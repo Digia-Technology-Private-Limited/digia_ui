@@ -12,14 +12,31 @@ class DUIImage extends StatefulWidget {
 
 class _DUIImageState extends State<DUIImage> {
   final DUIImageProps _props;
+
   _DUIImageState(this._props);
 
   @override
   Widget build(BuildContext context) {
-    return Image(
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.blueGrey,
+        shape: BoxShape.rectangle,
+        borderRadius: _props.cornerRadius?.getRadius()
+      ),
       height: _props.height,
       width: _props.width,
-      image: const NetworkImage(""),
+      child: Padding(
+        padding: _props.margins!.margins(),
+        child: _props.imageSrc!.contains('http')
+            ? Image(
+                image: NetworkImage(_props.imageSrc!),
+                // fit: _props.fit as BoxFit,
+              )
+            : Image(
+                image: AssetImage(_props.imageSrc!),
+                // fit: _props.fit as BoxFit,
+              ),
+      ),
     );
   }
 }
