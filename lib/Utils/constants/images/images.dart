@@ -1,0 +1,1 @@
+const String kDUIImagePath = "assets/images/";

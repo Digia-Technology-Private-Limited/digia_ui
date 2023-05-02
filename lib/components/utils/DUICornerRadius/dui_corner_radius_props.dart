@@ -7,10 +7,10 @@ part 'dui_corner_radius_props.g.dart';
 
 @JsonSerializable()
 class DUICornerRadius {
-  double bottomLeft = 0;
-  double bottomRight = 0;
-  double topLeft = 0;
-  double topRight = 0;
+  late double bottomLeft = 0;
+  late double bottomRight = 0;
+  late double topLeft = 0;
+  late double topRight = 0;
 
   DUICornerRadius();
 

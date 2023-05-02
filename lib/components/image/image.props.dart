@@ -9,15 +9,15 @@ part 'image.props.g.dart';
 
 @JsonSerializable()
 class DUIImageProps {
-  double height = 100;
-  double width = 100;
-  String? imageSrc;
-  int? aspectRatio;
-  String? placeHolder;
-  String? errorFallback;
-  DUIInsets? margins;
-  DUIFit? fit;
-  DUICornerRadius? cornerRadius;
+  late double height = 100;
+  late double width = 100;
+  late String imageSrc;
+  late int? aspectRatio;
+  late String? placeHolder;
+  late String? errorFallback;
+  late DUIInsets margins;
+  late DUIFit fit;
+  late DUICornerRadius? cornerRadius;
 
   DUIImageProps();
 
@@ -46,13 +46,13 @@ class DUIImageProps {
         "bottom":12
       },
       "fit": {
-        "fit":"contain"
+        "fit":"cover"
       },
       "cornerRadius": {
-        "topRight":0,
-        "topLeft":0,
-        "bottomLeft":0,
-        "bottomRight":0,
+        "topRight":12,
+        "topLeft":12,
+        "bottomLeft":12,
+        "bottomRight":12,
       }
     });
   }

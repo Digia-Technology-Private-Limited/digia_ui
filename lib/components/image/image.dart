@@ -1,3 +1,4 @@
+import 'package:digia_ui/Utils/constants/images/images.dart';
 import 'package:digia_ui/components/image/image.props.dart';
 import 'package:flutter/material.dart';
 
@@ -18,6 +19,8 @@ class _DUIImageState extends State<DUIImage> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: _props.margins.margins(),
+      padding: _props.margins.margins(),
       decoration: BoxDecoration(
         color: Colors.blueGrey,
         shape: BoxShape.rectangle,
@@ -25,18 +28,15 @@ class _DUIImageState extends State<DUIImage> {
       ),
       height: _props.height,
       width: _props.width,
-      child: Padding(
-        padding: _props.margins!.margins(),
-        child: _props.imageSrc!.contains('http')
-            ? Image(
-                image: NetworkImage(_props.imageSrc!),
-                // fit: _props.fit as BoxFit,
-              )
-            : Image(
-                image: AssetImage(_props.imageSrc!),
-                // fit: _props.fit as BoxFit,
-              ),
-      ),
+      child: _props.imageSrc.contains('http')
+          ? Image(
+              image: NetworkImage(_props.imageSrc),
+              fit: _props.fit.fitImage(),
+            )
+          : Image(
+              image: AssetImage(kDUIImagePath + _props.imageSrc),
+              fit: _props.fit.fitImage(),
+            ),
     );
   }
 }

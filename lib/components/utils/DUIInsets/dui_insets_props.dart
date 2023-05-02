@@ -7,10 +7,10 @@ part 'dui_insets_props.g.dart';
 
 @JsonSerializable()
 class DUIInsets {
-  double top = 0;
-  double bottom = 0;
-  double left = 0;
-  double right = 0;
+  late double top = 0;
+  late double bottom = 0;
+  late double left = 0;
+  late double right = 0;
 
   DUIInsets();
 

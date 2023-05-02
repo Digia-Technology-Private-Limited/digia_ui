@@ -7,7 +7,7 @@ part 'dui_fit_props.g.dart';
 
 @JsonSerializable()
 class DUIFit {
-  String fit = 'none';
+  late String fit = 'none';
 
   DUIFit();
 
