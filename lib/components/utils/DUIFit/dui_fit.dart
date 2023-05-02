@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-part 'dui_fit_props.g.dart';
+part 'dui_fit.g.dart';
 
 @JsonSerializable()
 class DUIFit {

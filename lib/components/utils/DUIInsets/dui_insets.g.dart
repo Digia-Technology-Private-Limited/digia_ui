@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'dui_insets_props.dart';
+part of 'dui_insets.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator

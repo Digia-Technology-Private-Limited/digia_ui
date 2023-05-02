@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-part 'dui_insets_props.g.dart';
+part 'dui_insets.g.dart';
 
 @JsonSerializable()
 class DUIInsets {

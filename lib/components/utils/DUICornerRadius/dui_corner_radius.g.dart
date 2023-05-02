@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'dui_corner_radius_props.dart';
+part of 'dui_corner_radius.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
