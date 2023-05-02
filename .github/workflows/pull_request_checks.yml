@@ -5,7 +5,7 @@ on:
     branches: [main]
 
 jobs:
-  Run Dart Lint Checks:
+  run-format-and-analyse:
     runs-on: ubuntu-latest
 
     steps:
