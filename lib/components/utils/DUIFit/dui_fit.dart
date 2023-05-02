@@ -22,20 +22,21 @@ class DUIFit {
   }
 
   BoxFit fitImage() {
-    if (fit == 'fill') {
-      return BoxFit.fill;
-    } else if (fit == 'contain') {
-      return BoxFit.contain;
-    } else if (fit == 'cover') {
-      return BoxFit.cover;
-    } else if (fit == 'fitWidth') {
-      return BoxFit.fitWidth;
-    } else if (fit == 'fitHeight') {
-      return BoxFit.fitHeight;
-    } else if (fit == 'scaleDown') {
-      return BoxFit.scaleDown;
-    } else {
-      return BoxFit.none;
+    switch(fit) {
+      case 'fill':
+        return BoxFit.fill;
+      case 'contain':
+        return BoxFit.contain;
+      case 'cover':
+        return BoxFit.cover;
+      case 'fitWidth':
+        return BoxFit.fitWidth;
+      case 'fitHeight':
+        return BoxFit.fitHeight;
+      case 'scaleDown':
+        return BoxFit.scaleDown;
+      default:
+        return BoxFit.none;
     }
   }
 }
