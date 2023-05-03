@@ -23,10 +23,11 @@ class DUIInsets {
   String toString() {
     return jsonEncode(this);
   }
+
   EdgeInsetsGeometry margins() => EdgeInsets.fromLTRB(
-    left,
-    top,
-    right,
-    bottom,
-  );
+        left,
+        top,
+        right,
+        bottom,
+      );
 }

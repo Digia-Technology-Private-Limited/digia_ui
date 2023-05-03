@@ -35,24 +35,18 @@ class DUIImageProps {
     return DUIImageProps.fromJson({
       "height": 400,
       "width": 400,
-      "placeHolder":"",
-      "errorFallback":"",
-      "aspectRatio":0,
-      "imageSrc": "https://upload.wikimedia.org/wikipedia/commons/e/e7/Everest_North_Face_toward_Base_Camp_Tibet_Luca_Galuzzi_2006.jpg",
-      "margins": {
-        "top":12,
-        "left":12,
-        "right":12,
-        "bottom":12
-      },
-      "fit": {
-        "fit":"cover"
-      },
+      "placeHolder": "",
+      "errorFallback": "",
+      "aspectRatio": 0,
+      "imageSrc":
+          "https://upload.wikimedia.org/wikipedia/commons/e/e7/Everest_North_Face_toward_Base_Camp_Tibet_Luca_Galuzzi_2006.jpg",
+      "margins": {"top": 12, "left": 12, "right": 12, "bottom": 12},
+      "fit": {"fit": "cover"},
       "cornerRadius": {
-        "topRight":12,
-        "topLeft":12,
-        "bottomLeft":12,
-        "bottomRight":12,
+        "topRight": 12,
+        "topLeft": 12,
+        "bottomLeft": 12,
+        "bottomRight": 12,
       }
     });
   }
