@@ -10,6 +10,10 @@ DUIButtonProps _$DUIButtonPropsFromJson(Map<String, dynamic> json) =>
     DUIButtonProps()
       ..width = (json['width'] as num).toDouble()
       ..height = (json['height'] as num).toDouble()
+      ..margin = DUIInsets.fromJson(json['margin'] as Map<String, dynamic>)
+      ..padding = DUIInsets.fromJson(json['padding'] as Map<String, dynamic>)
+      ..cornerRadius =
+          DUICornerRadius.fromJson(json['cornerRadius'] as Map<String, dynamic>)
       ..text = json['text'] as String
       ..textColor = json['textColor'] as String
       ..disabledTextColor = json['disabledTextColor'] as String
@@ -21,6 +25,9 @@ Map<String, dynamic> _$DUIButtonPropsToJson(DUIButtonProps instance) =>
     <String, dynamic>{
       'width': instance.width,
       'height': instance.height,
+      'margin': instance.margin,
+      'padding': instance.padding,
+      'cornerRadius': instance.cornerRadius,
       'text': instance.text,
       'textColor': instance.textColor,
       'disabledTextColor': instance.disabledTextColor,
