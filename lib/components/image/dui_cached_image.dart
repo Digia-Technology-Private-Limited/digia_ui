@@ -50,11 +50,6 @@ class DUICachedImage extends StatelessWidget {
         ),
         super(key: key);
 
-  static CacheManagerLogLevel get logLevel => CacheManager.logLevel;
-
-  static set logLevel(CacheManagerLogLevel level) =>
-      CacheManager.logLevel = level;
-
   static Future evictFromCache(
     String url, {
     String? cacheKey,

@@ -33,8 +33,8 @@ class DUIImageProps {
 
   DUIImageProps mockWidget() {
     return DUIImageProps.fromJson({
-      "height": 400,
-      "width": 400,
+      "height": 300,
+      "width": 300,
       "placeHolder": "",
       "errorFallback": "",
       "aspectRatio": 0,

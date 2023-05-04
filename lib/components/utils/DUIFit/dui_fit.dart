@@ -11,8 +11,7 @@ class DUIFit {
 
   DUIFit();
 
-  factory DUIFit.fromJson(Map<String, dynamic> json) =>
-      _$DUIFitFromJson(json);
+  factory DUIFit.fromJson(Map<String, dynamic> json) => _$DUIFitFromJson(json);
 
   Map<String, dynamic> toJson() => _$DUIFitToJson(this);
 
@@ -22,7 +21,7 @@ class DUIFit {
   }
 
   BoxFit fitImage() {
-    switch(fit) {
+    switch (fit) {
       case 'fill':
         return BoxFit.fill;
       case 'contain':
