@@ -22,3 +22,29 @@ class _DUIButtonState extends State<DUIButton> {
     props = widget.props;
   }
 
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      child: Container(
+        width: props.width,
+        padding: props.padding.margins(),
+        margin: props.margin.margins(),
+        height: props.height,
+        decoration: BoxDecoration(
+          color: props.disabled
+              ? Color(int.parse(props.disabledBackgroundColor))
+              : Color(int.parse(props.backgroundColor)),
+          borderRadius: props.cornerRadius.getRadius(),
+        ),
+        child: Text(
+          props.text,
+          style: TextStyle(
+            color: props.disabled
+                ? Color(int.parse(props.disabledTextColor))
+                : Color(int.parse(props.textColor)),
+          ),
+        ),
+      ),
+    );
+  }
+}
