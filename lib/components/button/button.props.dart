@@ -2,15 +2,18 @@ import 'dart:convert';
 
 import 'package:json_annotation/json_annotation.dart';
 
+import '../utils/DUICornerRadius/dui_corner_radius.dart';
+import '../utils/DUIInsets/dui_insets.dart';
+
 part 'button.props.g.dart';
 
 @JsonSerializable()
 class DUIButtonProps {
   late double width;
   late double height;
-  // late DUIInsets margins;
-  // late DUIInsets paddings;
-  // late DUICornerRadius cornerRadius;
+  late DUIInsets margin;
+  late DUIInsets padding;
+  late DUICornerRadius cornerRadius;
   late String text;
   late String textColor;
   late String disabledTextColor;
