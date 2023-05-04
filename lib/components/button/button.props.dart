@@ -20,6 +20,7 @@ class DUIButtonProps {
   late String backgroundColor;
   late String disabledBackgroundColor;
   late bool disabled;
+  double? fontSize;
   DUIButtonProps();
 
   factory DUIButtonProps.fromJson(Map<String, dynamic> json) =>
@@ -35,13 +36,13 @@ class DUIButtonProps {
   DUIButtonProps mockWidget() {
     return DUIButtonProps.fromJson({
       "height": 100,
-      "width": 500,
+      "width": 400,
       "text": "Button",
       "textColor": "FFFFFF",
       "disabledTextColor": "808080",
-      "backgroundColor": "D00000",
+      "backgroundColor": "00FF00",
       "disabledBackgroundColor": "C0C0C0",
-      "disabled": true,
+      "disabled": false,
       "margin": {"top": 12, "left": 12, "right": 12, "bottom": 12},
       "padding": {"top": 12, "left": 12, "right": 12, "bottom": 12},
       "cornerRadius": {

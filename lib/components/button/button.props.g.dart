@@ -19,7 +19,8 @@ DUIButtonProps _$DUIButtonPropsFromJson(Map<String, dynamic> json) =>
       ..disabledTextColor = json['disabledTextColor'] as String
       ..backgroundColor = json['backgroundColor'] as String
       ..disabledBackgroundColor = json['disabledBackgroundColor'] as String
-      ..disabled = json['disabled'] as bool;
+      ..disabled = json['disabled'] as bool
+      ..fontSize = (json['fontSize'] as num?)?.toDouble();
 
 Map<String, dynamic> _$DUIButtonPropsToJson(DUIButtonProps instance) =>
     <String, dynamic>{
@@ -34,4 +35,5 @@ Map<String, dynamic> _$DUIButtonPropsToJson(DUIButtonProps instance) =>
       'backgroundColor': instance.backgroundColor,
       'disabledBackgroundColor': instance.disabledBackgroundColor,
       'disabled': instance.disabled,
+      'fontSize': instance.fontSize,
     };
