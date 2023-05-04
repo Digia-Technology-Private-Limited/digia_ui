@@ -31,4 +31,25 @@ class DUIButtonProps {
   String toString() {
     return jsonEncode(this);
   }
+
+  DUIButtonProps mockWidget() {
+    return DUIButtonProps.fromJson({
+      "height": 100,
+      "width": 500,
+      "text": "Button",
+      "textColor": "FFFFFF",
+      "disabledTextColor": "808080",
+      "backgroundColor": "D00000",
+      "disabledBackgroundColor": "C0C0C0",
+      "disabled": true,
+      "margin": {"top": 12, "left": 12, "right": 12, "bottom": 12},
+      "padding": {"top": 12, "left": 12, "right": 12, "bottom": 12},
+      "cornerRadius": {
+        "topRight": 12,
+        "topLeft": 12,
+        "bottomLeft": 12,
+        "bottomRight": 12,
+      }
+    });
+  }
 }

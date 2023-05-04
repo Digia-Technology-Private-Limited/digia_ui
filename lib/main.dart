@@ -1,6 +1,6 @@
 import 'package:digia_ui/Utils/config_resolver.dart';
-import 'package:digia_ui/components/image/image.dart';
-import 'package:digia_ui/components/image/image.props.dart';
+import 'package:digia_ui/components/button/button.dart';
+import 'package:digia_ui/components/button/button.props.dart';
 import 'package:flutter/material.dart';
 
 void main() async {
@@ -79,7 +79,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: DUIImage(DUIImageProps().mockWidget()),
+      body: DUIButton(DUIButtonProps().mockWidget()),
     );
   }
 }
