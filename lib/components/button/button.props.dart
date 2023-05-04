@@ -42,7 +42,7 @@ class DUIButtonProps {
       "disabledTextColor": "808080",
       "backgroundColor": "00FF00",
       "disabledBackgroundColor": "C0C0C0",
-      "disabled": false,
+      "disabled": true,
       "margin": {"top": 12, "left": 12, "right": 12, "bottom": 12},
       "padding": {"top": 12, "left": 12, "right": 12, "bottom": 12},
       "cornerRadius": {
