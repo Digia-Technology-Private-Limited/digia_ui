@@ -1,8 +1,12 @@
+import 'package:digia_ui/Utils/config_resolver.dart';
 import 'package:digia_ui/components/image/image.dart';
 import 'package:digia_ui/components/image/image.props.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+void main() async {
+  // Load configuration
+  await ConfigResolver.initialize('config.json');
+
   runApp(const MyApp());
 }
 

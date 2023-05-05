@@ -1,0 +1,40 @@
+{
+  "theme": {
+    "colors": {
+      "primary": "#00C063",
+      "secondary": "#0070BB",
+      "text": "#212121",
+      "textSubtle": "#4F4F4F",
+      "accent1": "#FEE7CD",
+      "accent2": "#CCCCFF",
+      "accent3": "#DCEFDC",
+      "accent4": "#FFF5C2",
+      "accent5": "#CEDFF3",
+      "accent6": "#F6C5C1",
+      "accent7": "#ACFBDC",
+      "light": "#FAFCFE"
+    },
+    "fonts": {
+      "heading1Loose": { "size": 36, "weight": "bold", "height": 54 },
+      "heading1Tight": { "size": 36, "weight": "bold", "height": 40 },
+      "heading2": { "size": 24, "weight": "semibold" },
+      "heading3": { "size": 24, "weight": "medium" },
+      "para1": { "size": 16, "weight": "medium" },
+      "para2": { "size": 14, "weight": "medium" },
+      "para3": { "size": 14, "weight": "regular" },
+      "para3Italic": { "size": 14, "weight": "regular", "style": "italic" },
+      "button1": { "size": 18, "weight": "medium" }
+    },
+    "spacing": {
+      "sp-100": 4,
+      "sp-200": 8,
+      "sp-250": 12,
+      "sp-300": 16,
+      "sp-350": 24,
+      "sp-400": 32,
+      "sp-425": 40,
+      "sp-450": 48,
+      "sp-500": 64
+    }
+  }
+}
