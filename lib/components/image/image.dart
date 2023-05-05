@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:digia_ui/Utils/constants.dart';
 import 'package:digia_ui/components/image/dui_cached_image.dart';
 import 'package:digia_ui/components/image/image.props.dart';
