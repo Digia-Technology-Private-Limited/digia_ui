@@ -1,6 +1,5 @@
 import 'package:digia_ui/Utils/dui_font.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class DUIConfigConstants {
   static double fallbackSize = 14;
