@@ -36,16 +36,19 @@ class DUITextProps {
     return DUITextProps.fromJson(
       {
         "fontSize": 18.0,
+        'textScaleFactor': 2,
         "textSpans": [
           {
             "text": "Hello ",
             "fontSize": 36.0,
-            "fontWeight": {"fontWeight": 800}
+            "fontWeight": {"fontWeight": 800},
           },
           {
             "text": "prem ",
             "fontWeight": {"fontWeight": 300},
-            "color": "2196F3",
+            "color": "#2196F3",
+            'url': 'https://google.com',
+            'isUnderlined': false,
             "fontSize": 12,
           },
         ],

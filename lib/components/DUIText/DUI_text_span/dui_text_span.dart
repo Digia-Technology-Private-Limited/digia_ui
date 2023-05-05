@@ -35,19 +35,13 @@ class DUITextSpan {
     return TextSpan(
       text: text,
       style: TextStyle(
-          fontWeight: fontWeight!.getFontWeight(),
-          color: color != null ? color!.toColor() : Colors.black,
+          fontWeight: fontWeight?.getFontWeight() ?? FontWeight.w400,
+          color: color?.toColor() ?? Colors.black,
           fontSize: fontSize,
-          decoration: isUnderlined != null
-              ? isUnderlined!
-                  ? TextDecoration.underline
-                  : TextDecoration.none
-              : null,
-          fontStyle: isItalic != null
-              ? isItalic!
-                  ? FontStyle.italic
-                  : FontStyle.normal
-              : null),
+          decoration: (isUnderlined ?? false)
+              ? TextDecoration.underline
+              : TextDecoration.none,
+          fontStyle: (isItalic ?? false) ? FontStyle.italic : FontStyle.normal),
       recognizer: TapGestureRecognizer()
         ..onTap = () async {
           if (url != null) {

@@ -1,4 +1,5 @@
 import 'package:digia_ui/Utils/color_extension.dart';
+import 'package:digia_ui/Utils/constants.dart';
 import 'package:digia_ui/components/DUIText/dui_text_props.dart';
 import 'package:flutter/material.dart';
 
@@ -24,8 +25,8 @@ class _DUITextState extends State<DUIText> {
 
   List<TextSpan> getTextSpans() {
     List<TextSpan> list = [];
-    for (var i = 0; i < props.textSpans.length; i++) {
-      list.add(props.textSpans[i].getSpan());
+    for (var i in props.textSpans) {
+      list.add(i.getSpan());
     }
     return list;
   }
@@ -34,26 +35,16 @@ class _DUITextState extends State<DUIText> {
   Widget build(BuildContext context) {
     return RichText(
       maxLines: props.maxLines,
-      overflow: props.overFlow != null
-          ? props.overFlow!.getOverFlow()
-          : TextOverflow.ellipsis,
-      textScaleFactor:
-          props.textScaleFactor != null ? props.textScaleFactor! : 1,
-      textAlign: props.alignment != null
-          ? props.alignment!.getTextAlign()
-          : TextAlign.start,
+      overflow: props.overFlow?.getOverFlow() ?? TextOverflow.ellipsis,
+      textScaleFactor: props.textScaleFactor ?? 1,
+      textAlign: props.alignment?.getTextAlign() ?? TextAlign.start,
       text: TextSpan(
         style: TextStyle(
           fontSize: props.fontSize,
-          fontStyle: props.isItalic != null
-              ? props.isItalic!
-                  ? FontStyle.italic
-                  : FontStyle.normal
-              : null,
-          fontWeight: props.fontWeight != null
-              ? props.fontWeight!.getFontWeight()
-              : FontWeight.w400,
-          color: props.color?.toColor() ?? "2196F3".toColor(),
+          fontStyle:
+              (props.isItalic ?? false) ? FontStyle.italic : FontStyle.normal,
+          fontWeight: props.fontWeight?.getFontWeight() ?? FontWeight.w400,
+          color: props.color?.toColor() ?? kHexBlack.toColor(),
         ),
         children: getTextSpans(),
       ),
