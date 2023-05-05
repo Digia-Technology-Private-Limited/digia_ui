@@ -1,5 +1,5 @@
-import 'package:digia_ui/components/button/button.dart';
-import 'package:digia_ui/components/button/button.props.dart';
+import 'package:digia_ui/components/DUIText/dui_text.dart';
+import 'package:digia_ui/components/DUIText/dui_text_props.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -8,6 +8,7 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -22,6 +23,7 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
+
   final String title;
 
   @override
@@ -35,7 +37,11 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: DUIButton(DUIButtonProps().mockWidget()),
+      body: Center(
+        child: DUIText(
+          DUITextProps().mockWidget(),
+        ),
+      ),
     );
   }
 }
