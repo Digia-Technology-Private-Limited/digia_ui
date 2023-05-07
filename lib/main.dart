@@ -1,6 +1,7 @@
 import 'package:digia_ui/Utils/config_resolver.dart';
 import 'package:digia_ui/components/button/button.dart';
 import 'package:digia_ui/components/button/button.props.dart';
+import 'package:digia_ui/components/button/button.props.dart';
 
 import 'package:flutter/material.dart';
 
@@ -8,7 +9,13 @@ void main() async {
   // Load configuration
   await ConfigResolver.initialize('config.json');
 
-  runApp(const MyApp());
+  runApp(const MyApp()
+  
+  
+  
+  
+  
+  );
 }
 
 class MyApp extends StatelessWidget {
