@@ -1,16 +1,9 @@
-# digia_ui
-
-A new Flutter project.
-
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+Few things to get started:
 
-A few resources to get you started if this is your first Flutter project:
+Step 1: Add Pre-Commit Hook
+`ln -s pre-commit.bash .git/hooks/pre-commit`
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Step 2: Install [rps](https://pub.dev/packages/rps). Check the latest version beforehand.
+`dart pub global activate rps --version 0.7.0-dev.6`
