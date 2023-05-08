@@ -1,5 +1,4 @@
-import 'package:digia_ui/Utils/color_extension.dart';
-import 'package:digia_ui/Utils/constants.dart';
+import 'package:digia_ui/Utils/util_functions.dart';
 import 'package:digia_ui/components/DUIText/dui_text_props.dart';
 import 'package:flutter/material.dart';
 
@@ -35,17 +34,10 @@ class _DUITextState extends State<DUIText> {
   Widget build(BuildContext context) {
     return RichText(
       maxLines: props.maxLines,
-      overflow: props.overFlow?.getOverFlow() ?? TextOverflow.ellipsis,
-      textScaleFactor: props.textScaleFactor ?? 1,
-      textAlign: props.alignment?.getTextAlign() ?? TextAlign.start,
+      overflow: getOverFlow(props.overFlow ?? ""),
+      textAlign: getTextAlign(props.alignment ?? ""),
       text: TextSpan(
-        style: TextStyle(
-          fontSize: props.fontSize,
-          fontStyle:
-              (props.isItalic ?? false) ? FontStyle.italic : FontStyle.normal,
-          fontWeight: props.fontWeight?.getFontWeight() ?? FontWeight.w400,
-          color: props.color?.toColor() ?? kHexBlack.toColor(),
-        ),
+        style: getTextStyle(style: props.style),
         children: getTextSpans(),
       ),
     );
