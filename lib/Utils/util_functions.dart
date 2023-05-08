@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 class DUIConfigConstants {
   static const double fallbackSize = 14;
-  static const String fallbackStyle = "f:para1;tc:text;dc:underline;spc:sp-100";
+  static const String fallbackStyle = "";
 }
 
 FontWeight getFontWeight(String? weight) {
@@ -107,7 +107,6 @@ TextDecoration? getTextDecoration(
 }
 
 TextStyle? getTextStyle({String? style = DUIConfigConstants.fallbackStyle}) {
-  //todo will check why DUIConfigConstants.fallbackStyle is not working
   if ((style ?? '').isEmpty) return null;
   var styleItems = style!.split(';').where((e) => e.startsWith('f:')).toList();
   if (styleItems.isEmpty) return null;
@@ -119,7 +118,6 @@ TextStyle? getTextStyle({String? style = DUIConfigConstants.fallbackStyle}) {
       color: getTextColor(style: style) ?? Colors.black,
       decoration: getTextDecoration(style: style),
       wordSpacing: getWordSpacing(style: style));
-  print(res);
   return res;
 }
 
