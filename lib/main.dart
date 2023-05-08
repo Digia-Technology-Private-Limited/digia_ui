@@ -1,8 +1,13 @@
-import 'package:digia_ui/components/DUIText/dui_text.dart';
-import 'package:digia_ui/components/DUIText/dui_text_props.dart';
+import 'package:digia_ui/Utils/config_resolver.dart';
+import 'package:digia_ui/components/button/button.dart';
+import 'package:digia_ui/components/button/button.props.dart';
+
 import 'package:flutter/material.dart';
 
-void main() {
+void main() async {
+  // Load configuration
+  await ConfigResolver.initialize('config.json');
+
   runApp(const MyApp());
 }
 
@@ -37,11 +42,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(
-        child: DUIText(
-          DUITextProps().mockWidget(),
-        ),
-      ),
+      body: DUIButton(DUIButtonProps().mockWidget()),
     );
   }
 }
