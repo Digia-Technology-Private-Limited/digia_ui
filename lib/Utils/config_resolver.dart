@@ -22,13 +22,18 @@ class ConfigResolver {
 
   Map<String, dynamic> get _colors => themeConfig['colors'];
   Map<String, dynamic> get _fonts => themeConfig['fonts'];
+  Map<String, dynamic> get _spacing => themeConfig['spacing'];
 
   String? getColorValue(String colorToken) {
     return _colors[colorToken];
   }
 
   DUIFont getFont(String fontToken) {
-    var fontsJson = jsonDecode(_fonts[fontToken]);
+    var fontsJson = (_fonts[fontToken]);
     return DUIFont.fromJson(fontsJson);
+  }
+
+  double? getSpacing(String spacingToken) {
+    return _spacing[spacingToken];
   }
 }

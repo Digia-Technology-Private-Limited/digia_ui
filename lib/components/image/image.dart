@@ -24,14 +24,14 @@ class _DUIImageState extends State<DUIImage> {
   }
 
   Widget errorImage() => Image.asset(
-        kDUIErrorImage,
+        duiErrorImage,
         height: props.height,
         width: props.width,
         fit: props.fit.fitImage(),
       );
 
   Widget placeHolderImage() => Image.asset(
-        kDUIPlaceHolder,
+        duiPlaceHolder,
         height: props.height,
         width: props.width,
         fit: props.fit.fitImage(),
