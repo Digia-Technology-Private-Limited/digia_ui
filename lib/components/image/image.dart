@@ -1,5 +1,5 @@
 import 'package:digia_ui/Utils/constants.dart';
-import 'package:digia_ui/Utils/dui_cached_image.dart';
+import 'package:digia_ui/components/image/dui_cached_image.dart';
 import 'package:digia_ui/components/image/image.props.dart';
 import 'package:flutter/material.dart';
 
@@ -14,7 +14,6 @@ class DUIImage extends StatefulWidget {
 
 class _DUIImageState extends State<DUIImage> {
   late DUIImageProps props;
-  // late File _file;
 
   _DUIImageState();
 
@@ -66,15 +65,8 @@ class _DUIImageState extends State<DUIImage> {
   @override
   Widget build(BuildContext context) {
     return props.margins != null
-        ? Container(
-            margin: props.margins!.margins(),
+        ? Padding(
             padding: props.margins!.margins(),
-            decoration: BoxDecoration(
-                color: Colors.blueGrey,
-                shape: BoxShape.rectangle,
-                borderRadius: props.cornerRadius?.getRadius()),
-            height: props.height,
-            width: props.width,
             child: imageWidget(),
           )
         : imageWidget();
