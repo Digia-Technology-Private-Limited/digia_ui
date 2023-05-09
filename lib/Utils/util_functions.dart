@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:digia_ui/Utils/color_extension.dart';
 import 'package:digia_ui/Utils/config_resolver.dart';
+import 'package:digia_ui/Utils/constants.dart';
 import 'package:digia_ui/Utils/dui_font.dart';
 import 'package:flutter/material.dart';
 
@@ -74,7 +77,7 @@ TextAlign getTextAlign(String alignment) {
   }
 }
 
-TextOverflow getOverFlow(String overFlow) {
+TextOverflow getTextOverFlow(String overFlow) {
   switch (overFlow) {
     case "fade":
       return TextOverflow.fade;
@@ -87,13 +90,7 @@ TextOverflow getOverFlow(String overFlow) {
   }
 }
 
-TextDecoration? getTextDecoration(
-    {String? style = DUIConfigConstants.fallbackStyle}) {
-  if (style!.isEmpty) return null;
-  var styleItems = style.split(';').where((e) => e.startsWith('dc:')).toList();
-  if (styleItems.isEmpty) return null;
-  var styleItem = styleItems.first;
-  var decorationToken = styleItem.split(':').last;
+TextDecoration? getTextDecoration(String decorationToken) {
   switch (decorationToken) {
     case "underline":
       return TextDecoration.underline;
@@ -106,36 +103,48 @@ TextDecoration? getTextDecoration(
   }
 }
 
-TextStyle? getTextStyle({String? style = DUIConfigConstants.fallbackStyle}) {
-  if ((style ?? '').isEmpty) return null;
-  var styleItems = style!.split(';').where((e) => e.startsWith('f:')).toList();
-  if (styleItems.isEmpty) return null;
-  var styleItem = styleItems.first;
-  var fontToken = styleItem.split(':').last;
-  DUIFont font = ConfigResolver().getFont(fontToken);
-  TextStyle fromFont = getTextStyleHelper(font);
-  var res = fromFont.copyWith(
-      color: getTextColor(style: style) ?? Colors.black,
-      decoration: getTextDecoration(style: style),
-      wordSpacing: getWordSpacing(style: style));
-  return res;
+TextStyle? getTextStyle({required String style}) {
+  Map<String, String>? styleItems = getStyleItems(style);
+  if (styleItems != null) {
+    DUIFont font = ConfigResolver().getFont(styleItems['f']!);
+    TextStyle fromFont = getTextStyleHelper(font);
+    var res = fromFont.copyWith(
+      color: styleItems.containsKey('tc')
+          ? getTextColor(styleItems['tc']!)
+          : hexBlack.toColor(),
+      decoration: styleItems.containsKey('dc')
+          ? getTextDecoration(styleItems['dc']!)
+          : getTextDecoration(DUIConfigConstants.fallbackStyle),
+      wordSpacing: styleItems.containsKey('spc')
+          ? getWordSpacing(styleItems['spc']!)
+          : getWordSpacing(DUIConfigConstants.fallbackStyle),
+    );
+    return res;
+  }
+  return null;
 }
 
-double? getWordSpacing({String? style = DUIConfigConstants.fallbackStyle}) {
-  if (style!.isEmpty) return null;
-  var styleItems = style.split(';').where((e) => e.startsWith('spc:')).toList();
-  if (styleItems.isEmpty) return null;
-  var styleItem = styleItems.first;
-  var spacingToken = styleItem.split(':').last;
+double? getWordSpacing(String spacingToken) {
   return ConfigResolver().getSpacing(spacingToken);
 }
 
-Color? getTextColor({String? style = DUIConfigConstants.fallbackStyle}) {
-  if (style!.isEmpty) return null;
-  var styleItems = style.split(';').where((e) => e.startsWith('tc:')).toList();
-  if (styleItems.isEmpty) return null;
-  var styleItem = styleItems.first;
-  var colorToken = styleItem.split(':').last;
+Color? getTextColor(String colorToken) {
   String? colorValue = ConfigResolver().getColorValue(colorToken);
-  return colorValue?.toColor();
+  try {
+    return colorValue?.toColor();
+  } on FormatException catch (_) {
+    log("Invalid Color value in json");
+  }
+  return null;
+}
+
+Map<String, String>? getStyleItems(String style) {
+  Map<String, String> resMap = {};
+  if (style.isEmpty) return null;
+  var styleItems = style.split(';');
+  if (styleItems.isEmpty) return null;
+  for (var i in styleItems) {
+    resMap[i.split(':').first] = i.split(':').last;
+  }
+  return resMap;
 }

@@ -13,6 +13,7 @@ class DUITextSpan {
   late String text;
   late String? style;
   late String? url;
+
   DUITextSpan();
 
   factory DUITextSpan.fromJson(Map<String, dynamic> json) =>
@@ -28,9 +29,10 @@ class DUITextSpan {
   TextSpan getSpan() {
     return TextSpan(
       text: text,
-      style: getTextStyle(style: style),
+      style: getTextStyle(style: style ?? DUIConfigConstants.fallbackStyle),
       recognizer: TapGestureRecognizer()
         ..onTap = () async {
+          //todo change onTap functionality according to backend latter
           if (url != null) {
             if (await canLaunchUrl(Uri.parse(url!))) {
               await launchUrl(Uri.parse(url!));

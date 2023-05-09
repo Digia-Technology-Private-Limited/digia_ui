@@ -34,7 +34,7 @@ class _DUITextState extends State<DUIText> {
   Widget build(BuildContext context) {
     return RichText(
       maxLines: props.maxLines,
-      overflow: getOverFlow(props.overFlow ?? ""),
+      overflow: getTextOverFlow(props.overFlow ?? ""),
       textAlign: getTextAlign(props.alignment ?? ""),
       text: TextSpan(
         style: getTextStyle(style: props.style),
