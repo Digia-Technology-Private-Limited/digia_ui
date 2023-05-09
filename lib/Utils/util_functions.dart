@@ -45,21 +45,6 @@ FontStyle getFontStyle(String? style) {
   return FontStyle.normal;
 }
 
-TextStyle getTextStyleHelper(DUIFont fontModel) {
-  var fontSize = fontModel.size;
-  var lineHeight = fontModel.height;
-  var fontWeight = getFontWeight(fontModel.weight);
-  var fontStyle = getFontStyle(fontModel.style);
-
-  var style = TextStyle(
-      fontSize: fontSize,
-      height: lineHeight,
-      fontWeight: fontWeight,
-      fontStyle: fontStyle);
-
-  return style;
-}
-
 TextAlign getTextAlign(String alignment) {
   switch (alignment) {
     case 'right':
@@ -106,20 +91,25 @@ TextDecoration? getTextDecoration(String decorationToken) {
 TextStyle? getTextStyle({required String style}) {
   Map<String, String>? styleItems = getStyleItems(style);
   if (styleItems != null) {
-    DUIFont font = ConfigResolver().getFont(styleItems['f']!);
-    TextStyle fromFont = getTextStyleHelper(font);
-    var res = fromFont.copyWith(
-      color: styleItems.containsKey('tc')
-          ? getTextColor(styleItems['tc']!)
-          : hexBlack.toColor(),
-      decoration: styleItems.containsKey('dc')
-          ? getTextDecoration(styleItems['dc']!)
-          : getTextDecoration(DUIConfigConstants.fallbackStyle),
-      wordSpacing: styleItems.containsKey('spc')
-          ? getWordSpacing(styleItems['spc']!)
-          : getWordSpacing(DUIConfigConstants.fallbackStyle),
-    );
-    return res;
+    if (styleItems.containsKey('f')) {
+      DUIFont font = ConfigResolver().getFont(styleItems['f']!);
+      TextStyle textStyle = TextStyle(
+        fontWeight: getFontWeight(font.weight),
+        fontStyle: getFontStyle(font.style),
+        fontSize: font.size,
+        height: font.height,
+        color: styleItems.containsKey('tc')
+            ? getTextColor(styleItems['tc']!)
+            : hexBlack.toColor(),
+        decoration: styleItems.containsKey('dc')
+            ? getTextDecoration(styleItems['dc']!)
+            : getTextDecoration(DUIConfigConstants.fallbackStyle),
+        wordSpacing: styleItems.containsKey('spc')
+            ? getWordSpacing(styleItems['spc']!)
+            : getWordSpacing(DUIConfigConstants.fallbackStyle),
+      );
+      return textStyle;
+    }
   }
   return null;
 }
