@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:digia_ui/Utils/color_extension.dart';
 import 'package:digia_ui/Utils/config_resolver.dart';
-import 'package:digia_ui/Utils/constants.dart';
 import 'package:digia_ui/Utils/dui_font.dart';
 import 'package:flutter/material.dart';
 
@@ -100,7 +99,7 @@ TextStyle? getTextStyle({required String style}) {
         height: font.height,
         color: styleItems.containsKey('tc')
             ? getTextColor(styleItems['tc']!)
-            : hexBlack.toColor(),
+            : null,
         decoration: styleItems.containsKey('dc')
             ? getTextDecoration(styleItems['dc']!)
             : getTextDecoration(DUIConfigConstants.fallbackStyle),
