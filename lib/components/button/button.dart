@@ -1,7 +1,9 @@
 import 'dart:developer';
 
+import 'package:digia_ui/components/DUIText/dui_text.dart';
 import 'package:flutter/material.dart';
 
+import '../../Utils/color_extension.dart';
 import 'button.props.dart';
 
 class DUIButton extends StatefulWidget {
@@ -25,31 +27,23 @@ class _DUIButtonState extends State<DUIButton> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: props.margin.margins(),
+      margin: props.margin?.margins(),
       child: InkWell(
         onTap: () {
-          log('Button Clicked');
+          log('button clicked');
         },
         child: Container(
           alignment: Alignment.center,
-          width: props.width,
-          padding: props.padding.margins(),
-          height: props.height,
+          width: props.width ?? double.infinity,
+          padding: props.padding?.margins() ?? EdgeInsets.zero,
+          height: props.height ?? 150,
           decoration: BoxDecoration(
-            color: props.disabled
-                ? Color(int.parse('0xFF${props.disabledBackgroundColor}'))
-                : Color(int.parse('0xFF${props.backgroundColor}')),
-            borderRadius: props.cornerRadius.getRadius(),
+            color: props.disabled != null && props.disabled == true
+                ? props.disabledBackgroundColor?.toColor()
+                : props.backgroundColor?.toColor(),
+            borderRadius: props.cornerRadius?.getRadius(),
           ),
-          child: Text(
-            props.text,
-            style: TextStyle(
-              fontSize: props.fontSize ?? 14,
-              color: props.disabled
-                  ? Color(int.parse('0xFF${props.disabledTextColor}'))
-                  : Color(int.parse('0xFF${props.textColor}')),
-            ),
-          ),
+          child: DUIText(props.text),
         ),
       ),
     );

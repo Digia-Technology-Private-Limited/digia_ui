@@ -1,7 +1,8 @@
 import 'package:digia_ui/Utils/config_resolver.dart';
-import 'package:digia_ui/components/DUIText/dui_text.dart';
-import 'package:digia_ui/components/DUIText/dui_text_props.dart';
+import 'package:digia_ui/components/button/button.props.dart';
 import 'package:flutter/material.dart';
+
+import 'components/button/button.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -43,8 +44,8 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Center(
-        child: DUIText(
-          DUITextProps().mockWidget(),
+        child: DUIButton(
+          DUIButtonProps().mockWidget(),
         ),
       ),
     );

@@ -15,7 +15,7 @@
       "light": "#FAFCFE"
     },
     "fonts": {
-      "heading1Loose": { "size": 36, "weight": "bold", "height": 14 },
+      "heading1Loose": { "size": 36, "weight": "bold", "height": 1.2 },
       "heading1Tight": { "size": 36, "weight": "bold", "height": 40 },
       "heading2": { "size": 24, "weight": "semibold" },
       "heading3": { "size": 24, "weight": "medium" },

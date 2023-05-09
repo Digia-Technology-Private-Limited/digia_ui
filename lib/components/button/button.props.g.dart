@@ -8,18 +8,24 @@ part of 'button.props.dart';
 
 DUIButtonProps _$DUIButtonPropsFromJson(Map<String, dynamic> json) =>
     DUIButtonProps()
-      ..width = (json['width'] as num).toDouble()
-      ..height = (json['height'] as num).toDouble()
-      ..margin = DUIInsets.fromJson(json['margin'] as Map<String, dynamic>)
-      ..padding = DUIInsets.fromJson(json['padding'] as Map<String, dynamic>)
-      ..cornerRadius =
-          DUICornerRadius.fromJson(json['cornerRadius'] as Map<String, dynamic>)
-      ..text = json['text'] as String
-      ..textColor = json['textColor'] as String
-      ..disabledTextColor = json['disabledTextColor'] as String
-      ..backgroundColor = json['backgroundColor'] as String
-      ..disabledBackgroundColor = json['disabledBackgroundColor'] as String
-      ..disabled = json['disabled'] as bool
+      ..width = (json['width'] as num?)?.toDouble()
+      ..height = (json['height'] as num?)?.toDouble()
+      ..margin = json['margin'] == null
+          ? null
+          : DUIInsets.fromJson(json['margin'] as Map<String, dynamic>)
+      ..padding = json['padding'] == null
+          ? null
+          : DUIInsets.fromJson(json['padding'] as Map<String, dynamic>)
+      ..cornerRadius = json['cornerRadius'] == null
+          ? null
+          : DUICornerRadius.fromJson(
+              json['cornerRadius'] as Map<String, dynamic>)
+      ..text = DUITextProps.fromJson(json['text'] as Map<String, dynamic>)
+      ..textColor = json['textColor'] as String?
+      ..disabledTextColor = json['disabledTextColor'] as String?
+      ..backgroundColor = json['backgroundColor'] as String?
+      ..disabledBackgroundColor = json['disabledBackgroundColor'] as String?
+      ..disabled = json['disabled'] as bool?
       ..fontSize = (json['fontSize'] as num?)?.toDouble();
 
 Map<String, dynamic> _$DUIButtonPropsToJson(DUIButtonProps instance) =>
