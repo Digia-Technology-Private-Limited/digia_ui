@@ -144,7 +144,8 @@ Map<String, String>? getStyleItems(String style) {
   var styleItems = style.split(';');
   if (styleItems.isEmpty) return null;
   for (var i in styleItems) {
-    resMap[i.split(':').first] = i.split(':').last;
+    List<String> styleItem = i.split(':');
+    resMap[styleItem.first] = styleItem.last;
   }
   return resMap;
 }
