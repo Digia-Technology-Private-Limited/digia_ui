@@ -9,10 +9,9 @@ part 'image.props.g.dart';
 
 @JsonSerializable()
 class DUIImageProps {
-  late double height = 100;
-  late double width = 100;
+  late double? height;
+  late double? width;
   late String imageSrc;
-  late int? aspectRatio;
   late String? placeHolder;
   late String? errorFallback;
   late DUIInsets? margins;

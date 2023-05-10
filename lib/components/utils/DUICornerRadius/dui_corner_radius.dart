@@ -24,7 +24,7 @@ class DUICornerRadius {
     return jsonEncode(this);
   }
 
-  BorderRadiusGeometry getRadius() {
+  BorderRadiusGeometry getCornerRadius() {
     return BorderRadius.only(
       topLeft: Radius.circular(topLeft),
       topRight: Radius.circular(topRight),

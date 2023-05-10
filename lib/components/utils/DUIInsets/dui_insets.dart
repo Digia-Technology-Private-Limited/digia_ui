@@ -24,7 +24,7 @@ class DUIInsets {
     return jsonEncode(this);
   }
 
-  EdgeInsetsGeometry margins() => EdgeInsets.fromLTRB(
+  EdgeInsetsGeometry getInsets() => EdgeInsets.fromLTRB(
         left,
         top,
         right,

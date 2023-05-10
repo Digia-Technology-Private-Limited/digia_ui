@@ -1,6 +1,6 @@
 import 'package:digia_ui/Utils/config_resolver.dart';
-import 'package:digia_ui/components/DUIText/dui_text.dart';
-import 'package:digia_ui/components/DUIText/dui_text_props.dart';
+import 'package:digia_ui/components/DUICard/dui_card.dart';
+import 'package:digia_ui/components/DUICard/dui_card_props.dart';
 import 'package:flutter/material.dart';
 
 void main() async {
@@ -43,8 +43,8 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Center(
-        child: DUIText(
-          DUITextProps().mockWidget(),
+        child: DUICard(
+          DUICardProps().mockWidget(),
         ),
       ),
     );

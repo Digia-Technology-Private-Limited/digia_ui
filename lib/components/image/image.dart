@@ -27,25 +27,25 @@ class _DUIImageState extends State<DUIImage> {
         duiErrorImage,
         height: props.height,
         width: props.width,
-        fit: props.fit.fitImage(),
+        fit: props.fit.getFit(),
       );
 
   Widget placeHolderImage() => Image.asset(
         duiPlaceHolder,
         height: props.height,
         width: props.width,
-        fit: props.fit.fitImage(),
+        fit: props.fit.getFit(),
       );
 
   Widget imageWidget() => ClipRRect(
-        borderRadius: props.cornerRadius?.getRadius(),
+        borderRadius: props.cornerRadius?.getCornerRadius(),
         clipBehavior: Clip.antiAlias,
         child: props.imageSrc.split('/').first == 'assets'
             ? Image.asset(
                 props.imageSrc,
                 height: props.height,
                 width: props.width,
-                fit: props.fit.fitImage(),
+                fit: props.fit.getFit(),
                 errorBuilder: (BuildContext context, Object exception,
                     StackTrace? stackTrace) {
                   return errorImage();
@@ -54,8 +54,8 @@ class _DUIImageState extends State<DUIImage> {
             : DUICachedImage(
                 width: props.width,
                 height: props.height,
-                fit: props.fit.fitImage(),
-                borderRadius: props.cornerRadius?.getRadius(),
+                fit: props.fit.getFit(),
+                borderRadius: props.cornerRadius?.getCornerRadius(),
                 imageUrl: props.imageSrc,
                 errorImage: errorImage(),
                 placeHolderImage: placeHolderImage(),
@@ -66,7 +66,7 @@ class _DUIImageState extends State<DUIImage> {
   Widget build(BuildContext context) {
     return props.margins != null
         ? Padding(
-            padding: props.margins!.margins(),
+            padding: props.margins!.getInsets(),
             child: imageWidget(),
           )
         : imageWidget();

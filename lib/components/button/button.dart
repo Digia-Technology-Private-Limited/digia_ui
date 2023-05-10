@@ -25,7 +25,7 @@ class _DUIButtonState extends State<DUIButton> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: props.margin.margins(),
+      margin: props.margin.getInsets(),
       child: InkWell(
         onTap: () {
           log('Button Clicked');
@@ -33,13 +33,13 @@ class _DUIButtonState extends State<DUIButton> {
         child: Container(
           alignment: Alignment.center,
           width: props.width,
-          padding: props.padding.margins(),
+          padding: props.padding.getInsets(),
           height: props.height,
           decoration: BoxDecoration(
             color: props.disabled
                 ? Color(int.parse('0xFF${props.disabledBackgroundColor}'))
                 : Color(int.parse('0xFF${props.backgroundColor}')),
-            borderRadius: props.cornerRadius.getRadius(),
+            borderRadius: props.cornerRadius.getCornerRadius(),
           ),
           child: Text(
             props.text,
