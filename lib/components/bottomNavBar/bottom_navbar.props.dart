@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'bottom_navbar.props.g.dart';
@@ -8,6 +9,19 @@ part 'bottom_navbar.props.g.dart';
 class DUIBottomNavbarProps {
   late List<Map<String, dynamic>> items;
   late String type;
+  int currentIndex = 0;
+  late List<Widget> screens = [
+    const Center(
+      child: Text('home'),
+    ),
+    const Center(
+      child: Text('school'),
+    ),
+    const Center(
+      child: Text('bookmark'),
+    ),
+  ];
+  VoidCallback? onTap;
   DUIBottomNavbarProps();
 
   factory DUIBottomNavbarProps.fromJson(Map<String, dynamic> json) =>
@@ -20,24 +34,26 @@ class DUIBottomNavbarProps {
     return jsonEncode(this);
   }
 
-  // DUIButtonProps mockWidget() {
-  //   return DUIButtonProps.fromJson({
-  //     "height": 100,
-  //     "width": 400,
-  //     "text": "Button",
-  //     "textColor": "FFFFFF",
-  //     "disabledTextColor": "808080",
-  //     "backgroundColor": "00FF00",
-  //     "disabledBackgroundColor": "C0C0C0",
-  //     "disabled": true,
-  //     "margin": {"top": 12, "left": 12, "right": 12, "bottom": 12},
-  //     "padding": {"top": 12, "left": 12, "right": 12, "bottom": 12},
-  //     "cornerRadius": {
-  //       "topRight": 12,
-  //       "topLeft": 12,
-  //       "bottomLeft": 12,
-  //       "bottomRight": 12,
-  //     }
-  //   });
-  // }
+  DUIBottomNavbarProps mockWidget() {
+    return DUIBottomNavbarProps.fromJson({
+      'type': 'fixed',
+      'items': [
+        {
+          'icon': '0xf7f5',
+          'activeIcon': '0xf7f5',
+          'label': '',
+        },
+        {
+          'icon': '0xf33c',
+          'activeIcon': '0xf012e',
+          'label': '',
+        },
+        {
+          'icon': '0xe0f4',
+          'activeIcon': '0xeee3',
+          'label': '',
+        },
+      ]
+    });
+  }
 }

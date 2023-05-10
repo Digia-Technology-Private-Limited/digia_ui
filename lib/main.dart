@@ -1,7 +1,8 @@
 import 'package:digia_ui/Utils/config_resolver.dart';
-import 'package:digia_ui/components/DUIText/dui_text.dart';
-import 'package:digia_ui/components/DUIText/dui_text_props.dart';
+import 'package:digia_ui/components/bottomNavBar/bottom_navbar.props.dart';
 import 'package:flutter/material.dart';
+
+import './components/bottomNavBar/bottom_navbar.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,17 +37,30 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  DUIBottomNavbarProps bottomNavbarProps = DUIBottomNavbarProps();
+  late List<Widget> screens;
+  @override
+  void initState() {
+    super.initState();
+    screens = bottomNavbarProps.screens;
+  }
+
+  int index = 0;
+  void changeIndex(int index) {
+    setState(() {
+      this.index = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(
-        child: DUIText(
-          DUITextProps().mockWidget(),
-        ),
-      ),
+      bottomNavigationBar:
+          DUIBottomNavbar(bottomNavbarProps.mockWidget(), changeIndex),
+      body: screens[index],
     );
   }
 }

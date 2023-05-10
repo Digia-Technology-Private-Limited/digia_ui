@@ -4,8 +4,8 @@ import 'bottom_navbar.props.dart';
 
 class DUIBottomNavbar extends StatefulWidget {
   final DUIBottomNavbarProps props;
-
-  const DUIBottomNavbar(this.props, {super.key}) : super();
+  final Function(int) onTap;
+  const DUIBottomNavbar(this.props, this.onTap, {super.key}) : super();
 
   @override
   State<StatefulWidget> createState() => _DUIBottomNavbarState();
@@ -23,35 +23,32 @@ class _DUIBottomNavbarState extends State<DUIBottomNavbar> {
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
-        type: BottomNavigationBarType.fixed, items: const []);
-    // return Container(
-    //   margin: props.margin.margins(),
-    //   child: InkWell(
-    //     onTap: () {
-    //       log('Button Clicked');
-    //     },
-    //     child: Container(
-    //       alignment: Alignment.center,
-    //       width: props.width,
-    //       padding: props.padding.margins(),
-    //       height: props.height,
-    //       decoration: BoxDecoration(
-    //         color: props.disabled
-    //             ? Color(int.parse('0xFF${props.disabledBackgroundColor}'))
-    //             : Color(int.parse('0xFF${props.backgroundColor}')),
-    //         borderRadius: props.cornerRadius.getRadius(),
-    //       ),
-    //       child: Text(
-    //         props.text,
-    //         style: TextStyle(
-    //           fontSize: props.fontSize ?? 14,
-    //           color: props.disabled
-    //               ? Color(int.parse('0xFF${props.disabledTextColor}'))
-    //               : Color(int.parse('0xFF${props.textColor}')),
-    //         ),
-    //       ),
-    //     ),
-    //   ),
-    // );
+        type: props.type == 'fixed'
+            ? BottomNavigationBarType.fixed
+            : BottomNavigationBarType.shifting,
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        onTap: (index) {
+          props.currentIndex = index;
+          widget.onTap(index);
+        },
+        currentIndex: props.currentIndex,
+        items: props.items.map((e) {
+          return BottomNavigationBarItem(
+            activeIcon: Icon(
+              IconData(
+                int.parse(e['activeIcon']!),
+                fontFamily: 'MaterialIcons',
+              ),
+            ),
+            icon: Icon(
+              IconData(
+                int.parse(e['icon']!),
+                fontFamily: 'MaterialIcons',
+              ),
+            ),
+            label: e['label'],
+          );
+        }).toList());
   }
 }
