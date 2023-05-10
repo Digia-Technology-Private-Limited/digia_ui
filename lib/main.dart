@@ -37,6 +37,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  GlobalKey globalKey = GlobalKey();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,6 +47,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         child: DUIButton(
           DUIButtonProps().mockWidget(),
+          globalKey,
         ),
       ),
     );

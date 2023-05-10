@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:digia_ui/components/DUIText/dui_text_props.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-import '../utils/DUICornerRadius/dui_corner_radius.dart';
 import '../utils/DUIInsets/dui_insets.dart';
 
 part 'button.props.g.dart';
@@ -14,7 +13,7 @@ class DUIButtonProps {
   double? height;
   DUIInsets? margin;
   DUIInsets? padding;
-  DUICornerRadius? cornerRadius;
+  String? shape;
   late DUITextProps text;
   String? textColor;
   String? disabledTextColor;
@@ -35,18 +34,22 @@ class DUIButtonProps {
   }
 
   DUIButtonProps mockWidget() {
-    return DUIButtonProps.fromJson({
-      "backgroundColor": "#345678",
-      "text": {
-        "style": "f:heading1Loose;tc:accent5",
-        "maxLines": 2,
-        "textSpans": [
-          {
-            "text": "Button",
-            "textAlign": "center",
-          },
-        ],
+    return DUIButtonProps.fromJson(
+      {
+        "backgroundColor": "#345678",
+        "width": 200,
+        "shape": "pill",
+        "text": {
+          "style": "f:heading1Loose;tc:accent5",
+          "maxLines": 2,
+          "textSpans": [
+            {
+              "text": "Button",
+              "textAlign": "center",
+            },
+          ],
+        },
       },
-    });
+    );
   }
 }
