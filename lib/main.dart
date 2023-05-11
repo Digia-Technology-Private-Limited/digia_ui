@@ -58,8 +58,8 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      bottomNavigationBar:
-          DUIBottomNavbar(bottomNavbarProps.mockWidget(), changeIndex),
+      bottomNavigationBar: DUIBottomNavbar(
+          props: bottomNavbarProps.mockWidget(), onTap: changeIndex),
       body: screens[index],
     );
   }

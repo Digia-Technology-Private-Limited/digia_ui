@@ -5,7 +5,8 @@ import 'bottom_navbar.props.dart';
 class DUIBottomNavbar extends StatefulWidget {
   final DUIBottomNavbarProps props;
   final Function(int) onTap;
-  const DUIBottomNavbar(this.props, this.onTap, {super.key}) : super();
+  const DUIBottomNavbar({required this.props, required this.onTap, super.key})
+      : super();
 
   @override
   State<StatefulWidget> createState() => _DUIBottomNavbarState();
