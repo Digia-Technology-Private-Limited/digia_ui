@@ -7,10 +7,10 @@ part 'dui_corner_radius.g.dart';
 
 @JsonSerializable()
 class DUICornerRadius {
-  late double bottomLeft = 0;
-  late double bottomRight = 0;
-  late double topLeft = 0;
-  late double topRight = 0;
+  late double? bottomLeft;
+  late double? bottomRight;
+  late double? topLeft;
+  late double? topRight;
 
   DUICornerRadius();
 
@@ -26,10 +26,10 @@ class DUICornerRadius {
 
   BorderRadiusGeometry getCornerRadius() {
     return BorderRadius.only(
-      topLeft: Radius.circular(topLeft),
-      topRight: Radius.circular(topRight),
-      bottomLeft: Radius.circular(bottomLeft),
-      bottomRight: Radius.circular(bottomRight),
+      topLeft: Radius.circular(topLeft ?? 0.0),
+      topRight: Radius.circular(topRight ?? 0.0),
+      bottomLeft: Radius.circular(bottomLeft ?? 0.0),
+      bottomRight: Radius.circular(bottomRight ?? 0.0),
     );
   }
 }

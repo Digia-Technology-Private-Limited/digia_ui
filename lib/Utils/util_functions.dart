@@ -97,9 +97,8 @@ TextStyle? getTextStyle({required String style}) {
         fontStyle: getFontStyle(font.style),
         fontSize: font.size,
         height: font.height,
-        color: styleItems.containsKey('tc')
-            ? getTextColor(styleItems['tc']!)
-            : null,
+        color:
+            styleItems.containsKey('tc') ? getColor(styleItems['tc']!) : null,
         decoration: styleItems.containsKey('dc')
             ? getTextDecoration(styleItems['dc']!)
             : getTextDecoration(DUIConfigConstants.fallbackStyle),
@@ -117,7 +116,7 @@ double? getWordSpacing(String spacingToken) {
   return ConfigResolver().getSpacing(spacingToken);
 }
 
-Color? getTextColor(String colorToken) {
+Color? getColor(String colorToken) {
   String? colorValue = ConfigResolver().getColorValue(colorToken);
   try {
     return colorValue?.toColor();
@@ -138,3 +137,12 @@ Map<String, String>? getStyleItems(String style) {
   }
   return resMap;
 }
+
+EdgeInsetsGeometry getInsets(
+        {String? left, String? top, String? right, String? bottom}) =>
+    EdgeInsets.fromLTRB(
+      ConfigResolver().getSpacing(left ?? "sp-0") ?? 0.0,
+      ConfigResolver().getSpacing(top ?? "sp-0") ?? 0.0,
+      ConfigResolver().getSpacing(right ?? "sp-0") ?? 0.0,
+      ConfigResolver().getSpacing(bottom ?? "sp-0") ?? 0.0,
+    );

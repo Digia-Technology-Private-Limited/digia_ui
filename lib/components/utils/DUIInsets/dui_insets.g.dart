@@ -7,10 +7,10 @@ part of 'dui_insets.dart';
 // **************************************************************************
 
 DUIInsets _$DUIInsetsFromJson(Map<String, dynamic> json) => DUIInsets()
-  ..top = (json['top'] as num).toDouble()
-  ..bottom = (json['bottom'] as num).toDouble()
-  ..left = (json['left'] as num).toDouble()
-  ..right = (json['right'] as num).toDouble();
+  ..top = json['top'] as String?
+  ..bottom = json['bottom'] as String?
+  ..left = json['left'] as String?
+  ..right = json['right'] as String?;
 
 Map<String, dynamic> _$DUIInsetsToJson(DUIInsets instance) => <String, dynamic>{
       'top': instance.top,

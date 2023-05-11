@@ -1,4 +1,5 @@
 import 'package:digia_ui/Utils/constants.dart';
+import 'package:digia_ui/Utils/util_functions.dart';
 import 'package:digia_ui/components/image/dui_cached_image.dart';
 import 'package:digia_ui/components/image/image.props.dart';
 import 'package:flutter/material.dart';
@@ -66,7 +67,12 @@ class _DUIImageState extends State<DUIImage> {
   Widget build(BuildContext context) {
     return props.margins != null
         ? Padding(
-            padding: props.margins!.getInsets(),
+            padding: getInsets(
+              left: props.margins?.left,
+              right: props.margins?.right,
+              top: props.margins?.top,
+              bottom: props.margins?.bottom,
+            ),
             child: imageWidget(),
           )
         : imageWidget();

@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:digia_ui/Utils/util_functions.dart';
 import 'package:flutter/material.dart';
 
 import 'button.props.dart';
@@ -15,7 +16,9 @@ class DUIButton extends StatefulWidget {
 
 class _DUIButtonState extends State<DUIButton> {
   late DUIButtonProps props;
+
   _DUIButtonState();
+
   @override
   void initState() {
     super.initState();
@@ -25,7 +28,12 @@ class _DUIButtonState extends State<DUIButton> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: props.margin.getInsets(),
+      margin: getInsets(
+        left: props.margin.left,
+        right: props.margin.right,
+        top: props.margin.top,
+        bottom: props.margin.bottom,
+      ),
       child: InkWell(
         onTap: () {
           log('Button Clicked');
@@ -33,7 +41,12 @@ class _DUIButtonState extends State<DUIButton> {
         child: Container(
           alignment: Alignment.center,
           width: props.width,
-          padding: props.padding.getInsets(),
+          padding: getInsets(
+            left: props.margin.left,
+            right: props.margin.right,
+            top: props.margin.top,
+            bottom: props.margin.bottom,
+          ),
           height: props.height,
           decoration: BoxDecoration(
             color: props.disabled

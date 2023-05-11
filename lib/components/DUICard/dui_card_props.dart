@@ -36,14 +36,14 @@ class DUICardProps {
   DUICardProps mockWidget() {
     return DUICardProps.fromJson(
       {
-        "color": "#ACFBDC",
+        "color": "accent1",
         "height": 170,
         "width": 360,
         "insets": {
-          "top": 12,
-          "bottom": 12,
-          "left": 12,
-          "right": 12,
+          "top": "sp-250",
+          "bottom": "sp-250",
+          "left": "sp-250",
+          "right": "sp-250",
         },
         "cornerRadius": {
           "bottomLeft": 12,
@@ -60,9 +60,7 @@ class DUICardProps {
           },
           "cornerRadius": {
             "bottomLeft": 12,
-            "bottomRight": 0,
             "topLeft": 12,
-            "topRight": 0,
           },
         },
         "date": {

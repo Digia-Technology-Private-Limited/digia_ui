@@ -1,4 +1,5 @@
-import 'package:digia_ui/Utils/color_extension.dart';
+import 'package:digia_ui/Utils/config_resolver.dart';
+import 'package:digia_ui/Utils/util_functions.dart';
 import 'package:digia_ui/components/DUICard/dui_card_props.dart';
 import 'package:digia_ui/components/DUIText/dui_text.dart';
 import 'package:digia_ui/components/image/image.dart';
@@ -26,51 +27,57 @@ class _DUICardState extends State<DUICard> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: props.height,
-      width: props.width,
-      margin: props.insets.getInsets(),
-      decoration: BoxDecoration(
-        color: props.color.toColor(),
-        borderRadius: props.cornerRadius.getCornerRadius(),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            flex: 1,
-            child: DUIImage(props.thumbnail),
-          ),
-          Expanded(
+    return GestureDetector(
+      onTap: () {},
+      child: Container(
+        height: props.height,
+        width: props.width,
+        margin: getInsets(
+          left: props.insets.left,
+          right: props.insets.right,
+          top: props.insets.top,
+          bottom: props.insets.bottom,
+        ),
+        decoration: BoxDecoration(
+          color: getColor(props.color),
+          borderRadius: props.cornerRadius.getCornerRadius(),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              flex: 1,
+              child: DUIImage(props.thumbnail),
+            ),
+            Expanded(
               flex: 2,
               child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                padding: getInsets(
+                  left: props.insets.left,
+                  right: props.insets.right,
+                  top: props.insets.top,
+                  bottom: props.insets.bottom,
+                ),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Align(
-                      alignment: Alignment.topLeft,
-                      child: DUIText(props.date),
-                    ),
+                    DUIText(props.date),
                     DUIText(props.title),
-                    Align(
-                      alignment: Alignment.bottomLeft,
-                      child: Row(
-                        children: [
-                          DUIImage(
-                            props.authorProfile,
-                          ),
-                          const SizedBox(
-                            width: 8,
-                          ),
-                          DUIText(props.authorName)
-                        ],
-                      ),
-                    )
+                    Row(
+                      children: [
+                        DUIImage(props.authorProfile),
+                        SizedBox(
+                          width: ConfigResolver().getSpacing("sp-200"),
+                        ),
+                        DUIText(props.authorName)
+                      ],
+                    ),
                   ],
                 ),
-              ))
-        ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
