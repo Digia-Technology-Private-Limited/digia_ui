@@ -2,12 +2,76 @@ import 'dart:developer';
 
 import 'package:digia_ui/Utils/color_extension.dart';
 import 'package:digia_ui/Utils/config_resolver.dart';
-import 'package:digia_ui/Utils/dui_font.dart';
 import 'package:flutter/material.dart';
 
 class DUIConfigConstants {
   static const double fallbackSize = 14;
   static const String fallbackStyle = "";
+}
+
+// TextStyle? getTextStyle({required String style}) {
+//   Map<String, String>? styleItems = getStyleItems(style);
+//   if (styleItems != null) {
+//     return TextStyle(
+//       fontSize: styleItems.containsKey('f')
+//           ? ConfigResolver().getFont(styleItems['f']!).size
+//           : null,
+//       height: styleItems.containsKey('f')
+//           ? ConfigResolver().getFont(styleItems['f']!).height
+//           : null,
+//       fontWeight: styleItems.containsKey('f')
+//           ? getFontWeight(
+//               ConfigResolver().getFont(styleItems['f']!).weight,
+//             )
+//           : null,
+//       fontStyle: styleItems.containsKey('f')
+//           ? getFontStyle(
+//               ConfigResolver().getFont(styleItems['f']!).style,
+//             )
+//           : null,
+//       fontFamily: styleItems.containsKey('f') ? styleItems['ff'] : null,
+//       color:
+//           styleItems.containsKey('tc') ? getTextColor(styleItems['tc']!) : null,
+//       decoration: styleItems.containsKey('dc')
+//           ? getTextDecoration(styleItems['dc']!)
+//           : getTextDecoration(DUIConfigConstants.fallbackStyle),
+//       wordSpacing: styleItems.containsKey('spc')
+//           ? getWordSpacing(styleItems['spc']!)
+//           : getWordSpacing(DUIConfigConstants.fallbackStyle),
+//     );
+//   }
+//   return null;
+// }
+
+TextStyle? getTextStyle({required String style}) {
+  Map<String, String>? styleItems = getStyleItems(style);
+  TextStyle textStyle = const TextStyle();
+  if (styleItems != null) {
+    if (styleItems.containsKey('f')) {
+      textStyle = textStyle.copyWith(
+        fontSize: ConfigResolver().getFont(styleItems['f']!).size,
+        height: ConfigResolver().getFont(styleItems['f']!).height,
+        fontWeight: getFontWeight(
+          ConfigResolver().getFont(styleItems['f']!).weight,
+        ),
+        fontStyle: getFontStyle(
+          ConfigResolver().getFont(styleItems['f']!).style,
+        ),
+      );
+    }
+    return textStyle.copyWith(
+      fontFamily: styleItems.containsKey('ff') ? styleItems['ff'] : null,
+      color:
+          styleItems.containsKey('tc') ? getTextColor(styleItems['tc']!) : null,
+      decoration: styleItems.containsKey('dc')
+          ? getTextDecoration(styleItems['dc']!)
+          : getTextDecoration(DUIConfigConstants.fallbackStyle),
+      wordSpacing: styleItems.containsKey('spc')
+          ? getWordSpacing(styleItems['spc']!)
+          : getWordSpacing(DUIConfigConstants.fallbackStyle),
+    );
+  }
+  return null;
 }
 
 FontWeight getFontWeight(String? weight) {
@@ -85,32 +149,6 @@ TextDecoration? getTextDecoration(String decorationToken) {
     default:
       return TextDecoration.none;
   }
-}
-
-TextStyle? getTextStyle({required String style}) {
-  Map<String, String>? styleItems = getStyleItems(style);
-  if (styleItems != null) {
-    if (styleItems.containsKey('f')) {
-      DUIFont font = ConfigResolver().getFont(styleItems['f']!);
-      TextStyle textStyle = TextStyle(
-        fontWeight: getFontWeight(font.weight),
-        fontStyle: getFontStyle(font.style),
-        fontSize: font.size,
-        height: font.height,
-        color: styleItems.containsKey('tc')
-            ? getTextColor(styleItems['tc']!)
-            : null,
-        decoration: styleItems.containsKey('dc')
-            ? getTextDecoration(styleItems['dc']!)
-            : getTextDecoration(DUIConfigConstants.fallbackStyle),
-        wordSpacing: styleItems.containsKey('spc')
-            ? getWordSpacing(styleItems['spc']!)
-            : getWordSpacing(DUIConfigConstants.fallbackStyle),
-      );
-      return textStyle;
-    }
-  }
-  return null;
 }
 
 double? getWordSpacing(String spacingToken) {
