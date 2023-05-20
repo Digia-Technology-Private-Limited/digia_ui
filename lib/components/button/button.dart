@@ -9,6 +9,9 @@ class DUIButton extends StatefulWidget {
 
   const DUIButton(this.props, {super.key}) : super();
 
+  factory DUIButton.fromJson(Map<String, dynamic> json) =>
+      DUIButton(DUIButtonProps.fromJson(json));
+
   @override
   State<StatefulWidget> createState() => _DUIButtonState();
 }
@@ -25,7 +28,7 @@ class _DUIButtonState extends State<DUIButton> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: props.margin.margins(),
+      margin: props.margin?.margins(),
       child: InkWell(
         onTap: () {
           log('Button Clicked');
@@ -33,19 +36,19 @@ class _DUIButtonState extends State<DUIButton> {
         child: Container(
           alignment: Alignment.center,
           width: props.width,
-          padding: props.padding.margins(),
+          padding: props.padding?.margins(),
           height: props.height,
           decoration: BoxDecoration(
-            color: props.disabled
+            color: props.disabled == true
                 ? Color(int.parse('0xFF${props.disabledBackgroundColor}'))
                 : Color(int.parse('0xFF${props.backgroundColor}')),
-            borderRadius: props.cornerRadius.getRadius(),
+            borderRadius: props.cornerRadius?.getRadius(),
           ),
           child: Text(
             props.text,
             style: TextStyle(
               fontSize: props.fontSize ?? 14,
-              color: props.disabled
+              color: props.disabled == true
                   ? Color(int.parse('0xFF${props.disabledTextColor}'))
                   : Color(int.parse('0xFF${props.textColor}')),
             ),

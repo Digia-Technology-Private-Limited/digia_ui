@@ -1,0 +1,78 @@
+{
+  "page": {
+    "applicationId": "bytes-12345",
+    "id": "bytes-category-page-1",
+    "name": "Topics",
+    "route": "/topics",
+    "inputArgs": {
+      "properties": {}
+    },
+    "actions": {
+      "onPageLoad": {
+        "actionType": "loadPage",
+        "actionData": {
+          "pageName": "Topics",
+          "inputArgs": {}
+        }
+      },
+      "onBackPress": {},
+      "pullToRefresh": {}
+    },
+    "layout": {
+      "header": {},
+      "body": {
+        "list": [
+          {
+            "type": "digia/button",
+            "data": {
+              "width": 300,
+              "height": 100,
+              "text": "Hello World! Tap Me",
+              "backgroundColor": "AABBCC",
+              "textColor": "DDEEFF"
+            }
+          },
+          {
+            "type": "digia/image",
+            "data": {
+              "width": 300,
+              "height": 100,
+              "imageSrc": "https://placehold.jp/3d4070/ffffff/150x150.png",
+              "cornerRadius": {
+                "topRight": 12,
+                "topLeft": 12,
+                "bottomLeft": 12,
+                "bottomRight": 12
+              }
+            }
+          },
+          {
+            "type": "digia/button",
+            "data": {
+              "width": 300,
+              "height": 100,
+              "text": "Hello World! Tap Me",
+              "backgroundColor": "AABBCC",
+              "textColor": "DDEEFF"
+            }
+          },
+          {
+            "type": "digia/image",
+            "data": {
+              "width": 300,
+              "height": 100,
+              "imageSrc": "https://placehold.jp/3d4070/ffffff/150x150.png",
+              "cornerRadius": {
+                "topRight": 12,
+                "topLeft": 12,
+                "bottomLeft": 12,
+                "bottomRight": 12
+              }
+            }
+          }
+        ]
+      },
+      "footer": {}
+    }
+  }
+}

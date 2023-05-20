@@ -16,7 +16,7 @@ class DUIImageProps {
   late String? placeHolder;
   late String? errorFallback;
   late DUIInsets? margins;
-  late DUIFit fit;
+  late DUIFit? fit;
   late DUICornerRadius? cornerRadius;
 
   DUIImageProps();

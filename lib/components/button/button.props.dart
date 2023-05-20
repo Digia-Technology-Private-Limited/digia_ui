@@ -11,15 +11,15 @@ part 'button.props.g.dart';
 class DUIButtonProps {
   late double width;
   late double height;
-  late DUIInsets margin;
-  late DUIInsets padding;
-  late DUICornerRadius cornerRadius;
+  late DUIInsets? margin;
+  late DUIInsets? padding;
+  late DUICornerRadius? cornerRadius;
   late String text;
-  late String textColor;
-  late String disabledTextColor;
-  late String backgroundColor;
-  late String disabledBackgroundColor;
-  late bool disabled;
+  late String? textColor;
+  late String? disabledTextColor;
+  late String? backgroundColor;
+  late String? disabledBackgroundColor;
+  late bool? disabled;
   double? fontSize;
   DUIButtonProps();
 
