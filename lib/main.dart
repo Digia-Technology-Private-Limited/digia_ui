@@ -1,7 +1,9 @@
 import 'package:digia_ui/Utils/config_resolver.dart';
-import 'package:digia_ui/components/DUIText/dui_text.dart';
-import 'package:digia_ui/components/DUIText/dui_text_props.dart';
+import 'package:digia_ui/Utils/util_functions.dart';
+import 'package:digia_ui/pages/onboarding/onboarding.dart';
+import 'package:digia_ui/pages/onboarding/onboarding_props.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,11 +19,30 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        scaffoldBackgroundColor: getTextColor("light"),
+        primaryColor: getTextColor("light"),
+        brightness: Brightness.light,
+        appBarTheme: AppBarTheme(
+          elevation: 0,
+          iconTheme: IconThemeData(
+            color: getTextColor("primary"),
+          ),
+          color: getTextColor("light"),
+          systemOverlayStyle: const SystemUiOverlayStyle(
+            statusBarColor: Colors.transparent,
+            statusBarBrightness: Brightness.dark,
+            statusBarIconBrightness: Brightness.dark,
+          ),
+          titleTextStyle: TextStyle(
+              color: getTextColor("text"),
+              fontSize: 20,
+              fontWeight: FontWeight.w700),
+        ),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      title: 'Flutter Demo',
+      home: OnBoarding(OnBoardingProps().mockWidget()),
     );
   }
 }
@@ -42,11 +63,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(
-        child: DUIText(
-          DUITextProps().mockWidget(),
-        ),
-      ),
+      body: OnBoarding(OnBoardingProps().mockWidget()),
     );
   }
 }
