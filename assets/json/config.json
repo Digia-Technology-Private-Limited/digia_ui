@@ -12,18 +12,13 @@
       "accent5": "#CEDFF3",
       "accent6": "#F6C5C1",
       "accent7": "#ACFBDC",
-      "light": "#FAFCFE"
+      "light": "#FAFCFE",
+      "background": "#FFFFFF"
     },
     "fonts": {
-      "heading1Loose": {
+      "heading1": {
         "size": 36,
-        "weight": "bold",
-        "height": 14
-      },
-      "heading1Tight": {
-        "size": 36,
-        "weight": "bold",
-        "height": 40
+        "weight": "bold"
       },
       "heading2": {
         "size": 24,
@@ -45,10 +40,9 @@
         "size": 14,
         "weight": "regular"
       },
-      "para3Italic": {
-        "size": 14,
-        "weight": "regular",
-        "style": "italic"
+      "caption": {
+        "size": 12,
+        "weight": "regular"
       },
       "button1": {
         "size": 18,
