@@ -13,9 +13,12 @@ DUIImageProps _$DUIImagePropsFromJson(Map<String, dynamic> json) =>
       ..imageSrc = json['imageSrc'] as String
       ..placeHolder = json['placeHolder'] as String?
       ..errorFallback = json['errorFallback'] as String?
-      ..margins = json['margins'] == null
+      ..margin = json['margin'] == null
           ? null
-          : DUIInsets.fromJson(json['margins'] as Map<String, dynamic>)
+          : DUIInsets.fromJson(json['margin'] as Map<String, dynamic>)
+      ..padding = json['padding'] == null
+          ? null
+          : DUIInsets.fromJson(json['padding'] as Map<String, dynamic>)
       ..fit = DUIFit.fromJson(json['fit'] as Map<String, dynamic>)
       ..cornerRadius = json['cornerRadius'] == null
           ? null
@@ -29,7 +32,8 @@ Map<String, dynamic> _$DUIImagePropsToJson(DUIImageProps instance) =>
       'imageSrc': instance.imageSrc,
       'placeHolder': instance.placeHolder,
       'errorFallback': instance.errorFallback,
-      'margins': instance.margins,
+      'margin': instance.margin,
+      'padding': instance.padding,
       'fit': instance.fit,
       'cornerRadius': instance.cornerRadius,
     };

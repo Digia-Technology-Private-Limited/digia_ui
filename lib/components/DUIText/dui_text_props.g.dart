@@ -11,15 +11,15 @@ DUITextProps _$DUITextPropsFromJson(Map<String, dynamic> json) => DUITextProps()
       .map((e) => DUITextSpan.fromJson(e as Map<String, dynamic>))
       .toList()
   ..maxLines = json['maxLines'] as int?
-  ..overFlow = json['overFlow'] as String?
+  ..overflow = json['overflow'] as String?
   ..alignment = json['alignment'] as String?
-  ..style = json['style'] as String;
+  ..styleClass = json['styleClass'] as String;
 
 Map<String, dynamic> _$DUITextPropsToJson(DUITextProps instance) =>
     <String, dynamic>{
       'textSpans': instance.textSpans,
       'maxLines': instance.maxLines,
-      'overFlow': instance.overFlow,
+      'overflow': instance.overflow,
       'alignment': instance.alignment,
-      'style': instance.style,
+      'styleClass': instance.styleClass,
     };

@@ -9,9 +9,9 @@ part 'dui_text_props.g.dart';
 class DUITextProps {
   late List<DUITextSpan> textSpans;
   late int? maxLines;
-  late String? overFlow;
+  late String? overflow;
   late String? alignment;
-  late String style;
+  late String styleClass;
 
   DUITextProps();
 

@@ -1,4 +1,3 @@
-import 'package:digia_ui/Utils/config_resolver.dart';
 import 'package:digia_ui/Utils/util_functions.dart';
 import 'package:digia_ui/components/DUICard/dui_card_props.dart';
 import 'package:digia_ui/components/DUIText/dui_text.dart';
@@ -32,44 +31,41 @@ class _DUICardState extends State<DUICard> {
       child: Container(
         height: props.height,
         width: props.width,
-        margin: getInsets(
-          left: props.insets.left,
-          right: props.insets.right,
-          top: props.insets.top,
-          bottom: props.insets.bottom,
-        ),
         decoration: BoxDecoration(
-          color: getColor(props.color),
-          borderRadius: props.cornerRadius.getCornerRadius(),
+          color: toColor(props.bgColor),
+          borderRadius: toBorderRadiusGeometry(props.cornerRadius),
         ),
         child: Row(
           children: [
             Expanded(
               flex: 1,
-              child: DUIImage(props.thumbnail),
+              child: Padding(
+                padding: toEdgeInsetsGeometry(props.imageMargin),
+                child: DUIImage(props.image),
+              ),
             ),
             Expanded(
               flex: 2,
               child: Padding(
-                padding: getInsets(
-                  left: props.insets.left,
-                  right: props.insets.right,
-                  top: props.insets.top,
-                  bottom: props.insets.bottom,
-                ),
+                padding: toEdgeInsetsGeometry(props.contentMargin),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    DUIText(props.date),
+                    DUIText(props.topCrumbText),
+                    SizedBox(
+                        height:
+                            resolveSpacing(props.spaceBtwTopCrumbTextTitle)),
                     DUIText(props.title),
+                    const Spacer(),
                     Row(
                       children: [
-                        DUIImage(props.authorProfile),
+                        DUIImage(props.avatarImage),
                         SizedBox(
-                          width: ConfigResolver().getSpacing("sp-200"),
+                          width:
+                              resolveSpacing(props.spaceBtwAvatarImageAndText),
                         ),
-                        DUIText(props.authorName)
+                        DUIText(props.avatarText)
                       ],
                     ),
                   ],

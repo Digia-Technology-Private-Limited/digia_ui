@@ -10,16 +10,19 @@ part 'dui_card_props.g.dart';
 
 @JsonSerializable()
 class DUICardProps {
-  late String color;
+  late String bgColor;
   late double height;
   late double width;
-  late DUIInsets insets;
+  late DUIInsets contentMargin;
   late DUICornerRadius cornerRadius;
-  late DUIImageProps thumbnail;
-  late DUIImageProps authorProfile;
-  late DUITextProps date;
-  late DUITextProps authorName;
+  late DUIImageProps image;
+  DUIInsets imageMargin = DUIInsets();
   late DUITextProps title;
+  late DUITextProps topCrumbText;
+  late String spaceBtwTopCrumbTextTitle;
+  late DUITextProps avatarText;
+  late DUIImageProps avatarImage;
+  late String spaceBtwAvatarImageAndText;
 
   DUICardProps();
 
@@ -36,22 +39,22 @@ class DUICardProps {
   DUICardProps mockWidget() {
     return DUICardProps.fromJson(
       {
-        "color": "accent1",
-        "height": 170,
+        "bgColor": "accent1",
+        "height": 150,
         "width": 360,
-        "insets": {
+        "contentMargin": {
           "top": "sp-250",
           "bottom": "sp-250",
           "left": "sp-250",
           "right": "sp-250",
         },
         "cornerRadius": {
-          "bottomLeft": 12,
-          "bottomRight": 12,
-          "topLeft": 12,
-          "topRight": 12,
+          "bottomLeft": 8,
+          "bottomRight": 8,
+          "topLeft": 8,
+          "topRight": 8,
         },
-        "thumbnail": {
+        "image": {
           "height": 1800,
           "imageSrc":
               "https://upload.wikimedia.org/wikipedia/commons/e/e7/Everest_North_Face_toward_Base_Camp_Tibet_Luca_Galuzzi_2006.jpg",
@@ -63,16 +66,23 @@ class DUICardProps {
             "topLeft": 12,
           },
         },
-        "date": {
-          "style": "f:para3;tc:text",
+        "imageMargin": {
+          "top": "0",
+          "bottom": "0",
+          "left": "0",
+          "right": "0",
+        },
+        "topCrumbText": {
+          "styleClass": "ft:caption;tc:textSubtle",
           "textSpans": [
             {
-              "text": "20/09/2000",
+              "text": "April 11, 2023",
             },
           ]
         },
+        "spaceBtwTopCrumbTextTitle": "sp-100",
         "title": {
-          "style": "f:para1;tc:textSubtle",
+          "styleClass": "ft:para2;tc:text",
           "maxLines": 3,
           "overFlow": "jhgkjfhgv",
           "textSpans": [
@@ -82,9 +92,10 @@ class DUICardProps {
             },
           ]
         },
-        "authorProfile": {
-          "height": 30,
-          "width": 30,
+        "spaceBtwAvatarImageAndText": "sp-200",
+        "avatarImage": {
+          "height": 24,
+          "width": 24,
           "imageSrc":
               "https://howtodrawforkids.com/wp-content/uploads/2021/06/How-to-draw-a-human-for-kids.jpg",
           "fit": {"fit": "contain"},
@@ -95,8 +106,8 @@ class DUICardProps {
             "topRight": 1200,
           },
         },
-        "authorName": {
-          "style": "f:para3;tc:text",
+        "avatarText": {
+          "styleClass": "ft:caption;tc:textSubtle",
           "textSpans": [
             {
               "text": "Premansh",

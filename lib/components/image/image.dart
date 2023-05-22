@@ -38,43 +38,46 @@ class _DUIImageState extends State<DUIImage> {
         fit: props.fit.getFit(),
       );
 
-  Widget imageWidget() => ClipRRect(
-        borderRadius: props.cornerRadius?.getCornerRadius(),
-        clipBehavior: Clip.antiAlias,
-        child: props.imageSrc.split('/').first == 'assets'
-            ? Image.asset(
-                props.imageSrc,
-                height: props.height,
-                width: props.width,
-                fit: props.fit.getFit(),
-                errorBuilder: (BuildContext context, Object exception,
-                    StackTrace? stackTrace) {
-                  return errorImage();
-                },
-              )
-            : DUICachedImage(
-                width: props.width,
-                height: props.height,
-                fit: props.fit.getFit(),
-                borderRadius: props.cornerRadius?.getCornerRadius(),
-                imageUrl: props.imageSrc,
-                errorImage: errorImage(),
-                placeHolderImage: placeHolderImage(),
-              ),
+  Widget assetImage() => Image.asset(
+        props.imageSrc,
+        height: props.height,
+        width: props.width,
+        fit: props.fit.getFit(),
+        errorBuilder:
+            (BuildContext context, Object exception, StackTrace? stackTrace) {
+          return errorImage();
+        },
       );
+
+  Widget cachedImage() => DUICachedImage(
+        width: props.width,
+        height: props.height,
+        fit: props.fit.getFit(),
+        borderRadius: toBorderRadiusGeometry(props.cornerRadius),
+        imageUrl: props.imageSrc,
+        errorImage: errorImage(),
+        placeHolderImage: placeHolderImage(),
+      );
+
+  Widget imageWidget() => ClipRRect(
+      borderRadius: toBorderRadiusGeometry(props.cornerRadius),
+      clipBehavior: Clip.antiAlias,
+      child: Padding(
+        padding: toEdgeInsetsGeometry(props.padding),
+        child: props.imageSrc.split('/').first == 'assets'
+            ? assetImage()
+            : cachedImage(),
+      ));
 
   @override
   Widget build(BuildContext context) {
-    return props.margins != null
-        ? Padding(
-            padding: getInsets(
-              left: props.margins?.left,
-              right: props.margins?.right,
-              top: props.margins?.top,
-              bottom: props.margins?.bottom,
-            ),
-            child: imageWidget(),
-          )
-        : imageWidget();
+    if (props.margin == null) {
+      return imageWidget();
+    }
+
+    return Padding(
+      padding: toEdgeInsetsGeometry(props.margin),
+      child: imageWidget(),
+    );
   }
 }

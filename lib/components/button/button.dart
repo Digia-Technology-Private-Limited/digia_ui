@@ -28,12 +28,7 @@ class _DUIButtonState extends State<DUIButton> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: getInsets(
-        left: props.margin.left,
-        right: props.margin.right,
-        top: props.margin.top,
-        bottom: props.margin.bottom,
-      ),
+      margin: toEdgeInsetsGeometry(props.margin),
       child: InkWell(
         onTap: () {
           log('Button Clicked');
@@ -41,27 +36,21 @@ class _DUIButtonState extends State<DUIButton> {
         child: Container(
           alignment: Alignment.center,
           width: props.width,
-          padding: getInsets(
-            left: props.margin.left,
-            right: props.margin.right,
-            top: props.margin.top,
-            bottom: props.margin.bottom,
-          ),
+          padding: toEdgeInsetsGeometry(props.padding),
           height: props.height,
           decoration: BoxDecoration(
             color: props.disabled
-                ? Color(int.parse('0xFF${props.disabledBackgroundColor}'))
-                : Color(int.parse('0xFF${props.backgroundColor}')),
-            borderRadius: props.cornerRadius.getCornerRadius(),
+                ? toColor(props.disabledBackgroundColor)
+                : toColor(props.backgroundColor),
+            borderRadius: toBorderRadiusGeometry(props.cornerRadius),
           ),
           child: Text(
             props.text,
             style: TextStyle(
-              fontSize: props.fontSize ?? 14,
-              color: props.disabled
-                  ? Color(int.parse('0xFF${props.disabledTextColor}'))
-                  : Color(int.parse('0xFF${props.textColor}')),
-            ),
+                fontSize: props.fontSize ?? 14,
+                color: props.disabled
+                    ? toColor(props.disabledTextColor)
+                    : toColor(props.textColor)),
           ),
         ),
       ),

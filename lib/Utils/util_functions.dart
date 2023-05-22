@@ -1,16 +1,17 @@
-import 'dart:developer';
-
-import 'package:digia_ui/Utils/color_extension.dart';
 import 'package:digia_ui/Utils/config_resolver.dart';
-import 'package:digia_ui/Utils/dui_font.dart';
+import 'package:digia_ui/components/DUIText/DUI_text_span/dui_text_span.dart';
+import 'package:digia_ui/components/utils/DUICornerRadius/dui_corner_radius.dart';
+import 'package:digia_ui/components/utils/DUIInsets/dui_insets.dart';
 import 'package:flutter/material.dart';
 
 class DUIConfigConstants {
   static const double fallbackSize = 14;
   static const String fallbackStyle = "";
+  static const Color fallbackTextColor = Colors.black;
+  static const double fallbackLineHeightFactor = 1.5;
 }
 
-FontWeight getFontWeight(String? weight) {
+FontWeight toFontWeight(String? weight) {
   switch (weight) {
     case 'thin':
       return FontWeight.w100;
@@ -35,7 +36,7 @@ FontWeight getFontWeight(String? weight) {
   return FontWeight.normal;
 }
 
-FontStyle getFontStyle(String? style) {
+FontStyle toFontStyle(String? style) {
   switch (style) {
     case 'italic':
       return FontStyle.italic;
@@ -44,7 +45,7 @@ FontStyle getFontStyle(String? style) {
   return FontStyle.normal;
 }
 
-TextAlign getTextAlign(String alignment) {
+TextAlign toTextAlign(String? alignment) {
   switch (alignment) {
     case 'right':
       return TextAlign.right;
@@ -56,13 +57,12 @@ TextAlign getTextAlign(String alignment) {
       return TextAlign.end;
     case 'justify':
       return TextAlign.justify;
-    default:
-      return TextAlign.start;
   }
+  return TextAlign.start;
 }
 
-TextOverflow getTextOverFlow(String overFlow) {
-  switch (overFlow) {
+TextOverflow toTextOverflow(String? overflow) {
+  switch (overflow) {
     case "fade":
       return TextOverflow.fade;
     case "visible":
@@ -74,8 +74,8 @@ TextOverflow getTextOverFlow(String overFlow) {
   }
 }
 
-TextDecoration? getTextDecoration(String decorationToken) {
-  switch (decorationToken) {
+TextDecoration toTextDecoration(String textDecorationToken) {
+  switch (textDecorationToken) {
     case "underline":
       return TextDecoration.underline;
     case "overline":
@@ -87,62 +87,166 @@ TextDecoration? getTextDecoration(String decorationToken) {
   }
 }
 
-TextStyle? getTextStyle({required String style}) {
-  Map<String, String>? styleItems = getStyleItems(style);
-  if (styleItems != null) {
-    if (styleItems.containsKey('f')) {
-      DUIFont font = ConfigResolver().getFont(styleItems['f']!);
-      TextStyle textStyle = TextStyle(
-        fontWeight: getFontWeight(font.weight),
-        fontStyle: getFontStyle(font.style),
-        fontSize: font.size,
-        height: font.height,
-        color:
-            styleItems.containsKey('tc') ? getColor(styleItems['tc']!) : null,
-        decoration: styleItems.containsKey('dc')
-            ? getTextDecoration(styleItems['dc']!)
-            : getTextDecoration(DUIConfigConstants.fallbackStyle),
-        wordSpacing: styleItems.containsKey('spc')
-            ? getWordSpacing(styleItems['spc']!)
-            : getWordSpacing(DUIConfigConstants.fallbackStyle),
-      );
-      return textStyle;
+TextDecorationStyle? toTextDecorationStyle(String textDecorationStyleToken) {
+  switch (textDecorationStyleToken) {
+    case "dashed":
+      return TextDecorationStyle.dashed;
+    case "dotted":
+      return TextDecorationStyle.dotted;
+    case "double":
+      return TextDecorationStyle.double;
+    case "solid":
+      return TextDecorationStyle.solid;
+    case "wavy":
+      return TextDecorationStyle.wavy;
+  }
+
+  return null;
+}
+
+TextStyle? toTextStyle({required String styleClass}) {
+  var styleClassMap = _createStyleMap(styleClass);
+
+  if (styleClassMap.isEmpty) {
+    return null;
+  }
+
+  FontWeight fontWeight = FontWeight.normal;
+  FontStyle fontStyle = FontStyle.normal;
+  double fontSize = DUIConfigConstants.fallbackSize;
+  double fontHeight = DUIConfigConstants.fallbackLineHeightFactor;
+  Color textColor = DUIConfigConstants.fallbackTextColor;
+  TextDecoration textDecoration = TextDecoration.none;
+  Color? decorationColor;
+  TextDecorationStyle? decorationStyle;
+
+  styleClassMap.forEach((key, value) {
+    switch (key) {
+      // Font token
+      case 'ft':
+        var font = ConfigResolver().getFont(value);
+        fontWeight = toFontWeight(font.weight);
+        fontStyle = toFontStyle(font.style);
+        fontSize = font.size ?? DUIConfigConstants.fallbackSize;
+        fontHeight = font.height ?? DUIConfigConstants.fallbackLineHeightFactor;
+        break;
+
+      // Text Color
+      case 'tc':
+        textColor = toColor(value);
+        break;
+
+      // Text Decoration
+      case 'd':
+        textDecoration = toTextDecoration(value);
+        break;
+
+      // Text Deocration Color
+      case 'dc':
+        decorationColor = toColor(value);
+        break;
+
+      // Text Deocration Style
+      case 'ds':
+        decorationStyle = toTextDecorationStyle(value);
     }
+  });
+
+  return TextStyle(
+      fontWeight: fontWeight,
+      fontStyle: fontStyle,
+      fontSize: fontSize,
+      height: fontHeight,
+      color: textColor,
+      decoration: textDecoration,
+      decorationColor: decorationColor,
+      decorationStyle: decorationStyle);
+}
+
+TextSpan toTextSpan(DUITextSpan textSpan) {
+  return TextSpan(
+    text: textSpan.text,
+    style: toTextStyle(styleClass: textSpan.styleClass ?? ""),
+    // recognizer: TapGestureRecognizer()
+    //   ..onTap = () async {
+    //     //todo change onTap functionality according to backend latter
+    //     if (url != null) {
+    //       if (await canLaunchUrl(Uri.parse(url!))) {
+    //         await launchUrl(Uri.parse(url!));
+    //       } else {
+    //         null;
+    //       }
+    //     } else {
+    //       null;
+    //     }
+    //   },
+  );
+}
+
+Map<String, String> _createStyleMap(String styleClass) {
+  if (styleClass.isEmpty) return {};
+
+  final styleItems = styleClass.split(';');
+  if (styleItems.isEmpty) return {};
+
+  return styleItems.fold({}, (previousValue, element) {
+    List<String> splitValues = element.split(':');
+    previousValue[splitValues.first] = splitValues.last;
+    return previousValue;
+  });
+}
+
+BorderRadiusGeometry toBorderRadiusGeometry(DUICornerRadius? cornerRadius) {
+  return BorderRadius.only(
+    topLeft: Radius.circular(cornerRadius?.topLeft ?? 0.0),
+    topRight: Radius.circular(cornerRadius?.topRight ?? 0.0),
+    bottomLeft: Radius.circular(cornerRadius?.bottomLeft ?? 0.0),
+    bottomRight: Radius.circular(cornerRadius?.bottomRight ?? 0.0),
+  );
+}
+
+// Possible Values for colorToken:
+// token: primary, hexCode: #242424, hexCode with Alpha: #FF242424
+Color toColor(String colorToken) {
+  var hexValue = ConfigResolver().getColorValue(colorToken);
+
+  return hexToColor(hexValue ?? colorToken);
+}
+
+Color hexToColor(String colorHexString) {
+  if (!isValidHexCode(colorHexString)) {
+    // TODO: Instead of throwing, log error and provide fallback color
+    throw FormatException(
+        'Hexadecimal Color Value Is Invalid: $colorHexString');
   }
-  return null;
-}
 
-double? getWordSpacing(String spacingToken) {
-  return ConfigResolver().getSpacing(spacingToken);
-}
+  var rgbString = colorHexString.replaceAll('#', '');
 
-Color? getColor(String colorToken) {
-  String? colorValue = ConfigResolver().getColorValue(colorToken);
-  try {
-    return colorValue?.toColor();
-  } on FormatException catch (_) {
-    log("Invalid Color value in json");
+  if (colorHexString.length == 8) {
+    return Color(int.parse('0x$rgbString'));
   }
-  return null;
+
+  return Color(int.parse('0xFF$rgbString'));
 }
 
-Map<String, String>? getStyleItems(String style) {
-  Map<String, String> resMap = {};
-  if (style.isEmpty) return null;
-  var styleItems = style.split(';');
-  if (styleItems.isEmpty) return null;
-  for (var i in styleItems) {
-    List<String> styleItem = i.split(':');
-    resMap[styleItem.first] = styleItem.last;
+bool isValidHexCode(String colorToken) {
+  const validHexRegExp = r'^#?([0-9a-fA-F]{6}|[0-9a-fA-F]{8})$';
+
+  return RegExp(validHexRegExp).hasMatch(colorToken);
+}
+
+double resolveSpacing(String spacingToken) {
+  return ConfigResolver().getSpacing(spacingToken) ?? 0.0;
+}
+
+EdgeInsetsGeometry toEdgeInsetsGeometry(DUIInsets? insets) {
+  if (insets == null) {
+    return EdgeInsets.zero;
   }
-  return resMap;
-}
 
-EdgeInsetsGeometry getInsets(
-        {String? left, String? top, String? right, String? bottom}) =>
-    EdgeInsets.fromLTRB(
-      ConfigResolver().getSpacing(left ?? "sp-0") ?? 0.0,
-      ConfigResolver().getSpacing(top ?? "sp-0") ?? 0.0,
-      ConfigResolver().getSpacing(right ?? "sp-0") ?? 0.0,
-      ConfigResolver().getSpacing(bottom ?? "sp-0") ?? 0.0,
-    );
+  return EdgeInsets.fromLTRB(
+      ConfigResolver().getSpacing(insets.left) ?? 0.0,
+      ConfigResolver().getSpacing(insets.top) ?? 0.0,
+      ConfigResolver().getSpacing(insets.right) ?? 0.0,
+      ConfigResolver().getSpacing(insets.bottom) ?? 0.0);
+}

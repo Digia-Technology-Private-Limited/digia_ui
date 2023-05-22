@@ -6,12 +6,13 @@ part 'dui_insets.g.dart';
 
 @JsonSerializable()
 class DUIInsets {
-  late String? top;
-  late String? bottom;
-  late String? left;
-  late String? right;
+  String top;
+  String bottom;
+  String left;
+  String right;
 
-  DUIInsets();
+  DUIInsets(
+      {this.top = "0", this.bottom = "0", this.left = "0", this.right = "0"});
 
   factory DUIInsets.fromJson(Map<String, dynamic> json) =>
       _$DUIInsetsFromJson(json);

@@ -7,31 +7,39 @@ part of 'dui_card_props.dart';
 // **************************************************************************
 
 DUICardProps _$DUICardPropsFromJson(Map<String, dynamic> json) => DUICardProps()
-  ..color = json['color'] as String
+  ..bgColor = json['bgColor'] as String
   ..height = (json['height'] as num).toDouble()
   ..width = (json['width'] as num).toDouble()
-  ..insets = DUIInsets.fromJson(json['insets'] as Map<String, dynamic>)
+  ..contentMargin =
+      DUIInsets.fromJson(json['contentMargin'] as Map<String, dynamic>)
   ..cornerRadius =
       DUICornerRadius.fromJson(json['cornerRadius'] as Map<String, dynamic>)
-  ..thumbnail =
-      DUIImageProps.fromJson(json['thumbnail'] as Map<String, dynamic>)
-  ..authorProfile =
-      DUIImageProps.fromJson(json['authorProfile'] as Map<String, dynamic>)
-  ..date = DUITextProps.fromJson(json['date'] as Map<String, dynamic>)
-  ..authorName =
-      DUITextProps.fromJson(json['authorName'] as Map<String, dynamic>)
-  ..title = DUITextProps.fromJson(json['title'] as Map<String, dynamic>);
+  ..image = DUIImageProps.fromJson(json['image'] as Map<String, dynamic>)
+  ..imageMargin =
+      DUIInsets.fromJson(json['imageMargin'] as Map<String, dynamic>)
+  ..title = DUITextProps.fromJson(json['title'] as Map<String, dynamic>)
+  ..topCrumbText =
+      DUITextProps.fromJson(json['topCrumbText'] as Map<String, dynamic>)
+  ..spaceBtwTopCrumbTextTitle = json['spaceBtwTopCrumbTextTitle'] as String
+  ..avatarText =
+      DUITextProps.fromJson(json['avatarText'] as Map<String, dynamic>)
+  ..avatarImage =
+      DUIImageProps.fromJson(json['avatarImage'] as Map<String, dynamic>)
+  ..spaceBtwAvatarImageAndText = json['spaceBtwAvatarImageAndText'] as String;
 
 Map<String, dynamic> _$DUICardPropsToJson(DUICardProps instance) =>
     <String, dynamic>{
-      'color': instance.color,
+      'bgColor': instance.bgColor,
       'height': instance.height,
       'width': instance.width,
-      'insets': instance.insets,
+      'contentMargin': instance.contentMargin,
       'cornerRadius': instance.cornerRadius,
-      'thumbnail': instance.thumbnail,
-      'authorProfile': instance.authorProfile,
-      'date': instance.date,
-      'authorName': instance.authorName,
+      'image': instance.image,
+      'imageMargin': instance.imageMargin,
       'title': instance.title,
+      'topCrumbText': instance.topCrumbText,
+      'spaceBtwTopCrumbTextTitle': instance.spaceBtwTopCrumbTextTitle,
+      'avatarText': instance.avatarText,
+      'avatarImage': instance.avatarImage,
+      'spaceBtwAvatarImageAndText': instance.spaceBtwAvatarImageAndText,
     };
