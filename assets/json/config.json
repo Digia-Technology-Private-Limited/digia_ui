@@ -20,12 +20,16 @@
         "size": 36,
         "weight": "bold"
       },
-      "heading2": {
+      "h2-semibold": {
         "size": 24,
         "weight": "semibold"
       },
-      "heading3": {
+      "h2-medium": {
         "size": 24,
+        "weight": "medium"
+      },
+      "heading3": {
+        "size": 20,
         "weight": "medium"
       },
       "para1": {

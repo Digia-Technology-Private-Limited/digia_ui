@@ -19,7 +19,7 @@ DUIImageProps _$DUIImagePropsFromJson(Map<String, dynamic> json) =>
       ..padding = json['padding'] == null
           ? null
           : DUIInsets.fromJson(json['padding'] as Map<String, dynamic>)
-      ..fit = DUIFit.fromJson(json['fit'] as Map<String, dynamic>)
+      ..fit = json['fit'] as String
       ..cornerRadius = json['cornerRadius'] == null
           ? null
           : DUICornerRadius.fromJson(
