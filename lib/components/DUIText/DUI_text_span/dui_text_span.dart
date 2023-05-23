@@ -1,10 +1,6 @@
 import 'dart:convert';
 
-import 'package:digia_ui/Utils/util_functions.dart';
-import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 part 'dui_text_span.g.dart';
 

@@ -21,22 +21,22 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        scaffoldBackgroundColor: getTextColor("light"),
-        primaryColor: getTextColor("light"),
+        scaffoldBackgroundColor: toColor("light"),
+        primaryColor: toColor("light"),
         brightness: Brightness.light,
         appBarTheme: AppBarTheme(
           elevation: 0,
           iconTheme: IconThemeData(
-            color: getTextColor("primary"),
+            color: toColor("primary"),
           ),
-          color: getTextColor("light"),
+          color: toColor("light"),
           systemOverlayStyle: const SystemUiOverlayStyle(
             statusBarColor: Colors.transparent,
             statusBarBrightness: Brightness.dark,
             statusBarIconBrightness: Brightness.dark,
           ),
           titleTextStyle: TextStyle(
-              color: getTextColor("text"),
+              color: toColor("text"),
               fontSize: 20,
               fontWeight: FontWeight.w700),
         ),

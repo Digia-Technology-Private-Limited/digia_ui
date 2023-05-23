@@ -39,7 +39,7 @@ class _OnBoardingState extends State<OnBoarding> {
                   height: props.height,
                   width: props.width,
                   decoration: BoxDecoration(
-                    color: getTextColor(props.color),
+                    color: toColor(props.color),
                     borderRadius: BorderRadius.circular(32),
                   ),
                   child: Center(
@@ -47,11 +47,11 @@ class _OnBoardingState extends State<OnBoarding> {
                   ),
                 ),
                 SizedBox(
-                  height: getWordSpacing("sp-400"),
+                  height: resolveSpacing("sp-400"),
                 ),
                 DUIText(props.title),
                 SizedBox(
-                  height: getWordSpacing("sp-250"),
+                  height: resolveSpacing("sp-250"),
                 ),
                 DUIText(props.subTitle)
               ],
@@ -62,12 +62,13 @@ class _OnBoardingState extends State<OnBoarding> {
               width: 130,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(38),
-                color: getTextColor("primary"),
+                color: toColor("primary"),
               ),
               child: Center(
                 child: Text(
                   "Get Started",
-                  style: getTextStyle(style: "f:button1;tc:light;ff:poppins;"),
+                  style:
+                      toTextStyle(styleClass: "f:button1;tc:light;ff:poppins;"),
                 ),
               ),
             ),
