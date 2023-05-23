@@ -9,6 +9,7 @@ class DUIConfigConstants {
   static const String fallbackStyle = "";
   static const Color fallbackTextColor = Colors.black;
   static const double fallbackLineHeightFactor = 1.5;
+  static const String fallbackBgColorHexCode = "#FFFFFF";
 }
 
 FontWeight toFontWeight(String? weight) {
