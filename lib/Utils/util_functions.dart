@@ -29,7 +29,7 @@ FontWeight toFontWeight(String? weight) {
       return FontWeight.w700;
     case 'extra-bold':
       return FontWeight.w800;
-    case 'thick':
+    case 'black':
       return FontWeight.w900;
   }
 
