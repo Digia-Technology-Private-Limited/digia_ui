@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:digia_ui/components/utils/DUICornerRadius/dui_corner_radius.dart';
-import 'package:digia_ui/components/utils/DUIFit/dui_fit.dart';
 import 'package:digia_ui/components/utils/DUIInsets/dui_insets.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -16,7 +15,7 @@ class DUIImageProps {
   late String? errorFallback;
   late DUIInsets? margin;
   late DUIInsets? padding;
-  late DUIFit fit;
+  late String fit;
   late DUICornerRadius? cornerRadius;
 
   DUIImageProps();
@@ -40,8 +39,7 @@ class DUIImageProps {
       "aspectRatio": 0,
       "imageSrc":
           "https://upload.wikimedia.org/wikipedia/commons/e/e7/Everest_North_Face_toward_Base_Camp_Tibet_Luca_Galuzzi_2006.jpg",
-      "margins": {"top": 12, "left": 12, "right": 12, "bottom": 12},
-      "fit": {"fit": "cover"},
+      "fit": "cover",
       "cornerRadius": {
         "topRight": 12,
         "topLeft": 12,

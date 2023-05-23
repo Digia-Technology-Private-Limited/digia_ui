@@ -28,21 +28,21 @@ class _DUIImageState extends State<DUIImage> {
         duiErrorImage,
         height: props.height,
         width: props.width,
-        fit: props.fit.getFit(),
+        fit: toBoxFit(props.fit),
       );
 
   Widget placeHolderImage() => Image.asset(
         duiPlaceHolder,
         height: props.height,
         width: props.width,
-        fit: props.fit.getFit(),
+        fit: toBoxFit(props.fit),
       );
 
   Widget assetImage() => Image.asset(
         props.imageSrc,
         height: props.height,
         width: props.width,
-        fit: props.fit.getFit(),
+        fit: toBoxFit(props.fit),
         errorBuilder:
             (BuildContext context, Object exception, StackTrace? stackTrace) {
           return errorImage();
@@ -52,7 +52,7 @@ class _DUIImageState extends State<DUIImage> {
   Widget cachedImage() => DUICachedImage(
         width: props.width,
         height: props.height,
-        fit: props.fit.getFit(),
+        fit: toBoxFit(props.fit),
         borderRadius: toBorderRadiusGeometry(props.cornerRadius),
         imageUrl: props.imageSrc,
         errorImage: errorImage(),

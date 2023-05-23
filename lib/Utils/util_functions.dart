@@ -183,6 +183,25 @@ TextSpan toTextSpan(DUITextSpan textSpan) {
   );
 }
 
+BoxFit toBoxFit(String fitValue) {
+  switch (fitValue) {
+    case 'fill':
+      return BoxFit.fill;
+    case 'contain':
+      return BoxFit.contain;
+    case 'cover':
+      return BoxFit.cover;
+    case 'fitWidth':
+      return BoxFit.fitWidth;
+    case 'fitHeight':
+      return BoxFit.fitHeight;
+    case 'scaleDown':
+      return BoxFit.scaleDown;
+  }
+
+  return BoxFit.none;
+}
+
 Map<String, String> _createStyleMap(String styleClass) {
   if (styleClass.isEmpty) return {};
 
@@ -244,9 +263,17 @@ EdgeInsetsGeometry toEdgeInsetsGeometry(DUIInsets? insets) {
     return EdgeInsets.zero;
   }
 
+  double parseInsetValue(String insetToken) {
+    try {
+      return double.parse(insetToken);
+    } catch (e) {
+      return ConfigResolver().getSpacing(insetToken) ?? 0.0;
+    }
+  }
+
   return EdgeInsets.fromLTRB(
-      ConfigResolver().getSpacing(insets.left) ?? 0.0,
-      ConfigResolver().getSpacing(insets.top) ?? 0.0,
-      ConfigResolver().getSpacing(insets.right) ?? 0.0,
-      ConfigResolver().getSpacing(insets.bottom) ?? 0.0);
+      parseInsetValue(insets.left),
+      parseInsetValue(insets.top),
+      parseInsetValue(insets.right),
+      parseInsetValue(insets.bottom));
 }
