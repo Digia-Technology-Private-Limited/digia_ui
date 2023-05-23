@@ -1,7 +1,9 @@
 import 'package:digia_ui/Utils/config_resolver.dart';
-import 'package:digia_ui/core/dui_page.dart';
-
+import 'package:digia_ui/Utils/util_functions.dart';
+import 'package:digia_ui/pages/onboarding/onboarding.dart';
+import 'package:digia_ui/pages/onboarding/onboarding_props.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,11 +18,53 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        fontFamily: "Poppins",
+        scaffoldBackgroundColor: toColor("light"),
+        primaryColor: toColor("light"),
+        brightness: Brightness.light,
+        appBarTheme: AppBarTheme(
+          elevation: 0,
+          iconTheme: IconThemeData(
+            color: toColor("primary"),
+          ),
+          color: toColor("light"),
+          systemOverlayStyle: const SystemUiOverlayStyle(
+            statusBarColor: Colors.transparent,
+            statusBarBrightness: Brightness.dark,
+            statusBarIconBrightness: Brightness.dark,
+          ),
+          titleTextStyle: TextStyle(
+              color: toColor("text"),
+              fontSize: 20,
+              fontWeight: FontWeight.w700),
+        ),
       ),
-      home: const DUIPage(),
+      title: 'Flutter Demo',
+      home: OnBoarding(OnBoardingProps().mockWidget()),
+    );
+  }
+}
+
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key, required this.title});
+
+  final String title;
+
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  GlobalKey globalKey = GlobalKey();
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.title),
+      ),
+      body: OnBoarding(OnBoardingProps().mockWidget()),
     );
   }
 }

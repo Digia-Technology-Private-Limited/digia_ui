@@ -12,29 +12,58 @@
       "accent5": "#CEDFF3",
       "accent6": "#F6C5C1",
       "accent7": "#ACFBDC",
-      "light": "#FAFCFE"
+      "light": "#FAFCFE",
+      "background": "#FFFFFF"
     },
     "fonts": {
-      "heading1Loose": { "size": 36, "weight": "bold", "height": 14 },
-      "heading1Tight": { "size": 36, "weight": "bold", "height": 40 },
-      "heading2": { "size": 24, "weight": "semibold" },
-      "heading3": { "size": 24, "weight": "medium" },
-      "para1": { "size": 16, "weight": "medium" },
-      "para2": { "size": 14, "weight": "medium" },
-      "para3": { "size": 14, "weight": "regular" },
-      "para3Italic": { "size": 14, "weight": "regular", "style": "italic" },
-      "button1": { "size": 18, "weight": "medium" }
+      "heading1": {
+        "size": 36,
+        "weight": "bold"
+      },
+      "h2-semibold": {
+        "size": 24,
+        "weight": "semibold"
+      },
+      "h2-medium": {
+        "size": 24,
+        "weight": "medium"
+      },
+      "heading3": {
+        "size": 20,
+        "weight": "medium"
+      },
+      "para1": {
+        "size": 16,
+        "weight": "medium"
+      },
+      "para2": {
+        "size": 14,
+        "weight": "medium"
+      },
+      "para3": {
+        "size": 14,
+        "weight": "regular"
+      },
+      "caption": {
+        "size": 12,
+        "weight": "regular"
+      },
+      "button1": {
+        "size": 18,
+        "weight": "medium"
+      }
     },
     "spacing": {
-      "sp-100": 4,
-      "sp-200": 8,
-      "sp-250": 12,
-      "sp-300": 16,
-      "sp-350": 24,
-      "sp-400": 32,
-      "sp-425": 40,
-      "sp-450": 48,
-      "sp-500": 64
+      "sp-0": 0.0,
+      "sp-100": 4.0,
+      "sp-200": 8.0,
+      "sp-250": 12.0,
+      "sp-300": 16.0,
+      "sp-350": 24.0,
+      "sp-400": 32.0,
+      "sp-425": 40.0,
+      "sp-450": 48.0,
+      "sp-500": 64.0
     }
   }
 }
