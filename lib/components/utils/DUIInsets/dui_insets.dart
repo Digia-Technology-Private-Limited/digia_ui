@@ -1,18 +1,18 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'dui_insets.g.dart';
 
 @JsonSerializable()
 class DUIInsets {
-  late double top = 0;
-  late double bottom = 0;
-  late double left = 0;
-  late double right = 0;
+  String top;
+  String bottom;
+  String left;
+  String right;
 
-  DUIInsets();
+  DUIInsets(
+      {this.top = "0", this.bottom = "0", this.left = "0", this.right = "0"});
 
   factory DUIInsets.fromJson(Map<String, dynamic> json) =>
       _$DUIInsetsFromJson(json);
@@ -23,11 +23,4 @@ class DUIInsets {
   String toString() {
     return jsonEncode(this);
   }
-
-  EdgeInsetsGeometry margins() => EdgeInsets.fromLTRB(
-        left,
-        top,
-        right,
-        bottom,
-      );
 }

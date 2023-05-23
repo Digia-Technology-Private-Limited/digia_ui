@@ -1,18 +1,21 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'dui_corner_radius.g.dart';
 
 @JsonSerializable()
 class DUICornerRadius {
-  late double bottomLeft = 0;
-  late double bottomRight = 0;
-  late double topLeft = 0;
-  late double topRight = 0;
+  late double bottomLeft;
+  late double bottomRight;
+  late double topLeft;
+  late double topRight;
 
-  DUICornerRadius();
+  DUICornerRadius(
+      {this.bottomLeft = 0,
+      this.bottomRight = 0,
+      this.topLeft = 0,
+      this.topRight = 0});
 
   factory DUICornerRadius.fromJson(Map<String, dynamic> json) =>
       _$DUICornerRadiusFromJson(json);
@@ -22,14 +25,5 @@ class DUICornerRadius {
   @override
   String toString() {
     return jsonEncode(this);
-  }
-
-  BorderRadiusGeometry getRadius() {
-    return BorderRadius.only(
-      topLeft: Radius.circular(topLeft),
-      topRight: Radius.circular(topRight),
-      bottomLeft: Radius.circular(bottomLeft),
-      bottomRight: Radius.circular(bottomRight),
-    );
   }
 }

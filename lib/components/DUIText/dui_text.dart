@@ -22,23 +22,15 @@ class _DUITextState extends State<DUIText> {
     super.initState();
   }
 
-  List<TextSpan> getTextSpans() {
-    List<TextSpan> list = [];
-    for (var i in props.textSpans) {
-      list.add(i.getSpan());
-    }
-    return list;
-  }
-
   @override
   Widget build(BuildContext context) {
     return RichText(
       maxLines: props.maxLines,
-      overflow: getTextOverFlow(props.overFlow ?? ""),
-      textAlign: getTextAlign(props.alignment ?? ""),
+      overflow: toTextOverflow(props.overflow),
+      textAlign: toTextAlign(props.alignment ?? ""),
       text: TextSpan(
-        style: getTextStyle(style: props.style),
-        children: getTextSpans(),
+        style: toTextStyle(styleClass: props.styleClass),
+        children: props.textSpans.map(toTextSpan).toList(),
       ),
     );
   }
