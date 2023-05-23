@@ -117,9 +117,9 @@ flutter:
           style: italic
         - asset: assets/fonts/Poppins/Poppins-Regular.ttf
           weight: 400
-        - asset: assets/fonts/Poppins/Poppins-RegularItalic.ttf
-          weight: 400
-          style: italic
+        # - asset: assets/fonts/Poppins/Poppins-RegularItalic.ttf
+        #   weight: 400
+        #   style: italic
         - asset: assets/fonts/Poppins/Poppins-Light.ttf
           weight: 300
         - asset: assets/fonts/Poppins/Poppins-LightItalic.ttf
@@ -137,7 +137,8 @@ flutter:
           style: italic
     - family: AppleII
       fonts:
-        - asset: assets/font/AppleIIScreenTypeface/AppleIiScreenTypeface-2aP3.ttf
+        - asset: assets/fonts/AppleIIScreenTypeface/AppleIiScreenTypeface-2aP3.ttf
+          weight: 400
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro

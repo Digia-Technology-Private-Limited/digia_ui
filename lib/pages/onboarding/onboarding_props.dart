@@ -38,7 +38,7 @@ class OnBoardingProps {
       "height": 350,
       "width": 360,
       "logoText": {
-        "style": "f:heading1Loose;tc:light;ff:appleli",
+        "styleClass": "f:heading1Loose;tc:light;ff:appleli",
         "textSpans": [
           {
             "text": "BYTES",
@@ -46,19 +46,19 @@ class OnBoardingProps {
         ],
       },
       "title": {
-        "style": "f:heading1Tight;tc:text;ff:poppins",
+        "styleClass": "f:heading1Tight;tc:text;ff:poppins",
         "textSpans": [
           {
             "text": "Stoppage for\nyour ",
           },
           {
-            "style": "tc:secondary;",
+            "styleClass": "tc:secondary;",
             "text": "Curiosity",
           }
         ],
       },
       "subTitle": {
-        "style": "f:para3;tc:textSubtle;ff:poppins",
+        "styleClass": "f:para3;tc:textSubtle;ff:poppins",
         "textSpans": [
           {
             "text":
