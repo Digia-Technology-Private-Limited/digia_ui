@@ -255,8 +255,16 @@ bool isValidHexCode(String colorToken) {
   return RegExp(validHexRegExp).hasMatch(colorToken);
 }
 
+double _parseSpacingToken(String token) {
+  try {
+    return double.parse(token);
+  } catch (e) {
+    return ConfigResolver().getSpacing(token) ?? 0.0;
+  }
+}
+
 double resolveSpacing(String spacingToken) {
-  return ConfigResolver().getSpacing(spacingToken) ?? 0.0;
+  return _parseSpacingToken(spacingToken);
 }
 
 EdgeInsetsGeometry toEdgeInsetsGeometry(DUIInsets? insets) {
@@ -264,17 +272,9 @@ EdgeInsetsGeometry toEdgeInsetsGeometry(DUIInsets? insets) {
     return EdgeInsets.zero;
   }
 
-  double parseInsetValue(String insetToken) {
-    try {
-      return double.parse(insetToken);
-    } catch (e) {
-      return ConfigResolver().getSpacing(insetToken) ?? 0.0;
-    }
-  }
-
   return EdgeInsets.fromLTRB(
-      parseInsetValue(insets.left),
-      parseInsetValue(insets.top),
-      parseInsetValue(insets.right),
-      parseInsetValue(insets.bottom));
+      _parseSpacingToken(insets.left),
+      _parseSpacingToken(insets.top),
+      _parseSpacingToken(insets.right),
+      _parseSpacingToken(insets.bottom));
 }
