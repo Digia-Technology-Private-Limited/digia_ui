@@ -9,9 +9,9 @@ part 'dui_text_props.g.dart';
 class DUITextProps {
   late List<DUITextSpan> textSpans;
   late int? maxLines;
-  late String? overFlow;
+  late String? overflow;
   late String? alignment;
-  late String style;
+  late String styleClass;
 
   DUITextProps();
 
@@ -28,7 +28,7 @@ class DUITextProps {
   DUITextProps mockWidget() {
     return DUITextProps.fromJson(
       {
-        "style": "f:heading1Loose;tc:accent5",
+        "styleClass": "f:heading1Loose;tc:accent5",
         "maxLines": 2,
         "textSpans": [
           {
@@ -36,7 +36,7 @@ class DUITextProps {
           },
           {
             "text": "prem ",
-            "style": "f:para1;tc:accent6;dc:underline",
+            "styleClass": "f:para1;tc:accent6;dc:underline",
             'url': 'https://google.com',
           },
         ],

@@ -20,7 +20,7 @@ class DUIFit {
     return jsonEncode(this);
   }
 
-  BoxFit fitImage() {
+  BoxFit getFit() {
     switch (fit) {
       case 'fill':
         return BoxFit.fill;
