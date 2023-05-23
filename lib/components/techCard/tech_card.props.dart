@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:digia_ui/components/DUIText/dui_text_props.dart';
 import 'package:digia_ui/components/image/image.props.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -14,15 +15,12 @@ class DUITechCardProps {
   late double height;
   late DUIInsets margin;
   late DUIInsets padding;
+  late String spaceBtwImageAndTitle;
   late DUICornerRadius cornerRadius;
   late DUIImageProps image;
-  late String text1Color;
-  late String text1;
-  late String text2;
-  late String text2Color;
-  late String backgroundColor;
-  double? font1Size;
-  double? font2Size;
+  late DUITextProps title;
+  late DUITextProps subText;
+  late String bgColor;
   DUITechCardProps();
 
   factory DUITechCardProps.fromJson(Map<String, dynamic> json) =>
@@ -35,23 +33,17 @@ class DUITechCardProps {
     return jsonEncode(this);
   }
 
-  DUITechCardProps mockWidget() {
+  static DUITechCardProps mockWidget() {
     return DUITechCardProps.fromJson({
-      "height": 130,
-      "width": 180,
-      "text1": "Kotlin",
-      "text2": "Read more",
-      "text1Color": "0000FF",
+      "height": 160,
+      "width": 200,
       "image": {
-        "height": 50,
-        "width": 50,
-        "placeHolder": "",
-        "errorFallback": "",
+        "height": 48,
+        "width": 48,
         "aspectRatio": 1,
-        "margins": {"top": 5, "left": 5, "right": 5, "bottom": 5},
         "imageSrc":
             "https://upload.wikimedia.org/wikipedia/commons/e/e7/Everest_North_Face_toward_Base_Camp_Tibet_Luca_Galuzzi_2006.jpg",
-        "fit": {"fit": "fill"},
+        "fit": "fill",
         "cornerRadius": {
           "topRight": 25,
           "topLeft": 25,
@@ -59,18 +51,42 @@ class DUITechCardProps {
           "bottomRight": 25,
         }
       },
-      "text2Color": "FF0000",
-      "backgroundColor": "00FFF0",
-      "margin": {"top": 12, "left": 12, "right": 12, "bottom": 12},
-      "padding": {"top": 12, "left": 12, "right": 12, "bottom": 12},
+      "bgColor": "accent1",
+      "padding": {
+        "top": "sp-300",
+        "left": "sp-300",
+        "right": "sp-300",
+        "bottom": "sp-300"
+      },
+      "margin": {
+        "top": "sp-300",
+        "left": "sp-300",
+        "right": "sp-300",
+        "bottom": "sp-300"
+      },
+      "spaceBtwImageAndTitle": "sp-250",
       "cornerRadius": {
         "topRight": 12,
         "topLeft": 12,
         "bottomLeft": 12,
         "bottomRight": 12,
       },
-      "font1Size": 17,
-      "font2Size": 17,
+      "title": {
+        "styleClass": "ft:h2-medium;tc:text",
+        "textSpans": [
+          {
+            "text": "Kotlin",
+          },
+        ]
+      },
+      "subText": {
+        "styleClass": "ft:para3;tc:textSubtle",
+        "textSpans": [
+          {
+            "text": "Programming",
+          },
+        ]
+      }
     });
   }
 }

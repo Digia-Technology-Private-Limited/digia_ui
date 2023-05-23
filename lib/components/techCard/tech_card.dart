@@ -1,5 +1,7 @@
 import 'dart:developer';
 
+import 'package:digia_ui/Utils/util_functions.dart';
+import 'package:digia_ui/components/DUIText/dui_text.dart';
 import 'package:flutter/material.dart';
 
 import '../image/image.dart';
@@ -25,41 +27,29 @@ class _DUITechCardState extends State<DUITechCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: props.margin.margins(),
-      child: InkWell(
-        onTap: () {
-          log('Button Clicked');
-        },
-        child: Container(
-          width: props.width,
-          padding: props.padding.margins(),
-          height: props.height,
-          decoration: BoxDecoration(
-            color: Color(int.parse('0xFF${props.backgroundColor}')),
-            borderRadius: props.cornerRadius.getRadius(),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              DUIImage(props.image),
-              Text(
-                props.text1,
-                style: TextStyle(
-                  fontSize: props.font1Size ?? 14,
-                  color: Color(int.parse('0xFF${props.text1Color}')),
-                ),
-              ),
-              Text(
-                props.text2,
-                style: TextStyle(
-                  fontSize: props.font2Size ?? 14,
-                  color: Color(int.parse('0xFF${props.text2Color}')),
-                ),
-              ),
-            ],
-          ),
+    return InkWell(
+      onTap: () {
+        log('Button Clicked');
+      },
+      child: Container(
+        width: props.width,
+        height: props.height,
+        margin: toEdgeInsetsGeometry(props.margin),
+        padding: toEdgeInsetsGeometry(props.padding),
+        decoration: BoxDecoration(
+          color: toColor(props.bgColor),
+          borderRadius: toBorderRadiusGeometry(props.cornerRadius),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            DUIImage(props.image),
+            const Spacer(),
+            SizedBox(height: resolveSpacing(props.spaceBtwImageAndTitle)),
+            DUIText(props.title),
+            DUIText(props.subText),
+          ],
         ),
       ),
     );

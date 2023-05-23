@@ -12,16 +12,13 @@ DUITechCardProps _$DUITechCardPropsFromJson(Map<String, dynamic> json) =>
       ..height = (json['height'] as num).toDouble()
       ..margin = DUIInsets.fromJson(json['margin'] as Map<String, dynamic>)
       ..padding = DUIInsets.fromJson(json['padding'] as Map<String, dynamic>)
+      ..spaceBtwImageAndTitle = json['spaceBtwImageAndTitle'] as String
       ..cornerRadius =
           DUICornerRadius.fromJson(json['cornerRadius'] as Map<String, dynamic>)
       ..image = DUIImageProps.fromJson(json['image'] as Map<String, dynamic>)
-      ..text1Color = json['text1Color'] as String
-      ..text1 = json['text1'] as String
-      ..text2 = json['text2'] as String
-      ..text2Color = json['text2Color'] as String
-      ..backgroundColor = json['backgroundColor'] as String
-      ..font1Size = (json['font1Size'] as num?)?.toDouble()
-      ..font2Size = (json['font2Size'] as num?)?.toDouble();
+      ..title = DUITextProps.fromJson(json['title'] as Map<String, dynamic>)
+      ..subText = DUITextProps.fromJson(json['subText'] as Map<String, dynamic>)
+      ..bgColor = json['bgColor'] as String;
 
 Map<String, dynamic> _$DUITechCardPropsToJson(DUITechCardProps instance) =>
     <String, dynamic>{
@@ -29,13 +26,10 @@ Map<String, dynamic> _$DUITechCardPropsToJson(DUITechCardProps instance) =>
       'height': instance.height,
       'margin': instance.margin,
       'padding': instance.padding,
+      'spaceBtwImageAndTitle': instance.spaceBtwImageAndTitle,
       'cornerRadius': instance.cornerRadius,
       'image': instance.image,
-      'text1Color': instance.text1Color,
-      'text1': instance.text1,
-      'text2': instance.text2,
-      'text2Color': instance.text2Color,
-      'backgroundColor': instance.backgroundColor,
-      'font1Size': instance.font1Size,
-      'font2Size': instance.font2Size,
+      'title': instance.title,
+      'subText': instance.subText,
+      'bgColor': instance.bgColor,
     };
