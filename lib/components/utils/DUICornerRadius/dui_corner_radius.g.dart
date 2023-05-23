@@ -7,11 +7,12 @@ part of 'dui_corner_radius.dart';
 // **************************************************************************
 
 DUICornerRadius _$DUICornerRadiusFromJson(Map<String, dynamic> json) =>
-    DUICornerRadius()
-      ..bottomLeft = (json['bottomLeft'] as num).toDouble()
-      ..bottomRight = (json['bottomRight'] as num).toDouble()
-      ..topLeft = (json['topLeft'] as num).toDouble()
-      ..topRight = (json['topRight'] as num).toDouble();
+    DUICornerRadius(
+      bottomLeft: (json['bottomLeft'] as num?)?.toDouble() ?? 0,
+      bottomRight: (json['bottomRight'] as num?)?.toDouble() ?? 0,
+      topLeft: (json['topLeft'] as num?)?.toDouble() ?? 0,
+      topRight: (json['topRight'] as num?)?.toDouble() ?? 0,
+    );
 
 Map<String, dynamic> _$DUICornerRadiusToJson(DUICornerRadius instance) =>
     <String, dynamic>{
