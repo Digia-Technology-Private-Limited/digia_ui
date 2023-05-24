@@ -1,4 +1,3 @@
-
 part 'dui_insets.json.dart';
 
 class DUIInsets {
