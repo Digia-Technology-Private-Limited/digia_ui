@@ -67,8 +67,7 @@ class _OnBoardingState extends State<OnBoarding> {
               child: Center(
                 child: Text(
                   "Get Started",
-                  style:
-                      toTextStyle(styleClass: "f:button1;tc:light;ff:poppins;"),
+                  style: toTextStyle("f:button1;tc:light;"),
                 ),
               ),
             ),

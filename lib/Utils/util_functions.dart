@@ -70,9 +70,11 @@ TextOverflow toTextOverflow(String? overflow) {
       return TextOverflow.visible;
     case "clip":
       return TextOverflow.clip;
-    default:
+    case "ellipsis":
       return TextOverflow.ellipsis;
   }
+
+  return TextOverflow.clip;
 }
 
 TextDecoration toTextDecoration(String textDecorationToken) {
@@ -105,7 +107,7 @@ TextDecorationStyle? toTextDecorationStyle(String textDecorationStyleToken) {
   return null;
 }
 
-TextStyle? toTextStyle({required String styleClass}) {
+TextStyle? toTextStyle(String? styleClass) {
   var styleClassMap = _createStyleMap(styleClass);
 
   if (styleClassMap.isEmpty) {
@@ -120,6 +122,7 @@ TextStyle? toTextStyle({required String styleClass}) {
   TextDecoration textDecoration = TextDecoration.none;
   Color? decorationColor;
   TextDecorationStyle? decorationStyle;
+  String fontFamily = "Poppins"; // TODO: This shouldn't be hardcoded here.
 
   styleClassMap.forEach((key, value) {
     switch (key) {
@@ -130,6 +133,11 @@ TextStyle? toTextStyle({required String styleClass}) {
         fontStyle = toFontStyle(font.style);
         fontSize = font.size ?? DUIConfigConstants.fallbackSize;
         fontHeight = font.height ?? DUIConfigConstants.fallbackLineHeightFactor;
+        break;
+
+      // Font family
+      case 'ff':
+        fontFamily = value;
         break;
 
       // Text Color
@@ -154,6 +162,7 @@ TextStyle? toTextStyle({required String styleClass}) {
   });
 
   return TextStyle(
+      fontFamily: fontFamily,
       fontWeight: fontWeight,
       fontStyle: fontStyle,
       fontSize: fontSize,
@@ -167,7 +176,7 @@ TextStyle? toTextStyle({required String styleClass}) {
 TextSpan toTextSpan(DUITextSpan textSpan) {
   return TextSpan(
     text: textSpan.text,
-    style: toTextStyle(styleClass: textSpan.styleClass ?? ""),
+    style: toTextStyle(textSpan.styleClass ?? ""),
     // recognizer: TapGestureRecognizer()
     //   ..onTap = () async {
     //     //todo change onTap functionality according to backend latter
@@ -203,7 +212,9 @@ BoxFit toBoxFit(String fitValue) {
   return BoxFit.none;
 }
 
-Map<String, String> _createStyleMap(String styleClass) {
+Map<String, String> _createStyleMap(String? styleClass) {
+  if (styleClass == null) return {};
+
   if (styleClass.isEmpty) return {};
 
   final styleItems = styleClass.split(';');
@@ -217,11 +228,15 @@ Map<String, String> _createStyleMap(String styleClass) {
 }
 
 BorderRadiusGeometry toBorderRadiusGeometry(DUICornerRadius? cornerRadius) {
+  if (cornerRadius == null) {
+    return BorderRadius.zero;
+  }
+
   return BorderRadius.only(
-    topLeft: Radius.circular(cornerRadius?.topLeft ?? 0.0),
-    topRight: Radius.circular(cornerRadius?.topRight ?? 0.0),
-    bottomLeft: Radius.circular(cornerRadius?.bottomLeft ?? 0.0),
-    bottomRight: Radius.circular(cornerRadius?.bottomRight ?? 0.0),
+    topLeft: Radius.circular(cornerRadius.topLeft),
+    topRight: Radius.circular(cornerRadius.topRight),
+    bottomLeft: Radius.circular(cornerRadius.bottomLeft),
+    bottomRight: Radius.circular(cornerRadius.bottomRight),
   );
 }
 
@@ -277,4 +292,41 @@ EdgeInsetsGeometry toEdgeInsetsGeometry(DUIInsets? insets) {
       _parseSpacingToken(insets.top),
       _parseSpacingToken(insets.right),
       _parseSpacingToken(insets.bottom));
+}
+
+AlignmentGeometry? toAlignmentGeometry(String? token) {
+  if (token == null) {
+    return null;
+  }
+
+  switch (token) {
+    case 'topLeft':
+      return Alignment.topLeft;
+
+    case 'topCenter':
+      return Alignment.topCenter;
+
+    case 'topRight':
+      return Alignment.topRight;
+
+    case 'centerLeft':
+      return Alignment.centerLeft;
+
+    case 'center':
+      return Alignment.center;
+
+    case 'centerRight':
+      return Alignment.centerRight;
+
+    case 'bottomLeft':
+      return Alignment.bottomLeft;
+
+    case 'bottomCenter':
+      return Alignment.bottomCenter;
+
+    case 'bottomRight':
+      return Alignment.bottomRight;
+  }
+
+  return null;
 }
