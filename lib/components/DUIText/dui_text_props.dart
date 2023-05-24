@@ -11,7 +11,7 @@ class DUITextProps {
   late int? maxLines;
   late String? overflow;
   late String? alignment;
-  late String styleClass;
+  late String? styleClass;
 
   DUITextProps();
 

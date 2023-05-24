@@ -9,7 +9,7 @@ class DUIImage extends StatefulWidget {
 
   const DUIImage(this.props, {super.key}) : super();
 
-  factory DUIImage.fromJson(Map<String, dynamic> json) =>
+  factory DUIImage.create(Map<String, dynamic> json) =>
       DUIImage(DUIImageProps.fromJson(json));
 
   @override

@@ -7,6 +7,9 @@ class DUIText extends StatefulWidget {
 
   const DUIText(this.props, {super.key}) : super();
 
+  factory DUIText.create(Map<String, dynamic> json) =>
+      DUIText(DUITextProps.fromJson(json));
+
   @override
   State<DUIText> createState() => _DUITextState();
 }
@@ -27,9 +30,9 @@ class _DUITextState extends State<DUIText> {
     return RichText(
       maxLines: props.maxLines,
       overflow: toTextOverflow(props.overflow),
-      textAlign: toTextAlign(props.alignment ?? ""),
+      textAlign: toTextAlign(props.alignment),
       text: TextSpan(
-        style: toTextStyle(styleClass: props.styleClass),
+        style: toTextStyle(props.styleClass),
         children: props.textSpans.map(toTextSpan).toList(),
       ),
     );

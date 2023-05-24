@@ -13,7 +13,7 @@ DUITextProps _$DUITextPropsFromJson(Map<String, dynamic> json) => DUITextProps()
   ..maxLines = json['maxLines'] as int?
   ..overflow = json['overflow'] as String?
   ..alignment = json['alignment'] as String?
-  ..styleClass = json['styleClass'] as String;
+  ..styleClass = json['styleClass'] as String?;
 
 Map<String, dynamic> _$DUITextPropsToJson(DUITextProps instance) =>
     <String, dynamic>{
