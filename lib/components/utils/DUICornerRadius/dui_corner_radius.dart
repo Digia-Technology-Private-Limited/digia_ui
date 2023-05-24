@@ -1,29 +1,24 @@
-import 'dart:convert';
 
-import 'package:json_annotation/json_annotation.dart';
+part 'dui_corner_radius.json.dart';
 
-part 'dui_corner_radius.g.dart';
-
-@JsonSerializable()
 class DUICornerRadius {
-  late double bottomLeft;
-  late double bottomRight;
-  late double topLeft;
-  late double topRight;
+  double topLeft;
+  double topRight;
+  double bottomRight;
+  double bottomLeft;
 
-  DUICornerRadius(
-      {this.bottomLeft = 0,
-      this.bottomRight = 0,
-      this.topLeft = 0,
-      this.topRight = 0});
+  DUICornerRadius({
+    this.topLeft = 0,
+    this.topRight = 0,
+    this.bottomRight = 0,
+    this.bottomLeft = 0,
+  });
 
-  factory DUICornerRadius.fromJson(Map<String, dynamic> json) =>
+  factory DUICornerRadius.fromJson(dynamic json) =>
       _$DUICornerRadiusFromJson(json);
-
-  Map<String, dynamic> toJson() => _$DUICornerRadiusToJson(this);
 
   @override
   String toString() {
-    return jsonEncode(this);
+    return "topLeft:$topLeft, topRight:$topRight, bottomRight:$bottomRight, bottomLeft:$bottomLeft";
   }
 }
