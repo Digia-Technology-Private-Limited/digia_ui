@@ -48,7 +48,7 @@
                 "data": {
                   "textSpans": [
                     {
-                      "text": "Stoppage for your",
+                      "text": "Stoppage for your\n",
                       "styleClass": "ft:heading1;tc:text;ff:Nunito"
                     },
                     {
@@ -64,7 +64,7 @@
               "child": {
                 "type": "digia/text",
                 "data": {
-                  "styleClass": "ft:para1-regular;tc:textSubtle",
+                  "styleClass": "ft:para1-regular;tc:textSubtle;tbc:accent2",
                   "textSpans": [
                     {
                       "text": "Discover Bytes, an intuitive and versatile Content Platform powered by Digia."

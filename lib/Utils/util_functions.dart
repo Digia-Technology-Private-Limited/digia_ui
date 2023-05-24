@@ -119,6 +119,7 @@ TextStyle? toTextStyle(String? styleClass) {
   double fontSize = DUIConfigConstants.fallbackSize;
   double fontHeight = DUIConfigConstants.fallbackLineHeightFactor;
   Color textColor = DUIConfigConstants.fallbackTextColor;
+  Color? textBgColor;
   TextDecoration textDecoration = TextDecoration.none;
   Color? decorationColor;
   TextDecorationStyle? decorationStyle;
@@ -145,18 +146,23 @@ TextStyle? toTextStyle(String? styleClass) {
         textColor = toColor(value);
         break;
 
+      // Text Background Color
+      case 'tbc':
+        textBgColor = toColor(value);
+        break;
+
       // Text Decoration
-      case 'd':
+      case 'td':
         textDecoration = toTextDecoration(value);
         break;
 
       // Text Deocration Color
-      case 'dc':
+      case 'tdc':
         decorationColor = toColor(value);
         break;
 
       // Text Deocration Style
-      case 'ds':
+      case 'tds':
         decorationStyle = toTextDecorationStyle(value);
     }
   });
@@ -168,6 +174,7 @@ TextStyle? toTextStyle(String? styleClass) {
       fontSize: fontSize,
       height: fontHeight,
       color: textColor,
+      backgroundColor: textBgColor,
       decoration: textDecoration,
       decorationColor: decorationColor,
       decorationStyle: decorationStyle);
@@ -222,7 +229,7 @@ Map<String, String> _createStyleMap(String? styleClass) {
 
   return styleItems.fold({}, (previousValue, element) {
     List<String> splitValues = element.split(':');
-    previousValue[splitValues.first] = splitValues.last;
+    previousValue[splitValues.first.trim()] = splitValues.last.trim();
     return previousValue;
   });
 }
