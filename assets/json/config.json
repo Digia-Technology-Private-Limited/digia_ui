@@ -13,9 +13,14 @@
       "accent6": "#F6C5C1",
       "accent7": "#ACFBDC",
       "light": "#FAFCFE",
-      "background": "#FFFFFF"
+      "white": "#FFFFFF"
     },
     "fonts": {
+      "bytes-logo": {
+        "size": 64,
+        "weight": "regular",
+        "font-family": "AppleII"
+      },
       "heading1": {
         "size": 36,
         "weight": "bold"
@@ -35,6 +40,10 @@
       "para1": {
         "size": 16,
         "weight": "medium"
+      },
+      "para1-regular": {
+        "size": 16,
+        "weight": "regular"
       },
       "para2": {
         "size": 14,

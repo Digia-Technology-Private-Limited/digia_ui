@@ -1,7 +1,6 @@
 import 'package:digia_ui/Utils/config_resolver.dart';
 import 'package:digia_ui/Utils/util_functions.dart';
-import 'package:digia_ui/pages/onboarding/onboarding.dart';
-import 'package:digia_ui/pages/onboarding/onboarding_props.dart';
+import 'package:digia_ui/core/dui_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -42,29 +41,29 @@ class MyApp extends StatelessWidget {
         ),
       ),
       title: 'Flutter Demo',
-      home: OnBoarding(OnBoardingProps().mockWidget()),
+      home: const DUIPage(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+// class MyHomePage extends StatefulWidget {
+//   const MyHomePage({super.key, required this.title});
 
-  final String title;
+//   final String title;
 
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
+//   @override
+//   State<MyHomePage> createState() => _MyHomePageState();
+// }
 
-class _MyHomePageState extends State<MyHomePage> {
-  GlobalKey globalKey = GlobalKey();
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: OnBoarding(OnBoardingProps().mockWidget()),
-    );
-  }
-}
+// class _MyHomePageState extends State<MyHomePage> {
+//   GlobalKey globalKey = GlobalKey();
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text(widget.title),
+//       ),
+//       body: OnBoarding(OnBoardingProps().mockWidget()),
+//     );
+//   }
+// }

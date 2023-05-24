@@ -2,8 +2,8 @@
   "page": {
     "applicationId": "bytes-12345",
     "id": "bytes-category-page-1",
-    "name": "Topics",
-    "route": "/topics",
+    "name": "Onboarding",
+    "route": "/onboarding",
     "inputArgs": {
       "properties": {}
     },
@@ -11,7 +11,7 @@
       "onPageLoad": {
         "actionType": "loadPage",
         "actionData": {
-          "pageName": "Topics",
+          "pageName": "Onboarding",
           "inputArgs": {}
         }
       },
@@ -21,56 +21,60 @@
     "layout": {
       "header": {},
       "body": {
-        "list": [
-          {
-            "type": "digia/button",
-            "data": {
-              "width": 300,
-              "height": 100,
-              "text": "Hello World! Tap Me",
-              "backgroundColor": "AABBCC",
-              "textColor": "DDEEFF"
-            }
-          },
-          {
-            "type": "digia/image",
-            "data": {
-              "width": 300,
-              "height": 100,
-              "imageSrc": "https://placehold.jp/3d4070/ffffff/150x150.png",
-              "cornerRadius": {
-                "topRight": 12,
-                "topLeft": 12,
-                "bottomLeft": 12,
-                "bottomRight": 12
+        "list": {
+          "padding": "sp-300",
+          "children": [
+            {
+              "alignment": "center",
+              "height": "46%",
+              "child": {
+                "type": "digia/text",
+                "data": {
+                  "styleClass": "ft:bytes-logo;tc:white;ff:AppleII",
+                  "textSpans": [
+                    {
+                      "text": "BYTES"
+                    }
+                  ]
+                }
+              },
+              "bgColor": "primary",
+              "cornerRadius": 32
+            },
+            {
+              "margin": "0,sp-400,0,0",
+              "child": {
+                "type": "digia/text",
+                "data": {
+                  "textSpans": [
+                    {
+                      "text": "Stoppage for your",
+                      "styleClass": "ft:heading1;tc:text;ff:Nunito"
+                    },
+                    {
+                      "text": "Curiosity",
+                      "styleClass": "ft:heading1;tc:secondary;ff:Nunito"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "margin": "0,22,0,0",
+              "child": {
+                "type": "digia/text",
+                "data": {
+                  "styleClass": "ft:para1-regular;tc:textSubtle",
+                  "textSpans": [
+                    {
+                      "text": "Discover Bytes, an intuitive and versatile Content Platform powered by Digia."
+                    }
+                  ]
+                }
               }
             }
-          },
-          {
-            "type": "digia/button",
-            "data": {
-              "width": 300,
-              "height": 100,
-              "text": "Hello World! Tap Me",
-              "backgroundColor": "AABBCC",
-              "textColor": "DDEEFF"
-            }
-          },
-          {
-            "type": "digia/image",
-            "data": {
-              "width": 300,
-              "height": 100,
-              "imageSrc": "https://placehold.jp/3d4070/ffffff/150x150.png",
-              "cornerRadius": {
-                "topRight": 12,
-                "topLeft": 12,
-                "bottomLeft": 12,
-                "bottomRight": 12
-              }
-            }
-          }
-        ]
+          ]
+        }
       },
       "footer": {}
     }
