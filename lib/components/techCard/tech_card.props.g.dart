@@ -10,11 +10,10 @@ DUITechCardProps _$DUITechCardPropsFromJson(Map<String, dynamic> json) =>
     DUITechCardProps()
       ..width = (json['width'] as num).toDouble()
       ..height = (json['height'] as num).toDouble()
-      ..margin = DUIInsets.fromJson(json['margin'] as Map<String, dynamic>)
-      ..padding = DUIInsets.fromJson(json['padding'] as Map<String, dynamic>)
+      ..margin = DUIInsets.fromJson(json['margin'])
+      ..padding = DUIInsets.fromJson(json['padding'])
       ..spaceBtwImageAndTitle = json['spaceBtwImageAndTitle'] as String
-      ..cornerRadius =
-          DUICornerRadius.fromJson(json['cornerRadius'] as Map<String, dynamic>)
+      ..cornerRadius = DUICornerRadius.fromJson(json['cornerRadius'])
       ..image = DUIImageProps.fromJson(json['image'] as Map<String, dynamic>)
       ..title = DUITextProps.fromJson(json['title'] as Map<String, dynamic>)
       ..subText = DUITextProps.fromJson(json['subText'] as Map<String, dynamic>)

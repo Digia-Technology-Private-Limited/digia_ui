@@ -16,6 +16,8 @@ class DUICornerRadius {
   factory DUICornerRadius.fromJson(dynamic json) =>
       _$DUICornerRadiusFromJson(json);
 
+  Map<String, dynamic> toJson() => _$DUICornerRadiusToJson(this);
+
   @override
   String toString() {
     return "topLeft:$topLeft, topRight:$topRight, bottomRight:$bottomRight, bottomLeft:$bottomLeft";

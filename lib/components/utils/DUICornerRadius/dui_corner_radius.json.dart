@@ -43,7 +43,16 @@ DUICornerRadius _$DUICornerRadiusFromJson(dynamic json) {
 }
 
 DUICornerRadius _$DUICornerRadiusFromListOfString(List<String> list) {
-  final parsedList = list.map(double.tryParse).nonNulls.toList();
+  final parsedList = list
+      .map((e) {
+        if (e == 'inf' || e == 'infinity') {
+          return double.infinity;
+        }
+
+        return double.tryParse(e);
+      })
+      .nonNulls
+      .toList();
   return _$DUICornerRadiusFromListOfDouble(parsedList);
 }
 
@@ -68,3 +77,11 @@ DUICornerRadius _$DUICornerRadiusFromListOfDouble(List<double> list) {
 
   return DUICornerRadius();
 }
+
+Map<String, dynamic> _$DUICornerRadiusToJson(DUICornerRadius instance) =>
+    <String, dynamic>{
+      'topLeft': instance.topLeft,
+      'topRight': instance.topRight,
+      'bottomRight': instance.bottomRight,
+      'bottomLeft': instance.bottomLeft,
+    };

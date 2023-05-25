@@ -15,6 +15,9 @@ class DUITextProps {
 
   DUITextProps();
 
+  factory DUITextProps.withText(String text) =>
+      DUITextProps()..textSpans = [DUITextSpan()..text = text];
+
   factory DUITextProps.fromJson(Map<String, dynamic> json) =>
       _$DUITextPropsFromJson(json);
 

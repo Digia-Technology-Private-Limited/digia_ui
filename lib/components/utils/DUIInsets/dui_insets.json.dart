@@ -42,3 +42,10 @@ DUIInsets _$DUIInsetsFromListOfString(List<String> list) {
 
   return DUIInsets();
 }
+
+Map<String, dynamic> _$DUIInsetsToJson(DUIInsets instance) => <String, dynamic>{
+      'left': instance.left,
+      'top': instance.top,
+      'right': instance.right,
+      'bottom': instance.bottom,
+    };
