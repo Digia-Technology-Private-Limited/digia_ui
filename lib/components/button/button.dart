@@ -8,8 +8,14 @@ import 'button.props.dart';
 
 class DUIButton extends StatefulWidget {
   final DUIButtonProps props;
-  final GlobalKey globalKey = GlobalKey();
-  DUIButton(this.props, GlobalKey globalKey, {super.key}) : super();
+  // TODO: GLobalKey is needed for different shapes, but that causes
+  // interference with DUIButton.create function which is needed
+  // to render from json.
+  // final GlobalKey globalKey = GlobalKey();
+  const DUIButton(this.props, {super.key}) : super();
+
+  factory DUIButton.create(Map<String, dynamic> json) =>
+      DUIButton(DUIButtonProps.fromJson(json));
 
   @override
   State<StatefulWidget> createState() => _DUIButtonState();
@@ -26,41 +32,53 @@ class _DUIButtonState extends State<DUIButton> {
   void initState() {
     super.initState();
     props = widget.props;
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      renderbox =
-          widget.globalKey.currentContext!.findRenderObject() as RenderBox;
-      setState(() {
-        width = renderbox.size.width;
-        height = renderbox.size.height;
-      });
-    });
+    // TODO: Commented out for now. Check TODO near GlobalKey
+    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    //   renderbox =
+    //       widget.globalKey.currentContext!.findRenderObject() as RenderBox;
+    //   setState(() {
+    //     width = renderbox.size.width;
+    //     height = renderbox.size.height;
+    //   });
+    // });
   }
 
+  // TODO: We may need to use Plain text here and not rich text.
+  // Problem is we need we may need to change textColor in case of disabled state.
+  // We would need to fetch a new textStyleClass for disabled state.
+  // Not supporting it for now.
   @override
   Widget build(BuildContext context) {
+    var styleclass = props.disabled == true
+        ? props.styleClass?.copyWith(bgColor: props.disabledBackgroundColor)
+        : props.styleClass;
+    var widget = createContainerFromStyleClass(
+        styleclass, context, DUIText(props.text), false);
     return InkWell(
-      onTap: () {
-        log('button clicked');
-      },
-      child: Container(
-        alignment: Alignment.center,
-        width: props.width ?? double.infinity,
-        padding: toEdgeInsetsGeometry(props.padding),
-        height: props.height ?? 150,
-        decoration: BoxDecoration(
-          color: props.disabled != null && props.disabled == true
-              ? toColor(props.disabledBackgroundColor ??
-                  DUIConfigConstants.fallbackBgColorHexCode)
-              : toColor(props.backgroundColor ??
-                  DUIConfigConstants.fallbackBgColorHexCode),
-          borderRadius: BorderRadius.circular(props.shape == 'pill'
-              ? width / 2
-              : props.shape == 'rect'
-                  ? width / 100
-                  : 0),
-        ),
-        child: DUIText(props.text),
-      ),
-    );
+        onTap: () {
+          log('button clicked');
+        },
+        child: widget
+        // child: Container(
+        //   width: props.width,
+        //   height: props.height,
+        //   alignment: toAlignmentGeometry(props.alignment),
+        //   padding: toEdgeInsetsGeometry(props.padding),
+        //   margin: toEdgeInsetsGeometry(props.margin),
+        //   decoration: BoxDecoration(
+        //     color: props.disabled == true
+        //         ? toColor(props.disabledBackgroundColor ??
+        //             DUIConfigConstants.fallbackBgColorHexCode)
+        //         : toColor(props.backgroundColor ??
+        //             DUIConfigConstants.fallbackBgColorHexCode),
+        //     // borderRadius: BorderRadius.circular(props.shape == 'pill'
+        //     //     ? width / 2
+        //     //     : props.shape == 'rect'
+        //     //         ? width / 100
+        //     //         : 0),
+        //   ),
+        //   child: DUIText(props.text),
+        // ),
+        );
   }
 }

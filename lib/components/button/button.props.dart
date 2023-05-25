@@ -1,26 +1,26 @@
 import 'dart:convert';
 
 import 'package:digia_ui/components/DUIText/dui_text_props.dart';
+import 'package:digia_ui/components/utils/DUIStyleClass/dui_style_class.dart';
 import 'package:json_annotation/json_annotation.dart';
-
-import '../utils/DUIInsets/dui_insets.dart';
 
 part 'button.props.g.dart';
 
 @JsonSerializable()
 class DUIButtonProps {
-  double? width;
-  double? height;
-  DUIInsets? margin;
-  DUIInsets? padding;
-  String? shape;
+  // double? width;
+  // double? height;
+  // String? alignment;
+  // String? backgroundColor;
+  // DUIInsets? margin;
+  // DUIInsets? padding;
+  @JsonKey(fromJson: DUIStyleClass.fromJson, includeToJson: false)
+  DUIStyleClass? styleClass;
+  // String? shape;
   late DUITextProps text;
-  String? textColor;
-  String? disabledTextColor;
-  String? backgroundColor;
   String? disabledBackgroundColor;
   bool? disabled;
-  double? fontSize;
+
   DUIButtonProps();
 
   factory DUIButtonProps.fromJson(Map<String, dynamic> json) =>
