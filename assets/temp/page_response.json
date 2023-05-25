@@ -22,11 +22,11 @@
       "header": {},
       "body": {
         "list": {
-          "padding": "sp-300",
+          "styleClass": "p:sp-300",
           "children": [
             {
-              "alignment": "center",
-              "height": "46%",
+              "wrap": false,
+              "styleClass": "h:46%; bgc:primary; cr:32; al:center",
               "child": {
                 "type": "digia/text",
                 "data": {
@@ -37,12 +37,10 @@
                     }
                   ]
                 }
-              },
-              "bgColor": "primary",
-              "cornerRadius": 32
+              }
             },
             {
-              "margin": "0,sp-400,0,0",
+              "styleClass": "m:0,sp-400,0,0",
               "child": {
                 "type": "digia/text",
                 "data": {
@@ -60,16 +58,34 @@
               }
             },
             {
-              "margin": "0,22,0,0",
+              "styleClass": "m:0,22,0,0",
               "child": {
                 "type": "digia/text",
                 "data": {
-                  "styleClass": "ft:para1-regular;tc:textSubtle;tbc:accent2",
+                  "styleClass": "ft:para1-regular;tc:textSubtle",
                   "textSpans": [
                     {
                       "text": "Discover Bytes, an intuitive and versatile Content Platform powered by Digia."
                     }
                   ]
+                }
+              }
+            },
+            {
+              "wrap": true,
+              "styleClass": "p:0,sp-500,0,0",
+              "child": {
+                "type": "digia/button",
+                "data": {
+                  "styleClass": "p:sp-300,sp-250;bgc:primary;cr:200",
+                  "text": {
+                    "styleClass": "ft:button1;tc:light",
+                    "textSpans": [
+                      {
+                        "text": "Get Started"
+                      }
+                    ]
+                  }
                 }
               }
             }
