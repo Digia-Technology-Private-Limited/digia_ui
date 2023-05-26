@@ -27,10 +27,27 @@ class _DUITextState extends State<DUIText> {
 
   @override
   Widget build(BuildContext context) {
+    final mayNotUseRichText = props.textSpans.length == 1;
+
+    final overflow = toTextOverflow(props.overflow);
+    final maxLines = props.maxLines;
+    final textAlign = toTextAlign(props.alignment);
+
+    if (mayNotUseRichText) {
+      final text = props.textSpans[0].text;
+      final style = props.textSpans[0].styleClass ?? props.styleClass;
+
+      return Text(text,
+          style: toTextStyle(style),
+          maxLines: maxLines,
+          overflow: overflow,
+          textAlign: textAlign);
+    }
+
     return RichText(
-      maxLines: props.maxLines,
-      overflow: toTextOverflow(props.overflow),
-      textAlign: toTextAlign(props.alignment),
+      maxLines: maxLines,
+      overflow: overflow,
+      textAlign: textAlign,
       text: TextSpan(
         style: toTextStyle(props.styleClass),
         children: props.textSpans.map(toTextSpan).toList(),

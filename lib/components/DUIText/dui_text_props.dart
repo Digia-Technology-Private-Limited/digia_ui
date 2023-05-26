@@ -1,11 +1,9 @@
 import 'dart:convert';
 
 import 'package:digia_ui/components/DUIText/DUI_text_span/dui_text_span.dart';
-import 'package:json_annotation/json_annotation.dart';
 
-part 'dui_text_props.g.dart';
+part 'dui_text_props.json.dart';
 
-@JsonSerializable()
 class DUITextProps {
   late List<DUITextSpan> textSpans;
   late int? maxLines;
@@ -15,11 +13,21 @@ class DUITextProps {
 
   DUITextProps();
 
-  factory DUITextProps.withText(String text) =>
-      DUITextProps()..textSpans = [DUITextSpan()..text = text];
+  factory DUITextProps.withText(
+      {required String text,
+      String? styleClass,
+      int? maxLines,
+      String? overflow,
+      String? alignment}) {
+    return DUITextProps()
+      ..textSpans = [DUITextSpan()..text = text]
+      ..styleClass = styleClass
+      ..alignment = alignment
+      ..overflow = overflow
+      ..maxLines = maxLines;
+  }
 
-  factory DUITextProps.fromJson(Map<String, dynamic> json) =>
-      _$DUITextPropsFromJson(json);
+  factory DUITextProps.fromJson(dynamic json) => _$DUITextPropsFromJson(json);
 
   Map<String, dynamic> toJson() => _$DUITextPropsToJson(this);
 
