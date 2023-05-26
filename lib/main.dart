@@ -1,6 +1,6 @@
 import 'package:digia_ui/Utils/config_resolver.dart';
 import 'package:digia_ui/Utils/util_functions.dart';
-import 'package:digia_ui/core/dui_page.dart';
+import 'package:digia_ui/core/page/dui_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 

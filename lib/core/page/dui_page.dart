@@ -1,10 +1,10 @@
 import 'dart:convert';
 
-import 'package:digia_ui/Utils/util_functions.dart';
 import 'package:digia_ui/components/DUIText/dui_text.dart';
 import 'package:digia_ui/components/button/button.dart';
 import 'package:digia_ui/components/image/image.dart';
-import 'package:digia_ui/core/props/dui_page_props.dart';
+import 'package:digia_ui/core/container/dui_container.dart';
+import 'package:digia_ui/core/page/props/dui_page_props.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -53,22 +53,23 @@ class _DUIPageState extends State<DUIPage> {
               return const Center(child: Text("Currently Not supported!!!"));
             }
 
-            return createContainerFromStyleClass(
-                listObject?.styleClass,
-                context,
-                ListView.builder(
+            return DUIContainer(
+                styleClass: listObject?.styleClass,
+                child: ListView.builder(
                     itemCount: list.length,
                     itemBuilder: (context, index) {
                       final item = list[index];
-                      final style = item.styleClass;
 
-                      return createContainerFromStyleClass(
-                          style,
-                          context,
-                          listRegistry[item.child.type]?.call(item.child.data),
-                          item.wrap);
-                    }),
-                false);
+                      final widgetFromRegistry =
+                          listRegistry[item.child.type]?.call(item.child.data);
+
+                      final child = item.wrap
+                          ? Wrap(children: [widgetFromRegistry])
+                          : widgetFromRegistry;
+
+                      return DUIContainer(
+                          styleClass: item.styleClass, child: child);
+                    }));
           }),
     );
   }

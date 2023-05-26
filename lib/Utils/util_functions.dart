@@ -2,7 +2,6 @@ import 'package:digia_ui/Utils/config_resolver.dart';
 import 'package:digia_ui/components/DUIText/DUI_text_span/dui_text_span.dart';
 import 'package:digia_ui/components/utils/DUICornerRadius/dui_corner_radius.dart';
 import 'package:digia_ui/components/utils/DUIInsets/dui_insets.dart';
-import 'package:digia_ui/components/utils/DUIStyleClass/dui_style_class.dart';
 import 'package:flutter/material.dart';
 
 class DUIConfigConstants {
@@ -337,37 +336,4 @@ AlignmentGeometry? toAlignmentGeometry(String? token) {
   }
 
   return null;
-}
-
-Widget createContainerFromStyleClass(
-    DUIStyleClass? styleClass, BuildContext context, Widget child, bool wrap) {
-  double? computeHeight() {
-    final height = styleClass?.height;
-    if (height == null || height.isEmpty == true) return null;
-
-    final parsedValue = double.tryParse(height);
-    if (parsedValue != null) return parsedValue;
-
-    if (height.characters.last == "%") {
-      final substring = height.substring(0, height.length - 1);
-      final heightFactor = double.tryParse(substring);
-      if (heightFactor == null) return null;
-
-      return MediaQuery.of(context).size.height * (heightFactor / 100);
-    }
-
-    return null;
-  }
-
-  return Container(
-      width: double.tryParse(styleClass?.width ?? ""),
-      height: computeHeight(),
-      alignment: toAlignmentGeometry(styleClass?.alignment),
-      padding: toEdgeInsetsGeometry(styleClass?.padding),
-      margin: toEdgeInsetsGeometry(styleClass?.margin),
-      decoration: BoxDecoration(
-          color: toColor(
-              styleClass?.bgColor ?? DUIConfigConstants.fallbackBgColorHexCode),
-          borderRadius: toBorderRadiusGeometry(styleClass?.cornerRadius)),
-      child: (wrap == true) ? Wrap(children: [child]) : child);
 }

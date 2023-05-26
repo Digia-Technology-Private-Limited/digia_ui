@@ -1,7 +1,7 @@
 import 'dart:developer';
 
-import 'package:digia_ui/Utils/util_functions.dart';
 import 'package:digia_ui/components/DUIText/dui_text.dart';
+import 'package:digia_ui/core/container/dui_container.dart';
 import 'package:flutter/material.dart';
 
 import 'button.props.dart';
@@ -52,13 +52,11 @@ class _DUIButtonState extends State<DUIButton> {
     var styleclass = props.disabled == true
         ? props.styleClass?.copyWith(bgColor: props.disabledBackgroundColor)
         : props.styleClass;
-    var widget = createContainerFromStyleClass(
-        styleclass, context, DUIText(props.text), false);
     return InkWell(
         onTap: () {
           log('button clicked');
         },
-        child: widget
+        child: DUIContainer(styleClass: styleclass, child: DUIText(props.text))
         // child: Container(
         //   width: props.width,
         //   height: props.height,
