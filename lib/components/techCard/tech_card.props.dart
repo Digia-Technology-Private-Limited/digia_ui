@@ -2,25 +2,22 @@ import 'dart:convert';
 
 import 'package:digia_ui/components/DUIText/dui_text_props.dart';
 import 'package:digia_ui/components/image/image.props.dart';
+import 'package:digia_ui/components/utils/DUIStyleClass/dui_style_class.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-import '../utils/DUICornerRadius/dui_corner_radius.dart';
-import '../utils/DUIInsets/dui_insets.dart';
 
 part 'tech_card.props.g.dart';
 
 @JsonSerializable()
 class DUITechCardProps {
-  late double width;
-  late double height;
-  late DUIInsets margin;
-  late DUIInsets padding;
+  @JsonKey(fromJson: DUIStyleClass.fromJson, includeToJson: false)
+  DUIStyleClass? styleClass;
+  late double? width;
+  late double? height;
   late String spaceBtwImageAndTitle;
-  late DUICornerRadius cornerRadius;
   late DUIImageProps image;
   late DUITextProps title;
   late DUITextProps subText;
-  late String bgColor;
   DUITechCardProps();
 
   factory DUITechCardProps.fromJson(Map<String, dynamic> json) =>
@@ -52,25 +49,6 @@ class DUITechCardProps {
         }
       },
       "bgColor": "accent1",
-      "padding": {
-        "top": "sp-300",
-        "left": "sp-300",
-        "right": "sp-300",
-        "bottom": "sp-300"
-      },
-      "margin": {
-        "top": "sp-300",
-        "left": "sp-300",
-        "right": "sp-300",
-        "bottom": "sp-300"
-      },
-      "spaceBtwImageAndTitle": "sp-250",
-      "cornerRadius": {
-        "topRight": 12,
-        "topLeft": 12,
-        "bottomLeft": 12,
-        "bottomRight": 12,
-      },
       "title": {
         "styleClass": "ft:h2-medium;tc:text",
         "textSpans": [
