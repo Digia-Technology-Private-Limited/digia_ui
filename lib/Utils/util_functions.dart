@@ -1,8 +1,23 @@
 import 'package:digia_ui/Utils/config_resolver.dart';
 import 'package:digia_ui/components/DUIText/DUI_text_span/dui_text_span.dart';
+import 'package:digia_ui/components/DUIText/dui_text.dart';
+import 'package:digia_ui/components/button/button.dart';
+import 'package:digia_ui/components/image/image.dart';
+import 'package:digia_ui/components/techCard/tech_card.dart';
 import 'package:digia_ui/components/utils/DUICornerRadius/dui_corner_radius.dart';
 import 'package:digia_ui/components/utils/DUIInsets/dui_insets.dart';
+import 'package:digia_ui/core/grid/dui_grid_view.dart';
 import 'package:flutter/material.dart';
+
+// ignore: non_constant_identifier_names
+final Map<String, Function> DUIWidgetRegistry = {
+  // 'digia/button': DUIButton.fromJson,
+  'digia/text': DUIText.create,
+  'digia/image': DUIImage.create,
+  'digia/button': DUIButton.create,
+  'digia/card_type1': DUITechCard.create,
+  'digia/grid': DUIGridView.create
+};
 
 class DUIConfigConstants {
   static const double fallbackSize = 14;
@@ -285,7 +300,9 @@ double _parseSpacingToken(String token) {
   }
 }
 
-double resolveSpacing(String spacingToken) {
+double resolveSpacing(String? spacingToken) {
+  if (spacingToken == null || spacingToken.isEmpty) return 0;
+
   return _parseSpacingToken(spacingToken);
 }
 

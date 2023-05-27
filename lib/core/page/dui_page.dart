@@ -1,8 +1,6 @@
 import 'dart:convert';
 
-import 'package:digia_ui/components/DUIText/dui_text.dart';
-import 'package:digia_ui/components/button/button.dart';
-import 'package:digia_ui/components/image/image.dart';
+import 'package:digia_ui/Utils/util_functions.dart';
 import 'package:digia_ui/core/container/dui_container.dart';
 import 'package:digia_ui/core/page/props/dui_page_props.dart';
 import 'package:flutter/material.dart';
@@ -16,16 +14,9 @@ class DUIPage extends StatefulWidget {
 }
 
 class _DUIPageState extends State<DUIPage> {
-  final Map<String, Function> listRegistry = {
-    // 'digia/button': DUIButton.fromJson,
-    'digia/text': DUIText.create,
-    'digia/image': DUIImage.create,
-    'digia/button': DUIButton.create,
-  };
-
   Future<DUIPageProps>? _jsonData() async {
     final response =
-        await rootBundle.loadString("assets/temp/page_response.json");
+        await rootBundle.loadString("assets/temp/subjects_response.json");
     final json = await jsonDecode(response);
     return DUIPageProps.fromJson(json['page']);
   }
@@ -61,7 +52,8 @@ class _DUIPageState extends State<DUIPage> {
                       final item = list[index];
 
                       final widgetFromRegistry =
-                          listRegistry[item.child.type]?.call(item.child.data);
+                          DUIWidgetRegistry[item.child.type]
+                              ?.call(item.child.data);
 
                       final child = item.wrap
                           ? Wrap(children: [widgetFromRegistry])
