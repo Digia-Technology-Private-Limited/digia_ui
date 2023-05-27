@@ -14,12 +14,10 @@ DUICardProps _$DUICardPropsFromJson(Map<String, dynamic> json) => DUICardProps()
   ..cornerRadius = DUICornerRadius.fromJson(json['cornerRadius'])
   ..image = DUIImageProps.fromJson(json['image'] as Map<String, dynamic>)
   ..imageMargin = DUIInsets.fromJson(json['imageMargin'])
-  ..title = DUITextProps.fromJson(json['title'] as Map<String, dynamic>)
-  ..topCrumbText =
-      DUITextProps.fromJson(json['topCrumbText'] as Map<String, dynamic>)
+  ..title = DUITextProps.fromJson(json['title'])
+  ..topCrumbText = DUITextProps.fromJson(json['topCrumbText'])
   ..spaceBtwTopCrumbTextTitle = json['spaceBtwTopCrumbTextTitle'] as String
-  ..avatarText =
-      DUITextProps.fromJson(json['avatarText'] as Map<String, dynamic>)
+  ..avatarText = DUITextProps.fromJson(json['avatarText'])
   ..avatarImage =
       DUIImageProps.fromJson(json['avatarImage'] as Map<String, dynamic>)
   ..spaceBtwAvatarImageAndText = json['spaceBtwAvatarImageAndText'] as String;

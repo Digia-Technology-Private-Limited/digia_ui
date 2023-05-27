@@ -7,8 +7,8 @@ part 'dui_text_span.g.dart';
 @JsonSerializable()
 class DUITextSpan {
   late String text;
-  late String? styleClass;
-  late String? url;
+  String? styleClass;
+  String? url;
 
   DUITextSpan();
 
