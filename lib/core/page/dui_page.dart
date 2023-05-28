@@ -44,24 +44,26 @@ class _DUIPageState extends State<DUIPage> {
               return const Center(child: Text("Currently Not supported!!!"));
             }
 
-            return DUIContainer(
-                styleClass: listObject?.styleClass,
-                child: ListView.builder(
-                    itemCount: list.length,
-                    itemBuilder: (context, index) {
-                      final item = list[index];
+            final widget = ListView.builder(
+                itemCount: list.length,
+                itemBuilder: (context, index) {
+                  final item = list[index];
 
-                      final widgetFromRegistry =
-                          DUIWidgetRegistry[item.child.type]
-                              ?.call(item.child.data);
+                  final widgetFromRegistry =
+                      DUIWidgetRegistry[item.child.type]?.call(item.child.data);
 
-                      final child = item.wrap
-                          ? Wrap(children: [widgetFromRegistry])
-                          : widgetFromRegistry;
+                  final child = item.wrap
+                      ? Wrap(children: [widgetFromRegistry])
+                      : widgetFromRegistry;
 
-                      return DUIContainer(
-                          styleClass: item.styleClass, child: child);
-                    }));
+                  return DUIContainer(
+                      styleClass: item.styleClass, child: child);
+                });
+
+            return listObject?.styleClass == null
+                ? widget
+                : DUIContainer(
+                    styleClass: listObject?.styleClass, child: widget);
           }),
     );
   }

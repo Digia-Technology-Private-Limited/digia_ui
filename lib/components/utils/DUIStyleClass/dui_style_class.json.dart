@@ -1,7 +1,7 @@
 part of 'dui_style_class.dart';
 
 DUIStyleClass? _$DUIStyleClassFromJson(dynamic json) {
-  if (json is Map<String, dynamic>) {
+  if (json is Map<String, dynamic> && json.isNotEmpty) {
     return _$DUIStyleClassFromDictionary(json);
   }
 
