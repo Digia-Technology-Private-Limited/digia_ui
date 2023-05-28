@@ -8,29 +8,18 @@ part of 'image.props.dart';
 
 DUIImageProps _$DUIImagePropsFromJson(Map<String, dynamic> json) =>
     DUIImageProps()
-      ..height = (json['height'] as num?)?.toDouble()
-      ..width = (json['width'] as num?)?.toDouble()
+      ..styleClass = DUIStyleClass.fromJson(json['styleClass'])
       ..imageSrc = json['imageSrc'] as String
       ..placeHolder = json['placeHolder'] as String?
-      ..errorFallback = json['errorFallback'] as String?
-      ..margin =
-          json['margin'] == null ? null : DUIInsets.fromJson(json['margin'])
-      ..padding =
-          json['padding'] == null ? null : DUIInsets.fromJson(json['padding'])
-      ..fit = json['fit'] as String
-      ..cornerRadius = json['cornerRadius'] == null
-          ? null
-          : DUICornerRadius.fromJson(json['cornerRadius']);
+      ..errorImage = json['errorImage'] as String?
+      ..aspectRatio = (json['aspectRatio'] as num?)?.toDouble()
+      ..fit = json['fit'] as String;
 
 Map<String, dynamic> _$DUIImagePropsToJson(DUIImageProps instance) =>
     <String, dynamic>{
-      'height': instance.height,
-      'width': instance.width,
       'imageSrc': instance.imageSrc,
       'placeHolder': instance.placeHolder,
-      'errorFallback': instance.errorFallback,
-      'margin': instance.margin,
-      'padding': instance.padding,
+      'errorImage': instance.errorImage,
+      'aspectRatio': instance.aspectRatio,
       'fit': instance.fit,
-      'cornerRadius': instance.cornerRadius,
     };

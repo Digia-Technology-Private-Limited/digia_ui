@@ -31,7 +31,7 @@
                 "data": {
                   "contentPadding": "sp-250,sp-250,sp-300,sp-250",
                   "image": {
-                    "height": 150,
+                    "aspectRatio": 0.85,
                     "imageSrc": "https://upload.wikimedia.org/wikipedia/commons/e/e7/Everest_North_Face_toward_Base_Camp_Tibet_Luca_Galuzzi_2006.jpg",
                     "fit": "fill"
                   },
@@ -47,11 +47,9 @@
                   "spaceBtwAvatarImageAndText": "sp-200",
                   "spaceBtwTopCrumbTextTitle": "sp-100",
                   "avatarImage": {
-                    "height": 24,
-                    "width": 24,
+                    "styleClass": "h:24; w:24; cr: 24",
                     "imageSrc": "https://howtodrawforkids.com/wp-content/uploads/2021/06/How-to-draw-a-human-for-kids.jpg",
-                    "fit": "contain",
-                    "cornerRadius": 24
+                    "fit": "contain"
                   },
                   "avatarText": {
                     "styleClass": "ft:caption;tc:textSubtle",
@@ -61,13 +59,13 @@
               }
             },
             {
-              "styleClass": "cr:8; bgc:accent1; h:150; m:0,0,0,sp-300",
+              "styleClass": "cr:8; bgc:accent1; m:0,0,0,sp-300",
               "child": {
                 "type": "digia/card_type2",
                 "data": {
                   "contentPadding": "sp-250,sp-250,sp-300,sp-250",
                   "image": {
-                    "height": 100,
+                    "aspectRatio": 0.85,
                     "imageSrc": "https://upload.wikimedia.org/wikipedia/commons/e/e7/Everest_North_Face_toward_Base_Camp_Tibet_Luca_Galuzzi_2006.jpg",
                     "fit": "fill"
                   },
@@ -83,11 +81,9 @@
                   "spaceBtwAvatarImageAndText": "sp-200",
                   "spaceBtwTopCrumbTextTitle": "sp-100",
                   "avatarImage": {
-                    "height": 24,
-                    "width": 24,
+                    "styleClass": "h:24; w:24; cr: 24",
                     "imageSrc": "https://howtodrawforkids.com/wp-content/uploads/2021/06/How-to-draw-a-human-for-kids.jpg",
-                    "fit": "contain",
-                    "cornerRadius": 24
+                    "fit": "contain"
                   },
                   "avatarText": {
                     "styleClass": "ft:caption;tc:textSubtle",

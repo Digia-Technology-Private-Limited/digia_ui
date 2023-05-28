@@ -1,22 +1,19 @@
 import 'dart:convert';
 
-import 'package:digia_ui/components/utils/DUICornerRadius/dui_corner_radius.dart';
-import 'package:digia_ui/components/utils/DUIInsets/dui_insets.dart';
+import 'package:digia_ui/components/utils/DUIStyleClass/dui_style_class.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'image.props.g.dart';
 
 @JsonSerializable()
 class DUIImageProps {
-  late double? height;
-  late double? width;
+  @JsonKey(fromJson: DUIStyleClass.fromJson, includeToJson: false)
+  late DUIStyleClass? styleClass;
   late String imageSrc;
   late String? placeHolder;
-  late String? errorFallback;
-  late DUIInsets? margin;
-  late DUIInsets? padding;
+  late String? errorImage;
+  late double? aspectRatio;
   late String fit;
-  late DUICornerRadius? cornerRadius;
 
   DUIImageProps();
 

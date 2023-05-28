@@ -1,8 +1,9 @@
-import 'package:digia_ui/Utils/constants.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:digia_ui/Utils/util_functions.dart';
-import 'package:digia_ui/components/image/dui_cached_image.dart';
 import 'package:digia_ui/components/image/image.props.dart';
+import 'package:digia_ui/core/container/dui_container.dart';
 import 'package:flutter/material.dart';
+import 'package:octo_image/octo_image.dart';
 
 class DUIImage extends StatefulWidget {
   final DUIImageProps props;
@@ -27,60 +28,54 @@ class _DUIImageState extends State<DUIImage> {
     super.initState();
   }
 
-  Widget errorImage() => Image.asset(
-        duiErrorImage,
-        height: props.height,
-        width: props.width,
-        fit: toBoxFit(props.fit),
-      );
+  OctoPlaceholderBuilder? _placeHolderBuilderCreater() {
+    final placeHolderValue = props.placeHolder;
 
-  Widget placeHolderImage() => Image.asset(
-        duiPlaceHolder,
-        height: props.height,
-        width: props.width,
-        fit: toBoxFit(props.fit),
-      );
+    if (placeHolderValue == null || placeHolderValue.isEmpty) {
+      return null;
+    }
 
-  Widget assetImage() => Image.asset(
-        props.imageSrc,
-        height: props.height,
-        width: props.width,
-        fit: toBoxFit(props.fit),
-        errorBuilder:
-            (BuildContext context, Object exception, StackTrace? stackTrace) {
-          return errorImage();
-        },
-      );
+    switch (props.imageSrc.split('/').first) {
+      case 'http':
+      case 'https':
+        return ((context) => CachedNetworkImage(imageUrl: placeHolderValue));
+      case 'assets':
+        return ((context) => Image.asset(placeHolderValue));
+      case 'blurHash':
+        return OctoPlaceholder.blurHash(placeHolderValue[1]);
+    }
 
-  Widget cachedImage() => DUICachedImage(
-        width: props.width,
-        height: props.height,
-        fit: toBoxFit(props.fit),
-        borderRadius: toBorderRadiusGeometry(props.cornerRadius),
-        imageUrl: props.imageSrc,
-        errorImage: errorImage(),
-        placeHolderImage: placeHolderImage(),
-      );
-
-  Widget imageWidget() => ClipRRect(
-      borderRadius: toBorderRadiusGeometry(props.cornerRadius),
-      clipBehavior: Clip.antiAlias,
-      child: Padding(
-        padding: toEdgeInsetsGeometry(props.padding),
-        child: props.imageSrc.split('/').first == 'assets'
-            ? assetImage()
-            : cachedImage(),
-      ));
+    return null;
+  }
 
   @override
   Widget build(BuildContext context) {
-    if (props.margin == null) {
-      return imageWidget();
+    final ImageProvider imageProvider;
+    // Network Image
+    if (props.imageSrc.startsWith("http")) {
+      imageProvider = CachedNetworkImageProvider(props.imageSrc);
+    } else {
+      imageProvider = AssetImage(props.imageSrc);
     }
 
-    return Padding(
-      padding: toEdgeInsetsGeometry(props.margin),
-      child: imageWidget(),
-    );
+    return OctoImage(
+        image: imageProvider,
+        fit: toBoxFit(props.fit),
+        gaplessPlayback: true,
+        placeholderBuilder: _placeHolderBuilderCreater(),
+        imageBuilder: (BuildContext context, Widget widget) {
+          final child = props.aspectRatio == null
+              ? widget
+              : AspectRatio(aspectRatio: props.aspectRatio!, child: widget);
+          return props.styleClass != null
+              ? DUIContainer(styleClass: props.styleClass, child: child)
+              : child;
+        },
+        errorBuilder: (context, error, stackTrace) {
+          if (props.errorImage == null) {
+            return const Icon(Icons.error);
+          }
+          return Image.asset(props.errorImage!);
+        });
   }
 }
