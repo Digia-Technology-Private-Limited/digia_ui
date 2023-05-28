@@ -41,7 +41,7 @@ class _DUICardState extends State<DUICard> {
                 child: DUIImage(props.image),
               ),
               Expanded(
-                flex: 2,  
+                flex: 2,
                 child: Padding(
                   padding: toEdgeInsetsGeometry(props.contentPadding),
                   child: Column(
