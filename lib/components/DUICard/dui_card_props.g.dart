@@ -7,13 +7,9 @@ part of 'dui_card_props.dart';
 // **************************************************************************
 
 DUICardProps _$DUICardPropsFromJson(Map<String, dynamic> json) => DUICardProps()
-  ..bgColor = json['bgColor'] as String
-  ..height = (json['height'] as num).toDouble()
-  ..width = (json['width'] as num).toDouble()
-  ..contentMargin = DUIInsets.fromJson(json['contentMargin'])
-  ..cornerRadius = DUICornerRadius.fromJson(json['cornerRadius'])
+  ..styleClass = DUIStyleClass.fromJson(json['styleClass'])
+  ..contentPadding = DUIInsets.fromJson(json['contentPadding'])
   ..image = DUIImageProps.fromJson(json['image'] as Map<String, dynamic>)
-  ..imageMargin = DUIInsets.fromJson(json['imageMargin'])
   ..title = DUITextProps.fromJson(json['title'])
   ..topCrumbText = DUITextProps.fromJson(json['topCrumbText'])
   ..spaceBtwTopCrumbTextTitle = json['spaceBtwTopCrumbTextTitle'] as String
@@ -24,13 +20,8 @@ DUICardProps _$DUICardPropsFromJson(Map<String, dynamic> json) => DUICardProps()
 
 Map<String, dynamic> _$DUICardPropsToJson(DUICardProps instance) =>
     <String, dynamic>{
-      'bgColor': instance.bgColor,
-      'height': instance.height,
-      'width': instance.width,
-      'contentMargin': instance.contentMargin,
-      'cornerRadius': instance.cornerRadius,
+      'contentPadding': instance.contentPadding,
       'image': instance.image,
-      'imageMargin': instance.imageMargin,
       'title': instance.title,
       'topCrumbText': instance.topCrumbText,
       'spaceBtwTopCrumbTextTitle': instance.spaceBtwTopCrumbTextTitle,

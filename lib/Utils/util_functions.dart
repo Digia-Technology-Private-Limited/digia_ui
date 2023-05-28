@@ -1,4 +1,5 @@
 import 'package:digia_ui/Utils/config_resolver.dart';
+import 'package:digia_ui/components/DUICard/dui_card.dart';
 import 'package:digia_ui/components/DUIText/DUI_text_span/dui_text_span.dart';
 import 'package:digia_ui/components/DUIText/dui_text.dart';
 import 'package:digia_ui/components/button/button.dart';
@@ -16,6 +17,7 @@ final Map<String, Function> DUIWidgetRegistry = {
   'digia/image': DUIImage.create,
   'digia/button': DUIButton.create,
   'digia/card_type1': DUITechCard.create,
+  'digia/card_type2': DUICard.create,
   'digia/grid': DUIGridView.create
 };
 
