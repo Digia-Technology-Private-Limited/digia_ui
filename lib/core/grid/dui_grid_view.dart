@@ -1,4 +1,5 @@
 import 'package:digia_ui/Utils/util_functions.dart';
+import 'package:digia_ui/core/container/dui_container.dart';
 import 'package:digia_ui/core/grid/dui_grid_view.props.dart';
 import 'package:flutter/material.dart';
 
@@ -20,12 +21,15 @@ class DUIGridView extends StatelessWidget {
             crossAxisCount: props.crossAxisCount,
             mainAxisSpacing: resolveSpacing(props.mainAxisSpacing),
             crossAxisSpacing: resolveSpacing(props.crossAxisSpacing),
-            childAspectRatio: 1.2),
+            childAspectRatio: props.childAspectRatio ?? 1.0),
         itemBuilder: (context, index) {
           final childContainer = props.children[index];
           final widget = DUIWidgetRegistry[childContainer.child.type]
               ?.call(childContainer.child.data);
-          return widget;
+          return childContainer.styleClass == null
+              ? widget
+              : DUIContainer(
+                  styleClass: childContainer.styleClass, child: widget);
         });
   }
 }

@@ -16,12 +16,14 @@ DUIGridViewProps _$DUIGridViewPropsFromJson(Map<String, dynamic> json) =>
     )
       ..mainAxisSpacing = json['mainAxisSpacing'] as String?
       ..crossAxisSpacing = json['crossAxisSpacing'] as String?
-      ..crossAxisCount = json['crossAxisCount'] as int;
+      ..crossAxisCount = json['crossAxisCount'] as int
+      ..childAspectRatio = (json['childAspectRatio'] as num?)?.toDouble();
 
 Map<String, dynamic> _$DUIGridViewPropsToJson(DUIGridViewProps instance) =>
     <String, dynamic>{
       'mainAxisSpacing': instance.mainAxisSpacing,
       'crossAxisSpacing': instance.crossAxisSpacing,
       'crossAxisCount': instance.crossAxisCount,
+      'childAspectRatio': instance.childAspectRatio,
       'children': instance.children,
     };

@@ -31,6 +31,7 @@
                   "crossAxisCount": 2,
                   "crossAxisSpacing": "sp-300",
                   "mainAxisSpacing": "sp-300",
+                  "childAspectRatio": 1.2,
                   "children": [
                     {
                       "child": {

@@ -8,9 +8,11 @@ class DUIGridViewProps {
   String? mainAxisSpacing;
   String? crossAxisSpacing;
   int crossAxisCount = 2;
+  double? childAspectRatio;
   List<PageBodyListContainer> children;
 
   DUIGridViewProps({this.children = const []});
+
   factory DUIGridViewProps.fromJson(Map<String, dynamic> json) =>
       _$DUIGridViewPropsFromJson(json);
 
