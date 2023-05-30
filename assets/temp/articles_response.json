@@ -31,6 +31,7 @@
                 "data": {
                   "contentPadding": "sp-250,sp-250,sp-300,sp-250",
                   "image": {
+                    "styleClass": "cr:8",
                     "aspectRatio": 0.85,
                     "imageSrc": "https://upload.wikimedia.org/wikipedia/commons/e/e7/Everest_North_Face_toward_Base_Camp_Tibet_Luca_Galuzzi_2006.jpg",
                     "fit": "fill"
@@ -59,12 +60,13 @@
               }
             },
             {
-              "styleClass": "cr:8; bgc:accent1; m:0,0,0,sp-300",
+              "styleClass": "cr:8; bgc:accent1; h:150; m:0,0,0,sp-300",
               "child": {
                 "type": "digia/card_type2",
                 "data": {
                   "contentPadding": "sp-250,sp-250,sp-300,sp-250",
                   "image": {
+                    "styleClass": "cr:8",
                     "aspectRatio": 0.85,
                     "imageSrc": "https://upload.wikimedia.org/wikipedia/commons/e/e7/Everest_North_Face_toward_Base_Camp_Tibet_Luca_Galuzzi_2006.jpg",
                     "fit": "fill"
