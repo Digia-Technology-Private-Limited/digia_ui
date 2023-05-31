@@ -111,8 +111,7 @@
         "onPageLoad": {
           "type": "loadPage",
           "data": {
-            "pageName": "subjects",
-            "inputArgs": {}
+            "pageName": "subjects"
           }
         },
         "onBackPress": {},
@@ -137,6 +136,15 @@
                         "child": {
                           "type": "digia/card_type1",
                           "data": {
+                            "onClick": {
+                              "type": "navigate_to_page",
+                              "data": {
+                                "pageName": "articles",
+                                "inputArgs": {
+                                  "subjectId": "articles-kotlin"
+                                }
+                              }
+                            },
                             "styleClass": "bgc:accent1;cr:8;p:sp-300",
                             "title": {
                               "styleClass": "ft:h2-medium;tc:text",
@@ -159,6 +167,15 @@
                         "child": {
                           "type": "digia/card_type1",
                           "data": {
+                            "onClick": {
+                              "type": "navigate_to_page",
+                              "data": {
+                                "pageName": "articles",
+                                "inputArgs": {
+                                  "subjectId": "articles-Flutter"
+                                }
+                              }
+                            },
                             "styleClass": "bgc:accent2;cr:8;p:sp-300",
                             "title": {
                               "styleClass": "ft:h2-medium;tc:text",
@@ -181,6 +198,12 @@
                         "child": {
                           "type": "digia/card_type1",
                           "data": {
+                            "onClick": {
+                              "type": "navigate_to_page",
+                              "data": {
+                                "pageName": "articles"
+                              }
+                            },
                             "styleClass": "bgc:accent3;cr:8;p:sp-300",
                             "title": {
                               "styleClass": "ft:h2-medium;tc:text",
@@ -203,6 +226,12 @@
                         "child": {
                           "type": "digia/card_type1",
                           "data": {
+                            "onClick": {
+                              "type": "navigate_to_page",
+                              "data": {
+                                "pageName": "articles"
+                              }
+                            },
                             "styleClass": "bgc:accent4;cr:8;p:sp-300",
                             "title": {
                               "styleClass": "ft:h2-medium;tc:text",
@@ -225,6 +254,12 @@
                         "child": {
                           "type": "digia/card_type1",
                           "data": {
+                            "onClick": {
+                              "type": "navigate_to_page",
+                              "data": {
+                                "pageName": "articles"
+                              }
+                            },
                             "styleClass": "bgc:accent5;cr:8;p:sp-300",
                             "title": {
                               "styleClass": "ft:h2-medium;tc:text",
@@ -247,6 +282,12 @@
                         "child": {
                           "type": "digia/card_type1",
                           "data": {
+                            "onClick": {
+                              "type": "navigate_to_page",
+                              "data": {
+                                "pageName": "articles"
+                              }
+                            },
                             "styleClass": "bgc:accent6;cr:8;p:sp-300",
                             "title": {
                               "styleClass": "ft:h2-medium;tc:text",
@@ -269,6 +310,12 @@
                         "child": {
                           "type": "digia/card_type1",
                           "data": {
+                            "onClick": {
+                              "type": "navigate_to_page",
+                              "data": {
+                                "pageName": "articles"
+                              }
+                            },
                             "styleClass": "bgc:accent7;cr:8;p:sp-300",
                             "title": {
                               "styleClass": "ft:h2-medium;tc:text",
@@ -291,6 +338,12 @@
                         "child": {
                           "type": "digia/card_type1",
                           "data": {
+                            "onClick": {
+                              "type": "navigate_to_page",
+                              "data": {
+                                "pageName": "articles"
+                              }
+                            },
                             "styleClass": "bgc:accent8;cr:8;p:sp-300",
                             "title": {
                               "styleClass": "ft:h2-medium;tc:text",
@@ -324,16 +377,19 @@
       "name": "articles",
       "route": "/articles",
       "inputArgs": {
-        "properties": {}
+        "type": "object",
+        "properties": {
+          "subjectId": {
+            "type": "string"
+          }
+        },
+        "required": ["subjectId"]
       },
       "actions": {
         "onPageLoad": {
           "type": "loadPage",
           "data": {
-            "pageName": "articles",
-            "inputArgs": {
-              "subjectId": "{{  }}"
-            }
+            "pageName": "articles"
           }
         },
         "onBackPress": {},

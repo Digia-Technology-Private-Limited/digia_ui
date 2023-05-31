@@ -1,7 +1,6 @@
-import 'dart:developer';
-
 import 'package:digia_ui/Utils/util_functions.dart';
 import 'package:digia_ui/components/DUIText/dui_text.dart';
+import 'package:digia_ui/core/action/action_handler.dart';
 import 'package:digia_ui/core/container/dui_container.dart';
 import 'package:flutter/material.dart';
 
@@ -31,25 +30,29 @@ class _DUITechCardState extends State<DUITechCard> {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        log('Button Clicked');
-      },
-      child: DUIContainer(
-          styleClass: props.styleClass,
-          width: props.width,
-          height: props.height,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              DUIImage(props.image),
-              const Spacer(),
-              SizedBox(height: resolveSpacing(props.spaceBtwImageAndTitle)),
-              DUIText(props.title),
-              DUIText(props.subText),
-            ],
-          )),
-    );
+    final widget = DUIContainer(
+        styleClass: props.styleClass,
+        width: props.width,
+        height: props.height,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            DUIImage(props.image),
+            const Spacer(),
+            SizedBox(height: resolveSpacing(props.spaceBtwImageAndTitle)),
+            DUIText(props.title),
+            DUIText(props.subText),
+          ],
+        ));
+
+    return props.onClick == null
+        ? widget
+        : InkWell(
+            onTap: () {
+              ActionHandler().executeAction(context, props.onClick!);
+            },
+            child: widget,
+          );
   }
 }
