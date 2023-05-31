@@ -1,4 +1,486 @@
 {
+  "pages": {
+    "onboardingPage": {
+      "pageName": "bytes-front-page",
+      "inputArgs": {}
+    },
+    "bytes-front-page": {
+      "id": "bytes-front-page",
+      "name": "bytes-front-page",
+      "route": "/bytes-front-page",
+      "inputArgs": {
+        "properties": {}
+      },
+      "actions": {
+        "onPageLoad": {
+          "type": "renderLayout",
+          "data": {
+            "pageName": "bytes-front-page"
+          }
+        },
+        "onBackPress": {},
+        "pullToRefresh": {}
+      },
+      "layout": {
+        "header": {},
+        "body": {
+          "list": {
+            "styleClass": "p:sp-300",
+            "children": [
+              {
+                "wrap": false,
+                "styleClass": "h:46%; bgc:primary; cr:32; al:center",
+                "child": {
+                  "type": "digia/text",
+                  "data": {
+                    "styleClass": "ft:bytes-logo;tc:white;ff:AppleII",
+                    "textSpans": [
+                      {
+                        "text": "BYTES"
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                "styleClass": "m:0,sp-400,0,0",
+                "child": {
+                  "type": "digia/text",
+                  "data": {
+                    "textSpans": [
+                      {
+                        "text": "Stoppage for your\n",
+                        "styleClass": "ft:heading1;tc:text;ff:Nunito"
+                      },
+                      {
+                        "text": "Curiosity",
+                        "styleClass": "ft:heading1;tc:secondary;ff:Nunito"
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                "styleClass": "m:0,22,0,0",
+                "child": {
+                  "type": "digia/text",
+                  "data": {
+                    "styleClass": "ft:para1-regular;tc:textSubtle",
+                    "textSpans": [
+                      {
+                        "text": "Discover Bytes, an intuitive and versatile Content Platform powered by Digia."
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                "styleClass": "m:0,sp-500,0,0",
+                "wrap": true,
+                "child": {
+                  "type": "digia/button",
+                  "data": {
+                    "styleClass": "p:sp-300,sp-250;bgc:primary;cr:200;",
+                    "text": {
+                      "styleClass": "ft:button1;tc:light",
+                      "text": "Get Started"
+                    },
+                    "onClick": {
+                      "type": "navigate_to_page",
+                      "data": {
+                        "pageName": "subjects"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "footer": {}
+      }
+    },
+    "subjects": {
+      "id": "subjects",
+      "name": "subjects",
+      "route": "/subjects",
+      "inputArgs": {
+        "properties": {}
+      },
+      "actions": {
+        "onPageLoad": {
+          "type": "loadPage",
+          "data": {
+            "pageName": "subjects"
+          }
+        },
+        "onBackPress": {},
+        "pullToRefresh": {}
+      },
+      "layout": {
+        "header": {},
+        "body": {
+          "list": {
+            "styleClass": "p:sp-300",
+            "children": [
+              {
+                "child": {
+                  "type": "digia/grid",
+                  "data": {
+                    "crossAxisCount": 2,
+                    "crossAxisSpacing": "sp-300",
+                    "mainAxisSpacing": "sp-300",
+                    "childAspectRatio": 1.2,
+                    "children": [
+                      {
+                        "child": {
+                          "type": "digia/card_type1",
+                          "data": {
+                            "onClick": {
+                              "type": "navigate_to_page",
+                              "data": {
+                                "pageName": "articles",
+                                "inputArgs": {
+                                  "subjectId": "articles-kotlin"
+                                }
+                              }
+                            },
+                            "styleClass": "bgc:accent1;cr:8;p:sp-300",
+                            "title": {
+                              "styleClass": "ft:h2-medium;tc:text",
+                              "text": "Kotlin"
+                            },
+                            "subText": {
+                              "styleClass": "ft:para3;tc:textSubtle",
+                              "text": "Programming"
+                            },
+                            "spaceBtwImageAndTitle": "sp-250",
+                            "image": {
+                              "styleClass": "w:48;h:48;cr:24",
+                              "imageSrc": "https://upload.wikimedia.org/wikipedia/commons/e/e7/Everest_North_Face_toward_Base_Camp_Tibet_Luca_Galuzzi_2006.jpg",
+                              "fit": "fill"
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "child": {
+                          "type": "digia/card_type1",
+                          "data": {
+                            "onClick": {
+                              "type": "navigate_to_page",
+                              "data": {
+                                "pageName": "articles",
+                                "inputArgs": {
+                                  "subjectId": "articles-Flutter"
+                                }
+                              }
+                            },
+                            "styleClass": "bgc:accent2;cr:8;p:sp-300",
+                            "title": {
+                              "styleClass": "ft:h2-medium;tc:text",
+                              "text": "Flutter"
+                            },
+                            "subText": {
+                              "styleClass": "ft:para3;tc:textSubtle",
+                              "text": "Programming"
+                            },
+                            "spaceBtwImageAndTitle": "sp-250",
+                            "image": {
+                              "styleClass": "w:48;h:48;cr:24",
+                              "imageSrc": "https://upload.wikimedia.org/wikipedia/commons/e/e7/Everest_North_Face_toward_Base_Camp_Tibet_Luca_Galuzzi_2006.jpg",
+                              "fit": "fill"
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "child": {
+                          "type": "digia/card_type1",
+                          "data": {
+                            "onClick": {
+                              "type": "navigate_to_page",
+                              "data": {
+                                "pageName": "articles",
+                                "inputArgs": {
+                                  "subjectId": "articles-Nodejs"
+                                }
+                              }
+                            },
+                            "styleClass": "bgc:accent3;cr:8;p:sp-300",
+                            "title": {
+                              "styleClass": "ft:h2-medium;tc:text",
+                              "text": "Nodejs"
+                            },
+                            "subText": {
+                              "styleClass": "ft:para3;tc:textSubtle",
+                              "text": "Programming"
+                            },
+                            "spaceBtwImageAndTitle": "sp-250",
+                            "image": {
+                              "styleClass": "w:48;h:48;cr:24",
+                              "imageSrc": "https://upload.wikimedia.org/wikipedia/commons/e/e7/Everest_North_Face_toward_Base_Camp_Tibet_Luca_Galuzzi_2006.jpg",
+                              "fit": "fill"
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "child": {
+                          "type": "digia/card_type1",
+                          "data": {
+                            "onClick": {
+                              "type": "navigate_to_page",
+                              "data": {
+                                "pageName": "articles"
+                              }
+                            },
+                            "styleClass": "bgc:accent4;cr:8;p:sp-300",
+                            "title": {
+                              "styleClass": "ft:h2-medium;tc:text",
+                              "text": "Javascript"
+                            },
+                            "subText": {
+                              "styleClass": "ft:para3;tc:textSubtle",
+                              "text": "Programming"
+                            },
+                            "spaceBtwImageAndTitle": "sp-250",
+                            "image": {
+                              "styleClass": "w:48;h:48;cr:24",
+                              "imageSrc": "https://upload.wikimedia.org/wikipedia/commons/e/e7/Everest_North_Face_toward_Base_Camp_Tibet_Luca_Galuzzi_2006.jpg",
+                              "fit": "fill"
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "child": {
+                          "type": "digia/card_type1",
+                          "data": {
+                            "onClick": {
+                              "type": "navigate_to_page",
+                              "data": {
+                                "pageName": "articles"
+                              }
+                            },
+                            "styleClass": "bgc:accent5;cr:8;p:sp-300",
+                            "title": {
+                              "styleClass": "ft:h2-medium;tc:text",
+                              "text": "Typescript"
+                            },
+                            "subText": {
+                              "styleClass": "ft:para3;tc:textSubtle",
+                              "text": "Programming"
+                            },
+                            "spaceBtwImageAndTitle": "sp-250",
+                            "image": {
+                              "styleClass": "w:48;h:48;cr:24",
+                              "imageSrc": "https://upload.wikimedia.org/wikipedia/commons/e/e7/Everest_North_Face_toward_Base_Camp_Tibet_Luca_Galuzzi_2006.jpg",
+                              "fit": "fill"
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "child": {
+                          "type": "digia/card_type1",
+                          "data": {
+                            "onClick": {
+                              "type": "navigate_to_page",
+                              "data": {
+                                "pageName": "articles"
+                              }
+                            },
+                            "styleClass": "bgc:accent6;cr:8;p:sp-300",
+                            "title": {
+                              "styleClass": "ft:h2-medium;tc:text",
+                              "text": "Python"
+                            },
+                            "subText": {
+                              "styleClass": "ft:para3;tc:textSubtle",
+                              "text": "Programming"
+                            },
+                            "spaceBtwImageAndTitle": "sp-250",
+                            "image": {
+                              "styleClass": "w:48;h:48;cr:24",
+                              "imageSrc": "https://upload.wikimedia.org/wikipedia/commons/e/e7/Everest_North_Face_toward_Base_Camp_Tibet_Luca_Galuzzi_2006.jpg",
+                              "fit": "fill"
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "child": {
+                          "type": "digia/card_type1",
+                          "data": {
+                            "onClick": {
+                              "type": "navigate_to_page",
+                              "data": {
+                                "pageName": "articles"
+                              }
+                            },
+                            "styleClass": "bgc:accent7;cr:8;p:sp-300",
+                            "title": {
+                              "styleClass": "ft:h2-medium;tc:text",
+                              "text": "Product Plan"
+                            },
+                            "subText": {
+                              "styleClass": "ft:para3;tc:textSubtle",
+                              "text": "Programming"
+                            },
+                            "spaceBtwImageAndTitle": "sp-250",
+                            "image": {
+                              "styleClass": "w:48;h:48;cr:24",
+                              "imageSrc": "https://upload.wikimedia.org/wikipedia/commons/e/e7/Everest_North_Face_toward_Base_Camp_Tibet_Luca_Galuzzi_2006.jpg",
+                              "fit": "fill"
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "child": {
+                          "type": "digia/card_type1",
+                          "data": {
+                            "onClick": {
+                              "type": "navigate_to_page",
+                              "data": {
+                                "pageName": "articles"
+                              }
+                            },
+                            "styleClass": "bgc:accent8;cr:8;p:sp-300",
+                            "title": {
+                              "styleClass": "ft:h2-medium;tc:text",
+                              "text": "Figma"
+                            },
+                            "subText": {
+                              "styleClass": "ft:para3;tc:textSubtle",
+                              "text": "Programming"
+                            },
+                            "spaceBtwImageAndTitle": "sp-250",
+                            "image": {
+                              "styleClass": "w:48;h:48;cr:24",
+                              "imageSrc": "https://upload.wikimedia.org/wikipedia/commons/e/e7/Everest_North_Face_toward_Base_Camp_Tibet_Luca_Galuzzi_2006.jpg",
+                              "fit": "fill"
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "footer": {}
+      }
+    },
+    "articles": {
+      "id": "articles",
+      "name": "articles",
+      "route": "/articles",
+      "inputArgs": {
+        "type": "object",
+        "properties": {
+          "subjectId": {
+            "type": "string"
+          }
+        },
+        "required": ["subjectId"]
+      },
+      "actions": {
+        "onPageLoad": {
+          "type": "loadPage",
+          "data": {
+            "pageName": "articles"
+          }
+        },
+        "onBackPress": {},
+        "pullToRefresh": {}
+      },
+      "layout": {
+        "header": {},
+        "body": {
+          "list": {
+            "styleClass": "p:sp-300",
+            "children": [
+              {
+                "styleClass": "cr:8; bgc:accent1; h:150; m:0,0,0,sp-300",
+                "child": {
+                  "type": "digia/card_type2",
+                  "data": {
+                    "contentPadding": "sp-250,sp-250,sp-300,sp-250",
+                    "image": {
+                      "styleClass": "cr:8",
+                      "aspectRatio": 0.85,
+                      "imageSrc": "https://upload.wikimedia.org/wikipedia/commons/e/e7/Everest_North_Face_toward_Base_Camp_Tibet_Luca_Galuzzi_2006.jpg",
+                      "fit": "fill"
+                    },
+                    "title": {
+                      "styleClass": "ft:para2;tc:text",
+                      "text": "Impact on UX",
+                      "maxLines": 3
+                    },
+                    "topCrumbText": {
+                      "styleClass": "ft:caption;tc:textSubtle",
+                      "text": "April 11, 2023"
+                    },
+                    "spaceBtwAvatarImageAndText": "sp-200",
+                    "spaceBtwTopCrumbTextTitle": "sp-100",
+                    "avatarImage": {
+                      "styleClass": "h:24; w:24; cr: 24",
+                      "imageSrc": "https://howtodrawforkids.com/wp-content/uploads/2021/06/How-to-draw-a-human-for-kids.jpg",
+                      "fit": "contain"
+                    },
+                    "avatarText": {
+                      "styleClass": "ft:caption;tc:textSubtle",
+                      "text": "Rahul Kashyap"
+                    }
+                  }
+                }
+              },
+              {
+                "styleClass": "cr:8; bgc:accent1; h:150; m:0,0,0,sp-300",
+                "child": {
+                  "type": "digia/card_type2",
+                  "data": {
+                    "contentPadding": "sp-250,sp-250,sp-300,sp-250",
+                    "image": {
+                      "styleClass": "cr:8",
+                      "aspectRatio": 0.85,
+                      "imageSrc": "https://upload.wikimedia.org/wikipedia/commons/e/e7/Everest_North_Face_toward_Base_Camp_Tibet_Luca_Galuzzi_2006.jpg",
+                      "fit": "fill"
+                    },
+                    "title": {
+                      "styleClass": "ft:para2;tc:text",
+                      "text": "Impact on UX: Individual Designers vs. Systematic Methodology",
+                      "maxLines": 3
+                    },
+                    "topCrumbText": {
+                      "styleClass": "ft:caption;tc:textSubtle",
+                      "text": "April 12, 2023"
+                    },
+                    "spaceBtwAvatarImageAndText": "sp-200",
+                    "spaceBtwTopCrumbTextTitle": "sp-100",
+                    "avatarImage": {
+                      "styleClass": "h:24; w:24; cr: 24",
+                      "imageSrc": "https://howtodrawforkids.com/wp-content/uploads/2021/06/How-to-draw-a-human-for-kids.jpg",
+                      "fit": "contain"
+                    },
+                    "avatarText": {
+                      "styleClass": "ft:caption;tc:textSubtle",
+                      "text": "Prem Nagar"
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "footer": {}
+      }
+    }
+  },
   "theme": {
     "colors": {
       "primary": "#00C063",

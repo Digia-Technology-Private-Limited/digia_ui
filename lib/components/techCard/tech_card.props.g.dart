@@ -14,7 +14,10 @@ DUITechCardProps _$DUITechCardPropsFromJson(Map<String, dynamic> json) =>
       ..spaceBtwImageAndTitle = json['spaceBtwImageAndTitle'] as String
       ..image = DUIImageProps.fromJson(json['image'] as Map<String, dynamic>)
       ..title = DUITextProps.fromJson(json['title'])
-      ..subText = DUITextProps.fromJson(json['subText']);
+      ..subText = DUITextProps.fromJson(json['subText'])
+      ..onClick = json['onClick'] == null
+          ? null
+          : ActionProp.fromJson(json['onClick'] as Map<String, dynamic>);
 
 Map<String, dynamic> _$DUITechCardPropsToJson(DUITechCardProps instance) =>
     <String, dynamic>{
@@ -24,4 +27,5 @@ Map<String, dynamic> _$DUITechCardPropsToJson(DUITechCardProps instance) =>
       'image': instance.image,
       'title': instance.title,
       'subText': instance.subText,
+      'onClick': instance.onClick,
     };

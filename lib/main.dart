@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
       title: 'Flutter Demo',
-      home: const DUIPage(),
+      home: DUIPage(initData: ConfigResolver().getfirstPageData()),
     );
   }
 }

@@ -1,6 +1,5 @@
-import 'dart:developer';
-
 import 'package:digia_ui/components/DUIText/dui_text.dart';
+import 'package:digia_ui/core/action/action_handler.dart';
 import 'package:digia_ui/core/container/dui_container.dart';
 import 'package:flutter/material.dart';
 
@@ -52,31 +51,36 @@ class _DUIButtonState extends State<DUIButton> {
     var styleclass = props.disabled == true
         ? props.styleClass?.copyWith(bgColor: props.disabledBackgroundColor)
         : props.styleClass;
-    return InkWell(
-        onTap: () {
-          log('button clicked');
-        },
-        child: DUIContainer(styleClass: styleclass, child: DUIText(props.text))
-        // child: Container(
-        //   width: props.width,
-        //   height: props.height,
-        //   alignment: toAlignmentGeometry(props.alignment),
-        //   padding: toEdgeInsetsGeometry(props.padding),
-        //   margin: toEdgeInsetsGeometry(props.margin),
-        //   decoration: BoxDecoration(
-        //     color: props.disabled == true
-        //         ? toColor(props.disabledBackgroundColor ??
-        //             DUIConfigConstants.fallbackBgColorHexCode)
-        //         : toColor(props.backgroundColor ??
-        //             DUIConfigConstants.fallbackBgColorHexCode),
-        //     // borderRadius: BorderRadius.circular(props.shape == 'pill'
-        //     //     ? width / 2
-        //     //     : props.shape == 'rect'
-        //     //         ? width / 100
-        //     //         : 0),
-        //   ),
-        //   child: DUIText(props.text),
-        // ),
-        );
+
+    final widget =
+        DUIContainer(styleClass: styleclass, child: DUIText(props.text));
+
+    return props.onClick == null
+        ? widget
+        : InkWell(
+            onTap: () {
+              ActionHandler().executeAction(context, props.onClick!);
+            },
+            child: widget);
+    // child: Container(
+    //   width: props.width,
+    //   height: props.height,
+    //   alignment: toAlignmentGeometry(props.alignment),
+    //   padding: toEdgeInsetsGeometry(props.padding),
+    //   margin: toEdgeInsetsGeometry(props.margin),
+    //   decoration: BoxDecoration(
+    //     color: props.disabled == true
+    //         ? toColor(props.disabledBackgroundColor ??
+    //             DUIConfigConstants.fallbackBgColorHexCode)
+    //         : toColor(props.backgroundColor ??
+    //             DUIConfigConstants.fallbackBgColorHexCode),
+    //     // borderRadius: BorderRadius.circular(props.shape == 'pill'
+    //     //     ? width / 2
+    //     //     : props.shape == 'rect'
+    //     //         ? width / 100
+    //     //         : 0),
+    //   ),
+    //   child: DUIText(props.text),
+    // ),
   }
 }

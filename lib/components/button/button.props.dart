@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:digia_ui/components/DUIText/dui_text_props.dart';
 import 'package:digia_ui/components/utils/DUIStyleClass/dui_style_class.dart';
+import 'package:digia_ui/core/action/action_prop.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'button.props.g.dart';
@@ -20,6 +21,7 @@ class DUIButtonProps {
   late DUITextProps text;
   String? disabledBackgroundColor;
   bool? disabled;
+  ActionProp? onClick;
 
   DUIButtonProps();
 

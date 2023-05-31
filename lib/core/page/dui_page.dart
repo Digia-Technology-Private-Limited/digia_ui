@@ -1,24 +1,34 @@
-import 'dart:convert';
-
+import 'package:digia_ui/Utils/extensions.dart';
 import 'package:digia_ui/Utils/util_functions.dart';
+import 'package:digia_ui/core/action/action_handler.dart';
+import 'package:digia_ui/core/action/action_prop.dart';
 import 'package:digia_ui/core/container/dui_container.dart';
+import 'package:digia_ui/core/page/page_init_data.dart';
 import 'package:digia_ui/core/page/props/dui_page_props.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class DUIPage extends StatefulWidget {
-  const DUIPage({super.key});
+  final PageInitData initData;
+  const DUIPage({super.key, required this.initData});
 
   @override
   State<StatefulWidget> createState() => _DUIPageState();
 }
 
 class _DUIPageState extends State<DUIPage> {
-  Future<DUIPageProps>? _jsonData() async {
-    final response =
-        await rootBundle.loadString("assets/temp/subjects_response.json");
-    final json = await jsonDecode(response);
-    return DUIPageProps.fromJson(json['page']);
+  late PageInitData initData;
+
+  Future<DUIPageProps>? _executeOnPageLoadAction(BuildContext context) async {
+    final action = ActionProp.fromJson(
+        initData.pageConfig.valueFor(keyPath: "actions.onPageLoad"));
+    final json = await ActionHandler().executeAction(context, action);
+    return DUIPageProps.fromJson(json);
+  }
+
+  @override
+  void initState() {
+    initData = widget.initData;
+    super.initState();
   }
 
   @override
@@ -26,7 +36,7 @@ class _DUIPageState extends State<DUIPage> {
     return Scaffold(
       // appBar: AppBar(title: const Text("Test Page")),
       body: FutureBuilder<DUIPageProps>(
-          future: _jsonData(),
+          future: _executeOnPageLoadAction(context),
           builder: (context, snapshot) {
             // TODO: Loader config shall change later
             if (!snapshot.hasData) {
