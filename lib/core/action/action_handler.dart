@@ -7,6 +7,7 @@ import 'package:digia_ui/core/page/dui_page.dart';
 import 'package:digia_ui/core/page/page_init_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:json_schema2/json_schema2.dart';
 
 class ActionHandler {
   static final ActionHandler _instance = ActionHandler._internal();
@@ -31,12 +32,16 @@ class ActionHandler {
           throw "Page Config can not be null";
         }
 
+        final inputArgs = action.data['inputArgs'];
+
+        validateSchema(inputArgs, pageConfig['inputArgs']);
+
         return Navigator.push(context, MaterialPageRoute(builder: (ctx) {
           return DUIPage(
               initData: PageInitData(
                   pageName: pageName,
                   pageConfig: pageConfig,
-                  inputArgs: action.data['inputArgs']));
+                  inputArgs: inputArgs));
         }));
 
       // TODO: Replace file read by API Call.
@@ -69,4 +74,14 @@ class ActionHandler {
   }
 
   ActionHandler._internal();
+}
+
+bool validateSchema(Map<String, dynamic>? args, Map<String, dynamic> def) {
+  final schema = JsonSchema.createSchema(def);
+  final validationResult = schema.validate(args);
+  if (!validationResult) {
+    throw "Validation Error";
+  }
+
+  return true;
 }
