@@ -1,3 +1,4 @@
+import 'package:digia_ui/Utils/extensions.dart';
 import 'package:digia_ui/Utils/util_functions.dart';
 import 'package:digia_ui/components/utils/DUIStyleClass/dui_style_class.dart';
 import 'package:flutter/material.dart';
@@ -37,12 +38,14 @@ class DUIContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final borderRadius = toBorderRadiusGeometry(styleClass?.cornerRadius);
+
     return Container(
         alignment: alignment ?? toAlignmentGeometry(styleClass?.alignment),
         padding: padding ?? toEdgeInsetsGeometry(styleClass?.padding),
         decoration: BoxDecoration(
             color: color ?? _color(styleClass?.bgColor),
-            borderRadius: toBorderRadiusGeometry(styleClass?.cornerRadius)),
+            borderRadius: borderRadius),
         foregroundDecoration: foregroundDecoration,
         width: width ?? double.tryParse(styleClass?.width ?? ""),
         height: height ?? _height(context, styleClass?.height),
@@ -50,7 +53,7 @@ class DUIContainer extends StatelessWidget {
         margin: margin ?? toEdgeInsetsGeometry(styleClass?.margin),
         transform: transform,
         transformAlignment: transformAlignment,
-        clipBehavior: clipBehavior,
+        clipBehavior: borderRadius.isZero() ? clipBehavior : Clip.hardEdge,
         child: child);
   }
 
