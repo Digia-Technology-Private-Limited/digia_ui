@@ -201,7 +201,10 @@
                             "onClick": {
                               "type": "navigate_to_page",
                               "data": {
-                                "pageName": "articles"
+                                "pageName": "articles",
+                                "inputArgs": {
+                                  "subjectId": "articles-Nodejs"
+                                }
                               }
                             },
                             "styleClass": "bgc:accent3;cr:8;p:sp-300",
