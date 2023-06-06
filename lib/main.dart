@@ -1,6 +1,7 @@
 import 'package:digia_ui/Utils/config_resolver.dart';
 import 'package:digia_ui/Utils/util_functions.dart';
-import 'package:digia_ui/core/page/dui_page.dart';
+import 'package:digia_ui/components/charts/line/line_chart.dart';
+import 'package:digia_ui/components/utils/DUIStyleClass/dui_style_class.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -41,7 +42,12 @@ class MyApp extends StatelessWidget {
         ),
       ),
       title: 'Flutter Demo',
-      home: DUIPage(initData: ConfigResolver().getfirstPageData()),
+      home: LineChart(
+        styleClass:
+            DUIStyleClass.fromJson("bgc:white;w:250;h:300;p:35,25,10,10"),
+        lineData: samplelineData,
+      ),
+      // home: DUIPage(initData: ConfigResolver().getfirstPageData()
     );
   }
 }
