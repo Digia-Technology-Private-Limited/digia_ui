@@ -111,5 +111,4 @@ const samplelineData = {
   }
 };
 
-
 // const lineData = {"data": []};

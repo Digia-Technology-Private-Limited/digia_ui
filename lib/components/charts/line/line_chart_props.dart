@@ -1,7 +1,7 @@
 import 'package:digia_ui/components/utils/DUIStyleClass/dui_style_class.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-part 'line_chart_props.g.dart';
+// part 'line_chart_props.g.dart';
 
 @JsonSerializable()
 class LineChartProps {
