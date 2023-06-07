@@ -88,7 +88,7 @@
                     "onClick": {
                       "type": "navigate_to_page",
                       "data": {
-                        "pageName": "subjects"
+                        "pageName": "easy-eat"
                       }
                     }
                   }
@@ -477,6 +477,28 @@
             ]
           }
         },
+        "footer": {}
+      }
+    },
+    "easy-eat": {
+      "id": "easy-eat",
+      "name": "easy-eat",
+      "inputArgs": {},
+      "actions": {
+        "onPageLoad": {
+          "type": "rest_call",
+          "data": {
+            "pageName": "easy-eat",
+            "method": "POST",
+            "url": "http://localhost:5000/easyeat/getChartPage"
+          }
+        },
+        "onBackPress": {},
+        "pullToRefresh": {}
+      },
+      "layout": {
+        "header": {},
+        "body": {},
         "footer": {}
       }
     }

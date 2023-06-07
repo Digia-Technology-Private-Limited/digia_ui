@@ -47,6 +47,7 @@ dependencies:
   octo_image: ^1.0.2
   json_schema2: ^2.0.4+8
   graphic: ^2.2.0
+  http: ^0.13.0
 
 dev_dependencies:
   flutter_test:

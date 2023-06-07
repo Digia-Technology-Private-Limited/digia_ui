@@ -84,12 +84,13 @@ class LineChart extends StatelessWidget {
             final lineStyle = seriesStyleMap[p['group']]['lineStyle']
                 as Map<String, dynamic>?;
 
-            final dashArray = (lineStyle?['dashArray'] as List<num>?)
-                ?.take(2)
-                .map((e) => e.toDouble())
+            final dashArray = (lineStyle?['dashArray'] as List<dynamic>?)
+                ?.map((e) => double.tryParse(e.toString()))
+                .take(2)
+                .nonNulls
                 .toList();
 
-            if (dashArray != null) {
+            if (dashArray != null && dashArray.length == 2) {
               return BasicLineShape(dash: dashArray);
             }
 
@@ -105,9 +106,7 @@ class LineChart extends StatelessWidget {
           color: ColorEncode(encoder: (p) {
             return toColor(seriesStyleMap[p['group']]['color']);
           }),
-        ),
-        // )
-        PointMark()
+        )
       ],
       axes: [
         Defaults.horizontalAxis,
@@ -125,33 +124,33 @@ class LineChart extends StatelessWidget {
   }
 }
 
-const samplelineData = {
-  "styleClass": "w:300;h:300;bgc:white;p:20,40,0,20",
-  "data": {
-    "series": [
-      {
-        "group": "revenue",
-        "color": "primary",
-        "width": 2.0,
-        "data": [148, 86.4, 340, 0, 0, 0, 0]
-      },
-      {
-        "group": "comparison",
-        "color": "secondary",
-        "width": 1.0,
-        "data": [180, 993.7, 0, 0, 257.4, 0, 0],
-        "lineStyle": {
-          "smooth": false,
-          "dashArray": [3, 5]
-        }
-      }
-    ],
-    "xAxis": {
-      "name": "date",
-      "data": ["29 May", "30 May", "31 May", "1 Jun", "2 Jun", "3 Jun", "4 Jun"]
-    },
-    "yAxis": {"name": "revenue", "labelFormatter": "RM {value}"}
-  }
-};
+// const samplelineData = {
+//   "styleClass": "w:300;h:300;bgc:white;p:20,40,0,20",
+//   "data": {
+//     "series": [
+//       {
+//         "group": "revenue",
+//         "color": "primary",
+//         "width": 2.0,
+//         "data": [148, 86.4, 340, 0, 0, 0, 0]
+//       },
+//       {
+//         "group": "comparison",
+//         "color": "secondary",
+//         "width": 1.0,
+//         "data": [180, 993.7, 0, 0, 257.4, 0, 0],
+//         "lineStyle": {
+//           "smooth": false,
+//           "dashArray": [3, 5]
+//         }
+//       }
+//     ],
+//     "xAxis": {
+//       "name": "date",
+//       "data": ["29 May", "30 May", "31 May", "1 Jun", "2 Jun", "3 Jun", "4 Jun"]
+//     },
+//     "yAxis": {"name": "revenue", "labelFormatter": "RM {value}"}
+//   }
+// };
 
 // const lineData = {"data": []};
