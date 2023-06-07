@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:digia_ui/Utils/config_resolver.dart';
 import 'package:digia_ui/Utils/extensions.dart';
 import 'package:digia_ui/core/action/action_prop.dart';
+import 'package:digia_ui/core/action/rest_handler.dart';
 import 'package:digia_ui/core/page/dui_page.dart';
 import 'package:digia_ui/core/page/page_init_data.dart';
 import 'package:flutter/material.dart';
@@ -68,6 +69,9 @@ class ActionHandler {
         }
 
         return pageConfig;
+
+      case 'rest_call':
+        return RestHandler().executeAction(context, action);
     }
 
     return null;
@@ -85,3 +89,8 @@ bool validateSchema(Map<String, dynamic>? args, Map<String, dynamic> def) {
 
   return true;
 }
+
+const Map<String, String> defaultHeaders = {
+  "Accept": "application/json",
+  "Content-Type": "application/json",
+};
