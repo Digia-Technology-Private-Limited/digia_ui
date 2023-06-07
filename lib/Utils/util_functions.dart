@@ -3,6 +3,7 @@ import 'package:digia_ui/components/DUICard/dui_card.dart';
 import 'package:digia_ui/components/DUIText/DUI_text_span/dui_text_span.dart';
 import 'package:digia_ui/components/DUIText/dui_text.dart';
 import 'package:digia_ui/components/button/button.dart';
+import 'package:digia_ui/components/charts/line/line_chart.dart';
 import 'package:digia_ui/components/image/image.dart';
 import 'package:digia_ui/components/techCard/tech_card.dart';
 import 'package:digia_ui/components/utils/DUICornerRadius/dui_corner_radius.dart';
@@ -18,7 +19,8 @@ final Map<String, Function> DUIWidgetRegistry = {
   'digia/button': DUIButton.create,
   'digia/card_type1': DUITechCard.create,
   'digia/card_type2': DUICard.create,
-  'digia/grid': DUIGridView.create
+  'digia/grid': DUIGridView.create,
+  'digia/chart': LineChart.create
 };
 
 class DUIConfigConstants {
@@ -267,18 +269,23 @@ BorderRadiusGeometry toBorderRadiusGeometry(DUICornerRadius? cornerRadius) {
 // Possible Values for colorToken:
 // token: primary, hexCode: #242424, hexCode with Alpha: #FF242424
 Color toColor(String colorToken) {
-  var hexValue = ConfigResolver().getColorValue(colorToken);
+  var colorString = ConfigResolver().getColorValue(colorToken) ?? colorToken;
 
-  return hexToColor(hexValue ?? colorToken);
+  if (isValidHexCode(colorString)) {
+    return hexToColor(colorString);
+  }
+
+  final rgbAlpha =
+      colorString.split(",").map((e) => int.tryParse(e)).nonNulls.toList();
+  if (rgbAlpha.length >= 3) {
+    final alpha = rgbAlpha.length > 3 ? rgbAlpha[3] : 255;
+    return Color.fromARGB(alpha, rgbAlpha[0], rgbAlpha[1], rgbAlpha[2]);
+  }
+
+  throw FormatException('Invalid color Format: $colorString');
 }
 
 Color hexToColor(String colorHexString) {
-  if (!isValidHexCode(colorHexString)) {
-    // TODO: Instead of throwing, log error and provide fallback color
-    throw FormatException(
-        'Hexadecimal Color Value Is Invalid: $colorHexString');
-  }
-
   var rgbString = colorHexString.replaceAll('#', '');
 
   if (colorHexString.length == 8) {
