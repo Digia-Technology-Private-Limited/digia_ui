@@ -3,9 +3,11 @@ import 'package:digia_ui/components/DUICard/dui_card.dart';
 import 'package:digia_ui/components/DUIText/DUI_text_span/dui_text_span.dart';
 import 'package:digia_ui/components/DUIText/dui_text.dart';
 import 'package:digia_ui/components/button/button.dart';
-import 'package:digia_ui/components/charts/line/line_chart.dart';
+import 'package:digia_ui/components/charts/line/dui_chart.dart';
+import 'package:digia_ui/components/easy-eat/chart.dart';
 import 'package:digia_ui/components/image/image.dart';
 import 'package:digia_ui/components/techCard/tech_card.dart';
+import 'package:digia_ui/components/utils/DUIBorder/dui_border.dart';
 import 'package:digia_ui/components/utils/DUICornerRadius/dui_corner_radius.dart';
 import 'package:digia_ui/components/utils/DUIInsets/dui_insets.dart';
 import 'package:digia_ui/core/grid/dui_grid_view.dart';
@@ -20,7 +22,8 @@ final Map<String, Function> DUIWidgetRegistry = {
   'digia/card_type1': DUITechCard.create,
   'digia/card_type2': DUICard.create,
   'digia/grid': DUIGridView.create,
-  'digia/chart': LineChart.create
+  'digia/chart': DUIChart.create,
+  'easy-eat/chart': EEChart.create
 };
 
 class DUIConfigConstants {
@@ -29,12 +32,14 @@ class DUIConfigConstants {
   static const Color fallbackTextColor = Colors.black;
   static const double fallbackLineHeightFactor = 1.5;
   static const String fallbackBgColorHexCode = "#FFFFFF";
+  static const String fallbackBorderColorHexCode = "#FF000000";
 }
 
 FontWeight toFontWeight(String? weight) {
   switch (weight) {
     case 'thin':
       return FontWeight.w100;
+    case 'extralight':
     case 'extra-light':
       return FontWeight.w200;
     case 'light':
@@ -43,10 +48,12 @@ FontWeight toFontWeight(String? weight) {
       return FontWeight.normal;
     case 'medium':
       return FontWeight.w500;
+    case 'semibold':
     case 'semi-bold':
       return FontWeight.w600;
     case 'bold':
       return FontWeight.w700;
+    case 'extrabold':
     case 'extra-bold':
       return FontWeight.w800;
     case 'black':
@@ -264,6 +271,18 @@ BorderRadiusGeometry toBorderRadiusGeometry(DUICornerRadius? cornerRadius) {
     bottomLeft: Radius.circular(cornerRadius.bottomLeft),
     bottomRight: Radius.circular(cornerRadius.bottomRight),
   );
+}
+
+Border? toBorder(DUIBorder? border) {
+  if (border == null || border.borderStyle != 'solid') {
+    return null;
+  }
+
+  return Border.all(
+      style: BorderStyle.solid,
+      width: border.borderWidth ?? 1.0,
+      color: toColor(
+          border.borderColor ?? DUIConfigConstants.fallbackBorderColorHexCode));
 }
 
 // Possible Values for colorToken:
