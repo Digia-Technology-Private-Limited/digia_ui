@@ -38,12 +38,14 @@ class DUIContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final borderRadius = toBorderRadiusGeometry(styleClass?.cornerRadius);
+    final borderRadius =
+        toBorderRadiusGeometry(styleClass?.border?.borderRadius);
 
     return Container(
         alignment: alignment ?? toAlignmentGeometry(styleClass?.alignment),
         padding: padding ?? toEdgeInsetsGeometry(styleClass?.padding),
         decoration: BoxDecoration(
+            border: toBorder(styleClass?.border),
             color: color ?? _color(styleClass?.bgColor),
             borderRadius: borderRadius),
         foregroundDecoration: foregroundDecoration,

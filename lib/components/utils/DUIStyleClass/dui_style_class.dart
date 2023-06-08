@@ -1,5 +1,5 @@
 import 'package:digia_ui/Utils/util_functions.dart';
-import 'package:digia_ui/components/utils/DUICornerRadius/dui_corner_radius.dart';
+import 'package:digia_ui/components/utils/DUIBorder/dui_border.dart';
 import 'package:digia_ui/components/utils/DUIInsets/dui_insets.dart';
 
 part 'dui_style_class.json.dart';
@@ -12,7 +12,7 @@ class DUIStyleClass {
   DUIInsets? padding;
   DUIInsets? margin;
   String? bgColor;
-  DUICornerRadius? cornerRadius;
+  DUIBorder? border;
   String? alignment;
   String? height;
   String? width;
@@ -21,7 +21,7 @@ class DUIStyleClass {
       {this.padding,
       this.margin,
       this.bgColor,
-      this.cornerRadius,
+      this.border,
       this.alignment,
       this.height,
       this.width});
@@ -32,7 +32,7 @@ class DUIStyleClass {
     DUIInsets? padding,
     DUIInsets? margin,
     String? bgColor,
-    DUICornerRadius? cornerRadius,
+    DUIBorder? border,
     String? alignment,
     String? height,
     String? width,
@@ -41,7 +41,7 @@ class DUIStyleClass {
       padding: padding ?? this.padding,
       margin: margin ?? this.margin,
       bgColor: bgColor ?? this.bgColor,
-      cornerRadius: cornerRadius ?? this.cornerRadius,
+      border: border ?? this.border,
       alignment: alignment ?? this.alignment,
       height: height ?? this.height,
       width: width ?? this.width,
