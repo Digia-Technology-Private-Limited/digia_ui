@@ -1,23 +1,24 @@
 import 'package:digia_ui/Utils/util_functions.dart';
-import 'package:digia_ui/components/charts/line/line_chart_props.dart';
+import 'package:digia_ui/components/charts/line/dui_chart_props.dart';
 import 'package:digia_ui/core/container/dui_container.dart';
 import 'package:flutter/material.dart';
 import 'package:graphic/graphic.dart';
 
-class LineChart extends StatelessWidget {
-  final LineChartProps props;
+class DUIChart extends StatelessWidget {
+  final DUIChartProps props;
 
-  const LineChart(this.props, {super.key});
+  const DUIChart(this.props, {super.key});
 
-  factory LineChart.create(Map<String, dynamic> json) =>
-      LineChart(LineChartProps.fromJson(json));
+  factory DUIChart.create(Map<String, dynamic> json) =>
+      DUIChart(DUIChartProps.fromJson(json));
 
   @override
   Widget build(BuildContext context) {
     // final lines = lineData['lines'] as List<Map<String, dynamic>>;
     final x = props.data.xAxis.name;
     final y = props.data.yAxis.name;
-    final seriesStyleMap = props.data.series.fold({}, (result, element) {
+    final Map<String, dynamic> seriesStyleMap =
+        props.data.series.fold({}, (result, element) {
       result[element.group] = {
         'color': element.color,
         'width': element.width,
@@ -25,6 +26,8 @@ class LineChart extends StatelessWidget {
       };
       return result;
     });
+
+    Mark<Shape> mark = _getMarkForChart(seriesStyleMap, x, y);
 
     final chartData = props.data.series
         .map((line) {
@@ -77,37 +80,7 @@ class LineChart extends StatelessWidget {
           accessor: (Map<String, dynamic> dict) => dict['group'] as String,
         ),
       },
-      marks: [
-        LineMark(
-          position: Varset(x) * Varset(y) / Varset('group'),
-          shape: ShapeEncode(encoder: (p) {
-            final lineStyle = seriesStyleMap[p['group']]['lineStyle']
-                as Map<String, dynamic>?;
-
-            final dashArray = (lineStyle?['dashArray'] as List<dynamic>?)
-                ?.map((e) => double.tryParse(e.toString()))
-                .take(2)
-                .nonNulls
-                .toList();
-
-            if (dashArray != null && dashArray.length == 2) {
-              return BasicLineShape(dash: dashArray);
-            }
-
-            return BasicLineShape(smooth: lineStyle?['smooth'] ?? true);
-          }),
-          // shape: ShapeEncode(value: BasicLineShape(dash: [5, 5])),
-          size: SizeEncode(
-            encoder: (p) {
-              final width = seriesStyleMap[p['group']]['width'] as double?;
-              return width ?? 2.0;
-            },
-          ),
-          color: ColorEncode(encoder: (p) {
-            return toColor(seriesStyleMap[p['group']]['color']);
-          }),
-        )
-      ],
+      marks: [mark],
       axes: [
         Defaults.horizontalAxis,
         Defaults.verticalAxis,
@@ -121,6 +94,56 @@ class LineChart extends StatelessWidget {
         : DUIContainer(styleClass: props.styleClass, child: child);
 
     return SingleChildScrollView(child: widget);
+  }
+
+  Mark _getMarkForChart(
+      Map<String, dynamic> seriesStyleMap, String x, String y) {
+    double sizeEncoder(Map<String, dynamic> tuple) {
+      final width = seriesStyleMap[tuple['group']]['width'] as double?;
+      return width ?? 2.0;
+    }
+
+    Color colorEncoder(Map<String, dynamic> tuple) {
+      return toColor(seriesStyleMap[tuple['group']]['color']);
+    }
+
+    LineShape lineShapeEncoder(Map<String, dynamic> tuple) {
+      final lineStyle =
+          seriesStyleMap[tuple['group']]['lineStyle'] as Map<String, dynamic>?;
+
+      final dashArray = (lineStyle?['dashArray'] as List<dynamic>?)
+          ?.map((e) => double.tryParse(e.toString()))
+          .take(2)
+          .nonNulls
+          .toList();
+
+      if (dashArray != null && dashArray.length == 2) {
+        return BasicLineShape(dash: dashArray);
+      }
+
+      return BasicLineShape(smooth: lineStyle?['smooth'] ?? true);
+    }
+
+    switch (props.data.type) {
+      case 'bar':
+        return IntervalMark(
+            position: Varset(x) * Varset(y) / Varset('group'),
+            size: SizeEncode(
+              encoder: sizeEncoder,
+            ),
+            color: ColorEncode(encoder: colorEncoder));
+      case 'line':
+        return LineMark(
+          position: Varset(x) * Varset(y) / Varset('group'),
+          shape: ShapeEncode(encoder: lineShapeEncoder),
+          size: SizeEncode(
+            encoder: sizeEncoder,
+          ),
+          color: ColorEncode(encoder: colorEncoder),
+        );
+    }
+
+    throw "Unsupported Chart Type: ${props.data.type}";
   }
 }
 

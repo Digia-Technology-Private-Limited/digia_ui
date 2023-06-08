@@ -1,40 +1,39 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'line_chart_props.dart';
+part of 'dui_chart_props.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-LineChartProps _$LineChartPropsFromJson(Map<String, dynamic> json) =>
-    LineChartProps()
+DUIChartProps _$DUIChartPropsFromJson(Map<String, dynamic> json) =>
+    DUIChartProps()
       ..styleClass = DUIStyleClass.fromJson(json['styleClass'])
-      ..data = LineChartData.fromJson(json['data'] as Map<String, dynamic>);
+      ..data = DUIChartData.fromJson(json['data'] as Map<String, dynamic>);
 
-Map<String, dynamic> _$LineChartPropsToJson(LineChartProps instance) =>
+Map<String, dynamic> _$DUIChartPropsToJson(DUIChartProps instance) =>
     <String, dynamic>{
       'data': instance.data,
     };
 
-LineChartData _$LineChartDataFromJson(Map<String, dynamic> json) =>
-    LineChartData()
-      ..series = (json['series'] as List<dynamic>)
-          .map((e) => LineChartBarData.fromJson(e as Map<String, dynamic>))
-          .toList()
-      ..xAxis =
-          LineChartAxisData.fromJson(json['xAxis'] as Map<String, dynamic>)
-      ..yAxis =
-          LineChartAxisData.fromJson(json['yAxis'] as Map<String, dynamic>);
+DUIChartData _$DUIChartDataFromJson(Map<String, dynamic> json) => DUIChartData()
+  ..type = json['type'] as String
+  ..series = (json['series'] as List<dynamic>)
+      .map((e) => DUIChartSeriesData.fromJson(e as Map<String, dynamic>))
+      .toList()
+  ..xAxis = DUIChartAxisData.fromJson(json['xAxis'] as Map<String, dynamic>)
+  ..yAxis = DUIChartAxisData.fromJson(json['yAxis'] as Map<String, dynamic>);
 
-Map<String, dynamic> _$LineChartDataToJson(LineChartData instance) =>
+Map<String, dynamic> _$DUIChartDataToJson(DUIChartData instance) =>
     <String, dynamic>{
+      'type': instance.type,
       'series': instance.series,
       'xAxis': instance.xAxis,
       'yAxis': instance.yAxis,
     };
 
-LineChartBarData _$LineChartBarDataFromJson(Map<String, dynamic> json) =>
-    LineChartBarData()
+DUIChartSeriesData _$DUIChartSeriesDataFromJson(Map<String, dynamic> json) =>
+    DUIChartSeriesData()
       ..group = json['group'] as String
       ..color = json['color'] as String?
       ..width = (json['width'] as num?)?.toDouble()
@@ -43,7 +42,7 @@ LineChartBarData _$LineChartBarDataFromJson(Map<String, dynamic> json) =>
           .toList()
       ..lineStyle = json['lineStyle'] as Map<String, dynamic>?;
 
-Map<String, dynamic> _$LineChartBarDataToJson(LineChartBarData instance) =>
+Map<String, dynamic> _$DUIChartSeriesDataToJson(DUIChartSeriesData instance) =>
     <String, dynamic>{
       'group': instance.group,
       'color': instance.color,
@@ -52,8 +51,8 @@ Map<String, dynamic> _$LineChartBarDataToJson(LineChartBarData instance) =>
       'lineStyle': instance.lineStyle,
     };
 
-LineChartAxisData _$LineChartAxisDataFromJson(Map<String, dynamic> json) =>
-    LineChartAxisData()
+DUIChartAxisData _$DUIChartAxisDataFromJson(Map<String, dynamic> json) =>
+    DUIChartAxisData()
       ..name = json['name'] as String
       ..min = json['min'] as num?
       ..max = json['max'] as num?
@@ -61,7 +60,7 @@ LineChartAxisData _$LineChartAxisDataFromJson(Map<String, dynamic> json) =>
           (json['data'] as List<dynamic>?)?.map((e) => e as String).toList()
       ..labelFormatter = json['labelFormatter'] as String?;
 
-Map<String, dynamic> _$LineChartAxisDataToJson(LineChartAxisData instance) =>
+Map<String, dynamic> _$DUIChartAxisDataToJson(DUIChartAxisData instance) =>
     <String, dynamic>{
       'name': instance.name,
       'min': instance.min,
