@@ -29,16 +29,12 @@
             "children": [
               {
                 "wrap": false,
-                "styleClass": "h:46%; bgc:primary; cr:32; al:center",
                 "child": {
-                  "type": "digia/text",
+                  "type": "digia/image",
                   "data": {
-                    "styleClass": "ft:bytes-logo;tc:white;ff:AppleII",
-                    "textSpans": [
-                      {
-                        "text": "BYTES"
-                      }
-                    ]
+                    "styleClass": "h:200;p:16",
+                    "fit": "fitWidth",
+                    "imageSrc": "https://d208quqxsjalxm.cloudfront.net/partner-app-images/Login/logo-new.png"
                   }
                 }
               },
@@ -47,43 +43,37 @@
                 "child": {
                   "type": "digia/text",
                   "data": {
-                    "textSpans": [
-                      {
-                        "text": "Stoppage for your\n",
-                        "styleClass": "ft:heading1;tc:text;ff:Nunito"
-                      },
-                      {
-                        "text": "Curiosity",
-                        "styleClass": "ft:heading1;tc:secondary;ff:Nunito"
-                      }
-                    ]
+                    "alignment": "center",
+                    "text": "Login to Owner's headquarters",
+                    "styleClass": "ft:h2-semibold;tc:text;ff:Nunito"
                   }
                 }
               },
               {
-                "styleClass": "m:0,22,0,0",
+                "styleClass": "m:0,16,0,0",
                 "child": {
                   "type": "digia/text",
                   "data": {
-                    "styleClass": "ft:para1-regular;tc:textSubtle",
+                    "alignment": "center",
+                    "styleClass": "ft:caption;tc:textSubtle",
                     "textSpans": [
                       {
-                        "text": "Discover Bytes, an intuitive and versatile Content Platform powered by Digia."
+                        "text": "See how your business is doing on a central dashboard for all the outlet sales & view daily reports generated automatically at day end."
                       }
                     ]
                   }
                 }
               },
               {
-                "styleClass": "m:0,sp-500,0,0",
+                "styleClass": "m:0,sp-500,0,0; al:center",
                 "wrap": true,
                 "child": {
                   "type": "digia/button",
                   "data": {
-                    "styleClass": "p:sp-300,sp-250;bgc:primary;cr:200;",
+                    "styleClass": "p:20,10;bgc:#000000;bdr:8;",
                     "text": {
                       "styleClass": "ft:button1;tc:light",
-                      "text": "Get Started"
+                      "text": "Login & See Restaurant Analytics"
                     },
                     "onClick": {
                       "type": "navigate_to_page",
@@ -145,7 +135,7 @@
                                 }
                               }
                             },
-                            "styleClass": "bgc:accent1;cr:8;p:sp-300",
+                            "styleClass": "bgc:accent1;bdr:8;p:sp-300",
                             "title": {
                               "styleClass": "ft:h2-medium;tc:text",
                               "text": "Kotlin"
@@ -156,7 +146,7 @@
                             },
                             "spaceBtwImageAndTitle": "sp-250",
                             "image": {
-                              "styleClass": "w:48;h:48;cr:24",
+                              "styleClass": "w:48;h:48;bdr:24",
                               "imageSrc": "https://upload.wikimedia.org/wikipedia/commons/e/e7/Everest_North_Face_toward_Base_Camp_Tibet_Luca_Galuzzi_2006.jpg",
                               "fit": "fill"
                             }
@@ -176,7 +166,7 @@
                                 }
                               }
                             },
-                            "styleClass": "bgc:accent2;cr:8;p:sp-300",
+                            "styleClass": "bgc:accent2;bdr:8;p:sp-300",
                             "title": {
                               "styleClass": "ft:h2-medium;tc:text",
                               "text": "Flutter"
@@ -187,7 +177,7 @@
                             },
                             "spaceBtwImageAndTitle": "sp-250",
                             "image": {
-                              "styleClass": "w:48;h:48;cr:24",
+                              "styleClass": "w:48;h:48;bdr:24",
                               "imageSrc": "https://upload.wikimedia.org/wikipedia/commons/e/e7/Everest_North_Face_toward_Base_Camp_Tibet_Luca_Galuzzi_2006.jpg",
                               "fit": "fill"
                             }
@@ -207,7 +197,7 @@
                                 }
                               }
                             },
-                            "styleClass": "bgc:accent3;cr:8;p:sp-300",
+                            "styleClass": "bgc:accent3;bdr:8;p:sp-300",
                             "title": {
                               "styleClass": "ft:h2-medium;tc:text",
                               "text": "Nodejs"
@@ -218,7 +208,7 @@
                             },
                             "spaceBtwImageAndTitle": "sp-250",
                             "image": {
-                              "styleClass": "w:48;h:48;cr:24",
+                              "styleClass": "w:48;h:48;bdr:24",
                               "imageSrc": "https://upload.wikimedia.org/wikipedia/commons/e/e7/Everest_North_Face_toward_Base_Camp_Tibet_Luca_Galuzzi_2006.jpg",
                               "fit": "fill"
                             }
@@ -235,7 +225,7 @@
                                 "pageName": "articles"
                               }
                             },
-                            "styleClass": "bgc:accent4;cr:8;p:sp-300",
+                            "styleClass": "bgc:accent4;bdr:8;p:sp-300",
                             "title": {
                               "styleClass": "ft:h2-medium;tc:text",
                               "text": "Javascript"
@@ -246,7 +236,7 @@
                             },
                             "spaceBtwImageAndTitle": "sp-250",
                             "image": {
-                              "styleClass": "w:48;h:48;cr:24",
+                              "styleClass": "w:48;h:48;bdr:24",
                               "imageSrc": "https://upload.wikimedia.org/wikipedia/commons/e/e7/Everest_North_Face_toward_Base_Camp_Tibet_Luca_Galuzzi_2006.jpg",
                               "fit": "fill"
                             }
@@ -263,7 +253,7 @@
                                 "pageName": "articles"
                               }
                             },
-                            "styleClass": "bgc:accent5;cr:8;p:sp-300",
+                            "styleClass": "bgc:accent5;bdr:8;p:sp-300",
                             "title": {
                               "styleClass": "ft:h2-medium;tc:text",
                               "text": "Typescript"
@@ -274,7 +264,7 @@
                             },
                             "spaceBtwImageAndTitle": "sp-250",
                             "image": {
-                              "styleClass": "w:48;h:48;cr:24",
+                              "styleClass": "w:48;h:48;bdr:24",
                               "imageSrc": "https://upload.wikimedia.org/wikipedia/commons/e/e7/Everest_North_Face_toward_Base_Camp_Tibet_Luca_Galuzzi_2006.jpg",
                               "fit": "fill"
                             }
@@ -291,7 +281,7 @@
                                 "pageName": "articles"
                               }
                             },
-                            "styleClass": "bgc:accent6;cr:8;p:sp-300",
+                            "styleClass": "bgc:accent6;bdr:8;p:sp-300",
                             "title": {
                               "styleClass": "ft:h2-medium;tc:text",
                               "text": "Python"
@@ -302,7 +292,7 @@
                             },
                             "spaceBtwImageAndTitle": "sp-250",
                             "image": {
-                              "styleClass": "w:48;h:48;cr:24",
+                              "styleClass": "w:48;h:48;bdr:24",
                               "imageSrc": "https://upload.wikimedia.org/wikipedia/commons/e/e7/Everest_North_Face_toward_Base_Camp_Tibet_Luca_Galuzzi_2006.jpg",
                               "fit": "fill"
                             }
@@ -319,7 +309,7 @@
                                 "pageName": "articles"
                               }
                             },
-                            "styleClass": "bgc:accent7;cr:8;p:sp-300",
+                            "styleClass": "bgc:accent7;bdr:8;p:sp-300",
                             "title": {
                               "styleClass": "ft:h2-medium;tc:text",
                               "text": "Product Plan"
@@ -330,7 +320,7 @@
                             },
                             "spaceBtwImageAndTitle": "sp-250",
                             "image": {
-                              "styleClass": "w:48;h:48;cr:24",
+                              "styleClass": "w:48;h:48;bdr:24",
                               "imageSrc": "https://upload.wikimedia.org/wikipedia/commons/e/e7/Everest_North_Face_toward_Base_Camp_Tibet_Luca_Galuzzi_2006.jpg",
                               "fit": "fill"
                             }
@@ -347,7 +337,7 @@
                                 "pageName": "articles"
                               }
                             },
-                            "styleClass": "bgc:accent8;cr:8;p:sp-300",
+                            "styleClass": "bgc:accent8;bdr:8;p:sp-300",
                             "title": {
                               "styleClass": "ft:h2-medium;tc:text",
                               "text": "Figma"
@@ -358,7 +348,7 @@
                             },
                             "spaceBtwImageAndTitle": "sp-250",
                             "image": {
-                              "styleClass": "w:48;h:48;cr:24",
+                              "styleClass": "w:48;h:48;bdr:24",
                               "imageSrc": "https://upload.wikimedia.org/wikipedia/commons/e/e7/Everest_North_Face_toward_Base_Camp_Tibet_Luca_Galuzzi_2006.jpg",
                               "fit": "fill"
                             }
@@ -405,13 +395,13 @@
             "styleClass": "p:sp-300",
             "children": [
               {
-                "styleClass": "cr:8; bgc:accent1; h:150; m:0,0,0,sp-300",
+                "styleClass": "bdr:8; bgc:accent1; h:150; m:0,0,0,sp-300",
                 "child": {
                   "type": "digia/card_type2",
                   "data": {
                     "contentPadding": "sp-250,sp-250,sp-300,sp-250",
                     "image": {
-                      "styleClass": "cr:8",
+                      "styleClass": "bdr:8",
                       "aspectRatio": 0.85,
                       "imageSrc": "https://upload.wikimedia.org/wikipedia/commons/e/e7/Everest_North_Face_toward_Base_Camp_Tibet_Luca_Galuzzi_2006.jpg",
                       "fit": "fill"
@@ -428,7 +418,7 @@
                     "spaceBtwAvatarImageAndText": "sp-200",
                     "spaceBtwTopCrumbTextTitle": "sp-100",
                     "avatarImage": {
-                      "styleClass": "h:24; w:24; cr: 24",
+                      "styleClass": "h:24; w:24; bdr: 24",
                       "imageSrc": "https://howtodrawforkids.com/wp-content/uploads/2021/06/How-to-draw-a-human-for-kids.jpg",
                       "fit": "contain"
                     },
@@ -440,13 +430,13 @@
                 }
               },
               {
-                "styleClass": "cr:8; bgc:accent1; h:150; m:0,0,0,sp-300",
+                "styleClass": "bdr:8; bgc:accent1; h:150; m:0,0,0,sp-300",
                 "child": {
                   "type": "digia/card_type2",
                   "data": {
                     "contentPadding": "sp-250,sp-250,sp-300,sp-250",
                     "image": {
-                      "styleClass": "cr:8",
+                      "styleClass": "bdr:8",
                       "aspectRatio": 0.85,
                       "imageSrc": "https://upload.wikimedia.org/wikipedia/commons/e/e7/Everest_North_Face_toward_Base_Camp_Tibet_Luca_Galuzzi_2006.jpg",
                       "fit": "fill"
@@ -463,7 +453,7 @@
                     "spaceBtwAvatarImageAndText": "sp-200",
                     "spaceBtwTopCrumbTextTitle": "sp-100",
                     "avatarImage": {
-                      "styleClass": "h:24; w:24; cr: 24",
+                      "styleClass": "h:24; w:24; bdr: 24",
                       "imageSrc": "https://howtodrawforkids.com/wp-content/uploads/2021/06/How-to-draw-a-human-for-kids.jpg",
                       "fit": "contain"
                     },
@@ -530,6 +520,10 @@
         "size": 36,
         "weight": "bold"
       },
+      "h2-bold": {
+        "size": 24,
+        "weight": "bold"
+      },
       "h2-semibold": {
         "size": 24,
         "weight": "semibold"
@@ -537,6 +531,10 @@
       "h2-medium": {
         "size": 24,
         "weight": "medium"
+      },
+      "h3-sb": {
+        "size": 20,
+        "weight": "semibold"
       },
       "heading3": {
         "size": 20,
