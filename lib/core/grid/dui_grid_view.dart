@@ -1,3 +1,4 @@
+import 'package:digia_ui/Utils/dui_widget_list_registry.dart';
 import 'package:digia_ui/Utils/util_functions.dart';
 import 'package:digia_ui/core/container/dui_container.dart';
 import 'package:digia_ui/core/grid/dui_grid_view.props.dart';
