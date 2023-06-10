@@ -11,8 +11,7 @@ class DUIBorder {
 
   DUIBorder();
 
-  factory DUIBorder.fromJson(Map<String, dynamic> json) =>
-      _$DUIBorderFromJson(json);
+  factory DUIBorder.fromJson(dynamic json) => _$DUIBorderFromJson(json);
 
   Map<String, dynamic> toJson() => _$DUIBorderToJson(this);
 }
