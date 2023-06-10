@@ -6,7 +6,7 @@ DUICornerRadius _$DUICornerRadiusFromJson(dynamic json) {
   }
 
   if (json is String) {
-    return _$DUICornerRadiusFromListOfString(json.split(","));
+    return _$DUICornerRadiusFromListOfString(json.split(','));
   }
 
   if (json is int) {

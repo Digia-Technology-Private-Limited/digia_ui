@@ -49,7 +49,7 @@ class DUIContainer extends StatelessWidget {
             color: color ?? _color(styleClass?.bgColor),
             borderRadius: borderRadius),
         foregroundDecoration: foregroundDecoration,
-        width: width ?? double.tryParse(styleClass?.width ?? ""),
+        width: width ?? double.tryParse(styleClass?.width ?? ''),
         height: height ?? _height(context, styleClass?.height),
         constraints: constraints,
         margin: margin ?? toEdgeInsetsGeometry(styleClass?.margin),
@@ -73,7 +73,7 @@ class DUIContainer extends StatelessWidget {
     final parsedValue = double.tryParse(heightStringValue);
     if (parsedValue != null) return parsedValue;
 
-    if (heightStringValue.characters.last == "%") {
+    if (heightStringValue.characters.last == '%') {
       final substring =
           heightStringValue.substring(0, heightStringValue.length - 1);
       final heightFactor = double.tryParse(substring);

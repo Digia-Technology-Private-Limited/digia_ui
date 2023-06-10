@@ -47,17 +47,17 @@ class ConfigResolver {
   PageInitData getfirstPageData() {
     final firstPageConfig = _pages['onboardingPage'];
     if (firstPageConfig == null || firstPageConfig['pageName'] == null) {
-      throw "Config for First Page not found.";
+      throw 'Config for First Page not found.';
     }
 
     final pageName = firstPageConfig['pageName'];
     if (pageName == null) {
-      throw "Page Name not present in First Page Config";
+      throw 'Page Name not present in First Page Config';
     }
 
     final pageConfig = getPageConfig(firstPageConfig['pageName']);
     if (pageConfig == null) {
-      throw "Page Config not found for $pageName";
+      throw 'Page Config not found for $pageName';
     }
 
     return PageInitData(

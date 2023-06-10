@@ -24,13 +24,13 @@ class ActionHandler {
         final pageName = action.data['pageName'];
 
         if (pageName == null) {
-          throw "Target Page can not be null";
+          throw 'Target Page can not be null';
         }
 
         final pageConfig = ConfigResolver().getPageConfig(pageName);
 
         if (pageConfig == null) {
-          throw "Page Config can not be null";
+          throw 'Page Config can not be null';
         }
 
         final inputArgs = action.data['inputArgs'];
@@ -49,23 +49,23 @@ class ActionHandler {
       case 'loadPage':
         final pageName = action.data['pageName'];
         if (pageName == null) {
-          throw "Target Page can not be null";
+          throw 'Target Page can not be null';
         }
 
-        final response = await rootBundle.loadString("assets/json/config.json");
+        final response = await rootBundle.loadString('assets/json/config.json');
         final json = await jsonDecode(response) as Map<String, dynamic>;
-        return json.valueFor(keyPath: "pages.$pageName");
+        return json.valueFor(keyPath: 'pages.$pageName');
 
       case 'renderLayout':
         final pageName = action.data['pageName'];
         if (pageName == null) {
-          throw "Target Page can not be null";
+          throw 'Target Page can not be null';
         }
 
         final pageConfig = ConfigResolver().getPageConfig(pageName);
 
         if (pageConfig == null) {
-          throw "Page Config can not be null";
+          throw 'Page Config can not be null';
         }
 
         return pageConfig;
@@ -84,13 +84,13 @@ bool validateSchema(Map<String, dynamic>? args, Map<String, dynamic> def) {
   final schema = JsonSchema.createSchema(def);
   final validationResult = schema.validate(args);
   if (!validationResult) {
-    throw "Validation Error";
+    throw 'Validation Error';
   }
 
   return true;
 }
 
 const Map<String, String> defaultHeaders = {
-  "Accept": "application/json",
-  "Content-Type": "application/json",
+  'Accept': 'application/json',
+  'Content-Type': 'application/json',
 };

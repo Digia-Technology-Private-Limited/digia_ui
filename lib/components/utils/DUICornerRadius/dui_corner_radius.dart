@@ -20,6 +20,6 @@ class DUICornerRadius {
 
   @override
   String toString() {
-    return "topLeft:$topLeft, topRight:$topRight, bottomRight:$bottomRight, bottomLeft:$bottomLeft";
+    return 'topLeft:$topLeft, topRight:$topRight, bottomRight:$bottomRight, bottomLeft:$bottomLeft';
   }
 }

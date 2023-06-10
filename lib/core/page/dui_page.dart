@@ -1,5 +1,5 @@
+import 'package:digia_ui/Utils/dui_widget_list_registry.dart';
 import 'package:digia_ui/Utils/extensions.dart';
-import 'package:digia_ui/Utils/util_functions.dart';
 import 'package:digia_ui/core/action/action_handler.dart';
 import 'package:digia_ui/core/action/action_prop.dart';
 import 'package:digia_ui/core/container/dui_container.dart';
@@ -20,7 +20,7 @@ class _DUIPageState extends State<DUIPage> {
 
   Future<DUIPageProps>? _executeOnPageLoadAction(BuildContext context) async {
     final action = ActionProp.fromJson(
-        initData.pageConfig.valueFor(keyPath: "actions.onPageLoad"));
+        initData.pageConfig.valueFor(keyPath: 'actions.onPageLoad'));
     final json = await ActionHandler().executeAction(context, action);
     return DUIPageProps.fromJson(json);
   }
@@ -51,7 +51,7 @@ class _DUIPageState extends State<DUIPage> {
             final list = listObject?.children;
 
             if (list == null) {
-              return const Center(child: Text("Currently Not supported!!!"));
+              return const Center(child: Text('Currently Not supported!!!'));
             }
 
             final widget = ListView.builder(

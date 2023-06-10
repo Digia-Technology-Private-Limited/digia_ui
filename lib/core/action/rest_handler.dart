@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 const Map<String, String> defaultHeaders = {
-  "Accept": "application/json",
-  "Content-Type": "application/json",
+  'Accept': 'application/json',
+  'Content-Type': 'application/json',
 };
 
 class RestHandler {
