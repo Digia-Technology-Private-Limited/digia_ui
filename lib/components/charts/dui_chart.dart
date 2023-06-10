@@ -1,5 +1,5 @@
 import 'package:digia_ui/Utils/util_functions.dart';
-import 'package:digia_ui/components/charts/line/dui_chart_props.dart';
+import 'package:digia_ui/components/charts/dui_chart_props.dart';
 import 'package:digia_ui/core/container/dui_container.dart';
 import 'package:flutter/material.dart';
 import 'package:graphic/graphic.dart';
@@ -143,7 +143,7 @@ class DUIChart extends StatelessWidget {
         );
     }
 
-    throw "Unsupported Chart Type: ${props.data.type}";
+    throw 'Unsupported Chart Type: ${props.data.type}';
   }
 }
 
