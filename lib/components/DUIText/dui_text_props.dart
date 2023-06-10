@@ -35,23 +35,4 @@ class DUITextProps {
   String toString() {
     return jsonEncode(this);
   }
-
-  DUITextProps mockWidget() {
-    return DUITextProps.fromJson(
-      {
-        "styleClass": "f:heading1Loose;tc:accent5",
-        "maxLines": 2,
-        "textSpans": [
-          {
-            "text": "Hello ",
-          },
-          {
-            "text": "prem ",
-            "styleClass": "f:para1;tc:accent6;dc:underline",
-            'url': 'https://google.com',
-          },
-        ],
-      },
-    );
-  }
 }
