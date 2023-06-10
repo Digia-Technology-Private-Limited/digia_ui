@@ -1,5 +1,5 @@
 import 'package:digia_ui/components/DUIText/dui_text.dart';
-import 'package:digia_ui/components/charts/line/dui_chart.dart';
+import 'package:digia_ui/components/charts/dui_chart.dart';
 import 'package:digia_ui/components/easy-eat/chart.props.dart';
 import 'package:digia_ui/components/utils/DUIStyleClass/dui_style_class.dart';
 import 'package:digia_ui/core/container/dui_container.dart';
@@ -26,7 +26,7 @@ class EEChart extends StatelessWidget {
         const SizedBox(height: 16),
         DUIContainer(
             styleClass: DUIStyleClass.fromJson(
-                "al:center;bdr:8;p:8;bds:solid;bdc:224,224,224"),
+                'al:center;bdr:8;p:8;bds:solid;bdc:224,224,224'),
             child: DUIText(props.bottomText))
       ],
     );

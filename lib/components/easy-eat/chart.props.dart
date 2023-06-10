@@ -1,5 +1,5 @@
 import 'package:digia_ui/components/DUIText/dui_text_props.dart';
-import 'package:digia_ui/components/charts/line/dui_chart_props.dart';
+import 'package:digia_ui/components/charts/dui_chart_props.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'chart.props.g.dart';
