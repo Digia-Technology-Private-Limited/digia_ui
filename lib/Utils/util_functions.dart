@@ -1,38 +1,17 @@
 import 'package:digia_ui/Utils/config_resolver.dart';
-import 'package:digia_ui/components/DUICard/dui_card.dart';
 import 'package:digia_ui/components/DUIText/DUI_text_span/dui_text_span.dart';
-import 'package:digia_ui/components/DUIText/dui_text.dart';
-import 'package:digia_ui/components/button/button.dart';
-import 'package:digia_ui/components/charts/line/dui_chart.dart';
-import 'package:digia_ui/components/easy-eat/chart.dart';
-import 'package:digia_ui/components/image/image.dart';
-import 'package:digia_ui/components/techCard/tech_card.dart';
 import 'package:digia_ui/components/utils/DUIBorder/dui_border.dart';
 import 'package:digia_ui/components/utils/DUICornerRadius/dui_corner_radius.dart';
 import 'package:digia_ui/components/utils/DUIInsets/dui_insets.dart';
-import 'package:digia_ui/core/grid/dui_grid_view.dart';
 import 'package:flutter/material.dart';
-
-// ignore: non_constant_identifier_names
-final Map<String, Function> DUIWidgetRegistry = {
-  // 'digia/button': DUIButton.fromJson,
-  'digia/text': DUIText.create,
-  'digia/image': DUIImage.create,
-  'digia/button': DUIButton.create,
-  'digia/card_type1': DUITechCard.create,
-  'digia/card_type2': DUICard.create,
-  'digia/grid': DUIGridView.create,
-  'digia/chart': DUIChart.create,
-  'easy-eat/chart': EEChart.create
-};
 
 class DUIConfigConstants {
   static const double fallbackSize = 14;
-  static const String fallbackStyle = "";
+  static const String fallbackStyle = '';
   static const Color fallbackTextColor = Colors.black;
   static const double fallbackLineHeightFactor = 1.5;
-  static const String fallbackBgColorHexCode = "#FFFFFF";
-  static const String fallbackBorderColorHexCode = "#FF000000";
+  static const String fallbackBgColorHexCode = '#FFFFFF';
+  static const String fallbackBorderColorHexCode = '#FF000000';
 }
 
 FontWeight toFontWeight(String? weight) {
@@ -90,13 +69,13 @@ TextAlign toTextAlign(String? alignment) {
 
 TextOverflow toTextOverflow(String? overflow) {
   switch (overflow) {
-    case "fade":
+    case 'fade':
       return TextOverflow.fade;
-    case "visible":
+    case 'visible':
       return TextOverflow.visible;
-    case "clip":
+    case 'clip':
       return TextOverflow.clip;
-    case "ellipsis":
+    case 'ellipsis':
       return TextOverflow.ellipsis;
   }
 
@@ -105,11 +84,11 @@ TextOverflow toTextOverflow(String? overflow) {
 
 TextDecoration toTextDecoration(String textDecorationToken) {
   switch (textDecorationToken) {
-    case "underline":
+    case 'underline':
       return TextDecoration.underline;
-    case "overline":
+    case 'overline':
       return TextDecoration.overline;
-    case "lineThrough":
+    case 'lineThrough':
       return TextDecoration.lineThrough;
     default:
       return TextDecoration.none;
@@ -118,15 +97,15 @@ TextDecoration toTextDecoration(String textDecorationToken) {
 
 TextDecorationStyle? toTextDecorationStyle(String textDecorationStyleToken) {
   switch (textDecorationStyleToken) {
-    case "dashed":
+    case 'dashed':
       return TextDecorationStyle.dashed;
-    case "dotted":
+    case 'dotted':
       return TextDecorationStyle.dotted;
-    case "double":
+    case 'double':
       return TextDecorationStyle.double;
-    case "solid":
+    case 'solid':
       return TextDecorationStyle.solid;
-    case "wavy":
+    case 'wavy':
       return TextDecorationStyle.wavy;
   }
 
@@ -149,7 +128,7 @@ TextStyle? toTextStyle(String? styleClass) {
   TextDecoration textDecoration = TextDecoration.none;
   Color? decorationColor;
   TextDecorationStyle? decorationStyle;
-  String fontFamily = "Poppins"; // TODO: This shouldn't be hardcoded here.
+  String fontFamily = 'Poppins'; // TODO: This shouldn't be hardcoded here.
 
   styleClassMap.forEach((key, value) {
     switch (key) {
@@ -209,7 +188,7 @@ TextStyle? toTextStyle(String? styleClass) {
 TextSpan toTextSpan(DUITextSpan textSpan) {
   return TextSpan(
     text: textSpan.text,
-    style: toTextStyle(textSpan.styleClass ?? ""),
+    style: toTextStyle(textSpan.styleClass ?? ''),
     // recognizer: TapGestureRecognizer()
     //   ..onTap = () async {
     //     //todo change onTap functionality according to backend latter
@@ -261,6 +240,10 @@ Map<String, String> createStyleMap(String? styleClass) {
 }
 
 BorderRadiusGeometry toBorderRadiusGeometry(DUICornerRadius? cornerRadius) {
+  return toBorderRadius(cornerRadius);
+}
+
+BorderRadius toBorderRadius(DUICornerRadius? cornerRadius) {
   if (cornerRadius == null) {
     return BorderRadius.zero;
   }
@@ -285,6 +268,19 @@ Border? toBorder(DUIBorder? border) {
           border.borderColor ?? DUIConfigConstants.fallbackBorderColorHexCode));
 }
 
+OutlineInputBorder? toOutlineInputBorder(DUIBorder? border) {
+  if (border == null) {
+    return null;
+  }
+
+  return OutlineInputBorder(
+      borderRadius: toBorderRadius(border.borderRadius),
+      borderSide: BorderSide(
+          color: toColor(border.borderColor ??
+              DUIConfigConstants.fallbackBorderColorHexCode),
+          width: border.borderWidth ?? 1.0));
+}
+
 // Possible Values for colorToken:
 // token: primary, hexCode: #242424, hexCode with Alpha: #FF242424
 Color toColor(String colorToken) {
@@ -295,7 +291,7 @@ Color toColor(String colorToken) {
   }
 
   final rgbAlpha =
-      colorString.split(",").map((e) => int.tryParse(e)).nonNulls.toList();
+      colorString.split(',').map((e) => int.tryParse(e)).nonNulls.toList();
   if (rgbAlpha.length >= 3) {
     final alpha = rgbAlpha.length > 3 ? rgbAlpha[3] : 255;
     return Color.fromARGB(alpha, rgbAlpha[0], rgbAlpha[1], rgbAlpha[2]);
@@ -378,6 +374,18 @@ AlignmentGeometry? toAlignmentGeometry(String? token) {
 
     case 'bottomRight':
       return Alignment.bottomRight;
+  }
+
+  return null;
+}
+
+double? tryParseToDouble(dynamic value) {
+  if (value is String) {
+    return double.tryParse(value);
+  }
+
+  if (value is num) {
+    return value.toDouble();
   }
 
   return null;
