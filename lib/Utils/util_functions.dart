@@ -390,3 +390,15 @@ double? tryParseToDouble(dynamic value) {
 
   return null;
 }
+
+int? tryParseToInt(dynamic value) {
+  if (value is String) {
+    return int.tryParse(value);
+  }
+
+  if (value is num) {
+    return value.toInt();
+  }
+
+  return null;
+}

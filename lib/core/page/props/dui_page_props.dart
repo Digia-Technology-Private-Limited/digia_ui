@@ -20,6 +20,7 @@ class DUIPageProps {
 
 @JsonSerializable()
 class PageLayoutProps {
+  Map<String, dynamic>? header;
   late PageBody body;
 
   PageLayoutProps();
@@ -32,6 +33,7 @@ class PageLayoutProps {
 
 @JsonSerializable()
 class PageBody {
+  bool? allowScroll = true;
   late PageBodyList list;
 
   PageBody();

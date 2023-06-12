@@ -12,6 +12,8 @@ class DUITextFieldProps {
   late DUIBorder? focusedBorder;
   late String? hintText;
   late String? hintTextStyle;
+  late String? inputType;
+  late String dataKey;
 
   DUITextFieldProps();
 

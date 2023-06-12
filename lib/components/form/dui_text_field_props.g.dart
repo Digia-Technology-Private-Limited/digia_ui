@@ -16,7 +16,9 @@ DUITextFieldProps _$DUITextFieldPropsFromJson(Map<String, dynamic> json) =>
           ? null
           : DUIBorder.fromJson(json['focusedBorder'])
       ..hintText = json['hintText'] as String?
-      ..hintTextStyle = json['hintTextStyle'] as String?;
+      ..hintTextStyle = json['hintTextStyle'] as String?
+      ..inputType = json['inputType'] as String?
+      ..dataKey = json['dataKey'] as String;
 
 Map<String, dynamic> _$DUITextFieldPropsToJson(DUITextFieldProps instance) =>
     <String, dynamic>{
@@ -26,4 +28,6 @@ Map<String, dynamic> _$DUITextFieldPropsToJson(DUITextFieldProps instance) =>
       'focusedBorder': instance.focusedBorder,
       'hintText': instance.hintText,
       'hintTextStyle': instance.hintTextStyle,
+      'inputType': instance.inputType,
+      'dataKey': instance.dataKey,
     };

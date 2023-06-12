@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:digia_ui/Utils/dui_font.dart';
 import 'package:digia_ui/core/page/page_init_data.dart';
+import 'package:digia_ui/core/pref/pref_util.dart';
 import 'package:flutter/services.dart';
 
 class ConfigResolver {
@@ -45,6 +46,16 @@ class ConfigResolver {
   }
 
   PageInitData getfirstPageData() {
+    // TODO: Remove this custom logic later.
+    final authToken = PrefUtil.getString('authToken');
+
+    if (authToken != null) {
+      return PageInitData(
+          pageName: 'easy-eat',
+          pageConfig: getPageConfig('easy-eat')!,
+          inputArgs: null);
+    }
+
     final firstPageConfig = _pages['onboardingPage'];
     if (firstPageConfig == null || firstPageConfig['pageName'] == null) {
       throw 'Config for First Page not found.';

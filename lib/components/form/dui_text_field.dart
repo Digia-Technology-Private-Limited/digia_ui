@@ -1,5 +1,7 @@
+import 'package:digia_ui/Utils/extensions.dart';
 import 'package:digia_ui/Utils/util_functions.dart';
 import 'package:digia_ui/components/DUIText/dui_text.dart';
+import 'package:digia_ui/components/form/dui_form.dart';
 import 'package:digia_ui/components/form/dui_text_field_props.dart';
 import 'package:flutter/material.dart';
 
@@ -27,9 +29,21 @@ class _DUITextFieldState extends State<DUITextField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+        // TODO: Need better abstraction for obscureText, validator
+        // and show password for password.
+        obscureText: props.inputType == 'password',
         validator: (value) {
-          print(value);
+          if (value == null) return null;
+
+          if (props.inputType == 'email') {
+            if (!value.isValidEmail()) {
+              return 'Invalid Email';
+            }
+          }
           return null;
+        },
+        onSaved: (newValue) {
+          signInFormData[props.dataKey] = newValue;
         },
         controller: userInput,
         style: toTextStyle(props.textStyle),

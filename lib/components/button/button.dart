@@ -1,6 +1,10 @@
 import 'package:digia_ui/components/DUIText/dui_text.dart';
+import 'package:digia_ui/components/form/dui_form.dart';
 import 'package:digia_ui/core/action/action_handler.dart';
+import 'package:digia_ui/core/action/action_prop.dart';
+import 'package:digia_ui/core/action/rest_handler.dart';
 import 'package:digia_ui/core/container/dui_container.dart';
+import 'package:digia_ui/core/pref/pref_util.dart';
 import 'package:flutter/material.dart';
 
 import 'button.props.dart';
@@ -48,7 +52,7 @@ class _DUIButtonState extends State<DUIButton> {
   // Not supporting it for now.
   @override
   Widget build(BuildContext context) {
-    var styleclass = props.disabled == true
+    final styleclass = props.disabled == true
         ? props.styleClass?.copyWith(bgColor: props.disabledBackgroundColor)
         : props.styleClass;
 
@@ -58,8 +62,35 @@ class _DUIButtonState extends State<DUIButton> {
     return props.onClick == null
         ? widget
         : InkWell(
-            onTap: () {
-              ActionHandler().executeAction(context, props.onClick!);
+            onTap: () async {
+              // TODO: Remove this Custom logic -> Move to JSON
+              // ActionHandler().executeAction(context, props.onClick!);
+              final isValid = signUpFormGlobalKey.currentState!.validate();
+              if (isValid) {
+                signUpFormGlobalKey.currentState!.save();
+              }
+
+              var resp = await RestHandler().executeAction(
+                  context,
+                  ActionProp(type: 'rest_call', data: {
+                    'method': 'POST',
+                    'url': 'https://napi.easyeat.ai/api/auth/login',
+                    'keyToReadFrom': null,
+                    'body': {
+                      'login_email': signInFormData['email'],
+                      'password': signInFormData['password'],
+                      'role': 'rest_hq_admin',
+                    }
+                  }));
+
+              await PrefUtil.setString('authToken', resp['token']);
+              if (context.mounted) {
+                await ActionHandler().executeAction(
+                    context,
+                    ActionProp(type: 'navigate_to_page', data: {
+                      'pageName': 'easy-eat',
+                    }));
+              }
             },
             child: widget);
     // child: Container(

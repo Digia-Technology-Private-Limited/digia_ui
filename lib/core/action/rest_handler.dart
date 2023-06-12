@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:digia_ui/Utils/extensions.dart';
 import 'package:digia_ui/core/action/action_prop.dart';
+import 'package:digia_ui/core/pref/pref_util.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -33,11 +34,17 @@ class RestHandler {
     return null;
   }
 
+// TODO: Figure out a better way to read data from a key
   Future<dynamic>? _post(Map<String, dynamic> data) async {
+    final authToken = PrefUtil.getString('authToken');
     final url = Uri.parse(data['url']);
-    final resp =
-        await http.post(url, headers: defaultHeaders, body: jsonEncode({}));
+    final resp = await http.post(url,
+        headers: {...defaultHeaders, 'authorization': 'Bearer $authToken'},
+        body: data['body'] != null ? jsonEncode(data['body']) : null);
     final json = await jsonDecode(resp.body) as Map<String, dynamic>;
-    return json.valueFor(keyPath: 'data.response');
+    if (data['keyToReadFrom'] == null) {
+      return json;
+    }
+    return json.valueFor(keyPath: data['keyToReadFrom']);
   }
 }

@@ -22,17 +22,21 @@ Map<String, dynamic> _$DUIPagePropsToJson(DUIPageProps instance) =>
 
 PageLayoutProps _$PageLayoutPropsFromJson(Map<String, dynamic> json) =>
     PageLayoutProps()
+      ..header = json['header'] as Map<String, dynamic>?
       ..body = PageBody.fromJson(json['body'] as Map<String, dynamic>);
 
 Map<String, dynamic> _$PageLayoutPropsToJson(PageLayoutProps instance) =>
     <String, dynamic>{
+      'header': instance.header,
       'body': instance.body,
     };
 
 PageBody _$PageBodyFromJson(Map<String, dynamic> json) => PageBody()
+  ..allowScroll = json['allowScroll'] as bool?
   ..list = PageBodyList.fromJson(json['list'] as Map<String, dynamic>);
 
 Map<String, dynamic> _$PageBodyToJson(PageBody instance) => <String, dynamic>{
+      'allowScroll': instance.allowScroll,
       'list': instance.list,
     };
 

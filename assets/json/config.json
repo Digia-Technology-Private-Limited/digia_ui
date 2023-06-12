@@ -22,8 +22,8 @@
         "pullToRefresh": {}
       },
       "layout": {
-        "header": {},
         "body": {
+          "allowScroll": false,
           "list": {
             "styleClass": "p:sp-300",
             "children": [
@@ -61,6 +61,65 @@
                         "text": "See how your business is doing on a central dashboard for all the outlet sales & view daily reports generated automatically at day end."
                       }
                     ]
+                  }
+                }
+              },
+              {
+                "styleClass": "m:0,16,0,0",
+                "child": {
+                  "type": "fw/sized_box",
+                  "data": {
+                    "height": 80
+                  }
+                }
+              },
+              {
+                "styleClass": "m:0,16,0,0",
+                "child": {
+                  "type": "digia/form",
+                  "data": {
+                    "children": [
+                      {
+                        "type": "digia/form/textfield",
+                        "data": {
+                          "dataKey": "email",
+                          "inputType": "email",
+                          "hintText": "Enter your email address",
+                          "textStyle": "ft:para1;tc:text",
+                          "border": "bdc:208,208,208; bdr:8; bdw:2",
+                          "label": {
+                            "text": "EMAIL ID",
+                            "styleClass": "ft:para1;tc:textSubtle"
+                          }
+                        }
+                      },
+                      {
+                        "type": "fw/sized_box",
+                        "data": { "height": 20 }
+                      },
+                      {
+                        "type": "digia/form/textfield",
+                        "data": {
+                          "dataKey": "password",
+                          "inputType": "password",
+                          "hintText": "Enter Password",
+                          "textStyle": "ft:para1;tc:text",
+                          "border": "bdc:208,208,208; bdr:8; bdw:2",
+                          "label": {
+                            "text": "PASSWORD",
+                            "styleClass": "ft:para1;tc:textSubtle"
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                "child": {
+                  "type": "fw/sized_box",
+                  "data": {
+                    "height": 100
                   }
                 }
               },
@@ -478,6 +537,7 @@
         "onPageLoad": {
           "type": "rest_call",
           "data": {
+            "keyToReadFrom": "data.response",
             "pageName": "easy-eat",
             "method": "POST",
             "url": "http://localhost:5000/easyeat/getChartPage"
@@ -487,7 +547,9 @@
         "pullToRefresh": {}
       },
       "layout": {
-        "header": {},
+        "header": {
+          "appBar": true
+        },
         "body": {},
         "footer": {}
       }
