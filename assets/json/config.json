@@ -540,7 +540,7 @@
             "keyToReadFrom": "data.response",
             "pageName": "easy-eat",
             "method": "POST",
-            "url": "http://localhost:5000/easyeat/getChartPage"
+            "url": "http://dev.digia.tech/hydrator/api/easyeat/getChartPage"
           }
         },
         "onBackPress": {},

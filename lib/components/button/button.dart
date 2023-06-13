@@ -29,6 +29,7 @@ class _DUIButtonState extends State<DUIButton> {
   late RenderBox renderbox;
   double width = 0;
   double height = 0;
+  bool _isLoading = false;
   _DUIButtonState();
 
   @override
@@ -56,15 +57,23 @@ class _DUIButtonState extends State<DUIButton> {
         ? props.styleClass?.copyWith(bgColor: props.disabledBackgroundColor)
         : props.styleClass;
 
-    final widget =
-        DUIContainer(styleClass: styleclass, child: DUIText(props.text));
+    final widget = DUIContainer(
+        styleClass: styleclass,
+        child: _isLoading
+            ? const SizedBox(
+                width: 20, height: 20, child: CircularProgressIndicator())
+            : DUIText(props.text));
 
     return props.onClick == null
         ? widget
         : InkWell(
             onTap: () async {
+              if (_isLoading) return;
               // TODO: Remove this Custom logic -> Move to JSON
               // ActionHandler().executeAction(context, props.onClick!);
+              setState(() {
+                _isLoading = true;
+              });
               final isValid = signUpFormGlobalKey.currentState!.validate();
               if (isValid) {
                 signUpFormGlobalKey.currentState!.save();
@@ -85,6 +94,9 @@ class _DUIButtonState extends State<DUIButton> {
 
               await PrefUtil.setString('authToken', resp['token']);
               if (context.mounted) {
+                setState(() {
+                  _isLoading = false;
+                });
                 await ActionHandler().executeAction(
                     context,
                     ActionProp(type: 'navigate_to_page', data: {
