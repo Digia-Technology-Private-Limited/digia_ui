@@ -46,7 +46,9 @@ class _DUIPageState extends State<DUIPage> {
         ? Wrap(children: [widgetFromRegistry])
         : widgetFromRegistry;
 
-    return DUIContainer(styleClass: childContainer.styleClass, child: child);
+    return childContainer.styleClass == null
+        ? child
+        : DUIContainer(styleClass: childContainer.styleClass, child: child);
   }
 
   @override
@@ -54,6 +56,7 @@ class _DUIPageState extends State<DUIPage> {
     final showAppBar =
         initData.pageConfig.valueFor(keyPath: 'layout.header.appBar');
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       // TODO: Remove Custom AppBar logic
       appBar: showAppBar == true
           ? AppBar(
@@ -62,6 +65,7 @@ class _DUIPageState extends State<DUIPage> {
                 TextButton(
                     onPressed: () async {
                       await PrefUtil.clearStorage();
+                      await Navigator.of(context).maybePop();
                     },
                     child: const Text('Clear AuthToken'))
               ],
