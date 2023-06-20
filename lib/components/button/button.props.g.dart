@@ -14,7 +14,8 @@ DUIButtonProps _$DUIButtonPropsFromJson(Map<String, dynamic> json) =>
       ..disabled = json['disabled'] as bool?
       ..onClick = json['onClick'] == null
           ? null
-          : ActionProp.fromJson(json['onClick'] as Map<String, dynamic>);
+          : ActionProp.fromJson(json['onClick'] as Map<String, dynamic>)
+      ..setLoading = json['setLoading'] as bool?;
 
 Map<String, dynamic> _$DUIButtonPropsToJson(DUIButtonProps instance) =>
     <String, dynamic>{
@@ -22,4 +23,5 @@ Map<String, dynamic> _$DUIButtonPropsToJson(DUIButtonProps instance) =>
       'disabledBackgroundColor': instance.disabledBackgroundColor,
       'disabled': instance.disabled,
       'onClick': instance.onClick,
+      'setLoading': instance.setLoading,
     };

@@ -22,6 +22,7 @@ class DUIButtonProps {
   String? disabledBackgroundColor;
   bool? disabled;
   ActionProp? onClick;
+  bool? setLoading;
 
   DUIButtonProps();
 
