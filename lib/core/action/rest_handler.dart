@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:digia_ui/Utils/config_resolver.dart';
 import 'package:digia_ui/Utils/extensions.dart';
 import 'package:digia_ui/core/action/action_prop.dart';
 import 'package:digia_ui/core/pref/pref_util.dart';
@@ -34,17 +35,58 @@ class RestHandler {
     return null;
   }
 
-// TODO: Figure out a better way to read data from a key
   Future<dynamic>? _post(Map<String, dynamic> data) async {
-    final authToken = PrefUtil.getString('authToken');
     final url = Uri.parse(data['url']);
-    final resp = await http.post(url,
-        headers: {...defaultHeaders, 'authorization': 'Bearer $authToken'},
-        body: data['body'] != null ? jsonEncode(data['body']) : null);
+    final resp = await http
+        .post(url,
+            headers: _createHeaders(data['headers'] ?? {}),
+            body: _createBody(data['body']))
+        .timeout(const Duration(seconds: 10));
     final json = await jsonDecode(resp.body) as Map<String, dynamic>;
+
     if (data['keyToReadFrom'] == null) {
       return json;
     }
     return json.valueFor(keyPath: data['keyToReadFrom']);
+  }
+
+  Object? _createBody(Map<String, dynamic>? body) {
+    if (body == null) return null;
+
+    return jsonEncode(_fill(body));
+  }
+
+  Map<String, String> _createHeaders(Map<String, String> headers) {
+    final defaultHeadersFromConfig = ConfigResolver().getDefaultHeaders() ?? {};
+
+    final mergedHeaders = {
+      ...defaultHeaders,
+      ..._fill(defaultHeadersFromConfig),
+      ..._fill(headers)
+    };
+
+    return Map.fromEntries(mergedHeaders.entries
+        .where((element) => element.value != null || element.value is! String)
+        .map((e) => MapEntry(e.key, e.value as String)));
+  }
+
+// TODO: MOve to a better location
+  Map<String, dynamic> _fill(Map<String, dynamic> body) {
+    Map<String, dynamic> result = {};
+    for (var MapEntry(:key, :value) in body.entries) {
+      final matches = RegExp(r'\s*{{\s*(.+)\s*}}\s*').allMatches(value);
+      var match = matches.isNotEmpty ? matches.elementAt(0) : null;
+      if (match?.group(1) != null) {
+        final splitValues = match!.group(1)!.split('.');
+        switch (splitValues[0]) {
+          case 'localStorage':
+            final prefKey = splitValues.skip(1).join('.').trim();
+            result[key] = PrefUtil.get(prefKey);
+        }
+      } else {
+        result[key] = value;
+      }
+    }
+    return result;
   }
 }
