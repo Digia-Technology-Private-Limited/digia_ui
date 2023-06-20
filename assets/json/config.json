@@ -1,7 +1,7 @@
 {
   "pages": {
     "onboardingPage": {
-      "pageName": "bytes-front-page",
+      "pageName": "easy-eat-login",
       "inputArgs": {}
     },
     "bytes-front-page": {
@@ -29,12 +29,16 @@
             "children": [
               {
                 "wrap": false,
+                "styleClass": "h:46%; bgc:primary; cr:32; al:center",
                 "child": {
-                  "type": "digia/image",
+                  "type": "digia/text",
                   "data": {
-                    "styleClass": "h:200;p:16",
-                    "fit": "fitWidth",
-                    "imageSrc": "https://d208quqxsjalxm.cloudfront.net/partner-app-images/Login/logo-new.png"
+                    "styleClass": "ft:bytes-logo;tc:white;ff:AppleII",
+                    "textSpans": [
+                      {
+                        "text": "BYTES"
+                      }
+                    ]
                   }
                 }
               },
@@ -43,101 +47,48 @@
                 "child": {
                   "type": "digia/text",
                   "data": {
-                    "alignment": "center",
-                    "text": "Login to Owner's headquarters",
-                    "styleClass": "ft:h2-semibold;tc:text;ff:Nunito"
+                    "textSpans": [
+                      {
+                        "text": "Stoppage for your\n",
+                        "styleClass": "ft:heading1;tc:text;ff:Nunito"
+                      },
+                      {
+                        "text": "Curiosity",
+                        "styleClass": "ft:heading1;tc:secondary;ff:Nunito"
+                      }
+                    ]
                   }
                 }
               },
               {
-                "styleClass": "m:0,16,0,0",
+                "styleClass": "m:0,22,0,0",
                 "child": {
                   "type": "digia/text",
                   "data": {
-                    "alignment": "center",
-                    "styleClass": "ft:caption;tc:textSubtle",
+                    "styleClass": "ft:para1-regular;tc:textSubtle",
                     "textSpans": [
                       {
-                        "text": "See how your business is doing on a central dashboard for all the outlet sales & view daily reports generated automatically at day end."
+                        "text": "Discover Bytes, an intuitive and versatile Content Platform powered by Digia."
                       }
                     ]
                   }
                 }
               },
               {
-                "styleClass": "m:0,16,0,0",
-                "child": {
-                  "type": "fw/sized_box",
-                  "data": {
-                    "height": 80
-                  }
-                }
-              },
-              {
-                "styleClass": "m:0,16,0,0",
-                "child": {
-                  "type": "digia/form",
-                  "data": {
-                    "children": [
-                      {
-                        "type": "digia/form/textfield",
-                        "data": {
-                          "dataKey": "email",
-                          "inputType": "email",
-                          "hintText": "Enter your email address",
-                          "textStyle": "ft:para1;tc:text",
-                          "border": "bdc:208,208,208; bdr:8; bdw:2",
-                          "label": {
-                            "text": "EMAIL ID",
-                            "styleClass": "ft:para1;tc:textSubtle"
-                          }
-                        }
-                      },
-                      {
-                        "type": "fw/sized_box",
-                        "data": { "height": 20 }
-                      },
-                      {
-                        "type": "digia/form/textfield",
-                        "data": {
-                          "dataKey": "password",
-                          "inputType": "password",
-                          "hintText": "Enter Password",
-                          "textStyle": "ft:para1;tc:text",
-                          "border": "bdc:208,208,208; bdr:8; bdw:2",
-                          "label": {
-                            "text": "PASSWORD",
-                            "styleClass": "ft:para1;tc:textSubtle"
-                          }
-                        }
-                      }
-                    ]
-                  }
-                }
-              },
-              {
-                "child": {
-                  "type": "fw/sized_box",
-                  "data": {
-                    "height": 100
-                  }
-                }
-              },
-              {
-                "styleClass": "m:0,sp-500,0,0; al:center",
+                "styleClass": "m:0,sp-500,0,0",
                 "wrap": true,
                 "child": {
                   "type": "digia/button",
                   "data": {
-                    "styleClass": "p:20,10;bgc:#000000;bdr:8;",
+                    "styleClass": "p:sp-300,sp-250;bgc:primary;cr:200;",
                     "text": {
                       "styleClass": "ft:button1;tc:light",
-                      "text": "Login & See Restaurant Analytics"
+                      "text": "Get Started"
                     },
                     "onClick": {
                       "type": "navigate_to_page",
                       "data": {
-                        "pageName": "easy-eat"
+                        "pageName": "subjects"
                       }
                     }
                   }
@@ -540,7 +491,10 @@
             "keyToReadFrom": "data.response",
             "pageName": "easy-eat",
             "method": "POST",
-            "url": "http://dev.digia.tech/hydrator/api/easyeat/getChartPage"
+            "url": "http://dev.digia.tech/hydrator/api/easyeat/getChartPage",
+            "body": {
+              "restaurant_ids": "{{ localStorage.restaurant_ids }}"
+            }
           }
         },
         "onBackPress": {},
@@ -553,6 +507,144 @@
         "body": {},
         "footer": {}
       }
+    },
+    "easy-eat-login": {
+      "id": "easy-eat-login",
+      "name": "easy-eat-login",
+      "route": "/easy-eat-login",
+      "inputArgs": {
+        "properties": {}
+      },
+      "actions": {
+        "onPageLoad": {
+          "type": "renderLayout",
+          "data": {
+            "pageName": "easy-eat-login"
+          }
+        },
+        "onBackPress": {},
+        "pullToRefresh": {}
+      },
+      "layout": {
+        "body": {
+          "allowScroll": false,
+          "list": {
+            "styleClass": "p:sp-300",
+            "children": [
+              {
+                "wrap": false,
+                "child": {
+                  "type": "digia/image",
+                  "data": {
+                    "styleClass": "h:200;p:16",
+                    "fit": "fitWidth",
+                    "imageSrc": "https://d208quqxsjalxm.cloudfront.net/partner-app-images/Login/logo-new.png"
+                  }
+                }
+              },
+              {
+                "styleClass": "m:0,10,0,0",
+                "child": {
+                  "type": "digia/text",
+                  "data": {
+                    "alignment": "center",
+                    "text": "Login to Owner's headquarters",
+                    "styleClass": "ft:h2-semibold;tc:text;ff:Nunito"
+                  }
+                }
+              },
+              {
+                "styleClass": "m:0,12,0,0",
+                "child": {
+                  "type": "digia/text",
+                  "data": {
+                    "alignment": "center",
+                    "styleClass": "ft:caption;tc:textSubtle",
+                    "textSpans": [
+                      {
+                        "text": "See how your business is doing on a central dashboard for all the outlet sales & view daily reports generated automatically at day end."
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                "styleClass": "m:0,12,0,0",
+                "child": {
+                  "type": "digia/form",
+                  "data": {
+                    "children": [
+                      {
+                        "type": "digia/form/textfield",
+                        "data": {
+                          "dataKey": "email",
+                          "inputType": "email",
+                          "hintText": "Enter your email address",
+                          "textStyle": "ft:para1;tc:text",
+                          "border": "bdc:208,208,208; bdr:8; bdw:2",
+                          "label": {
+                            "text": "EMAIL ID",
+                            "styleClass": "ft:para1;tc:textSubtle"
+                          }
+                        }
+                      },
+                      {
+                        "type": "fw/sized_box",
+                        "data": { "height": 10 }
+                      },
+                      {
+                        "type": "digia/form/textfield",
+                        "data": {
+                          "dataKey": "password",
+                          "inputType": "password",
+                          "hintText": "Enter Password",
+                          "textStyle": "ft:para1;tc:text",
+                          "border": "bdc:208,208,208; bdr:8; bdw:2",
+                          "label": {
+                            "text": "PASSWORD",
+                            "styleClass": "ft:para1;tc:textSubtle"
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                "child": {
+                  "type": "fw/spacer",
+                  "data": {}
+                }
+              },
+              {
+                "styleClass": "m:0,16,0,64; al:center",
+                "child": {
+                  "type": "digia/button",
+                  "data": {
+                    "styleClass": "p:20,10;bgc:#000000;bdr:8;",
+                    "text": {
+                      "styleClass": "ft:button1;tc:light",
+                      "text": "Login & See Restaurant Analytics"
+                    },
+                    "onClick": {
+                      "type": "navigate_to_page",
+                      "data": {
+                        "pageName": "easy-eat"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "footer": {}
+      }
+    }
+  },
+  "rest": {
+    "defaultHeaders": {
+      "authorization": "{{ localStorage.authToken }}"
     }
   },
   "theme": {
