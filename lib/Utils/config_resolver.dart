@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 class ConfigResolver {
   late Map<String, dynamic> _themeConfig;
   late Map<String, dynamic> _pages;
+  late Map<String, dynamic> _restConfig;
 
   static final ConfigResolver _instance = ConfigResolver._internal();
 
@@ -20,6 +21,7 @@ class ConfigResolver {
     final data = await jsonDecode(response);
     _instance._themeConfig = data['theme'];
     _instance._pages = data['pages'];
+    _instance._restConfig = data['rest'];
   }
 
   ConfigResolver._internal();
@@ -51,8 +53,8 @@ class ConfigResolver {
 
     if (authToken != null) {
       return PageInitData(
-          pageName: 'easy-eat',
-          pageConfig: getPageConfig('easy-eat')!,
+          pageName: 'easy-eat-login',
+          pageConfig: getPageConfig('easy-eat-login')!,
           inputArgs: null);
     }
 
@@ -75,5 +77,9 @@ class ConfigResolver {
         pageName: firstPageConfig['pageName'],
         pageConfig: pageConfig,
         inputArgs: firstPageConfig['inputArgs']);
+  }
+
+  Map<String, dynamic>? getDefaultHeaders() {
+    return _restConfig['defaultHeaders'];
   }
 }
