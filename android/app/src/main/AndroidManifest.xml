@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="tech.digia.digia_ui">
+    <uses-permission android:name="android.permission.INTERNET"/>
     <queries>
         <!-- If your app checks for SMS support -->
         <intent>
@@ -20,7 +21,7 @@
     </queries>
 
    <application
-        android:label="digia_ui"
+        android:label="Easy Eat - Owner"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
