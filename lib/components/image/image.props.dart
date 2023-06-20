@@ -26,23 +26,4 @@ class DUIImageProps {
   String toString() {
     return jsonEncode(this);
   }
-
-  DUIImageProps mockWidget() {
-    return DUIImageProps.fromJson({
-      "height": 300,
-      "width": 300,
-      "placeHolder": "",
-      "errorFallback": "",
-      "aspectRatio": 0,
-      "imageSrc":
-          "https://upload.wikimedia.org/wikipedia/commons/e/e7/Everest_North_Face_toward_Base_Camp_Tibet_Luca_Galuzzi_2006.jpg",
-      "fit": "cover",
-      "cornerRadius": {
-        "topRight": 12,
-        "topLeft": 12,
-        "bottomLeft": 12,
-        "bottomRight": 12,
-      }
-    });
-  }
 }

@@ -1,38 +1,24 @@
 import 'package:digia_ui/Utils/config_resolver.dart';
-import 'package:digia_ui/components/DUICard/dui_card.dart';
 import 'package:digia_ui/components/DUIText/DUI_text_span/dui_text_span.dart';
-import 'package:digia_ui/components/DUIText/dui_text.dart';
-import 'package:digia_ui/components/button/button.dart';
-import 'package:digia_ui/components/image/image.dart';
-import 'package:digia_ui/components/techCard/tech_card.dart';
+import 'package:digia_ui/components/utils/DUIBorder/dui_border.dart';
 import 'package:digia_ui/components/utils/DUICornerRadius/dui_corner_radius.dart';
 import 'package:digia_ui/components/utils/DUIInsets/dui_insets.dart';
-import 'package:digia_ui/core/grid/dui_grid_view.dart';
 import 'package:flutter/material.dart';
-
-// ignore: non_constant_identifier_names
-final Map<String, Function> DUIWidgetRegistry = {
-  // 'digia/button': DUIButton.fromJson,
-  'digia/text': DUIText.create,
-  'digia/image': DUIImage.create,
-  'digia/button': DUIButton.create,
-  'digia/card_type1': DUITechCard.create,
-  'digia/card_type2': DUICard.create,
-  'digia/grid': DUIGridView.create
-};
 
 class DUIConfigConstants {
   static const double fallbackSize = 14;
-  static const String fallbackStyle = "";
+  static const String fallbackStyle = '';
   static const Color fallbackTextColor = Colors.black;
   static const double fallbackLineHeightFactor = 1.5;
-  static const String fallbackBgColorHexCode = "#FFFFFF";
+  static const String fallbackBgColorHexCode = '#FFFFFF';
+  static const String fallbackBorderColorHexCode = '#FF000000';
 }
 
 FontWeight toFontWeight(String? weight) {
   switch (weight) {
     case 'thin':
       return FontWeight.w100;
+    case 'extralight':
     case 'extra-light':
       return FontWeight.w200;
     case 'light':
@@ -41,10 +27,12 @@ FontWeight toFontWeight(String? weight) {
       return FontWeight.normal;
     case 'medium':
       return FontWeight.w500;
+    case 'semibold':
     case 'semi-bold':
       return FontWeight.w600;
     case 'bold':
       return FontWeight.w700;
+    case 'extrabold':
     case 'extra-bold':
       return FontWeight.w800;
     case 'black':
@@ -81,13 +69,13 @@ TextAlign toTextAlign(String? alignment) {
 
 TextOverflow toTextOverflow(String? overflow) {
   switch (overflow) {
-    case "fade":
+    case 'fade':
       return TextOverflow.fade;
-    case "visible":
+    case 'visible':
       return TextOverflow.visible;
-    case "clip":
+    case 'clip':
       return TextOverflow.clip;
-    case "ellipsis":
+    case 'ellipsis':
       return TextOverflow.ellipsis;
   }
 
@@ -96,11 +84,11 @@ TextOverflow toTextOverflow(String? overflow) {
 
 TextDecoration toTextDecoration(String textDecorationToken) {
   switch (textDecorationToken) {
-    case "underline":
+    case 'underline':
       return TextDecoration.underline;
-    case "overline":
+    case 'overline':
       return TextDecoration.overline;
-    case "lineThrough":
+    case 'lineThrough':
       return TextDecoration.lineThrough;
     default:
       return TextDecoration.none;
@@ -109,15 +97,15 @@ TextDecoration toTextDecoration(String textDecorationToken) {
 
 TextDecorationStyle? toTextDecorationStyle(String textDecorationStyleToken) {
   switch (textDecorationStyleToken) {
-    case "dashed":
+    case 'dashed':
       return TextDecorationStyle.dashed;
-    case "dotted":
+    case 'dotted':
       return TextDecorationStyle.dotted;
-    case "double":
+    case 'double':
       return TextDecorationStyle.double;
-    case "solid":
+    case 'solid':
       return TextDecorationStyle.solid;
-    case "wavy":
+    case 'wavy':
       return TextDecorationStyle.wavy;
   }
 
@@ -140,7 +128,7 @@ TextStyle? toTextStyle(String? styleClass) {
   TextDecoration textDecoration = TextDecoration.none;
   Color? decorationColor;
   TextDecorationStyle? decorationStyle;
-  String fontFamily = "Poppins"; // TODO: This shouldn't be hardcoded here.
+  String fontFamily = 'Poppins'; // TODO: This shouldn't be hardcoded here.
 
   styleClassMap.forEach((key, value) {
     switch (key) {
@@ -200,7 +188,7 @@ TextStyle? toTextStyle(String? styleClass) {
 TextSpan toTextSpan(DUITextSpan textSpan) {
   return TextSpan(
     text: textSpan.text,
-    style: toTextStyle(textSpan.styleClass ?? ""),
+    style: toTextStyle(textSpan.styleClass ?? ''),
     // recognizer: TapGestureRecognizer()
     //   ..onTap = () async {
     //     //todo change onTap functionality according to backend latter
@@ -252,6 +240,10 @@ Map<String, String> createStyleMap(String? styleClass) {
 }
 
 BorderRadiusGeometry toBorderRadiusGeometry(DUICornerRadius? cornerRadius) {
+  return toBorderRadius(cornerRadius);
+}
+
+BorderRadius toBorderRadius(DUICornerRadius? cornerRadius) {
   if (cornerRadius == null) {
     return BorderRadius.zero;
   }
@@ -264,21 +256,51 @@ BorderRadiusGeometry toBorderRadiusGeometry(DUICornerRadius? cornerRadius) {
   );
 }
 
+Border? toBorder(DUIBorder? border) {
+  if (border == null || border.borderStyle != 'solid') {
+    return null;
+  }
+
+  return Border.all(
+      style: BorderStyle.solid,
+      width: border.borderWidth ?? 1.0,
+      color: toColor(
+          border.borderColor ?? DUIConfigConstants.fallbackBorderColorHexCode));
+}
+
+OutlineInputBorder? toOutlineInputBorder(DUIBorder? border) {
+  if (border == null) {
+    return null;
+  }
+
+  return OutlineInputBorder(
+      borderRadius: toBorderRadius(border.borderRadius),
+      borderSide: BorderSide(
+          color: toColor(border.borderColor ??
+              DUIConfigConstants.fallbackBorderColorHexCode),
+          width: border.borderWidth ?? 1.0));
+}
+
 // Possible Values for colorToken:
 // token: primary, hexCode: #242424, hexCode with Alpha: #FF242424
 Color toColor(String colorToken) {
-  var hexValue = ConfigResolver().getColorValue(colorToken);
+  var colorString = ConfigResolver().getColorValue(colorToken) ?? colorToken;
 
-  return hexToColor(hexValue ?? colorToken);
+  if (isValidHexCode(colorString)) {
+    return hexToColor(colorString);
+  }
+
+  final rgbAlpha =
+      colorString.split(',').map((e) => int.tryParse(e)).nonNulls.toList();
+  if (rgbAlpha.length >= 3) {
+    final alpha = rgbAlpha.length > 3 ? rgbAlpha[3] : 255;
+    return Color.fromARGB(alpha, rgbAlpha[0], rgbAlpha[1], rgbAlpha[2]);
+  }
+
+  throw FormatException('Invalid color Format: $colorString');
 }
 
 Color hexToColor(String colorHexString) {
-  if (!isValidHexCode(colorHexString)) {
-    // TODO: Instead of throwing, log error and provide fallback color
-    throw FormatException(
-        'Hexadecimal Color Value Is Invalid: $colorHexString');
-  }
-
   var rgbString = colorHexString.replaceAll('#', '');
 
   if (colorHexString.length == 8) {
@@ -352,6 +374,30 @@ AlignmentGeometry? toAlignmentGeometry(String? token) {
 
     case 'bottomRight':
       return Alignment.bottomRight;
+  }
+
+  return null;
+}
+
+double? tryParseToDouble(dynamic value) {
+  if (value is String) {
+    return double.tryParse(value);
+  }
+
+  if (value is num) {
+    return value.toDouble();
+  }
+
+  return null;
+}
+
+int? tryParseToInt(dynamic value) {
+  if (value is String) {
+    return int.tryParse(value);
+  }
+
+  if (value is num) {
+    return value.toInt();
   }
 
   return null;

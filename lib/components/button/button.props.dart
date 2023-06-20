@@ -22,6 +22,7 @@ class DUIButtonProps {
   String? disabledBackgroundColor;
   bool? disabled;
   ActionProp? onClick;
+  bool? setLoading;
 
   DUIButtonProps();
 
@@ -33,25 +34,5 @@ class DUIButtonProps {
   @override
   String toString() {
     return jsonEncode(this);
-  }
-
-  DUIButtonProps mockWidget() {
-    return DUIButtonProps.fromJson(
-      {
-        "backgroundColor": "#345678",
-        "width": 200,
-        "shape": "pill",
-        "text": {
-          "style": "f:heading1Loose;tc:accent5",
-          "maxLines": 2,
-          "textSpans": [
-            {
-              "text": "Button",
-              "textAlign": "center",
-            },
-          ],
-        },
-      },
-    );
   }
 }

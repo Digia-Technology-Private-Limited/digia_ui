@@ -7,7 +7,7 @@ class DUIInsets {
   String right;
 
   DUIInsets(
-      {this.top = "0", this.bottom = "0", this.left = "0", this.right = "0"});
+      {this.top = '0', this.bottom = '0', this.left = '0', this.right = '0'});
 
   factory DUIInsets.fromJson(dynamic json) => _$DUIInsetsFromJson(json);
 
@@ -15,6 +15,6 @@ class DUIInsets {
 
   @override
   String toString() {
-    return "left:$left, top:$top, right:$right, bottom:$bottom";
+    return 'left:$left, top:$top, right:$right, bottom:$bottom';
   }
 }

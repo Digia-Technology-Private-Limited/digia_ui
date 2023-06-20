@@ -1,7 +1,7 @@
 {
   "pages": {
     "onboardingPage": {
-      "pageName": "bytes-front-page",
+      "pageName": "easy-eat-login",
       "inputArgs": {}
     },
     "bytes-front-page": {
@@ -22,8 +22,8 @@
         "pullToRefresh": {}
       },
       "layout": {
-        "header": {},
         "body": {
+          "allowScroll": false,
           "list": {
             "styleClass": "p:sp-300",
             "children": [
@@ -145,7 +145,7 @@
                                 }
                               }
                             },
-                            "styleClass": "bgc:accent1;cr:8;p:sp-300",
+                            "styleClass": "bgc:accent1;bdr:8;p:sp-300",
                             "title": {
                               "styleClass": "ft:h2-medium;tc:text",
                               "text": "Kotlin"
@@ -156,7 +156,7 @@
                             },
                             "spaceBtwImageAndTitle": "sp-250",
                             "image": {
-                              "styleClass": "w:48;h:48;cr:24",
+                              "styleClass": "w:48;h:48;bdr:24",
                               "imageSrc": "https://upload.wikimedia.org/wikipedia/commons/e/e7/Everest_North_Face_toward_Base_Camp_Tibet_Luca_Galuzzi_2006.jpg",
                               "fit": "fill"
                             }
@@ -176,7 +176,7 @@
                                 }
                               }
                             },
-                            "styleClass": "bgc:accent2;cr:8;p:sp-300",
+                            "styleClass": "bgc:accent2;bdr:8;p:sp-300",
                             "title": {
                               "styleClass": "ft:h2-medium;tc:text",
                               "text": "Flutter"
@@ -187,7 +187,7 @@
                             },
                             "spaceBtwImageAndTitle": "sp-250",
                             "image": {
-                              "styleClass": "w:48;h:48;cr:24",
+                              "styleClass": "w:48;h:48;bdr:24",
                               "imageSrc": "https://upload.wikimedia.org/wikipedia/commons/e/e7/Everest_North_Face_toward_Base_Camp_Tibet_Luca_Galuzzi_2006.jpg",
                               "fit": "fill"
                             }
@@ -207,7 +207,7 @@
                                 }
                               }
                             },
-                            "styleClass": "bgc:accent3;cr:8;p:sp-300",
+                            "styleClass": "bgc:accent3;bdr:8;p:sp-300",
                             "title": {
                               "styleClass": "ft:h2-medium;tc:text",
                               "text": "Nodejs"
@@ -218,7 +218,7 @@
                             },
                             "spaceBtwImageAndTitle": "sp-250",
                             "image": {
-                              "styleClass": "w:48;h:48;cr:24",
+                              "styleClass": "w:48;h:48;bdr:24",
                               "imageSrc": "https://upload.wikimedia.org/wikipedia/commons/e/e7/Everest_North_Face_toward_Base_Camp_Tibet_Luca_Galuzzi_2006.jpg",
                               "fit": "fill"
                             }
@@ -235,7 +235,7 @@
                                 "pageName": "articles"
                               }
                             },
-                            "styleClass": "bgc:accent4;cr:8;p:sp-300",
+                            "styleClass": "bgc:accent4;bdr:8;p:sp-300",
                             "title": {
                               "styleClass": "ft:h2-medium;tc:text",
                               "text": "Javascript"
@@ -246,7 +246,7 @@
                             },
                             "spaceBtwImageAndTitle": "sp-250",
                             "image": {
-                              "styleClass": "w:48;h:48;cr:24",
+                              "styleClass": "w:48;h:48;bdr:24",
                               "imageSrc": "https://upload.wikimedia.org/wikipedia/commons/e/e7/Everest_North_Face_toward_Base_Camp_Tibet_Luca_Galuzzi_2006.jpg",
                               "fit": "fill"
                             }
@@ -263,7 +263,7 @@
                                 "pageName": "articles"
                               }
                             },
-                            "styleClass": "bgc:accent5;cr:8;p:sp-300",
+                            "styleClass": "bgc:accent5;bdr:8;p:sp-300",
                             "title": {
                               "styleClass": "ft:h2-medium;tc:text",
                               "text": "Typescript"
@@ -274,7 +274,7 @@
                             },
                             "spaceBtwImageAndTitle": "sp-250",
                             "image": {
-                              "styleClass": "w:48;h:48;cr:24",
+                              "styleClass": "w:48;h:48;bdr:24",
                               "imageSrc": "https://upload.wikimedia.org/wikipedia/commons/e/e7/Everest_North_Face_toward_Base_Camp_Tibet_Luca_Galuzzi_2006.jpg",
                               "fit": "fill"
                             }
@@ -291,7 +291,7 @@
                                 "pageName": "articles"
                               }
                             },
-                            "styleClass": "bgc:accent6;cr:8;p:sp-300",
+                            "styleClass": "bgc:accent6;bdr:8;p:sp-300",
                             "title": {
                               "styleClass": "ft:h2-medium;tc:text",
                               "text": "Python"
@@ -302,7 +302,7 @@
                             },
                             "spaceBtwImageAndTitle": "sp-250",
                             "image": {
-                              "styleClass": "w:48;h:48;cr:24",
+                              "styleClass": "w:48;h:48;bdr:24",
                               "imageSrc": "https://upload.wikimedia.org/wikipedia/commons/e/e7/Everest_North_Face_toward_Base_Camp_Tibet_Luca_Galuzzi_2006.jpg",
                               "fit": "fill"
                             }
@@ -319,7 +319,7 @@
                                 "pageName": "articles"
                               }
                             },
-                            "styleClass": "bgc:accent7;cr:8;p:sp-300",
+                            "styleClass": "bgc:accent7;bdr:8;p:sp-300",
                             "title": {
                               "styleClass": "ft:h2-medium;tc:text",
                               "text": "Product Plan"
@@ -330,7 +330,7 @@
                             },
                             "spaceBtwImageAndTitle": "sp-250",
                             "image": {
-                              "styleClass": "w:48;h:48;cr:24",
+                              "styleClass": "w:48;h:48;bdr:24",
                               "imageSrc": "https://upload.wikimedia.org/wikipedia/commons/e/e7/Everest_North_Face_toward_Base_Camp_Tibet_Luca_Galuzzi_2006.jpg",
                               "fit": "fill"
                             }
@@ -347,7 +347,7 @@
                                 "pageName": "articles"
                               }
                             },
-                            "styleClass": "bgc:accent8;cr:8;p:sp-300",
+                            "styleClass": "bgc:accent8;bdr:8;p:sp-300",
                             "title": {
                               "styleClass": "ft:h2-medium;tc:text",
                               "text": "Figma"
@@ -358,7 +358,7 @@
                             },
                             "spaceBtwImageAndTitle": "sp-250",
                             "image": {
-                              "styleClass": "w:48;h:48;cr:24",
+                              "styleClass": "w:48;h:48;bdr:24",
                               "imageSrc": "https://upload.wikimedia.org/wikipedia/commons/e/e7/Everest_North_Face_toward_Base_Camp_Tibet_Luca_Galuzzi_2006.jpg",
                               "fit": "fill"
                             }
@@ -405,13 +405,13 @@
             "styleClass": "p:sp-300",
             "children": [
               {
-                "styleClass": "cr:8; bgc:accent1; h:150; m:0,0,0,sp-300",
+                "styleClass": "bdr:8; bgc:accent1; h:150; m:0,0,0,sp-300",
                 "child": {
                   "type": "digia/card_type2",
                   "data": {
                     "contentPadding": "sp-250,sp-250,sp-300,sp-250",
                     "image": {
-                      "styleClass": "cr:8",
+                      "styleClass": "bdr:8",
                       "aspectRatio": 0.85,
                       "imageSrc": "https://upload.wikimedia.org/wikipedia/commons/e/e7/Everest_North_Face_toward_Base_Camp_Tibet_Luca_Galuzzi_2006.jpg",
                       "fit": "fill"
@@ -428,7 +428,7 @@
                     "spaceBtwAvatarImageAndText": "sp-200",
                     "spaceBtwTopCrumbTextTitle": "sp-100",
                     "avatarImage": {
-                      "styleClass": "h:24; w:24; cr: 24",
+                      "styleClass": "h:24; w:24; bdr: 24",
                       "imageSrc": "https://howtodrawforkids.com/wp-content/uploads/2021/06/How-to-draw-a-human-for-kids.jpg",
                       "fit": "contain"
                     },
@@ -440,13 +440,13 @@
                 }
               },
               {
-                "styleClass": "cr:8; bgc:accent1; h:150; m:0,0,0,sp-300",
+                "styleClass": "bdr:8; bgc:accent1; h:150; m:0,0,0,sp-300",
                 "child": {
                   "type": "digia/card_type2",
                   "data": {
                     "contentPadding": "sp-250,sp-250,sp-300,sp-250",
                     "image": {
-                      "styleClass": "cr:8",
+                      "styleClass": "bdr:8",
                       "aspectRatio": 0.85,
                       "imageSrc": "https://upload.wikimedia.org/wikipedia/commons/e/e7/Everest_North_Face_toward_Base_Camp_Tibet_Luca_Galuzzi_2006.jpg",
                       "fit": "fill"
@@ -463,7 +463,7 @@
                     "spaceBtwAvatarImageAndText": "sp-200",
                     "spaceBtwTopCrumbTextTitle": "sp-100",
                     "avatarImage": {
-                      "styleClass": "h:24; w:24; cr: 24",
+                      "styleClass": "h:24; w:24; bdr: 24",
                       "imageSrc": "https://howtodrawforkids.com/wp-content/uploads/2021/06/How-to-draw-a-human-for-kids.jpg",
                       "fit": "contain"
                     },
@@ -479,6 +479,172 @@
         },
         "footer": {}
       }
+    },
+    "easy-eat": {
+      "id": "easy-eat",
+      "name": "easy-eat",
+      "inputArgs": {},
+      "actions": {
+        "onPageLoad": {
+          "type": "rest_call",
+          "data": {
+            "keyToReadFrom": "data.response",
+            "pageName": "easy-eat",
+            "method": "POST",
+            "url": "http://dev.digia.tech/hydrator/api/easyeat/getChartPage",
+            "body": {
+              "restaurant_ids": "{{ localStorage.restaurant_ids }}"
+            }
+          }
+        },
+        "onBackPress": {},
+        "pullToRefresh": {}
+      },
+      "layout": {
+        "header": {
+          "appBar": true
+        },
+        "body": {},
+        "footer": {}
+      }
+    },
+    "easy-eat-login": {
+      "id": "easy-eat-login",
+      "name": "easy-eat-login",
+      "route": "/easy-eat-login",
+      "inputArgs": {
+        "properties": {}
+      },
+      "actions": {
+        "onPageLoad": {
+          "type": "renderLayout",
+          "data": {
+            "pageName": "easy-eat-login"
+          }
+        },
+        "onBackPress": {},
+        "pullToRefresh": {}
+      },
+      "layout": {
+        "body": {
+          "allowScroll": false,
+          "list": {
+            "styleClass": "p:sp-300",
+            "children": [
+              {
+                "wrap": false,
+                "child": {
+                  "type": "digia/image",
+                  "data": {
+                    "styleClass": "h:200;p:16",
+                    "fit": "fitWidth",
+                    "imageSrc": "https://d208quqxsjalxm.cloudfront.net/partner-app-images/Login/logo-new.png"
+                  }
+                }
+              },
+              {
+                "styleClass": "m:0,10,0,0",
+                "child": {
+                  "type": "digia/text",
+                  "data": {
+                    "alignment": "center",
+                    "text": "Login to Owner's headquarters",
+                    "styleClass": "ft:h2-semibold;tc:text;ff:Nunito"
+                  }
+                }
+              },
+              {
+                "styleClass": "m:0,12,0,0",
+                "child": {
+                  "type": "digia/text",
+                  "data": {
+                    "alignment": "center",
+                    "styleClass": "ft:caption;tc:textSubtle",
+                    "textSpans": [
+                      {
+                        "text": "See how your business is doing on a central dashboard for all the outlet sales & view daily reports generated automatically at day end."
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                "styleClass": "m:0,12,0,0",
+                "child": {
+                  "type": "digia/form",
+                  "data": {
+                    "children": [
+                      {
+                        "type": "digia/form/textfield",
+                        "data": {
+                          "dataKey": "email",
+                          "inputType": "email",
+                          "hintText": "Enter your email address",
+                          "textStyle": "ft:para1;tc:text",
+                          "border": "bdc:208,208,208; bdr:8; bdw:2",
+                          "label": {
+                            "text": "EMAIL ID",
+                            "styleClass": "ft:para1;tc:textSubtle"
+                          }
+                        }
+                      },
+                      {
+                        "type": "fw/sized_box",
+                        "data": { "height": 10 }
+                      },
+                      {
+                        "type": "digia/form/textfield",
+                        "data": {
+                          "dataKey": "password",
+                          "inputType": "password",
+                          "hintText": "Enter Password",
+                          "textStyle": "ft:para1;tc:text",
+                          "border": "bdc:208,208,208; bdr:8; bdw:2",
+                          "label": {
+                            "text": "PASSWORD",
+                            "styleClass": "ft:para1;tc:textSubtle"
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                "child": {
+                  "type": "fw/spacer",
+                  "data": {}
+                }
+              },
+              {
+                "styleClass": "m:0,16,0,64; al:center",
+                "child": {
+                  "type": "digia/button",
+                  "data": {
+                    "styleClass": "p:20,10;bgc:#000000;bdr:8;",
+                    "text": {
+                      "styleClass": "ft:button1;tc:light",
+                      "text": "Login & See Restaurant Analytics"
+                    },
+                    "onClick": {
+                      "type": "navigate_to_page",
+                      "data": {
+                        "pageName": "easy-eat"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "footer": {}
+      }
+    }
+  },
+  "rest": {
+    "defaultHeaders": {
+      "authorization": "{{ localStorage.authToken }}"
     }
   },
   "theme": {
@@ -508,6 +674,10 @@
         "size": 36,
         "weight": "bold"
       },
+      "h2-bold": {
+        "size": 24,
+        "weight": "bold"
+      },
       "h2-semibold": {
         "size": 24,
         "weight": "semibold"
@@ -515,6 +685,10 @@
       "h2-medium": {
         "size": 24,
         "weight": "medium"
+      },
+      "h3-sb": {
+        "size": 20,
+        "weight": "semibold"
       },
       "heading3": {
         "size": 20,

@@ -2,11 +2,13 @@ import 'dart:convert';
 
 import 'package:digia_ui/Utils/dui_font.dart';
 import 'package:digia_ui/core/page/page_init_data.dart';
+import 'package:digia_ui/core/pref/pref_util.dart';
 import 'package:flutter/services.dart';
 
 class ConfigResolver {
   late Map<String, dynamic> _themeConfig;
   late Map<String, dynamic> _pages;
+  late Map<String, dynamic> _restConfig;
 
   static final ConfigResolver _instance = ConfigResolver._internal();
 
@@ -19,6 +21,7 @@ class ConfigResolver {
     final data = await jsonDecode(response);
     _instance._themeConfig = data['theme'];
     _instance._pages = data['pages'];
+    _instance._restConfig = data['rest'];
   }
 
   ConfigResolver._internal();
@@ -45,24 +48,38 @@ class ConfigResolver {
   }
 
   PageInitData getfirstPageData() {
+    // TODO: Remove this custom logic later.
+    final authToken = PrefUtil.getString('authToken');
+
+    if (authToken != null) {
+      return PageInitData(
+          pageName: 'easy-eat-login',
+          pageConfig: getPageConfig('easy-eat-login')!,
+          inputArgs: null);
+    }
+
     final firstPageConfig = _pages['onboardingPage'];
     if (firstPageConfig == null || firstPageConfig['pageName'] == null) {
-      throw "Config for First Page not found.";
+      throw 'Config for First Page not found.';
     }
 
     final pageName = firstPageConfig['pageName'];
     if (pageName == null) {
-      throw "Page Name not present in First Page Config";
+      throw 'Page Name not present in First Page Config';
     }
 
     final pageConfig = getPageConfig(firstPageConfig['pageName']);
     if (pageConfig == null) {
-      throw "Page Config not found for $pageName";
+      throw 'Page Config not found for $pageName';
     }
 
     return PageInitData(
         pageName: firstPageConfig['pageName'],
         pageConfig: pageConfig,
         inputArgs: firstPageConfig['inputArgs']);
+  }
+
+  Map<String, dynamic>? getDefaultHeaders() {
+    return _restConfig['defaultHeaders'];
   }
 }

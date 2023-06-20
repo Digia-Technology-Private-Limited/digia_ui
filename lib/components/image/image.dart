@@ -52,7 +52,7 @@ class _DUIImageState extends State<DUIImage> {
   Widget build(BuildContext context) {
     final ImageProvider imageProvider;
     // Network Image
-    if (props.imageSrc.startsWith("http")) {
+    if (props.imageSrc.startsWith('http')) {
       imageProvider = CachedNetworkImageProvider(props.imageSrc);
     } else {
       imageProvider = AssetImage(props.imageSrc);
