@@ -30,6 +30,7 @@ class _DUIButtonState extends State<DUIButton> {
   double width = 0;
   double height = 0;
   bool _isLoading = false;
+  bool _actionInProgress = false;
   _DUIButtonState();
 
   @override
@@ -68,11 +69,12 @@ class _DUIButtonState extends State<DUIButton> {
         ? widget
         : InkWell(
             onTap: () async {
-              if (_isLoading) return;
+              if (_actionInProgress) return;
               // TODO: Remove this Custom logic -> Move to JSON
               // ActionHandler().executeAction(context, props.onClick!);
               setState(() {
-                _isLoading = true;
+                _isLoading = (props.setLoading == true) | true;
+                _actionInProgress = true;
               });
               final isValid = signUpFormGlobalKey.currentState!.validate();
               if (isValid) {
@@ -92,10 +94,31 @@ class _DUIButtonState extends State<DUIButton> {
                     }
                   }));
 
-              await PrefUtil.setString('authToken', resp['token']);
+              if (resp['token'] == null) {
+                final message = resp['message'] ?? resp['error'];
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text("Error: ${message}"),
+                ));
+                setState(() {
+                  _isLoading = false;
+                  _actionInProgress = false;
+                });
+                return;
+              }
+              final restaurants = resp['mall_restaurants'] as List<dynamic>?;
+
+              if (restaurants != null) {
+                List<String> ids = restaurants.map((o) {
+                  return o['id'] as String;
+                }).toList();
+                await PrefUtil.set('restaurant_ids', ids);
+              }
+
+              await PrefUtil.setString('authToken', 'Bearer ${resp['token']}');
               if (context.mounted) {
                 setState(() {
                   _isLoading = false;
+                  _actionInProgress = false;
                 });
                 await ActionHandler().executeAction(
                     context,
