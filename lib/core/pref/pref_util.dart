@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:digia_ui/Utils/json_util.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PrefUtil {
@@ -15,31 +18,27 @@ class PrefUtil {
     return _pref.setString(key, value);
   }
 
-  // static bool getBool(String key, [bool? defValue]) {
-  //   return _pref.getBool(key) ?? defValue!;
-  // }
+  static Future<bool> set(String key, dynamic value) {
+    if (value is String) {
+      return _pref.setString(key, value);
+    }
 
-  // static Future<bool> setBool(String key, bool value) async {
-  //   return _pref.setBool(key, value) ?? Future.value(false);
-  // }
+    if (value != null) {
+      return _pref.setString(key, jsonEncode(value));
+    }
 
-  // static int getInt(String key, [int? defValue]) {
-  //   return _pref.getInt(key) ?? defValue!;
-  // }
+    return Future.value(false);
+  }
 
-  // static Future<bool> setInt(String key, int value) async {
-  //   var prefs = await _pref;
-  //   return prefs?.setInt(key, value) ?? Future.value(false);
-  // }
+  static dynamic get(String key) {
+    final value = _pref.getString(key);
 
-  // static List<String> getStringList(String key, [List<String>? defValue]) {
-  //   return _pref.getStringList(key) ?? [];
-  // }
+    if (value == null) return null;
 
-  // static Future<bool> setStringList(String key, List<String> value) async {
-  //   var prefs = await _pref;
-  //   return prefs?.setStringList(key, value) ?? Future.value(false);
-  // }
+    final decodedValue = JsonUtil.tryDecode(value);
+
+    return decodedValue ?? value;
+  }
 
   static Future<bool> clearStorage() async {
     return _pref.clear();
