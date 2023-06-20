@@ -20,6 +20,8 @@ class _DUITextFieldState extends State<DUITextField> {
   late DUITextFieldProps props;
   TextEditingController userInput = TextEditingController();
 
+  bool _obscureText = false;
+
   @override
   void initState() {
     super.initState();
@@ -31,7 +33,7 @@ class _DUITextFieldState extends State<DUITextField> {
     return TextFormField(
         // TODO: Need better abstraction for obscureText, validator
         // and show password for password.
-        obscureText: props.inputType == 'password',
+        obscureText: _obscureText,
         validator: (value) {
           if (value == null) return null;
 
@@ -48,6 +50,18 @@ class _DUITextFieldState extends State<DUITextField> {
         controller: userInput,
         style: toTextStyle(props.textStyle),
         decoration: InputDecoration(
+            suffixIcon: props.inputType == 'password'
+                ? GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _obscureText = !_obscureText;
+                      });
+                    },
+                    child: _obscureText
+                        ? const Icon(Icons.visibility_off)
+                        : const Icon(Icons.visibility),
+                  )
+                : null,
             label: DUIText(props.label),
             border: toOutlineInputBorder(props.border),
             focusedBorder: toOutlineInputBorder(props.focusedBorder),
@@ -55,61 +69,3 @@ class _DUITextFieldState extends State<DUITextField> {
             hintStyle: toTextStyle(props.hintTextStyle)));
   }
 }
-
-//               child: TextFormField(
-//                 controller: userInput,
-//                 style: TextStyle(
-//                   fontSize: 24,
-//                   color: Colors.blue,
-//                   fontWeight: FontWeight.w600,
-//                 ),
-//                 onChanged: (value) {
-//                   setState(() {
-//                     // userInput.text = value.toString();
-//                   });
-//                 },
-//                 decoration: InputDecoration(
-//                     // counterText: "Counter Text",
-//                     semanticCounterText: "Semantic Counter Text",
-//                     icon: Icon(Icons.abc_rounded),
-//                     // label: Wrap(children: [Icon(Icons.ac_unit), Text("Lol")]),
-//                     focusColor: Colors.white,
-//                     //add prefix icon
-//                     prefixIcon: Icon(
-//                       Icons.person_outline_rounded,
-//                       color: Colors.grey,
-//                     ),
-//                     suffix: Text("Suffix Text Widget"),
-//                     errorText: switchValue ? null : "Error Text",
-//                     errorStyle: TextStyle(
-//                       color: Colors.red,
-//                       fontSize: 32,
-//                       fontWeight: FontWeight.w400,
-//                     ),
-//                     isCollapsed: false,
-//                     floatingLabelBehavior: FloatingLabelBehavior.auto,
-//                     fillColor: Colors.grey,
-//                     hintText: "Hint Text",
-//                     helperText: "Helper Text",
-//                     //make hint text
-//                     hintStyle: TextStyle(
-//                       color: Colors.grey,
-//                       fontSize: 16,
-//                       fontFamily: "verdana_regular",
-//                       fontWeight: FontWeight.w400,
-//                     ),
-
-//                     // create lable
-//                     labelText: 'Label Text',
-//                     // lable style
-//                     labelStyle: TextStyle(
-//                       color: Colors.grey,
-//                       fontSize: 16,
-//                       fontFamily: "Poppins",
-//                       fontWeight: FontWeight.w400,
-//                     ),
-//                     floatingLabelStyle:
-//                         TextStyle(backgroundColor: Colors.amber)),
-//               ),
-//             ),
-//             Text(userInput.text),
