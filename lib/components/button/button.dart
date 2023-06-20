@@ -97,7 +97,7 @@ class _DUIButtonState extends State<DUIButton> {
               if (resp['token'] == null) {
                 final message = resp['message'] ?? resp['error'];
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text("Error: ${message}"),
+                  content: Text('Error: $message'),
                 ));
                 setState(() {
                   _isLoading = false;
