@@ -21,11 +21,13 @@ version: 1.0.0+1
 environment:
   sdk: ">=3.0.0"
 
-# https://github.com/gonuit/rps
+# https://github.com/frencojobs/derry
 scripts:
-  gen: flutter pub run build_runner build --delete-conflicting-outputs
+  build: dart run build_runner build --delete-conflicting-outputs
   format: dart format .
   fix: dart fix --apply
+  analyze: dart analyze
+  analyse: dart analyze
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
