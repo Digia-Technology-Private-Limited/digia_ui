@@ -11,13 +11,10 @@ class FW {
     );
   }
 
-// TODO: Spacer not working inside Column. To be fixed.
+  // This does not work well directly inside a Container.
+  // Avoid using it with styleClass.
   static Widget spacer(Map<String, dynamic>? json) {
-    // final flex = tryParseToInt(json?['flex']) ?? 1;
-    // return SizedBox.expand();
-    return Expanded(
-        child: Container(
-      height: 100,
-    ));
+    final flex = json?['flex'] as int? ?? 1;
+    return Spacer(flex: flex);
   }
 }
