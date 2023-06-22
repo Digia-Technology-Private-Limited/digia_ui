@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:digia_ui/Utils/config_resolver.dart';
 import 'package:digia_ui/Utils/extensions.dart';
 import 'package:digia_ui/core/action/action_prop.dart';
-import 'package:digia_ui/core/pref/pref_util.dart';
+import 'package:digia_ui/core/var.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -74,18 +74,8 @@ class RestHandler {
   Map<String, dynamic> _fill(Map<String, dynamic> body) {
     Map<String, dynamic> result = {};
     for (var MapEntry(:key, :value) in body.entries) {
-      final matches = RegExp(r'\s*{{\s*(.+)\s*}}\s*').allMatches(value);
-      var match = matches.isNotEmpty ? matches.elementAt(0) : null;
-      if (match?.group(1) != null) {
-        final splitValues = match!.group(1)!.split('.');
-        switch (splitValues[0]) {
-          case 'localStorage':
-            final prefKey = splitValues.skip(1).join('.').trim();
-            result[key] = PrefUtil.get(prefKey);
-        }
-      } else {
-        result[key] = value;
-      }
+      final variable = extractVar(value);
+      result[key] = variable != null ? getValueIfVar(variable) : value;
     }
     return result;
   }
