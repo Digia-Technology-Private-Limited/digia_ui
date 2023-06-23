@@ -37,6 +37,9 @@ class _DUIPageState extends State<DUIPage> {
     final widgetFromRegistry = DUIWidgetRegistry[childContainer.child.type]
         ?.call(childContainer.child.data);
 
+    // TODO: Figure out a fallback in this case.
+    // Should be logged as well.
+    // @Vivek, @Anupam, @Tushar
     if (widgetFromRegistry == null) {
       return Text(
           'A widget of type: ${childContainer.child.type} is not found');
@@ -93,15 +96,20 @@ class _DUIPageState extends State<DUIPage> {
             Widget widget;
 
             if (snapshot.data?.layout.body.allowScroll == false) {
-              widget = Column(
-                children: list
-                    .map((child) {
-                      return _buildChildWidget(child);
-                    })
-                    .nonNulls
-                    .toList(),
+              // https: //stackoverflow.com/a/54564767
+              widget = SafeArea(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: list
+                      .map((item) {
+                        return _buildChildWidget(item);
+                      })
+                      .nonNulls
+                      .toList(),
+                ),
               );
             } else {
+              // https://stackoverflow.com/a/52106410
               widget = ListView.builder(
                   itemCount: list.length,
                   itemBuilder: (context, index) {
