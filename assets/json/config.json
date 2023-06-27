@@ -22,6 +22,32 @@
         "pullToRefresh": {}
       },
       "layout": {
+        "header": {
+          "appBar": true,
+          "title": "Bytes",
+          "backgroundColor": "ffffff",
+          "elevation": 1,
+          "centerTitle": true,
+          "actions": {
+            "items": [
+              {
+                "title": "Search"
+              }
+            ]
+          },
+          "popUpMenu": {
+            "items": [
+              {
+                "title": "Settings",
+                "value": 1
+              },
+              {
+                "title": "Log Out",
+                "value": 2
+              }
+            ]
+          }
+        },
         "body": {
           "allowScroll": false,
           "list": {

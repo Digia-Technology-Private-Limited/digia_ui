@@ -1,12 +1,11 @@
 import 'package:digia_ui/Utils/dui_widget_list_registry.dart';
 import 'package:digia_ui/Utils/extensions.dart';
-import 'package:digia_ui/components/DUIText/dui_text.dart';
 import 'package:digia_ui/core/action/action_handler.dart';
 import 'package:digia_ui/core/action/action_prop.dart';
 import 'package:digia_ui/core/container/dui_container.dart';
+import 'package:digia_ui/core/flutter_widgets.dart';
 import 'package:digia_ui/core/page/page_init_data.dart';
 import 'package:digia_ui/core/page/props/dui_page_props.dart';
-import 'package:digia_ui/core/pref/pref_util.dart';
 import 'package:flutter/material.dart';
 
 class DUIPage extends StatefulWidget {
@@ -58,21 +57,12 @@ class _DUIPageState extends State<DUIPage> {
   Widget build(BuildContext context) {
     final showAppBar =
         initData.pageConfig.valueFor(keyPath: 'layout.header.appBar');
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       // TODO: Remove Custom AppBar logic
       appBar: showAppBar == true
-          ? AppBar(
-              title: DUIText.create(const {'text': 'Restaurant Analytics'}),
-              actions: [
-                TextButton(
-                    onPressed: () async {
-                      await PrefUtil.clearStorage();
-                      await Navigator.of(context).maybePop();
-                    },
-                    child: const Text('Clear AuthToken'))
-              ],
-            )
+          ? FW.appbar(initData.pageConfig.valueFor(keyPath: 'layout.header'))
           : null,
       body: FutureBuilder<DUIPageProps>(
           future: _executeOnPageLoadAction(context),
