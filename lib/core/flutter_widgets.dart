@@ -59,9 +59,8 @@ class FW {
         // TODO: (Ansh) confirm this, cannot return null here
       ],
       title: title != null ? Text(title) : null,
-      backgroundColor: backgroundColor != null
-          ? Color(int.parse('0xFF$backgroundColor'))
-          : null,
+      backgroundColor:
+          backgroundColor != null ? toColor(backgroundColor) : null,
       elevation: elevation,
       centerTitle: centerTitle,
     );
