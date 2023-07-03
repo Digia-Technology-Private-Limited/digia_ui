@@ -28,13 +28,12 @@
           "backgroundColor": "ffffff",
           "elevation": 1,
           "centerTitle": true,
-          "actions": {
-            "items": [
-              {
-                "title": "Search"
-              }
-            ]
-          },
+          "actions": [
+            {
+              "title": "Search",
+              "icon": "0xe567"
+            }
+          ],
           "popUpMenu": {
             "items": [
               {

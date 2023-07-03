@@ -62,7 +62,7 @@ class _DUIPageState extends State<DUIPage> {
       resizeToAvoidBottomInset: false,
       // TODO: Remove Custom AppBar logic
       appBar: showAppBar == true
-          ? FW.appbar(initData.pageConfig.valueFor(keyPath: 'layout.header'))
+          ? FW.appBar(initData.pageConfig.valueFor(keyPath: 'layout.header'))
           : null,
       body: FutureBuilder<DUIPageProps>(
           future: _executeOnPageLoadAction(context),

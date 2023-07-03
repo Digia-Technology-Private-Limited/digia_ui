@@ -1,5 +1,9 @@
 import 'package:digia_ui/Utils/util_functions.dart';
+import 'package:digia_ui/core/appbar/appbar_props.dart';
 import 'package:flutter/material.dart';
+
+import '../components/DUIIcon/dui_icon.dart';
+import '../components/DUIIcon/dui_icon_props.dart';
 
 class FW {
   static SizedBox sizedBox(Map<String, dynamic> json) {
@@ -18,27 +22,34 @@ class FW {
     return Spacer(flex: flex);
   }
 
-  static AppBar appbar(Map<String, dynamic> json) {
-    final title = json['title'] as String?;
-    final backgroundColor = json['backgroundColor'] as String?;
-    final elevation = tryParseToDouble(json['elevation']);
-    final centerTitle = json['centerTitle'] as bool? ?? false;
-    // final leading = json['leading'] as Map<String, dynamic>?;
-    // final actions = json['actions'] as List<dynamic>?;
-    List<Widget> actions = [];
-    if (json['actions'] != null) {
-      for (final action in json['actions']['items']) {
-        actions.add(
-          IconButton(
-            onPressed: () {
-              print(action['title']);
-            },
-            icon: const Icon(Icons.search),
-          ),
+  static AppBar appBar(Map<String, dynamic> json) {
+    AppBarProps props = AppBarProps.fromJson(json);
+
+    late List<Widget> actions;
+    if (props.actions != null) {
+      actions = props.actions!.map((e) {
+        return IconButton(
+          tooltip: e['title'],
+          onPressed: () {},
+          icon: DUIIcon(props: DUIIconProps.fromJson(e['icon'])!),
         );
-      }
+      }).toList();
+      // for (final action in props.actions!) {
+      //   actions.add(
+      //     IconButton(
+      //       tooltip: action['title'],
+      //       onPressed: () {},
+      //       icon: DUIIcon(props: DUIIconProps.fromJson(action['icon'])!),
+      //     ),
+      //   );
+      // }
     }
     return AppBar(
+      leading: props.back == true
+          ? const BackButton(
+              // TODO: add the Navigator.pop functionality
+              )
+          : null,
       actions: [
         ...actions,
         json['popUpMenu'] != null
@@ -47,7 +58,6 @@ class FW {
                   return (json['popUpMenu']['items'] as List<dynamic>)
                       .map(
                         (e) => PopupMenuItem(
-                          onTap: () => print(e['title']),
                           value: e['value'],
                           child: Text(e['title'] as String),
                         ),
@@ -56,13 +66,13 @@ class FW {
                 },
               )
             : const SizedBox()
-        // TODO: (Ansh) confirm this, cannot return null here
       ],
-      title: title != null ? Text(title) : null,
-      backgroundColor:
-          backgroundColor != null ? toColor(backgroundColor) : null,
-      elevation: elevation,
-      centerTitle: centerTitle,
+      title: props.title != null ? Text(props.title!) : null,
+      backgroundColor: props.backgroundColor != null
+          ? toColor(props.backgroundColor!)
+          : null,
+      elevation: props.elevation,
+      centerTitle: props.centerTitle,
     );
   }
 }

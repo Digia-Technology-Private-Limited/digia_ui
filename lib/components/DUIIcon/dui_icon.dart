@@ -8,6 +8,10 @@ class DUIIcon extends StatelessWidget {
   final DUIIconProps props;
   @override
   Widget build(BuildContext context) {
-    return Icon(Icons.abc, size: props.size, color: toColor(props.color));
+    return Icon(
+      IconData(props.value, fontFamily: 'MaterialIcons'),
+      size: props.size,
+      color: props.color == null ? null : toColor(props.color!),
+    );
   }
 }
