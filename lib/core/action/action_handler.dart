@@ -21,7 +21,6 @@ class ActionHandler {
 
   Future<dynamic>? executeAction(
       BuildContext context, ActionProp action) async {
-        
     switch (action.type) {
       case 'Action.navigateToPage':
         final pageName = action.data['pageName'];
