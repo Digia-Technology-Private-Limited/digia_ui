@@ -63,10 +63,10 @@ class PageBodyList {
 class PageBodyListContainer {
   @JsonKey(fromJson: DUIStyleClass.fromJson, includeToJson: false)
   late DUIStyleClass? styleClass;
-  bool wrap;
+  String? alignChild;
   late PageBodyListChild child;
 
-  PageBodyListContainer({this.wrap = false});
+  PageBodyListContainer({this.alignChild});
 
   factory PageBodyListContainer.fromJson(Map<String, dynamic> json) =>
       _$PageBodyListContainerFromJson(json);

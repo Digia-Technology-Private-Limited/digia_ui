@@ -23,7 +23,7 @@ class RestHandler {
 
   Future<dynamic>? executeAction(
       BuildContext context, ActionProp action) async {
-    if (action.type != 'rest_call' || action.data.isEmpty) {
+    if (action.type != 'Action.restCall' || action.data.isEmpty) {
       return null;
     }
 

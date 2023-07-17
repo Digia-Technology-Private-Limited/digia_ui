@@ -1,5 +1,6 @@
 import 'package:digia_ui/Utils/dui_widget_list_registry.dart';
 import 'package:digia_ui/Utils/extensions.dart';
+import 'package:digia_ui/Utils/util_functions.dart';
 import 'package:digia_ui/components/DUIText/dui_text.dart';
 import 'package:digia_ui/core/action/action_handler.dart';
 import 'package:digia_ui/core/action/action_prop.dart';
@@ -45,8 +46,13 @@ class _DUIPageState extends State<DUIPage> {
           'A widget of type: ${childContainer.child.type} is not found');
     }
 
-    final child = childContainer.wrap
-        ? Wrap(children: [widgetFromRegistry])
+    final childAlignmentInContainer =
+        toAlignmentGeometry(childContainer.alignChild);
+    final child = childAlignmentInContainer != null
+        ? Align(
+            alignment: childAlignmentInContainer,
+            child: widgetFromRegistry,
+          )
         : widgetFromRegistry;
 
     return childContainer.styleClass == null

@@ -4,6 +4,7 @@ import 'package:digia_ui/components/utils/DUIBorder/dui_border.dart';
 import 'package:digia_ui/components/utils/DUICornerRadius/dui_corner_radius.dart';
 import 'package:digia_ui/components/utils/DUIInsets/dui_insets.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class DUIConfigConstants {
   static const double fallbackSize = 14;
@@ -205,24 +206,15 @@ TextSpan toTextSpan(DUITextSpan textSpan) {
   );
 }
 
-BoxFit toBoxFit(String fitValue) {
-  switch (fitValue) {
-    case 'fill':
-      return BoxFit.fill;
-    case 'contain':
-      return BoxFit.contain;
-    case 'cover':
-      return BoxFit.cover;
-    case 'fitWidth':
-      return BoxFit.fitWidth;
-    case 'fitHeight':
-      return BoxFit.fitHeight;
-    case 'scaleDown':
-      return BoxFit.scaleDown;
-  }
-
-  return BoxFit.none;
-}
+BoxFit toBoxFit(String fitValue) => switch (fitValue) {
+      'fill' => BoxFit.fill,
+      'contain' => BoxFit.contain,
+      'cover' => BoxFit.cover,
+      'fitWidth' => BoxFit.fitWidth,
+      'fitHeight' => BoxFit.fitHeight,
+      'scaleDown' => BoxFit.scaleDown,
+      _ => BoxFit.none
+    };
 
 Map<String, String> createStyleMap(String? styleClass) {
   if (styleClass == null) return {};
@@ -402,3 +394,11 @@ int? tryParseToInt(dynamic value) {
 
   return null;
 }
+
+LaunchMode toUriLaunchMode(String? value) => switch (value) {
+      'inAppWebView' => LaunchMode.inAppWebView,
+      'externalApplication' || 'external' => LaunchMode.externalApplication,
+      'externalNonBrowserApplication' =>
+        LaunchMode.externalNonBrowserApplication,
+      _ => LaunchMode.platformDefault
+    };

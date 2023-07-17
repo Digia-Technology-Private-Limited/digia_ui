@@ -83,7 +83,7 @@ class _DUIButtonState extends State<DUIButton> {
 
               var resp = await RestHandler().executeAction(
                   context,
-                  ActionProp(type: 'rest_call', data: {
+                  ActionProp(type: 'Action.restCall', data: {
                     'method': 'POST',
                     'url': 'https://napi.easyeat.ai/api/auth/login',
                     'keyToReadFrom': null,
@@ -122,7 +122,7 @@ class _DUIButtonState extends State<DUIButton> {
                 });
                 await ActionHandler().executeAction(
                     context,
-                    ActionProp(type: 'navigate_to_page', data: {
+                    ActionProp(type: 'Action.navigateToPage', data: {
                       'pageName': 'easy-eat',
                     }));
               }

@@ -13,7 +13,7 @@
       },
       "actions": {
         "onPageLoad": {
-          "type": "renderLayout",
+          "type": "Action.renderSelf",
           "data": {
             "pageName": "bytes-front-page"
           }
@@ -23,12 +23,11 @@
       },
       "layout": {
         "body": {
-          "allowScroll": false,
+          "allowScroll": true,
           "list": {
             "styleClass": "p:sp-300",
             "children": [
               {
-                "wrap": false,
                 "styleClass": "h:46%; bgc:primary; bdr:32; al:center",
                 "child": {
                   "type": "digia/text",
@@ -76,7 +75,7 @@
               },
               {
                 "styleClass": "m:0,sp-500,0,0",
-                "wrap": true,
+                "alignChild": "centerRight",
                 "child": {
                   "type": "digia/button",
                   "data": {
@@ -86,7 +85,7 @@
                       "text": "Get Started"
                     },
                     "onClick": {
-                      "type": "navigate_to_page",
+                      "type": "Action.navigateToPage",
                       "data": {
                         "pageName": "subjects"
                       }
@@ -109,7 +108,7 @@
       },
       "actions": {
         "onPageLoad": {
-          "type": "loadPage",
+          "type": "Action.loadPage",
           "data": {
             "pageName": "subjects"
           }
@@ -137,7 +136,7 @@
                           "type": "digia/card_type1",
                           "data": {
                             "onClick": {
-                              "type": "navigate_to_page",
+                              "type": "Action.navigateToPage",
                               "data": {
                                 "pageName": "articles",
                                 "inputArgs": {
@@ -168,7 +167,7 @@
                           "type": "digia/card_type1",
                           "data": {
                             "onClick": {
-                              "type": "navigate_to_page",
+                              "type": "Action.navigateToPage",
                               "data": {
                                 "pageName": "articles",
                                 "inputArgs": {
@@ -199,7 +198,7 @@
                           "type": "digia/card_type1",
                           "data": {
                             "onClick": {
-                              "type": "navigate_to_page",
+                              "type": "Action.navigateToPage",
                               "data": {
                                 "pageName": "articles",
                                 "inputArgs": {
@@ -230,7 +229,7 @@
                           "type": "digia/card_type1",
                           "data": {
                             "onClick": {
-                              "type": "navigate_to_page",
+                              "type": "Action.navigateToPage",
                               "data": {
                                 "pageName": "articles"
                               }
@@ -258,7 +257,7 @@
                           "type": "digia/card_type1",
                           "data": {
                             "onClick": {
-                              "type": "navigate_to_page",
+                              "type": "Action.navigateToPage",
                               "data": {
                                 "pageName": "articles"
                               }
@@ -286,7 +285,7 @@
                           "type": "digia/card_type1",
                           "data": {
                             "onClick": {
-                              "type": "navigate_to_page",
+                              "type": "Action.navigateToPage",
                               "data": {
                                 "pageName": "articles"
                               }
@@ -314,7 +313,7 @@
                           "type": "digia/card_type1",
                           "data": {
                             "onClick": {
-                              "type": "navigate_to_page",
+                              "type": "Action.navigateToPage",
                               "data": {
                                 "pageName": "articles"
                               }
@@ -342,7 +341,7 @@
                           "type": "digia/card_type1",
                           "data": {
                             "onClick": {
-                              "type": "navigate_to_page",
+                              "type": "Action.navigateToPage",
                               "data": {
                                 "pageName": "articles"
                               }
@@ -390,7 +389,7 @@
       },
       "actions": {
         "onPageLoad": {
-          "type": "loadPage",
+          "type": "Action.loadPage",
           "data": {
             "pageName": "articles"
           }
@@ -486,7 +485,7 @@
       "inputArgs": {},
       "actions": {
         "onPageLoad": {
-          "type": "rest_call",
+          "type": "Action.restCall",
           "data": {
             "keyToReadFrom": "data.response",
             "pageName": "easy-eat",
@@ -517,7 +516,7 @@
       },
       "actions": {
         "onPageLoad": {
-          "type": "renderLayout",
+          "type": "Action.renderSelf",
           "data": {
             "pageName": "easy-eat-login"
           }
@@ -532,7 +531,6 @@
             "styleClass": "p:sp-300",
             "children": [
               {
-                "wrap": false,
                 "child": {
                   "type": "digia/image",
                   "data": {
@@ -627,7 +625,7 @@
                       "text": "Login & See Restaurant Analytics"
                     },
                     "onClick": {
-                      "type": "navigate_to_page",
+                      "type": "Action.navigateToPage",
                       "data": {
                         "pageName": "easy-eat"
                       }

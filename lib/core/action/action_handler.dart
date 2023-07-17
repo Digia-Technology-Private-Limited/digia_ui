@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:digia_ui/Utils/config_resolver.dart';
 import 'package:digia_ui/Utils/extensions.dart';
+import 'package:digia_ui/Utils/util_functions.dart';
 import 'package:digia_ui/core/action/action_prop.dart';
 import 'package:digia_ui/core/action/rest_handler.dart';
 import 'package:digia_ui/core/page/dui_page.dart';
@@ -9,6 +10,7 @@ import 'package:digia_ui/core/page/page_init_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:json_schema2/json_schema2.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ActionHandler {
   static final ActionHandler _instance = ActionHandler._internal();
@@ -19,8 +21,9 @@ class ActionHandler {
 
   Future<dynamic>? executeAction(
       BuildContext context, ActionProp action) async {
+        
     switch (action.type) {
-      case 'navigate_to_page':
+      case 'Action.navigateToPage':
         final pageName = action.data['pageName'];
 
         if (pageName == null) {
@@ -46,7 +49,7 @@ class ActionHandler {
         }));
 
       // TODO: Replace file read by API Call.
-      case 'loadPage':
+      case 'Action.loadPage':
         final pageName = action.data['pageName'];
         if (pageName == null) {
           throw 'Target Page can not be null';
@@ -56,7 +59,7 @@ class ActionHandler {
         final json = await jsonDecode(response) as Map<String, dynamic>;
         return json.valueFor(keyPath: 'pages.$pageName');
 
-      case 'renderLayout':
+      case 'Action.renderSelf':
         final pageName = action.data['pageName'];
         if (pageName == null) {
           throw 'Target Page can not be null';
@@ -70,8 +73,20 @@ class ActionHandler {
 
         return pageConfig;
 
-      case 'rest_call':
+      case 'Action.restCall':
         return RestHandler().executeAction(context, action);
+
+      case 'Action.pop':
+        Navigator.of(context).maybePop();
+        return null;
+
+      case 'Action.openUrl':
+        final url = Uri.parse(action.data['url']);
+        final canOpenUrl = await canLaunchUrl(url);
+        if (canOpenUrl == true) {
+          await launchUrl(url,
+              mode: toUriLaunchMode(action.data['launchMode']));
+        }
     }
 
     return null;

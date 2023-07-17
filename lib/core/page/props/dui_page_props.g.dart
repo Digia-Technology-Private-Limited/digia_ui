@@ -56,7 +56,7 @@ Map<String, dynamic> _$PageBodyListToJson(PageBodyList instance) =>
 PageBodyListContainer _$PageBodyListContainerFromJson(
         Map<String, dynamic> json) =>
     PageBodyListContainer(
-      wrap: json['wrap'] as bool? ?? false,
+      alignChild: json['alignChild'] as String?,
     )
       ..styleClass = DUIStyleClass.fromJson(json['styleClass'])
       ..child =
@@ -65,7 +65,7 @@ PageBodyListContainer _$PageBodyListContainerFromJson(
 Map<String, dynamic> _$PageBodyListContainerToJson(
         PageBodyListContainer instance) =>
     <String, dynamic>{
-      'wrap': instance.wrap,
+      'alignChild': instance.alignChild,
       'child': instance.child,
     };
 
