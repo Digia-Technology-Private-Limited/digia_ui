@@ -3,6 +3,8 @@ import 'package:digia_ui/Utils/util_functions.dart';
 import 'package:digia_ui/components/utils/DUIStyleClass/dui_style_class.dart';
 import 'package:flutter/material.dart';
 
+import '../../Utils/basic_shared_utils/dui_decoder.dart';
+
 class DUIContainer extends StatelessWidget {
   final DUIStyleClass? styleClass;
   final AlignmentGeometry? alignment;
@@ -42,11 +44,12 @@ class DUIContainer extends StatelessWidget {
         toBorderRadiusGeometry(styleClass?.border?.borderRadius);
 
     return Container(
-        alignment: alignment ?? toAlignmentGeometry(styleClass?.alignment),
+        alignment:
+            alignment ?? DUIDecoder.toAlignmentGeometry(styleClass?.alignment),
         padding: padding ?? toEdgeInsetsGeometry(styleClass?.padding),
         decoration: BoxDecoration(
             border: toBorder(styleClass?.border),
-            color: color ?? _color(styleClass?.bgColor),
+            color: color ?? _toColor(styleClass?.bgColor),
             borderRadius: borderRadius),
         foregroundDecoration: foregroundDecoration,
         width: width ?? double.tryParse(styleClass?.width ?? ''),
@@ -59,10 +62,10 @@ class DUIContainer extends StatelessWidget {
         child: child);
   }
 
-  Color? _color(String? colorValue) {
-    if (colorValue == null) return null;
+  Color? _toColor(String? colorString) {
+    if (colorString == null) return null;
 
-    return toColor(colorValue);
+    return toColor(colorString);
   }
 
   double? _height(BuildContext context, String? heightStringValue) {

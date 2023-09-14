@@ -1,17 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:digia_ui/Utils/util_functions.dart';
 import 'package:digia_ui/components/image/image.props.dart';
 import 'package:digia_ui/core/container/dui_container.dart';
 import 'package:flutter/material.dart';
 import 'package:octo_image/octo_image.dart';
 
+import '../../Utils/basic_shared_utils/dui_decoder.dart';
+
 class DUIImage extends StatefulWidget {
   final DUIImageProps props;
 
   const DUIImage(this.props, {super.key}) : super();
-
-  factory DUIImage.create(Map<String, dynamic> json) =>
-      DUIImage(DUIImageProps.fromJson(json));
 
   @override
   State<StatefulWidget> createState() => _DUIImageState();
@@ -60,7 +58,7 @@ class _DUIImageState extends State<DUIImage> {
 
     return OctoImage(
         image: imageProvider,
-        fit: toBoxFit(props.fit),
+        fit: DUIDecoder.toBoxFit(props.fit),
         gaplessPlayback: true,
         placeholderBuilder: _placeHolderBuilderCreater(),
         imageBuilder: (BuildContext context, Widget widget) {

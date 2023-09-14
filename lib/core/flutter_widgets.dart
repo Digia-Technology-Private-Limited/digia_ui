@@ -1,10 +1,10 @@
-import 'package:digia_ui/Utils/util_functions.dart';
+import 'package:digia_ui/Utils/basic_shared_utils/num_decoder.dart';
 import 'package:flutter/material.dart';
 
 class FW {
   static SizedBox sizedBox(Map<String, dynamic> json) {
-    final width = tryParseToDouble(json['width']);
-    final height = tryParseToDouble(json['height']);
+    final width = NumDecoder.toDouble(json['width']);
+    final height = NumDecoder.toDouble(json['height']);
     return SizedBox(
       width: width,
       height: height,
@@ -14,7 +14,7 @@ class FW {
   // This does not work well directly inside a Container.
   // Avoid using it with styleClass.
   static Widget spacer(Map<String, dynamic>? json) {
-    final flex = json?['flex'] as int? ?? 1;
+    final flex = NumDecoder.toInt(json?['flex']) ?? 1;
     return Spacer(flex: flex);
   }
 }

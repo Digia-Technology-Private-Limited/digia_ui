@@ -1,4 +1,3 @@
-import 'package:digia_ui/Utils/dui_widget_list_registry.dart';
 import 'package:digia_ui/components/form/dui_form_props.dart';
 import 'package:flutter/material.dart';
 
@@ -31,14 +30,16 @@ class _DUIFormState extends State<DUIForm> {
 
   @override
   Widget build(BuildContext context) {
+    // TODO: @tushar Need to rethink this from scratch
+    return const SizedBox.shrink();
     //
-    return Form(
-        key: signUpFormGlobalKey,
-        child: Column(
-          children: props.children
-              .map((child) => DUIFormRegistry[child.type]?.call(child.data))
-              .nonNulls
-              .toList(),
-        ));
+    // return Form(
+    //     key: signUpFormGlobalKey,
+    //     child: Column(
+    //       children: props.children
+    //           .map((child) => DUIFormRegistry[child.type]?.call(child.data))
+    //           .nonNulls
+    //           .toList(),
+    //     ));
   }
 }

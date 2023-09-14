@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:digia_ui/Utils/config_resolver.dart';
 import 'package:digia_ui/Utils/extensions.dart';
-import 'package:digia_ui/Utils/util_functions.dart';
 import 'package:digia_ui/core/action/action_prop.dart';
 import 'package:digia_ui/core/action/rest_handler.dart';
 import 'package:digia_ui/core/page/dui_page.dart';
@@ -11,6 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:json_schema2/json_schema2.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import '../../Utils/basic_shared_utils/dui_decoder.dart';
 
 class ActionHandler {
   static final ActionHandler _instance = ActionHandler._internal();
@@ -84,7 +85,7 @@ class ActionHandler {
         final canOpenUrl = await canLaunchUrl(url);
         if (canOpenUrl == true) {
           await launchUrl(url,
-              mode: toUriLaunchMode(action.data['launchMode']));
+              mode: DUIDecoder.toUriLaunchMode(action.data['launchMode']));
         }
     }
 

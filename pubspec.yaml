@@ -26,8 +26,9 @@ scripts:
   build: dart run build_runner build --delete-conflicting-outputs
   format: dart format .
   fix: dart fix --apply
+  lint: derry fix; derry format
   analyze: dart analyze
-  analyse: dart analyze
+  analyse: derry analyze
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions

@@ -42,7 +42,7 @@ DUITextProps _$DUITextPropsFromJson(dynamic json) {
 
   return DUITextProps()
     ..alignment = json['alignment'] as String?
-    ..styleClass = json['styleClass'] as String?
+    ..textStyle = json['textStyle'] as String?
     ..overflow = json['overflow'] as String?
     ..maxLines = json['maxLines'] as int?
     ..textSpans =
@@ -55,5 +55,5 @@ Map<String, dynamic> _$DUITextPropsToJson(DUITextProps instance) =>
       'maxLines': instance.maxLines,
       'overflow': instance.overflow,
       'alignment': instance.alignment,
-      'styleClass': instance.styleClass,
+      'textStyle': instance.textStyle,
     };

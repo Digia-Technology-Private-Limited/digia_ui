@@ -17,9 +17,6 @@ class DUIButton extends StatefulWidget {
   // final GlobalKey globalKey = GlobalKey();
   const DUIButton(this.props, {super.key}) : super();
 
-  factory DUIButton.create(Map<String, dynamic> json) =>
-      DUIButton(DUIButtonProps.fromJson(json));
-
   @override
   State<StatefulWidget> createState() => _DUIButtonState();
 }

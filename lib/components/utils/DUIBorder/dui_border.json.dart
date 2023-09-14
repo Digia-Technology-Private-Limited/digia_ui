@@ -21,7 +21,7 @@ DUIBorder _$DUIBorderFromJson(dynamic json) {
 
 DUIBorder _$DUIBorderFromDictionary(Map<String, dynamic> json) => DUIBorder()
   ..borderStyle = (json['borderStyle'] ?? json['bds']) as String?
-  ..borderWidth = tryParseToDouble(json['borderWidth'] ?? json['bdw'])
+  ..borderWidth = NumDecoder.toDouble(json['borderWidth'] ?? json['bdw'])
   ..borderColor = (json['borderColor'] ?? json['bdc']) as String?
   ..borderRadius = (json['borderRadius'] ?? json['bdr']) == null
       ? null

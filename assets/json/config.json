@@ -23,74 +23,91 @@
       },
       "layout": {
         "body": {
-          "allowScroll": true,
-          "list": {
-            "styleClass": "p:sp-300",
+          "root": {
+            "type": "digia/column",
+            "props": {
+              "crossAxisAlignment": "start"
+            },
+            "containerProps": {
+              "style": "p:16"
+            },
             "children": [
               {
-                "styleClass": "h:46%; bgc:primary; bdr:32; al:center",
-                "child": {
-                  "type": "digia/text",
-                  "data": {
-                    "styleClass": "ft:bytes-logo;tc:white;ff:AppleII",
-                    "textSpans": [
-                      {
-                        "text": "BYTES"
-                      }
-                    ]
-                  }
+                "type": "digia/text",
+                "props": {
+                  "textStyle": "ft:bytes-logo;tc:white;ff:AppleII",
+                  "textSpans": [
+                    {
+                      "text": "BYTES"
+                    }
+                  ]
+                },
+                "containerProps": {
+                  "style": "h:46%; bgc:primary; bdr:32; al:center"
                 }
               },
               {
-                "styleClass": "m:0,sp-400,0,0",
-                "child": {
-                  "type": "digia/text",
-                  "data": {
-                    "textSpans": [
-                      {
-                        "text": "Stoppage for your\n",
-                        "styleClass": "ft:heading1;tc:text;ff:Nunito"
-                      },
-                      {
-                        "text": "Curiosity",
-                        "styleClass": "ft:heading1;tc:secondary;ff:Nunito"
-                      }
-                    ]
-                  }
+                "type": "fw/sized_box",
+                "props": {
+                  "height": 32
                 }
               },
               {
-                "styleClass": "m:0,22,0,0",
-                "child": {
-                  "type": "digia/text",
-                  "data": {
-                    "styleClass": "ft:para1-regular;tc:textSubtle",
-                    "textSpans": [
-                      {
-                        "text": "Discover Bytes, an intuitive and versatile Content Platform powered by Digia."
-                      }
-                    ]
-                  }
-                }
-              },
-              {
-                "styleClass": "m:0,sp-500,0,0",
-                "alignChild": "centerRight",
-                "child": {
-                  "type": "digia/button",
-                  "data": {
-                    "styleClass": "p:sp-300,sp-250;bgc:primary;bdr:200;",
-                    "text": {
-                      "styleClass": "ft:button1;tc:light",
-                      "text": "Get Started"
+                "type": "digia/text",
+                "props": {
+                  "textSpans": [
+                    {
+                      "text": "Stoppage for your\n",
+                      "spanStyle": "ft:heading1;tc:text"
                     },
-                    "onClick": {
-                      "type": "Action.navigateToPage",
-                      "data": {
-                        "pageName": "subjects"
+                    {
+                      "text": "Curiosity",
+                      "spanStyle": "ft:heading1;tc:secondary"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "fw/sized_box",
+                "props": {
+                  "height": 22
+                }
+              },
+              {
+                "type": "digia/text",
+                "props": {
+                  "textStyle": "ft:para1-regular;tc:textSubtle",
+                  "textSpans": [
+                    {
+                      "text": "Discover Bytes, an intuitive and versatile Content Platform powered by Digia."
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "fw/spacer"
+              },
+              {
+                "type": "digia/button",
+                "props": {
+                  "text": {
+                    "textStyle": "ft:button1;tc:light",
+                    "textSpans": [
+                      {
+                        "text": "Get Started"
                       }
+                    ]
+                  },
+                  "onClick": {
+                    "type": "Action.navigateToPage",
+                    "data": {
+                      "pageName": "topics"
                     }
                   }
+                },
+                "containerProps": {
+                  "style": "p:16,12,16,12;bgc:primary;bdr:200",
+                  "align": "centerLeft"
                 }
               }
             ]
@@ -478,171 +495,6 @@
         },
         "footer": {}
       }
-    },
-    "easy-eat": {
-      "id": "easy-eat",
-      "name": "easy-eat",
-      "inputArgs": {},
-      "actions": {
-        "onPageLoad": {
-          "type": "Action.restCall",
-          "data": {
-            "keyToReadFrom": "data.response",
-            "pageName": "easy-eat",
-            "method": "POST",
-            "url": "http://dev.digia.tech/hydrator/api/easyeat/getChartPage",
-            "body": {
-              "restaurant_ids": "{{ localStorage.restaurant_ids }}"
-            }
-          }
-        },
-        "onBackPress": {},
-        "pullToRefresh": {}
-      },
-      "layout": {
-        "header": {
-          "appBar": true
-        },
-        "body": {},
-        "footer": {}
-      }
-    },
-    "easy-eat-login": {
-      "id": "easy-eat-login",
-      "name": "easy-eat-login",
-      "route": "/easy-eat-login",
-      "inputArgs": {
-        "properties": {}
-      },
-      "actions": {
-        "onPageLoad": {
-          "type": "Action.renderSelf",
-          "data": {
-            "pageName": "easy-eat-login"
-          }
-        },
-        "onBackPress": {},
-        "pullToRefresh": {}
-      },
-      "layout": {
-        "body": {
-          "allowScroll": false,
-          "list": {
-            "styleClass": "p:sp-300",
-            "children": [
-              {
-                "child": {
-                  "type": "digia/image",
-                  "data": {
-                    "styleClass": "h:200;p:16",
-                    "fit": "fitWidth",
-                    "imageSrc": "https://d208quqxsjalxm.cloudfront.net/partner-app-images/Login/logo-new.png"
-                  }
-                }
-              },
-              {
-                "styleClass": "m:0,10,0,0",
-                "child": {
-                  "type": "digia/text",
-                  "data": {
-                    "alignment": "center",
-                    "text": "Login to Owner's headquarters",
-                    "styleClass": "ft:h2-semibold;tc:text;ff:Nunito"
-                  }
-                }
-              },
-              {
-                "styleClass": "m:0,12,0,0",
-                "child": {
-                  "type": "digia/text",
-                  "data": {
-                    "alignment": "center",
-                    "styleClass": "ft:caption;tc:textSubtle",
-                    "textSpans": [
-                      {
-                        "text": "See how your business is doing on a central dashboard for all the outlet sales & view daily reports generated automatically at day end."
-                      }
-                    ]
-                  }
-                }
-              },
-              {
-                "styleClass": "m:0,12,0,0",
-                "child": {
-                  "type": "digia/form",
-                  "data": {
-                    "children": [
-                      {
-                        "type": "digia/form/textfield",
-                        "data": {
-                          "dataKey": "email",
-                          "inputType": "email",
-                          "hintText": "Enter your email address",
-                          "textStyle": "ft:para1;tc:text",
-                          "border": "bdc:208,208,208; bdr:8; bdw:2",
-                          "label": {
-                            "text": "EMAIL ID",
-                            "styleClass": "ft:para1;tc:textSubtle"
-                          }
-                        }
-                      },
-                      {
-                        "type": "fw/sized_box",
-                        "data": { "height": 10 }
-                      },
-                      {
-                        "type": "digia/form/textfield",
-                        "data": {
-                          "dataKey": "password",
-                          "inputType": "password",
-                          "hintText": "Enter Password",
-                          "textStyle": "ft:para1;tc:text",
-                          "border": "bdc:208,208,208; bdr:8; bdw:2",
-                          "label": {
-                            "text": "PASSWORD",
-                            "styleClass": "ft:para1;tc:textSubtle"
-                          }
-                        }
-                      }
-                    ]
-                  }
-                }
-              },
-              {
-                "child": {
-                  "type": "fw/spacer",
-                  "data": {}
-                }
-              },
-              {
-                "styleClass": "m:0,16,0,64; al:center",
-                "child": {
-                  "type": "digia/button",
-                  "data": {
-                    "styleClass": "p:20,10;bgc:#000000;bdr:8;",
-                    "text": {
-                      "styleClass": "ft:button1;tc:light",
-                      "text": "Login & See Restaurant Analytics"
-                    },
-                    "onClick": {
-                      "type": "Action.navigateToPage",
-                      "data": {
-                        "pageName": "easy-eat"
-                      }
-                    }
-                  }
-                }
-              }
-            ]
-          }
-        },
-        "footer": {}
-      }
-    }
-  },
-  "rest": {
-    "defaultHeaders": {
-      "authorization": "{{ localStorage.authToken }}"
     }
   },
   "theme": {
@@ -716,18 +568,11 @@
         "size": 18,
         "weight": "medium"
       }
-    },
-    "spacing": {
-      "sp-0": 0.0,
-      "sp-100": 4.0,
-      "sp-200": 8.0,
-      "sp-250": 12.0,
-      "sp-300": 16.0,
-      "sp-350": 24.0,
-      "sp-400": 32.0,
-      "sp-425": 40.0,
-      "sp-450": 48.0,
-      "sp-500": 64.0
+    }
+  },
+  "rest": {
+    "defaultHeaders": {
+      "authorization": "{{ localStorage.authToken }}"
     }
   }
 }

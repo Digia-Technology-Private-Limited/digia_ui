@@ -9,19 +9,19 @@ class DUITextProps {
   late int? maxLines;
   late String? overflow;
   late String? alignment;
-  late String? styleClass;
+  late String? textStyle;
 
   DUITextProps();
 
   factory DUITextProps.withText(
       {required String text,
-      String? styleClass,
+      String? textStyle,
       int? maxLines,
       String? overflow,
       String? alignment}) {
     return DUITextProps()
       ..textSpans = [DUITextSpan()..text = text]
-      ..styleClass = styleClass
+      ..textStyle = textStyle
       ..alignment = alignment
       ..overflow = overflow
       ..maxLines = maxLines;

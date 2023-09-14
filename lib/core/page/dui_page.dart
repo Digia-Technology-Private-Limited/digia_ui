@@ -1,13 +1,10 @@
-import 'package:digia_ui/Utils/dui_widget_list_registry.dart';
+import 'package:digia_ui/Utils/dui_widget_registry.dart';
 import 'package:digia_ui/Utils/extensions.dart';
-import 'package:digia_ui/Utils/util_functions.dart';
-import 'package:digia_ui/components/DUIText/dui_text.dart';
 import 'package:digia_ui/core/action/action_handler.dart';
 import 'package:digia_ui/core/action/action_prop.dart';
-import 'package:digia_ui/core/container/dui_container.dart';
+import 'package:digia_ui/core/builders/dui_json_widget_builder.dart';
 import 'package:digia_ui/core/page/page_init_data.dart';
 import 'package:digia_ui/core/page/props/dui_page_props.dart';
-import 'package:digia_ui/core/pref/pref_util.dart';
 import 'package:flutter/material.dart';
 
 class DUIPage extends StatefulWidget {
@@ -34,57 +31,56 @@ class _DUIPageState extends State<DUIPage> {
     super.initState();
   }
 
-  Widget _buildChildWidget(PageBodyListContainer childContainer) {
-    final widgetFromRegistry = DUIWidgetRegistry[childContainer.child.type]
-        ?.call(childContainer.child.data);
+  // Widget _buildChildWidget(PageBodyListContainer childContainer) {
+  //   final widgetFromRegistry = DUIWidgetRegistry[childContainer.child.type]
+  //       ?.call(childContainer.child.data);
 
-    // TODO: Figure out a fallback in this case.
-    // Should be logged as well.
-    // @Vivek, @Anupam, @Tushar
-    if (widgetFromRegistry == null) {
-      return Text(
-          'A widget of type: ${childContainer.child.type} is not found');
-    }
+  //   // TODO: Figure out a fallback in this case.
+  //   // Should be logged as well.
+  //   // @Vivek, @Anupam, @Tushar
+  //   if (widgetFromRegistry == null) {
+  //     return Text(
+  //         'A widget of type: ${childContainer.child.type} is not found');
+  //   }
 
-    final childAlignmentInContainer =
-        toAlignmentGeometry(childContainer.alignChild);
-    final child = childAlignmentInContainer != null
-        ? Align(
-            alignment: childAlignmentInContainer,
-            child: widgetFromRegistry,
-          )
-        : widgetFromRegistry;
+  //   final childAlignmentInContainer =
+  //       toAlignmentGeometry(childContainer.alignChild);
+  //   final child = childAlignmentInContainer != null
+  //       ? Align(
+  //           alignment: childAlignmentInContainer,
+  //           child: widgetFromRegistry,
+  //         )
+  //       : widgetFromRegistry;
 
-    return childContainer.styleClass == null
-        ? child
-        : DUIContainer(styleClass: childContainer.styleClass, child: child);
-  }
+  //   return childContainer.styleClass == null
+  //       ? child
+  //       : DUIContainer(styleClass: childContainer.styleClass, child: child);
+  // }
 
   @override
   Widget build(BuildContext context) {
-    final showAppBar =
-        initData.pageConfig.valueFor(keyPath: 'layout.header.appBar');
+    // final showAppBar =
+    //     initData.pageConfig.valueFor(keyPath: 'layout.header.appBar');
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      // TODO: Remove Custom AppBar logic
-      appBar: showAppBar == true
-          ? AppBar(
-              title: DUIText.create(const {'text': 'Restaurant Analytics'}),
-              actions: [
-                TextButton(
-                    onPressed: () async {
-                      await PrefUtil.clearStorage();
-                      await Navigator.of(context).maybePop();
-                    },
-                    child: const Text('Clear AuthToken'))
-              ],
-            )
-          : null,
+      // resizeToAvoidBottomInset: false,
+      // appBar: showAppBar == true
+      //     ? AppBar(
+      //         title: DUIText.create(const {'text': 'Restaurant Analytics'}),
+      //         actions: [
+      //           TextButton(
+      //               onPressed: () async {
+      //                 await PrefUtil.clearStorage();
+      //                 await Navigator.of(context).maybePop();
+      //               },
+      //               child: const Text('Clear AuthToken'))
+      //         ],
+      //       )
+      //     : null,
       body: FutureBuilder<DUIPageProps>(
           future: _executeOnPageLoadAction(context),
           builder: (context, snapshot) {
             // TODO: Loader config shall change later
-            if (!snapshot.hasData) {
+            if (!snapshot.hasData || snapshot.data == null) {
               return Center(
                 child: SizedBox(
                   child: CircularProgressIndicator(color: Colors.blue[100]),
@@ -92,43 +88,48 @@ class _DUIPageState extends State<DUIPage> {
               );
             }
 
-            final listObject = snapshot.data?.layout.body.list;
-            final list = listObject?.children;
+            final rootWidgetData = snapshot.data!.layout.body.root;
+            final builder = DUIJsonWidgetBuilder(
+                data: rootWidgetData, registry: DUIWidgetRegistry.shared);
+            return SafeArea(child: builder.build(context));
+            // rootWidgetData.
 
-            if (list == null) {
-              return const Center(child: Text('Currently Not supported!!!'));
-            }
+            // final list = listObject?.children;
 
-            Widget widget;
+            // if (list == null) {
+            //   return const Center(child: Text('Currently Not supported!!!'));
+            // }
 
-            if (snapshot.data?.layout.body.allowScroll == false) {
-              // https: //stackoverflow.com/a/54564767
-              widget = SafeArea(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: list
-                      .map((item) {
-                        return _buildChildWidget(item);
-                      })
-                      .nonNulls
-                      .toList(),
-                ),
-              );
-            } else {
-              // https://stackoverflow.com/a/52106410
-              widget = ListView.builder(
-                  itemCount: list.length,
-                  itemBuilder: (context, index) {
-                    final item = list[index];
+            // Widget widget;
 
-                    return _buildChildWidget(item);
-                  });
-            }
+            // if (snapshot.data?.layout.body.allowScroll == false) {
+            //   // https: //stackoverflow.com/a/54564767
+            //   widget = SafeArea(
+            //     child: Column(
+            //       crossAxisAlignment: CrossAxisAlignment.start,
+            //       children: list
+            //           .map((item) {
+            //             return _buildChildWidget(item);
+            //           })
+            //           .nonNulls
+            //           .toList(),
+            //     ),
+            //   );
+            // } else {
+            //   // https://stackoverflow.com/a/52106410
+            //   widget = ListView.builder(
+            //       itemCount: list.length,
+            //       itemBuilder: (context, index) {
+            //         final item = list[index];
 
-            return listObject?.styleClass == null
-                ? widget
-                : DUIContainer(
-                    styleClass: listObject?.styleClass, child: widget);
+            //         return _buildChildWidget(item);
+            //       });
+            // }
+
+            // return listObject?.styleClass == null
+            //     ? widget
+            //     : DUIContainer(
+            //         styleClass: listObject?.styleClass, child: widget);
           }),
     );
   }

@@ -1,10 +1,11 @@
+import 'package:digia_ui/Utils/basic_shared_utils/color_decoder.dart';
+import 'package:digia_ui/Utils/basic_shared_utils/dui_decoder.dart';
 import 'package:digia_ui/Utils/config_resolver.dart';
 import 'package:digia_ui/components/DUIText/DUI_text_span/dui_text_span.dart';
 import 'package:digia_ui/components/utils/DUIBorder/dui_border.dart';
 import 'package:digia_ui/components/utils/DUICornerRadius/dui_corner_radius.dart';
 import 'package:digia_ui/components/utils/DUIInsets/dui_insets.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 
 class DUIConfigConstants {
   static const double fallbackSize = 14;
@@ -13,104 +14,6 @@ class DUIConfigConstants {
   static const double fallbackLineHeightFactor = 1.5;
   static const String fallbackBgColorHexCode = '#FFFFFF';
   static const String fallbackBorderColorHexCode = '#FF000000';
-}
-
-FontWeight toFontWeight(String? weight) {
-  switch (weight) {
-    case 'thin':
-      return FontWeight.w100;
-    case 'extralight':
-    case 'extra-light':
-      return FontWeight.w200;
-    case 'light':
-      return FontWeight.w300;
-    case 'regular':
-      return FontWeight.normal;
-    case 'medium':
-      return FontWeight.w500;
-    case 'semibold':
-    case 'semi-bold':
-      return FontWeight.w600;
-    case 'bold':
-      return FontWeight.w700;
-    case 'extrabold':
-    case 'extra-bold':
-      return FontWeight.w800;
-    case 'black':
-      return FontWeight.w900;
-  }
-
-  return FontWeight.normal;
-}
-
-FontStyle toFontStyle(String? style) {
-  switch (style) {
-    case 'italic':
-      return FontStyle.italic;
-  }
-
-  return FontStyle.normal;
-}
-
-TextAlign toTextAlign(String? alignment) {
-  switch (alignment) {
-    case 'right':
-      return TextAlign.right;
-    case 'left':
-      return TextAlign.left;
-    case 'center':
-      return TextAlign.center;
-    case 'end':
-      return TextAlign.end;
-    case 'justify':
-      return TextAlign.justify;
-  }
-  return TextAlign.start;
-}
-
-TextOverflow toTextOverflow(String? overflow) {
-  switch (overflow) {
-    case 'fade':
-      return TextOverflow.fade;
-    case 'visible':
-      return TextOverflow.visible;
-    case 'clip':
-      return TextOverflow.clip;
-    case 'ellipsis':
-      return TextOverflow.ellipsis;
-  }
-
-  return TextOverflow.clip;
-}
-
-TextDecoration toTextDecoration(String textDecorationToken) {
-  switch (textDecorationToken) {
-    case 'underline':
-      return TextDecoration.underline;
-    case 'overline':
-      return TextDecoration.overline;
-    case 'lineThrough':
-      return TextDecoration.lineThrough;
-    default:
-      return TextDecoration.none;
-  }
-}
-
-TextDecorationStyle? toTextDecorationStyle(String textDecorationStyleToken) {
-  switch (textDecorationStyleToken) {
-    case 'dashed':
-      return TextDecorationStyle.dashed;
-    case 'dotted':
-      return TextDecorationStyle.dotted;
-    case 'double':
-      return TextDecorationStyle.double;
-    case 'solid':
-      return TextDecorationStyle.solid;
-    case 'wavy':
-      return TextDecorationStyle.wavy;
-  }
-
-  return null;
 }
 
 TextStyle? toTextStyle(String? styleClass) {
@@ -136,8 +39,8 @@ TextStyle? toTextStyle(String? styleClass) {
       // Font token
       case 'ft':
         var font = ConfigResolver().getFont(value);
-        fontWeight = toFontWeight(font.weight);
-        fontStyle = toFontStyle(font.style);
+        fontWeight = DUIDecoder.toFontWeight(font.weight);
+        fontStyle = DUIDecoder.toFontStyle(font.style);
         fontSize = font.size ?? DUIConfigConstants.fallbackSize;
         fontHeight = font.height ?? DUIConfigConstants.fallbackLineHeightFactor;
         break;
@@ -159,7 +62,7 @@ TextStyle? toTextStyle(String? styleClass) {
 
       // Text Decoration
       case 'td':
-        textDecoration = toTextDecoration(value);
+        textDecoration = DUIDecoder.toTextDecoration(value);
         break;
 
       // Text Deocration Color
@@ -169,7 +72,7 @@ TextStyle? toTextStyle(String? styleClass) {
 
       // Text Deocration Style
       case 'tds':
-        decorationStyle = toTextDecorationStyle(value);
+        decorationStyle = DUIDecoder.toTextDecorationStyle(value);
     }
   });
 
@@ -189,7 +92,7 @@ TextStyle? toTextStyle(String? styleClass) {
 TextSpan toTextSpan(DUITextSpan textSpan) {
   return TextSpan(
     text: textSpan.text,
-    style: toTextStyle(textSpan.styleClass ?? ''),
+    style: toTextStyle(textSpan.spanStyle ?? ''),
     // recognizer: TapGestureRecognizer()
     //   ..onTap = () async {
     //     //todo change onTap functionality according to backend latter
@@ -205,16 +108,6 @@ TextSpan toTextSpan(DUITextSpan textSpan) {
     //   },
   );
 }
-
-BoxFit toBoxFit(String fitValue) => switch (fitValue) {
-      'fill' => BoxFit.fill,
-      'contain' => BoxFit.contain,
-      'cover' => BoxFit.cover,
-      'fitWidth' => BoxFit.fitWidth,
-      'fitHeight' => BoxFit.fitHeight,
-      'scaleDown' => BoxFit.scaleDown,
-      _ => BoxFit.none
-    };
 
 Map<String, String> createStyleMap(String? styleClass) {
   if (styleClass == null) return {};
@@ -278,34 +171,12 @@ OutlineInputBorder? toOutlineInputBorder(DUIBorder? border) {
 Color toColor(String colorToken) {
   var colorString = ConfigResolver().getColorValue(colorToken) ?? colorToken;
 
-  if (isValidHexCode(colorString)) {
-    return hexToColor(colorString);
+  final color = ColorDecoder.fromString(colorString);
+  if (color == null) {
+    throw FormatException('Invalid color Format: $colorString');
   }
 
-  final rgbAlpha =
-      colorString.split(',').map((e) => int.tryParse(e)).nonNulls.toList();
-  if (rgbAlpha.length >= 3) {
-    final alpha = rgbAlpha.length > 3 ? rgbAlpha[3] : 255;
-    return Color.fromARGB(alpha, rgbAlpha[0], rgbAlpha[1], rgbAlpha[2]);
-  }
-
-  throw FormatException('Invalid color Format: $colorString');
-}
-
-Color hexToColor(String colorHexString) {
-  var rgbString = colorHexString.replaceAll('#', '');
-
-  if (colorHexString.length == 8) {
-    return Color(int.parse('0x$rgbString'));
-  }
-
-  return Color(int.parse('0xFF$rgbString'));
-}
-
-bool isValidHexCode(String colorToken) {
-  const validHexRegExp = r'^#?([0-9a-fA-F]{6}|[0-9a-fA-F]{8})$';
-
-  return RegExp(validHexRegExp).hasMatch(colorToken);
+  return color;
 }
 
 double _parseSpacingToken(String token) {
@@ -333,72 +204,3 @@ EdgeInsetsGeometry toEdgeInsetsGeometry(DUIInsets? insets) {
       _parseSpacingToken(insets.right),
       _parseSpacingToken(insets.bottom));
 }
-
-AlignmentGeometry? toAlignmentGeometry(String? token) {
-  if (token == null) {
-    return null;
-  }
-
-  switch (token) {
-    case 'topLeft':
-      return Alignment.topLeft;
-
-    case 'topCenter':
-      return Alignment.topCenter;
-
-    case 'topRight':
-      return Alignment.topRight;
-
-    case 'centerLeft':
-      return Alignment.centerLeft;
-
-    case 'center':
-      return Alignment.center;
-
-    case 'centerRight':
-      return Alignment.centerRight;
-
-    case 'bottomLeft':
-      return Alignment.bottomLeft;
-
-    case 'bottomCenter':
-      return Alignment.bottomCenter;
-
-    case 'bottomRight':
-      return Alignment.bottomRight;
-  }
-
-  return null;
-}
-
-double? tryParseToDouble(dynamic value) {
-  if (value is String) {
-    return double.tryParse(value);
-  }
-
-  if (value is num) {
-    return value.toDouble();
-  }
-
-  return null;
-}
-
-int? tryParseToInt(dynamic value) {
-  if (value is String) {
-    return int.tryParse(value);
-  }
-
-  if (value is num) {
-    return value.toInt();
-  }
-
-  return null;
-}
-
-LaunchMode toUriLaunchMode(String? value) => switch (value) {
-      'inAppWebView' => LaunchMode.inAppWebView,
-      'externalApplication' || 'external' => LaunchMode.externalApplication,
-      'externalNonBrowserApplication' =>
-        LaunchMode.externalNonBrowserApplication,
-      _ => LaunchMode.platformDefault
-    };
