@@ -77,7 +77,7 @@ class DUICachedImage extends StatelessWidget {
           : Duration.zero,
       imageBuilder: (BuildContext context, provider) {
         return ClipRRect(
-          borderRadius: borderRadius??BorderRadius.zero,
+          borderRadius: borderRadius ?? BorderRadius.zero,
           clipBehavior: Clip.antiAlias,
           child: provider,
         );
