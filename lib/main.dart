@@ -34,8 +34,8 @@ class MyApp extends StatelessWidget {
           color: toColor('light'),
           systemOverlayStyle: const SystemUiOverlayStyle(
             statusBarColor: Colors.transparent,
-            statusBarBrightness: Brightness.dark,
-            statusBarIconBrightness: Brightness.dark,
+            statusBarBrightness: Brightness.light,
+            statusBarIconBrightness: Brightness.light,
           ),
           titleTextStyle: TextStyle(
               color: toColor('text'),
