@@ -58,23 +58,23 @@ class ConfigResolver {
           inputArgs: null);
     }
 
-    final firstPageConfig = _pages['onboardingPage'];
-    if (firstPageConfig == null || firstPageConfig['pageName'] == null) {
+    final firstPageConfig = _pages['focusedPageId'];
+    if (firstPageConfig == null || firstPageConfig['slug'] == null) {
       throw 'Config for First Page not found.';
     }
 
-    final pageName = firstPageConfig['pageName'];
+    final pageName = firstPageConfig['slug'];
     if (pageName == null) {
       throw 'Page Name not present in First Page Config';
     }
 
-    final pageConfig = getPageConfig(firstPageConfig['pageName']);
+    final pageConfig = getPageConfig(firstPageConfig['slug']);
     if (pageConfig == null) {
       throw 'Page Config not found for $pageName';
     }
 
     return PageInitData(
-        pageName: firstPageConfig['pageName'],
+        pageName: firstPageConfig['slug'],
         pageConfig: pageConfig,
         inputArgs: firstPageConfig['inputArgs']);
   }

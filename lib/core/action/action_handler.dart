@@ -24,7 +24,7 @@ class ActionHandler {
       BuildContext context, ActionProp action) async {
     switch (action.type) {
       case 'Action.navigateToPage':
-        final pageName = action.data['pageName'];
+        final pageName = action.data['slug'];
 
         if (pageName == null) {
           throw 'Target Page can not be null';
@@ -50,7 +50,7 @@ class ActionHandler {
 
       // TODO: Replace file read by API Call.
       case 'Action.loadPage':
-        final pageName = action.data['pageName'];
+        final pageName = action.data['slug'];
         if (pageName == null) {
           throw 'Target Page can not be null';
         }
@@ -60,7 +60,7 @@ class ActionHandler {
         return json.valueFor(keyPath: 'pages.$pageName');
 
       case 'Action.renderSelf':
-        final pageName = action.data['pageName'];
+        final pageName = action.data['slug'];
         if (pageName == null) {
           throw 'Target Page can not be null';
         }
