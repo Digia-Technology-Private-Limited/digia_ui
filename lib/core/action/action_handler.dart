@@ -42,33 +42,6 @@ class ActionHandler {
       //           inputArgs: inputArgs));
       // }));
 
-      // TODO: Replace file read by API Call.
-      case 'Action.loadPage':
-        final pageName = action.data['pageName'];
-        if (pageName == null) {
-          throw 'Target Page can not be null';
-        }
-
-      // return executeLoadPageAction(action);
-
-      // final response = await rootBundle.loadString('assets/json/config.json');
-      // final json = await jsonDecode(response) as Map<String, dynamic>;
-      // return json.valueFor(keyPath: 'pages.$pageName');
-
-      case 'Action.renderSelf':
-        final pageName = action.data['pageName'];
-        if (pageName == null) {
-          throw 'Target Page can not be null';
-        }
-
-        final pageConfig = ConfigResolver().getPageConfig(pageName);
-
-        if (pageConfig == null) {
-          throw 'Page Config can not be null';
-        }
-
-        return pageConfig;
-
       case 'Action.restCall':
         return RestHandler().executeAction(context, action);
 

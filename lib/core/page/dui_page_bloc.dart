@@ -1,9 +1,11 @@
 import 'package:digia_ui/Utils/config_resolver.dart';
 import 'package:digia_ui/core/action/action_prop.dart';
 import 'package:digia_ui/core/action/post_action.dart';
+import 'package:digia_ui/core/page/dui_page.dart';
 import 'package:digia_ui/core/page/dui_page_event.dart';
 import 'package:digia_ui/core/page/dui_page_state.dart';
 import 'package:digia_ui/core/page/props/dui_page_props.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
@@ -15,7 +17,8 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
             isLoading: true,
             props: DUIPageProps.fromJson(initData.config))) {
     on<InitPageEvent>(_init);
-    on<PostActionEvent>((event, emit) => _handleAction(event.action, emit));
+    on<PostActionEvent>(
+        (event, emit) => _handleAction(event.context, event.action, emit));
   }
 
   void _init(
@@ -28,16 +31,18 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
 
     final action = ActionProp.fromJson(onPageLoadAction);
 
-    await _handleAction(action, emit);
+    await _handleAction(null, action, emit);
 
     return;
   }
 
-  Future<void> _handleAction(
-      ActionProp action, Emitter<DUIPageState> emit) async {
+// TODO: Need Action Handler
+  Future<Object?> _handleAction(BuildContext? context, ActionProp action,
+      Emitter<DUIPageState> emit) async {
     switch (action.type) {
       // TODO: Move to some constant
       case 'Action.loadPage':
+      case 'Action.rebuildPage':
         emit(state.copyWith(isLoading: true));
         final pagePropsJson = await PostAction(resolver).execute(action);
 
@@ -48,8 +53,28 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
         final props = DUIPageProps.fromJson(pagePropsJson['response']);
         emit(state.copyWith(isLoading: false, props: props));
 
+      case 'Action.navigateToPage':
+        final pageId = action.data['pageId'];
+        final pageConfig = ConfigResolver().getPageConfig(pageId);
+
+        // TODO: Fix this lint error.
+        return Navigator.push(context!, MaterialPageRoute(builder: (ctx) {
+          return BlocProvider(
+            create: (context) {
+              return DUIPageBloc(
+                  initData:
+                      DUIPageInitData(identifier: pageId, config: pageConfig!),
+                  resolver: ConfigResolver())
+                ..add(InitPageEvent());
+            },
+            child: const DUIPage(),
+          );
+        }));
+
       default:
         emit(state.copyWith());
+        return null;
     }
+    return null;
   }
 }

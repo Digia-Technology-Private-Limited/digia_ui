@@ -66,7 +66,8 @@ class _DUIButtonState extends State<DUIButton> {
         : GestureDetector(
             onTap: () async {
               // TODO: WIP. This needs to be thought through
-              bloc.add(PostActionEvent(action: props.onClick!));
+              bloc.add(
+                  PostActionEvent(action: props.onClick!, context: context));
               // if (_actionInProgress) return;
               // TODO: Remove this Custom logic -> Move to JSON
               // ActionHandler().executeAction(context, props.onClick!);

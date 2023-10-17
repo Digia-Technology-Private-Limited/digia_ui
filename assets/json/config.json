@@ -145,7 +145,35 @@
         "onPageLoad": {
           "type": "Action.loadPage",
           "data": {
-            "uid": "first-page"
+            "pageId": "first-page"
+          }
+        }
+      }
+    },
+    "list-countries": {
+      "slug": "list-countries",
+      "uid": "list-countries",
+      "pageName": "List Countries",
+      "inputArgs": null,
+      "actions": {
+        "onPageLoad": {
+          "type": "Action.loadPage",
+          "data": {
+            "pageId": "list-countries"
+          }
+        }
+      }
+    },
+    "load-joke": {
+      "slug": "load-joke",
+      "uid": "load-joke",
+      "pageName": "List Countries",
+      "inputArgs": null,
+      "actions": {
+        "onPageLoad": {
+          "type": "Action.loadPage",
+          "data": {
+            "pageId": "load-joke"
           }
         }
       }
