@@ -1,9 +1,12 @@
 import 'package:digia_ui/Utils/config_resolver.dart';
 import 'package:digia_ui/Utils/util_functions.dart';
 import 'package:digia_ui/core/page/dui_page.dart';
+import 'package:digia_ui/core/page/dui_page_bloc.dart';
+import 'package:digia_ui/core/page/dui_page_event.dart';
 import 'package:digia_ui/core/pref/pref_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -44,7 +47,15 @@ class MyApp extends StatelessWidget {
         ),
       ),
       title: 'Flutter Demo',
-      home: DUIPage(initData: ConfigResolver().getfirstPageData()),
+      home: BlocProvider(
+        create: (context) {
+          final resolver = ConfigResolver();
+          return DUIPageBloc(
+              initData: resolver.getfirstPageData(), resolver: resolver)
+            ..add(InitPageEvent());
+        },
+        child: const DUIPage(),
+      ),
     );
   }
 }

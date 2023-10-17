@@ -40,11 +40,12 @@ class DUIDecoder {
   }
 
   static FontWeight toFontWeight(String? weight) {
-    switch (weight) {
+    switch (weight?.toLowerCase()) {
       case 'thin':
         return FontWeight.w100;
       case 'extralight':
       case 'extra-light':
+      case 'extra_light':
         return FontWeight.w200;
       case 'light':
         return FontWeight.w300;
@@ -121,7 +122,7 @@ class DUIDecoder {
   }
 
   static TextDecorationStyle? toTextDecorationStyle(
-      String textDecorationStyleToken) {
+      String? textDecorationStyleToken) {
     switch (textDecorationStyleToken) {
       case 'dashed':
         return TextDecorationStyle.dashed;

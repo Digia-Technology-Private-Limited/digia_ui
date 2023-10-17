@@ -6,17 +6,20 @@ part of 'dui_page_props.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-DUIPageProps _$DUIPagePropsFromJson(Map<String, dynamic> json) => DUIPageProps()
-  ..id = json['id'] as String
-  ..name = json['name'] as String
-  ..actions = json['actions']
-  ..layout = PageLayoutProps.fromJson(json['layout'] as Map<String, dynamic>);
+DUIPageProps _$DUIPagePropsFromJson(Map<String, dynamic> json) => DUIPageProps(
+      uid: json['uid'] as String,
+      actions: json['actions'],
+      inputArgs: json['inputArgs'],
+      layout: json['layout'] == null
+          ? null
+          : PageLayoutProps.fromJson(json['layout'] as Map<String, dynamic>),
+    );
 
 Map<String, dynamic> _$DUIPagePropsToJson(DUIPageProps instance) =>
     <String, dynamic>{
-      'id': instance.id,
-      'name': instance.name,
+      'uid': instance.uid,
       'actions': instance.actions,
+      'inputArgs': instance.inputArgs,
       'layout': instance.layout,
     };
 

@@ -48,24 +48,25 @@ class _DUITextFieldState extends State<DUITextField> {
           signInFormData[props.dataKey] = newValue;
         },
         controller: userInput,
-        style: toTextStyle(props.textStyle),
+        // style: toTextStyle(props.textStyle),
         decoration: InputDecoration(
-            suffixIcon: props.inputType == 'password'
-                ? GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        _obscureText = !_obscureText;
-                      });
-                    },
-                    child: _obscureText
-                        ? const Icon(Icons.visibility_off)
-                        : const Icon(Icons.visibility),
-                  )
-                : null,
-            label: DUIText(props.label),
-            border: toOutlineInputBorder(props.border),
-            focusedBorder: toOutlineInputBorder(props.focusedBorder),
-            hintText: props.hintText,
-            hintStyle: toTextStyle(props.hintTextStyle)));
+          suffixIcon: props.inputType == 'password'
+              ? GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _obscureText = !_obscureText;
+                    });
+                  },
+                  child: _obscureText
+                      ? const Icon(Icons.visibility_off)
+                      : const Icon(Icons.visibility),
+                )
+              : null,
+          label: DUIText(props.label),
+          border: toOutlineInputBorder(props.border),
+          focusedBorder: toOutlineInputBorder(props.focusedBorder),
+          hintText: props.hintText,
+          // hintStyle: toTextStyle(props.hintTextStyle)
+        ));
   }
 }

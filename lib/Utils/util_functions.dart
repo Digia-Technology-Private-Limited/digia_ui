@@ -2,6 +2,7 @@ import 'package:digia_ui/Utils/basic_shared_utils/color_decoder.dart';
 import 'package:digia_ui/Utils/basic_shared_utils/dui_decoder.dart';
 import 'package:digia_ui/Utils/config_resolver.dart';
 import 'package:digia_ui/components/DUIText/DUI_text_span/dui_text_span.dart';
+import 'package:digia_ui/components/DUIText/dui_text_style.dart';
 import 'package:digia_ui/components/utils/DUIBorder/dui_border.dart';
 import 'package:digia_ui/components/utils/DUICornerRadius/dui_corner_radius.dart';
 import 'package:digia_ui/components/utils/DUIInsets/dui_insets.dart';
@@ -16,65 +17,34 @@ class DUIConfigConstants {
   static const String fallbackBorderColorHexCode = '#FF000000';
 }
 
-TextStyle? toTextStyle(String? styleClass) {
-  var styleClassMap = createStyleMap(styleClass);
-
-  if (styleClassMap.isEmpty) {
-    return null;
-  }
+TextStyle? toTextStyle(DUITextStyle? textStyle) {
+  if (textStyle == null) return null;
 
   FontWeight fontWeight = FontWeight.normal;
   FontStyle fontStyle = FontStyle.normal;
   double fontSize = DUIConfigConstants.fallbackSize;
   double fontHeight = DUIConfigConstants.fallbackLineHeightFactor;
-  Color textColor = DUIConfigConstants.fallbackTextColor;
-  Color? textBgColor;
-  TextDecoration textDecoration = TextDecoration.none;
-  Color? decorationColor;
-  TextDecorationStyle? decorationStyle;
-  String fontFamily = 'Poppins'; // TODO: This shouldn't be hardcoded here.
 
-  styleClassMap.forEach((key, value) {
-    switch (key) {
-      // Font token
-      case 'ft':
-        var font = ConfigResolver().getFont(value);
-        fontWeight = DUIDecoder.toFontWeight(font.weight);
-        fontStyle = DUIDecoder.toFontStyle(font.style);
-        fontSize = font.size ?? DUIConfigConstants.fallbackSize;
-        fontHeight = font.height ?? DUIConfigConstants.fallbackLineHeightFactor;
-        break;
+  if (textStyle.fontToken != null) {
+    var font = ConfigResolver().getFont(textStyle.fontToken!);
+    fontWeight = DUIDecoder.toFontWeight(font.weight);
+    fontStyle = DUIDecoder.toFontStyle(font.style);
+    fontSize = font.size ?? DUIConfigConstants.fallbackSize;
+    fontHeight = font.height ?? DUIConfigConstants.fallbackLineHeightFactor;
+  }
 
-      // Font family
-      case 'ff':
-        fontFamily = value;
-        break;
+  Color textColor =
+      resolveColor(textStyle.textColor) ?? DUIConfigConstants.fallbackTextColor;
 
-      // Text Color
-      case 'tc':
-        textColor = toColor(value);
-        break;
+  Color? textBgColor = resolveColor(textStyle.textBgColor);
 
-      // Text Background Color
-      case 'tbc':
-        textBgColor = toColor(value);
-        break;
-
-      // Text Decoration
-      case 'td':
-        textDecoration = DUIDecoder.toTextDecoration(value);
-        break;
-
-      // Text Deocration Color
-      case 'tdc':
-        decorationColor = toColor(value);
-        break;
-
-      // Text Deocration Style
-      case 'tds':
-        decorationStyle = DUIDecoder.toTextDecorationStyle(value);
-    }
-  });
+  TextDecoration textDecoration =
+      DUIDecoder.toTextDecoration(textStyle.textDecoration);
+  Color? decorationColor = resolveColor(textStyle.textDecorationColor);
+  TextDecorationStyle? decorationStyle =
+      DUIDecoder.toTextDecorationStyle(textStyle.textDecorationStyle);
+  String fontFamily = textStyle.fontFamily ??
+      'Poppins'; // TODO: This shouldn't be hardcoded here.
 
   return TextStyle(
       fontFamily: fontFamily,
@@ -92,7 +62,7 @@ TextStyle? toTextStyle(String? styleClass) {
 TextSpan toTextSpan(DUITextSpan textSpan) {
   return TextSpan(
     text: textSpan.text,
-    style: toTextStyle(textSpan.spanStyle ?? ''),
+    style: toTextStyle(textSpan.spanStyle),
     // recognizer: TapGestureRecognizer()
     //   ..onTap = () async {
     //     //todo change onTap functionality according to backend latter
@@ -176,6 +146,14 @@ Color toColor(String colorToken) {
     throw FormatException('Invalid color Format: $colorString');
   }
 
+  return color;
+}
+
+Color? resolveColor(String? colorToken) {
+  if (colorToken == null) return null;
+
+  var colorString = ConfigResolver().getColorValue(colorToken) ?? colorToken;
+  final color = ColorDecoder.fromString(colorString);
   return color;
 }
 

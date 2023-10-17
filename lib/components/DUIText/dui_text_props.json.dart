@@ -37,14 +37,15 @@ DUITextProps _$DUITextPropsFromJson(dynamic json) {
 
   var text = json['text'] as String?;
   var textSpans = (json['textSpans'] as List<dynamic>?)
-      ?.map((e) => DUITextSpan.fromJson(e as Map<String, dynamic>))
+      ?.nonNulls
+      .map((e) => DUITextSpan.fromJson(e as Map<String, dynamic>))
       .toList();
 
   return DUITextProps()
     ..alignment = json['alignment'] as String?
-    ..textStyle = json['textStyle'] as String?
+    ..textStyle = DUITextStyle.fromJson(json['textStyle'])
     ..overflow = json['overflow'] as String?
-    ..maxLines = json['maxLines'] as int?
+    ..maxLines = NumDecoder.toInt(json['maxLines'])
     ..textSpans =
         textSpans ?? ((text != null) ? [DUITextSpan()..text = text] : []);
 }

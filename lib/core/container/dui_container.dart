@@ -49,7 +49,7 @@ class DUIContainer extends StatelessWidget {
         padding: padding ?? toEdgeInsetsGeometry(styleClass?.padding),
         decoration: BoxDecoration(
             border: toBorder(styleClass?.border),
-            color: color ?? _toColor(styleClass?.bgColor),
+            color: color ?? resolveColor(styleClass?.bgColor),
             borderRadius: borderRadius),
         foregroundDecoration: foregroundDecoration,
         width: width ?? double.tryParse(styleClass?.width ?? ''),
@@ -60,12 +60,6 @@ class DUIContainer extends StatelessWidget {
         transformAlignment: transformAlignment,
         clipBehavior: borderRadius.isZero() ? clipBehavior : Clip.hardEdge,
         child: child);
-  }
-
-  Color? _toColor(String? colorString) {
-    if (colorString == null) return null;
-
-    return toColor(colorString);
   }
 
   double? _height(BuildContext context, String? heightStringValue) {

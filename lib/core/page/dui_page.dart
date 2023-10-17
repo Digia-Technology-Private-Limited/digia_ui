@@ -1,36 +1,46 @@
 import 'package:digia_ui/Utils/dui_widget_registry.dart';
-import 'package:digia_ui/Utils/extensions.dart';
-import 'package:digia_ui/core/action/action_handler.dart';
-import 'package:digia_ui/core/action/action_prop.dart';
 import 'package:digia_ui/core/builders/dui_json_widget_builder.dart';
-import 'package:digia_ui/core/page/page_init_data.dart';
-import 'package:digia_ui/core/page/props/dui_page_props.dart';
+import 'package:digia_ui/core/page/dui_page_bloc.dart';
+import 'package:digia_ui/core/page/dui_page_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class DUIPage extends StatefulWidget {
-  final PageInitData initData;
-  const DUIPage({super.key, required this.initData});
+  const DUIPage({super.key});
 
   @override
   State<StatefulWidget> createState() => _DUIPageState();
 }
 
 class _DUIPageState extends State<DUIPage> {
-  late PageInitData initData;
-
-  Future<DUIPageProps>? _executeOnPageLoadAction(BuildContext context) async {
-    final action = ActionProp.fromJson(
-        initData.pageConfig.valueFor(keyPath: 'actions.onPageLoad'));
-    final json = await ActionHandler().executeAction(context, action);
-    return DUIPageProps.fromJson(json);
-  }
-
   @override
-  void initState() {
-    initData = widget.initData;
-    super.initState();
+  Widget build(BuildContext context) {
+    return BlocBuilder<DUIPageBloc, DUIPageState>(builder: (context, state) {
+      if (state.isLoading) {
+        return const Center(
+          child: SizedBox(
+            // TODO -> Resolve Loader from Config
+            child: CircularProgressIndicator(color: Colors.blue),
+          ),
+        );
+      }
+      final rootWidgetDataNullable = state.props?.layout?.body.root;
+      if (rootWidgetDataNullable != null) {
+        final builder = DUIJsonWidgetBuilder(
+            data: rootWidgetDataNullable, registry: DUIWidgetRegistry.shared);
+        return SafeArea(child: builder.build(context));
+      }
+
+      return Center(child: Text('Props not found for page: ${state.uid}'));
+    });
   }
 
+  // Future<DUIPageProps>? _executeOnPageLoadAction(BuildContext context) async {
+  //   final action = ActionProp.fromJson(
+  //       initData.pageConfig.valueFor(keyPath: 'actions.onPageLoad'));
+  //   final json = await ActionHandler().executeAction(context, action);
+  //   return DUIPageProps.fromJson(json);
+  // }
   // Widget _buildChildWidget(PageBodyListContainer childContainer) {
   //   final widgetFromRegistry = DUIWidgetRegistry[childContainer.child.type]
   //       ?.call(childContainer.child.data);
@@ -57,80 +67,80 @@ class _DUIPageState extends State<DUIPage> {
   //       : DUIContainer(styleClass: childContainer.styleClass, child: child);
   // }
 
-  @override
-  Widget build(BuildContext context) {
-    // final showAppBar =
-    //     initData.pageConfig.valueFor(keyPath: 'layout.header.appBar');
-    return Scaffold(
-      // resizeToAvoidBottomInset: false,
-      // appBar: showAppBar == true
-      //     ? AppBar(
-      //         title: DUIText.create(const {'text': 'Restaurant Analytics'}),
-      //         actions: [
-      //           TextButton(
-      //               onPressed: () async {
-      //                 await PrefUtil.clearStorage();
-      //                 await Navigator.of(context).maybePop();
-      //               },
-      //               child: const Text('Clear AuthToken'))
-      //         ],
-      //       )
-      //     : null,
-      body: FutureBuilder<DUIPageProps>(
-          future: _executeOnPageLoadAction(context),
-          builder: (context, snapshot) {
-            // TODO: Loader config shall change later
-            if (!snapshot.hasData || snapshot.data == null) {
-              return Center(
-                child: SizedBox(
-                  child: CircularProgressIndicator(color: Colors.blue[100]),
-                ),
-              );
-            }
+  // @override
+  // Widget build(BuildContext context) {
+  // final showAppBar =
+  //     initData.pageConfig.valueFor(keyPath: 'layout.header.appBar');
+  // return Scaffold(
+  // resizeToAvoidBottomInset: false,
+  // appBar: showAppBar == true
+  //     ? AppBar(
+  //         title: DUIText.create(const {'text': 'Restaurant Analytics'}),
+  //         actions: [
+  //           TextButton(
+  //               onPressed: () async {
+  //                 await PrefUtil.clearStorage();
+  //                 await Navigator.of(context).maybePop();
+  //               },
+  //               child: const Text('Clear AuthToken'))
+  //         ],
+  //       )
+  //     : null,
+  // body: FutureBuilder<DUIPageProps>(
+  //     future: _executeOnPageLoadAction(context),
+  //     builder: (context, snapshot) {
+  //       // TODO: Loader config shall change later
+  //       if (!snapshot.hasData || snapshot.data == null) {
+  //         return const Center(
+  //           child: SizedBox(
+  //             child: CircularProgressIndicator(color: Colors.blue),
+  //           ),
+  //         );
+  //       }
 
-            final rootWidgetData = snapshot.data!.layout.body.root;
-            final builder = DUIJsonWidgetBuilder(
-                data: rootWidgetData, registry: DUIWidgetRegistry.shared);
-            return SafeArea(child: builder.build(context));
-            // rootWidgetData.
+  //       final rootWidgetData = snapshot.data!.layout.body.root;
+  //       final builder = DUIJsonWidgetBuilder(
+  //           data: rootWidgetData, registry: DUIWidgetRegistry.shared);
+  //       return SafeArea(child: builder.build(context));
+  // rootWidgetData.
 
-            // final list = listObject?.children;
+  // final list = listObject?.children;
 
-            // if (list == null) {
-            //   return const Center(child: Text('Currently Not supported!!!'));
-            // }
+  // if (list == null) {
+  //   return const Center(child: Text('Currently Not supported!!!'));
+  // }
 
-            // Widget widget;
+  // Widget widget;
 
-            // if (snapshot.data?.layout.body.allowScroll == false) {
-            //   // https: //stackoverflow.com/a/54564767
-            //   widget = SafeArea(
-            //     child: Column(
-            //       crossAxisAlignment: CrossAxisAlignment.start,
-            //       children: list
-            //           .map((item) {
-            //             return _buildChildWidget(item);
-            //           })
-            //           .nonNulls
-            //           .toList(),
-            //     ),
-            //   );
-            // } else {
-            //   // https://stackoverflow.com/a/52106410
-            //   widget = ListView.builder(
-            //       itemCount: list.length,
-            //       itemBuilder: (context, index) {
-            //         final item = list[index];
+  // if (snapshot.data?.layout.body.allowScroll == false) {
+  //   // https: //stackoverflow.com/a/54564767
+  //   widget = SafeArea(
+  //     child: Column(
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       children: list
+  //           .map((item) {
+  //             return _buildChildWidget(item);
+  //           })
+  //           .nonNulls
+  //           .toList(),
+  //     ),
+  //   );
+  // } else {
+  //   // https://stackoverflow.com/a/52106410
+  //   widget = ListView.builder(
+  //       itemCount: list.length,
+  //       itemBuilder: (context, index) {
+  //         final item = list[index];
 
-            //         return _buildChildWidget(item);
-            //       });
-            // }
+  //         return _buildChildWidget(item);
+  //       });
+  // }
 
-            // return listObject?.styleClass == null
-            //     ? widget
-            //     : DUIContainer(
-            //         styleClass: listObject?.styleClass, child: widget);
-          }),
-    );
-  }
+  // return listObject?.styleClass == null
+  //     ? widget
+  //     : DUIContainer(
+  //         styleClass: listObject?.styleClass, child: widget);
+  //       }),
+  // );
+  // }
 }

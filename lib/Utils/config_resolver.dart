@@ -1,14 +1,14 @@
 import 'dart:convert';
 
 import 'package:digia_ui/Utils/dui_font.dart';
-import 'package:digia_ui/core/page/page_init_data.dart';
-import 'package:digia_ui/core/pref/pref_util.dart';
+import 'package:digia_ui/core/page/dui_page_state.dart';
 import 'package:flutter/services.dart';
 
 class ConfigResolver {
   late Map<String, dynamic> _themeConfig;
   late Map<String, dynamic> _pages;
   late Map<String, dynamic> _restConfig;
+  late String _initialRoute;
 
   static final ConfigResolver _instance = ConfigResolver._internal();
 
@@ -22,6 +22,7 @@ class ConfigResolver {
     _instance._themeConfig = data['theme'];
     _instance._pages = data['pages'];
     _instance._restConfig = data['rest'];
+    _instance._initialRoute = data['initialRoute'];
   }
 
   ConfigResolver._internal();
@@ -43,43 +44,23 @@ class ConfigResolver {
     return _spacing[spacingToken];
   }
 
-  Map<String, dynamic>? getPageConfig(String pageName) {
-    return _pages[pageName];
+  Map<String, dynamic>? getPageConfig(String uid) {
+    return _pages[uid];
   }
 
-  PageInitData getfirstPageData() {
-    // TODO: Remove this custom logic later.
-    final authToken = PrefUtil.getString('authToken');
-
-    if (authToken != null) {
-      return PageInitData(
-          pageName: 'easy-eat-login',
-          pageConfig: getPageConfig('easy-eat-login')!,
-          inputArgs: null);
-    }
-
-    final firstPageConfig = _pages['onboardingPage'];
-    if (firstPageConfig == null || firstPageConfig['pageName'] == null) {
+  DUIPageInitData getfirstPageData() {
+    final firstPageConfig = _pages[_initialRoute];
+    if (firstPageConfig == null || firstPageConfig['uid'] == null) {
       throw 'Config for First Page not found.';
     }
 
-    final pageName = firstPageConfig['pageName'];
-    if (pageName == null) {
-      throw 'Page Name not present in First Page Config';
-    }
-
-    final pageConfig = getPageConfig(firstPageConfig['pageName']);
-    if (pageConfig == null) {
-      throw 'Page Config not found for $pageName';
-    }
-
-    return PageInitData(
-        pageName: firstPageConfig['pageName'],
-        pageConfig: pageConfig,
-        inputArgs: firstPageConfig['inputArgs']);
+    return DUIPageInitData(
+        identifier: firstPageConfig['uid'], config: firstPageConfig);
   }
 
   Map<String, dynamic>? getDefaultHeaders() {
     return _restConfig['defaultHeaders'];
   }
+
+  String? get baseUrl => _restConfig['baseUrl'];
 }
