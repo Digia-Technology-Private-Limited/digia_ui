@@ -1,3 +1,4 @@
+import 'package:digia_ui/core/builders/dui_app_bar_builder.dart';
 import 'package:digia_ui/core/builders/dui_button_builder.dart';
 import 'package:digia_ui/core/builders/dui_column_builder.dart';
 import 'package:digia_ui/core/builders/dui_image_builder.dart';
@@ -32,7 +33,8 @@ class DUIWidgetRegistry {
     'digia/listView': DUIListViewBuilder.create,
     'digia/column': DUIColumnBuilder.create,
     'fw/sized_box': withoutRegistry(DUISizedBoxBuilder.create),
-    'fw/spacer': withoutRegistry(DUISpacerBuilder.create)
+    'fw/spacer': withoutRegistry(DUISpacerBuilder.create),
+    'fw/appBar': withoutRegistry(DUIAppBarBuilder.create),
   };
 
   static final DUIWidgetRegistry shared = DUIWidgetRegistry();

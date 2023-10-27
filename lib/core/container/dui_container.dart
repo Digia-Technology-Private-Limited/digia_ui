@@ -1,3 +1,4 @@
+import 'package:digia_ui/Utils/basic_shared_utils/lodash.dart';
 import 'package:digia_ui/Utils/extensions.dart';
 import 'package:digia_ui/Utils/util_functions.dart';
 import 'package:digia_ui/components/utils/DUIStyleClass/dui_style_class.dart';
@@ -49,7 +50,7 @@ class DUIContainer extends StatelessWidget {
         padding: padding ?? toEdgeInsetsGeometry(styleClass?.padding),
         decoration: BoxDecoration(
             border: toBorder(styleClass?.border),
-            color: color ?? resolveColor(styleClass?.bgColor),
+            color: color ?? ifNotNull(styleClass?.bgColor, toColor),
             borderRadius: borderRadius),
         foregroundDecoration: foregroundDecoration,
         width: width ?? double.tryParse(styleClass?.width ?? ''),

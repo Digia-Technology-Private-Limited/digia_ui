@@ -26,7 +26,7 @@ class DUIPageProps {
 
 @JsonSerializable()
 class PageLayoutProps {
-  Map<String, dynamic>? header;
+  ({DUIWidgetJsonData? root})? header;
   PageBody body;
 
   PageLayoutProps({

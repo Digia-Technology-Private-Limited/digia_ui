@@ -1,5 +1,6 @@
 import 'package:digia_ui/Utils/basic_shared_utils/color_decoder.dart';
 import 'package:digia_ui/Utils/basic_shared_utils/dui_decoder.dart';
+import 'package:digia_ui/Utils/basic_shared_utils/lodash.dart';
 import 'package:digia_ui/Utils/config_resolver.dart';
 import 'package:digia_ui/components/DUIText/DUI_text_span/dui_text_span.dart';
 import 'package:digia_ui/components/DUIText/dui_text_style.dart';
@@ -33,14 +34,14 @@ TextStyle? toTextStyle(DUITextStyle? textStyle) {
     fontHeight = font.height ?? DUIConfigConstants.fallbackLineHeightFactor;
   }
 
-  Color textColor =
-      resolveColor(textStyle.textColor) ?? DUIConfigConstants.fallbackTextColor;
+  Color textColor = ifTruthy(textStyle.textColor, toColor) ??
+      DUIConfigConstants.fallbackTextColor;
 
-  Color? textBgColor = resolveColor(textStyle.textBgColor);
+  Color? textBgColor = ifTruthy(textStyle.textBgColor, toColor);
 
   TextDecoration textDecoration =
       DUIDecoder.toTextDecoration(textStyle.textDecoration);
-  Color? decorationColor = resolveColor(textStyle.textDecorationColor);
+  Color? decorationColor = ifNotNull(textStyle.textDecorationColor, toColor);
   TextDecorationStyle? decorationStyle =
       DUIDecoder.toTextDecorationStyle(textStyle.textDecorationStyle);
   String fontFamily = textStyle.fontFamily ??
@@ -146,14 +147,6 @@ Color toColor(String colorToken) {
     throw FormatException('Invalid color Format: $colorString');
   }
 
-  return color;
-}
-
-Color? resolveColor(String? colorToken) {
-  if (colorToken == null) return null;
-
-  var colorString = ConfigResolver().getColorValue(colorToken) ?? colorToken;
-  final color = ColorDecoder.fromString(colorString);
   return color;
 }
 

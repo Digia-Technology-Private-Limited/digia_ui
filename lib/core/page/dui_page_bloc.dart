@@ -72,7 +72,7 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
         }));
 
       default:
-        emit(state.copyWith());
+        emit(state.copyWith(isLoading: false));
         return null;
     }
     return null;

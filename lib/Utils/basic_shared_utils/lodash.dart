@@ -1,3 +1,5 @@
+import 'package:digia_ui/Utils/extensions.dart';
+
 Map<String, T> keyBy<T>(
   Iterable<T> list,
   String Function(T) keySelector,
@@ -87,3 +89,9 @@ T castOrDefault<T>(dynamic x, {required T defaultValue}) {
 }
 
 T cast<T>(dynamic x) => x as T;
+
+R? ifNotNull<R, T>(T? arg, R? Function(T) f) => (arg == null) ? null : f(arg);
+
+R? ifTruthy<R, T>(T? arg, R? Function(T) f) =>
+    // ignore: null_check_on_nullable_type_parameter
+    arg.isNullEmptyFalseOrZero ? null : f(arg!);

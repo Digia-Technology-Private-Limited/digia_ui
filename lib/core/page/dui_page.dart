@@ -1,5 +1,7 @@
+import 'package:digia_ui/Utils/basic_shared_utils/lodash.dart';
 import 'package:digia_ui/Utils/dui_widget_registry.dart';
 import 'package:digia_ui/core/builders/dui_json_widget_builder.dart';
+import 'package:digia_ui/core/flutter_widgets.dart';
 import 'package:digia_ui/core/page/dui_page_bloc.dart';
 import 'package:digia_ui/core/page/dui_page_state.dart';
 import 'package:flutter/material.dart';
@@ -16,22 +18,36 @@ class _DUIPageState extends State<DUIPage> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<DUIPageBloc, DUIPageState>(builder: (context, state) {
+      Widget bodyWidget;
+
       if (state.isLoading) {
-        return const Center(
+        bodyWidget = const Center(
           child: SizedBox(
             // TODO -> Resolve Loader from Config
             child: CircularProgressIndicator(color: Colors.blue),
           ),
         );
-      }
-      final rootWidgetDataNullable = state.props?.layout?.body.root;
-      if (rootWidgetDataNullable != null) {
-        final builder = DUIJsonWidgetBuilder(
-            data: rootWidgetDataNullable, registry: DUIWidgetRegistry.shared);
-        return SafeArea(child: builder.build(context));
+      } else {
+        bodyWidget = ifNotNull(state.props?.layout?.body.root, (root) {
+              final builder = DUIJsonWidgetBuilder(
+                  data: root, registry: DUIWidgetRegistry.shared);
+              return builder.build(context);
+            }) ??
+            Center(child: Text('Props not found for page: ${state.uid}'));
       }
 
-      return Center(child: Text('Props not found for page: ${state.uid}'));
+      final appBar = ifNotNull(state.props?.layout?.header?.root, (root) {
+        if (root.type != 'fw/appBar') {
+          return null;
+        }
+
+        return FW.appBar(root.props);
+      });
+
+      return Scaffold(
+        appBar: appBar,
+        body: SafeArea(child: bodyWidget),
+      );
     });
   }
 

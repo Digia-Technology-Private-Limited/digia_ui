@@ -1,4 +1,8 @@
+import 'package:digia_ui/Utils/basic_shared_utils/lodash.dart';
 import 'package:digia_ui/Utils/basic_shared_utils/num_decoder.dart';
+import 'package:digia_ui/Utils/util_functions.dart';
+import 'package:digia_ui/components/DUIText/dui_text.dart';
+import 'package:digia_ui/components/app_bar/app_bar.props.dart';
 import 'package:flutter/material.dart';
 
 class FW {
@@ -16,5 +20,17 @@ class FW {
   static Widget spacer(Map<String, dynamic>? json) {
     final flex = NumDecoder.toInt(json?['flex']) ?? 1;
     return Spacer(flex: flex);
+  }
+
+  static AppBar appBar(Map<String, dynamic> json) {
+    final props = DUIAppBarProps.fromJson(json);
+
+    return AppBar(
+        title: DUIText(props.title),
+        elevation: props.elevation,
+        shadowColor: ifNotNull(props.shadowColor, toColor),
+        backgroundColor: ifNotNull(props.backgrounColor, toColor),
+        iconTheme:
+            IconThemeData(color: ifNotNull(props.backgrounColor, toColor)));
   }
 }

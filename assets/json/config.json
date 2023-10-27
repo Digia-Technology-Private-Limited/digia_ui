@@ -1,9 +1,10 @@
 {
-  "initialRoute": "first-page",
+  "initialRoute": "onboarding-page",
   "pages": {
     "onboarding-page": {
       "pageName": "onboarding-page",
       "slug": "onboarding-page",
+      "uid": "onboarding-page",
       "inputArgs": null,
       "actions": {
         "onPageLoad": {
@@ -12,6 +13,17 @@
         }
       },
       "layout": {
+        "header": {
+          "root": {
+            "type": "fw/appBar",
+            "props": {
+              "title": "BYTES",
+              "backgroundColor": "primary"
+            },
+            "containerProps": {},
+            "children": []
+          }
+        },
         "body": {
           "root": {
             "type": "digia/column",
@@ -288,7 +300,7 @@
     }
   },
   "rest": {
-    "baseUrl": "http://localhost:5000/hydrator/api",
+    "baseUrl": "https://app.digia.tech/hydrator/api",
     "defaultHeaders": {
       "authorization": "{{ localStorage.authToken }}"
     }
