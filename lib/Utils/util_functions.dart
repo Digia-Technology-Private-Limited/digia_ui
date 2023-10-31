@@ -41,7 +41,7 @@ TextStyle? toTextStyle(DUITextStyle? textStyle) {
 
   TextDecoration textDecoration =
       DUIDecoder.toTextDecoration(textStyle.textDecoration);
-  Color? decorationColor = ifNotNull(textStyle.textDecorationColor, toColor);
+  Color? decorationColor = ifTruthy(textStyle.textDecorationColor, toColor);
   TextDecorationStyle? decorationStyle =
       DUIDecoder.toTextDecorationStyle(textStyle.textDecorationStyle);
   String fontFamily = textStyle.fontFamily ??
