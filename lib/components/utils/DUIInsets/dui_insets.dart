@@ -12,9 +12,4 @@ class DUIInsets {
   factory DUIInsets.fromJson(dynamic json) => _$DUIInsetsFromJson(json);
 
   Map<String, dynamic> toJson() => _$DUIInsetsToJson(this);
-
-  @override
-  String toString() {
-    return 'left:$left, top:$top, right:$right, bottom:$bottom';
-  }
 }
