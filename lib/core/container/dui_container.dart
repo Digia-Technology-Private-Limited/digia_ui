@@ -45,12 +45,11 @@ class DUIContainer extends StatelessWidget {
         toBorderRadiusGeometry(styleClass?.border?.borderRadius);
 
     return Container(
-        alignment:
-            alignment ?? DUIDecoder.toAlignmentGeometry(styleClass?.alignment),
+        alignment: alignment ?? DUIDecoder.toAlignment(styleClass?.alignment),
         padding: padding ?? toEdgeInsetsGeometry(styleClass?.padding),
         decoration: BoxDecoration(
             border: toBorder(styleClass?.border),
-            color: color ?? ifNotNull(styleClass?.bgColor, toColor),
+            color: color ?? ifTruthy(styleClass?.bgColor, toColor),
             borderRadius: borderRadius),
         foregroundDecoration: foregroundDecoration,
         width: width ?? double.tryParse(styleClass?.width ?? ''),
