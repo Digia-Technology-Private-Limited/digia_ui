@@ -165,13 +165,5 @@ double resolveSpacing(String? spacingToken) {
 }
 
 EdgeInsetsGeometry toEdgeInsetsGeometry(DUIInsets? insets) {
-  if (insets == null) {
-    return EdgeInsets.zero;
-  }
-
-  return EdgeInsets.fromLTRB(
-      _parseSpacingToken(insets.left),
-      _parseSpacingToken(insets.top),
-      _parseSpacingToken(insets.right),
-      _parseSpacingToken(insets.bottom));
+  return DUIDecoder.toEdgeInsets(insets?.toJson());
 }

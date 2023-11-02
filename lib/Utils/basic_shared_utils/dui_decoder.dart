@@ -1,3 +1,4 @@
+import 'package:digia_ui/Utils/basic_shared_utils/num_decoder.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
@@ -147,8 +148,7 @@ class DUIDecoder {
         _ => LaunchMode.platformDefault
       };
 
-  static AlignmentGeometry? toAlignmentGeometry(String? token) =>
-      switch (token) {
+  static Alignment? toAlignment(String? token) => switch (token) {
         'topLeft' => Alignment.topLeft,
         'topCenter' => Alignment.topCenter,
         'topRight' => Alignment.topRight,
@@ -170,4 +170,40 @@ class DUIDecoder {
         'scaleDown' => BoxFit.scaleDown,
         _ => BoxFit.none
       };
+
+  static EdgeInsets toEdgeInsets(Map<String, dynamic>? insets) {
+    if (insets == null) {
+      return EdgeInsets.zero;
+    }
+
+    return EdgeInsets.fromLTRB(
+      NumDecoder.toDoubleOrDefault(insets['left'], defaultValue: 0),
+      NumDecoder.toDoubleOrDefault(insets['top'], defaultValue: 0),
+      NumDecoder.toDoubleOrDefault(insets['right'], defaultValue: 0),
+      NumDecoder.toDoubleOrDefault(insets['bottom'], defaultValue: 0),
+    );
+  }
+
+  static ScrollPhysics? toScrollPhysics(dynamic physics) {
+    if (physics is bool) {
+      return physics
+          ? const AlwaysScrollableScrollPhysics()
+          : const NeverScrollableScrollPhysics();
+    }
+
+    if (physics is String) {
+      return switch (physics) {
+        'always' => const AlwaysScrollableScrollPhysics(),
+        'bouncing' => const BouncingScrollPhysics(),
+        'clamping' => const ClampingScrollPhysics(),
+        'fixedExtent' => const FixedExtentScrollPhysics(),
+        'never' => const NeverScrollableScrollPhysics(),
+        'page' => const PageScrollPhysics(),
+        'rangeMaintaining' => const RangeMaintainingScrollPhysics(),
+        _ => null
+      };
+    }
+
+    return null;
+  }
 }
