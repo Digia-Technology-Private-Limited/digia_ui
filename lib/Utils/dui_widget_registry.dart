@@ -1,8 +1,10 @@
 import 'package:digia_ui/core/builders/dui_app_bar_builder.dart';
 import 'package:digia_ui/core/builders/dui_button_builder.dart';
 import 'package:digia_ui/core/builders/dui_column_builder.dart';
+import 'package:digia_ui/core/builders/dui_gridview_builder.dart';
 import 'package:digia_ui/core/builders/dui_image_builder.dart';
 import 'package:digia_ui/core/builders/dui_listview_builder.dart';
+import 'package:digia_ui/core/builders/dui_row_builder.dart';
 import 'package:digia_ui/core/builders/dui_sized_box_builder.dart';
 import 'package:digia_ui/core/builders/dui_spacer_builder.dart';
 import 'package:digia_ui/core/builders/dui_text_builder.dart';
@@ -27,11 +29,14 @@ DUIWidgetBuilderCreatorFn withoutRegistry(
 
 class DUIWidgetRegistry {
   static final Map<String, DUIWidgetBuilderCreatorFn> builders = {
+    'digia/richText': withoutRegistry(DUITextBuilder.create),
     'digia/text': withoutRegistry(DUITextBuilder.create),
     'digia/button': withoutRegistry(DUIButtonBuilder.create),
     'digia/image': withoutRegistry(DUIImageBuilder.create),
     'digia/listView': DUIListViewBuilder.create,
+    'digia/gridView': DUIGridViewBuilder.create,
     'digia/column': DUIColumnBuilder.create,
+    'digia/row': DUIRowBuilder.create,
     'fw/sized_box': withoutRegistry(DUISizedBoxBuilder.create),
     'fw/spacer': withoutRegistry(DUISpacerBuilder.create),
     'fw/appBar': withoutRegistry(DUIAppBarBuilder.create),
