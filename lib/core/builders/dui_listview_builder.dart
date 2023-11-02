@@ -1,3 +1,5 @@
+import 'package:digia_ui/Utils/basic_shared_utils/dui_decoder.dart';
+import 'package:digia_ui/Utils/basic_shared_utils/num_decoder.dart';
 import 'package:digia_ui/Utils/dui_widget_registry.dart';
 import 'package:digia_ui/core/builders/dui_json_widget_builder.dart';
 import 'package:digia_ui/core/json_widget_builder.dart';
@@ -20,6 +22,9 @@ class DUIListViewBuilder extends DUIWidgetBuilder {
     }
 
     return ListView.builder(
+        physics: DUIDecoder.toScrollPhysics(data.props['allowScroll']),
+        shrinkWrap: NumDecoder.toBoolOrDefault(data.props['shrinkWrap'],
+            defaultValue: false),
         itemCount: data.children.length,
         itemBuilder: (context, index) {
           final builder = DUIJsonWidgetBuilder(
