@@ -1,3 +1,4 @@
+import 'package:digia_ui/Utils/basic_shared_utils/num_decoder.dart';
 import 'package:digia_ui/Utils/util_functions.dart';
 import 'package:digia_ui/components/DUICard/dui_card_props.dart';
 import 'package:digia_ui/components/DUIText/dui_text.dart';
@@ -50,15 +51,15 @@ class _DUICardState extends State<DUICard> {
                     children: [
                       DUIText(props.topCrumbText),
                       SizedBox(
-                          height:
-                              resolveSpacing(props.spaceBtwTopCrumbTextTitle)),
+                          height: NumDecoder.toDouble(
+                              props.spaceBtwTopCrumbTextTitle)),
                       DUIText(props.title),
                       const Spacer(),
                       Row(
                         children: [
                           DUIImage(props.avatarImage),
                           SizedBox(
-                            width: resolveSpacing(
+                            width: NumDecoder.toDouble(
                                 props.spaceBtwAvatarImageAndText),
                           ),
                           DUIText(props.avatarText)

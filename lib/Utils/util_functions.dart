@@ -150,20 +150,6 @@ Color toColor(String colorToken) {
   return color;
 }
 
-double _parseSpacingToken(String token) {
-  try {
-    return double.parse(token);
-  } catch (e) {
-    return ConfigResolver().getSpacing(token) ?? 0.0;
-  }
-}
-
-double resolveSpacing(String? spacingToken) {
-  if (spacingToken == null || spacingToken.isEmpty) return 0;
-
-  return _parseSpacingToken(spacingToken);
-}
-
 EdgeInsetsGeometry toEdgeInsetsGeometry(DUIInsets? insets) {
   return DUIDecoder.toEdgeInsets(insets?.toJson());
 }

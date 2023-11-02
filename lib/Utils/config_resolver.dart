@@ -27,9 +27,9 @@ class ConfigResolver {
 
   ConfigResolver._internal();
 
-  Map<String, dynamic> get _colors => _themeConfig['colors'];
+  // TOOD: @tushar - Add support for light / dark theme
+  Map<String, dynamic> get _colors => _themeConfig['colors']['light'];
   Map<String, dynamic> get _fonts => _themeConfig['fonts'];
-  Map<String, dynamic> get _spacing => _themeConfig['spacing'];
 
   String? getColorValue(String colorToken) {
     return _colors[colorToken];
@@ -38,10 +38,6 @@ class ConfigResolver {
   DUIFont getFont(String fontToken) {
     var fontsJson = (_fonts[fontToken]);
     return DUIFont.fromJson(fontsJson);
-  }
-
-  double? getSpacing(String spacingToken) {
-    return _spacing[spacingToken];
   }
 
   Map<String, dynamic>? getPageConfig(String uid) {
