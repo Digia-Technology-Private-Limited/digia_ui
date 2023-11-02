@@ -28,9 +28,9 @@ class FW {
     return AppBar(
         title: DUIText(props.title),
         elevation: props.elevation,
-        shadowColor: ifNotNull(props.shadowColor, toColor),
-        backgroundColor: ifNotNull(props.backgrounColor, toColor),
+        shadowColor: ifTruthy(props.shadowColor, toColor),
+        backgroundColor: ifTruthy(props.backgrounColor, toColor),
         iconTheme:
-            IconThemeData(color: ifNotNull(props.backgrounColor, toColor)));
+            IconThemeData(color: ifTruthy(props.backgrounColor, toColor)));
   }
 }
