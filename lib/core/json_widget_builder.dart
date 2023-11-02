@@ -1,3 +1,4 @@
+import 'package:digia_ui/Utils/basic_shared_utils/num_decoder.dart';
 import 'package:digia_ui/Utils/dui_widget_registry.dart';
 import 'package:digia_ui/components/utils/DUIStyleClass/dui_style_class.dart';
 import 'package:digia_ui/core/action/action_prop.dart';
@@ -35,8 +36,7 @@ abstract class DUIWidgetBuilder {
     }
 
     // Align
-    final alignmentValue =
-        DUIDecoder.toAlignmentGeometry(data.containerProps['align']);
+    final alignmentValue = DUIDecoder.toAlignment(data.containerProps['align']);
     if (alignmentValue != null) {
       output = Align(
         alignment: alignmentValue,
@@ -57,10 +57,10 @@ abstract class DUIWidgetBuilder {
     }
 
     // Visibility
-    // final visiblityBool = NumDecoder.toBool(data.containerProps['visibility']);
-    // if (visiblityBool != null) {
-    //   output = Visibility(visible: visiblityBool, child: output);
-    // }
+    final visiblityBool = NumDecoder.toBool(data.containerProps['visibility']);
+    if (visiblityBool != null) {
+      output = Visibility(visible: visiblityBool, child: output);
+    }
 
     return output;
   }
