@@ -1,5 +1,7 @@
 {
-  "initialRoute": "onboarding-page",
+  "appSettings": {
+    "initialRoute": "first-page"
+  },
   "pages": {
     "onboarding-page": {
       "pageName": "onboarding-page",

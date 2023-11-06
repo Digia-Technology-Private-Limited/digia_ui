@@ -22,7 +22,7 @@ class ConfigResolver {
     _instance._themeConfig = data['theme'];
     _instance._pages = data['pages'];
     _instance._restConfig = data['rest'];
-    _instance._initialRoute = data['initialRoute'];
+    _instance._initialRoute = data['appSettings']['initialRoute'];
   }
 
   ConfigResolver._internal();
