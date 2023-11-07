@@ -1,6 +1,14 @@
 class NumDecoder {
   static double? toDouble(dynamic value) {
     if (value is String) {
+      if (['inf', 'infinity'].contains(value.toLowerCase())) {
+        return double.infinity;
+      }
+
+      if (value.startsWith('0x') == true) {
+        return int.tryParse(value.substring(2), radix: 16)?.toDouble();
+      }
+
       return double.tryParse(value);
     }
 
@@ -18,6 +26,10 @@ class NumDecoder {
 
   static int? toInt(dynamic value) {
     if (value is String) {
+      if (value.startsWith('0x') == true) {
+        return int.tryParse(value.substring(2), radix: 16)?.toInt();
+      }
+
       return int.tryParse(value);
     }
 

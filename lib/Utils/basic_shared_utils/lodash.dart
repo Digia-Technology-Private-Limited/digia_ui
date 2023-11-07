@@ -92,6 +92,9 @@ T cast<T>(dynamic x) => x as T;
 
 R? ifNotNull<R, T>(T? arg, R? Function(T) f) => (arg == null) ? null : f(arg);
 
+R? ifNotNull2<R, T0, T1>(T0? arg0, T1? arg1, R? Function(T0, T1) f) =>
+    (arg0 != null && arg1 != null) ? f(arg0, arg1) : null;
+
 R? ifTruthy<R, T>(T? arg, R? Function(T) f) =>
     // ignore: null_check_on_nullable_type_parameter
     arg.isNullEmptyFalseOrZero ? null : f(arg!);

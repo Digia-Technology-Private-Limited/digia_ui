@@ -1,3 +1,4 @@
+import 'package:digia_ui/Utils/basic_shared_utils/lodash.dart';
 import 'package:digia_ui/Utils/basic_shared_utils/num_decoder.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -148,7 +149,9 @@ class DUIDecoder {
         _ => LaunchMode.platformDefault
       };
 
-  static Alignment? toAlignment(String? token) => switch (token) {
+  static Alignment? toAlignment(dynamic value) {
+    if (value is String) {
+      return switch (value) {
         'topLeft' => Alignment.topLeft,
         'topCenter' => Alignment.topCenter,
         'topRight' => Alignment.topRight,
@@ -160,6 +163,17 @@ class DUIDecoder {
         'bottomRight' => Alignment.bottomRight,
         _ => null
       };
+    }
+
+    if (value is Map) {
+      final xNullable = NumDecoder.toDouble(value['x']);
+      final yNullable = NumDecoder.toDouble(value['y']);
+
+      return ifNotNull2(xNullable, yNullable, (x, y) => Alignment(x, y));
+    }
+
+    return null;
+  }
 
   static BoxFit toBoxFit(String? fitValue) => switch (fitValue) {
         'fill' => BoxFit.fill,
