@@ -25,7 +25,6 @@ class ConfigResolver {
     _instance._initialRoute = data['appSettings']['initialRoute'];
   }
 
-
   static initializeByJson(dynamic data) async {
     // final data = await jsonDecode(response);
     _instance._themeConfig = data['theme'];
@@ -34,11 +33,10 @@ class ConfigResolver {
     _instance._initialRoute = data['appSettings']['initialRoute'];
   }
 
-
   ConfigResolver._internal();
 
   // TOOD: @tushar - Add support for light / dark theme
-  Map<String, dynamic> get _colors => _themeConfig['colors'];
+  Map<String, dynamic> get _colors => _themeConfig['colors']['light'];
   Map<String, dynamic> get _fonts => _themeConfig['fonts'];
 
   String? getColorValue(String colorToken) {

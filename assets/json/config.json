@@ -185,20 +185,22 @@
   },
   "theme": {
     "colors": {
-      "primary": "#00C063",
-      "secondary": "#0070BB",
-      "text": "#212121",
-      "textSubtle": "#4F4F4F",
-      "accent1": "#FEE7CD",
-      "accent2": "#CCCCFF",
-      "accent3": "#DCEFDC",
-      "accent4": "#FFF5C2",
-      "accent5": "#CEDFF3",
-      "accent6": "#CCCCFF",
-      "accent7": "#F6C5C1",
-      "accent8": "#FFDCC6",
-      "light": "#FAFCFE",
-      "white": "#FFFFFF"
+      "light": {
+        "primary": "#00C063",
+        "secondary": "#0070BB",
+        "text": "#212121",
+        "textSubtle": "#4F4F4F",
+        "accent1": "#FEE7CD",
+        "accent2": "#CCCCFF",
+        "accent3": "#DCEFDC",
+        "accent4": "#FFF5C2",
+        "accent5": "#CEDFF3",
+        "accent6": "#CCCCFF",
+        "accent7": "#F6C5C1",
+        "accent8": "#FFDCC6",
+        "light": "#FAFCFE",
+        "white": "#FFFFFF"
+      }
     },
     "fonts": {
       "display-large": {
