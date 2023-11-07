@@ -1,6 +1,6 @@
 {
   "appSettings": {
-    "initialRoute": "first-page"
+    "initialRoute": "onboarding-page"
   },
   "pages": {
     "onboarding-page": {
@@ -15,17 +15,7 @@
         }
       },
       "layout": {
-        "header": {
-          "root": {
-            "type": "fw/appBar",
-            "props": {
-              "title": "BYTES",
-              "backgroundColor": "primary"
-            },
-            "containerProps": {},
-            "children": []
-          }
-        },
+        "header": {},
         "body": {
           "root": {
             "type": "digia/column",
@@ -40,13 +30,13 @@
                 "props": {
                   "textSpans": [
                     {
-                      "text": "",
+                      "text": "1st Span",
                       "spanStyle": {
-                        "textColor": ""
+                        "textColor": "#FF00FF"
                       }
                     },
                     {
-                      "text": "BYTES 2"
+                      "text": "2nd Span"
                     }
                   ],
                   "maxLines": "",

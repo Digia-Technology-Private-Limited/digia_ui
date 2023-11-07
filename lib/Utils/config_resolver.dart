@@ -28,7 +28,7 @@ class ConfigResolver {
   ConfigResolver._internal();
 
   // TOOD: @tushar - Add support for light / dark theme
-  Map<String, dynamic> get _colors => _themeConfig['colors']['light'];
+  Map<String, dynamic> get _colors => _themeConfig['colors'];
   Map<String, dynamic> get _fonts => _themeConfig['fonts'];
 
   String? getColorValue(String colorToken) {
