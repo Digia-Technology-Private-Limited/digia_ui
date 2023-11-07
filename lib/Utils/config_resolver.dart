@@ -25,6 +25,16 @@ class ConfigResolver {
     _instance._initialRoute = data['appSettings']['initialRoute'];
   }
 
+
+  static initializeByJson(dynamic data) async {
+    // final data = await jsonDecode(response);
+    _instance._themeConfig = data['theme'];
+    _instance._pages = data['pages'];
+    _instance._restConfig = data['rest'];
+    _instance._initialRoute = data['appSettings']['initialRoute'];
+  }
+
+
   ConfigResolver._internal();
 
   // TOOD: @tushar - Add support for light / dark theme
