@@ -1,3 +1,5 @@
+import 'package:digia_ui/Utils/basic_shared_utils/color_decoder.dart';
+import 'package:digia_ui/components/DUIText/dui_text.dart';
 import 'package:digia_ui/components/dui_avatar/avatar_props.dart';
 import 'package:flutter/material.dart';
 
@@ -24,33 +26,50 @@ class _DUIAvatarState extends State<DUIAvatar> {
       case AvatarShape.square:
         return makeSquareAvatar();
       default:
-        return makeStandardAvatar();
+        return makeCircleAvatar();
     }
   }
 
-  Widget makeStandardAvatar() {
+  Widget makeCircleAvatar() {
     return CircleAvatar(
-      backgroundColor: widget.duiAvatarProps.backgroundColor,
-      radius: widget.duiAvatarProps.radius,
+      backgroundColor: _duiAvatarProps.bgColor != null
+          ? ColorDecoder.fromString(_duiAvatarProps.bgColor)
+          : Colors.yellow,
+      // radius: _duiAvatarProps.radius.,
       child: _getAvatarChildWidget(),
     );
   }
 
   Widget makeSquareAvatar() {
-    return SizedBox(
-      height: _duiAvatarProps.radius,
-      width: _duiAvatarProps.radius,
-      child: _getAvatarChildWidget(),
+    return Container(
+      height: _duiAvatarProps.radius!.topLeft * 10,
+      width: _duiAvatarProps.radius!.bottomLeft * 2,
+      decoration: BoxDecoration(
+        color: Colors.yellow,
+        borderRadius: _duiAvatarProps.radius != null
+            ? BorderRadius.only(
+                topLeft: Radius.circular(_duiAvatarProps.radius!.topLeft),
+                topRight: Radius.circular(_duiAvatarProps.radius!.topRight),
+                bottomLeft: Radius.circular(_duiAvatarProps.radius!.bottomLeft),
+                bottomRight:
+                    Radius.circular(_duiAvatarProps.radius!.bottomRight),
+              )
+            : BorderRadius.zero,
+      ),
+      child: SizedBox(
+          height: _duiAvatarProps.radius!.topLeft * 10,
+          width: _duiAvatarProps.radius!.bottomLeft * 2,
+          child: _getAvatarChildWidget()),
     );
   }
 
   Widget _getAvatarChildWidget() {
-    if (_duiAvatarProps.image != null) {
+    if (_duiAvatarProps.imageSrc != null) {
       // [TODO]: SHOW IMAGE
       return Container();
     } else {
-      // [TODO]: SHOW FALLBACK TEXT
-      return Container();
+      // SHOW DUIText FALLBACK
+      return DUIText(_duiAvatarProps.fallbackText!);
     }
   }
 }

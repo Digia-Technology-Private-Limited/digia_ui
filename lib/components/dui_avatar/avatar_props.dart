@@ -29,8 +29,10 @@ class DUIAvatarProps {
     AvatarShape? shape,
   }) : _shape = shape ?? AvatarShape.circle;
 
-  factory DUIAvatarProps.fromJson(Map<String, dynamic> json) =>
-      _$DUIAvatarPropsFromJson(json);
+  factory DUIAvatarProps.fromJson(Map<String, dynamic> json) {
+    print('Json from config file: $json');
+    return _$DUIAvatarPropsFromJson(json);
+  }
 
   Map<String, dynamic> toJson() => _$DUIAvatarPropsToJson(this);
 }

@@ -26,6 +26,66 @@
             "containerProps": {},
             "children": [
               {
+                "type": "digia/avatar",
+                "props": {
+                  "shape": "circle",
+                  "radius": {
+                    "topLeft": 5,
+                    "topRight": 5,
+                    "bottomLeft": 5,
+                    "bottomRight": 5
+                  },
+
+                  "bgColor": "#04A24C",
+                  "fallbackText": {
+                    "type": "digia/text",
+                    "props": {
+                      "textSpans": [
+                        {
+                          "text": "Stoppage",
+                          "spanStyle": {
+                            "textColor": "#FFFFFF"
+                          }
+                        }
+                      ],
+                      "maxLines": 2
+                    },
+                    "containerProps": {},
+                    "children": []
+                  }
+                }
+              },
+              {
+                "type": "digia/avatar",
+                "props": {
+                  "shape": "square",
+                  "radius": {
+                    "topLeft": 5,
+                    "topRight": 5,
+                    "bottomLeft": 5,
+                    "bottomRight": 5
+                  },
+
+                  "bgColor": "#04A24C",
+                  "fallbackText": {
+                    "type": "digia/text",
+                    "props": {
+                      "textSpans": [
+                        {
+                          "text": "Stoppage",
+                          "spanStyle": {
+                            "textColor": "#FFFFFF"
+                          }
+                        }
+                      ],
+                      "maxLines": 2
+                    },
+                    "containerProps": {},
+                    "children": []
+                  }
+                }
+              },
+              {
                 "type": "digia/text",
                 "props": {
                   "textSpans": [
