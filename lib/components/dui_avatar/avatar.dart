@@ -1,11 +1,6 @@
 import 'package:digia_ui/components/dui_avatar/avatar_props.dart';
 import 'package:flutter/material.dart';
 
-enum AvatarShape {
-  standard,
-  square,
-}
-
 class DUIAvatar extends StatefulWidget {
   final DUIAvatarProps duiAvatarProps;
   const DUIAvatar({required this.duiAvatarProps, super.key});
@@ -42,7 +37,7 @@ class _DUIAvatarState extends State<DUIAvatar> {
   }
 
   Widget makeSquareAvatar() {
-    return Container(
+    return SizedBox(
       height: _duiAvatarProps.radius,
       width: _duiAvatarProps.radius,
       child: _getAvatarChildWidget(),

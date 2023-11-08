@@ -1,26 +1,33 @@
-import 'package:digia_ui/Utils/basic_shared_utils/color_decoder.dart';
-import 'package:digia_ui/components/DUIText/dui_text.dart';
-import 'package:digia_ui/components/dui_avatar/avatar.dart';
-import 'package:digia_ui/components/utils/DUIStyleClass/dui_style_class.dart';
-import 'package:flutter/material.dart';
+import 'package:digia_ui/components/DUIText/dui_text_props.dart';
+import 'package:digia_ui/components/utils/DUICornerRadius/dui_corner_radius.dart';
+
 import 'package:json_annotation/json_annotation.dart';
 part 'avatar_props.g.dart';
 
+@JsonEnum()
+enum AvatarShape {
+  circle,
+  square,
+}
+
+@JsonSerializable()
 class DUIAvatarProps {
-  @JsonKey(fromJson: DUIStyleClass.fromJson, includeToJson: false)
-  // Properties
-  double? radius;
-  AvatarShape? shape;
-  Color? backgroundColor;
-  Widget? image;
-  DUIText? fallbackText;
+  // Radius is only applicable when shape is Square.
+  DUICornerRadius? radius;
+  AvatarShape _shape;
+  String? bgColor;
+  String? imageSrc;
+  DUITextProps? fallbackText;
+
+  AvatarShape get shape => _shape;
 
   DUIAvatarProps({
-    this.backgroundColor,
     this.radius,
-    this.image,
+    this.bgColor,
+    this.imageSrc,
     this.fallbackText,
-  });
+    AvatarShape? shape,
+  }) : _shape = shape ?? AvatarShape.circle;
 
   factory DUIAvatarProps.fromJson(Map<String, dynamic> json) =>
       _$DUIAvatarPropsFromJson(json);
