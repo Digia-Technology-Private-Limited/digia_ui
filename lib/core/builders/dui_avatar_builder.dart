@@ -14,7 +14,7 @@ class DUIAvatarBuilder extends DUIWidgetBuilder {
   @override
   Widget build(BuildContext context) {
     return DUIAvatar(
-      duiAvatarProps: DUIAvatarProps.fromJson(data.props),
+      props: DUIAvatarProps.fromJson(data.props),
     );
   }
 }

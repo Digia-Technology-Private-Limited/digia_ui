@@ -1,4 +1,3 @@
-import 'package:digia_ui/components/dui_avatar/avatar.dart';
 import 'package:digia_ui/core/builders/dui_app_bar_builder.dart';
 import 'package:digia_ui/core/builders/dui_avatar_builder.dart';
 import 'package:digia_ui/core/builders/dui_button_builder.dart';

@@ -25,7 +25,7 @@ class DUIAvatarProps {
   String? imageSrc;
   String? imageFit;
   // Will use Text if image is not provided
-  DUITextProps? fallbackText;
+  DUITextProps? text;
 
   // Common props
   String? bgColor;
@@ -40,7 +40,7 @@ class DUIAvatarProps {
     double? side,
     this.bgColor,
     this.imageSrc,
-    this.fallbackText,
+    this.text,
     this.imageFit,
     AvatarShape? shape,
   })  : _radius = radius ?? 16.0,

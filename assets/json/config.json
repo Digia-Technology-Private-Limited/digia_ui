@@ -29,17 +29,19 @@
                 "type": "digia/avatar",
                 "props": {
                   "shape": "circle",
-                  "radius": 50.0, 
-                  "imageSrc": "https://picsum.photos/250?image=9",
+                  "radius": 50.0,
                   "imageFit": "cover",
                   "bgColor": "#04A24C",
-                  "fallbackText": {
-                    "text": "Avatar"
-                    ,"textColor" :"#FFFFFF"
+                  "text": {
+                    "text": "TG",
+                    "textStyle": {
+                      "textColor": "#FF00FF",
+                      "fontToken": "headline-medium"
+                    }
                   }
                 },
                 "containerProps": {
-                  "align" : "center" 
+                  "align": "center"
                 }
               },
               {
@@ -47,21 +49,13 @@
                 "props": {
                   "shape": "square",
                   "side": 100.0,
-                  "imageSrc": "https://picsum.photos/250?image=9",
                   "imageFit": "cover",
                   "bgColor": "#FF00FF",
-                  "cornerRadius": {
-                    "topLeft": 5,
-                    "topRight": 5,
-                    "bottomLeft": 5,
-                    "bottomRight": 5
-                  },
-                  "fallbackText": {
-                    "text": "Avatar"
-                  }
+                  "cornerRadius": 12,
+                  "text": "SP"
                 },
                 "containerProps": {
-                  "align" : "center" 
+                  "align": "center"
                 }
               },
               {
