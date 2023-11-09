@@ -26,6 +26,39 @@
             "containerProps": {},
             "children": [
               {
+                "type": "digia/avatar",
+                "props": {
+                  "shape": "circle",
+                  "radius": 50.0,
+                  "imageFit": "cover",
+                  "bgColor": "#04A24C",
+                  "text": {
+                    "text": "TG",
+                    "textStyle": {
+                      "textColor": "#FF00FF",
+                      "fontToken": "headline-medium"
+                    }
+                  }
+                },
+                "containerProps": {
+                  "align": "center"
+                }
+              },
+              {
+                "type": "digia/avatar",
+                "props": {
+                  "shape": "square",
+                  "side": 100.0,
+                  "imageFit": "cover",
+                  "bgColor": "#FF00FF",
+                  "cornerRadius": 12,
+                  "text": "SP"
+                },
+                "containerProps": {
+                  "align": "center"
+                }
+              },
+              {
                 "type": "digia/text",
                 "props": {
                   "textSpans": [
