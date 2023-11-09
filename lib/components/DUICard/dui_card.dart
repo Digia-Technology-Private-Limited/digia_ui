@@ -1,5 +1,5 @@
+import 'package:digia_ui/Utils/basic_shared_utils/dui_decoder.dart';
 import 'package:digia_ui/Utils/basic_shared_utils/num_decoder.dart';
-import 'package:digia_ui/Utils/util_functions.dart';
 import 'package:digia_ui/components/DUICard/dui_card_props.dart';
 import 'package:digia_ui/components/DUIText/dui_text.dart';
 import 'package:digia_ui/components/image/image.dart';
@@ -44,7 +44,8 @@ class _DUICardState extends State<DUICard> {
               Expanded(
                 flex: 2,
                 child: Padding(
-                  padding: toEdgeInsetsGeometry(props.contentPadding),
+                  padding:
+                      DUIDecoder.toEdgeInsets(props.contentPadding.toJson()),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,

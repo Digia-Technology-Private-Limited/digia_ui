@@ -1,3 +1,4 @@
+import 'package:digia_ui/Utils/basic_shared_utils/dui_decoder.dart';
 import 'package:digia_ui/Utils/basic_shared_utils/lodash.dart';
 import 'package:digia_ui/Utils/util_functions.dart';
 import 'package:digia_ui/components/DUIText/dui_text.dart';
@@ -43,7 +44,8 @@ class _DUIAvatarState extends State<DUIAvatar> {
       decoration: BoxDecoration(
           color: ifNotNull(widget.props.bgColor, toColor) ?? Colors.grey,
           shape: BoxShape.rectangle,
-          borderRadius: toBorderRadius(widget.props.cornerRadius)),
+          borderRadius:
+              DUIDecoder.toBorderRadius(widget.props.cornerRadius?.toJson())),
       clipBehavior: Clip.hardEdge,
       child: _getAvatarChildWidget(),
     );
