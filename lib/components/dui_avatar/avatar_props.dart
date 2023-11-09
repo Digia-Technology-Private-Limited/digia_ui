@@ -13,24 +13,42 @@ enum AvatarShape {
 @JsonSerializable()
 class DUIAvatarProps {
   // Radius is only applicable when shape is Square.
-  DUICornerRadius? radius;
   AvatarShape _shape;
-  String? bgColor;
+
+  // For AvatarShape.square
+  double _side;
+  DUICornerRadius? cornerRadius;
+  // For AvatarShape.circle
+  double _radius;
+
+  // If Image has to be used
   String? imageSrc;
+  String? imageFit;
+  // Will use Text if image is not provided
   DUITextProps? fallbackText;
 
+  // Common props
+  String? bgColor;
+
+  double get radius => _radius;
   AvatarShape get shape => _shape;
+  double get side => _side;
 
   DUIAvatarProps({
-    this.radius,
+    this.cornerRadius,
+    double? radius,
+    double? side,
     this.bgColor,
     this.imageSrc,
     this.fallbackText,
+    this.imageFit,
     AvatarShape? shape,
-  }) : _shape = shape ?? AvatarShape.circle;
+  })  : _radius = radius ?? 16.0,
+        _side = side ?? 32.0,
+        _shape = shape ?? AvatarShape.circle;
 
   factory DUIAvatarProps.fromJson(Map<String, dynamic> json) {
-    print('Json from config file: $json');
+    // print('Json from config file: $json');
     return _$DUIAvatarPropsFromJson(json);
   }
 

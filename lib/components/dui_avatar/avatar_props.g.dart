@@ -8,9 +8,11 @@ part of 'avatar_props.dart';
 
 DUIAvatarProps _$DUIAvatarPropsFromJson(Map<String, dynamic> json) =>
     DUIAvatarProps(
-      radius: json['radius'] == null
+      cornerRadius: json['cornerRadius'] == null
           ? null
-          : DUICornerRadius.fromJson(json['radius']),
+          : DUICornerRadius.fromJson(json['cornerRadius']),
+      radius: (json['radius'] as num?)?.toDouble(),
+      side: (json['side'] as num?)?.toDouble(),
       bgColor: json['bgColor'] as String?,
       imageSrc: json['imageSrc'] as String?,
       fallbackText: json['fallbackText'] == null
@@ -21,11 +23,13 @@ DUIAvatarProps _$DUIAvatarPropsFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$DUIAvatarPropsToJson(DUIAvatarProps instance) =>
     <String, dynamic>{
-      'radius': instance.radius,
+      'cornerRadius': instance.cornerRadius,
       'bgColor': instance.bgColor,
       'imageSrc': instance.imageSrc,
       'fallbackText': instance.fallbackText,
+      'radius': instance.radius,
       'shape': _$AvatarShapeEnumMap[instance.shape]!,
+      'side': instance.side,
     };
 
 const _$AvatarShapeEnumMap = {
