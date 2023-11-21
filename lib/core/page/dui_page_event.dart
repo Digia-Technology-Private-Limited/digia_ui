@@ -3,7 +3,11 @@ import 'package:flutter/material.dart';
 
 abstract class DUIPageEvent {}
 
-class InitPageEvent extends DUIPageEvent {}
+class InitPageEvent extends DUIPageEvent {
+  final Map<String, dynamic>? pageParams;
+
+  InitPageEvent({this.pageParams});
+}
 
 class PostActionEvent extends DUIPageEvent {
   final ActionProp action;

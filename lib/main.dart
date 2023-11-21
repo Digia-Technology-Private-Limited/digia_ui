@@ -26,18 +26,18 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         fontFamily: 'Poppins',
-        scaffoldBackgroundColor: toColor('light'),
-        primaryColor: toColor('light'),
+        scaffoldBackgroundColor: toColor('primary'),
+        primaryColor: toColor('primary'),
         brightness: Brightness.light,
         appBarTheme: AppBarTheme(
-          color: toColor('light'),
+          color: toColor('primary'),
           systemOverlayStyle: const SystemUiOverlayStyle(
             statusBarColor: Colors.transparent,
             statusBarBrightness: Brightness.light,
             statusBarIconBrightness: Brightness.light,
           ),
           titleTextStyle: TextStyle(
-              color: toColor('text'),
+              color: toColor('primarytext'),
               fontSize: 20,
               fontWeight: FontWeight.w700),
         ),
