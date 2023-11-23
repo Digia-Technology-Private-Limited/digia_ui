@@ -70,8 +70,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'Something went wrong!',
-                        style: TextStyle(color: Colors.red),
+                        'Could not fetch Config.',
+                        style: TextStyle(color: Colors.red, fontSize: 24),
                       ),
                     ],
                   ),
