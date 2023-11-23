@@ -32,14 +32,14 @@ TextStyle? toTextStyle(DUITextStyle? textStyle) {
     fontHeight = font.height ?? DUIConfigConstants.fallbackLineHeightFactor;
   }
 
-  Color textColor = ifTruthy(textStyle.textColor, toColor) ??
+  Color textColor = textStyle.textColor.letIfTrue(toColor) ??
       DUIConfigConstants.fallbackTextColor;
 
-  Color? textBgColor = ifTruthy(textStyle.textBgColor, toColor);
+  Color? textBgColor = textStyle.textBgColor.letIfTrue(toColor);
 
   TextDecoration textDecoration =
       DUIDecoder.toTextDecoration(textStyle.textDecoration);
-  Color? decorationColor = ifTruthy(textStyle.textDecorationColor, toColor);
+  Color? decorationColor = textStyle.textDecorationColor.letIfTrue(toColor);
   TextDecorationStyle? decorationStyle =
       DUIDecoder.toTextDecorationStyle(textStyle.textDecorationStyle);
   String fontFamily = textStyle.fontFamily ??

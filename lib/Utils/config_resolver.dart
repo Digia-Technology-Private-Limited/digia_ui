@@ -2,6 +2,9 @@ import 'dart:convert';
 
 import 'package:digia_ui/Utils/dui_font.dart';
 import 'package:digia_ui/core/page/dui_page_state.dart';
+import 'package:digia_ui/network/core/types.dart';
+import 'package:digia_ui/network/network_manager.dart';
+import 'package:digia_ui/project_constants.dart';
 import 'package:flutter/services.dart';
 
 class ConfigResolver {
@@ -31,6 +34,35 @@ class ConfigResolver {
     _instance._pages = data['pages'];
     _instance._restConfig = data['rest'];
     _instance._initialRoute = data['appSettings']['initialRoute'];
+  }
+
+  static _initializeVars(Map<String, dynamic> data) {
+    _instance._themeConfig = data['theme'];
+    _instance._pages = data['pages'];
+    _instance._restConfig = data['rest'];
+    _instance._initialRoute = data['appSettings']['initialRoute'];
+  }
+
+  static Future<bool> initializeFromCloud() async {
+    const baseUrl = ProjectConstants.baseUrl;
+    try {
+      final config = await NetworkManager().request(HttpMethod.post,
+          '$baseUrl/config/getAppConfig', (json) => json as dynamic,
+          data: jsonEncode({'projectId': ProjectConstants.projectId}));
+
+      final resp = config.data['response'] as Map<String, dynamic>?;
+      if (resp == null || resp.isEmpty) {
+        print('Empty Config from Server');
+        return false;
+      }
+
+      _initializeVars(resp);
+    } catch (err) {
+      print(err);
+      return false;
+    }
+
+    return true;
   }
 
   ConfigResolver._internal();
@@ -66,5 +98,6 @@ class ConfigResolver {
     return _restConfig['defaultHeaders'];
   }
 
-  String? get baseUrl => _restConfig['baseUrl'];
+  // String? get baseUrl => _restConfig['baseUrl'];
+  String? get baseUrl => ProjectConstants.baseUrl;
 }

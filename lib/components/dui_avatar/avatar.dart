@@ -29,7 +29,7 @@ class _DUIAvatarState extends State<DUIAvatar> {
       height: widget.props.radius * 2,
       width: widget.props.radius * 2,
       decoration: BoxDecoration(
-        color: ifNotNull(widget.props.bgColor, toColor) ?? Colors.grey,
+        color: widget.props.bgColor?.let(toColor) ?? Colors.grey,
         shape: BoxShape.circle,
       ),
       clipBehavior: Clip.hardEdge,
@@ -42,7 +42,7 @@ class _DUIAvatarState extends State<DUIAvatar> {
       height: widget.props.side,
       width: widget.props.side,
       decoration: BoxDecoration(
-          color: ifNotNull(widget.props.bgColor, toColor) ?? Colors.grey,
+          color: widget.props.bgColor?.let(toColor) ?? Colors.grey,
           shape: BoxShape.rectangle,
           borderRadius:
               DUIDecoder.toBorderRadius(widget.props.cornerRadius?.toJson())),
@@ -57,11 +57,9 @@ class _DUIAvatarState extends State<DUIAvatar> {
           imageSrc: widget.props.imageSrc!, fit: widget.props.imageFit));
     }
 
-    return ifNotNull(
-        widget.props.text,
-        ((p0) => Align(
-              alignment: Alignment.center,
-              child: DUIText(p0),
-            )));
+    return widget.props.text.let((p0) => Align(
+          alignment: Alignment.center,
+          child: DUIText(p0),
+        ));
   }
 }

@@ -168,8 +168,7 @@ class DUIDecoder {
     if (value is Map) {
       final xNullable = NumDecoder.toDouble(value['x']);
       final yNullable = NumDecoder.toDouble(value['y']);
-
-      return ifNotNull2(xNullable, yNullable, (x, y) => Alignment(x, y));
+      return (xNullable, yNullable).let((p0, p1) => Alignment(p0, p1));
     }
 
     return null;

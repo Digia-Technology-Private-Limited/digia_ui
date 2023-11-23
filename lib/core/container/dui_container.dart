@@ -50,7 +50,7 @@ class DUIContainer extends StatelessWidget {
             padding ?? DUIDecoder.toEdgeInsets(styleClass?.padding?.toJson()),
         decoration: BoxDecoration(
             border: toBorder(styleClass?.border),
-            color: color ?? ifTruthy(styleClass?.bgColor, toColor),
+            color: color ?? styleClass?.bgColor.letIfTrue(toColor),
             borderRadius: borderRadius),
         foregroundDecoration: foregroundDecoration,
         width: width ?? double.tryParse(styleClass?.width ?? ''),
