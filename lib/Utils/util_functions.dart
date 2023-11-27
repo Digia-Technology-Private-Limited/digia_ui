@@ -5,8 +5,6 @@ import 'package:digia_ui/Utils/config_resolver.dart';
 import 'package:digia_ui/components/DUIText/DUI_text_span/dui_text_span.dart';
 import 'package:digia_ui/components/DUIText/dui_text_style.dart';
 import 'package:digia_ui/components/utils/DUIBorder/dui_border.dart';
-import 'package:digia_ui/components/utils/DUICornerRadius/dui_corner_radius.dart';
-import 'package:digia_ui/components/utils/DUIInsets/dui_insets.dart';
 import 'package:flutter/material.dart';
 
 class DUIConfigConstants {
@@ -34,14 +32,14 @@ TextStyle? toTextStyle(DUITextStyle? textStyle) {
     fontHeight = font.height ?? DUIConfigConstants.fallbackLineHeightFactor;
   }
 
-  Color textColor = ifTruthy(textStyle.textColor, toColor) ??
+  Color textColor = textStyle.textColor.letIfTrue(toColor) ??
       DUIConfigConstants.fallbackTextColor;
 
-  Color? textBgColor = ifTruthy(textStyle.textBgColor, toColor);
+  Color? textBgColor = textStyle.textBgColor.letIfTrue(toColor);
 
   TextDecoration textDecoration =
       DUIDecoder.toTextDecoration(textStyle.textDecoration);
-  Color? decorationColor = ifTruthy(textStyle.textDecorationColor, toColor);
+  Color? decorationColor = textStyle.textDecorationColor.letIfTrue(toColor);
   TextDecorationStyle? decorationStyle =
       DUIDecoder.toTextDecorationStyle(textStyle.textDecorationStyle);
   String fontFamily = textStyle.fontFamily ??
@@ -95,23 +93,6 @@ Map<String, String> createStyleMap(String? styleClass) {
   });
 }
 
-BorderRadiusGeometry toBorderRadiusGeometry(DUICornerRadius? cornerRadius) {
-  return toBorderRadius(cornerRadius);
-}
-
-BorderRadius toBorderRadius(DUICornerRadius? cornerRadius) {
-  if (cornerRadius == null) {
-    return BorderRadius.zero;
-  }
-
-  return BorderRadius.only(
-    topLeft: Radius.circular(cornerRadius.topLeft),
-    topRight: Radius.circular(cornerRadius.topRight),
-    bottomLeft: Radius.circular(cornerRadius.bottomLeft),
-    bottomRight: Radius.circular(cornerRadius.bottomRight),
-  );
-}
-
 Border? toBorder(DUIBorder? border) {
   if (border == null || border.borderStyle != 'solid') {
     return null;
@@ -130,7 +111,7 @@ OutlineInputBorder? toOutlineInputBorder(DUIBorder? border) {
   }
 
   return OutlineInputBorder(
-      borderRadius: toBorderRadius(border.borderRadius),
+      borderRadius: DUIDecoder.toBorderRadius(border.borderRadius?.toJson()),
       borderSide: BorderSide(
           color: toColor(border.borderColor ??
               DUIConfigConstants.fallbackBorderColorHexCode),
@@ -148,8 +129,4 @@ Color toColor(String colorToken) {
   }
 
   return color;
-}
-
-EdgeInsetsGeometry toEdgeInsetsGeometry(DUIInsets? insets) {
-  return DUIDecoder.toEdgeInsets(insets?.toJson());
 }

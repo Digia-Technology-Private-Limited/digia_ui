@@ -168,8 +168,7 @@ class DUIDecoder {
     if (value is Map) {
       final xNullable = NumDecoder.toDouble(value['x']);
       final yNullable = NumDecoder.toDouble(value['y']);
-
-      return ifNotNull2(xNullable, yNullable, (x, y) => Alignment(x, y));
+      return (xNullable, yNullable).let((p0, p1) => Alignment(p0, p1));
     }
 
     return null;
@@ -216,6 +215,83 @@ class DUIDecoder {
         'rangeMaintaining' => const RangeMaintainingScrollPhysics(),
         _ => null
       };
+    }
+
+    return null;
+  }
+
+  static Radius toRadius(dynamic value) {
+    final doubleValue = NumDecoder.toDouble(value);
+    if (doubleValue != null) return Radius.circular(doubleValue);
+
+    final doubleValueFromRadii = NumDecoder.toDouble(value['radius']);
+    if (doubleValueFromRadii != null) {
+      return Radius.circular(doubleValueFromRadii);
+    }
+
+    final xNullable = value['x'];
+    final yNullable = value['y'];
+
+    if (xNullable != null && yNullable != null) {
+      return Radius.elliptical(
+        NumDecoder.toDouble(xNullable) ?? 0.0,
+        NumDecoder.toDouble(yNullable) ?? 0.0,
+      );
+    }
+
+    return Radius.zero;
+  }
+
+  static BorderRadius toBorderRadius(dynamic value) {
+    if (value == null) return BorderRadius.zero;
+
+    if (value is List) {
+      return _toBorderRadiusFromList(value
+              .map((e) => NumDecoder.toDoubleOrDefault(e, defaultValue: 0.0))
+              .toList()) ??
+          BorderRadius.zero;
+    }
+
+    if (value is String) {
+      return _toBorderRadiusFromList(value
+              .split(',')
+              .map((e) => NumDecoder.toDoubleOrDefault(e, defaultValue: 0.0))
+              .toList()) ??
+          BorderRadius.zero;
+    }
+
+    if (value is num) {
+      return _toBorderRadiusFromList([value.toDouble()]) ?? BorderRadius.zero;
+    }
+
+    if (value is Map<String, dynamic>) {
+      return BorderRadius.only(
+        topLeft: toRadius(value['topLeft']),
+        topRight: toRadius(value['topRight']),
+        bottomRight: toRadius(value['bottomRight']),
+        bottomLeft: toRadius(value['bottomLeft']),
+      );
+    }
+
+    try {
+      return toBorderRadius(value.toJson());
+    } catch (err) {
+      return BorderRadius.zero;
+    }
+  }
+
+  static BorderRadius? _toBorderRadiusFromList(List<double> values) {
+    if (values.length == 1) {
+      return BorderRadius.circular(values.first);
+    }
+
+    if (values.length == 4) {
+      return BorderRadius.only(
+        topLeft: toRadius(values[0]),
+        topRight: toRadius(values[1]),
+        bottomRight: toRadius(values[2]),
+        bottomLeft: toRadius(values[3]),
+      );
     }
 
     return null;

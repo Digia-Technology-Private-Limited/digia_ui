@@ -42,20 +42,21 @@ class DUIContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final borderRadius =
-        toBorderRadiusGeometry(styleClass?.border?.borderRadius);
+        DUIDecoder.toBorderRadius(styleClass?.border?.borderRadius?.toJson());
 
     return Container(
         alignment: alignment ?? DUIDecoder.toAlignment(styleClass?.alignment),
-        padding: padding ?? toEdgeInsetsGeometry(styleClass?.padding),
+        padding:
+            padding ?? DUIDecoder.toEdgeInsets(styleClass?.padding?.toJson()),
         decoration: BoxDecoration(
             border: toBorder(styleClass?.border),
-            color: color ?? ifTruthy(styleClass?.bgColor, toColor),
+            color: color ?? styleClass?.bgColor.letIfTrue(toColor),
             borderRadius: borderRadius),
         foregroundDecoration: foregroundDecoration,
         width: width ?? double.tryParse(styleClass?.width ?? ''),
         height: height ?? _height(context, styleClass?.height),
         constraints: constraints,
-        margin: margin ?? toEdgeInsetsGeometry(styleClass?.margin),
+        margin: margin ?? DUIDecoder.toEdgeInsets(styleClass?.margin?.toJson()),
         transform: transform,
         transformAlignment: transformAlignment,
         clipBehavior: borderRadius.isZero() ? clipBehavior : Clip.hardEdge,

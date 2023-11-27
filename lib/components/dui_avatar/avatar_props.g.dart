@@ -15,7 +15,7 @@ DUIAvatarProps _$DUIAvatarPropsFromJson(Map<String, dynamic> json) =>
       side: (json['side'] as num?)?.toDouble(),
       bgColor: json['bgColor'] as String?,
       imageSrc: json['imageSrc'] as String?,
-      fallbackText: json['fallbackText'] == null
+      text: json['fallbackText'] == null
           ? null
           : DUITextProps.fromJson(json['fallbackText']),
       shape: $enumDecodeNullable(_$AvatarShapeEnumMap, json['shape']),
@@ -26,7 +26,7 @@ Map<String, dynamic> _$DUIAvatarPropsToJson(DUIAvatarProps instance) =>
       'cornerRadius': instance.cornerRadius,
       'bgColor': instance.bgColor,
       'imageSrc': instance.imageSrc,
-      'fallbackText': instance.fallbackText,
+      'text': instance.text,
       'radius': instance.radius,
       'shape': _$AvatarShapeEnumMap[instance.shape]!,
       'side': instance.side,

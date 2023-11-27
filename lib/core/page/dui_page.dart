@@ -28,7 +28,7 @@ class _DUIPageState extends State<DUIPage> {
           ),
         );
       } else {
-        bodyWidget = ifNotNull(state.props?.layout?.body.root, (root) {
+        bodyWidget = state.props?.layout?.body.root.let((root) {
               final builder = DUIJsonWidgetBuilder(
                   data: root, registry: DUIWidgetRegistry.shared);
               return builder.build(context);
@@ -36,7 +36,7 @@ class _DUIPageState extends State<DUIPage> {
             Center(child: Text('Props not found for page: ${state.uid}'));
       }
 
-      final appBar = ifNotNull(state.props?.layout?.header?.root, (root) {
+      final appBar = state.props?.layout?.header?.root.let((root) {
         if (root.type != 'fw/appBar') {
           return null;
         }

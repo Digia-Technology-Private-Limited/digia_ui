@@ -1,243 +1,176 @@
 {
   "appSettings": {
-    "initialRoute": "onboarding-page"
+    "initialRoute": "samples-list-page"
   },
   "pages": {
-    "onboarding-page": {
-      "pageName": "onboarding-page",
-      "slug": "onboarding-page",
-      "uid": "onboarding-page",
-      "inputArgs": null,
+    "samples-list-page": {
+      "slug": "samples-list-page",
+      "uid": "samples-list-page",
       "actions": {
         "onPageLoad": {
           "type": "Action.buildPage",
           "data": {}
         }
       },
+      "inputArgs": null,
       "layout": {
-        "header": {},
         "body": {
           "root": {
             "type": "digia/column",
             "props": {
-              "crossAxisAlignment": "stretch",
-              "mainAxisAlignment": "center"
+              "crossAxisAlignment": "start",
+              "mainAxisAlignment": "start"
             },
-            "containerProps": {},
+            "containerProps": null,
             "children": [
               {
-                "type": "digia/avatar",
+                "type": "digia/text",
                 "props": {
-                  "shape": "circle",
-                  "radius": 50.0, 
-                  "imageSrc": "https://picsum.photos/250?image=9",
-                  "imageFit": "cover",
-                  "bgColor": "#04A24C",
-                  "fallbackText": {
-                    "text": "Avatar"
-                    ,"textColor" :"#FFFFFF"
+                  "text": "Countries (Dynamic Data Example)",
+                  "textStyle": {
+                    "fontToken": "headline-small",
+                    "textColor": "#FF5963",
+                    "textBgColor": "#FFFFFF"
                   }
                 },
                 "containerProps": {
-                  "align" : "center" 
-                }
-              },
-              {
-                "type": "digia/avatar",
-                "props": {
-                  "shape": "square",
-                  "side": 100.0,
-                  "imageSrc": "https://picsum.photos/250?image=9",
-                  "imageFit": "cover",
-                  "bgColor": "#FF00FF",
-                  "cornerRadius": {
-                    "topLeft": 5,
-                    "topRight": 5,
-                    "bottomLeft": 5,
-                    "bottomRight": 5
-                  },
-                  "fallbackText": {
-                    "text": "Avatar"
-                  }
-                },
-                "containerProps": {
-                  "align" : "center" 
-                }
-              },
-              {
-                "type": "digia/text",
-                "props": {
-                  "textSpans": [
-                    {
-                      "text": "1st Span",
-                      "spanStyle": {
-                        "textColor": "#FF00FF"
-                      }
-                    },
-                    {
-                      "text": "2nd Span"
-                    }
-                  ],
-                  "maxLines": "",
-                  "overflow": "clip",
-                  "alignment": "center"
-                },
-                "containerProps": {
-                  "style": {
-                    "height": "47%",
-                    "bgColor": "#04A24C"
-                  },
-                  "align": "none"
-                },
-                "children": []
-              },
-              {
-                "type": "fw/sized_box",
-                "props": {
-                  "height": "24"
-                },
-                "containerProps": {},
-                "children": []
-              },
-              {
-                "type": "digia/text",
-                "props": {
-                  "textSpans": [
-                    {
-                      "text": "Stoppage for your Curiosity",
-                      "spanStyle": {
-                        "textDecoration": "none"
-                      }
-                    }
-                  ],
-                  "maxLines": 2
-                },
-                "containerProps": {},
-                "children": []
-              },
-              {
-                "type": "fw/sized_box",
-                "props": {
-                  "height": "22"
-                },
-                "containerProps": {},
-                "children": []
-              },
-              {
-                "type": "digia/text",
-                "props": {
-                  "maxLines": "",
-                  "textSpans": [
-                    {
-                      "text": "Digia"
-                    }
-                  ]
-                },
-                "containerProps": {},
-                "children": []
-              },
-              {
-                "type": "fw/spacer",
-                "props": {
-                  "flex": ""
-                },
-                "containerProps": {},
-                "children": []
-              },
-              {
-                "type": "digia/button",
-                "props": {
-                  "text": {
-                    "textSpans": [
-                      {
-                        "text": "Get Started"
-                      },
-                      {
-                        "text": "Text 2"
-                      }
-                    ]
-                  },
                   "onClick": {
-                    "type": "Action.openUrl",
+                    "type": "Action.navigateToPage",
                     "data": {
-                      "url": "http://google.com",
-                      "launchMode": null
+                      "pageId": "countries-",
+                      "args": {}
                     }
                   }
-                },
-                "containerProps": {},
-                "children": []
+                }
               },
               {
-                "type": "digia/column",
-                "props": null,
-                "containerProps": null,
-                "children": []
+                "type": "digia/text",
+                "props": {
+                  "text": "Load Joke Example",
+                  "textStyle": {
+                    "fontToken": "headline-small",
+                    "textColor": "#57636C",
+                    "textBgColor": "#FFFFFF"
+                  }
+                },
+                "containerProps": {
+                  "onClick": {
+                    "type": "Action.navigateToPage",
+                    "data": {
+                      "pageId": "joke",
+                      "args": {}
+                    }
+                  }
+                }
               }
             ]
           }
-        }
+        },
+        "header": null,
+        "footer": null
       }
     },
-    "first-page": {
-      "slug": "first-page",
-      "uid": "first-page",
-      "pageName": "First Page",
-      "inputArgs": null,
+    "countries-": {
+      "slug": "countries-",
+      "uid": "countries-",
       "actions": {
         "onPageLoad": {
           "type": "Action.loadPage",
           "data": {
-            "pageId": "first-page"
+            "pageId": "countries-"
           }
         }
-      }
-    },
-    "list-countries": {
-      "slug": "list-countries",
-      "uid": "list-countries",
-      "pageName": "List Countries",
+      },
       "inputArgs": null,
+      "layout": null
+    },
+    "joke": {
+      "slug": "joke",
+      "uid": "joke",
       "actions": {
         "onPageLoad": {
           "type": "Action.loadPage",
           "data": {
-            "pageId": "list-countries"
+            "pageId": "joke"
           }
         }
-      }
-    },
-    "load-joke": {
-      "slug": "load-joke",
-      "uid": "load-joke",
-      "pageName": "List Countries",
+      },
       "inputArgs": null,
+      "layout": null
+    },
+    "country-detail": {
+      "slug": "country-detail",
+      "uid": "country-detail",
       "actions": {
         "onPageLoad": {
           "type": "Action.loadPage",
           "data": {
-            "pageId": "load-joke"
+            "pageId": "country-detail"
           }
         }
-      }
+      },
+      "inputArgs": {
+        "type": "object",
+        "default": null,
+        "items": null,
+        "properties": {
+          "countryId": {
+            "type": "string",
+            "default": null,
+            "items": null,
+            "properties": null,
+            "required": []
+          }
+        },
+        "required": ["countryId"]
+      },
+      "layout": null
     }
+  },
+  "rest": {
+    "baseUrl": "https://app.digia.tech/hydrator/api",
+    "defaultHeaders": {}
   },
   "theme": {
     "colors": {
-      "primary": "#00C063",
-      "secondary": "#0070BB",
-      "text": "#212121",
-      "textSubtle": "#4F4F4F",
-      "accent1": "#FEE7CD",
-      "accent2": "#CCCCFF",
-      "accent3": "#DCEFDC",
-      "accent4": "#FFF5C2",
-      "accent5": "#CEDFF3",
-      "accent6": "#CCCCFF",
-      "accent7": "#F6C5C1",
-      "accent8": "#FFDCC6",
-      "light": "#FAFCFE",
-      "white": "#FFFFFF"
+      "light": {
+        "primary": "#a39cdd",
+        "secondary": "#39d2c0",
+        "tertiary": "#ee8b60",
+        "alternate": "#ff5963",
+        "primarytext": "#101213",
+        "secondarytext": "#57636c",
+        "primarybackground": "#f1f4f8",
+        "secondarybackground": "#ffffff",
+        "accent1": "#616161",
+        "accent2": "#e0e0e0",
+        "accent4": "#eeeeee",
+        "success": "#04a24c",
+        "error": "#e21c3d",
+        "Warning": "#fcdc0c",
+        "info": "#1c4494",
+        "customcolor1": "#cc12b0",
+        "customcolor2": "#205f7d"
+      },
+      "dark": {
+        "primary": "#a39cdd",
+        "secondary": "#39d2c0",
+        "tertiary": "#ee8b60",
+        "alternate": "#ff5963",
+        "primarytext": "#101213",
+        "secondarytext": "#57636c",
+        "primarybackground": "#f1f4f8",
+        "secondarybackground": "#ffffff",
+        "accent1": "#616161",
+        "accent2": "#e0e0e0",
+        "accent4": "#eeeeee",
+        "success": "#04a24c",
+        "error": "#e21c3d",
+        "Warning": "#fcdc0c",
+        "info": "#1c4494",
+        "customcolor1": "#cc12b0",
+        "customcolor2": "#205f7d"
+      }
     },
     "fonts": {
       "display-large": {
@@ -328,12 +261,6 @@
           "secondary": "Roboto"
         }
       }
-    }
-  },
-  "rest": {
-    "baseUrl": "https://app.digia.tech/hydrator/api",
-    "defaultHeaders": {
-      "authorization": "{{ localStorage.authToken }}"
     }
   }
 }

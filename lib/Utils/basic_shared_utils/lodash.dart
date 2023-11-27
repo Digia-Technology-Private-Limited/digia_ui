@@ -90,11 +90,35 @@ T castOrDefault<T>(dynamic x, {required T defaultValue}) {
 
 T cast<T>(dynamic x) => x as T;
 
-R? ifNotNull<R, T>(T? arg, R? Function(T) f) => (arg == null) ? null : f(arg);
+// R? ifNotNull<R, T>(T? arg, R? Function(T) f) => (arg == null) ? null : f(arg);
 
-R? ifNotNull2<R, T0, T1>(T0? arg0, T1? arg1, R? Function(T0, T1) f) =>
-    (arg0 != null && arg1 != null) ? f(arg0, arg1) : null;
+// R? ifNotNull2<R, T0, T1>(T0? arg0, T1? arg1, R? Function(T0, T1) f) =>
+//     (arg0 != null && arg1 != null) ? f(arg0, arg1) : null;
 
-R? ifTruthy<R, T>(T? arg, R? Function(T) f) =>
-    // ignore: null_check_on_nullable_type_parameter
-    arg.isNullEmptyFalseOrZero ? null : f(arg!);
+// R? ifTruthy<R, T>(T? arg, R? Function(T) f) =>
+//     // ignore: null_check_on_nullable_type_parameter
+//     arg.isNullEmptyFalseOrZero ? null : f(arg!);
+
+extension Let<T> on T? {
+  R? let<R>(R? Function(T) f) {
+    if (this == null) return null;
+
+    return f(this as T);
+  }
+
+  R? letIf<R>(bool Function(T) predicate, R? Function(T) block) {
+    return this.let((p0) => predicate(p0) ? block(this as T) : null);
+  }
+
+  R? letIfTrue<R>(R? Function(T) block) {
+    return this.letIf((p0) => !p0.isNullEmptyFalseOrZero, block);
+  }
+}
+
+extension Let2<T, R> on (T?, R?) {
+  S? let<S>(S Function(T, R) block) {
+    return (this.$1 != null && this.$2 != null)
+        ? block(this.$1 as T, this.$2 as R)
+        : null;
+  }
+}
