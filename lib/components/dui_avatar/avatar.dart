@@ -25,12 +25,6 @@ class _DUIAvatarState extends State<DUIAvatar> {
   @override
   Widget build(BuildContext context) {
     return _getAvatar();
-    switch (_duiAvatarProps.shape) {
-      case AvatarShape.square:
-        return makeSquareAvatar();
-      default:
-        return makeCircleAvatar();
-    }
   }
 
   Widget _getAvatar() {
@@ -52,13 +46,6 @@ class _DUIAvatarState extends State<DUIAvatar> {
                     Radius.circular(_duiAvatarProps.cornerRadius!.bottomLeft),
                 bottomRight:
                     Radius.circular(_duiAvatarProps.cornerRadius!.bottomRight),
-              )
-            : null,
-        image: _duiAvatarProps.imageSrc != null
-            ? DecorationImage(
-                image: NetworkImage(
-                  _duiAvatarProps.imageSrc!,
-                ),
               )
             : null,
       ),

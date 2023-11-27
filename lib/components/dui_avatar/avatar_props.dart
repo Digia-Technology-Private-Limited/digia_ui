@@ -1,6 +1,5 @@
 import 'package:digia_ui/components/DUIText/dui_text_props.dart';
 import 'package:digia_ui/components/utils/DUICornerRadius/dui_corner_radius.dart';
-
 import 'package:json_annotation/json_annotation.dart';
 part 'avatar_props.g.dart';
 
