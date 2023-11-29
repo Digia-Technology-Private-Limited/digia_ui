@@ -5,8 +5,8 @@ import 'package:digia_ui/components/linear_progress_bar/linear_progress_props.da
 import 'package:flutter/material.dart';
 
 class DUILinearProgress extends StatefulWidget {
-  final LinearProgressProps props;
-  const DUILinearProgress({required this.props, super.key});
+  final DUILinearProgressProps props;
+  const DUILinearProgress(this.props, {super.key});
 
   @override
   State<DUILinearProgress> createState() => _DUILinearProgressState();
@@ -16,8 +16,9 @@ class _DUILinearProgressState extends State<DUILinearProgress> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Scaffold(
-        body: Center(
+      // child: 
+      // Scaffold(
+        // body: Center(
           child: TweenAnimationBuilder<double>(
             duration: Duration(seconds: widget.props.animationDuration), // done
             curve: DUIDecoder.decodeCurve(widget.props.curves) ??
@@ -42,8 +43,8 @@ class _DUILinearProgressState extends State<DUILinearProgress> {
               );
             },
           ),
-        ),
-      ),
+        // ),
+      // ),
     );
   }
 }

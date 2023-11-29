@@ -15,18 +15,18 @@ DUIAvatarProps _$DUIAvatarPropsFromJson(Map<String, dynamic> json) =>
       side: (json['side'] as num?)?.toDouble(),
       bgColor: json['bgColor'] as String?,
       imageSrc: json['imageSrc'] as String?,
-      text: json['fallbackText'] == null
-          ? null
-          : DUITextProps.fromJson(json['fallbackText']),
+      text: json['text'] == null ? null : DUITextProps.fromJson(json['text']),
+      imageFit: json['imageFit'] as String?,
       shape: $enumDecodeNullable(_$AvatarShapeEnumMap, json['shape']),
     );
 
 Map<String, dynamic> _$DUIAvatarPropsToJson(DUIAvatarProps instance) =>
     <String, dynamic>{
       'cornerRadius': instance.cornerRadius,
-      'bgColor': instance.bgColor,
       'imageSrc': instance.imageSrc,
+      'imageFit': instance.imageFit,
       'text': instance.text,
+      'bgColor': instance.bgColor,
       'radius': instance.radius,
       'shape': _$AvatarShapeEnumMap[instance.shape]!,
       'side': instance.side,

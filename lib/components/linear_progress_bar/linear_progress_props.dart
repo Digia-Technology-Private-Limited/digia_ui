@@ -1,7 +1,10 @@
+import 'dart:convert';
 import 'package:json_annotation/json_annotation.dart';
 
+part 'linear_progress_props.g.dart';
+
 @JsonSerializable()
-class LinearProgressProps {
+class DUILinearProgressProps {
   double? width;
   double? minHeight;
   double? borderRadius;
@@ -16,7 +19,7 @@ class LinearProgressProps {
   String _curve;
   String get curves => _curve;
 
-  LinearProgressProps({
+  DUILinearProgressProps({
     this.width,
     this.minHeight,
     this.borderRadius,
@@ -28,6 +31,18 @@ class LinearProgressProps {
     String? curve,
   })  : _animationDuration = animationDuration ?? 5,
         _curve = curve ?? 'linear';
+
+  factory DUILinearProgressProps.fromJson(dynamic json) {
+    print('linearprogress: $json');
+    return _$DUILinearProgressPropsFromJson(json);
+  }
+
+  Map<String, dynamic> toJson() => _$DUILinearProgressPropsToJson(this);
+
+  @override
+  String toString() {
+    return jsonEncode(this);
+  }
 }
 
 /*
