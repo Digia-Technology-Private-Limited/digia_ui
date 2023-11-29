@@ -1,4 +1,6 @@
 import 'package:digia_ui/Utils/config_resolver.dart';
+import 'package:digia_ui/components/linear_progress_bar/linear_progress.dart';
+import 'package:digia_ui/components/linear_progress_bar/linear_progress_props.dart';
 import 'package:digia_ui/core/page/dui_page.dart';
 import 'package:digia_ui/core/page/dui_page_bloc.dart';
 import 'package:digia_ui/core/page/dui_page_event.dart';
@@ -83,11 +85,25 @@ class _MyHomePageState extends State<MyHomePage> {
           return BlocProvider(
             create: (context) {
               final resolver = ConfigResolver();
+
               return DUIPageBloc(
                   initData: resolver.getfirstPageData(), resolver: resolver)
                 ..add(InitPageEvent());
             },
-            child: const DUIPage(),
+            // child: const DUIPage(),
+            child: DUILinearProgress(
+              props: LinearProgressProps(
+                width: 400,
+                minHeight: 15.0,
+                borderRadius: 5.0,
+                bgColor: '#CF8695',
+                indicatorColor: '#868CCF',
+                animationDuration: 5,
+                animationBeginLength: 2.0,
+                animationEndLength: 40.0,
+                curve: 'easeInOutCubicEmphasized',
+              ),
+            ),
           );
         });
   }
