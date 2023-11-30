@@ -1,6 +1,7 @@
 import 'package:digia_ui/Utils/basic_shared_utils/lodash.dart';
 import 'package:digia_ui/Utils/basic_shared_utils/num_decoder.dart';
 import 'package:flutter/material.dart';
+import 'package:styled_divider/styled_divider.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class DUIDecoder {
@@ -292,6 +293,25 @@ class DUIDecoder {
         bottomRight: toRadius(values[2]),
         bottomLeft: toRadius(values[3]),
       );
+    }
+
+    return null;
+  }
+
+  static DividerLineStyle? decodeDividerlineStyle(String? style) {
+    if (style == null) return null;
+
+    print('linestyle: $style');
+
+    switch (style) {
+      case 'dashdotted':
+        return DividerLineStyle.dashdotted;
+      case 'dashed':
+        return DividerLineStyle.dashed;
+      case 'dotted':
+        return DividerLineStyle.dotted;
+      case 'solid':
+        return DividerLineStyle.solid;
     }
 
     return null;
