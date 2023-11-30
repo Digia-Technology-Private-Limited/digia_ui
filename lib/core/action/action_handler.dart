@@ -2,6 +2,7 @@ import 'package:digia_ui/Utils/config_resolver.dart';
 import 'package:digia_ui/core/action/action_prop.dart';
 import 'package:digia_ui/core/action/rest_handler.dart';
 import 'package:flutter/material.dart';
+import 'package:json_schema2/json_schema2.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
