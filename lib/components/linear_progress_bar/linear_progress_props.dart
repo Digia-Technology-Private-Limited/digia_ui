@@ -6,7 +6,7 @@ part 'linear_progress_props.g.dart';
 @JsonSerializable()
 class DUILinearProgressProps {
   double? width;
-  double? minHeight;
+  double? thickness;
   double? borderRadius;
   String? bgColor;
   String? indicatorColor;
@@ -21,7 +21,7 @@ class DUILinearProgressProps {
 
   DUILinearProgressProps({
     this.width,
-    this.minHeight,
+    this.thickness,
     this.borderRadius,
     this.bgColor,
     this.indicatorColor,
@@ -45,40 +45,3 @@ class DUILinearProgressProps {
   }
 }
 
-/*
-  easeInCubic,
-  easeInExpo,
-  easeOutBack,
-  easeInOutCirc,
-  easeInOutCubic,
-  easeInOutCubicEmphasized,
-  easeInOutExpo,
-  easeInOutQuad,
-  easeInOutQuart,
-  easeInOutQuint,
-  easeInOutSine,
-  easeInQuad,
-  easeInQuart,
-  easeInQuint,
-  easeInSine,
-  easeInToLinear,
-  easeOutCirc,
-  easeOutCubic,
-  easeOutExpo,
-  easeOutQuad,
-  easeOutQuart,
-  easeOutQuint,
-  easeOutSine,
-  elasticInOut,
-  elasticIn,
-  elasticOut,
-  fastEaselnToSlowOut,
-  fastLinearToSlowEasIn,
-  fastOutSlowIn,
-  bounceIn,
-  bounceOut,
-  bounceInOut,
-  linearToEaseOut,
-  slowMiddle,
-
-*/

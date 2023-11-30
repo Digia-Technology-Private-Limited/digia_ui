@@ -297,7 +297,7 @@ class DUIDecoder {
     return null;
   }
 
-  static Curve? decodeCurve(String curveString) {
+  static Curve? toCurve(String curveString) {
     switch (curveString) {
       case 'easeInCubic':
         return Curves.easeInCubic;
@@ -386,7 +386,7 @@ class DUIDecoder {
     }
   }
 
-  static StrokeCap? decodeStrokeCap(String? cap) {
+  static StrokeCap? toStrokeCap(String? cap) {
     if (cap == null) {
       return null;
     }

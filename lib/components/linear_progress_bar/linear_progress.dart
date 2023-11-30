@@ -15,13 +15,9 @@ class DUILinearProgress extends StatefulWidget {
 class _DUILinearProgressState extends State<DUILinearProgress> {
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      // child: 
-      // Scaffold(
-        // body: Center(
-          child: TweenAnimationBuilder<double>(
+    return TweenAnimationBuilder<double>(
             duration: Duration(seconds: widget.props.animationDuration), // done
-            curve: DUIDecoder.decodeCurve(widget.props.curves) ??
+            curve: DUIDecoder.toCurve(widget.props.curves) ??
                 Curves.linear, // [TODO]
             tween: Tween<double>(
               begin: widget.props.animationBeginLength,
@@ -35,16 +31,13 @@ class _DUILinearProgressState extends State<DUILinearProgress> {
                       Colors.blue, // [TODO]
                   backgroundColor:  widget.props.bgColor?.let(toColor) ?? 
                       Colors.transparent,
-                  minHeight: widget.props.minHeight, // done
+                  minHeight: widget.props.thickness, // done
                   borderRadius: BorderRadius.circular(
                     widget.props.borderRadius ?? 0.0,
                   ), // done
                 ),
               );
             },
-          ),
-        // ),
-      // ),
     );
   }
 }

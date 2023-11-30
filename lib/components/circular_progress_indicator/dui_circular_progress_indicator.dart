@@ -15,7 +15,7 @@ class DUICircularProgressIndicator extends StatelessWidget {
       body: Center(
         child: TweenAnimationBuilder<double>(
           duration: Duration(seconds: props.animationDuration), // done
-          curve: DUIDecoder.decodeCurve(props.curves) ?? Curves.linear,
+          curve: DUIDecoder.toCurve(props.curves) ?? Curves.linear,
           tween: Tween<double>(
             begin: props.animationBeginLength,
             end: props.animationEndLength,
@@ -27,7 +27,7 @@ class DUICircularProgressIndicator extends StatelessWidget {
               color: props.indicatorColor?.let(toColor) ?? Colors.transparent,
               strokeWidth: props.strokeWidth,
               strokeAlign: props.strokeAlign,
-              strokeCap: DUIDecoder.decodeStrokeCap(props.strokeCap),
+              strokeCap: DUIDecoder.toStrokeCap(props.strokeCap),
             );
           },
         ),

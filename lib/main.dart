@@ -1,8 +1,6 @@
 import 'package:digia_ui/Utils/config_resolver.dart';
 import 'package:digia_ui/components/circular_progress_indicator/dui_circular_progress_indicator.dart';
 import 'package:digia_ui/components/circular_progress_indicator/dui_circular_progress_indicator_props.dart';
-import 'package:digia_ui/components/linear_progress_bar/linear_progress.dart';
-import 'package:digia_ui/components/linear_progress_bar/linear_progress_props.dart';
 import 'package:digia_ui/core/page/dui_page.dart';
 import 'package:digia_ui/core/page/dui_page_bloc.dart';
 import 'package:digia_ui/core/page/dui_page_event.dart';
@@ -93,21 +91,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 initData: resolver.getfirstPageData(), resolver: resolver)
               ..add(InitPageEvent());
           },
-          // child: const DUIPage(),
+          child: const DUIPage(),
           
-          child: DUICircularProgressIndicator(
-            DUICircularProgressIndicatorProps(
-              strokeAlign: 10.0,
-              strokeWidth: 5.0,
-              thickness: 6.0,
-              indicatorColor: '#000000',
-              strokeCap: 'round',
-              animationDuration: 200,
-              animationBeginLength: 0.0,
-              animationEndLength: 10.0,
-              curve: 'easeInOutCubicEmphasized',
-            ),
-          ),
         );
       },
     );
