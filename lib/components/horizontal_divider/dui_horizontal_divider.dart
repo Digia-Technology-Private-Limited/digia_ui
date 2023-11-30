@@ -11,17 +11,14 @@ class DUIHorizontalDivider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: StyledDivider(
-          lineStyle: DUIDecoder.decodeDividerlineStyle(props.lineStyle) ?? DividerLineStyle.solid,
-          height: props.height,
-          thickness: props.thickness,
-          indent: props.indent,
-          endIndent: props.endIndent,
-          color: props.color?.let(toColor) ?? Colors.blue,
-        ),
-      ),
+    return  StyledDivider(
+        lineStyle: DUIDecoder.decodeDividerlineStyle(props.lineStyle) ?? DividerLineStyle.solid,
+        height: props.height,
+        thickness: props.thickness,
+        indent: props.indent,
+        endIndent: props.endIndent,
+        color: props.color?.let(toColor) ?? Colors.blue,
+      
     );
   }
 }
