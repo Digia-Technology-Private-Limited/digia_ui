@@ -11,17 +11,14 @@ class DUIVerticalDivider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: StyledVerticalDivider(
-          lineStyle: DUIDecoder.decodeDividerlineStyle(props.lineStyle) ?? DividerLineStyle.solid,
-          width: props.width,
-          thickness: props.thickness,
-          indent: props.indent,
-          endIndent: props.endIndent,
-          color: props.color?.let(toColor) ?? Colors.blue,
-        ),
-      ),
+    return StyledVerticalDivider(
+        lineStyle: DUIDecoder.decodeDividerlineStyle(props.lineStyle) ?? DividerLineStyle.solid,
+        width: props.width,
+        thickness: props.thickness,
+        indent: props.indent,
+        endIndent: props.endIndent,
+        color: props.color?.let(toColor) ?? Colors.blue,
+      
     );
   }
 }
