@@ -385,4 +385,21 @@ class DUIDecoder {
         return null;
     }
   }
+
+  static StrokeCap? decodeStrokeCap(String? cap) {
+    if (cap == null) {
+      return null;
+    }
+
+    switch (cap) {
+      case 'round':
+        return StrokeCap.round;
+      case 'butt':
+        return StrokeCap.butt;
+      case 'square':
+        return StrokeCap.square;
+    }
+
+    return null;
+  }
 }

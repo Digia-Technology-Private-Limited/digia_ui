@@ -33,7 +33,7 @@ class DUILinearProgressProps {
         _curve = curve ?? 'linear';
 
   factory DUILinearProgressProps.fromJson(dynamic json) {
-    print('linearprogress: $json');
+    // print('linearprogress: $json');
     return _$DUILinearProgressPropsFromJson(json);
   }
 

@@ -1,4 +1,6 @@
 import 'package:digia_ui/Utils/config_resolver.dart';
+import 'package:digia_ui/components/circular_progress_indicator/dui_circular_progress_indicator.dart';
+import 'package:digia_ui/components/circular_progress_indicator/dui_circular_progress_indicator_props.dart';
 import 'package:digia_ui/components/linear_progress_bar/linear_progress.dart';
 import 'package:digia_ui/components/linear_progress_bar/linear_progress_props.dart';
 import 'package:digia_ui/core/page/dui_page.dart';
@@ -41,6 +43,7 @@ class _MyHomePageState extends State<MyHomePage> {
   GlobalKey globalKey = GlobalKey();
   @override
   Widget build(BuildContext context) {
+    
     return FutureBuilder(
       future: ConfigResolver.initializeFromCloud(),
       builder: (context, snapshot) {
@@ -90,20 +93,21 @@ class _MyHomePageState extends State<MyHomePage> {
                 initData: resolver.getfirstPageData(), resolver: resolver)
               ..add(InitPageEvent());
           },
-          child: const DUIPage(),
-          // child: DUILinearProgress(
-          //   DUILinearProgressProps(
-          //     width: 400,
-          //     minHeight: 15.0,
-          //     borderRadius: 5.0,
-          //     bgColor: '#CF8695',
-          //     indicatorColor: '#868CCF',
-          //     animationDuration: 5,
-          //     animationBeginLength: 2.0,
-          //     animationEndLength: 40.0,
-          //     curve: 'easeInOutCubicEmphasized',
-          //   ),
-          // ),
+          // child: const DUIPage(),
+          
+          child: DUICircularProgressIndicator(
+            DUICircularProgressIndicatorProps(
+              strokeAlign: 10.0,
+              strokeWidth: 5.0,
+              thickness: 6.0,
+              indicatorColor: '#000000',
+              strokeCap: 'round',
+              animationDuration: 200,
+              animationBeginLength: 0.0,
+              animationEndLength: 10.0,
+              curve: 'easeInOutCubicEmphasized',
+            ),
+          ),
         );
       },
     );
