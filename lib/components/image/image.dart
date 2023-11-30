@@ -40,7 +40,7 @@ class _DUIImageState extends State<DUIImage> {
       case 'assets':
         return ((context) => Image.asset(placeHolderValue));
       case 'blurHash':
-        return OctoPlaceholder.blurHash(placeHolderValue[1]);
+        return OctoPlaceholder.frame();
     }
 
     return null;

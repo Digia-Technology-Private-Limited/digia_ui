@@ -1,4 +1,5 @@
 import 'package:digia_ui/Utils/config_resolver.dart';
+import 'package:digia_ui/components/divider/dui_divider.dart';
 import 'package:digia_ui/core/page/dui_page.dart';
 import 'package:digia_ui/core/page/dui_page_bloc.dart';
 import 'package:digia_ui/core/page/dui_page_event.dart';
@@ -87,7 +88,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   initData: resolver.getfirstPageData(), resolver: resolver)
                 ..add(InitPageEvent());
             },
-            child: const DUIPage(),
+            // child: const DUIPage(),
+            child: DUIDivider(),
           );
         });
   }
