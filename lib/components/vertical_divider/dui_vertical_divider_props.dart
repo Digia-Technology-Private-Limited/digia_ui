@@ -4,8 +4,8 @@ part 'dui_vertical_divider_props.g.dart';
 @JsonSerializable()
 class DUIVerticalDividerProps {
   String? lineStyle;
-  double? width;
   String? color;
+  double? width;
   double? thickness;
   double? indent;
   double? endIndent;
