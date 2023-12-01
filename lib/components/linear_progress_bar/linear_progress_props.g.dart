@@ -10,7 +10,7 @@ DUILinearProgressProps _$DUILinearProgressPropsFromJson(
         Map<String, dynamic> json) =>
     DUILinearProgressProps(
       width: (json['width'] as num?)?.toDouble(),
-      thickness: (json['minHeight'] as num?)?.toDouble(),
+      thickness: (json['thickness'] as num?)?.toDouble(),
       borderRadius: (json['borderRadius'] as num?)?.toDouble(),
       bgColor: json['bgColor'] as String?,
       indicatorColor: json['indicatorColor'] as String?,
@@ -23,7 +23,7 @@ Map<String, dynamic> _$DUILinearProgressPropsToJson(
         DUILinearProgressProps instance) =>
     <String, dynamic>{
       'width': instance.width,
-      'minHeight': instance.thickness,
+      'thickness': instance.thickness,
       'borderRadius': instance.borderRadius,
       'bgColor': instance.bgColor,
       'indicatorColor': instance.indicatorColor,

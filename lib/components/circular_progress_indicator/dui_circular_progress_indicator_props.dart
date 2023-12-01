@@ -8,11 +8,10 @@ class DUICircularProgressIndicatorProps {
   double get strokeWidth => _strokeWidth;
   double _strokeAlign;
   double get strokeAlign => _strokeAlign;
-  double? thickness;
-  String? progressColor;
+  double? thickness; 
+  String? strokeCap;
   String? bgColor;
   String? indicatorColor;
-  String? strokeCap;
   // For the Animations
   final int _animationDuration;
   int get animationDuration => _animationDuration;
@@ -26,7 +25,6 @@ class DUICircularProgressIndicatorProps {
     double? strokeAlign,
     this.strokeCap,
     this.thickness,
-    this.progressColor,
     this.bgColor,
     this.indicatorColor,
     int? animationDuration,
