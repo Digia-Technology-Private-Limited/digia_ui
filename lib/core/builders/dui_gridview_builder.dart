@@ -17,8 +17,10 @@ class DUIGridViewBuilder extends DUIWidgetBuilder {
 
   @override
   Widget build(BuildContext context) {
+    final children = data.children['children']!;
+
     return GridView.builder(
-        itemCount: data.children.length,
+        itemCount: children.length,
         physics: DUIDecoder.toScrollPhysics(data.props['allowScroll']),
         shrinkWrap: NumDecoder.toBoolOrDefault(data.props['shrinkWrap'],
             defaultValue: false),
@@ -36,8 +38,8 @@ class DUIGridViewBuilder extends DUIWidgetBuilder {
                 data.props['childAspectRatio'],
                 defaultValue: 1.0)),
         itemBuilder: (context, index) {
-          final builder = DUIJsonWidgetBuilder(
-              data: data.children[index], registry: registry!);
+          final builder =
+              DUIJsonWidgetBuilder(data: children[index], registry: registry!);
           return builder.build(context);
         });
   }
