@@ -45,9 +45,9 @@ dependencies:
   cupertino_icons: ^1.0.2
   json_annotation: ^4.8.1
   path_provider: ^2.0.14
-  cached_network_image: ^3.2.3
+  cached_network_image: ^3.3.0
   flutter_cache_manager: ^3.3.0
-  octo_image: ^1.0.2
+  octo_image: ^2.0.0
   json_schema2: ^2.0.4+8
   graphic: ^2.2.0
   shared_preferences: ^2.1.2
