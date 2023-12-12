@@ -1,4 +1,6 @@
 import 'package:digia_ui/Utils/config_resolver.dart';
+import 'package:digia_ui/components/dui_switch/dui_switch.dart';
+import 'package:digia_ui/components/dui_switch/dui_switch_props.dart';
 import 'package:digia_ui/components/html_view/dui_html_view.dart';
 import 'package:digia_ui/components/html_view/dui_htmview_props.dart';
 import 'package:digia_ui/core/page/dui_page.dart';
@@ -89,10 +91,18 @@ class _MyHomePageState extends State<MyHomePage> {
                   initData: resolver.getfirstPageData(), resolver: resolver)
                 ..add(InitPageEvent());
             },
-            child: const DUIPage(),
-            
+            child: DUISwitch(
+              DUISwitchProps(
+                enabled: true,
+                value: true,
+                activeColor: '#868CCF',
+                inactiveThumbColor: '#168CCF',
+                activeTrackColor: '#8623CF',
+                inactiveTrackColor: '#568CCF',
+              ),
+              onChange: (newVal) {},
+            ),
           );
         });
   }
 }
-
