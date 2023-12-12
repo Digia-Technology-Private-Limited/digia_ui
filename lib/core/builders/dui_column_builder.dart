@@ -27,7 +27,7 @@ class DUIColumnBuilder extends DUIWidgetBuilder {
         crossAxisAlignment: DUIDecoder.toCrossAxisAlignmentOrDefault(
             data.props['crossAxisAlignment'],
             defaultValue: CrossAxisAlignment.center),
-        children: data.children.map((e) {
+        children: data.children['children']!.map((e) {
           final builder = DUIJsonWidgetBuilder(data: e, registry: registry!);
           return builder.build(context);
         }).toList());
