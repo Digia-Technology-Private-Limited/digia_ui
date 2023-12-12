@@ -1,4 +1,3 @@
-import '../core/pref/pref_util.dart';
 import 'config_resolver.dart';
 
 class DigiaUiSDk {

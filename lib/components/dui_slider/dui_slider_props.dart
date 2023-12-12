@@ -14,6 +14,7 @@ class DUISliderProps {
   double get maxVal => _maxVal;
 
   int? divisions;
+  double? width;
 
   String? activeColor;
   String? inactiveColor;
@@ -24,6 +25,7 @@ class DUISliderProps {
     double? min,
     double? max,
     this.divisions,
+    this.width,
     this.activeColor,
     this.inactiveColor,
     this.thumbColor,
