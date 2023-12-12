@@ -1,4 +1,6 @@
 import 'package:digia_ui/Utils/config_resolver.dart';
+import 'package:digia_ui/components/dui_slider/dui_slider.dart';
+import 'package:digia_ui/components/dui_slider/dui_slider_props.dart';
 import 'package:digia_ui/components/html_view/dui_html_view.dart';
 import 'package:digia_ui/components/html_view/dui_htmview_props.dart';
 import 'package:digia_ui/core/page/dui_page.dart';
@@ -89,7 +91,19 @@ class _MyHomePageState extends State<MyHomePage> {
                   initData: resolver.getfirstPageData(), resolver: resolver)
                 ..add(InitPageEvent());
             },
-            child: const DUIPage(),
+            child: DUISlider(
+            DUISliderProps(
+              value: 5,
+              enabled: true,
+              min: 0.0,
+              max: 100,
+              // divisions: 20,
+              activeColor: '#EE210C',
+              inactiveColor: '#4BE31E',
+              thumbColor: '#CF9486',
+            ),
+            onChanged: (val) {},
+          ),
             
           );
         });
