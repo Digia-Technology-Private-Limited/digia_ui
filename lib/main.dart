@@ -1,4 +1,6 @@
 import 'package:digia_ui/Utils/config_resolver.dart';
+import 'package:digia_ui/components/html_view/dui_html_view.dart';
+import 'package:digia_ui/components/html_view/dui_htmview_props.dart';
 import 'package:digia_ui/core/page/dui_page.dart';
 import 'package:digia_ui/core/page/dui_page_bloc.dart';
 import 'package:digia_ui/core/page/dui_page_event.dart';
@@ -88,7 +90,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 ..add(InitPageEvent());
             },
             child: const DUIPage(),
+            
           );
         });
   }
 }
+
