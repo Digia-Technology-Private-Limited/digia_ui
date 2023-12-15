@@ -4,13 +4,13 @@ part 'dui_slider_props.g.dart';
 @JsonSerializable()
 class DUISliderProps {
   double value;
-  final bool _enabled;
-  bool get enables => _enabled;
+  bool _enabled;
+  bool get enabled => _enabled;
 
-  final double _minVal;
+  double _minVal;
   double get minVal => _minVal;
 
-  final double _maxVal;
+  double _maxVal;
   double get maxVal => _maxVal;
 
   int? divisions;
@@ -22,8 +22,8 @@ class DUISliderProps {
 
   DUISliderProps({
     bool? enabled,
-    double? min,
-    double? max,
+    double? minVal,
+    double? maxVal,
     this.divisions,
     this.width,
     this.activeColor,
@@ -31,8 +31,8 @@ class DUISliderProps {
     this.thumbColor,
     required this.value,
   })  : _enabled = enabled ?? true,
-        _minVal = min ?? 0.0,
-        _maxVal = max ?? 1.0;
+        _minVal = minVal ?? 0.0,
+        _maxVal = maxVal ?? 1.0;
 
   factory DUISliderProps.fromJson(dynamic json) =>
       _$DUISliderPropsFromJson(json);

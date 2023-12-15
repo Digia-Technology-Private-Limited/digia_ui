@@ -8,6 +8,9 @@ part of 'dui_slider_props.dart';
 
 DUISliderProps _$DUISliderPropsFromJson(Map<String, dynamic> json) =>
     DUISliderProps(
+      enabled: json['enabled'] as bool?,
+      minVal: (json['minVal'] as num?)?.toDouble(),
+      maxVal: (json['maxVal'] as num?)?.toDouble(),
       divisions: json['divisions'] as int?,
       width: (json['width'] as num?)?.toDouble(),
       activeColor: json['activeColor'] as String?,
@@ -19,6 +22,9 @@ DUISliderProps _$DUISliderPropsFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$DUISliderPropsToJson(DUISliderProps instance) =>
     <String, dynamic>{
       'value': instance.value,
+      'enabled': instance.enabled,
+      'minVal': instance.minVal,
+      'maxVal': instance.maxVal,
       'divisions': instance.divisions,
       'width': instance.width,
       'activeColor': instance.activeColor,

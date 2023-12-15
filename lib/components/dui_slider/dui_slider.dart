@@ -24,28 +24,26 @@ class _DUISliderState extends State<DUISlider> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: SizedBox(
-          width: widget.props.width,
-          child: Slider.adaptive(
-            value: _value,
-            // secondaryTrackValue: 50,
-            onChanged: (double val) {
-              if (widget.props.enables == false) {
-                return;
-              }
-              setState(() {
-                _value = val;
-              });
-            },
-            min: widget.props.minVal,
-            max: widget.props.maxVal,
-            divisions: widget.props.divisions,
-            activeColor: widget.props.activeColor?.let(toColor),
-            inactiveColor: widget.props.inactiveColor?.let(toColor),
-            thumbColor: widget.props.thumbColor?.let(toColor),
-            secondaryActiveColor: Colors.black,
-          ),
+      body: SizedBox(
+        width: widget.props.width,
+        child: Slider.adaptive(
+          value: _value,
+          // secondaryTrackValue: 50,
+          onChanged: (double val) {
+            if (widget.props.enabled == false) {
+              return;
+            }
+            setState(() {
+              _value = val;
+            });
+          },
+          min: widget.props.minVal,
+          max: widget.props.maxVal,
+          divisions: widget.props.divisions,
+          activeColor: widget.props.activeColor?.let(toColor),
+          inactiveColor: widget.props.inactiveColor?.let(toColor),
+          thumbColor: widget.props.thumbColor?.let(toColor),
+          secondaryActiveColor: Colors.black,
         ),
       ),
     );
