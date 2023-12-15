@@ -7,7 +7,7 @@ class DUISwitchProps {
   bool _value;
   bool get value => _value;
   bool _enabled;
-  bool get enables => _enabled;
+  bool get enabled => _enabled;
   String? activeColor;
   String? inactiveThumbColor;
   String? activeTrackColor;

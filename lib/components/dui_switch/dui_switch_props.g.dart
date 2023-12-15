@@ -9,6 +9,7 @@ part of 'dui_switch_props.dart';
 DUISwitchProps _$DUISwitchPropsFromJson(Map<String, dynamic> json) =>
     DUISwitchProps(
       value: json['value'] as bool?,
+      enabled: json['enabled'] as bool?,
       activeColor: json['activeColor'] as String?,
       inactiveThumbColor: json['inactiveThumbColor'] as String?,
       activeTrackColor: json['activeTrackColor'] as String?,
@@ -18,6 +19,7 @@ DUISwitchProps _$DUISwitchPropsFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$DUISwitchPropsToJson(DUISwitchProps instance) =>
     <String, dynamic>{
       'value': instance.value,
+      'enabled': instance.enabled,
       'activeColor': instance.activeColor,
       'inactiveThumbColor': instance.inactiveThumbColor,
       'activeTrackColor': instance.activeTrackColor,

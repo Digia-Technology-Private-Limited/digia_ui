@@ -28,7 +28,7 @@ class _DUISwitchState extends State<DUISwitch> {
         child: Switch.adaptive(
           value: _value,
           onChanged: (newval) {
-            if (widget.props.enables == false) {
+            if (widget.props.enabled == false) {
               return;
             }
 
