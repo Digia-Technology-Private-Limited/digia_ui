@@ -1,0 +1,114 @@
+{
+	"name": "digia/slider",
+	"displayName": "Slider",
+	"icon": "Icon.Avatar",
+	"schemaType": "UI.component",
+	"properties": {
+		"shape": {
+			"type": "string",
+			"default": "circle",
+			"panelConfig": {
+				"label": "Avatar Box Shape",
+				"selectorType": "DROP_DOWN",
+				"options": [
+					{
+						"label": "Circle",
+						"value": "circle"
+					},
+					{
+						"label": "Square",
+						"value": "square"
+					}
+				]
+			}
+		},
+		"imageSrc": {
+			"type": "string",
+			"panelConfig": {
+				"label": "Image Source",
+				"selectorType": "IMAGE_SELECTOR"
+			}
+		},
+		"imageFit": {
+			"type": "string",
+			"default": "none",
+			"panelConfig": {
+				"label": "Image Fit",
+				"selectorType": "DROP_DOWN",
+				"options": [
+					{
+						"label": "None",
+						"value": "none"
+					},
+					{
+						"label": "Fill",
+						"value": "fill"
+					},
+					{
+						"label": "Contain",
+						"value": "contain"
+					},
+					{
+						"label": "Cover",
+						"value": "cover"
+					},
+					{
+						"label": "Fit Width",
+						"value": "fitWidth"
+					},
+					{
+						"label": "Fit Height",
+						"value": "fitHeight"
+					},
+					{
+						"label": "Scale Down",
+						"value": "scaleDown"
+					}
+				]
+			}
+		},
+		"side": {
+			"type": "number",
+			"default": 32,
+			"panelConfig": {
+				"label": "Side Length (Square Only)",
+				"toolTip": "This value applies to Square Shape only",
+				"selectorType": "INPUT_TEXT",
+				"validation": "ValidationRule.Number"
+			}
+		},
+		"radius": {
+			"type": "number",
+			"default": 16,
+			"panelConfig": {
+				"label": "Radius (Circle Only)",
+				"toolTip": "This value applies to Circle Shape only",
+				"selectorType": "INPUT_TEXT",
+				"validation": "ValidationRule.Number"
+			}
+		},
+		"bgColor": {
+			"type": "string",
+			"default": "#ABABAB",
+			"panelConfig": {
+				"label": "Background Color",
+				"selectorType": "COLOR_SELECTOR"
+			}
+		},
+		"text": {
+			"ref": "digia/text",
+			"panelConfig": {
+				"label": "Text",
+				"selectorType": "COLLAPSIBLE"
+			}
+		},
+		"cornerRadius": {
+			"type": "string",
+			"panelConfig": {
+				"label": "Corner Radius (Square Only)",
+				"toolTip": "This value applies to Square Shape only",
+				"selectorType": "BORDER_RADIUS_SELECTOR"
+			}
+		}
+	}
+}
