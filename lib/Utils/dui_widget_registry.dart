@@ -31,7 +31,7 @@ DUIWidgetBuilderCreatorFn withoutRegistry(
 
 class DUIWidgetRegistry {
   static final Map<String, DUIWidgetBuilderCreatorFn> builders = {
-    'digia/htmlView': withoutRegistry(DUIHTMLViewBuilder.create ),
+    'digia/htmlView': withoutRegistry(DUIHTMLViewBuilder.create),
     'digia/avatar': withoutRegistry(DUIAvatarBuilder.create),
     'digia/richText': withoutRegistry(DUITextBuilder.create),
     'digia/text': withoutRegistry(DUITextBuilder.create),
