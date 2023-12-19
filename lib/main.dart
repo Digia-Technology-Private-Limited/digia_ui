@@ -1,8 +1,4 @@
 import 'package:digia_ui/Utils/config_resolver.dart';
-import 'package:digia_ui/components/dui_switch/dui_switch.dart';
-import 'package:digia_ui/components/dui_switch/dui_switch_props.dart';
-import 'package:digia_ui/components/html_view/dui_html_view.dart';
-import 'package:digia_ui/components/html_view/dui_htmview_props.dart';
 import 'package:digia_ui/core/page/dui_page.dart';
 import 'package:digia_ui/core/page/dui_page_bloc.dart';
 import 'package:digia_ui/core/page/dui_page_event.dart';
@@ -44,65 +40,56 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: ConfigResolver.initializeFromCloud(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return const Scaffold(
-              body: SafeArea(
-                child: Align(
-                  alignment: Alignment.center,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text('Intializing from Cloud...'),
-                      LinearProgressIndicator()
-                    ],
-                  ),
+      future: ConfigResolver.initializeFromCloud(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return const Scaffold(
+            body: SafeArea(
+              child: Align(
+                alignment: Alignment.center,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('Intializing from Cloud...'),
+                    LinearProgressIndicator()
+                  ],
                 ),
               ),
-            );
-          }
-
-          if (snapshot.data != true) {
-            return const Scaffold(
-              body: SafeArea(
-                child: Align(
-                  alignment: Alignment.center,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Could not fetch Config.',
-                        style: TextStyle(color: Colors.red, fontSize: 24),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          }
-
-          return BlocProvider(
-            create: (context) {
-              final resolver = ConfigResolver();
-              return DUIPageBloc(
-                  initData: resolver.getfirstPageData(), resolver: resolver)
-                ..add(InitPageEvent());
-            },
-            child: DUISwitch(
-              DUISwitchProps(
-                enabled: true,
-                value: true,
-                activeColor: '#868CCF',
-                inactiveThumbColor: '#168CCF',
-                activeTrackColor: '#8623CF',
-                inactiveTrackColor: '#568CCF',
-              ),
-              onChange: (newVal) {},
             ),
           );
-        });
+        }
+
+        if (snapshot.data != true) {
+          return const Scaffold(
+            body: SafeArea(
+              child: Align(
+                alignment: Alignment.center,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Could not fetch Config.',
+                      style: TextStyle(color: Colors.red, fontSize: 24),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        }
+
+        return BlocProvider(
+          create: (context) {
+            final resolver = ConfigResolver();
+            return DUIPageBloc(
+                initData: resolver.getfirstPageData(), resolver: resolver)
+              ..add(InitPageEvent());
+          },
+          child: const DUIPage(),
+        );
+      },
+    );
   }
 }
