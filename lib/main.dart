@@ -89,18 +89,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 initData: resolver.getfirstPageData(), resolver: resolver)
               ..add(InitPageEvent());
           },
-          // child: const DUIPage(),
-          child: DUIHorizontalDivider(
-            DUIHorizonatalDividerProps(
-              lineStyle: 'dashed',
-              height: 100,
-              thickness: 10,
-              indent: 10,
-              endIndent: 15,
-              color: '#542365',
-            ),
-          ),
-          
+          child: const DUIPage(),
         );
       },
     );

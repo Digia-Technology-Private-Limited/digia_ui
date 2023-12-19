@@ -2,6 +2,7 @@ import 'package:digia_ui/Utils/basic_shared_utils/dui_decoder.dart';
 import 'package:digia_ui/Utils/basic_shared_utils/lodash.dart';
 import 'package:digia_ui/Utils/util_functions.dart';
 import 'package:digia_ui/components/horizontal_divider/dui_horizontal_divider_props.dart';
+import 'package:digia_ui/components/utils/decoder.dart';
 import 'package:flutter/material.dart';
 import 'package:styled_divider/styled_divider.dart';
 
@@ -11,14 +12,13 @@ class DUIHorizontalDivider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  StyledDivider(
-        lineStyle: DUIDecoder.decodeDividerlineStyle(props.lineStyle) ?? DividerLineStyle.solid,
-        height: props.height,
-        thickness: props.thickness,
-        indent: props.indent,
-        endIndent: props.endIndent,
-        color: props.color?.let(toColor) ?? Colors.blue,
-      
+    return StyledDivider(
+      lineStyle: toLineStyle(props.lineStyle) ?? DividerLineStyle.solid,
+      height: props.height,
+      thickness: props.thickness,
+      indent: props.indent,
+      endIndent: props.endIndent,
+      color: props.color.let(toColor),
     );
   }
 }

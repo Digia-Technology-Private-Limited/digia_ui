@@ -297,23 +297,4 @@ class DUIDecoder {
 
     return null;
   }
-
-  static DividerLineStyle? decodeDividerlineStyle(String? style) {
-    if (style == null) return null;
-
-    print('linestyle: $style');
-
-    switch (style) {
-      case 'dashdotted':
-        return DividerLineStyle.dashdotted;
-      case 'dashed':
-        return DividerLineStyle.dashed;
-      case 'dotted':
-        return DividerLineStyle.dotted;
-      case 'solid':
-        return DividerLineStyle.solid;
-    }
-
-    return null;
-  }
 }
