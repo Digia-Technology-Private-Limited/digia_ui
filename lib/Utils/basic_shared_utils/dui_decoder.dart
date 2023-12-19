@@ -1,7 +1,6 @@
 import 'package:digia_ui/Utils/basic_shared_utils/lodash.dart';
 import 'package:digia_ui/Utils/basic_shared_utils/num_decoder.dart';
 import 'package:flutter/material.dart';
-import 'package:styled_divider/styled_divider.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class DUIDecoder {

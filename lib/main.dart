@@ -1,6 +1,4 @@
 import 'package:digia_ui/Utils/config_resolver.dart';
-import 'package:digia_ui/components/horizontal_divider/dui_horizontal_divider.dart';
-import 'package:digia_ui/components/horizontal_divider/dui_horizontal_divider_props.dart';
 import 'package:digia_ui/core/page/dui_page.dart';
 import 'package:digia_ui/core/page/dui_page_bloc.dart';
 import 'package:digia_ui/core/page/dui_page_event.dart';
