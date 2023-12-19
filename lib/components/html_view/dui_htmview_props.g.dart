@@ -6,12 +6,12 @@ part of 'dui_htmview_props.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-DUIHTMLViewProps _$DUIHTMLViewPropsFromJson(Map<String, dynamic> json) =>
-    DUIHTMLViewProps(
+DUIHtmlViewProps _$DUIHtmlViewPropsFromJson(Map<String, dynamic> json) =>
+    DUIHtmlViewProps(
       json['content'] as String,
     );
 
-Map<String, dynamic> _$DUIHTMLViewPropsToJson(DUIHTMLViewProps instance) =>
+Map<String, dynamic> _$DUIHtmlViewPropsToJson(DUIHtmlViewProps instance) =>
     <String, dynamic>{
       'content': instance.content,
     };
