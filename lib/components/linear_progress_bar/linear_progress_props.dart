@@ -44,4 +44,3 @@ class DUILinearProgressProps {
     return jsonEncode(this);
   }
 }
-

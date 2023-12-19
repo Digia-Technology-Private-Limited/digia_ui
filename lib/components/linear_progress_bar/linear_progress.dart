@@ -16,28 +16,27 @@ class _DUILinearProgressState extends State<DUILinearProgress> {
   @override
   Widget build(BuildContext context) {
     return TweenAnimationBuilder<double>(
-            duration: Duration(seconds: widget.props.animationDuration), // done
-            curve: DUIDecoder.toCurve(widget.props.curves) ??
-                Curves.linear, // [TODO]
-            tween: Tween<double>(
-              begin: widget.props.animationBeginLength,
-              end: widget.props.animationEndLength,
-            ),
-            builder: (context, value, _) {
-              return SizedBox(
-                width: widget.props.width, // done
-                child: LinearProgressIndicator(
-                  color: widget.props.indicatorColor?.let(toColor) ??
-                      Colors.blue, // [TODO]
-                  backgroundColor:  widget.props.bgColor?.let(toColor) ?? 
-                      Colors.transparent,
-                  minHeight: widget.props.thickness, // done
-                  borderRadius: BorderRadius.circular(
-                    widget.props.borderRadius ?? 0.0,
-                  ), // done
-                ),
-              );
-            },
+      duration: Duration(seconds: widget.props.animationDuration), // done
+      curve: DUIDecoder.toCurve(widget.props.curves) ?? Curves.linear, // [TODO]
+      tween: Tween<double>(
+        begin: widget.props.animationBeginLength,
+        end: widget.props.animationEndLength,
+      ),
+      builder: (context, value, _) {
+        return SizedBox(
+          width: widget.props.width, // done
+          child: LinearProgressIndicator(
+            color: widget.props.indicatorColor?.let(toColor) ??
+                Colors.blue, // [TODO]
+            backgroundColor:
+                widget.props.bgColor?.let(toColor) ?? Colors.transparent,
+            minHeight: widget.props.thickness, // done
+            borderRadius: BorderRadius.circular(
+              widget.props.borderRadius ?? 0.0,
+            ), // done
+          ),
+        );
+      },
     );
   }
 }

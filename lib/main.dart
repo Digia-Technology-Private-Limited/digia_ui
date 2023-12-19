@@ -1,6 +1,4 @@
 import 'package:digia_ui/Utils/config_resolver.dart';
-import 'package:digia_ui/components/circular_progress_indicator/dui_circular_progress_indicator.dart';
-import 'package:digia_ui/components/circular_progress_indicator/dui_circular_progress_indicator_props.dart';
 import 'package:digia_ui/core/page/dui_page.dart';
 import 'package:digia_ui/core/page/dui_page_bloc.dart';
 import 'package:digia_ui/core/page/dui_page_event.dart';

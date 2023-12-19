@@ -8,7 +8,7 @@ class DUICircularProgressIndicatorProps {
   double get strokeWidth => _strokeWidth;
   double _strokeAlign;
   double get strokeAlign => _strokeAlign;
-  double? thickness; 
+  double? thickness;
   String? strokeCap;
   String? bgColor;
   String? indicatorColor;
