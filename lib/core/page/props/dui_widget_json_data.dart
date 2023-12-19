@@ -7,23 +7,43 @@ class DUIWidgetJsonData {
   String type;
   Map<String, dynamic> _props;
   Map<String, dynamic> _containerProps;
-  List<DUIWidgetJsonData> _children;
+  @JsonKey(fromJson: _childrenFromJson)
+  Map<String, List<DUIWidgetJsonData>> children;
 
   Map<String, dynamic> get props => _props;
   Map<String, dynamic> get containerProps => _containerProps;
-  List<DUIWidgetJsonData> get children => _children;
 
   DUIWidgetJsonData({
     required this.type,
     Map<String, dynamic>? props,
     Map<String, dynamic>? containerProps,
-    List<DUIWidgetJsonData>? children,
+    Map<String, List<DUIWidgetJsonData>>? children,
   })  : _props = props ?? {},
         _containerProps = containerProps ?? {},
-        _children = children ?? [];
+        children = children ?? <String, List<DUIWidgetJsonData>>{};
 
   factory DUIWidgetJsonData.fromJson(Map<String, dynamic> json) =>
       _$DUIWidgetJsonDataFromJson(json);
 
   Map<String, dynamic> toJson() => _$DUIWidgetJsonDataToJson(this);
+
+  static Map<String, List<DUIWidgetJsonData>> _childrenFromJson(dynamic json) {
+    if (json is List) {
+      return {
+        'children': json
+            .map((e) => DUIWidgetJsonData.fromJson(e as Map<String, dynamic>))
+            .toList()
+      };
+    }
+
+    if (json is Map) {
+      return json.map<String, List<DUIWidgetJsonData>>((key, value) => MapEntry(
+          key as String,
+          value
+              .map((e) => DUIWidgetJsonData.fromJson(e as Map<String, dynamic>))
+              .toList()));
+    }
+
+    return <String, List<DUIWidgetJsonData>>{};
+  }
 }

@@ -5,6 +5,7 @@ import 'package:digia_ui/components/DUIText/dui_text.dart';
 import 'package:digia_ui/components/dui_avatar/avatar_props.dart';
 import 'package:digia_ui/components/image/image.dart';
 import 'package:digia_ui/components/image/image.props.dart';
+import 'package:digia_ui/components/utils/DUICornerRadius/dui_corner_radius.dart';
 import 'package:flutter/material.dart';
 
 class DUIAvatar extends StatefulWidget {
@@ -19,15 +20,17 @@ class _DUIAvatarState extends State<DUIAvatar> {
   @override
   Widget build(BuildContext context) {
     return switch (widget.props.shape) {
-      AvatarShape.circle => _getCircleAvatar(),
-      AvatarShape.square => _getSquareAvatar()
+      AvatarCircleShape(:final radius) => _getCircleAvatar(radius),
+      AvatarSquareShape(:final sideLength, :final cornerRadius) =>
+        _getSquareAvatar(sideLength, cornerRadius),
+      _ => _getCircleAvatar(16.0)
     };
   }
 
-  Widget _getCircleAvatar() {
+  Widget _getCircleAvatar(double radius) {
     return Container(
-      height: widget.props.radius * 2,
-      width: widget.props.radius * 2,
+      height: radius * 2,
+      width: radius * 2,
       decoration: BoxDecoration(
         color: widget.props.bgColor?.let(toColor) ?? Colors.grey,
         shape: BoxShape.circle,
@@ -37,15 +40,14 @@ class _DUIAvatarState extends State<DUIAvatar> {
     );
   }
 
-  Widget _getSquareAvatar() {
+  Widget _getSquareAvatar(double side, DUICornerRadius? cornerRadius) {
     return Container(
-      height: widget.props.side,
-      width: widget.props.side,
+      height: side,
+      width: side,
       decoration: BoxDecoration(
           color: widget.props.bgColor?.let(toColor) ?? Colors.grey,
           shape: BoxShape.rectangle,
-          borderRadius:
-              DUIDecoder.toBorderRadius(widget.props.cornerRadius?.toJson())),
+          borderRadius: DUIDecoder.toBorderRadius(cornerRadius?.toJson())),
       clipBehavior: Clip.hardEdge,
       child: _getAvatarChildWidget(),
     );
