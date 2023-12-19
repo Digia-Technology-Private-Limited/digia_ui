@@ -8,7 +8,7 @@ part of 'button.props.dart';
 
 DUIButtonProps _$DUIButtonPropsFromJson(Map<String, dynamic> json) =>
     DUIButtonProps()
-      ..styleClass = DUIStyleClass.fromJson(json['styleClass'])
+      ..styleClass = DUIStyleClass.fromJson(json['style'])
       ..text = DUITextProps.fromJson(json['text'])
       ..disabledBackgroundColor = json['disabledBackgroundColor'] as String?
       ..disabled = json['disabled'] as bool?

@@ -7,6 +7,9 @@ import 'package:digia_ui/core/page/dui_page_state.dart';
 import 'package:digia_ui/core/page/props/dui_page_props.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import '../../Utils/basic_shared_utils/dui_decoder.dart';
 
 class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
   final ConfigResolver resolver;
@@ -57,6 +60,7 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
 
         final props = DUIPageProps.fromJson(pagePropsJson['response']);
         emit(state.copyWith(isLoading: false, props: props));
+        return null;
 
       case 'Action.navigateToPage':
         final pageId = action.data['pageId'];
@@ -75,6 +79,19 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
             child: const DUIPage(),
           );
         }));
+
+      case 'Action.openUrl':
+        final url = Uri.parse(action.data['url']);
+        final canOpenUrl = await canLaunchUrl(url);
+        if (canOpenUrl == true) {
+          await launchUrl(url,
+              mode: DUIDecoder.toUriLaunchMode(action.data['launchMode']));
+        }
+
+      case 'Action.pop':
+        if (context != null) {
+          return Navigator.of(context).maybePop();
+        }
 
       default:
         emit(state.copyWith(isLoading: false));

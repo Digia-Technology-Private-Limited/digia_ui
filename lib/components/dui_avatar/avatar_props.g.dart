@@ -8,31 +8,18 @@ part of 'avatar_props.dart';
 
 DUIAvatarProps _$DUIAvatarPropsFromJson(Map<String, dynamic> json) =>
     DUIAvatarProps(
-      cornerRadius: json['cornerRadius'] == null
-          ? null
-          : DUICornerRadius.fromJson(json['cornerRadius']),
-      radius: (json['radius'] as num?)?.toDouble(),
-      side: (json['side'] as num?)?.toDouble(),
       bgColor: json['bgColor'] as String?,
       imageSrc: json['imageSrc'] as String?,
-      text: json['fallbackText'] == null
-          ? null
-          : DUITextProps.fromJson(json['fallbackText']),
-      shape: $enumDecodeNullable(_$AvatarShapeEnumMap, json['shape']),
+      text: json['text'] == null ? null : DUITextProps.fromJson(json['text']),
+      imageFit: json['imageFit'] as String?,
+      shape: AvatarShape.fromJson(json['shape'] as Map<String, dynamic>?),
     );
 
 Map<String, dynamic> _$DUIAvatarPropsToJson(DUIAvatarProps instance) =>
     <String, dynamic>{
-      'cornerRadius': instance.cornerRadius,
-      'bgColor': instance.bgColor,
+      'shape': AvatarShape.toJson(instance.shape),
       'imageSrc': instance.imageSrc,
+      'imageFit': instance.imageFit,
       'text': instance.text,
-      'radius': instance.radius,
-      'shape': _$AvatarShapeEnumMap[instance.shape]!,
-      'side': instance.side,
+      'bgColor': instance.bgColor,
     };
-
-const _$AvatarShapeEnumMap = {
-  AvatarShape.circle: 'circle',
-  AvatarShape.square: 'square',
-};

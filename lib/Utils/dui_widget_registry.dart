@@ -3,6 +3,8 @@ import 'package:digia_ui/core/builders/dui_avatar_builder.dart';
 import 'package:digia_ui/core/builders/dui_button_builder.dart';
 import 'package:digia_ui/core/builders/dui_column_builder.dart';
 import 'package:digia_ui/core/builders/dui_gridview_builder.dart';
+import 'package:digia_ui/core/builders/dui_horizontal_divider_builder.dart';
+import 'package:digia_ui/core/builders/dui_htmlview_builder.dart';
 import 'package:digia_ui/core/builders/dui_image_builder.dart';
 import 'package:digia_ui/core/builders/dui_listview_builder.dart';
 import 'package:digia_ui/core/builders/dui_row_builder.dart';
@@ -31,7 +33,10 @@ DUIWidgetBuilderCreatorFn withoutRegistry(
 
 class DUIWidgetRegistry {
   static final Map<String, DUIWidgetBuilderCreatorFn> builders = {
-    'digia/vertical_divider': withoutRegistry(DUIVerticalDividerBuilder.create),
+    'digia/verticalDivider': withoutRegistry(DUIVerticalDividerBuilder.create),
+    'digia/horizontalDivider':
+        withoutRegistry(DUIHorizontalDividerBuilder.create),
+    'digia/htmlView': withoutRegistry(DUIHtmlViewBuilder.create),
     'digia/avatar': withoutRegistry(DUIAvatarBuilder.create),
     'digia/richText': withoutRegistry(DUITextBuilder.create),
     'digia/text': withoutRegistry(DUITextBuilder.create),

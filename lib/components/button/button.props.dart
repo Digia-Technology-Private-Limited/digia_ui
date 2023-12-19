@@ -15,7 +15,8 @@ class DUIButtonProps {
   // String? backgroundColor;
   // DUIInsets? margin;
   // DUIInsets? padding;
-  @JsonKey(fromJson: DUIStyleClass.fromJson, includeToJson: false)
+  @JsonKey(
+      fromJson: DUIStyleClass.fromJson, includeToJson: false, name: 'style')
   DUIStyleClass? styleClass;
   // String? shape;
   late DUITextProps text;

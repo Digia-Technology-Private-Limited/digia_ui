@@ -41,6 +41,8 @@ class _DUIImageState extends State<DUIImage> {
         return ((context) => Image.asset(placeHolderValue));
       case 'blurHash':
         return OctoPlaceholder.frame();
+        // TODO: Add blurHash functionality back
+        return OctoPlaceholder.frame();
     }
 
     return null;

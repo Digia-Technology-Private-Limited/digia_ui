@@ -48,7 +48,7 @@ abstract class DUIWidgetBuilder {
     final onTapProp = data.containerProps['onClick'];
     if (onTapProp != null) {
       final action = ActionProp.fromJson(onTapProp);
-      output = GestureDetector(
+      output = InkWell(
         onTap: () => context
             .read<DUIPageBloc>()
             .add(PostActionEvent(action: action, context: context)),

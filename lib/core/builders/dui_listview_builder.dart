@@ -21,14 +21,16 @@ class DUIListViewBuilder extends DUIWidgetBuilder {
       return fallbackWidget();
     }
 
+    final children = data.children['children']!;
+
     return ListView.builder(
         physics: DUIDecoder.toScrollPhysics(data.props['allowScroll']),
         shrinkWrap: NumDecoder.toBoolOrDefault(data.props['shrinkWrap'],
             defaultValue: false),
-        itemCount: data.children.length,
+        itemCount: children.length,
         itemBuilder: (context, index) {
-          final builder = DUIJsonWidgetBuilder(
-              data: data.children[index], registry: registry!);
+          final builder =
+              DUIJsonWidgetBuilder(data: children[index], registry: registry!);
           return builder.build(context);
         });
   }

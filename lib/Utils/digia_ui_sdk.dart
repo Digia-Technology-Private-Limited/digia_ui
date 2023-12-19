@@ -1,4 +1,3 @@
-import '../core/pref/pref_util.dart';
 import 'config_resolver.dart';
 
 class DigiaUiSDk {
@@ -7,7 +6,7 @@ class DigiaUiSDk {
     // This could include setting up configurations, initializing services, etc.
     // Load configuration
     await ConfigResolver.initialize(assetPath);
-    await PrefUtil.init();
+    // await PrefUtil.init();
   }
 
   static initializeByJson(dynamic response) async {
@@ -15,6 +14,6 @@ class DigiaUiSDk {
     // This could include setting up configurations, initializing services, etc.
     // Load configuration
     await ConfigResolver.initializeByJson(response);
-    await PrefUtil.init();
+    // await PrefUtil.init();
   }
 }
