@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 class DUISwitch extends StatefulWidget {
   final DUISwitchProps props;
   final Function(bool value) onChange;
-  const DUISwitch(this.props, {required  this.onChange, super.key});
+  const DUISwitch(this.props, {required this.onChange, super.key});
 
   @override
   State<DUISwitch> createState() => _DUISwitchState();
