@@ -5,15 +5,14 @@ import 'package:flutter/material.dart';
 
 class DUISwitch extends StatefulWidget {
   final DUISwitchProps props;
-  final Function(bool value) onChange;
-  const DUISwitch(this.props, {required this.onChange, super.key});
+  const DUISwitch(this.props, {super.key});
 
   @override
   State<DUISwitch> createState() => _DUISwitchState();
 }
 
 class _DUISwitchState extends State<DUISwitch> {
-  late bool _value;
+  bool _value = false;
 
   @override
   void initState() {
@@ -23,26 +22,19 @@ class _DUISwitchState extends State<DUISwitch> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Switch.adaptive(
-          value: _value,
-          onChanged: (newval) {
-            if (widget.props.enabled == false) {
-              return;
-            }
+    final onChange = widget.props.enabled.letIfTrue((p0) => (value) {
+          setState(() {
+            _value = value;
+          });
+        });
 
-            setState(() {
-              _value = newval;
-              widget.onChange(_value);
-            });
-          },
-          activeColor: widget.props.activeColor?.let(toColor),
-          inactiveThumbColor: widget.props.inactiveThumbColor?.let(toColor),
-          activeTrackColor: widget.props.activeTrackColor?.let(toColor),
-          inactiveTrackColor: widget.props.inactiveTrackColor?.let(toColor),
-        ),
-      ),
+    return Switch.adaptive(
+      value: _value,
+      onChanged: onChange,
+      activeColor: widget.props.activeColor.let(toColor),
+      inactiveThumbColor: widget.props.inactiveThumbColor.let(toColor),
+      activeTrackColor: widget.props.activeTrackColor.let(toColor),
+      inactiveTrackColor: widget.props.inactiveTrackColor.let(toColor),
     );
   }
 }

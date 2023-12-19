@@ -13,6 +13,6 @@ class DUISwitchBuilder extends DUIWidgetBuilder {
 
   @override
   Widget build(BuildContext context) {
-    return DUISwitch(DUISwitchProps.fromJson(data.props), onChange: (val) {});
+    return DUISwitch(DUISwitchProps.fromJson(data.props));
   }
 }
