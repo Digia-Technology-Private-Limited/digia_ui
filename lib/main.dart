@@ -1,4 +1,7 @@
 import 'package:digia_ui/Utils/config_resolver.dart';
+import 'package:digia_ui/components/dui_icons/Packs/LineIcons.dart';
+import 'package:digia_ui/components/dui_icons/dui_icon.dart';
+import 'package:digia_ui/components/dui_icons/dui_icon_props.dart';
 import 'package:digia_ui/core/page/dui_page.dart';
 import 'package:digia_ui/core/page/dui_page_bloc.dart';
 import 'package:digia_ui/core/page/dui_page_event.dart';
