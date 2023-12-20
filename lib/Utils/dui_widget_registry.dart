@@ -12,6 +12,7 @@ import 'package:digia_ui/core/builders/dui_listview_builder.dart';
 import 'package:digia_ui/core/builders/dui_row_builder.dart';
 import 'package:digia_ui/core/builders/dui_sized_box_builder.dart';
 import 'package:digia_ui/core/builders/dui_spacer_builder.dart';
+import 'package:digia_ui/core/builders/dui_switch_builder.dart';
 import 'package:digia_ui/core/builders/dui_text_builder.dart';
 import 'package:digia_ui/core/builders/dui_vertical_divider_builder.dart';
 import 'package:digia_ui/core/json_widget_builder.dart';
@@ -39,6 +40,7 @@ class DUIWidgetRegistry {
         withoutRegistry(DUILinearProgressIndicatorBuilder.create),
     'digia/circularProgressIndicator':
         withoutRegistry(DUICircularProgressIndicatorBuilder.create),
+    'digia/switch': withoutRegistry(DUISwitchBuilder.create),
     'digia/verticalDivider': withoutRegistry(DUIVerticalDividerBuilder.create),
     'digia/horizontalDivider':
         withoutRegistry(DUIHorizontalDividerBuilder.create),
