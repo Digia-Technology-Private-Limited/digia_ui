@@ -1,4 +1,3 @@
-
 import 'package:digia_ui/components/dui_slider/dui_slider.dart';
 import 'package:digia_ui/components/dui_slider/dui_slider_props.dart';
 import 'package:digia_ui/core/json_widget_builder.dart';
