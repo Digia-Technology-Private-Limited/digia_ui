@@ -3,21 +3,17 @@ part 'circular_progress_bar_props.g.dart';
 
 @JsonSerializable()
 class DUICircularProgressBarProps {
-  double _strokeWidth;
-  double get strokeWidth => _strokeWidth;
-  double _strokeAlign;
-  double get strokeAlign => _strokeAlign;
+  double strokeWidth;
+  double strokeAlign;
   double? thickness;
   String? strokeCap;
   String? bgColor;
   String? indicatorColor;
-  // For the Animations
-  final int _animationDuration;
-  int get animationDuration => _animationDuration;
+  // Animation Props
+  final int animationDuration;
   double? animationBeginLength;
   double? animationEndLength;
-  String _curve;
-  String get curves => _curve;
+  String curve;
 
   DUICircularProgressBarProps({
     double? strokeWidth,
@@ -30,10 +26,10 @@ class DUICircularProgressBarProps {
     this.animationBeginLength,
     this.animationEndLength,
     String? curve,
-  })  : _animationDuration = animationDuration ?? 5,
-        _strokeAlign = strokeAlign ?? 4.0,
-        _strokeWidth = strokeWidth ?? 5.0,
-        _curve = curve ?? 'linear';
+  })  : animationDuration = animationDuration ?? 5,
+        strokeAlign = strokeAlign ?? 4.0,
+        strokeWidth = strokeWidth ?? 5.0,
+        curve = curve ?? 'linear';
 
   factory DUICircularProgressBarProps.fromJson(dynamic json) =>
       _$DUICircularProgressBarPropsFromJson(json);

@@ -4,11 +4,11 @@ import 'package:digia_ui/core/json_widget_builder.dart';
 import 'package:digia_ui/core/page/props/dui_widget_json_data.dart';
 import 'package:flutter/material.dart';
 
-class DUILinearProgressIndicatorBuilder extends DUIWidgetBuilder {
-  DUILinearProgressIndicatorBuilder({required super.data});
+class DUILinearProgressBarBuilder extends DUIWidgetBuilder {
+  DUILinearProgressBarBuilder({required super.data});
 
-  static DUILinearProgressIndicatorBuilder? create(DUIWidgetJsonData data) {
-    return DUILinearProgressIndicatorBuilder(data: data);
+  static DUILinearProgressBarBuilder? create(DUIWidgetJsonData data) {
+    return DUILinearProgressBarBuilder(data: data);
   }
 
   @override

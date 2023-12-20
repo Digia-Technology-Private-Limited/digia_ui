@@ -36,10 +36,10 @@ DUIWidgetBuilderCreatorFn withoutRegistry(
 
 class DUIWidgetRegistry {
   static final Map<String, DUIWidgetBuilderCreatorFn> builders = {
-    'digia/linearProgressIndicator':
-        withoutRegistry(DUILinearProgressIndicatorBuilder.create),
-    'digia/circularProgressIndicator':
-        withoutRegistry(DUICircularProgressIndicatorBuilder.create),
+    'digia/linearProgressBar':
+        withoutRegistry(DUILinearProgressBarBuilder.create),
+    'digia/circularProgressBar':
+        withoutRegistry(DUICircularProgressBarBuilder.create),
     'digia/switch': withoutRegistry(DUISwitchBuilder.create),
     'digia/verticalDivider': withoutRegistry(DUIVerticalDividerBuilder.create),
     'digia/horizontalDivider':

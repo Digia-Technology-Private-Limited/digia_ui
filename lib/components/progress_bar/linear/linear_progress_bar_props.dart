@@ -10,13 +10,11 @@ class DUILinearProgressBarProps {
   String? bgColor;
   String? indicatorColor;
 
-  // For the Animations
-  final int _animationDuration;
-  int get animationDuration => _animationDuration;
+  // Animation Props
+  final int animationDuration;
   double? animationBeginLength;
   double? animationEndLength;
-  String _curve;
-  String get curves => _curve;
+  String curve;
 
   DUILinearProgressBarProps({
     this.width,
@@ -28,8 +26,8 @@ class DUILinearProgressBarProps {
     this.animationBeginLength,
     this.animationEndLength,
     String? curve,
-  })  : _animationDuration = animationDuration ?? 5,
-        _curve = curve ?? 'linear';
+  })  : animationDuration = animationDuration ?? 5,
+        curve = curve ?? 'linear';
 
   factory DUILinearProgressBarProps.fromJson(dynamic json) =>
       _$DUILinearProgressBarPropsFromJson(json);
