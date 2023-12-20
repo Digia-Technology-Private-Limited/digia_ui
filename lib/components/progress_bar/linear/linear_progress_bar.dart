@@ -17,16 +17,16 @@ class _DUILinearProgressBarState extends State<DUILinearProgressBar> {
   Widget build(BuildContext context) {
     return TweenAnimationBuilder<double>(
       duration: Duration(seconds: widget.props.animationDuration), // done
-      curve: DUIDecoder.toCurve(widget.props.curves) ?? Curves.linear, // [TODO]
+      curve: DUIDecoder.toCurve(widget.props.curve) ?? Curves.linear, // [TODO]
       tween: Tween<double>(
         begin: widget.props.animationBeginLength,
         end: widget.props.animationEndLength,
       ),
       builder: (context, value, _) {
         return SizedBox(
-          width: widget.props.width, // done
+          width: widget.props.width,
           child: LinearProgressIndicator(
-            color: widget.props.indicatorColor?.let(toColor) ??
+            color: widget.props.indicatorColor.let(toColor) ??
                 Colors.blue, // [TODO]
             backgroundColor:
                 widget.props.bgColor?.let(toColor) ?? Colors.transparent,
