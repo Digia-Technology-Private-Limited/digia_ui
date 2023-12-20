@@ -21,8 +21,8 @@ Map<String, dynamic> _$DUIVerticalDividerPropsToJson(
         DUIVerticalDividerProps instance) =>
     <String, dynamic>{
       'lineStyle': instance.lineStyle,
-      'width': instance.width,
       'color': instance.color,
+      'width': instance.width,
       'thickness': instance.thickness,
       'indent': instance.indent,
       'endIndent': instance.endIndent,

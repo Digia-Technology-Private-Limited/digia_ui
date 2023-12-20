@@ -1,11 +1,13 @@
 import 'package:digia_ui/core/builders/dui_app_bar_builder.dart';
 import 'package:digia_ui/core/builders/dui_avatar_builder.dart';
 import 'package:digia_ui/core/builders/dui_button_builder.dart';
+import 'package:digia_ui/core/builders/dui_circular_progress_indicator_builder.dart';
 import 'package:digia_ui/core/builders/dui_column_builder.dart';
 import 'package:digia_ui/core/builders/dui_gridview_builder.dart';
 import 'package:digia_ui/core/builders/dui_horizontal_divider_builder.dart';
 import 'package:digia_ui/core/builders/dui_htmlview_builder.dart';
 import 'package:digia_ui/core/builders/dui_image_builder.dart';
+import 'package:digia_ui/core/builders/dui_linear_progress_indicator_builder.dart';
 import 'package:digia_ui/core/builders/dui_listview_builder.dart';
 import 'package:digia_ui/core/builders/dui_row_builder.dart';
 import 'package:digia_ui/core/builders/dui_sized_box_builder.dart';
@@ -34,6 +36,10 @@ DUIWidgetBuilderCreatorFn withoutRegistry(
 
 class DUIWidgetRegistry {
   static final Map<String, DUIWidgetBuilderCreatorFn> builders = {
+    'digia/linearProgressIndicator':
+        withoutRegistry(DUILinearProgressIndicatorBuilder.create),
+    'digia/circularProgressIndicator':
+        withoutRegistry(DUICircularProgressIndicatorBuilder.create),
     'digia/switch': withoutRegistry(DUISwitchBuilder.create),
     'digia/verticalDivider': withoutRegistry(DUIVerticalDividerBuilder.create),
     'digia/horizontalDivider':
