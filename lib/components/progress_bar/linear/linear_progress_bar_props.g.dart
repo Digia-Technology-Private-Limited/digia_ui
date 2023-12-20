@@ -1,14 +1,14 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'linear_progress_props.dart';
+part of 'linear_progress_bar_props.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-DUILinearProgressProps _$DUILinearProgressPropsFromJson(
+DUILinearProgressBarProps _$DUILinearProgressBarPropsFromJson(
         Map<String, dynamic> json) =>
-    DUILinearProgressProps(
+    DUILinearProgressBarProps(
       width: (json['width'] as num?)?.toDouble(),
       thickness: (json['thickness'] as num?)?.toDouble(),
       borderRadius: (json['borderRadius'] as num?)?.toDouble(),
@@ -19,8 +19,8 @@ DUILinearProgressProps _$DUILinearProgressPropsFromJson(
       animationEndLength: (json['animationEndLength'] as num?)?.toDouble(),
     );
 
-Map<String, dynamic> _$DUILinearProgressPropsToJson(
-        DUILinearProgressProps instance) =>
+Map<String, dynamic> _$DUILinearProgressBarPropsToJson(
+        DUILinearProgressBarProps instance) =>
     <String, dynamic>{
       'width': instance.width,
       'thickness': instance.thickness,

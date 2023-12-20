@@ -35,9 +35,9 @@ DUIWidgetBuilderCreatorFn withoutRegistry(
 
 class DUIWidgetRegistry {
   static final Map<String, DUIWidgetBuilderCreatorFn> builders = {
-    'digia/linear_progress_indicator':
+    'digia/linearProgressIndicator':
         withoutRegistry(DUILinearProgressIndicatorBuilder.create),
-    'digia/circular_progress_indicator':
+    'digia/circularProgressIndicator':
         withoutRegistry(DUICircularProgressIndicatorBuilder.create),
     'digia/verticalDivider': withoutRegistry(DUIVerticalDividerBuilder.create),
     'digia/horizontalDivider':

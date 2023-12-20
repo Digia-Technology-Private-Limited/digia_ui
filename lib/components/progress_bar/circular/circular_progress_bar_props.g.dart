@@ -1,14 +1,14 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'dui_circular_progress_indicator_props.dart';
+part of 'circular_progress_bar_props.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-DUICircularProgressIndicatorProps _$DUICircularProgressIndicatorPropsFromJson(
+DUICircularProgressBarProps _$DUICircularProgressBarPropsFromJson(
         Map<String, dynamic> json) =>
-    DUICircularProgressIndicatorProps(
+    DUICircularProgressBarProps(
       strokeWidth: (json['strokeWidth'] as num?)?.toDouble(),
       strokeAlign: (json['strokeAlign'] as num?)?.toDouble(),
       strokeCap: json['strokeCap'] as String?,
@@ -20,8 +20,8 @@ DUICircularProgressIndicatorProps _$DUICircularProgressIndicatorPropsFromJson(
       animationEndLength: (json['animationEndLength'] as num?)?.toDouble(),
     );
 
-Map<String, dynamic> _$DUICircularProgressIndicatorPropsToJson(
-        DUICircularProgressIndicatorProps instance) =>
+Map<String, dynamic> _$DUICircularProgressBarPropsToJson(
+        DUICircularProgressBarProps instance) =>
     <String, dynamic>{
       'strokeWidth': instance.strokeWidth,
       'strokeAlign': instance.strokeAlign,

@@ -1,9 +1,8 @@
-import 'dart:convert';
 import 'package:json_annotation/json_annotation.dart';
-part 'dui_circular_progress_indicator_props.g.dart';
+part 'circular_progress_bar_props.g.dart';
 
 @JsonSerializable()
-class DUICircularProgressIndicatorProps {
+class DUICircularProgressBarProps {
   double _strokeWidth;
   double get strokeWidth => _strokeWidth;
   double _strokeAlign;
@@ -20,7 +19,7 @@ class DUICircularProgressIndicatorProps {
   String _curve;
   String get curves => _curve;
 
-  DUICircularProgressIndicatorProps({
+  DUICircularProgressBarProps({
     double? strokeWidth,
     double? strokeAlign,
     this.strokeCap,
@@ -36,14 +35,8 @@ class DUICircularProgressIndicatorProps {
         _strokeWidth = strokeWidth ?? 5.0,
         _curve = curve ?? 'linear';
 
-  factory DUICircularProgressIndicatorProps.fromJson(dynamic json) =>
-      _$DUICircularProgressIndicatorPropsFromJson(json);
+  factory DUICircularProgressBarProps.fromJson(dynamic json) =>
+      _$DUICircularProgressBarPropsFromJson(json);
 
-  Map<String, dynamic> toJson() =>
-      _$DUICircularProgressIndicatorPropsToJson(this);
-
-  @override
-  String toString() {
-    return jsonEncode(this);
-  }
+  Map<String, dynamic> toJson() => _$DUICircularProgressBarPropsToJson(this);
 }
