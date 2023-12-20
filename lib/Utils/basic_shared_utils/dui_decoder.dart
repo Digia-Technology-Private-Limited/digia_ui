@@ -296,4 +296,110 @@ class DUIDecoder {
 
     return null;
   }
+
+  static Curve? toCurve(String curveString) {
+    switch (curveString) {
+      case 'easeInCubic':
+        return Curves.easeInCubic;
+      case 'easeInExpo':
+        return Curves.easeInExpo;
+      case 'easeOutBack':
+        return Curves.easeOutBack;
+      case 'easeInOutCirc':
+        return Curves.easeInOutCirc;
+      case 'easeInOutCubic':
+        return Curves.easeInOutCubic;
+      case 'easeInOutCubicEmphasized':
+        return Curves.easeInOutCubicEmphasized;
+      case 'easeInOutExpo':
+        return Curves.easeInOutExpo;
+      case 'easeInOutQuad':
+        return Curves.easeInOutQuad;
+      case 'easeInOutQuart':
+        return Curves.easeInOutQuart;
+      case 'easeInOutQuint':
+        return Curves.easeInOutQuint;
+      case 'easeInOutSine':
+        return Curves.easeInOutSine;
+      case 'easeInQuad':
+        return Curves.easeInQuad;
+      case 'easeInQuart':
+        return Curves.easeInQuart;
+      case 'easeInQuint':
+        return Curves.easeInQuint;
+      case 'easeInSine':
+        return Curves.easeInSine;
+      case 'easeInToLinear':
+        return Curves.easeInToLinear;
+      case 'easeOutCirc':
+        return Curves.easeOutCirc;
+      case 'easeOutCubic':
+        return Curves.easeOutCubic;
+      case 'easeOutExpo':
+        return Curves.easeOutExpo;
+      case 'easeOutQuad':
+        return Curves.easeOutQuad;
+      case 'easeOutQuart':
+        return Curves.easeOutQuart;
+      case 'easeOutQuint':
+        return Curves.easeOutQuint;
+      case 'easeOutSine':
+        return Curves.easeOutSine;
+      case 'elasticInOut':
+        return Curves.elasticInOut;
+      case 'elasticIn':
+        return Curves.elasticIn;
+      case 'elasticOut':
+        return Curves.elasticOut;
+      case 'fastEaselnToSlowOut':
+        return Curves.fastEaseInToSlowEaseOut;
+      case 'fastLinearToSlowEaseIn':
+        return Curves.fastLinearToSlowEaseIn;
+      case 'fastOutSlowIn':
+        return Curves.fastOutSlowIn;
+      case 'bounceIn':
+        return Curves.bounceIn;
+      case 'bounceOut':
+        return Curves.bounceOut;
+      case 'bounceInOut':
+        return Curves.bounceInOut;
+      case 'linearToEaseOut':
+        return Curves.linearToEaseOut;
+      case 'slowMiddle':
+        return Curves.slowMiddle;
+      case 'decelerate':
+        return Curves.decelerate;
+      case 'ease':
+        return Curves.ease;
+      case 'easeIn':
+        return Curves.easeIn;
+      case 'easeOut':
+        return Curves.easeOut;
+      case 'easeInOut':
+        return Curves.easeInOut;
+      case 'easeInBack':
+        return Curves.easeInBack;
+      case 'easeInCirc':
+        return Curves.easeInCirc;
+      default:
+        return null;
+    }
+  }
+
+  static StrokeCap? toStrokeCap(String? cap) {
+    if (cap == null) {
+      return null;
+    }
+
+    switch (cap) {
+      case 'round':
+        return StrokeCap.round;
+      case 'butt':
+        return StrokeCap.butt;
+      case 'square':
+        return StrokeCap.square;
+    }
+
+    return null;
+  }
 }

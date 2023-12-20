@@ -2,12 +2,12 @@ import 'package:json_annotation/json_annotation.dart';
 part 'dui_htmview_props.g.dart';
 
 @JsonSerializable()
-class DUIHTMLViewProps {
+class DUIHtmlViewProps {
   String content;
 
-  DUIHTMLViewProps(this.content);
+  DUIHtmlViewProps(this.content);
 
-  factory DUIHTMLViewProps.fromJson(dynamic json) =>
-      _$DUIHTMLViewPropsFromJson(json);
-  Map<String, dynamic> toJson() => _$DUIHTMLViewPropsToJson(this);
+  factory DUIHtmlViewProps.fromJson(dynamic json) =>
+      _$DUIHtmlViewPropsFromJson(json);
+  Map<String, dynamic> toJson() => _$DUIHtmlViewPropsToJson(this);
 }
