@@ -13,7 +13,7 @@ class DUICircularProgressBar extends StatelessWidget {
     // Non-Deterministic
     return TweenAnimationBuilder<double>(
       duration: Duration(seconds: props.animationDuration), // done
-      curve: DUIDecoder.toCurve(props.curves) ?? Curves.linear,
+      curve: DUIDecoder.toCurve(props.curve) ?? Curves.linear,
       tween: Tween<double>(
         begin: props.animationBeginLength,
         end: props.animationEndLength,

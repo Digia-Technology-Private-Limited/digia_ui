@@ -13,7 +13,7 @@ class DUICircularProgressBarProps {
   final int animationDuration;
   double? animationBeginLength;
   double? animationEndLength;
-  String curve;
+  String? curve;
 
   DUICircularProgressBarProps({
     double? strokeWidth,
@@ -25,11 +25,10 @@ class DUICircularProgressBarProps {
     int? animationDuration,
     this.animationBeginLength,
     this.animationEndLength,
-    String? curve,
+    this.curve,
   })  : animationDuration = animationDuration ?? 5,
         strokeAlign = strokeAlign ?? 4.0,
-        strokeWidth = strokeWidth ?? 5.0,
-        curve = curve ?? 'linear';
+        strokeWidth = strokeWidth ?? 5.0;
 
   factory DUICircularProgressBarProps.fromJson(dynamic json) =>
       _$DUICircularProgressBarPropsFromJson(json);
