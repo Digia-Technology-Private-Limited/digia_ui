@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:digia_ui/components/image/image.props.dart';
 import 'package:digia_ui/core/container/dui_container.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_blurhash/flutter_blurhash.dart';
 import 'package:octo_image/octo_image.dart';
 
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
@@ -36,11 +37,26 @@ class _DUIImageState extends State<DUIImage> {
     switch (props.imageSrc.split('/').first) {
       case 'http':
       case 'https':
-        return ((context) => CachedNetworkImage(imageUrl: placeHolderValue));
+        return ((context) => AspectRatio(
+              aspectRatio: props.aspectRatio!,
+              child: CachedNetworkImage(imageUrl: placeHolderValue),
+            ));
       case 'assets':
-        return ((context) => Image.asset(placeHolderValue));
+        return ((context) => AspectRatio(
+              aspectRatio: props.aspectRatio!,
+              child: Image.asset(placeHolderValue),
+            ));
       case 'blurHash':
-        return OctoPlaceholder.frame(); // [TODO] : This had been changed
+        return ((context) => AspectRatio(
+              aspectRatio: props.aspectRatio!,
+              child: BlurHash(
+                hash: props.placeHolder!,
+                duration: const Duration(
+                  microseconds: 0,
+                ),
+              ),
+            ));
+      // [TODO] : This had been changed
     }
 
     return null;
