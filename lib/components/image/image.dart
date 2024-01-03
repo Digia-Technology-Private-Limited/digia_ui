@@ -57,10 +57,18 @@ class _DUIImageState extends State<DUIImage> {
     }
 
     return OctoImage(
+        fadeInDuration: const Duration(microseconds: 0),
+        fadeOutDuration: const Duration(microseconds: 0),
         image: imageProvider,
         fit: DUIDecoder.toBoxFit(props.fit),
         gaplessPlayback: true,
-        placeholderBuilder: _placeHolderBuilderCreater(),
+        placeholderBuilder: _placeHolderBuilderCreater() ??
+            ((context) => AspectRatio(
+                  aspectRatio: props.aspectRatio!,
+                  child: Container(
+                    color: Colors.grey.shade50,
+                  ),
+                )),
         imageBuilder: (BuildContext context, Widget widget) {
           final child = props.aspectRatio == null
               ? widget
