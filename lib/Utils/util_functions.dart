@@ -6,6 +6,7 @@ import 'package:digia_ui/components/DUIText/DUI_text_span/dui_text_span.dart';
 import 'package:digia_ui/components/DUIText/dui_text_style.dart';
 import 'package:digia_ui/components/utils/DUIBorder/dui_border.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class DUIConfigConstants {
   static const double fallbackSize = 14;
@@ -45,17 +46,20 @@ TextStyle? toTextStyle(DUITextStyle? textStyle) {
   String fontFamily = textStyle.fontFamily ??
       'Poppins'; // TODO: This shouldn't be hardcoded here.
 
-  return TextStyle(
-      fontFamily: fontFamily,
-      fontWeight: fontWeight,
-      fontStyle: fontStyle,
-      fontSize: fontSize,
-      height: fontHeight,
-      color: textColor,
-      backgroundColor: textBgColor,
-      decoration: textDecoration,
-      decorationColor: decorationColor,
-      decorationStyle: decorationStyle);
+  debugPrint('[fontFamily] : ${textStyle.fontFamily}');
+
+  return GoogleFonts.getFont(fontFamily).copyWith(
+    // fontFamily: fontFamily,
+    fontWeight: fontWeight,
+    fontStyle: fontStyle,
+    fontSize: fontSize,
+    height: fontHeight,
+    color: textColor,
+    backgroundColor: textBgColor,
+    decoration: textDecoration,
+    decorationColor: decorationColor,
+    decorationStyle: decorationStyle,
+  );
 }
 
 TextSpan toTextSpan(DUITextSpan textSpan) {

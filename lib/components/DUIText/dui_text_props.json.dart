@@ -40,6 +40,12 @@ DUITextProps _$DUITextPropsFromJson(dynamic json) {
       ?.nonNulls
       .map((e) => DUITextSpan.fromJson(e as Map<String, dynamic>))
       .toList();
+  
+  // [Todo] : remove after testing
+  const enc = JsonEncoder.withIndent('    ');
+  final conv = enc.convert(json);
+
+  debugPrint(conv);
 
   return DUITextProps()
     ..alignment = json['alignment'] as String?

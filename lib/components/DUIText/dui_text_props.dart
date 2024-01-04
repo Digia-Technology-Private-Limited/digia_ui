@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:digia_ui/Utils/basic_shared_utils/num_decoder.dart';
 import 'package:digia_ui/components/DUIText/DUI_text_span/dui_text_span.dart';
 import 'package:digia_ui/components/DUIText/dui_text_style.dart';
+import 'package:flutter/material.dart';
+import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 part 'dui_text_props.json.dart';
 
