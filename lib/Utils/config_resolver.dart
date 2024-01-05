@@ -77,6 +77,8 @@ class ConfigResolver {
 
   DUIFont getFont(String fontToken) {
     var fontsJson = (_fonts[fontToken]);
+    /// [TODO]: ADDED [fontFamily] instead of [font-family]
+    fontsJson['fontFamily'] = fontsJson['font-family'];
     return DUIFont.fromJson(fontsJson);
   }
 

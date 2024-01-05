@@ -25,8 +25,11 @@ TextStyle? toTextStyle(DUITextStyle? textStyle) {
   double fontSize = DUIConfigConstants.fallbackSize;
   double fontHeight = DUIConfigConstants.fallbackLineHeightFactor;
 
+  String fontFamily = textStyle.fontFamily ?? 'Poppins';
+
   if (textStyle.fontToken != null) {
     var font = ConfigResolver().getFont(textStyle.fontToken!);
+    fontFamily = font.fontFamily ?? fontFamily;
     fontWeight = DUIDecoder.toFontWeight(font.weight);
     fontStyle = DUIDecoder.toFontStyle(font.style);
     fontSize = font.size ?? DUIConfigConstants.fallbackSize;
@@ -43,10 +46,8 @@ TextStyle? toTextStyle(DUITextStyle? textStyle) {
   Color? decorationColor = textStyle.textDecorationColor.letIfTrue(toColor);
   TextDecorationStyle? decorationStyle =
       DUIDecoder.toTextDecorationStyle(textStyle.textDecorationStyle);
-  String fontFamily = textStyle.fontFamily ??
-      'Poppins'; // TODO: This shouldn't be hardcoded here.
+   // [TODO]: This shouldn't be hardcoded here.
 
-  debugPrint('[fontFamily] : ${textStyle.fontFamily}');
 
   return GoogleFonts.getFont(fontFamily).copyWith(
     // fontFamily: fontFamily,

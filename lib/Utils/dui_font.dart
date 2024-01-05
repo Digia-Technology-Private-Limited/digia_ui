@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:json_annotation/json_annotation.dart';
 
 part 'dui_font.g.dart';
@@ -10,6 +9,7 @@ class DUIFont {
   late double? size;
   late double? height;
   late String? style;
+  late String? fontFamily;
 
   DUIFont();
   factory DUIFont.fromJson(Map<String, dynamic> json) =>
