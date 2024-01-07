@@ -1,6 +1,7 @@
 import 'package:digia_ui/core/builders/dui_app_bar_builder.dart';
 import 'package:digia_ui/core/builders/dui_avatar_builder.dart';
 import 'package:digia_ui/core/builders/dui_button_builder.dart';
+import 'package:digia_ui/core/builders/dui_checkbox_builder.dart';
 import 'package:digia_ui/core/builders/dui_column_builder.dart';
 import 'package:digia_ui/core/builders/dui_gridview_builder.dart';
 import 'package:digia_ui/core/builders/dui_htmlview_builder.dart';
@@ -37,6 +38,7 @@ class DUIWidgetRegistry {
     'digia/text': withoutRegistry(DUITextBuilder.create),
     'digia/button': withoutRegistry(DUIButtonBuilder.create),
     'digia/image': withoutRegistry(DUIImageBuilder.create),
+    'digia/checkbox': withoutRegistry(DUICheckboxBuilder.create),
     'digia/listView': DUIListViewBuilder.create,
     'digia/gridView': DUIGridViewBuilder.create,
     'digia/column': DUIColumnBuilder.create,
