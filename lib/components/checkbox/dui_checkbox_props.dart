@@ -1,5 +1,4 @@
 import 'package:digia_ui/components/utils/DUIStyleClass/dui_style_class.dart';
-import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'dui_checkbox_props.g.dart';
@@ -12,7 +11,6 @@ class DUICheckboxProps {
   final String? activeBgColor;
   // final ActionProp? onChanged;
   final bool? value;
-  // final Widget? activeIcon;
 
   DUICheckboxProps(
     this.size,
