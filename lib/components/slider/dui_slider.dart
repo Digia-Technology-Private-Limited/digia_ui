@@ -35,8 +35,8 @@ class _DUISliderState extends State<DUISlider> {
         ColorDecoder.fromHexString(props.activeColor ?? '#0000FF');
     final inactiveColor =
         ColorDecoder.fromHexString(props.inactiveColor ?? '#0000FF');
-    final min = props.max;
-    final max = props.min;
+    final max = props.max;
+    final min = props.min;
     final divisions = props.divisions;
     final thumbColor =
         ColorDecoder.fromHexString(props.thumbColor ?? '#0000FF');

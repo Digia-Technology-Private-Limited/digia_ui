@@ -14,32 +14,48 @@ class DUIDropdown extends StatefulWidget {
 
 class _DUIDropdownState extends State<DUIDropdown> {
   late DUIDropdownProps props;
-  late BorderRadius? borderRadius;
-  late String? alignment;
+  late double borderRadius;
+  late Alignment? alignment;
   late Color? dropdownColor;
   late Color? focusColor;
+  late String value;
 
   @override
   void initState() {
     props = widget.props;
+    value = 'Item 1';
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final borderRadius = DUIDecoder.toBorderRadius(props.borderRadius ?? 20);
-    final alignment =
-        DUIDecoder.toAlignment(props.alignment ?? 'center') ?? Alignment.center;
+    final borderRadius = DUIDecoder.toBorderRadius(props.borderRadius);
+    final alignment = DUIDecoder.toAlignment(props.alignment);
     final dropdownColor =
         ColorDecoder.fromHexString(props.dropdownColor ?? '#FFFFFF');
     final focusColor =
         ColorDecoder.fromHexString(props.focusColor ?? '#FFFFFF');
 
     return DropdownButton(
-      items: [DropdownMenuItem(child: Text('Item 1'))],
-      onChanged: (val) {},
+      value: value,
+      items: const [
+        DropdownMenuItem(value: 'Item 1', child: Text('Item 1')),
+        DropdownMenuItem(
+          value: 'Item 2',
+          child: Text('Item 2'),
+        ),
+        DropdownMenuItem(
+          value: 'Item 3',
+          child: Text('Item 3'),
+        )
+      ],
+      onChanged: (val) {
+        setState(() {
+          value = val.toString();
+        });
+      },
       borderRadius: borderRadius,
-      alignment: alignment,
+      alignment: alignment ?? Alignment.center,
       dropdownColor: dropdownColor,
       focusColor: focusColor,
       isExpanded: props.isExpanded ?? false,

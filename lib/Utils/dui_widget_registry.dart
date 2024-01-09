@@ -15,6 +15,7 @@ import 'package:digia_ui/core/json_widget_builder.dart';
 import 'package:digia_ui/core/page/props/dui_widget_json_data.dart';
 import 'package:flutter/material.dart';
 
+import '../core/builders/dui_container_builder.dart';
 import '../core/builders/dui_dropdown_builder.dart';
 import '../core/builders/dui_slider_builder.dart';
 
@@ -48,6 +49,7 @@ class DUIWidgetRegistry {
     'digia/gridView': DUIGridViewBuilder.create,
     'digia/column': DUIColumnBuilder.create,
     'digia/row': DUIRowBuilder.create,
+    'digia/container': withoutRegistry(DUIContainerBuilder.create),
     'fw/sized_box': withoutRegistry(DUISizedBoxBuilder.create),
     'fw/spacer': withoutRegistry(DUISpacerBuilder.create),
     'fw/appBar': withoutRegistry(DUIAppBarBuilder.create),

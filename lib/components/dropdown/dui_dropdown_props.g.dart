@@ -8,7 +8,7 @@ part of 'dui_dropdown_props.dart';
 
 DUIDropdownProps _$DUIDropdownPropsFromJson(Map<String, dynamic> json) =>
     DUIDropdownProps(
-      (json['borderRadius'] as num?)?.toDouble(),
+      json['borderRadius'] as String,
       json['alignment'] as String?,
       json['dropdownColor'] as String?,
       json['focusColor'] as String?,
