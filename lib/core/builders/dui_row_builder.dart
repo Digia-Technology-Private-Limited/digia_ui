@@ -22,6 +22,7 @@ class DUIRowBuilder extends DUIWidgetBuilder {
 
     return data.props['isScrollable'] == true
         ? SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
             child: Row(
                 mainAxisAlignment: DUIDecoder.toMainAxisAlginmentOrDefault(
                     data.props['mainAxisAlignment'],
