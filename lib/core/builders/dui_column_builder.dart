@@ -20,7 +20,7 @@ class DUIColumnBuilder extends DUIWidgetBuilder {
       return fallbackWidget();
     }
 
-    return Column(
+    final columnWidget = Column(
         mainAxisAlignment: DUIDecoder.toMainAxisAlginmentOrDefault(
             data.props['mainAxisAlignment'],
             defaultValue: MainAxisAlignment.start),
@@ -31,6 +31,12 @@ class DUIColumnBuilder extends DUIWidgetBuilder {
           final builder = DUIJsonWidgetBuilder(data: e, registry: registry!);
           return builder.build(context);
         }).toList());
+
+    if (data.props['isScrollable'] == true) {
+      return SingleChildScrollView(child: columnWidget);
+    }
+
+    return columnWidget;
   }
 
   @override
