@@ -19,7 +19,7 @@ import 'package:digia_ui/core/json_widget_builder.dart';
 import 'package:digia_ui/core/page/props/dui_widget_json_data.dart';
 import 'package:flutter/material.dart';
 
-import '../core/builders/dui_checkbox_builder.dart';
+// import '../core/builders/dui_checkbox_builder.dart';
 
 typedef WidgetFromJsonFn<T extends Widget> = T Function(
     Map<String, dynamic> json);
@@ -52,7 +52,7 @@ class DUIWidgetRegistry {
     'digia/text': withoutRegistry(DUITextBuilder.create),
     'digia/button': withoutRegistry(DUIButtonBuilder.create),
     'digia/image': withoutRegistry(DUIImageBuilder.create),
-    'digia/checkbox': withoutRegistry(DUICheckboxBuilder.create),
+    // 'digia/checkbox': withoutRegistry(DUICheckboxBuilder.create),
     'digia/listView': DUIListViewBuilder.create,
     'digia/gridView': DUIGridViewBuilder.create,
     'digia/column': DUIColumnBuilder.create,
