@@ -7,6 +7,7 @@ part 'dui_dropdown_props.g.dart';
 class DUIDropdownProps {
   @JsonKey(fromJson: DUIStyleClass.fromJson, includeToJson: false)
   final DUIStyleClass? styleClass;
+  final List<Map> items;
   final String borderRadius;
   final String? alignment;
   final String? dropdownColor;
@@ -14,7 +15,7 @@ class DUIDropdownProps {
   final bool? isExpanded;
 
   DUIDropdownProps(this.borderRadius, this.alignment, this.dropdownColor,
-      this.focusColor, this.isExpanded, this.styleClass);
+      this.focusColor, this.isExpanded, this.styleClass, this.items);
 
   factory DUIDropdownProps.fromJson(Map<String, dynamic> json) =>
       _$DUIDropdownPropsFromJson(json);

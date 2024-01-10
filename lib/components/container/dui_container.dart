@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:digia_ui/Utils/basic_shared_utils/color_decoder.dart';
 import 'package:digia_ui/Utils/basic_shared_utils/dui_decoder.dart';
 import 'package:digia_ui/Utils/basic_shared_utils/num_decoder.dart';
@@ -56,6 +57,14 @@ class _DUIContainerState extends State<DUIContainer> {
             ? Border.all(color: borderColor, width: borderWidth ?? 1)
             : null,
         borderRadius: borderRadius,
+        image: props.imageURL == null
+            ? null
+            : DecorationImage(
+                opacity: props.imageOpacity ?? 1,
+                image: NetworkImage(
+                  props.imageURL ?? '',
+                ),
+                fit: BoxFit.cover),
       ),
     );
   }

@@ -1,14 +1,13 @@
 import 'package:digia_ui/components/utils/DUIStyleClass/dui_style_class.dart';
 import 'package:json_annotation/json_annotation.dart';
-
 import '../utils/DUIInsets/dui_insets.dart';
-
 part 'dui_container_props.g.dart';
 
 @JsonSerializable()
 class DUIContainerProps {
   @JsonKey(fromJson: DUIStyleClass.fromJson, includeToJson: false)
   final DUIStyleClass? styleClass;
+  final String? placeHolder;
   final String? width;
   final String? height;
   final String? alignment;
@@ -19,6 +18,8 @@ class DUIContainerProps {
   final String? borderRadius;
   final String? borderColor;
   final double? borderWidth;
+  final String? imageURL;
+  final double? imageOpacity;
 
   DUIContainerProps(
       this.styleClass,
@@ -31,7 +32,10 @@ class DUIContainerProps {
       this.hasBorder,
       this.borderRadius,
       this.borderColor,
-      this.borderWidth);
+      this.borderWidth,
+      this.imageURL,
+      this.imageOpacity,
+      this.placeHolder);
 
   factory DUIContainerProps.fromJson(Map<String, dynamic> json) =>
       _$DUIContainerPropsFromJson(json);

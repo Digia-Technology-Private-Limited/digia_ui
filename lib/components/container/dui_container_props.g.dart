@@ -19,10 +19,14 @@ DUIContainerProps _$DUIContainerPropsFromJson(Map<String, dynamic> json) =>
       json['borderRadius'] as String?,
       json['borderColor'] as String?,
       (json['borderWidth'] as num?)?.toDouble(),
+      json['imageURL'] as String?,
+      (json['imageOpacity'] as num?)?.toDouble(),
+      json['placeHolder'] as String?,
     );
 
 Map<String, dynamic> _$DUIContainerPropsToJson(DUIContainerProps instance) =>
     <String, dynamic>{
+      'placeHolder': instance.placeHolder,
       'width': instance.width,
       'height': instance.height,
       'alignment': instance.alignment,
@@ -33,4 +37,6 @@ Map<String, dynamic> _$DUIContainerPropsToJson(DUIContainerProps instance) =>
       'borderRadius': instance.borderRadius,
       'borderColor': instance.borderColor,
       'borderWidth': instance.borderWidth,
+      'imageURL': instance.imageURL,
+      'imageOpacity': instance.imageOpacity,
     };

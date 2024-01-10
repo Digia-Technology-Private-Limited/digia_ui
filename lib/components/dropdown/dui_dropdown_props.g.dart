@@ -14,10 +14,14 @@ DUIDropdownProps _$DUIDropdownPropsFromJson(Map<String, dynamic> json) =>
       json['focusColor'] as String?,
       json['isExpanded'] as bool?,
       DUIStyleClass.fromJson(json['styleClass']),
+      (json['items'] as List<dynamic>)
+          .map((e) => e as Map<String, dynamic>)
+          .toList(),
     );
 
 Map<String, dynamic> _$DUIDropdownPropsToJson(DUIDropdownProps instance) =>
     <String, dynamic>{
+      'items': instance.items,
       'borderRadius': instance.borderRadius,
       'alignment': instance.alignment,
       'dropdownColor': instance.dropdownColor,
