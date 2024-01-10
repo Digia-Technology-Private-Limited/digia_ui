@@ -1,5 +1,4 @@
 import 'package:digia_ui/components/utils/DUIStyleClass/dui_style_class.dart';
-import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'dui_checkbox_props.g.dart';

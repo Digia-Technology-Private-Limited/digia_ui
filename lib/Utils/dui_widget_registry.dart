@@ -1,6 +1,7 @@
 import 'package:digia_ui/core/builders/dui_app_bar_builder.dart';
 import 'package:digia_ui/core/builders/dui_avatar_builder.dart';
 import 'package:digia_ui/core/builders/dui_button_builder.dart';
+import 'package:digia_ui/core/builders/dui_circular_progress_indicator_builder.dart';
 import 'package:digia_ui/core/builders/dui_column_builder.dart';
 import 'package:digia_ui/core/builders/dui_gridview_builder.dart';
 import 'package:digia_ui/core/builders/dui_horizontal_divider_builder.dart';
@@ -19,7 +20,6 @@ import 'package:digia_ui/core/page/props/dui_widget_json_data.dart';
 import 'package:flutter/material.dart';
 
 import '../core/builders/dui_checkbox_builder.dart';
-import '../core/builders/dui_circular_progress_indicator_builder.dart';
 
 typedef WidgetFromJsonFn<T extends Widget> = T Function(
     Map<String, dynamic> json);
