@@ -20,17 +20,33 @@ class DUIRowBuilder extends DUIWidgetBuilder {
       return fallbackWidget();
     }
 
-    return Row(
-        mainAxisAlignment: DUIDecoder.toMainAxisAlginmentOrDefault(
-            data.props['mainAxisAlignment'],
-            defaultValue: MainAxisAlignment.start),
-        crossAxisAlignment: DUIDecoder.toCrossAxisAlignmentOrDefault(
-            data.props['crossAxisAlignment'],
-            defaultValue: CrossAxisAlignment.center),
-        children: data.children['children']!.map((e) {
-          final builder = DUIJsonWidgetBuilder(data: e, registry: registry!);
-          return builder.build(context);
-        }).toList());
+    return data.props['isScrollable'] == true
+        ? SingleChildScrollView(
+            child: Row(
+                mainAxisAlignment: DUIDecoder.toMainAxisAlginmentOrDefault(
+                    data.props['mainAxisAlignment'],
+                    defaultValue: MainAxisAlignment.start),
+                crossAxisAlignment: DUIDecoder.toCrossAxisAlignmentOrDefault(
+                    data.props['crossAxisAlignment'],
+                    defaultValue: CrossAxisAlignment.center),
+                children: data.children['children']!.map((e) {
+                  final builder =
+                      DUIJsonWidgetBuilder(data: e, registry: registry!);
+                  return builder.build(context);
+                }).toList()),
+          )
+        : Row(
+            mainAxisAlignment: DUIDecoder.toMainAxisAlginmentOrDefault(
+                data.props['mainAxisAlignment'],
+                defaultValue: MainAxisAlignment.start),
+            crossAxisAlignment: DUIDecoder.toCrossAxisAlignmentOrDefault(
+                data.props['crossAxisAlignment'],
+                defaultValue: CrossAxisAlignment.center),
+            children: data.children['children']!.map((e) {
+              final builder =
+                  DUIJsonWidgetBuilder(data: e, registry: registry!);
+              return builder.build(context);
+            }).toList());
   }
 
   @override
