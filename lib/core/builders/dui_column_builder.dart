@@ -20,33 +20,23 @@ class DUIColumnBuilder extends DUIWidgetBuilder {
       return fallbackWidget();
     }
 
-    return data.props['isScrollable'] == true
-        ? SingleChildScrollView(
-            child: Column(
-                mainAxisAlignment: DUIDecoder.toMainAxisAlginmentOrDefault(
-                    data.props['mainAxisAlignment'],
-                    defaultValue: MainAxisAlignment.start),
-                crossAxisAlignment: DUIDecoder.toCrossAxisAlignmentOrDefault(
-                    data.props['crossAxisAlignment'],
-                    defaultValue: CrossAxisAlignment.center),
-                children: data.children['children']!.map((e) {
-                  final builder =
-                      DUIJsonWidgetBuilder(data: e, registry: registry!);
-                  return builder.build(context);
-                }).toList()),
-          )
-        : Column(
-            mainAxisAlignment: DUIDecoder.toMainAxisAlginmentOrDefault(
-                data.props['mainAxisAlignment'],
-                defaultValue: MainAxisAlignment.start),
-            crossAxisAlignment: DUIDecoder.toCrossAxisAlignmentOrDefault(
-                data.props['crossAxisAlignment'],
-                defaultValue: CrossAxisAlignment.center),
-            children: data.children['children']!.map((e) {
-              final builder =
-                  DUIJsonWidgetBuilder(data: e, registry: registry!);
-              return builder.build(context);
-            }).toList());
+    final columnWidget = Column(
+        mainAxisAlignment: DUIDecoder.toMainAxisAlginmentOrDefault(
+            data.props['mainAxisAlignment'],
+            defaultValue: MainAxisAlignment.start),
+        crossAxisAlignment: DUIDecoder.toCrossAxisAlignmentOrDefault(
+            data.props['crossAxisAlignment'],
+            defaultValue: CrossAxisAlignment.center),
+        children: data.children['children']!.map((e) {
+          final builder = DUIJsonWidgetBuilder(data: e, registry: registry!);
+          return builder.build(context);
+        }).toList());
+
+    if (data.props['isScrollable'] == true) {
+      return SingleChildScrollView(child: columnWidget);
+    }
+
+    return columnWidget;
   }
 
   @override
