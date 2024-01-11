@@ -1,3 +1,4 @@
+import 'package:digia_ui/Utils/basic_shared_utils/num_decoder.dart';
 import 'package:flutter/material.dart';
 
 import '../../Utils/basic_shared_utils/color_decoder.dart';
@@ -24,20 +25,19 @@ class _DUISliderState extends State<DUISlider> {
   @override
   void initState() {
     props = widget.props;
-    value = props.value ?? 20;
+    value = NumDecoder.toDouble(props.value);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    // value = props.value ?? 20;
     final activeColor =
         ColorDecoder.fromHexString(props.activeColor ?? '#0000FF');
     final inactiveColor =
         ColorDecoder.fromHexString(props.inactiveColor ?? '#0000FF');
-    final min = props.max;
-    final max = props.min;
-    final divisions = props.divisions;
+    final max = NumDecoder.toDouble(props.max);
+    final min = NumDecoder.toDouble(props.min);
+    final divisions = NumDecoder.toInt(props.divisions);
     final thumbColor =
         ColorDecoder.fromHexString(props.thumbColor ?? '#0000FF');
 

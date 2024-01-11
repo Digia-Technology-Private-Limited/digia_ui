@@ -7,12 +7,12 @@ part 'dui_slider_props.g.dart';
 class DUISliderProps {
   @JsonKey(fromJson: DUIStyleClass.fromJson, includeToJson: false)
   final DUIStyleClass? styleClass;
-  final double? value;
+  final String? value;
   final String? activeColor;
   final String? inactiveColor;
-  final double? min;
-  final double? max;
-  final int? divisions;
+  final String? min;
+  final String? max;
+  final String? divisions;
   final String? thumbColor;
 
   DUISliderProps(this.styleClass, this.value, this.activeColor,

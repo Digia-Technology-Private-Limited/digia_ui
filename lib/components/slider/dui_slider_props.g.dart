@@ -9,12 +9,12 @@ part of 'dui_slider_props.dart';
 DUISliderProps _$DUISliderPropsFromJson(Map<String, dynamic> json) =>
     DUISliderProps(
       DUIStyleClass.fromJson(json['styleClass']),
-      (json['value'] as num?)?.toDouble(),
+      json['value'] as String?,
       json['activeColor'] as String?,
       json['inactiveColor'] as String?,
-      (json['min'] as num?)?.toDouble(),
-      (json['max'] as num?)?.toDouble(),
-      json['divisions'] as int?,
+      json['min'] as String?,
+      json['max'] as String?,
+      json['divisions'] as String?,
       json['thumbColor'] as String?,
     );
 
