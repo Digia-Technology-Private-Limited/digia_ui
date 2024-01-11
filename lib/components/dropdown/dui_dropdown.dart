@@ -18,10 +18,12 @@ class _DUIDropdownState extends State<DUIDropdown> {
   late String? alignment;
   late Color? dropdownColor;
   late Color? focusColor;
+  late String value;
 
   @override
   void initState() {
     props = widget.props;
+    value = props.dropLabelValue![0]['dropValue'].toString();
     super.initState();
   }
 
@@ -36,8 +38,19 @@ class _DUIDropdownState extends State<DUIDropdown> {
         ColorDecoder.fromHexString(props.focusColor ?? '#FFFFFF');
 
     return DropdownButton(
-      items: [DropdownMenuItem(child: Text('Item 1'))],
-      onChanged: (val) {},
+      value: value,
+      items: List.generate(
+          props.dropLabelValue!.length,
+          (index) => DropdownMenuItem(
+                value: props.dropLabelValue![index]['dropValue'].toString(),
+                child:
+                    Text(props.dropLabelValue![index]['dropLabel'].toString()),
+              )),
+      onChanged: (val) {
+        setState(() {
+          value = val ?? '';
+        });
+      },
       borderRadius: borderRadius,
       alignment: alignment,
       dropdownColor: dropdownColor,

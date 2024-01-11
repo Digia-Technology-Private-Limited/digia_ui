@@ -8,12 +8,15 @@ part of 'dui_dropdown_props.dart';
 
 DUIDropdownProps _$DUIDropdownPropsFromJson(Map<String, dynamic> json) =>
     DUIDropdownProps(
-      (json['borderRadius'] as num?)?.toDouble(),
+      json['borderRadius'] as String?,
       json['alignment'] as String?,
       json['dropdownColor'] as String?,
       json['focusColor'] as String?,
       json['isExpanded'] as bool?,
       DUIStyleClass.fromJson(json['styleClass']),
+      (json['dropLabelValue'] as List<dynamic>?)
+          ?.map((e) => e as Map<String, dynamic>)
+          .toList(),
     );
 
 Map<String, dynamic> _$DUIDropdownPropsToJson(DUIDropdownProps instance) =>
@@ -23,4 +26,5 @@ Map<String, dynamic> _$DUIDropdownPropsToJson(DUIDropdownProps instance) =>
       'dropdownColor': instance.dropdownColor,
       'focusColor': instance.focusColor,
       'isExpanded': instance.isExpanded,
+      'dropLabelValue': instance.dropLabelValue,
     };
