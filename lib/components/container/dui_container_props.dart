@@ -17,9 +17,9 @@ class DUIContainerProps {
   final bool? hasBorder;
   final String? borderRadius;
   final String? borderColor;
-  final double? borderWidth;
+  final String? borderWidth;
   final String? imageURL;
-  final double? imageOpacity;
+  final String? imageOpacity;
 
   DUIContainerProps(
       this.styleClass,

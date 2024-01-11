@@ -21,10 +21,11 @@ class _DUIContainerState extends State<DUIContainer> {
   late Alignment? alignment;
   late DUIInsets margin;
   late DUIInsets padding;
-  late double? borderRadius;
+  late BorderRadius? borderRadius;
   late double? borderWidth;
   late Color? color;
   late Color? borderColor;
+  late double? imageOpacity;
 
   @override
   void initState() {
@@ -34,6 +35,7 @@ class _DUIContainerState extends State<DUIContainer> {
 
   @override
   Widget build(BuildContext context) {
+    final imageOpacity = NumDecoder.toDouble(props.imageOpacity);
     final width = NumDecoder.toDouble(props.width);
     final height = NumDecoder.toDouble(props.height);
     final borderWidth = NumDecoder.toDouble(props.borderWidth);
@@ -60,7 +62,7 @@ class _DUIContainerState extends State<DUIContainer> {
         image: props.imageURL == null
             ? null
             : DecorationImage(
-                opacity: props.imageOpacity ?? 1,
+                opacity: imageOpacity ?? 1,
                 image: NetworkImage(
                   props.imageURL ?? '',
                 ),

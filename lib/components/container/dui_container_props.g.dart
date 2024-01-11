@@ -18,9 +18,9 @@ DUIContainerProps _$DUIContainerPropsFromJson(Map<String, dynamic> json) =>
       json['hasBorder'] as bool?,
       json['borderRadius'] as String?,
       json['borderColor'] as String?,
-      (json['borderWidth'] as num?)?.toDouble(),
+      json['borderWidth'] as String?,
       json['imageURL'] as String?,
-      (json['imageOpacity'] as num?)?.toDouble(),
+      json['imageOpacity'] as String?,
       json['placeHolder'] as String?,
     );
 
