@@ -17,6 +17,7 @@ DUILinearProgressBarProps _$DUILinearProgressBarPropsFromJson(
       animationDuration: json['animationDuration'] as int?,
       animationBeginLength: (json['animationBeginLength'] as num?)?.toDouble(),
       animationEndLength: (json['animationEndLength'] as num?)?.toDouble(),
+      curve: json['curve'] as String?,
     );
 
 Map<String, dynamic> _$DUILinearProgressBarPropsToJson(
@@ -30,4 +31,5 @@ Map<String, dynamic> _$DUILinearProgressBarPropsToJson(
       'animationDuration': instance.animationDuration,
       'animationBeginLength': instance.animationBeginLength,
       'animationEndLength': instance.animationEndLength,
+      'curve': instance.curve,
     };
