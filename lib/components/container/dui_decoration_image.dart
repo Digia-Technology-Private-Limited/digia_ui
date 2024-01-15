@@ -6,7 +6,7 @@ class DUIDecorationImage {
   final String? source;
   final String? fit;
   final String? alignment;
-  final String? opacity;
+  final double? opacity;
 
   DUIDecorationImage(this.source, this.fit, this.alignment, this.opacity);
 

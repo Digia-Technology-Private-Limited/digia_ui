@@ -11,7 +11,7 @@ DUIDecorationImage _$DUIDecorationImageFromJson(Map<String, dynamic> json) =>
       json['source'] as String?,
       json['fit'] as String?,
       json['alignment'] as String?,
-      json['opacity'] as String?,
+      (json['opacity'] as num?)?.toDouble(),
     );
 
 Map<String, dynamic> _$DUIDecorationImageToJson(DUIDecorationImage instance) =>
