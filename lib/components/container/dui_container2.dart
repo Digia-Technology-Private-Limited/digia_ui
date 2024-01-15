@@ -67,7 +67,7 @@ class DUIContainer2 extends StatelessWidget {
                   opacity: imageOpacity ?? 1.0,
                   image: imageProvider,
                   alignment: imageAlignment ?? Alignment.center,
-                  fit: DUIDecoder.toBoxFit(props.boxFit)),
+                  fit: DUIDecoder.toBoxFit(props.decorationImage?.fit)),
           shape: shape),
       constraints: BoxConstraints(
           maxHeight: _toHeight(context, props.maxHeight) ?? double.infinity,
