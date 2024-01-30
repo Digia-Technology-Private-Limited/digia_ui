@@ -24,7 +24,7 @@ class ActionHandler {
           throw 'Target Page can not be null';
         }
 
-        final pageConfig = ConfigResolver().getPageConfig(pageName);
+        final pageConfig = DigiaUIConfig().getPageConfig(pageName);
 
         if (pageConfig == null) {
           throw 'Page Config can not be null';

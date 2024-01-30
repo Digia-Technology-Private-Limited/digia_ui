@@ -12,7 +12,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
 
 class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
-  final ConfigResolver resolver;
+  final DigiaUIConfig resolver;
   final Map<String, dynamic>? args;
 
   DUIPageBloc({
@@ -68,7 +68,7 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
 
       case 'Action.navigateToPage':
         final pageId = action.data['pageId'];
-        final pageConfig = ConfigResolver().getPageConfig(pageId);
+        final pageConfig = DigiaUIConfig().getPageConfig(pageId);
 
         // TODO: Fix this lint error.
         return Navigator.push(context!, MaterialPageRoute(builder: (ctx) {
@@ -77,7 +77,7 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
               return DUIPageBloc(
                   initData:
                       DUIPageInitData(identifier: pageId, config: pageConfig!),
-                  resolver: ConfigResolver())
+                  resolver: DigiaUIConfig())
                 ..add(InitPageEvent(pageParams: action.data['args']));
             },
             child: const DUIPage(),

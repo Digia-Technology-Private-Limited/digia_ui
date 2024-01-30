@@ -25,7 +25,7 @@ TextStyle? toTextStyle(DUITextStyle? textStyle) {
   double fontHeight = DUIConfigConstants.fallbackLineHeightFactor;
 
   if (textStyle.fontToken != null) {
-    var font = ConfigResolver().getFont(textStyle.fontToken!);
+    var font = DigiaUIConfig().getFont(textStyle.fontToken!);
     fontWeight = DUIDecoder.toFontWeight(font.weight);
     fontStyle = DUIDecoder.toFontStyle(font.style);
     fontSize = font.size ?? DUIConfigConstants.fallbackSize;
@@ -121,7 +121,7 @@ OutlineInputBorder? toOutlineInputBorder(DUIBorder? border) {
 // Possible Values for colorToken:
 // token: primary, hexCode: #242424, hexCode with Alpha: #FF242424
 Color toColor(String colorToken) {
-  var colorString = ConfigResolver().getColorValue(colorToken) ?? colorToken;
+  var colorString = DigiaUIConfig().getColorValue(colorToken) ?? colorToken;
 
   final color = ColorDecoder.fromString(colorString);
   if (color == null) {

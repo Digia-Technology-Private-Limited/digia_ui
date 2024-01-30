@@ -55,7 +55,7 @@ class RestHandler {
   }
 
   Map<String, String> _createHeaders(Map<String, String> headers) {
-    final defaultHeadersFromConfig = ConfigResolver().getDefaultHeaders() ?? {};
+    final defaultHeadersFromConfig = DigiaUIConfig().getDefaultHeaders() ?? {};
 
     final mergedHeaders = {
       ...defaultHeaders,

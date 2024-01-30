@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await DigiaUiSDk(projectId: '659e7ac498e1ff58fef46b89').initializeFromCloud();
+  await DigiaUiSDk.initializeFromCloud(accessKey: '659e7ac498e1ff58fef46b89');
   runApp(const MyApp());
 }
 

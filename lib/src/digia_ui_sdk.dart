@@ -6,29 +6,40 @@ import 'package:digia_ui/src/core/page/dui_page_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+const defaultUIConfigAssetPath = 'assets/json/dui_config.json';
+
 class DigiaUiSDk {
-  final String projectId;
+  static final DigiaUiSDk _instance = DigiaUiSDk._();
 
-  DigiaUiSDk({required this.projectId});
+  DigiaUiSDk._();
 
-  static initialize({required String assetPath}) async {
-    // Perform SDK initialization tasks here
-    // This could include setting up configurations, initializing services, etc.
-    // Load configuration
-    await ConfigResolver.initialize(assetPath);
-    // await PrefUtil.init();
+  late String accessKey;
+
+  bool _isInitialized = false;
+
+  static initialize(
+      {required String accessKey, String? assetPath, String? baseUrl}) async {
+    _instance.accessKey = accessKey;
+
+    await DigiaUIConfig.initialize(assetPath ?? defaultUIConfigAssetPath);
+
+    _instance._isInitialized = true;
+  }
+
+  static bool isInitialized() {
+    return _instance._isInitialized;
   }
 
   static initializeByJson({dynamic json}) async {
     // Perform SDK initialization tasks here
     // This could include setting up configurations, initializing services, etc.
     // Load configuration
-    await ConfigResolver.initializeByJson(json);
+    await DigiaUIConfig.initializeByJson(json);
     // await PrefUtil.init();
   }
 
-  initializeFromCloud() async {
-    bool res = await ConfigResolver.initializeFromCloud(projectId);
+  static initializeFromCloud({required String accessKey}) async {
+    bool res = await DigiaUIConfig.initializeFromCloud(accessKey);
     if (!res) {
       throw Exception(
         'Something went wrong while getting data from cloud, please check provided projectId',
@@ -43,7 +54,7 @@ class DigiaUiSDk {
   }) {
     return BlocProvider(
       create: (context) {
-        ConfigResolver resolver = ConfigResolver();
+        DigiaUIConfig resolver = DigiaUIConfig();
         return DUIPageBloc(
             initData: DUIPageInitData(
                 identifier: pageUid, config: resolver.getPageConfig(pageUid)!),

@@ -13,7 +13,7 @@ const Map<String, String> defaultHeaders = {
 };
 
 class PostAction {
-  final ConfigResolver resolver;
+  final DigiaUIConfig resolver;
 
   PostAction(this.resolver);
 

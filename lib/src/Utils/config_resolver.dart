@@ -6,15 +6,15 @@ import 'package:digia_ui/src/network/network_manager.dart';
 import 'package:digia_ui/src/project_constants.dart';
 import 'package:flutter/services.dart';
 
-class ConfigResolver {
+class DigiaUIConfig {
   late Map<String, dynamic> _themeConfig;
   late Map<String, dynamic> _pages;
   late Map<String, dynamic> _restConfig;
   late String _initialRoute;
 
-  static final ConfigResolver _instance = ConfigResolver._internal();
+  static final DigiaUIConfig _instance = DigiaUIConfig._internal();
 
-  factory ConfigResolver() {
+  factory DigiaUIConfig() {
     return _instance;
   }
 
@@ -64,7 +64,7 @@ class ConfigResolver {
     return true;
   }
 
-  ConfigResolver._internal();
+  DigiaUIConfig._internal();
 
   // TOOD: @tushar - Add support for light / dark theme
   Map<String, dynamic> get _colors => _themeConfig['colors']['light'];
