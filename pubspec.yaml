@@ -143,14 +143,6 @@ flutter:
         - asset: assets/fonts/Poppins/Poppins-ThinItalic.ttf
           weight: 100
           style: italic
-    - family: AppleII
-      fonts:
-        - asset: assets/fonts/AppleIIScreenTypeface/AppleIiScreenTypeface-2aP3.ttf
-          weight: 400
-    - family: Nunito
-      fonts:
-        - asset: assets/fonts/Nunito/Nunito-Bold.ttf
-          weight: 700
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro
