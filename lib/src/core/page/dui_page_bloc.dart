@@ -13,9 +13,13 @@ import '../../Utils/basic_shared_utils/dui_decoder.dart';
 
 class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
   final ConfigResolver resolver;
+  final Map<String, dynamic>? args;
 
-  DUIPageBloc({required DUIPageInitData initData, required this.resolver})
-      : super(DUIPageState(
+  DUIPageBloc({
+    required DUIPageInitData initData,
+    required this.resolver,
+    this.args,
+  }) : super(DUIPageState(
             uid: initData.identifier,
             isLoading: true,
             props: DUIPageProps.fromJson(initData.config))) {
@@ -36,7 +40,7 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
 
     action.data['pageParams'] = {
       ...?action.data['pageParams'],
-      ...?event.pageParams,
+      ...?args,
     };
 
     await _handleAction(null, action, emit);

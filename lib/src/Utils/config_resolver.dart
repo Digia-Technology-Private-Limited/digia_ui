@@ -42,12 +42,12 @@ class ConfigResolver {
     _instance._initialRoute = data['appSettings']['initialRoute'];
   }
 
-  static Future<bool> initializeFromCloud() async {
+  static Future<bool> initializeFromCloud(String projectId) async {
     const baseUrl = ProjectConstants.baseUrl;
     try {
       final config = await NetworkManager().request(HttpMethod.post,
           '$baseUrl/config/getAppConfig', (json) => json as dynamic,
-          data: jsonEncode({'projectId': ProjectConstants.projectId}));
+          data: jsonEncode({'projectId': projectId}));
 
       final resp = config.data['response'] as Map<String, dynamic>?;
       if (resp == null || resp.isEmpty) {

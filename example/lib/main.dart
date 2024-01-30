@@ -1,9 +1,9 @@
 import 'package:digia_ui/digia_ui.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await DigiaUiSDk(projectId: '659e7ac498e1ff58fef46b89').initializeFromCloud();
   runApp(const MyApp());
 }
 
@@ -34,58 +34,9 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   GlobalKey globalKey = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: ConfigResolver.initializeFromCloud(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return const Scaffold(
-              body: SafeArea(
-                child: Align(
-                  alignment: Alignment.center,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text('Intializing from Cloud...'),
-                      LinearProgressIndicator()
-                    ],
-                  ),
-                ),
-              ),
-            );
-          }
-
-          if (snapshot.data != true) {
-            return const Scaffold(
-              body: SafeArea(
-                child: Align(
-                  alignment: Alignment.center,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Could not fetch Config.',
-                        style: TextStyle(color: Colors.red, fontSize: 24),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          }
-
-          return BlocProvider(
-            create: (context) {
-              final resolver = ConfigResolver();
-              return DUIPageBloc(
-                  initData: resolver.getfirstPageData(), resolver: resolver)
-                ..add(InitPageEvent());
-            },
-            child: const DUIPage(),
-          );
-        });
+    return DigiaUiSDk.getPage(pageUid: 'homepage-659e7ac498e1ff58fef46b89');
   }
 }
