@@ -39,10 +39,14 @@ class DUIWidgetRegistry {
     'digia/text': withoutRegistry(DUITextBuilder.create),
     'digia/button': withoutRegistry(DUIButtonBuilder.create),
     'digia/image': withoutRegistry(DUIImageBuilder.create),
-    'digia/listView': DUIListViewBuilder.create,
-    'digia/gridView': DUIGridViewBuilder.create,
-    'digia/column': DUIColumnBuilder.create,
-    'digia/row': DUIRowBuilder.create,
+    'digia/listView': (data, {registry}) =>
+        DUIListViewBuilder.create(data, registry: DUIWidgetRegistry.shared),
+    'digia/gridView': (data, {registry}) =>
+        DUIGridViewBuilder.create(data, registry: DUIWidgetRegistry.shared),
+    'digia/column': (data, {registry}) =>
+        DUIColumnBuilder.create(data, registry: DUIWidgetRegistry.shared),
+    'digia/row': (data, {registry}) =>
+        DUIRowBuilder.create(data, registry: DUIWidgetRegistry.shared),
     'digia/container': withoutRegistry(DUIContainer2Builder.create),
     'fw/sized_box': withoutRegistry(DUISizedBoxBuilder.create),
     'fw/spacer': withoutRegistry(DUISpacerBuilder.create),
