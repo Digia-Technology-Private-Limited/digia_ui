@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await DigiaUiSDk(projectId: '659e7ac498e1ff58fef46b89').initializeFromCloud();
   runApp(const MyApp());
 }
 
@@ -20,7 +19,51 @@ class MyApp extends StatelessWidget {
         brightness: Brightness.light,
       ),
       title: 'Flutter Demo',
-      home: const MyHomePage(),
+      home: FutureBuilder(
+        future: DigiaUIClient.initializeFromNetwork(
+            accessKey: '64f581f9007b81d85eceec68'),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState != ConnectionState.done) {
+            return const Scaffold(
+              body: SafeArea(
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('Intializing from Cloud...'),
+                      LinearProgressIndicator()
+                    ],
+                  ),
+                ),
+              ),
+            );
+          }
+
+          if (snapshot.hasError) {
+            return const Scaffold(
+              body: SafeArea(
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Could not fetch Config.',
+                        style: TextStyle(color: Colors.red, fontSize: 24),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          }
+
+          return const MyHomePage();
+        },
+      ),
     );
   }
 }
@@ -34,9 +77,8 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   GlobalKey globalKey = GlobalKey();
-
   @override
   Widget build(BuildContext context) {
-    return DigiaUiSDk.getPage(pageUid: 'homepage-659e7ac498e1ff58fef46b89');
+    return DigiaUIClient.getPage(pageUid: 'samples-list-page');
   }
 }

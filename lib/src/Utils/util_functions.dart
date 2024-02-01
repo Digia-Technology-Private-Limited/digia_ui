@@ -1,11 +1,12 @@
 import 'package:digia_ui/src/Utils/basic_shared_utils/color_decoder.dart';
 import 'package:digia_ui/src/Utils/basic_shared_utils/dui_decoder.dart';
 import 'package:digia_ui/src/Utils/basic_shared_utils/lodash.dart';
-import 'package:digia_ui/src/Utils/config_resolver.dart';
 import 'package:digia_ui/src/components/DUIText/DUI_text_span/dui_text_span.dart';
 import 'package:digia_ui/src/components/DUIText/dui_text_style.dart';
 import 'package:digia_ui/src/components/utils/DUIBorder/dui_border.dart';
 import 'package:flutter/material.dart';
+
+import '../../digia_ui.dart';
 
 class DUIConfigConstants {
   static const double fallbackSize = 14;
@@ -25,7 +26,7 @@ TextStyle? toTextStyle(DUITextStyle? textStyle) {
   double fontHeight = DUIConfigConstants.fallbackLineHeightFactor;
 
   if (textStyle.fontToken != null) {
-    var font = ConfigResolver().getFont(textStyle.fontToken!);
+    var font = DigiaUIClient.getConfigResolver().getFont(textStyle.fontToken!);
     fontWeight = DUIDecoder.toFontWeight(font.weight);
     fontStyle = DUIDecoder.toFontStyle(font.style);
     fontSize = font.size ?? DUIConfigConstants.fallbackSize;
@@ -121,7 +122,8 @@ OutlineInputBorder? toOutlineInputBorder(DUIBorder? border) {
 // Possible Values for colorToken:
 // token: primary, hexCode: #242424, hexCode with Alpha: #FF242424
 Color toColor(String colorToken) {
-  var colorString = ConfigResolver().getColorValue(colorToken) ?? colorToken;
+  var colorString =
+      DigiaUIClient.getConfigResolver().getColorValue(colorToken) ?? colorToken;
 
   final color = ColorDecoder.fromString(colorString);
   if (color == null) {

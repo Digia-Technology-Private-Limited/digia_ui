@@ -1,4 +1,3 @@
-import 'package:digia_ui/src/Utils/config_resolver.dart';
 import 'package:digia_ui/src/core/action/action_prop.dart';
 import 'package:digia_ui/src/core/action/post_action.dart';
 import 'package:digia_ui/src/core/page/dui_page.dart';
@@ -10,16 +9,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
+import '../../config_resolver.dart';
 
 class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
-  final ConfigResolver resolver;
+  final DigiaUIConfigResolver resolver;
   final Map<String, dynamic>? args;
 
-  DUIPageBloc({
-    required DUIPageInitData initData,
-    required this.resolver,
-    this.args,
-  }) : super(DUIPageState(
+  DUIPageBloc(
+      {required DUIPageInitData initData, required this.resolver, this.args})
+      : super(DUIPageState(
             uid: initData.identifier,
             isLoading: true,
             props: DUIPageProps.fromJson(initData.config))) {
@@ -40,7 +38,7 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
 
     action.data['pageParams'] = {
       ...?action.data['pageParams'],
-      ...?args,
+      ...?event.pageParams,
     };
 
     await _handleAction(null, action, emit);
@@ -68,7 +66,7 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
 
       case 'Action.navigateToPage':
         final pageId = action.data['pageId'];
-        final pageConfig = ConfigResolver().getPageConfig(pageId);
+        final pageConfig = resolver.getPageConfig(pageId);
 
         // TODO: Fix this lint error.
         return Navigator.push(context!, MaterialPageRoute(builder: (ctx) {
@@ -77,7 +75,7 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
               return DUIPageBloc(
                   initData:
                       DUIPageInitData(identifier: pageId, config: pageConfig!),
-                  resolver: ConfigResolver())
+                  resolver: resolver)
                 ..add(InitPageEvent(pageParams: action.data['args']));
             },
             child: const DUIPage(),

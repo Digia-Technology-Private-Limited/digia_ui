@@ -1,8 +1,4 @@
-import 'dart:convert';
-
-import 'package:digia_ui/src/Utils/config_resolver.dart';
 import 'package:digia_ui/src/core/action/action_prop.dart';
-import 'package:digia_ui/src/core/var.dart';
 import 'package:flutter/material.dart';
 
 const Map<String, String> defaultHeaders = {
@@ -48,33 +44,34 @@ class RestHandler {
   //   return json.valueFor(keyPath: data['keyToReadFrom']);
   // }
 
-  Object? _createBody(Map<String, dynamic>? body) {
-    if (body == null) return null;
+  // Object? _createBody(Map<String, dynamic>? body) {
+  //   if (body == null) return null;
 
-    return jsonEncode(_fill(body));
-  }
+  //   return jsonEncode(_fill(body));
+  // }
 
-  Map<String, String> _createHeaders(Map<String, String> headers) {
-    final defaultHeadersFromConfig = ConfigResolver().getDefaultHeaders() ?? {};
+  // Map<String, String> _createHeaders(Map<String, String> headers) {
+  //   final defaultHeadersFromConfig =
+  //       DigiaUIConfigResolver().getDefaultHeaders() ?? {};
 
-    final mergedHeaders = {
-      ...defaultHeaders,
-      ..._fill(defaultHeadersFromConfig),
-      ..._fill(headers)
-    };
+  //   final mergedHeaders = {
+  //     ...defaultHeaders,
+  //     ..._fill(defaultHeadersFromConfig),
+  //     ..._fill(headers)
+  //   };
 
-    return Map.fromEntries(mergedHeaders.entries
-        .where((element) => element.value != null || element.value is! String)
-        .map((e) => MapEntry(e.key, e.value as String)));
-  }
+  //   return Map.fromEntries(mergedHeaders.entries
+  //       .where((element) => element.value != null || element.value is! String)
+  //       .map((e) => MapEntry(e.key, e.value as String)));
+  // }
 
 // TODO: MOve to a better location
-  Map<String, dynamic> _fill(Map<String, dynamic> body) {
-    Map<String, dynamic> result = {};
-    for (var MapEntry(:key, :value) in body.entries) {
-      final variable = extractVar(value);
-      result[key] = variable != null ? getValueIfVar(variable) : value;
-    }
-    return result;
-  }
+  // Map<String, dynamic> _fill(Map<String, dynamic> body) {
+  //   Map<String, dynamic> result = {};
+  //   for (var MapEntry(:key, :value) in body.entries) {
+  //     final variable = extractVar(value);
+  //     result[key] = variable != null ? getValueIfVar(variable) : value;
+  //   }
+  //   return result;
+  // }
 }
