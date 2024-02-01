@@ -1,6 +1,5 @@
 import 'package:digia_ui/digia_ui.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,26 +19,11 @@ class MyApp extends StatelessWidget {
         brightness: Brightness.light,
       ),
       title: 'Flutter Demo',
-      home: const MyHomePage(),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  GlobalKey globalKey = GlobalKey();
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: ConfigResolver.initializeFromCloud(),
+      home: FutureBuilder(
+        future: DigiaUIClient.initializeFromNetwork(
+            accessKey: '64f581f9007b81d85eceec68'),
         builder: (context, snapshot) {
-          if (!snapshot.hasData) {
+          if (snapshot.connectionState != ConnectionState.done) {
             return const Scaffold(
               body: SafeArea(
                 child: Align(
@@ -57,7 +41,7 @@ class _MyHomePageState extends State<MyHomePage> {
             );
           }
 
-          if (snapshot.data != true) {
+          if (snapshot.hasError) {
             return const Scaffold(
               body: SafeArea(
                 child: Align(
@@ -77,15 +61,24 @@ class _MyHomePageState extends State<MyHomePage> {
             );
           }
 
-          return BlocProvider(
-            create: (context) {
-              final resolver = ConfigResolver();
-              return DUIPageBloc(
-                  initData: resolver.getfirstPageData(), resolver: resolver)
-                ..add(InitPageEvent());
-            },
-            child: const DUIPage(),
-          );
-        });
+          return const MyHomePage();
+        },
+      ),
+    );
+  }
+}
+
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key});
+
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  GlobalKey globalKey = GlobalKey();
+  @override
+  Widget build(BuildContext context) {
+    return DigiaUIClient.getPage(pageUid: 'samples-list-page');
   }
 }

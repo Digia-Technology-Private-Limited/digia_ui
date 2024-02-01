@@ -1,11 +1,9 @@
 import 'dart:convert';
 
-import 'package:digia_ui/src/Utils/config_resolver.dart';
+import 'package:digia_ui/digia_ui.dart';
 import 'package:digia_ui/src/core/action/action_prop.dart';
-import 'package:digia_ui/src/network/core/types.dart';
-import 'package:digia_ui/src/project_constants.dart';
 
-import '../../network/network_manager.dart';
+import '../../config_resolver.dart';
 
 const Map<String, String> defaultHeaders = {
   'Accept': 'application/json',
@@ -13,17 +11,16 @@ const Map<String, String> defaultHeaders = {
 };
 
 class PostAction {
-  final ConfigResolver resolver;
+  final DigiaUIConfigResolver resolver;
 
   PostAction(this.resolver);
 
   Future<Map<String, dynamic>?> execute(ActionProp action) async {
-    final baseUrl = resolver.baseUrl ?? ProjectConstants.baseUrl;
-
-    final resp = await NetworkManager().request(HttpMethod.post,
-        '$baseUrl/action/postAction', (json) => json as dynamic,
+    // TODO: Remove Singleton Access @tushar-g
+    final resp = await DigiaUIClient.getNetworkClient().post(
+        path: '/action/postAction',
+        fromJsonT: (json) => json as dynamic,
         data: jsonEncode(action.toJson()));
-
     return resp.data;
   }
 }

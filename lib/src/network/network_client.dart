@@ -17,6 +17,10 @@ class NetworkClient {
   final Dio dio;
   NetworkClient(Dio? dio, String baseUrl)
       : dio = dio ?? _createDefaultDio(baseUrl) {
+    if (baseUrl.isEmpty) {
+      throw 'Invalid BaseUrl';
+    }
+
     if (kDebugMode) {
       this.dio.interceptors.addAll([
         PrettyDioLogger(
@@ -54,5 +58,14 @@ class NetworkClient {
     } catch (e) {
       throw Exception('Error making HTTP request: $e');
     }
+  }
+
+  Future<BaseResponse<T>> post<T>(
+      {required String path,
+      required T Function(Object? json) fromJsonT,
+      required dynamic data,
+      Map<String, dynamic> headers = const {}}) async {
+    return request(HttpMethod.post, path, fromJsonT,
+        data: data, headers: headers);
   }
 }

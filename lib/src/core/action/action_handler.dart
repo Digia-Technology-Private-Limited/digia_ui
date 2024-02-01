@@ -1,4 +1,4 @@
-import 'package:digia_ui/src/Utils/config_resolver.dart';
+import 'package:digia_ui/digia_ui.dart';
 import 'package:digia_ui/src/core/action/action_prop.dart';
 import 'package:digia_ui/src/core/action/rest_handler.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +24,8 @@ class ActionHandler {
           throw 'Target Page can not be null';
         }
 
-        final pageConfig = ConfigResolver().getPageConfig(pageName);
+        final resolver = DigiaUIClient.getConfigResolver();
+        final pageConfig = resolver.getPageConfig(pageName);
 
         if (pageConfig == null) {
           throw 'Page Config can not be null';
