@@ -1,9 +1,9 @@
 import 'package:digia_ui/src/core/action/action_prop.dart';
 import 'package:digia_ui/src/core/action/post_action.dart';
-import 'package:digia_ui/src/core/page/dui_page.dart';
 import 'package:digia_ui/src/core/page/dui_page_event.dart';
 import 'package:digia_ui/src/core/page/dui_page_state.dart';
 import 'package:digia_ui/src/core/page/props/dui_page_props.dart';
+import 'package:digia_ui/src/core/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -65,22 +65,8 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
         return null;
 
       case 'Action.navigateToPage':
-        final pageId = action.data['pageId'];
-        final pageConfig = resolver.getPageConfig(pageId);
-
-        // TODO: Fix this lint error.
-        return Navigator.push(context!, MaterialPageRoute(builder: (ctx) {
-          return BlocProvider(
-            create: (context) {
-              return DUIPageBloc(
-                  initData:
-                      DUIPageInitData(identifier: pageId, config: pageConfig!),
-                  resolver: resolver)
-                ..add(InitPageEvent(pageParams: action.data['args']));
-            },
-            child: const DUIPage(),
-          );
-        }));
+        final pageUId = action.data['pageId'];
+        return openDUIPage(pageUid: pageUId, context: context!);
 
       case 'Action.openUrl':
         final url = Uri.parse(action.data['url']);

@@ -79,6 +79,6 @@ class _MyHomePageState extends State<MyHomePage> {
   GlobalKey globalKey = GlobalKey();
   @override
   Widget build(BuildContext context) {
-    return DigiaUIClient.getPage(pageUid: 'samples-list-page');
+    return const DUIPage(pageUid: 'samples-list-page');
   }
 }

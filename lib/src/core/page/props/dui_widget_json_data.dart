@@ -40,7 +40,8 @@ class DUIWidgetJsonData {
       return json.map<String, List<DUIWidgetJsonData>>((key, value) => MapEntry(
           key as String,
           value
-              .map((e) => DUIWidgetJsonData.fromJson(e as Map<String, dynamic>))
+              .map<DUIWidgetJsonData>(
+                  (e) => DUIWidgetJsonData.fromJson(e as Map<String, dynamic>))
               .toList()));
     }
 

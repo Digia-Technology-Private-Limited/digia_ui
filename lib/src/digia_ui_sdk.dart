@@ -1,15 +1,9 @@
 import 'dart:convert';
 
 import 'package:digia_ui/src/config_resolver.dart';
-import 'package:digia_ui/src/core/page/dui_page.dart';
-import 'package:digia_ui/src/core/page/dui_page_bloc.dart';
-import 'package:digia_ui/src/core/page/dui_page_event.dart';
-import 'package:digia_ui/src/core/page/dui_page_state.dart';
 import 'package:digia_ui/src/network/network_client.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'digia_ui_service.dart';
 
@@ -98,45 +92,5 @@ class DigiaUIClient {
         baseUrl: _instance.baseUrl,
         httpClient: _instance.networkClient,
         config: _instance.configResolver);
-  }
-
-  static Widget getPage({
-    Map<String, dynamic>? args,
-    Function({String actionId, List<dynamic> data})? function,
-    required String pageUid,
-  }) {
-    return BlocProvider(
-      create: (context) {
-        return DUIPageBloc(
-            initData: DUIPageInitData(
-                identifier: pageUid,
-                config: _instance.configResolver.getPageConfig(pageUid)!),
-            resolver: _instance.configResolver)
-          ..add(
-            InitPageEvent(),
-          );
-      },
-      child: const DUIPage(),
-    );
-  }
-
-  static openPage({
-    required String pageUid,
-    required BuildContext context,
-    Map<String, dynamic>? args,
-    Function({String actionId, List<dynamic> data})? function,
-  }) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (ctx) {
-          return getPage(
-            pageUid: pageUid,
-            args: args,
-            function: function,
-          );
-        },
-      ),
-    );
   }
 }
