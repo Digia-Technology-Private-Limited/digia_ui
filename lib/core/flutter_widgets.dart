@@ -30,7 +30,6 @@ class FW {
         elevation: props.elevation,
         shadowColor: props.shadowColor.letIfTrue(toColor),
         backgroundColor: props.backgrounColor.letIfTrue(toColor),
-        iconTheme:
-            IconThemeData(color: props.backgrounColor.letIfTrue(toColor)));
+        iconTheme: IconThemeData(color: props.iconColor.letIfTrue(toColor)));
   }
 }

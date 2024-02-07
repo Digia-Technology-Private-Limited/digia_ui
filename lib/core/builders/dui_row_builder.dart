@@ -20,7 +20,7 @@ class DUIRowBuilder extends DUIWidgetBuilder {
       return fallbackWidget();
     }
 
-    return Row(
+    final rowWidget = Row(
         mainAxisAlignment: DUIDecoder.toMainAxisAlginmentOrDefault(
             data.props['mainAxisAlignment'],
             defaultValue: MainAxisAlignment.start),
@@ -31,6 +31,15 @@ class DUIRowBuilder extends DUIWidgetBuilder {
           final builder = DUIJsonWidgetBuilder(data: e, registry: registry!);
           return builder.build(context);
         }).toList());
+
+    if (data.props['isScrollable'] == true) {
+      return SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: rowWidget,
+      );
+    }
+
+    return rowWidget;
   }
 
   @override

@@ -1,12 +1,13 @@
-import 'package:digia_ui/Utils/basic_shared_utils/num_decoder.dart';
-import 'package:digia_ui/Utils/util_functions.dart';
 import 'package:digia_ui/components/utils/DUICornerRadius/dui_corner_radius.dart';
+import 'package:json_annotation/json_annotation.dart';
 
-part 'dui_border.json.dart';
+part 'dui_border.g.dart';
 
+@JsonSerializable()
 class DUIBorder {
   String? borderStyle;
   double? borderWidth;
+  String? borderWidthStr;
   String? borderColor;
   DUICornerRadius? borderRadius;
 

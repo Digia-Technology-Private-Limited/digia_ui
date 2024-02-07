@@ -15,6 +15,8 @@ import 'package:digia_ui/core/json_widget_builder.dart';
 import 'package:digia_ui/core/page/props/dui_widget_json_data.dart';
 import 'package:flutter/material.dart';
 
+import '../core/builders/dui_container2_builder.dart';
+
 typedef WidgetFromJsonFn<T extends Widget> = T Function(
     Map<String, dynamic> json);
 
@@ -33,7 +35,7 @@ DUIWidgetBuilderCreatorFn withoutRegistry(
 class DUIWidgetRegistry {
   static final Map<String, DUIWidgetBuilderCreatorFn> builders = {
     'digia/icon': withoutRegistry(DUIIconBuilder.create),
-    'digia/htmlView': withoutRegistry(DUIHTMLViewBuilder.create),
+    'digia/htmlView': withoutRegistry(DUIHtmlViewBuilder.create),
     'digia/avatar': withoutRegistry(DUIAvatarBuilder.create),
     'digia/richText': withoutRegistry(DUITextBuilder.create),
     'digia/text': withoutRegistry(DUITextBuilder.create),
@@ -43,6 +45,7 @@ class DUIWidgetRegistry {
     'digia/gridView': DUIGridViewBuilder.create,
     'digia/column': DUIColumnBuilder.create,
     'digia/row': DUIRowBuilder.create,
+    'digia/container': withoutRegistry(DUIContainer2Builder.create),
     'fw/sized_box': withoutRegistry(DUISizedBoxBuilder.create),
     'fw/spacer': withoutRegistry(DUISpacerBuilder.create),
     'fw/appBar': withoutRegistry(DUIAppBarBuilder.create),

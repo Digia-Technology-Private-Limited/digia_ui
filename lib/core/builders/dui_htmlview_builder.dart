@@ -4,15 +4,15 @@ import 'package:digia_ui/core/json_widget_builder.dart';
 import 'package:digia_ui/core/page/props/dui_widget_json_data.dart';
 import 'package:flutter/material.dart';
 
-class DUIHTMLViewBuilder extends DUIWidgetBuilder {
-  DUIHTMLViewBuilder({required super.data});
+class DUIHtmlViewBuilder extends DUIWidgetBuilder {
+  DUIHtmlViewBuilder({required super.data});
 
-  static DUIHTMLViewBuilder? create(DUIWidgetJsonData data) {
-    return DUIHTMLViewBuilder(data: data);
+  static DUIHtmlViewBuilder? create(DUIWidgetJsonData data) {
+    return DUIHtmlViewBuilder(data: data);
   }
 
   @override
   Widget build(BuildContext context) {
-    return DUIHTMLView(DUIHTMLViewProps.fromJson(data.props));
+    return DUIHtmlView(DUIHtmlViewProps.fromJson(data.props));
   }
 }
