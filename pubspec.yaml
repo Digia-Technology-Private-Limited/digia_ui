@@ -145,26 +145,21 @@ flutter:
         - asset: assets/fonts/Poppins/Poppins-ThinItalic.ttf
           weight: 100
           style: italic
-    - family: Nunito
-      fonts:
-        - asset: assets/fonts/Nunito/Nunito-Bold.ttf
-          weight: 700
-
     - family: LineAwesomeIcons
       fonts:
-        - asset: assets/icons/lineAwesome/LineAwesome.ttf
+        - asset: assets/icons/LineAwesome.ttf
           style: normal
     - family: FontAwesomeBrands
       fonts:
-        - asset: assets/icons/lineAwesome/fa-brands-400.ttf
+        - asset: assets/icons/fa-brands-400.ttf
           style: normal
     - family: FontAwesomeSolid
       fonts:
-        - asset: assets/icons/lineAwesome/fa-solid-900.ttf
+        - asset: assets/icons/fa-solid-900.ttf
           style: normal
     - family: FontAwesomeRegular
       fonts:
-        - asset: assets/icons/lineAwesome/fa-regular-400.ttf
+        - asset: assets/icons/fa-regular-400.ttf
           style: normal
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
