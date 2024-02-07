@@ -6,7 +6,6 @@ import 'package:digia_ui/src/core/page/dui_page_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../components/dui_widget.dart';
 import 'dui_page_event.dart';
 
 class DUIPage extends StatelessWidget {
