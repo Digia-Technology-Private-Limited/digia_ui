@@ -10,7 +10,6 @@ class DUIIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     if (_props.iconData == null) {
       return const Text('');
     }
