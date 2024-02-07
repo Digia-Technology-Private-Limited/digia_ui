@@ -6,12 +6,11 @@ import 'package:digia_ui/src/core/page/dui_page_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../components/dui_widget.dart';
 import 'dui_page_event.dart';
 
 class DUIPage extends StatelessWidget {
   final String pageUid;
-  final Function({String methodId, Map<String, dynamic>? data})?
+  final Function(String methodId, Map<String, dynamic>? data)?
       onExternalMethodCalled;
   final Map<String, dynamic>? pageArguments;
 
@@ -28,6 +27,7 @@ class DUIPage extends StatelessWidget {
     return BlocProvider(
       create: (context) {
         return DUIPageBloc(
+            onExternalMethodCalled: onExternalMethodCalled,
             initData: DUIPageInitData(
                 identifier: pageUid,
                 config: configResolver.getPageConfig(pageUid)!),

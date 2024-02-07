@@ -14,9 +14,14 @@ import '../../config_resolver.dart';
 class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
   final DigiaUIConfigResolver resolver;
   final Map<String, dynamic>? args;
+  final Function(String methodId, Map<String, dynamic>? data)?
+      onExternalMethodCalled;
 
   DUIPageBloc(
-      {required DUIPageInitData initData, required this.resolver, this.args})
+      {this.onExternalMethodCalled,
+      required DUIPageInitData initData,
+      required this.resolver,
+      this.args})
       : super(DUIPageState(
             uid: initData.identifier,
             isLoading: true,
@@ -80,6 +85,9 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
         if (context != null) {
           return Navigator.of(context).maybePop();
         }
+      case 'Action.callExternalMethod':
+        onExternalMethodCalled?.call(
+            action.data['methodId'] ?? '', action.data['args']);
 
       default:
         emit(state.copyWith(isLoading: false));

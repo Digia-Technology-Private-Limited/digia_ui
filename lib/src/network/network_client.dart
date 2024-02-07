@@ -1,3 +1,4 @@
+import 'package:digia_ui/src/digia_ui_sdk.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_intercept_to_curl/dio_intercept_to_curl.dart';
 import 'package:flutter/foundation.dart';
@@ -15,6 +16,7 @@ Dio _createDefaultDio(String baseUrl) {
 
 class NetworkClient {
   final Dio dio;
+
   NetworkClient(Dio? dio, String baseUrl)
       : dio = dio ?? _createDefaultDio(baseUrl) {
     if (baseUrl.isEmpty) {
@@ -38,8 +40,17 @@ class NetworkClient {
 
   Future<Response<T>> _execute<T>(String path, HttpMethod method,
       {dynamic data, Map<String, dynamic>? headers}) async {
+    String urlPath = '';
+    if (path.contains('http')) {
+      urlPath = path;
+    } else {
+      urlPath = dio.options.baseUrl + path;
+    }
     return dio.fetch<T>(RequestOptions(
-        path: path, method: method.stringValue, data: data, headers: headers));
+        path: urlPath,
+        method: method.stringValue,
+        data: data,
+        headers: headers));
   }
 
   Future<BaseResponse<T>> request<T>(
