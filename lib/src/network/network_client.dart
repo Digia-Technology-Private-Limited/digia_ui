@@ -40,14 +40,10 @@ class NetworkClient {
 
   Future<Response<T>> _execute<T>(String path, HttpMethod method,
       {dynamic data, Map<String, dynamic>? headers}) async {
-    String urlPath = '';
-    if (path.contains('http')) {
-      urlPath = path;
-    } else {
-      urlPath = dio.options.baseUrl + path;
-    }
+    final fullPath =
+        path.contains('http') ? path : '${dio.options.baseUrl}/$path';
     return dio.fetch<T>(RequestOptions(
-        path: urlPath,
+        path: fullPath,
         method: method.stringValue,
         data: data,
         headers: headers));
