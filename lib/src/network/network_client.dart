@@ -1,4 +1,3 @@
-import 'package:digia_ui/src/digia_ui_sdk.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_intercept_to_curl/dio_intercept_to_curl.dart';
 import 'package:flutter/foundation.dart';
