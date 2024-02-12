@@ -10,7 +10,7 @@ import 'dui_page_event.dart';
 
 class DUIPage extends StatelessWidget {
   final String pageUid;
-  final Function({String methodId, Map<String, dynamic>? data})?
+  final Function(String methodId, Map<String, dynamic>? data)?
       onExternalMethodCalled;
   final Map<String, dynamic>? pageArguments;
 
@@ -27,6 +27,7 @@ class DUIPage extends StatelessWidget {
     return BlocProvider(
       create: (context) {
         return DUIPageBloc(
+            onExternalMethodCalled: onExternalMethodCalled,
             initData: DUIPageInitData(
                 identifier: pageUid,
                 config: configResolver.getPageConfig(pageUid)!),

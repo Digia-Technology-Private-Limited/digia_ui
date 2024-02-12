@@ -1,3 +1,4 @@
+import 'package:digia_ui/src/digia_ui_sdk.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_intercept_to_curl/dio_intercept_to_curl.dart';
 import 'package:flutter/foundation.dart';
@@ -15,6 +16,7 @@ Dio _createDefaultDio(String baseUrl) {
 
 class NetworkClient {
   final Dio dio;
+
   NetworkClient(Dio? dio, String baseUrl)
       : dio = dio ?? _createDefaultDio(baseUrl) {
     if (baseUrl.isEmpty) {

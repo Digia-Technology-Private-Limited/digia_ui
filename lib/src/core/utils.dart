@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 Future<Object?> openDUIPage({
   required String pageUid,
   required BuildContext context,
-  Function({String methodId, Map<String, dynamic>? data})?
+  Function(String methodId, Map<String, dynamic>? data)?
       onExternalMethodCalled,
   Map<String, dynamic>? pageArguments,
 }) {
