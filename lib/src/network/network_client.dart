@@ -38,8 +38,13 @@ class NetworkClient {
 
   Future<Response<T>> _execute<T>(String path, HttpMethod method,
       {dynamic data, Map<String, dynamic>? headers}) async {
+    final fullPath =
+        path.contains('http') ? path : '${dio.options.baseUrl}/$path';
     return dio.fetch<T>(RequestOptions(
-        path: path, method: method.stringValue, data: data, headers: headers));
+        path: fullPath,
+        method: method.stringValue,
+        data: data,
+        headers: headers));
   }
 
   Future<BaseResponse<T>> request<T>(
