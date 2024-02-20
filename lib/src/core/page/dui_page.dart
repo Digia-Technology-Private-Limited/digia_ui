@@ -1,6 +1,5 @@
 import 'package:digia_ui/digia_ui.dart';
 import 'package:digia_ui/src/Utils/basic_shared_utils/lodash.dart';
-import 'package:digia_ui/src/core/flutter_widgets.dart';
 import 'package:digia_ui/src/core/page/dui_page_bloc.dart';
 import 'package:digia_ui/src/core/page/dui_page_state.dart';
 import 'package:flutter/material.dart';
@@ -50,33 +49,19 @@ class _DUIScreenState extends State<_DUIScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<DUIPageBloc, DUIPageState>(builder: (context, state) {
-      Widget bodyWidget;
-
       if (state.isLoading) {
-        bodyWidget = const Center(
+        return const Scaffold(
+            body: SafeArea(
+                child: Center(
           child: SizedBox(
             // TODO -> Resolve Loader from Config
             child: CircularProgressIndicator(color: Colors.blue),
           ),
-        );
-      } else {
-        bodyWidget = state.props?.layout?.body.root
-                .let((root) => DUIWidget(data: root)) ??
-            Center(child: Text('Props not found for page: ${state.uid}'));
+        )));
       }
 
-      final appBar = state.props?.layout?.header?.root.let((root) {
-        if (root.type != 'fw/appBar') {
-          return null;
-        }
-
-        return FW.appBar(root.props);
-      });
-
-      return Scaffold(
-        appBar: appBar,
-        body: SafeArea(child: bodyWidget),
-      );
+      return state.props?.layout?.root.let((p0) => DUIWidget(data: p0)) ??
+          Center(child: Text('Props not found for page: ${state.uid}'));
     });
   }
 }

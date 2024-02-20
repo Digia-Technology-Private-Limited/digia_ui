@@ -25,8 +25,8 @@ class DUIScaffoldBuilder extends DUIWidgetBuilder {
 
     return Scaffold(
       appBar: appBar,
-      body: data.children['child']?.first.let((p0) {
-        return SafeArea(child: DUIWidget(data: data));
+      body: data.children['body']?.first.let((p0) {
+        return SafeArea(child: DUIWidget(data: p0));
       }),
     );
   }
