@@ -1,0 +1,30 @@
+[
+    {
+        "merged": "tech.digia.digia_ui.app-merged_res-13:/mipmap-xxxhdpi_ic_launcher.png.flat",
+        "source": "tech.digia.digia_ui.app-main-7:/mipmap-xxxhdpi/ic_launcher.png"
+    },
+    {
+        "merged": "tech.digia.digia_ui.app-merged_res-13:/mipmap-hdpi_ic_launcher.png.flat",
+        "source": "tech.digia.digia_ui.app-main-7:/mipmap-hdpi/ic_launcher.png"
+    },
+    {
+        "merged": "tech.digia.digia_ui.app-merged_res-13:/mipmap-mdpi_ic_launcher.png.flat",
+        "source": "tech.digia.digia_ui.app-main-7:/mipmap-mdpi/ic_launcher.png"
+    },
+    {
+        "merged": "tech.digia.digia_ui.app-merged_res-13:/mipmap-xxhdpi_ic_launcher.png.flat",
+        "source": "tech.digia.digia_ui.app-main-7:/mipmap-xxhdpi/ic_launcher.png"
+    },
+    {
+        "merged": "tech.digia.digia_ui.app-merged_res-13:/drawable-v21_launch_background.xml.flat",
+        "source": "tech.digia.digia_ui.app-main-7:/drawable-v21/launch_background.xml"
+    },
+    {
+        "merged": "tech.digia.digia_ui.app-merged_res-13:/mipmap-xhdpi_ic_launcher.png.flat",
+        "source": "tech.digia.digia_ui.app-main-7:/mipmap-xhdpi/ic_launcher.png"
+    },
+    {
+        "merged": "tech.digia.digia_ui.app-merged_res-13:/drawable_launch_background.xml.flat",
+        "source": "tech.digia.digia_ui.app-main-7:/drawable/launch_background.xml"
+    }
+]

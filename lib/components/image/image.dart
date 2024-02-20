@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:digia_ui/components/image/cached_image_wrapper.dart';
 import 'package:digia_ui/components/image/image.props.dart';
 import 'package:digia_ui/core/container/dui_container.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:octo_image/octo_image.dart';
 
@@ -36,7 +38,9 @@ class _DUIImageState extends State<DUIImage> {
     switch (props.imageSrc.split('/').first) {
       case 'http':
       case 'https':
-        return ((context) => CachedNetworkImage(imageUrl: placeHolderValue));
+        return ((context) => kIsWeb
+            ? Image.network(placeHolderValue)
+            : CachedNetworkImage(imageUrl: placeHolderValue));
       case 'assets':
         return ((context) => Image.asset(placeHolderValue));
       case 'blurHash':
@@ -48,16 +52,16 @@ class _DUIImageState extends State<DUIImage> {
 
   @override
   Widget build(BuildContext context) {
-    final ImageProvider imageProvider;
-    // Network Image
-    if (props.imageSrc.startsWith('http')) {
-      imageProvider = CachedNetworkImageProvider(props.imageSrc);
-    } else {
-      imageProvider = AssetImage(props.imageSrc);
-    }
+    // final ImageProvider imageProvider;
+    // // Network Image
+    // if (props.imageSrc.startsWith('http')) {
+    //   imageProvider = CachedNetworkImageProvider(props.imageSrc);
+    // } else {
+    //   imageProvider = AssetImage(props.imageSrc);
+    // }
 
     return OctoImage(
-        image: imageProvider,
+        image: DUIImageProvider(source: props.imageSrc).provider,
         fit: DUIDecoder.toBoxFit(props.fit),
         gaplessPlayback: true,
         placeholderBuilder: _placeHolderBuilderCreater(),

@@ -3,22 +3,20 @@ import 'package:digia_ui/Utils/basic_shared_utils/dui_decoder.dart';
 import 'package:digia_ui/Utils/basic_shared_utils/lodash.dart';
 import 'package:digia_ui/Utils/basic_shared_utils/num_decoder.dart';
 import 'package:digia_ui/Utils/util_functions.dart';
+import 'package:digia_ui/components/image/cached_image_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'dui_container2_props.dart';
 
 class DUIContainer2 extends StatelessWidget {
   final DUIContainer2Props props;
+
   const DUIContainer2(this.props, {super.key});
 
   @override
   Widget build(BuildContext context) {
     late BoxShape? shape;
     ImageProvider? imageProvider = props.decorationImage?.source.let((source) {
-      if (source.contains('http')) {
-        return CachedNetworkImageProvider(source);
-      }
-
-      return AssetImage(source);
+      return DUIImageProvider(source: source).provider;
     });
     if (props.shape == 'circle') {
       shape = BoxShape.circle;
