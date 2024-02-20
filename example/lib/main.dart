@@ -3,5 +3,5 @@ import 'package:flutter/material.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const DUIApp(digiaAccessKey: "64f581f9007b81d85eceec68"));
+  runApp(const DUIApp(digiaAccessKey: "654a07bd58a81f8c6e5c38c5"));
 }

@@ -10,7 +10,7 @@ class DUIPageProps {
   String uid;
   dynamic actions;
   dynamic inputArgs;
-  @JsonKey(fromJson: PageLayoutProps.fromJson, includeToJson: false)
+  @PageLayoutJsonConverter()
   PageLayoutProps? layout;
 
   DUIPageProps({
@@ -32,14 +32,33 @@ class PageLayoutProps {
   PageLayoutProps({
     required this.root,
   });
+}
 
+@JsonSerializable()
+class PageBody {
+  DUIWidgetJsonData root;
+
+  PageBody({required this.root});
+
+  factory PageBody.fromJson(Map<String, dynamic> json) =>
+      _$PageBodyFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PageBodyToJson(this);
+}
+
+class PageLayoutJsonConverter
+    extends JsonConverter<PageLayoutProps?, Map<String, dynamic>?> {
+  const PageLayoutJsonConverter();
   static final Map<String, List<DUIWidgetJsonData>> _defaultAppBarChild = {
     'appBar': [
       DUIWidgetJsonData(type: 'fw/app_bar', props: {'title': 'This is AppBar'})
     ],
   };
 
-  factory PageLayoutProps.fromJson(Map<String, dynamic> json) {
+  @override
+  PageLayoutProps? fromJson(Map<String, dynamic>? json) {
+    if (json == null) return null;
+
     /// If empty, show a Scaffold with a Default AppBar
     if (json.isEmpty) {
       return PageLayoutProps(
@@ -53,7 +72,7 @@ class PageLayoutProps {
 
     /// Below code is for Backward Compatibility.
     final Map<String, List<DUIWidgetJsonData>>? appBarProps =
-        ifNotNull(json['header']['root'] as Map<String, dynamic>?, (p0) {
+        ifNotNull(json['header']?['root'] as Map<String, dynamic>?, (p0) {
       if (p0['type'] == 'fw/appBar') {
         return {
           'appBar': [DUIWidgetJsonData.fromJson(p0)]
@@ -64,7 +83,7 @@ class PageLayoutProps {
     });
 
     final Map<String, List<DUIWidgetJsonData>>? bodyProps =
-        ifNotNull(json['body']['root'] as Map<String, dynamic>?, (p0) {
+        ifNotNull(json['body']?['root'] as Map<String, dynamic>?, (p0) {
       return {
         'body': [DUIWidgetJsonData.fromJson(p0)]
       };
@@ -74,16 +93,9 @@ class PageLayoutProps {
         root: DUIWidgetJsonData(
             type: 'fw/scaffold', children: {...?appBarProps, ...?bodyProps}));
   }
-}
 
-@JsonSerializable()
-class PageBody {
-  DUIWidgetJsonData root;
-
-  PageBody({required this.root});
-
-  factory PageBody.fromJson(Map<String, dynamic> json) =>
-      _$PageBodyFromJson(json);
-
-  Map<String, dynamic> toJson() => _$PageBodyToJson(this);
+  @override
+  toJson(PageLayoutProps? object) {
+    return null;
+  }
 }
