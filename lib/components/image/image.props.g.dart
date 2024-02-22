@@ -8,7 +8,7 @@ part of 'image.props.dart';
 
 DUIImageProps _$DUIImagePropsFromJson(Map<String, dynamic> json) =>
     DUIImageProps(
-      styleClass: DUIStyleClass.fromJson(json['styleClass']),
+      styleClass: DUIStyleClass.fromJson(json['style']),
       imageSrc: json['imageSrc'] as String,
       placeHolder: json['placeHolder'] as String?,
       errorImage: json['errorImage'] as String?,
