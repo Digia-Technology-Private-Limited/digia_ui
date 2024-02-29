@@ -32,7 +32,7 @@ class DUIPage extends StatelessWidget {
                 config: configResolver.getPageConfig(pageUid)!),
             resolver: configResolver)
           ..add(
-            InitPageEvent(),
+            InitPageEvent(pageParams: pageArguments),
           );
       },
       child: _DUIScreen(),
