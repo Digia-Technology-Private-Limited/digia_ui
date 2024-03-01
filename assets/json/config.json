@@ -25,16 +25,16 @@
             "children": [
               {
                 "type": "digia/linear_progress_indicator",
-                "props":{
+                "props": {
                   "width": 400,
-                "minHeight": 15.0,
-                "borderRadius": 5.0,
-                "bgColor": "#CF8695",
-                "indicatorColor": "#868CCF",
-                "animationDuration": 5,
-                "animationBeginLength": 2.0,
-                "animationEndLength": 40.0,
-                "curve": "easeInOutCubicEmphasized"
+                  "minHeight": 15.0,
+                  "borderRadius": 5.0,
+                  "bgColor": "#CF8695",
+                  "indicatorColor": "#868CCF",
+                  "animationDuration": 5,
+                  "animationBeginLength": 2.0,
+                  "animationEndLength": 40.0,
+                  "curve": "easeInOutCubicEmphasized"
                 }
               },
               {

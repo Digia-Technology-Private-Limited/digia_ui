@@ -23,6 +23,7 @@ environment:
 
 # https://github.com/frencojobs/derry
 scripts:
+  i: flutter pub get
   build: dart run build_runner build --delete-conflicting-outputs
   format: dart format .
   fix: dart fix --apply
@@ -144,31 +145,22 @@ flutter:
         - asset: assets/fonts/Poppins/Poppins-ThinItalic.ttf
           weight: 100
           style: italic
-    - family: AppleII
-      fonts:
-        - asset: assets/fonts/AppleIIScreenTypeface/AppleIiScreenTypeface-2aP3.ttf
-          weight: 400
-    - family: Nunito
-      fonts:
-        - asset: assets/fonts/Nunito/Nunito-Bold.ttf
-          weight: 700
-
     - family: LineAwesomeIcons
       fonts:
-        - asset: assets/icons/lineAwesome/LineAwesome.ttf
+        - asset: assets/icons/LineAwesome.ttf
           style: normal
     - family: FontAwesomeBrands
       fonts:
-        - asset: assets/icons/lineAwesome/fa-brands-400.ttf
+        - asset: assets/icons/fa-brands-400.ttf
           style: normal
     - family: FontAwesomeSolid
       fonts:
-        - asset: assets/icons/lineAwesome/fa-solid-900.ttf
+        - asset: assets/icons/fa-solid-900.ttf
           style: normal
     - family: FontAwesomeRegular
       fonts:
-        - asset: assets/icons/lineAwesome/fa-regular-400.ttf
-          style: normal          
+        - asset: assets/icons/fa-regular-400.ttf
+          style: normal
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro
