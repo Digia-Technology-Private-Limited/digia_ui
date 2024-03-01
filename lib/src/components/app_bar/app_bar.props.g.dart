@@ -8,7 +8,8 @@ part of 'app_bar.props.dart';
 
 DUIAppBarProps _$DUIAppBarPropsFromJson(Map<String, dynamic> json) =>
     DUIAppBarProps(
-      title: DUITextProps.fromJson(json['title']),
+      title:
+          json['title'] == null ? null : DUITextProps.fromJson(json['title']),
       shadowColor: json['shadowColor'] as String?,
       backgrounColor: json['backgrounColor'] as String?,
       iconColor: json['iconColor'] as String?,

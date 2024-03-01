@@ -26,7 +26,7 @@ class FW {
     final props = DUIAppBarProps.fromJson(json);
 
     return AppBar(
-        title: DUIText(props.title),
+        title: props.title.let((p0) => DUIText(p0)),
         elevation: props.elevation,
         shadowColor: props.shadowColor.letIfTrue(toColor),
         backgroundColor: props.backgrounColor.letIfTrue(toColor),
