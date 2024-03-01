@@ -46,16 +46,15 @@ TextStyle? toTextStyle(DUITextStyle? textStyle) {
   Color? decorationColor = textStyle.textDecorationColor.letIfTrue(toColor);
   TextDecorationStyle? decorationStyle =
       DUIDecoder.toTextDecorationStyle(textStyle.textDecorationStyle);
-   // [TODO]: This shouldn't be hardcoded here.
+  // [TODO]: This shouldn't be hardcoded here.
 
-
-  return GoogleFonts.getFont(fontFamily).copyWith(
-    // fontFamily: fontFamily,
+  return GoogleFonts.getFont(
+    fontFamily,
+    color: textColor,
     fontWeight: fontWeight,
     fontStyle: fontStyle,
     fontSize: fontSize,
     height: fontHeight,
-    color: textColor,
     backgroundColor: textBgColor,
     decoration: textDecoration,
     decorationColor: decorationColor,
