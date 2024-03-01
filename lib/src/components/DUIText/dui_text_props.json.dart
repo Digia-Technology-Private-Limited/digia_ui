@@ -40,8 +40,7 @@ DUITextProps _$DUITextPropsFromJson(dynamic json) {
       ?.nonNulls
       .map((e) => DUITextSpan.fromJson(e as Map<String, dynamic>))
       .toList();
-  
-  
+
   return DUITextProps()
     ..alignment = json['alignment'] as String?
     ..textStyle = DUITextStyle.fromJson(json['textStyle'])
