@@ -11,7 +11,7 @@ DUIFont _$DUIFontFromJson(Map<String, dynamic> json) => DUIFont()
   ..size = (json['size'] as num?)?.toDouble()
   ..height = (json['height'] as num?)?.toDouble()
   ..style = json['style'] as String?
-  ..fontFamily = json['fontFamily'] as String?;
+  ..fontFamily = json['font-family'] as String?;
 
 Map<String, dynamic> _$DUIFontToJson(DUIFont instance) => <String, dynamic>{
       'weight': instance.weight,
