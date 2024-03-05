@@ -15,6 +15,10 @@ class DUICarouselProps {
   final bool? autoPlay;
   final String? animationDuration;
   final String? autoPlayInterval;
+  final bool? infiniteScroll;
+  final bool? enlargeCenterPage;
+  final String? enlargeFactor;
+  final String? childPadding;
 
   DUICarouselProps(
     this.height,
@@ -28,6 +32,10 @@ class DUICarouselProps {
     this.autoPlay,
     this.animationDuration,
     this.autoPlayInterval,
+    this.infiniteScroll,
+    this.enlargeCenterPage,
+    this.enlargeFactor,
+    this.childPadding,
   );
 
   factory DUICarouselProps.fromJson(Map<String, dynamic> json) =>

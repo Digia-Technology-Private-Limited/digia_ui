@@ -19,6 +19,10 @@ DUICarouselProps _$DUICarouselPropsFromJson(Map<String, dynamic> json) =>
       json['autoPlay'] as bool?,
       json['animationDuration'] as String?,
       json['autoPlayInterval'] as String?,
+      json['infiniteScroll'] as bool?,
+      json['enlargeCenterPage'] as bool?,
+      json['enlargeFactor'] as String?,
+      json['childPadding'] as String?,
     );
 
 Map<String, dynamic> _$DUICarouselPropsToJson(DUICarouselProps instance) =>
@@ -34,4 +38,8 @@ Map<String, dynamic> _$DUICarouselPropsToJson(DUICarouselProps instance) =>
       'autoPlay': instance.autoPlay,
       'animationDuration': instance.animationDuration,
       'autoPlayInterval': instance.autoPlayInterval,
+      'infiniteScroll': instance.infiniteScroll,
+      'enlargeCenterPage': instance.enlargeCenterPage,
+      'enlargeFactor': instance.enlargeFactor,
+      'childPadding': instance.childPadding,
     };

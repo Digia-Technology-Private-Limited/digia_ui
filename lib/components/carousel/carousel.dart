@@ -14,8 +14,9 @@ class DUICarousel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final height = _toWidth(context, props.height) ?? 180;
+    final height = _toWidth(context, props.height);
     final width = _toWidth(context, props.width) ?? double.infinity;
+    final padding = double.tryParse(props.childPadding ?? '0') ?? 0;
     // final borderRadius = DUIDecoder.toBorderRadius(props.borderRadius);
 
     return Container(
@@ -25,6 +26,9 @@ class DUICarousel extends StatelessWidget {
         items: data.children['children']!.map((e) {
           final builder = DUIJsonWidgetBuilder(data: e, registry: registry!);
           return Container(
+              height: _toHeight(context, props.childHeight),
+              width: _toWidth(context, props.childWidth),
+              padding: EdgeInsets.symmetric(horizontal: padding),
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(
                       double.tryParse(props.borderRadius ?? '8') ?? 8)),
@@ -39,12 +43,14 @@ class DUICarousel extends StatelessWidget {
             autoPlayCurve: Curves.linear,
             autoPlayInterval: Duration(
                 milliseconds:
-                    int.tryParse(props.autoPlayInterval ?? '800') ?? 800),
-            enableInfiniteScroll: false,
+                    int.tryParse(props.autoPlayInterval ?? '3000') ?? 3000),
+            enableInfiniteScroll: props.infiniteScroll ?? false,
             initialPage: int.tryParse(props.initialPage ?? '1') ?? 1,
             viewportFraction:
                 double.tryParse(props.viewportFraction ?? '0.5') ?? 0.5,
-            enlargeFactor: 0.25),
+            enlargeFactor:
+                double.tryParse(props.enlargeFactor ?? '0.25') ?? 0.25,
+            enlargeCenterPage: props.enlargeCenterPage),
       ),
     );
   }
