@@ -2,6 +2,7 @@ import 'package:digia_ui/src/core/builders/dui_app_bar_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_avatar_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_button_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_column_builder.dart';
+import 'package:digia_ui/src/core/builders/dui_expandable_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_gridview_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_image_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_listview_builder.dart';
@@ -51,6 +52,8 @@ class DUIWidgetRegistry {
         DUIColumnBuilder.create(data, registry: DUIWidgetRegistry.shared),
     'digia/row': (data, {registry}) =>
         DUIRowBuilder.create(data, registry: DUIWidgetRegistry.shared),
+    'digia/expandable': (data, {registry}) =>
+        DUIExpandableBuilder.create(data, registry: DUIWidgetRegistry.shared),
     'digia/container': withoutRegistry(DUIContainer2Builder.create),
     'fw/sized_box': withoutRegistry(DUISizedBoxBuilder.create),
     'fw/spacer': withoutRegistry(DUISpacerBuilder.create),
