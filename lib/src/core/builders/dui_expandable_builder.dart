@@ -17,6 +17,7 @@ class DUIExpandableBuilder extends DUIWidgetBuilder {
   @override
   Widget build(BuildContext context) {
     return DUIExpandable(
+      children: data.children,
       props: DUIExpandableProps.fromJson(data.props),
       registry: registry,
     );

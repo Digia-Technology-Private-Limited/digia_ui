@@ -6,8 +6,6 @@ part 'dui_expandable_props.g.dart';
 
 @JsonSerializable()
 class DUIExpandableProps {
-  final Map<String, dynamic>? expanded;
-  final Map<String, dynamic>? collapsed;
   final String? bodyAlignment;
   final String? headerAlignment;
   final String? iconPlacement;
@@ -28,8 +26,6 @@ class DUIExpandableProps {
   final bool? initialExpanded;
 
   DUIExpandableProps(
-      this.expanded,
-      this.collapsed,
       this.bodyAlignment,
       this.headerAlignment,
       this.iconPlacement,
