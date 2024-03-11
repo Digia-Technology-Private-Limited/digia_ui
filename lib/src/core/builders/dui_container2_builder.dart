@@ -13,7 +13,7 @@ class DUIContainer2Builder extends DUIWidgetBuilder {
 
   @override
   Widget build(BuildContext context) {
-    return DUIContainer2(DUIContainer2Props.fromJson(data.props),
-        data.children['child']!.first);
+    return DUIContainer2(
+        DUIContainer2Props.fromJson(data.props), data.children['child']?.first);
   }
 }

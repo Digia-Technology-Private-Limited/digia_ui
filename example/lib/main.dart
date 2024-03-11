@@ -7,5 +7,5 @@ const String baseUrl = 'https://app.digia.tech/hydrator/api';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(const DUIApp(
-      digiaAccessKey: "65a4e1b85cc29694890b42e8", baseUrl: baseUrl));
+      digiaAccessKey: "654a07bd58a81f8c6e5c38c5", baseUrl: baseUrl));
 }
