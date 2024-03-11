@@ -67,7 +67,7 @@ class _DUIExpandableState extends State<DUIExpandable> {
         inkWellBorderRadius: DUIDecoder.toBorderRadius(
             widget.props.inkWellBorderRadius?.borderRadius),
       ),
-      controller: ExpandableController(initialExpanded: true),
+      controller: ExpandableController(initialExpanded: widget.props.initialExpanded),
       key: UniqueKey(),
     );
   }

@@ -25,6 +25,7 @@ class DUIExpandableProps {
   final bool? tapBodyToCollapse;
   final bool? useInkWell;
   final DUIBorder? inkWellBorderRadius;
+  final bool? initialExpanded;
 
   DUIExpandableProps(
       this.expanded,
@@ -45,7 +46,7 @@ class DUIExpandableProps {
       this.tapBodyToExpand,
       this.tapBodyToCollapse,
       this.useInkWell,
-      this.inkWellBorderRadius);
+      this.inkWellBorderRadius, this.initialExpanded);
 
   factory DUIExpandableProps.fromJson(Map<String, dynamic> json) =>
       _$DUIExpandablePropsFromJson(json);
