@@ -8,8 +8,6 @@ part of 'dui_expandable_props.dart';
 
 DUIExpandableProps _$DUIExpandablePropsFromJson(Map<String, dynamic> json) =>
     DUIExpandableProps(
-      json['expanded'] as Map<String, dynamic>?,
-      json['collapsed'] as Map<String, dynamic>?,
       json['bodyAlignment'] as String?,
       json['headerAlignment'] as String?,
       json['iconPlacement'] as String?,
@@ -34,8 +32,6 @@ DUIExpandableProps _$DUIExpandablePropsFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$DUIExpandablePropsToJson(DUIExpandableProps instance) =>
     <String, dynamic>{
-      'expanded': instance.expanded,
-      'collapsed': instance.collapsed,
       'bodyAlignment': instance.bodyAlignment,
       'headerAlignment': instance.headerAlignment,
       'iconPlacement': instance.iconPlacement,
