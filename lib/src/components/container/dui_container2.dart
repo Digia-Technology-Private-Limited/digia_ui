@@ -3,13 +3,17 @@ import 'package:digia_ui/src/Utils/basic_shared_utils/dui_decoder.dart';
 import 'package:digia_ui/src/Utils/basic_shared_utils/lodash.dart';
 import 'package:digia_ui/src/Utils/basic_shared_utils/num_decoder.dart';
 import 'package:digia_ui/src/Utils/util_functions.dart';
+import 'package:digia_ui/src/components/dui_widget.dart';
+import 'package:digia_ui/src/core/page/props/dui_widget_json_data.dart';
 
 import 'package:flutter/material.dart';
 import 'dui_container2_props.dart';
 
 class DUIContainer2 extends StatelessWidget {
   final DUIContainer2Props props;
-  const DUIContainer2(this.props, {super.key});
+  final DUIWidgetJsonData? child;
+
+  const DUIContainer2(this.props, this.child, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -75,6 +79,7 @@ class DUIContainer2 extends StatelessWidget {
           maxWidth: _toWidth(context, props.maxWidth) ?? double.infinity,
           minHeight: _toHeight(context, props.minHeight) ?? 0,
           minWidth: _toWidth(context, props.minWidth) ?? 0),
+      child: child.let((p0) => DUIWidget(data: p0)),
     );
   }
 
