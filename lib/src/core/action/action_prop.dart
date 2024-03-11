@@ -4,10 +4,15 @@ part 'action_prop.g.dart';
 
 @JsonSerializable()
 class ActionProp {
-  String type;
-  Map<String, dynamic> data;
+  final String type;
+  final Map<String, dynamic> data;
+  final bool inkwell;
 
-  ActionProp({required this.type, required this.data});
+  const ActionProp({
+    required this.type,
+    required this.data,
+    this.inkwell = true,
+  });
 
   factory ActionProp.fromJson(Map<String, dynamic> json) =>
       _$ActionPropFromJson(json);

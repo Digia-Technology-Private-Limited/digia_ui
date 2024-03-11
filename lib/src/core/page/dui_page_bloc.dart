@@ -12,23 +12,23 @@ import '../../Utils/basic_shared_utils/dui_decoder.dart';
 import '../../config_resolver.dart';
 
 class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
-  final DigiaUIConfigResolver resolver;
-  final Map<String, dynamic>? args;
+  final DUIConfig _config;
   final Function(String methodId, Map<String, dynamic>? data)?
       onExternalMethodCalled;
 
-  DUIPageBloc(
-      {this.onExternalMethodCalled,
-      required DUIPageInitData initData,
-      required this.resolver,
-      this.args})
-      : super(DUIPageState(
-            uid: initData.identifier,
+  DUIPageBloc({
+    required String pageUid,
+    required DUIConfig config,
+    this.onExternalMethodCalled,
+  })  : _config = config,
+        super(DUIPageState(
+            pageUid: pageUid,
             isLoading: true,
-            props: DUIPageProps.fromJson(initData.config))) {
+            props: config.getPageData(pageUid))) {
     on<InitPageEvent>(_init);
-    on<PostActionEvent>(
-        (event, emit) => _handleAction(event.context, event.action, emit));
+    on<SetStateEvent>(_setState);
+    // on<PostActionEvent>(
+    //     (event, emit) => _handleAction(event.context, event.action, emit));
   }
 
   void _init(
@@ -51,6 +51,15 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
     return;
   }
 
+  void _setState(
+    SetStateEvent event,
+    Emitter<DUIPageState> emit,
+  ) {
+    state.props.variables?[event.variableName]?.set(event.value);
+
+    emit(state.copyWith());
+  }
+
 // TODO: Need Action Handler
   Future<Object?> _handleAction(BuildContext? context, ActionProp action,
       Emitter<DUIPageState> emit) async {
@@ -59,10 +68,10 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
       case 'Action.loadPage':
       case 'Action.rebuildPage':
         emit(state.copyWith(isLoading: true));
-        final pagePropsJson = await PostAction(resolver).execute(action);
+        final pagePropsJson = await PostAction(_config).execute(action);
 
         if (pagePropsJson == null) {
-          throw 'Props not found for Page: ${state.uid}';
+          throw 'Props not found for Page: ${state.pageUid}';
         }
 
         final props = DUIPageProps.fromJson(pagePropsJson['response']);
@@ -72,9 +81,7 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
       case 'Action.navigateToPage':
         final pageUId = action.data['pageId'];
         return openDUIPage(
-            pageUid: pageUId,
-            context: context!,
-            pageArguments: action.data['args']);
+            pageUid: pageUId, context: context!, pageArgs: action.data['args']);
 
       case 'Action.openUrl':
         final url = Uri.parse(action.data['url']);

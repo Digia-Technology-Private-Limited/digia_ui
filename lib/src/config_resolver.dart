@@ -1,13 +1,15 @@
+import 'package:digia_ui/digia_ui.dart';
 import 'package:digia_ui/src/Utils/dui_font.dart';
 import 'package:digia_ui/src/core/page/dui_page_state.dart';
+import 'package:digia_ui/src/core/page/props/dui_page_props.dart';
 
-class DigiaUIConfigResolver {
+class DUIConfig {
   final Map<String, dynamic> _themeConfig;
   final Map<String, dynamic> _pages;
   final Map<String, dynamic> _restConfig;
   final String _initialRoute;
 
-  DigiaUIConfigResolver(dynamic data)
+  DUIConfig(dynamic data)
       : _themeConfig = data['theme'],
         _pages = data['pages'],
         _restConfig = data['rest'],
@@ -26,18 +28,25 @@ class DigiaUIConfigResolver {
     return DUIFont.fromJson(fontsJson);
   }
 
-  Map<String, dynamic>? getPageConfig(String uid) {
-    return _pages[uid];
+  // Map<String, dynamic>? getPageConfig(String uid) {
+  //   return _pages[uid];
+  // }
+
+  DUIPageProps getPageData(String pageUid) {
+    final pageConfig = _pages[pageUid];
+    if (pageConfig == null) {
+      throw 'Config for Page: $pageUid not found';
+    }
+    return DUIPageProps.fromJson(pageConfig);
   }
 
-  DUIPageInitData getfirstPageData() {
+  DUIPageProps getfirstPageData() {
     final firstPageConfig = _pages[_initialRoute];
     if (firstPageConfig == null || firstPageConfig['uid'] == null) {
       throw 'Config for First Page not found.';
     }
 
-    return DUIPageInitData(
-        identifier: firstPageConfig['uid'], config: firstPageConfig);
+    return DUIPageProps.fromJson(firstPageConfig);
   }
 
   Map<String, dynamic>? getDefaultHeaders() {

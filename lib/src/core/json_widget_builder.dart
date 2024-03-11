@@ -1,13 +1,12 @@
+import 'package:digia_ui/src/Utils/basic_shared_utils/lodash.dart';
 import 'package:digia_ui/src/Utils/basic_shared_utils/num_decoder.dart';
 import 'package:digia_ui/src/Utils/dui_widget_registry.dart';
 import 'package:digia_ui/src/components/utils/DUIStyleClass/dui_style_class.dart';
+import 'package:digia_ui/src/core/action/action_handler.dart';
 import 'package:digia_ui/src/core/action/action_prop.dart';
 import 'package:digia_ui/src/core/container/dui_container.dart';
-import 'package:digia_ui/src/core/page/dui_page_bloc.dart';
-import 'package:digia_ui/src/core/page/dui_page_event.dart';
 import 'package:digia_ui/src/core/page/props/dui_widget_json_data.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../Utils/basic_shared_utils/dui_decoder.dart';
 
@@ -44,16 +43,24 @@ abstract class DUIWidgetBuilder {
       );
     }
 
-    // TODO: This seems like a hack. Is it the right way to handle an action?
-    final onTapProp = data.containerProps['onClick'];
+    final onTapProp = ifNotNull(
+        data.containerProps['onClick'] as Map<String, dynamic>?,
+        (p0) => ActionProp.fromJson(p0));
+
     if (onTapProp != null) {
-      final action = ActionProp.fromJson(onTapProp);
-      output = InkWell(
-        onTap: () => context
-            .read<DUIPageBloc>()
-            .add(PostActionEvent(action: action, context: context)),
-        child: output,
-      );
+      if (onTapProp.inkwell) {
+        output = InkWell(
+          onTap: () => ActionHandler.instance
+              .execute(context: context, action: onTapProp),
+          child: output,
+        );
+      } else {
+        output = GestureDetector(
+          onTap: () => ActionHandler.instance
+              .execute(context: context, action: onTapProp),
+          child: output,
+        );
+      }
     }
 
     // Visibility
