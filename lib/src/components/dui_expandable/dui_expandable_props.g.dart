@@ -29,6 +29,7 @@ DUIExpandableProps _$DUIExpandablePropsFromJson(Map<String, dynamic> json) =>
       json['inkWellBorderRadius'] == null
           ? null
           : DUIBorder.fromJson(json['inkWellBorderRadius']),
+      json['initialExpanded'] as bool?,
     );
 
 Map<String, dynamic> _$DUIExpandablePropsToJson(DUIExpandableProps instance) =>
@@ -52,4 +53,5 @@ Map<String, dynamic> _$DUIExpandablePropsToJson(DUIExpandableProps instance) =>
       'tapBodyToCollapse': instance.tapBodyToCollapse,
       'useInkWell': instance.useInkWell,
       'inkWellBorderRadius': instance.inkWellBorderRadius,
+      'initialExpanded': instance.initialExpanded,
     };
