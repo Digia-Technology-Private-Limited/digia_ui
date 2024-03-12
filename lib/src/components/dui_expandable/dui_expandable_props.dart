@@ -3,6 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'dui_expandable_props.g.dart';
 
+@JsonSerializable()
 class DUIExpandableIconProps {
   final Map<String, dynamic>? collapseIcon;
   final Map<String, dynamic>? expandIcon;
@@ -20,29 +21,10 @@ class DUIExpandableIconProps {
     this.iconRotationAngle,
   });
 
-  factory DUIExpandableIconProps.fromJson(Map<String, dynamic> json) {
-    return DUIExpandableIconProps(
-      iconPadding: json['iconPadding'] == null
-          ? null
-          : DUIInsets.fromJson(json['iconPadding']),
-      collapseIcon: json['collapseIcon'] as Map<String, dynamic>?,
-      expandIcon: json['expandIcon'] as Map<String, dynamic>?,
-      iconPlacement: json['alignment'] as String?,
-      iconRotationAngle: (json['iconRotationAngle'] as num?)?.toDouble(),
-      iconSize: (json['iconSize'] as num?)?.toDouble(),
-    );
-  }
+  factory DUIExpandableIconProps.fromJson(Map<String, dynamic> json) =>
+      _$DUIExpandableIconPropsFromJson(json);
 
-  Map<String, dynamic> toJson() {
-    return {
-      'iconPlacement': iconPlacement,
-      'collapseIcon': collapseIcon,
-      'expandIcon': expandIcon,
-      'iconSize': iconSize,
-      'iconRotationAngle': iconRotationAngle,
-      'padding': iconPadding,
-    };
-  }
+  Map<String, dynamic> toJson() => _$DUIExpandableIconPropsToJson(this);
 }
 
 @JsonSerializable()

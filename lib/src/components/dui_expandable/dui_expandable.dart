@@ -57,7 +57,7 @@ class _DUIExpandableState extends State<DUIExpandable> {
             : CupertinoIcons.chevron_right,
         expandIcon: (widget.props.icon?.expandIcon != null)
             ? getIconData(icondataMap: widget.props.icon!.expandIcon!)
-            : CupertinoIcons.square,
+            : CupertinoIcons.chevron_down,
         hasIcon: widget.props.icon != null,
         iconPadding:
             DUIDecoder.toEdgeInsets(widget.props.icon?.iconPadding?.toJson()),
