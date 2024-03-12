@@ -10,14 +10,15 @@ DUIExpandableProps _$DUIExpandablePropsFromJson(Map<String, dynamic> json) =>
     DUIExpandableProps(
       json['bodyAlignment'] as String?,
       json['headerAlignment'] as String?,
-      json['iconPlacement'] as String?,
       json['color'] as String?,
-      (json['iconRotationAngle'] as num?)?.toDouble(),
-      json['hasIcon'] as bool?,
+      json['alignment'] as String?,
+      json['animationDuration'] as int?,
+      DUIExpandableProps._iconFromJson(json['icon'] as Map<String, dynamic>),
+      json['tapHeaderToExpand'] as bool?,
       json['tapBodyToExpand'] as bool?,
       json['tapBodyToCollapse'] as bool?,
       json['useInkWell'] as bool?,
-      json['inkWellBorderRadius'] as double?,
+      (json['inkWellBorderRadius'] as num?)?.toDouble(),
       json['initiallyExpanded'] as bool?,
     );
 
@@ -27,6 +28,7 @@ Map<String, dynamic> _$DUIExpandablePropsToJson(DUIExpandableProps instance) =>
       'headerAlignment': instance.headerAlignment,
       'color': instance.color,
       'alignment': instance.alignment,
+      'icon': DUIExpandableProps._iconToJson(instance.icon),
       'animationDuration': instance.animationDuration,
       'tapHeaderToExpand': instance.tapHeaderToExpand,
       'tapBodyToExpand': instance.tapBodyToExpand,
