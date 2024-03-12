@@ -8,6 +8,7 @@ import 'package:digia_ui/src/components/dui_expandable/dui_expandable_props.dart
 import 'package:digia_ui/src/components/dui_icons/icon_helpers/icon_data_serialization.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/cupertino.dart';
+import 'dart:math' show pi;
 
 class DUIExpandable extends StatefulWidget {
   final Map<String, List<DUIWidgetJsonData>> children;
@@ -33,7 +34,8 @@ class _DUIExpandableState extends State<DUIExpandable> {
       expanded: DUIWidget(
         data: widget.children['expandedView']!.first,
       ),
-      controller: ExpandableController(initialExpanded: true),
+      controller:
+          ExpandableController(initialExpanded: widget.props.initiallyExpanded),
       theme: ExpandableThemeData(
         bodyAlignment: (widget.props.bodyAlignment != null)
             ? getBodyAlignment(widget.props.bodyAlignment!)
@@ -41,8 +43,8 @@ class _DUIExpandableState extends State<DUIExpandable> {
         headerAlignment: (widget.props.headerAlignment != null)
             ? getHeaderAlignment(widget.props.headerAlignment!)
             : null,
-        iconPlacement: (widget.props.iconPlacement != null)
-            ? getIconAlignment(widget.props.iconPlacement!)
+        iconPlacement: (widget.props.icon?.iconPlacement != null)
+            ? getIconAlignment(widget.props.icon!.iconPlacement!)
             : null,
         // sizeCurve:,
         iconColor: widget.props.color?.letIfTrue(toColor),
@@ -50,22 +52,24 @@ class _DUIExpandableState extends State<DUIExpandable> {
         animationDuration: Duration(
             milliseconds:
                 NumDecoder.toInt(widget.props.animationDuration) ?? 1000),
-        collapseIcon: (widget.props.collapseIcon != null)
-            ? getIconData(icondataMap: widget.props.collapseIcon!)
+        collapseIcon: (widget.props.icon?.collapseIcon != null)
+            ? getIconData(icondataMap: widget.props.icon!.collapseIcon!)
             : CupertinoIcons.chevron_right,
-        expandIcon: (widget.props.collapseIcon != null)
-            ? getIconData(icondataMap: widget.props.collapseIcon!)
-            : CupertinoIcons.chevron_down,
-        hasIcon: widget.props.hasIcon,
-        iconPadding: DUIDecoder.toEdgeInsets(widget.props.padding?.toJson()),
-        iconSize: NumDecoder.toDouble(widget.props.iconSize),
-        iconRotationAngle: NumDecoder.toDouble(widget.props.iconRotationAngle),
+        expandIcon: (widget.props.icon?.expandIcon != null)
+            ? getIconData(icondataMap: widget.props.icon!.expandIcon!)
+            : CupertinoIcons.square,
+        hasIcon: widget.props.icon != null,
+        iconPadding:
+            DUIDecoder.toEdgeInsets(widget.props.icon?.iconPadding?.toJson()),
+        iconSize: NumDecoder.toDouble(widget.props.icon?.iconSize),
+        iconRotationAngle:
+            ((widget.props.icon?.iconRotationAngle ?? 90.0) / 180) * pi,
         tapHeaderToExpand: widget.props.tapHeaderToExpand,
         tapBodyToExpand: widget.props.tapBodyToExpand,
         tapBodyToCollapse: widget.props.tapBodyToCollapse,
         useInkWell: widget.props.useInkWell,
-        inkWellBorderRadius: DUIDecoder.toBorderRadius(
-            widget.props.inkWellBorderRadius?.borderRadius),
+        inkWellBorderRadius: BorderRadius.circular(
+            NumDecoder.toDouble(widget.props.icon?.iconSize) ?? 0),
       ),
     );
   }
