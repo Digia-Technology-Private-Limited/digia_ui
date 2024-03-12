@@ -77,6 +77,6 @@ class DUIExpandableProps {
       };
     }
 
-    return {'hasIcon': true, ...object.toJson()};
+    return {'icon': true, ...object.toJson()};
   }
 }
