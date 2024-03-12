@@ -3,10 +3,10 @@ import 'package:digia_ui/src/core/builders/dui_avatar_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_button_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_column_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_expandable_builder.dart';
+import 'package:digia_ui/src/core/builders/dui_flex_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_gridview_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_image_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_listview_builder.dart';
-import 'package:digia_ui/src/core/builders/dui_row_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_sized_box_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_spacer_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_text_builder.dart';
@@ -36,6 +36,7 @@ DUIWidgetBuilderCreatorFn withoutRegistry(
 
 class DUIWidgetRegistry {
   const DUIWidgetRegistry();
+
   static final Map<String, DUIWidgetBuilderCreatorFn> builders = {
     'digia/icon': withoutRegistry(DUIIconBuilder.create),
     'digia/htmlView': withoutRegistry(DUIHtmlViewBuilder.create),
@@ -48,10 +49,10 @@ class DUIWidgetRegistry {
         DUIListViewBuilder.create(data, registry: DUIWidgetRegistry.shared),
     'digia/gridView': (data, {registry}) =>
         DUIGridViewBuilder.create(data, registry: DUIWidgetRegistry.shared),
-    'digia/column': (data, {registry}) =>
-        DUIColumnBuilder.create(data, registry: DUIWidgetRegistry.shared),
-    'digia/row': (data, {registry}) =>
-        DUIRowBuilder.create(data, registry: DUIWidgetRegistry.shared),
+    'digia/column': (data, {registry}) => DUIFlexBuilder.create(data,
+        registry: DUIWidgetRegistry.shared, direction: Axis.vertical),
+    'digia/row': (data, {registry}) => DUIFlexBuilder.create(data,
+        registry: DUIWidgetRegistry.shared, direction: Axis.horizontal),
     'digia/expandable': (data, {registry}) =>
         DUIExpandableBuilder.create(data, registry: DUIWidgetRegistry.shared),
     'digia/container': withoutRegistry(DUIContainer2Builder.create),
