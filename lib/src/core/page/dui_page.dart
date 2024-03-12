@@ -79,7 +79,7 @@ class _DUIScreenState extends State<_DUIScreen> {
         )));
       }
 
-      return state.props?.layout?.root.let((p0) {
+      return state.props.layout?.root.let((p0) {
             return DUIWidgetScope(
                 iconDataProvider: widget.iconDataProvider,
                 imageProviderFn: widget.imageProviderFn,

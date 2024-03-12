@@ -17,11 +17,10 @@ class DUIIcon extends StatelessWidget {
     }
 
     final scope = DUIWidgetScope.of(context);
-    final icon = scope?.iconDataProvider(_props.iconData);
+    var iconData =
+        ifNotNull(_props.iconData, (p0) => scope?.iconDataProvider?.call(p0));
 
-    if (icon != null) return icon;
-
-    final IconData? iconData = getIconData(icondataMap: _props.iconData!);
+    iconData ??= getIconData(icondataMap: _props.iconData!);
 
     return Icon(iconData,
         size: _props.iconSize, color: _props.iconColor.let(toColor));
