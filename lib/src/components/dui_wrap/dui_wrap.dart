@@ -56,6 +56,7 @@ class _DUIWrapState extends State<DUIWrap> {
       case 'start':
         return WrapCrossAlignment.start;
       case 'center':
+        return WrapCrossAlignment.center;
       case 'end':
         return WrapCrossAlignment.end;
       default:
@@ -76,9 +77,9 @@ class _DUIWrapState extends State<DUIWrap> {
 
   VerticalDirection getVerticalDirection(String verticalDirection) {
     switch (verticalDirection) {
-      case 'vertical':
+      case 'up':
         return VerticalDirection.up;
-      case 'horizontal':
+      case 'down':
         return VerticalDirection.down;
       default:
         return VerticalDirection.down;
