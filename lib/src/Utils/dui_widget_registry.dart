@@ -8,6 +8,7 @@ import 'package:digia_ui/src/core/builders/dui_listview_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_sized_box_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_spacer_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_text_builder.dart';
+import 'package:digia_ui/src/core/builders/dui_wrap_builder.dart';
 import 'package:digia_ui/src/core/json_widget_builder.dart';
 import 'package:digia_ui/src/core/page/props/dui_widget_json_data.dart';
 import 'package:flutter/material.dart';
@@ -50,6 +51,7 @@ class DUIWidgetRegistry {
         registry: DUIWidgetRegistry.shared, direction: Axis.vertical),
     'digia/row': (data, {registry}) => DUIFlexBuilder.create(data,
         registry: DUIWidgetRegistry.shared, direction: Axis.horizontal),
+    'digia/wrap': (data, {registry}) => DUIWrapBuilder.create(data),
     'digia/container': withoutRegistry(DUIContainer2Builder.create),
     'fw/sized_box': withoutRegistry(DUISizedBoxBuilder.create),
     'fw/spacer': withoutRegistry(DUISpacerBuilder.create),
