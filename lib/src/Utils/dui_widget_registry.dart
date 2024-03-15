@@ -1,4 +1,3 @@
-import 'package:digia_ui/src/components/dui_youtube_player/dui_youtube_player.dart';
 import 'package:digia_ui/src/core/builders/dui_app_bar_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_avatar_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_button_builder.dart';

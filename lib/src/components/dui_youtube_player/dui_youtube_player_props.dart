@@ -7,7 +7,7 @@ class DUIYoutubePlayerProps {
   final String? videoUrl;
   final bool? isMuted;
 
-  DUIYoutubePlayerProps( {
+  DUIYoutubePlayerProps({
     this.videoUrl,
     this.isMuted,
   });

@@ -6,7 +6,8 @@ class DUIYoutubePlayer extends StatefulWidget {
   final DUIYoutubePlayerProps props;
 
   const DUIYoutubePlayer({
-    super.key, required this.props,
+    super.key,
+    required this.props,
   });
 
   @override
@@ -26,9 +27,9 @@ class _DUIYoutubePlayerState extends State<DUIYoutubePlayer> {
   @override
   void initState() {
     _controller = YoutubePlayerController(
-      initialVideoId: YoutubePlayer.convertUrlToId(
-              widget.props.videoUrl ?? '')!,
-      flags:  YoutubePlayerFlags(
+      initialVideoId:
+          YoutubePlayer.convertUrlToId(widget.props.videoUrl ?? '')!,
+      flags: YoutubePlayerFlags(
         mute: widget.props.isMuted ?? false,
         autoPlay: true,
         disableDragSeek: false,
