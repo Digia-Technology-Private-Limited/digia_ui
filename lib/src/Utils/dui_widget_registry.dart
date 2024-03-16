@@ -7,6 +7,7 @@ import 'package:digia_ui/src/core/builders/dui_image_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_listview_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_sized_box_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_spacer_builder.dart';
+import 'package:digia_ui/src/core/builders/dui_stack_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_text_builder.dart';
 import 'package:digia_ui/src/core/json_widget_builder.dart';
 import 'package:digia_ui/src/core/page/props/dui_widget_json_data.dart';
@@ -54,7 +55,8 @@ class DUIWidgetRegistry {
     'fw/sized_box': withoutRegistry(DUISizedBoxBuilder.create),
     'fw/spacer': withoutRegistry(DUISpacerBuilder.create),
     'fw/appBar': withoutRegistry(DUIAppBarBuilder.create),
-    'fw/scaffold': withoutRegistry(DUIScaffoldBuilder.create)
+    'fw/scaffold': withoutRegistry(DUIScaffoldBuilder.create),
+    'digia/stack':(data,{registry}) => DUIStackBuilder.create(data),
   };
 
   static const DUIWidgetRegistry shared = DUIWidgetRegistry();
