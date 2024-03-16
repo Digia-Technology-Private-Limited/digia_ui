@@ -74,16 +74,16 @@ class _DUIYoutubePlayerState extends State<DUIYoutubePlayer> {
             maxLines: 1,
           ),
         ),
-        IconButton(
-          icon: const Icon(
-            Icons.settings,
-            color: Colors.white,
-            size: 25.0,
-          ),
-
-          // setting
-          onPressed: () {},
-        ),
+        // IconButton(
+        //   icon: const Icon(
+        //     Icons.settings,
+        //     color: Colors.white,
+        //     size: 25.0,
+        //   ),
+        //
+        //   // setting
+        //   onPressed: () {},
+        // ),
       ],
       onReady: () {
         _isPlayerReady = true;
