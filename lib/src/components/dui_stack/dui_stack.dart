@@ -17,35 +17,31 @@ class DUIStack extends StatefulWidget {
 class _DUIStackState extends State<DUIStack> {
   @override
   Widget build(BuildContext context) {
-    List<Widget> positionedChild =widget.children!.map((e) {
-      return Positioned(
-        top: e.containerProps.valueFor(keyPath: 'positioned.top') ?? 0.0,
-        bottom:
-        e.containerProps.valueFor(keyPath: 'positioned.bottom') ?? 0.0,
-        left: e.containerProps.valueFor(keyPath: 'positioned.left') ?? 0.0,
-        right:
-        e.containerProps.valueFor(keyPath: 'positioned.right') ?? 0.0,
-        child: DUIWidget(
-          data: e,
-        ),
-      );
-    }).toList();
     return SizedBox(
       child: Stack(
           alignment: getChildAlignmentFit(widget.props.childAlignment ?? ''),
           fit: getStackFit(widget.props.fit ?? ''),
           children: widget.children!.map((e) {
-            return e.containerProps.valueFor(keyPath: 'positioned.hasPosition') == 'none'?DUIWidget(data: e):Positioned(
-              top: e.containerProps.valueFor(keyPath: 'positioned.top') ?? 0.0,
-              bottom:
-                  e.containerProps.valueFor(keyPath: 'positioned.bottom') ?? 0.0,
-              left: e.containerProps.valueFor(keyPath: 'positioned.left') ?? 0.0,
-              right:
-                  e.containerProps.valueFor(keyPath: 'positioned.right') ?? 0.0,
-              child: DUIWidget(
-                data: e,
-              ),
-            );
+            return e.containerProps
+                        .valueFor(keyPath: 'positioned.hasPosition') ==
+                    'none'
+                ? DUIWidget(data: e)
+                : Positioned(
+                    top: e.containerProps.valueFor(keyPath: 'positioned.top') ??
+                        0.0,
+                    bottom: e.containerProps
+                            .valueFor(keyPath: 'positioned.bottom') ??
+                        0.0,
+                    left:
+                        e.containerProps.valueFor(keyPath: 'positioned.left') ??
+                            0.0,
+                    right: e.containerProps
+                            .valueFor(keyPath: 'positioned.right') ??
+                        0.0,
+                    child: DUIWidget(
+                      data: e,
+                    ),
+                  );
           }).toList()),
     );
   }

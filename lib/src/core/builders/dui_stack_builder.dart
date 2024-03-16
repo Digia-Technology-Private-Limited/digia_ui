@@ -14,6 +14,7 @@ class DUIStackBuilder extends DUIWidgetBuilder {
   @override
   Widget build(BuildContext context) {
     return DUIStack(
-        props:DUIStackProps.fromJson(data.props), children:  data.children['children']);
+        props: DUIStackProps.fromJson(data.props),
+        children: data.children['children']);
   }
 }

@@ -56,7 +56,7 @@ class DUIWidgetRegistry {
     'fw/spacer': withoutRegistry(DUISpacerBuilder.create),
     'fw/appBar': withoutRegistry(DUIAppBarBuilder.create),
     'fw/scaffold': withoutRegistry(DUIScaffoldBuilder.create),
-    'digia/stack':(data,{registry}) => DUIStackBuilder.create(data),
+    'digia/stack': (data, {registry}) => DUIStackBuilder.create(data),
   };
 
   static const DUIWidgetRegistry shared = DUIWidgetRegistry();
