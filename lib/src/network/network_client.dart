@@ -6,18 +6,21 @@ import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'api_response/base_response.dart';
 import 'core/types.dart';
 
-Dio _createDefaultDio(String baseUrl) {
+Dio _createDefaultDio(String baseUrl, Map<String, dynamic> headers) {
   return Dio(BaseOptions(
       baseUrl: baseUrl,
       connectTimeout: const Duration(seconds: 1000),
-      headers: {Headers.contentTypeHeader: Headers.jsonContentType}));
+      headers: {
+        ...headers,
+        Headers.contentTypeHeader: Headers.jsonContentType,
+      }));
 }
 
 class NetworkClient {
   final Dio dio;
 
-  NetworkClient(Dio? dio, String baseUrl)
-      : dio = dio ?? _createDefaultDio(baseUrl) {
+  NetworkClient(Dio? dio, String baseUrl, Map<String, dynamic> headers)
+      : dio = dio ?? _createDefaultDio(baseUrl, headers) {
     if (baseUrl.isEmpty) {
       throw 'Invalid BaseUrl';
     }
