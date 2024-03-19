@@ -9,7 +9,7 @@ import 'digia_ui_service.dart';
 
 const defaultUIConfigAssetPath = 'assets/json/dui_config.json';
 const defaultBaseUrl = 'https://app.digia.tech/hydrator/api';
-// const baseUrl = 'http://localhost:5000/hydrator/api';
+const baseUrl = 'http://localhost:5000/hydrator/api';
 
 class DigiaUIClient {
   static final DigiaUIClient _instance = DigiaUIClient._();
@@ -75,12 +75,11 @@ class DigiaUIClient {
     _instance.networkClient = NetworkClient(dio, _instance.baseUrl, headers);
 
     final resp = await _instance.networkClient.post(
-      path: '${_instance.baseUrl}/config/getAppConfig',
+      path: '/config/getAppConfig',
       fromJsonT: (json) => json as dynamic,
       data: jsonEncode(
         {'projectId': accessKey},
       ),
-      headers: headers,
     );
 
     final data = resp.data['response'] as Map<String, dynamic>?;
