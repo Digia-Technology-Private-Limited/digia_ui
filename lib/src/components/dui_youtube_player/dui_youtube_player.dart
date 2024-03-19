@@ -1,6 +1,6 @@
 import 'package:digia_ui/src/components/dui_youtube_player/dui_youtube_player_props.dart';
+import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 import 'package:flutter/material.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class DUIYoutubePlayer extends StatefulWidget {
   final DUIYoutubePlayerProps props;
@@ -17,80 +17,51 @@ class DUIYoutubePlayer extends StatefulWidget {
 class _DUIYoutubePlayerState extends State<DUIYoutubePlayer> {
   late YoutubePlayerController _controller;
 
-  late PlayerState _playerState;
-  late YoutubeMetaData _videoMetaData;
-  late TextEditingController _seekToController;
-
-  final double _volume = 100;
-  bool _isPlayerReady = false;
-
   @override
   void initState() {
     _controller = YoutubePlayerController(
-      initialVideoId:
-          YoutubePlayer.convertUrlToId(widget.props.videoUrl ?? '')!,
-      flags: YoutubePlayerFlags(
+      params: YoutubePlayerParams(
         mute: widget.props.isMuted ?? false,
-        autoPlay: true,
-        disableDragSeek: false,
-        loop: false,
-        isLive: false,
-        forceHD: false,
-        enableCaption: true,
+        showFullscreenButton: true,
+        loop: true,
       ),
-    )..addListener(listener);
+    );
+    widget.props.videoUrl!.contains('https:')
+        ? _controller.loadVideo(widget.props.videoUrl ?? '')
+        : _controller.loadVideoById(videoId: widget.props.videoUrl ?? '');
 
-    _seekToController = TextEditingController();
-    _videoMetaData = const YoutubeMetaData();
-    _playerState = PlayerState.unknown;
     super.initState();
   }
 
-  void listener() {
-    if (_isPlayerReady && mounted && !_controller.value.isFullScreen) {
-      setState(() {
-        _playerState = _controller.value.playerState;
-        _videoMetaData = _controller.metadata;
-      });
-    }
+  @override
+  void dispose() {
+    _controller.close();
+    super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() async {
+    widget.props.videoUrl!.contains('https:')
+        ? await _controller.loadVideo(widget.props.videoUrl ?? '')
+        : await _controller.loadVideoById(videoId: widget.props.videoUrl ?? '');
+    super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
-    return YoutubePlayer(
-      controller: _controller,
-      showVideoProgressIndicator: true,
-      progressIndicatorColor: Colors.blueAccent,
-      topActions: <Widget>[
-        const SizedBox(width: 8.0),
-        Expanded(
-          child: Text(
-            _controller.metadata.title,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 18.0,
+    return YoutubePlayerScaffold(
+      aspectRatio: MediaQuery.sizeOf(context).height/MediaQuery.sizeOf(context).width,
+        builder: (context, player) {
+
+          return SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                player,
+              ],
             ),
-            overflow: TextOverflow.ellipsis,
-            maxLines: 1,
-          ),
-        ),
-        // IconButton(
-        //   icon: const Icon(
-        //     Icons.settings,
-        //     color: Colors.white,
-        //     size: 25.0,
-        //   ),
-        //
-        //   // setting
-        //   onPressed: () {},
-        // ),
-      ],
-      onReady: () {
-        _isPlayerReady = true;
-      },
-      onEnded: (data) {
-        _controller.pause();
-      },
-    );
+          );
+        }, controller: _controller);
   }
 }
