@@ -37,7 +37,7 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
   ) async {
     // Assumption is that onPageLoadAction will not be null.
     // It will either be Action.loadPage or Action.buildPage
-    final onPageLoadAction = state.props?.actions['onPageLoad'];
+    final onPageLoadAction = state.props.actions['onPageLoad'];
 
     final action = ActionProp.fromJson(onPageLoadAction);
 

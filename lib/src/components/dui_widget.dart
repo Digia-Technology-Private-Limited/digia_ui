@@ -1,10 +1,12 @@
 import 'dart:convert';
 
-import 'package:digia_ui/src/core/builders/dui_json_widget_builder.dart';
-import 'package:digia_ui/src/core/page/props/dui_widget_json_data.dart';
 import 'package:flutter/material.dart';
 
+import 'package:digia_ui/src/core/builders/dui_json_widget_builder.dart';
+import 'package:digia_ui/src/core/page/props/dui_widget_json_data.dart';
+
 import '../Utils/dui_widget_registry.dart';
+import '../core/page/props/dui_page_props.dart';
 import '../types.dart';
 
 class DUIWidgetScope extends InheritedWidget {
@@ -12,14 +14,16 @@ class DUIWidgetScope extends InheritedWidget {
   final DUIImageProviderFn? imageProviderFn;
   final DUITextStyleBuilder? textStyleBuilder;
   final DUIExternalFunctionHandler? externalFunctionHandler;
+  final Map<String, VariableDef>? pageVars;
 
   const DUIWidgetScope({
     super.key,
-    required super.child,
     this.iconDataProvider,
     this.imageProviderFn,
     this.textStyleBuilder,
     this.externalFunctionHandler,
+    this.pageVars,
+    required super.child,
   });
 
   @override

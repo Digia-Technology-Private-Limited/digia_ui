@@ -5,7 +5,6 @@ import 'package:digia_ui/src/core/page/dui_page_bloc.dart';
 import 'package:digia_ui/src/core/page/dui_page_event.dart';
 import 'package:digia_ui/src/core/utils.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:json_schema2/json_schema2.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -54,7 +53,12 @@ Map<String, ActionHandlerFn> _actionsMap = {
     return;
   },
   'Action.setPageState': ({required action, required context}) {
-    context.tryRead<DUIPageBloc>()?.add(SetStateEvent(
+    final bloc = context.tryRead<DUIPageBloc>();
+    if (bloc == null) {
+      throw 'Action.setPageState called on a widget which is not wrapped in DUIPageBloc';
+    }
+
+    bloc.add(SetStateEvent(
         variableName: action.data['variableName'],
         context: context,
         value: action.data['value']));

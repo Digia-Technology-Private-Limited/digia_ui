@@ -9,7 +9,7 @@ part of 'dui_page_state.dart';
 abstract class _$DUIPageStateCWProxy {
   DUIPageState pageUid(String pageUid);
 
-  DUIPageState props(DUIPageProps? props);
+  DUIPageState props(DUIPageProps props);
 
   DUIPageState isLoading(bool isLoading);
 
@@ -36,7 +36,7 @@ class _$DUIPageStateCWProxyImpl implements _$DUIPageStateCWProxy {
   DUIPageState pageUid(String pageUid) => this(pageUid: pageUid);
 
   @override
-  DUIPageState props(DUIPageProps? props) => this(props: props);
+  DUIPageState props(DUIPageProps props) => this(props: props);
 
   @override
   DUIPageState isLoading(bool isLoading) => this(isLoading: isLoading);
@@ -59,10 +59,10 @@ class _$DUIPageStateCWProxyImpl implements _$DUIPageStateCWProxy {
           ? _value.pageUid
           // ignore: cast_nullable_to_non_nullable
           : pageUid as String,
-      props: props == const $CopyWithPlaceholder()
+      props: props == const $CopyWithPlaceholder() || props == null
           ? _value.props
           // ignore: cast_nullable_to_non_nullable
-          : props as DUIPageProps?,
+          : props as DUIPageProps,
       isLoading: isLoading == const $CopyWithPlaceholder() || isLoading == null
           ? _value.isLoading
           // ignore: cast_nullable_to_non_nullable

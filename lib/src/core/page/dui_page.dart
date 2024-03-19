@@ -85,6 +85,7 @@ class _DUIScreenState extends State<_DUIScreen> {
                 imageProviderFn: widget.imageProviderFn,
                 textStyleBuilder: widget.textStyleBuilder,
                 externalFunctionHandler: widget.externalFunctionHandler,
+                pageVars: state.props.variables,
                 child: DUIWidget(data: p0));
           }) ??
           Center(child: Text('Props not found for page: ${state.pageUid}'));
