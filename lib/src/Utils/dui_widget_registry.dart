@@ -5,6 +5,7 @@ import 'package:digia_ui/src/core/builders/dui_flex_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_gridview_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_image_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_listview_builder.dart';
+import 'package:digia_ui/src/core/builders/dui_lottie_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_sized_box_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_spacer_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_text_builder.dart';
@@ -34,6 +35,7 @@ DUIWidgetBuilderCreatorFn withoutRegistry(
 
 class DUIWidgetRegistry {
   const DUIWidgetRegistry();
+
   static final Map<String, DUIWidgetBuilderCreatorFn> builders = {
     'digia/icon': withoutRegistry(DUIIconBuilder.create),
     'digia/htmlView': withoutRegistry(DUIHtmlViewBuilder.create),
@@ -54,7 +56,8 @@ class DUIWidgetRegistry {
     'fw/sized_box': withoutRegistry(DUISizedBoxBuilder.create),
     'fw/spacer': withoutRegistry(DUISpacerBuilder.create),
     'fw/appBar': withoutRegistry(DUIAppBarBuilder.create),
-    'fw/scaffold': withoutRegistry(DUIScaffoldBuilder.create)
+    'fw/scaffold': withoutRegistry(DUIScaffoldBuilder.create),
+    'digia/lottie': (data, {registry}) => DUILottieBuilder.create(data),
   };
 
   static const DUIWidgetRegistry shared = DUIWidgetRegistry();

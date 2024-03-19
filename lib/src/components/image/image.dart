@@ -71,7 +71,10 @@ class _DUIImageState extends State<DUIImage> {
         },
         errorBuilder: (context, error, stackTrace) {
           if (props.errorImage == null) {
-            return const Icon(Icons.error);
+            return const Icon(
+              Icons.error_outline,
+              color: Colors.red,
+            );
           }
           return Image.asset(props.errorImage!);
         });
