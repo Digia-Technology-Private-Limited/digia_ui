@@ -15,7 +15,7 @@ class DUIScaffoldBuilder extends DUIWidgetBuilder {
 
   @override
   Widget build(BuildContext context) {
-    final appBar = (data.children['appBar']?.first).let((root) {
+    final appBar = (data.children['appBar']?.firstOrNull).let((root) {
       if (root.type != 'fw/appBar') {
         return null;
       }
@@ -25,7 +25,7 @@ class DUIScaffoldBuilder extends DUIWidgetBuilder {
 
     return Scaffold(
       appBar: appBar,
-      body: data.children['body']?.first.let((p0) {
+      body: data.children['body']?.firstOrNull.let((p0) {
         return SafeArea(child: DUIWidget(data: p0));
       }),
     );

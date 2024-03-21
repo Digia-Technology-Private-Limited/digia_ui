@@ -407,8 +407,6 @@ class DUIDecoder {
     switch (fit) {
       case 'expand':
         return StackFit.expand;
-      case 'loose':
-        return StackFit.loose;
       case 'passthrough':
         return StackFit.passthrough;
       default:
@@ -416,28 +414,26 @@ class DUIDecoder {
     }
   }
 
-  static AlignmentGeometry toStackChildAlignment(String? fit) {
+  static AlignmentDirectional toStackChildAlignment(String? fit) {
     switch (fit) {
       case 'center':
-        return Alignment.center;
-      case 'topLeft':
-        return Alignment.topLeft;
-      case 'topRight':
-        return Alignment.topRight;
+        return AlignmentDirectional.center;
+      case 'topEnd':
+        return AlignmentDirectional.topEnd;
       case 'topCenter':
-        return Alignment.topCenter;
-      case 'centerLeft':
-        return Alignment.centerLeft;
-      case 'centerRight':
-        return Alignment.centerRight;
-      case 'bottomLeft':
-        return Alignment.bottomLeft;
+        return AlignmentDirectional.topCenter;
+      case 'centerEnd':
+        return AlignmentDirectional.centerEnd;
+      case 'centerStart':
+        return AlignmentDirectional.centerStart;
+      case 'bottomStart':
+        return AlignmentDirectional.bottomStart;
       case 'bottomCenter':
-        return Alignment.bottomCenter;
-      case 'bottomRight':
-        return Alignment.bottomRight;
+        return AlignmentDirectional.bottomCenter;
+      case 'bottomEnd':
+        return AlignmentDirectional.bottomEnd;
       default:
-        return Alignment.center;
+        return AlignmentDirectional.topStart;
     }
   }
 }
