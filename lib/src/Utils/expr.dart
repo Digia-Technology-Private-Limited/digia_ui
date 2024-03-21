@@ -7,58 +7,43 @@ import 'package:flutter/material.dart';
 import '../components/dui_widget.dart';
 import 'basic_shared_utils/num_decoder.dart';
 
-const stringExpressionRegex = r'\$\{\s{0,}(.+)\s{0,}\}';
+bool _hasExpression(dynamic expression) {
+  if (expression == null) return false;
 
-bool isExpression(dynamic s) {
-  if (s is! String) return false;
-  return RegExp(stringExpressionRegex).hasMatch(s.trim());
-}
+  if (expression is! String) return false;
 
-String extractExpression(String s) {
-  if (s.startsWith(r'${') && s.endsWith('}')) {
-    return s.substring(2, s.length - 1);
-  }
-
-  return s;
+  return Expression.hasExpression(expression);
 }
 
 T? evaluateExpression<T extends Object>(
     dynamic expression, BuildContext context, T? Function(String) fromJsonT) {
-  if (isExpression(expression)) {
-    final exp = extractExpression(expression as String);
-    final variables = DUIWidgetScope.of(context)?.pageVars;
+  if (expression == null) return null;
 
-    final root = createAST(exp);
+  if (!_hasExpression(expression)) return fromJsonT(expression);
 
-    final output = ASTEvaluator()
-        .eval(
-            root,
-            ExprContext(
-                variables: variables?.map((key, value) => MapEntry(key, () {
-                          switch (value.type) {
-                            case 'string':
-                              return ASTStringLiteral(
-                                  value: value.value?.toString());
+  final variables = DUIWidgetScope.of(context)?.pageVars;
 
-                            case 'integer':
-                              return ASTNumberLiteral(
-                                  value: NumDecoder.toInt(value.value));
+  return Expression.eval(
+          expression,
+          ExprContext(
+              variables: variables?.map((key, value) => MapEntry(key, () {
+                        switch (value.type) {
+                          case 'string':
+                            return ASTStringLiteral(
+                                value: value.value?.toString());
 
-                            case 'float':
-                              return ASTNumberLiteral(
-                                  value: NumDecoder.toDouble(value.value));
-                          }
-                          return ASTIdentifer(name: 'null');
-                        }())) ??
-                    {}))
-        .typedValue<T>();
+                          case 'integer':
+                            return ASTNumberLiteral(
+                                value: NumDecoder.toInt(value.value));
 
-    print(output);
-
-    return output;
-  }
-
-  return fromJsonT(expression);
+                          case 'float':
+                            return ASTNumberLiteral(
+                                value: NumDecoder.toDouble(value.value));
+                        }
+                        return ASTIdentifer(name: 'null');
+                      }())) ??
+                  {}))
+      .typedValue<T>();
 }
 
 extension ObjectExt on Object? {

@@ -64,7 +64,7 @@ class DigiaUIClient {
     _instance.baseUrl = baseUrl ?? defaultBaseUrl;
     Map<String, dynamic> headers = {'digia_projectId': accessKey};
     _instance.networkClient = NetworkClient(dio, _instance.baseUrl, headers);
-    _instance.configResolver = DigiaUIConfigResolver(data);
+    _instance.config = DUIConfig(data);
 
     _instance._isInitialized = true;
   }
