@@ -403,7 +403,7 @@ class DUIDecoder {
     return null;
   }
 
-  static StackFit toStackFit(String fit) {
+  static StackFit toStackFit(String? fit) {
     switch (fit) {
       case 'expand':
         return StackFit.expand;
@@ -416,7 +416,7 @@ class DUIDecoder {
     }
   }
 
-  static AlignmentGeometry toStackChildAlignment(String fit) {
+  static AlignmentGeometry toStackChildAlignment(String? fit) {
     switch (fit) {
       case 'center':
         return Alignment.center;
