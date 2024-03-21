@@ -41,10 +41,10 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
 
     final action = ActionProp.fromJson(onPageLoadAction);
 
-    action.data['pageParams'] = {
-      ...?action.data['pageParams'],
-      ...?event.pageParams,
-    };
+    // action.data['pageParams'] = {
+    //   ...?action.data['pageParams'],
+    //   ...?event.pageParams,
+    // };
 
     await _handleAction(null, action, emit);
 

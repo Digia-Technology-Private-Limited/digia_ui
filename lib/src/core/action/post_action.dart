@@ -3,8 +3,6 @@ import 'dart:convert';
 import 'package:digia_ui/digia_ui.dart';
 import 'package:digia_ui/src/core/action/action_prop.dart';
 
-import '../../config_resolver.dart';
-
 const Map<String, String> defaultHeaders = {
   'Accept': 'application/json',
   'Content-Type': 'application/json',

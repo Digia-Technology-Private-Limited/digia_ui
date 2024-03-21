@@ -1,4 +1,3 @@
-import 'package:digia_ui/src/core/action/action_prop.dart';
 import 'package:flutter/material.dart';
 
 abstract class DUIPageEvent {}

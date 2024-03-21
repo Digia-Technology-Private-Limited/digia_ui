@@ -17,6 +17,7 @@ import '../core/builders/dui_container2_builder.dart';
 import '../core/builders/dui_htmlview_builder.dart';
 import '../core/builders/dui_icon_builder.dart';
 import '../core/builders/dui_scaffold_builder.dart';
+import '../core/builders/dui_text_builder2.dart';
 
 typedef WidgetFromJsonFn<T extends Widget> = T Function(
     Map<String, dynamic> json);
@@ -55,7 +56,8 @@ class DUIWidgetRegistry {
     'fw/sized_box': withoutRegistry(DUISizedBoxBuilder.create),
     'fw/spacer': withoutRegistry(DUISpacerBuilder.create),
     'fw/appBar': withoutRegistry(DUIAppBarBuilder.create),
-    'fw/scaffold': withoutRegistry(DUIScaffoldBuilder.create)
+    'fw/scaffold': withoutRegistry(DUIScaffoldBuilder.create),
+    'digia/text2': withoutRegistry(DUIText2Builder.create),
   };
 
   static const DUIWidgetRegistry shared = DUIWidgetRegistry();

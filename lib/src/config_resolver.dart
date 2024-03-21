@@ -1,6 +1,4 @@
-import 'package:digia_ui/digia_ui.dart';
 import 'package:digia_ui/src/Utils/dui_font.dart';
-import 'package:digia_ui/src/core/page/dui_page_state.dart';
 import 'package:digia_ui/src/core/page/props/dui_page_props.dart';
 
 class DUIConfig {

@@ -1,7 +1,6 @@
 import 'package:digia_ui/src/components/DUIText/dui_text.dart';
 import 'package:digia_ui/src/core/container/dui_container.dart';
 import 'package:digia_ui/src/core/page/dui_page_bloc.dart';
-import 'package:digia_ui/src/core/page/dui_page_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -55,8 +54,8 @@ class _DUIButtonState extends State<DUIButton> {
         ? childToRender
         : GestureDetector(
             onTap: () async {
-              bloc.add(
-                  PostActionEvent(action: props.onClick!, context: context));
+              // bloc.add(
+              //     PostActionEvent(action: props.onClick!, context: context));
             },
             child: childToRender);
   }

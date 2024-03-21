@@ -1,4 +1,5 @@
 import 'package:digia_ui/src/Utils/extensions.dart';
+import 'package:flutter/material.dart';
 
 Map<String, T> keyBy<T>(
   Iterable<T> list,
@@ -68,27 +69,23 @@ extension MoveElement<T> on List<T> {
   }
 }
 
-T? castOrNull<T>(dynamic x) {
-  try {
-    return cast<T>(x);
-  } catch (_) {
-    // ignore: avoid_print
-    print('CastError when trying to cast $x to $T!');
-    return null;
+extension CastExt<T> on T? {
+  /// Tries to cast this object to given type [R]. Returns null if the cast
+  /// fails.
+  R? tryCast<R>() {
+    if (this == null) return null;
+    try {
+      return this as R;
+    } catch (e) {
+      // ignore: avoid_print
+      debugPrint(
+          'CastError when trying to cast $this to $T!. Error: ${e.toString()}');
+      return null;
+    }
   }
-}
 
-T castOrDefault<T>(dynamic x, {required T defaultValue}) {
-  try {
-    return cast<T>(x);
-  } on Error catch (_) {
-    // ignore: avoid_print
-    print('CastError when trying to cast $x to $T!');
-    return defaultValue;
-  }
+  R cast<R>() => this as R;
 }
-
-T cast<T>(dynamic x) => x as T;
 
 R? ifNotNull<R, T>(T? arg, R? Function(T) f) => (arg == null) ? null : f(arg);
 

@@ -1,6 +1,5 @@
 import 'package:digia_ui/digia_ui.dart';
 import 'package:digia_ui/src/Utils/basic_shared_utils/lodash.dart';
-import 'package:digia_ui/src/config_resolver.dart';
 import 'package:digia_ui/src/core/page/dui_page_bloc.dart';
 import 'package:digia_ui/src/core/page/dui_page_state.dart';
 import 'package:digia_ui/src/types.dart';
