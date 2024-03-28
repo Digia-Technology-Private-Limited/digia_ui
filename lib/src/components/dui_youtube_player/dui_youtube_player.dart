@@ -1,4 +1,5 @@
 import 'package:digia_ui/src/components/dui_youtube_player/dui_youtube_player_props.dart';
+import 'package:flutter/services.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 import 'package:flutter/material.dart';
 
@@ -22,10 +23,23 @@ class _DUIYoutubePlayerState extends State<DUIYoutubePlayer> {
     _controller = YoutubePlayerController(
       params: YoutubePlayerParams(
         mute: widget.props.isMuted ?? false,
-        showFullscreenButton: true,
+        showFullscreenButton: false,
         loop: true,
       ),
     );
+    // _controller.setFullScreenListener((value) {
+    //   if (value) {
+    //     SystemChrome.setPreferredOrientations([
+    //       DeviceOrientation.landscapeRight,
+    //       DeviceOrientation.landscapeLeft,
+    //     ]);
+    //   } else {
+    //     SystemChrome.setPreferredOrientations([
+    //       DeviceOrientation.portraitUp,
+    //       DeviceOrientation.portraitDown,
+    //     ]);
+    //   }
+    // });
     widget.props.videoUrl!.contains('https:')
         ? _controller.loadVideo(widget.props.videoUrl ?? '')
         : _controller.loadVideoById(videoId: widget.props.videoUrl ?? '');
@@ -50,18 +64,10 @@ class _DUIYoutubePlayerState extends State<DUIYoutubePlayer> {
   @override
   Widget build(BuildContext context) {
     return YoutubePlayerScaffold(
-      aspectRatio: MediaQuery.sizeOf(context).height/MediaQuery.sizeOf(context).width,
+      enableFullScreenOnVerticalDrag: false,
+      // aspectRatio: MediaQuery.sizeOf(context).height/MediaQuery.sizeOf(context).width,
         builder: (context, player) {
-
-          return SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                player,
-              ],
-            ),
-          );
+          return player;
         }, controller: _controller);
   }
 }
