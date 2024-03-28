@@ -27,7 +27,6 @@ class _DUIYoutubePlayerState extends State<DUIYoutubePlayer> {
       ),
     );
 
-
     (widget.props.autoPlay ?? false)
         ? _controller.loadVideoById(
             videoId: getVideoId(widget.props.videoUrl ?? ''),
@@ -35,7 +34,6 @@ class _DUIYoutubePlayerState extends State<DUIYoutubePlayer> {
         : _controller.cueVideoById(
             videoId: getVideoId(widget.props.videoUrl ?? ''),
           );
-
 
     super.initState();
   }
