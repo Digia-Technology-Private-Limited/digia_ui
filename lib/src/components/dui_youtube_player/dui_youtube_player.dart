@@ -1,5 +1,4 @@
 import 'package:digia_ui/src/components/dui_youtube_player/dui_youtube_player_props.dart';
-import 'package:flutter/services.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 import 'package:flutter/material.dart';
 
@@ -64,10 +63,11 @@ class _DUIYoutubePlayerState extends State<DUIYoutubePlayer> {
   @override
   Widget build(BuildContext context) {
     return YoutubePlayerScaffold(
-      enableFullScreenOnVerticalDrag: false,
-      // aspectRatio: MediaQuery.sizeOf(context).height/MediaQuery.sizeOf(context).width,
+        enableFullScreenOnVerticalDrag: false,
+        // aspectRatio: MediaQuery.sizeOf(context).height/MediaQuery.sizeOf(context).width,
         builder: (context, player) {
           return player;
-        }, controller: _controller);
+        },
+        controller: _controller);
   }
 }
