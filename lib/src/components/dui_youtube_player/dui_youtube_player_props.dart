@@ -6,10 +6,14 @@ part 'dui_youtube_player_props.g.dart';
 class DUIYoutubePlayerProps {
   final String? videoUrl;
   final bool? isMuted;
+  final bool? autoPlay;
+  final bool? loop;
 
   DUIYoutubePlayerProps({
     this.videoUrl,
     this.isMuted,
+    this.autoPlay,
+    this.loop,
   });
 
   factory DUIYoutubePlayerProps.fromJson(Map<String, dynamic> json) =>

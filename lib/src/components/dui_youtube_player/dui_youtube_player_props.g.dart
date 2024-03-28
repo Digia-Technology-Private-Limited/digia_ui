@@ -11,6 +11,8 @@ DUIYoutubePlayerProps _$DUIYoutubePlayerPropsFromJson(
     DUIYoutubePlayerProps(
       videoUrl: json['videoUrl'] as String?,
       isMuted: json['isMuted'] as bool?,
+      autoPlay: json['autoPlay'] as bool?,
+      loop: json['loop'] as bool?,
     );
 
 Map<String, dynamic> _$DUIYoutubePlayerPropsToJson(
@@ -18,4 +20,6 @@ Map<String, dynamic> _$DUIYoutubePlayerPropsToJson(
     <String, dynamic>{
       'videoUrl': instance.videoUrl,
       'isMuted': instance.isMuted,
+      'autoPlay': instance.autoPlay,
+      'loop': instance.loop,
     };

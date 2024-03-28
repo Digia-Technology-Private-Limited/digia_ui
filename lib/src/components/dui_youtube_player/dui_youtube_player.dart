@@ -23,25 +23,19 @@ class _DUIYoutubePlayerState extends State<DUIYoutubePlayer> {
       params: YoutubePlayerParams(
         mute: widget.props.isMuted ?? false,
         showFullscreenButton: false,
-        loop: true,
+        loop: widget.props.loop ?? false,
       ),
     );
-    // _controller.setFullScreenListener((value) {
-    //   if (value) {
-    //     SystemChrome.setPreferredOrientations([
-    //       DeviceOrientation.landscapeRight,
-    //       DeviceOrientation.landscapeLeft,
-    //     ]);
-    //   } else {
-    //     SystemChrome.setPreferredOrientations([
-    //       DeviceOrientation.portraitUp,
-    //       DeviceOrientation.portraitDown,
-    //     ]);
-    //   }
-    // });
-    widget.props.videoUrl!.contains('https:')
-        ? _controller.loadVideo(widget.props.videoUrl ?? '')
-        : _controller.loadVideoById(videoId: widget.props.videoUrl ?? '');
+
+
+    (widget.props.autoPlay ?? false)
+        ? _controller.loadVideoById(
+            videoId: getVideoId(widget.props.videoUrl ?? ''),
+          )
+        : _controller.cueVideoById(
+            videoId: getVideoId(widget.props.videoUrl ?? ''),
+          );
+
 
     super.initState();
   }
@@ -64,10 +58,19 @@ class _DUIYoutubePlayerState extends State<DUIYoutubePlayer> {
   Widget build(BuildContext context) {
     return YoutubePlayerScaffold(
         enableFullScreenOnVerticalDrag: false,
-        // aspectRatio: MediaQuery.sizeOf(context).height/MediaQuery.sizeOf(context).width,
         builder: (context, player) {
           return player;
         },
         controller: _controller);
+  }
+
+  String getVideoId(String url) {
+    if (url.contains('https:')) {
+      final params = Uri.parse(url).queryParameters;
+      final videoId = params['v'];
+      return videoId ?? '';
+    } else {
+      return url;
+    }
   }
 }
