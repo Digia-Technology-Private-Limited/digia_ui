@@ -2,7 +2,6 @@ import 'package:digia_ui/src/core/builders/dui_carousel_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_app_bar_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_avatar_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_button_builder.dart';
-import 'package:digia_ui/src/core/builders/dui_column_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_expandable_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_flex_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_gridview_builder.dart';
