@@ -9,6 +9,7 @@ class DUIFont {
   late double? size;
   late double? height;
   late String? style;
+  @JsonKey(name: 'font-family')
   late String? fontFamily;
 
   DUIFont();
