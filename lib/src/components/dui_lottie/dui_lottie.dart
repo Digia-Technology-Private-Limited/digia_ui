@@ -17,7 +17,7 @@ class _DUILottieState extends State<DUILottie> {
   Widget build(BuildContext context) {
     return LottieBuilder.network(
       widget.props.lottiePath ?? '',
-      alignment: getAlignment(widget.props.alignment ?? ''),
+      alignment: DUIDecoder.toAlignment(widget.props.alignment),
       height: widget.props.height,
       width: widget.props.width,
       animate: widget.props.animate ?? true,
@@ -35,30 +35,5 @@ class _DUILottieState extends State<DUILottie> {
             ));
       },
     );
-  }
-
-  AlignmentGeometry getAlignment(String fit) {
-    switch (fit) {
-      case 'center':
-        return Alignment.center;
-      case 'topLeft':
-        return Alignment.topLeft;
-      case 'topRight':
-        return Alignment.topRight;
-      case 'topCenter':
-        return Alignment.topCenter;
-      case 'centerLeft':
-        return Alignment.centerLeft;
-      case 'centerRight':
-        return Alignment.centerRight;
-      case 'bottomLeft':
-        return Alignment.bottomLeft;
-      case 'bottomCenter':
-        return Alignment.bottomCenter;
-      case 'bottomRight':
-        return Alignment.bottomRight;
-      default:
-        return Alignment.center;
-    }
   }
 }
