@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:digia_ui/src/Utils/basic_shared_utils/dui_decoder.dart';
 import 'package:digia_ui/src/Utils/basic_shared_utils/lodash.dart';
 import 'package:digia_ui/src/Utils/basic_shared_utils/num_decoder.dart';
+import 'package:digia_ui/src/Utils/extensions.dart';
 import 'package:digia_ui/src/Utils/util_functions.dart';
 import 'package:digia_ui/src/components/dui_widget.dart';
 import 'package:digia_ui/src/core/page/props/dui_widget_json_data.dart';
@@ -31,9 +32,8 @@ class DUIContainer2 extends StatelessWidget {
       shape = BoxShape.rectangle;
     }
 
-    final width = _toWidth(context, props.width);
-    final height = _toHeight(context, props.height);
-    final borderWidth = _toWidth(context, props.border?.borderWidthStr);
+    final width = props.width?.toWidth(context);
+    final height = props.height?.toHeight(context);
     final borderRadius = DUIDecoder.toBorderRadius(props.border?.borderRadius);
     final alignment = DUIDecoder.toAlignment(props.childAlignment);
     final margin = DUIDecoder.toEdgeInsets(props.margin?.toJson());
@@ -52,12 +52,10 @@ class DUIContainer2 extends StatelessWidget {
       padding: padding,
       decoration: BoxDecoration(
           color: color,
-          border: borderWidth == null
-              ? null
-              : Border.all(
-                  color: borderColor ?? Colors.black,
-                  width: borderWidth,
-                ),
+          border: (props.border?.borderWidth).let((p0) => Border.all(
+                color: borderColor ?? Colors.black,
+                width: NumDecoder.toDoubleOrDefault(p0, defaultValue: 1),
+              )),
           borderRadius: props.shape == 'circle'
               ? null
               : BorderRadius.only(
@@ -75,51 +73,11 @@ class DUIContainer2 extends StatelessWidget {
                   fit: DUIDecoder.toBoxFit(props.decorationImage?.fit)),
           shape: shape),
       constraints: BoxConstraints(
-          maxHeight: _toHeight(context, props.maxHeight) ?? double.infinity,
-          maxWidth: _toWidth(context, props.maxWidth) ?? double.infinity,
-          minHeight: _toHeight(context, props.minHeight) ?? 0,
-          minWidth: _toWidth(context, props.minWidth) ?? 0),
+          maxHeight: props.maxHeight?.toHeight(context) ?? double.infinity,
+          maxWidth: props.maxWidth?.toWidth(context) ?? double.infinity,
+          minHeight: props.minHeight?.toHeight(context) ?? 0,
+          minWidth: props.minWidth?.toWidth(context) ?? 0),
       child: child.let((p0) => DUIWidget(data: p0)),
     );
-  }
-
-  double? _toHeight(BuildContext context, String? extentStringValue) {
-    if (extentStringValue == null || extentStringValue.isEmpty == true) {
-      return null;
-    }
-
-    final parsedValue = double.tryParse(extentStringValue);
-    if (parsedValue != null) return parsedValue;
-
-    if (extentStringValue.characters.last == '%') {
-      final substring =
-          extentStringValue.substring(0, extentStringValue.length - 1);
-      final factor = double.tryParse(substring);
-      if (factor == null) return null;
-
-      return MediaQuery.of(context).size.height * (factor / 100);
-    }
-
-    return null;
-  }
-
-  double? _toWidth(BuildContext context, String? extentStringValue) {
-    if (extentStringValue == null || extentStringValue.isEmpty == true) {
-      return null;
-    }
-
-    final parsedValue = double.tryParse(extentStringValue);
-    if (parsedValue != null) return parsedValue;
-
-    if (extentStringValue.characters.last == '%') {
-      final substring =
-          extentStringValue.substring(0, extentStringValue.length - 1);
-      final factor = double.tryParse(substring);
-      if (factor == null) return null;
-
-      return MediaQuery.of(context).size.width * (factor / 100);
-    }
-
-    return null;
   }
 }

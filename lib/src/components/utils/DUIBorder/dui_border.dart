@@ -7,7 +7,6 @@ part 'dui_border.g.dart';
 class DUIBorder {
   String? borderStyle;
   double? borderWidth;
-  String? borderWidthStr;
   String? borderColor;
   DUICornerRadius? borderRadius;
 
