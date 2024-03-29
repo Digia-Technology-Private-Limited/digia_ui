@@ -1,6 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:digia_ui/components/carousel/carousel_props.dart';
-
+import 'package:digia_ui/src/components/carousel/carousel_props.dart';
 import 'package:digia_ui/src/Utils/dui_widget_registry.dart';
 import 'package:digia_ui/src/core/builders/dui_json_widget_builder.dart';
 import 'package:digia_ui/src/core/page/props/dui_widget_json_data.dart';
