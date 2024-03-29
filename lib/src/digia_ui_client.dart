@@ -9,7 +9,7 @@ import 'digia_ui_service.dart';
 
 const defaultUIConfigAssetPath = 'assets/json/dui_config.json';
 const defaultBaseUrl = 'https://app.digia.tech/hydrator/api';
-// const baseUrl = 'http://localhost:5000/hydrator/api';
+// const defaultBaseUrl = 'http://localhost:5000/hydrator/api';
 
 class DigiaUIClient {
   static final DigiaUIClient _instance = DigiaUIClient._();
@@ -38,7 +38,8 @@ class DigiaUIClient {
       Dio? dio}) async {
     _instance.accessKey = accessKey;
     _instance.baseUrl = baseUrl ?? defaultBaseUrl;
-    _instance.networkClient = NetworkClient(dio, _instance.baseUrl);
+    Map<String, dynamic> headers = {'digia_projectId': accessKey};
+    _instance.networkClient = NetworkClient(dio, _instance.baseUrl, headers);
     final string =
         await rootBundle.loadString(assetPath ?? defaultUIConfigAssetPath);
     final data = jsonDecode(string);
@@ -59,7 +60,8 @@ class DigiaUIClient {
       required dynamic data}) async {
     _instance.accessKey = accessKey;
     _instance.baseUrl = baseUrl ?? defaultBaseUrl;
-    _instance.networkClient = NetworkClient(dio, _instance.baseUrl);
+    Map<String, dynamic> headers = {'digia_projectId': accessKey};
+    _instance.networkClient = NetworkClient(dio, _instance.baseUrl, headers);
     _instance.configResolver = DigiaUIConfigResolver(data);
 
     _instance._isInitialized = true;
@@ -69,12 +71,16 @@ class DigiaUIClient {
       {required String accessKey, String? baseUrl, Dio? dio}) async {
     _instance.accessKey = accessKey;
     _instance.baseUrl = baseUrl ?? defaultBaseUrl;
-    _instance.networkClient = NetworkClient(dio, _instance.baseUrl);
+    Map<String, dynamic> headers = {'digia_projectId': accessKey};
+    _instance.networkClient = NetworkClient(dio, _instance.baseUrl, headers);
 
     final resp = await _instance.networkClient.post(
-        path: '${_instance.baseUrl}/config/getAppConfig',
-        fromJsonT: (json) => json as dynamic,
-        data: jsonEncode({'projectId': accessKey}));
+      path: '/config/getAppConfig',
+      fromJsonT: (json) => json as dynamic,
+      data: jsonEncode(
+        {'projectId': accessKey},
+      ),
+    );
 
     final data = resp.data['response'] as Map<String, dynamic>?;
     if (data == null || data.isEmpty) {
