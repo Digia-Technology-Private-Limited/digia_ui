@@ -62,7 +62,7 @@ TextStyle? toTextStyle(DUITextStyle? textStyle) {
 
 TextSpan toTextSpan(DUITextSpan textSpan) {
   return TextSpan(
-    text: textSpan.text,
+    text: textSpan.text.toString(),
     style: toTextStyle(textSpan.spanStyle),
     // recognizer: TapGestureRecognizer()
     //   ..onTap = () async {
