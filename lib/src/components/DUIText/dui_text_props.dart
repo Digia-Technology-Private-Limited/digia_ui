@@ -16,7 +16,7 @@ class DUITextProps {
   DUITextProps();
 
   factory DUITextProps.withText(
-      {required String text,
+      {required dynamic text,
       DUITextStyle? textStyle,
       int? maxLines,
       String? overflow,
