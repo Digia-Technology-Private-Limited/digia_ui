@@ -27,7 +27,8 @@ class _DUIExpandableState extends State<DUIExpandable> {
   Widget build(BuildContext context) {
     return ExpandablePanel(
       key: UniqueKey(),
-      header: DUIWidget(data: widget.children['header']!.first),
+      header: (widget.children['header']?.firstOrNull)
+          .let((p0) => DUIWidget(data: p0)),
       collapsed: DUIWidget(
         data: widget.children['collapsedView']!.first,
       ),
@@ -37,15 +38,12 @@ class _DUIExpandableState extends State<DUIExpandable> {
       controller:
           ExpandableController(initialExpanded: widget.props.initiallyExpanded),
       theme: ExpandableThemeData(
-        bodyAlignment: (widget.props.bodyAlignment != null)
-            ? getBodyAlignment(widget.props.bodyAlignment!)
-            : null,
-        headerAlignment: (widget.props.headerAlignment != null)
-            ? getHeaderAlignment(widget.props.headerAlignment!)
-            : null,
-        iconPlacement: (widget.props.icon?.iconPlacement != null)
-            ? getIconAlignment(widget.props.icon!.iconPlacement!)
-            : null,
+        bodyAlignment:
+            _toExpandablePanelBodyAlignment(widget.props.bodyAlignment),
+        headerAlignment:
+            _toExpandablePanelHeaderAlignment(widget.props.headerAlignment),
+        iconPlacement:
+            _toExpandablePanelIconPlacement(widget.props.icon?.iconPlacement),
         // sizeCurve:,
         iconColor: widget.props.color?.letIfTrue(toColor),
         alignment: DUIDecoder.toAlignment(widget.props.alignment),
@@ -74,53 +72,46 @@ class _DUIExpandableState extends State<DUIExpandable> {
     );
   }
 
-  ExpandablePanelBodyAlignment getBodyAlignment(String bodyAlignment) {
-    switch (bodyAlignment) {
+  ExpandablePanelBodyAlignment? _toExpandablePanelBodyAlignment(
+      String? bodyAlignment) {
+    if (bodyAlignment == null) return null;
+
+    switch (bodyAlignment.toLowerCase()) {
       case 'left':
-      case 'LEFT':
-      case 'Left':
         return ExpandablePanelBodyAlignment.left;
       case 'right':
-      case 'RIGHT':
-      case 'Right':
         return ExpandablePanelBodyAlignment.right;
       case 'center':
-      case 'CENTER':
-      case 'Center':
         return ExpandablePanelBodyAlignment.center;
       default:
         return ExpandablePanelBodyAlignment.left;
     }
   }
 
-  ExpandablePanelIconPlacement getIconAlignment(String bodyAlignment) {
-    switch (bodyAlignment) {
+  ExpandablePanelIconPlacement? _toExpandablePanelIconPlacement(
+      String? alignment) {
+    if (alignment == null) return null;
+
+    switch (alignment) {
       case 'left':
-      case 'LEFT':
-      case 'Left':
         return ExpandablePanelIconPlacement.left;
       case 'right':
-      case 'RIGHT':
-      case 'Right':
         return ExpandablePanelIconPlacement.right;
       default:
         return ExpandablePanelIconPlacement.right;
     }
   }
 
-  ExpandablePanelHeaderAlignment getHeaderAlignment(String bodyAlignment) {
-    switch (bodyAlignment) {
+  ExpandablePanelHeaderAlignment? _toExpandablePanelHeaderAlignment(
+      String? alignment) {
+    if (alignment == null) return null;
+
+    switch (alignment.toLowerCase()) {
       case 'top':
-      case 'TOP':
-      case 'Top':
         return ExpandablePanelHeaderAlignment.top;
       case 'bottom':
-      case 'BOTTOM':
-      case 'Bottom':
         return ExpandablePanelHeaderAlignment.bottom;
       case 'center':
-      case 'CENTER':
-      case 'Center':
         return ExpandablePanelHeaderAlignment.center;
       default:
         return ExpandablePanelHeaderAlignment.top;
