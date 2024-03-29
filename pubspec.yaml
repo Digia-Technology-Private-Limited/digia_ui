@@ -72,6 +72,7 @@ dependencies:
   font_awesome_flutter: ^10.6.0
   youtube_player_iframe: ^5.1.1
   google_fonts: ^6.1.0
+  flutter_blurhash: ^0.8.2
 
 dev_dependencies:
   flutter_test:
