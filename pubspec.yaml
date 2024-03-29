@@ -26,6 +26,12 @@ environment:
 scripts:
   i: flutter pub get
   build: dart run build_runner build --delete-conflicting-outputs
+  clean:
+    build:
+      - flutter clean
+      - rm -rf pubspec.lock
+      - flutter pub get
+      - $build
   format: dart format .
   fix: dart fix --apply
   lint: derry fix; derry format
@@ -65,7 +71,11 @@ dependencies:
   flutter_html: ^3.0.0-beta.2
   font_awesome_flutter: ^10.6.0
   carousel_slider: ^4.2.1
+  lottie: ^2.4.0
+  expandable: ^5.0.1
   youtube_player_iframe: ^5.1.1
+  google_fonts: ^6.1.0
+  flutter_blurhash: ^0.8.2
 
 dev_dependencies:
   flutter_test:
