@@ -402,4 +402,38 @@ class DUIDecoder {
 
     return null;
   }
+
+  static StackFit toStackFit(String? fit) {
+    switch (fit) {
+      case 'expand':
+        return StackFit.expand;
+      case 'passthrough':
+        return StackFit.passthrough;
+      default:
+        return StackFit.loose;
+    }
+  }
+
+  static AlignmentDirectional toStackChildAlignment(String? fit) {
+    switch (fit) {
+      case 'center':
+        return AlignmentDirectional.center;
+      case 'topEnd':
+        return AlignmentDirectional.topEnd;
+      case 'topCenter':
+        return AlignmentDirectional.topCenter;
+      case 'centerEnd':
+        return AlignmentDirectional.centerEnd;
+      case 'centerStart':
+        return AlignmentDirectional.centerStart;
+      case 'bottomStart':
+        return AlignmentDirectional.bottomStart;
+      case 'bottomCenter':
+        return AlignmentDirectional.bottomCenter;
+      case 'bottomEnd':
+        return AlignmentDirectional.bottomEnd;
+      default:
+        return AlignmentDirectional.topStart;
+    }
+  }
 }

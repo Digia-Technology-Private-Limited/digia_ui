@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:digia_ui/src/components/image/image.props.dart';
 import 'package:digia_ui/src/core/container/dui_container.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_blurhash/flutter_blurhash.dart';
 import 'package:octo_image/octo_image.dart';
 
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
@@ -36,11 +37,26 @@ class _DUIImageState extends State<DUIImage> {
     switch (props.imageSrc.split('/').first) {
       case 'http':
       case 'https':
-        return ((context) => CachedNetworkImage(imageUrl: placeHolderValue));
+        return ((context) => AspectRatio(
+              aspectRatio: props.aspectRatio!,
+              child: CachedNetworkImage(imageUrl: placeHolderValue),
+            ));
       case 'assets':
-        return ((context) => Image.asset(placeHolderValue));
+        return ((context) => AspectRatio(
+              aspectRatio: props.aspectRatio!,
+              child: Image.asset(placeHolderValue),
+            ));
       case 'blurHash':
-        return OctoPlaceholder.frame(); // [TODO] : This had been changed
+        return ((context) => AspectRatio(
+              aspectRatio: props.aspectRatio!,
+              child: BlurHash(
+                hash: props.placeHolder!,
+                duration: const Duration(
+                  microseconds: 0,
+                ),
+              ),
+            ));
+      // [TODO] : This had been changed
     }
 
     return null;
@@ -57,10 +73,18 @@ class _DUIImageState extends State<DUIImage> {
     }
 
     return OctoImage(
+        fadeInDuration: const Duration(microseconds: 0),
+        fadeOutDuration: const Duration(microseconds: 0),
         image: imageProvider,
         fit: DUIDecoder.toBoxFit(props.fit),
         gaplessPlayback: true,
-        placeholderBuilder: _placeHolderBuilderCreater(),
+        placeholderBuilder: _placeHolderBuilderCreater() ??
+            ((context) => AspectRatio(
+                  aspectRatio: props.aspectRatio!,
+                  child: Container(
+                    color: Colors.grey.shade50,
+                  ),
+                )),
         imageBuilder: (BuildContext context, Widget widget) {
           final child = props.aspectRatio == null
               ? widget
