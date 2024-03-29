@@ -71,7 +71,10 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
 
       case 'Action.navigateToPage':
         final pageUId = action.data['pageId'];
-        return openDUIPage(pageUid: pageUId, context: context!);
+        return openDUIPage(
+            pageUid: pageUId,
+            context: context!,
+            pageArguments: action.data['args']);
 
       case 'Action.openUrl':
         final url = Uri.parse(action.data['url']);

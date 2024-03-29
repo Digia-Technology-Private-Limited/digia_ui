@@ -5,7 +5,7 @@ part 'app_bar.props.g.dart';
 
 @JsonSerializable()
 class DUIAppBarProps {
-  final DUITextProps title;
+  final DUITextProps? title;
   final double _elevation;
   final String? shadowColor;
   final String? backgrounColor;

@@ -7,9 +7,14 @@ class DUIApp extends StatelessWidget {
   final String digiaAccessKey;
   final GlobalKey<NavigatorState>? navigatorKey;
   final ThemeData? theme;
+  final String? baseUrl;
 
   const DUIApp(
-      {super.key, required this.digiaAccessKey, this.navigatorKey, this.theme});
+      {super.key,
+      required this.digiaAccessKey,
+      this.navigatorKey,
+      this.theme,
+      this.baseUrl});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +29,8 @@ class DUIApp extends StatelessWidget {
           ),
       title: 'Digia App',
       home: FutureBuilder(
-        future: DigiaUIClient.initializeFromNetwork(accessKey: digiaAccessKey),
+        future: DigiaUIClient.initializeFromNetwork(
+            accessKey: digiaAccessKey, baseUrl: baseUrl),
         builder: (context, snapshot) {
           if (snapshot.connectionState != ConnectionState.done) {
             return const Scaffold(
