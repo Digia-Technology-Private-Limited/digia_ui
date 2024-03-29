@@ -13,6 +13,31 @@ extension KeyPath on Map {
   }
 }
 
+extension ExtentUtil on String {
+  double? toHeight(BuildContext context) {
+    return _compute(MediaQuery.of(context).size.height, this);
+  }
+
+  double? toWidth(BuildContext context) {
+    return _compute(MediaQuery.of(context).size.width, this);
+  }
+
+  double? _compute(double extent, String val) {
+    final s = val.trim();
+    if (s.isEmpty) return null;
+
+    if (s.characters.last == '%') {
+      final substring = s.substring(0, s.length - 1);
+      final factor = double.tryParse(substring);
+      if (factor == null) return null;
+
+      return extent * (factor / 100);
+    }
+
+    return double.tryParse(s);
+  }
+}
+
 extension Util on BorderRadiusGeometry {
   bool isZero() {
     return this == BorderRadius.zero;

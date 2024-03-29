@@ -1,7 +1,7 @@
+import 'package:digia_ui/src/core/builders/dui_carousel_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_app_bar_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_avatar_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_button_builder.dart';
-import 'package:digia_ui/src/core/builders/dui_column_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_expandable_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_flex_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_gridview_builder.dart';
@@ -53,6 +53,8 @@ class DUIWidgetRegistry {
         DUIListViewBuilder.create(data, registry: DUIWidgetRegistry.shared),
     'digia/gridView': (data, {registry}) =>
         DUIGridViewBuilder.create(data, registry: DUIWidgetRegistry.shared),
+    'digia/carousel': (data, {registry}) =>
+        DUICarouselBuilder.create(data, registry: DUIWidgetRegistry.shared),
     'digia/column': (data, {registry}) => DUIFlexBuilder.create(data,
         registry: DUIWidgetRegistry.shared, direction: Axis.vertical),
     'digia/row': (data, {registry}) => DUIFlexBuilder.create(data,
