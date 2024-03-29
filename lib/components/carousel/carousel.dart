@@ -19,7 +19,7 @@ class DUICarousel extends StatelessWidget {
     final padding = double.tryParse(props.childPadding ?? '0') ?? 0;
     // final borderRadius = DUIDecoder.toBorderRadius(props.borderRadius);
 
-    return Container(
+    return SizedBox(
       height: height,
       width: width,
       child: CarouselSlider(
