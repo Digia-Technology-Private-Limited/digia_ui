@@ -26,6 +26,12 @@ environment:
 scripts:
   i: flutter pub get
   build: dart run build_runner build --delete-conflicting-outputs
+  clean:
+    build:
+      - flutter clean
+      - rm -rf pubspec.lock
+      - flutter pub get
+      - $build
   format: dart format .
   fix: dart fix --apply
   lint: derry fix; derry format
