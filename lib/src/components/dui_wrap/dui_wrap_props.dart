@@ -11,16 +11,17 @@ class DUIWrapProps {
   final String? runAlignment;
   final String? direction;
   final String? verticalDirection;
+  final String? clipBehavior;
 
-  DUIWrapProps({
-    this.spacing,
-    this.runSpacing,
-    this.wrapAlignment,
-    this.wrapCrossAlignment,
-    this.runAlignment,
-    this.direction,
-    this.verticalDirection,
-  });
+  DUIWrapProps(
+      {this.spacing,
+      this.runSpacing,
+      this.wrapAlignment,
+      this.wrapCrossAlignment,
+      this.runAlignment,
+      this.direction,
+      this.verticalDirection,
+      this.clipBehavior});
 
   factory DUIWrapProps.fromJson(Map<String, dynamic> json) =>
       _$DUIWrapPropsFromJson(json);

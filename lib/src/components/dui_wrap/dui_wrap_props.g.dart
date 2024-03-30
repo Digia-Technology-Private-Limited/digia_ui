@@ -14,6 +14,7 @@ DUIWrapProps _$DUIWrapPropsFromJson(Map<String, dynamic> json) => DUIWrapProps(
       runAlignment: json['runAlignment'] as String?,
       direction: json['direction'] as String?,
       verticalDirection: json['verticalDirection'] as String?,
+      clipBehavior: json['clipBehavior'] as String?,
     );
 
 Map<String, dynamic> _$DUIWrapPropsToJson(DUIWrapProps instance) =>
@@ -25,4 +26,5 @@ Map<String, dynamic> _$DUIWrapPropsToJson(DUIWrapProps instance) =>
       'runAlignment': instance.runAlignment,
       'direction': instance.direction,
       'verticalDirection': instance.verticalDirection,
+      'clipBehavior': instance.clipBehavior,
     };

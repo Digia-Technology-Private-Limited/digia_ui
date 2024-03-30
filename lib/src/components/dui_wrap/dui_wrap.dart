@@ -27,6 +27,7 @@ class _DUIWrapState extends State<DUIWrap> {
       runAlignment: DUIDecoder.toWrapAlignment(widget.props.runAlignment),
       verticalDirection:
           DUIDecoder.toVerticalDirection(widget.props.verticalDirection),
+      clipBehavior: DUIDecoder.toClip(widget.props.clipBehavior),
       children: widget.children!.map((e) {
         return DUIWidget(data: e);
       }).toList(),

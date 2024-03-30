@@ -490,4 +490,15 @@ class DUIDecoder {
       _ => defaultValue
     };
   }
+
+  static Clip toClip(String? value, {Clip defaultValue = Clip.none}) {
+    if (value == null) return defaultValue;
+
+    return switch (value) {
+      'antiAlias' => Clip.antiAlias,
+      'hardEdge' => Clip.hardEdge,
+      'antiAliasWithSaveLayer' => Clip.antiAliasWithSaveLayer,
+      _ => defaultValue
+    };
+  }
 }
