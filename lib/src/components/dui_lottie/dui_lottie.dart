@@ -21,10 +21,10 @@ class _DUILottieState extends State<DUILottie> {
       height: widget.props.height,
       width: widget.props.width,
       animate: widget.props.animate ?? true,
-      frameRate: FrameRate(widget.props.frameRate ?? 0.9),
+      frameRate: FrameRate(widget.props.frameRate ?? 60),
       fit: DUIDecoder.toBoxFit(widget.props.fit ?? ''),
-      reverse: widget.props.reverse,
-      repeat: widget.props.repeat,
+      repeat: getAnimationType(widget.props.animationType ?? '').$1,
+      reverse: getAnimationType(widget.props.animationType ?? '').$2,
       errorBuilder: (context, object, stackTrace) {
         return SizedBox(
             height: widget.props.height,
@@ -35,5 +35,18 @@ class _DUILottieState extends State<DUILottie> {
             ));
       },
     );
+  }
+
+  (bool repeat, bool reverse) getAnimationType(String animationType) {
+    switch (animationType) {
+      case 'loop':
+        return (true, false);
+      case 'boomerang':
+        return (true, true);
+      case 'once':
+        return (false, false);
+      default:
+        return (true, false);
+    }
   }
 }

@@ -10,9 +10,8 @@ class DUILottieProps {
   final double? height;
   final double? width;
   final double? frameRate;
-  final bool? reverse;
+  final String? animationType;
   final bool? animate;
-  final bool? repeat;
 
   DUILottieProps({
     this.lottiePath,
@@ -21,9 +20,8 @@ class DUILottieProps {
     this.height,
     this.width,
     this.frameRate,
-    this.reverse,
+    this.animationType,
     this.animate,
-    this.repeat,
   });
 
   factory DUILottieProps.fromJson(Map<String, dynamic> json) =>

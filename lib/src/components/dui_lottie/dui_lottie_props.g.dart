@@ -14,9 +14,8 @@ DUILottieProps _$DUILottiePropsFromJson(Map<String, dynamic> json) =>
       height: (json['height'] as num?)?.toDouble(),
       width: (json['width'] as num?)?.toDouble(),
       frameRate: (json['frameRate'] as num?)?.toDouble(),
-      reverse: json['reverse'] as bool?,
+      animationType: json['animationType'] as String?,
       animate: json['animate'] as bool?,
-      repeat: json['repeat'] as bool?,
     );
 
 Map<String, dynamic> _$DUILottiePropsToJson(DUILottieProps instance) =>
@@ -27,7 +26,6 @@ Map<String, dynamic> _$DUILottiePropsToJson(DUILottieProps instance) =>
       'height': instance.height,
       'width': instance.width,
       'frameRate': instance.frameRate,
-      'reverse': instance.reverse,
+      'animationType': instance.animationType,
       'animate': instance.animate,
-      'repeat': instance.repeat,
     };
