@@ -15,6 +15,8 @@ class DUILottie extends StatefulWidget {
 class _DUILottieState extends State<DUILottie> {
   @override
   Widget build(BuildContext context) {
+    final (repeat, reverse) = getAnimationType(widget.props.animationType);
+
     return LottieBuilder.network(
       widget.props.lottiePath ?? '',
       alignment: DUIDecoder.toAlignment(widget.props.alignment),
@@ -22,9 +24,9 @@ class _DUILottieState extends State<DUILottie> {
       width: widget.props.width,
       animate: widget.props.animate ?? true,
       frameRate: FrameRate(widget.props.frameRate ?? 60),
-      fit: DUIDecoder.toBoxFit(widget.props.fit ?? ''),
-      repeat: getAnimationType(widget.props.animationType ?? '').$1,
-      reverse: getAnimationType(widget.props.animationType ?? '').$2,
+      fit: DUIDecoder.toBoxFit(widget.props.fit),
+      repeat: repeat,
+      reverse: reverse,
       errorBuilder: (context, object, stackTrace) {
         return SizedBox(
             height: widget.props.height,
@@ -37,14 +39,15 @@ class _DUILottieState extends State<DUILottie> {
     );
   }
 
-  (bool repeat, bool reverse) getAnimationType(String animationType) {
-    switch (animationType) {
-      case 'loop':
-        return (true, false);
+  (bool repeat, bool reverse) getAnimationType(String? animationType) {
+    final value = animationType ?? 'loop';
+
+    switch (value) {
       case 'boomerang':
         return (true, true);
       case 'once':
         return (false, false);
+      case 'loop':
       default:
         return (true, false);
     }
