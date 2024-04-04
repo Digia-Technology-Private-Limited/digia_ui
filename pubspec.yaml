@@ -76,7 +76,7 @@ dependencies:
   youtube_player_iframe: ^5.1.1
   google_fonts: ^6.1.0
   flutter_blurhash: ^0.8.2
-    digia_expr:
+  digia_expr:
     git:
       url: https://github.com/Digia-Technology-Private-Limited/digia_expr.git
       ref: main
