@@ -40,7 +40,7 @@ T? evaluateExpression<T extends Object>(
                             return ASTNumberLiteral(
                                 value: NumDecoder.toDouble(value.value));
                         }
-                        return ASTIdentifer(name: 'null');
+                        return ASTStringLiteral();
                       }())) ??
                   {}))
       .typedValue<T>();
