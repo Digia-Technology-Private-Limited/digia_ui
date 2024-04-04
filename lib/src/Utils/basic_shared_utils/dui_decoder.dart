@@ -436,4 +436,69 @@ class DUIDecoder {
         return AlignmentDirectional.topStart;
     }
   }
+
+  static VerticalDirection toVerticalDirection(String? value) {
+    if (value == null) return VerticalDirection.down;
+
+    switch (value) {
+      case 'up':
+        return VerticalDirection.up;
+      case 'down':
+        return VerticalDirection.down;
+      default:
+        return VerticalDirection.down;
+    }
+  }
+
+  static Axis toAxis(String? value, {Axis defaultValue = Axis.horizontal}) {
+    if (value == null) return defaultValue;
+
+    switch (value) {
+      case 'horizontal':
+        Axis.horizontal;
+
+      case 'vertical':
+        Axis.vertical;
+    }
+
+    return defaultValue;
+  }
+
+  static WrapAlignment toWrapAlignment(String? value,
+      {WrapAlignment defaultValue = WrapAlignment.start}) {
+    if (value == null) return defaultValue;
+
+    return switch (value) {
+      'start' => WrapAlignment.start,
+      'end' => WrapAlignment.end,
+      'center' => WrapAlignment.center,
+      'spaceBetween' => WrapAlignment.spaceBetween,
+      'spaceAround' => WrapAlignment.spaceAround,
+      'spaceEvenly' => WrapAlignment.spaceEvenly,
+      _ => defaultValue
+    };
+  }
+
+  static WrapCrossAlignment toWrapCrossAlignment(String? value,
+      {WrapCrossAlignment defaultValue = WrapCrossAlignment.start}) {
+    if (value == null) return defaultValue;
+
+    return switch (value) {
+      'start' => WrapCrossAlignment.start,
+      'end' => WrapCrossAlignment.end,
+      'center' => WrapCrossAlignment.center,
+      _ => defaultValue
+    };
+  }
+
+  static Clip toClip(String? value, {Clip defaultValue = Clip.none}) {
+    if (value == null) return defaultValue;
+
+    return switch (value) {
+      'antiAlias' => Clip.antiAlias,
+      'hardEdge' => Clip.hardEdge,
+      'antiAliasWithSaveLayer' => Clip.antiAliasWithSaveLayer,
+      _ => defaultValue
+    };
+  }
 }

@@ -7,7 +7,7 @@ part of 'dui_text_span.dart';
 // **************************************************************************
 
 DUITextSpan _$DUITextSpanFromJson(Map<String, dynamic> json) => DUITextSpan()
-  ..text = json['text'] as String
+  ..text = json['text']
   ..spanStyle = DUITextStyle.fromJson(json['spanStyle'])
   ..url = json['url'] as String?;
 

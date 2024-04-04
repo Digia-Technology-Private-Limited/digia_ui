@@ -28,13 +28,14 @@ class NetworkClient {
     if (kDebugMode) {
       this.dio.interceptors.addAll([
         PrettyDioLogger(
-            requestHeader: true,
-            requestBody: true,
-            responseBody: true,
-            responseHeader: false,
-            error: true,
-            compact: true,
-            maxWidth: 100),
+          requestHeader: true,
+          requestBody: true,
+          responseBody: true,
+          responseHeader: false,
+          error: true,
+          compact: true,
+          // fixme if inFuture have some error related to dio, add maxWidth property and set it >100
+        ),
         DioInterceptToCurl(),
       ]);
     }

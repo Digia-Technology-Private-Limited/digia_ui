@@ -5,6 +5,7 @@ import 'package:digia_ui/src/components/DUIText/DUI_text_span/dui_text_span.dart
 import 'package:digia_ui/src/components/DUIText/dui_text_style.dart';
 import 'package:digia_ui/src/components/utils/DUIBorder/dui_border.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../../digia_ui.dart';
 
@@ -24,10 +25,12 @@ TextStyle? toTextStyle(DUITextStyle? textStyle) {
   FontStyle fontStyle = FontStyle.normal;
   double fontSize = DUIConfigConstants.fallbackSize;
   double fontHeight = DUIConfigConstants.fallbackLineHeightFactor;
+  String fontFamily = 'Poppins';
 
   if (textStyle.fontToken != null) {
     var font = DigiaUIClient.getConfigResolver().getFont(textStyle.fontToken!);
     fontWeight = DUIDecoder.toFontWeight(font.weight);
+    fontFamily = font.fontFamily!;
     fontStyle = DUIDecoder.toFontStyle(font.style);
     fontSize = font.size ?? DUIConfigConstants.fallbackSize;
     fontHeight = font.height ?? DUIConfigConstants.fallbackLineHeightFactor;
@@ -43,11 +46,9 @@ TextStyle? toTextStyle(DUITextStyle? textStyle) {
   Color? decorationColor = textStyle.textDecorationColor.letIfTrue(toColor);
   TextDecorationStyle? decorationStyle =
       DUIDecoder.toTextDecorationStyle(textStyle.textDecorationStyle);
-  String fontFamily = textStyle.fontFamily ??
-      'Poppins'; // TODO: This shouldn't be hardcoded here.
+  // TODO: This shouldn't be hardcoded here.
 
-  return TextStyle(
-      fontFamily: fontFamily,
+  return GoogleFonts.getFont(fontFamily,
       fontWeight: fontWeight,
       fontStyle: fontStyle,
       fontSize: fontSize,
@@ -61,7 +62,7 @@ TextStyle? toTextStyle(DUITextStyle? textStyle) {
 
 TextSpan toTextSpan(DUITextSpan textSpan) {
   return TextSpan(
-    text: textSpan.text,
+    text: textSpan.text.toString(),
     style: toTextStyle(textSpan.spanStyle),
     // recognizer: TapGestureRecognizer()
     //   ..onTap = () async {
