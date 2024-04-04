@@ -28,38 +28,30 @@ class _DUIImageState extends State<DUIImage> {
   }
 
   OctoPlaceholderBuilder? _placeHolderBuilderCreater() {
+    Widget widget = Container(
+      color: Colors.grey.shade50,
+    );
+
     final placeHolderValue = props.placeHolder;
 
-    if (placeHolderValue == null || placeHolderValue.isEmpty) {
-      return null;
+    if (placeHolderValue != null && placeHolderValue.isNotEmpty) {
+      widget = switch (placeHolderValue.split('/').first) {
+        'http' || 'https' => CachedNetworkImage(imageUrl: placeHolderValue),
+        'assets' => Image.asset(placeHolderValue),
+        'blurHash' => BlurHash(
+            hash: props.placeHolder!,
+            duration: const Duration(
+              microseconds: 0,
+            )),
+        _ => widget
+      };
     }
 
-    switch (props.imageSrc.split('/').first) {
-      case 'http':
-      case 'https':
-        return ((context) => AspectRatio(
-              aspectRatio: props.aspectRatio!,
-              child: CachedNetworkImage(imageUrl: placeHolderValue),
-            ));
-      case 'assets':
-        return ((context) => AspectRatio(
-              aspectRatio: props.aspectRatio!,
-              child: Image.asset(placeHolderValue),
-            ));
-      case 'blurHash':
-        return ((context) => AspectRatio(
-              aspectRatio: props.aspectRatio!,
-              child: BlurHash(
-                hash: props.placeHolder!,
-                duration: const Duration(
-                  microseconds: 0,
-                ),
-              ),
-            ));
-      // [TODO] : This had been changed
+    if (props.aspectRatio != null) {
+      widget = AspectRatio(aspectRatio: props.aspectRatio!, child: widget);
     }
 
-    return null;
+    return (context) => widget;
   }
 
   @override
@@ -78,13 +70,7 @@ class _DUIImageState extends State<DUIImage> {
         image: imageProvider,
         fit: DUIDecoder.toBoxFit(props.fit),
         gaplessPlayback: true,
-        placeholderBuilder: _placeHolderBuilderCreater() ??
-            ((context) => AspectRatio(
-                  aspectRatio: props.aspectRatio!,
-                  child: Container(
-                    color: Colors.grey.shade50,
-                  ),
-                )),
+        placeholderBuilder: _placeHolderBuilderCreater(),
         imageBuilder: (BuildContext context, Widget widget) {
           final child = props.aspectRatio == null
               ? widget
