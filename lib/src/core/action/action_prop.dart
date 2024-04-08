@@ -2,7 +2,6 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'action_prop.g.dart';
 
-@JsonSerializable()
 class ActionFlow {
   final List<ActionProp> actions;
 

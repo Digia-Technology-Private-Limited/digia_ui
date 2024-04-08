@@ -28,8 +28,10 @@ TextStyle? toTextStyle(DUITextStyle? textStyle) {
   double fontHeight = DUIConfigConstants.fallbackLineHeightFactor;
   String fontFamily = 'Poppins';
 
-  if (textStyle.fontToken != null) {
-    var font = DigiaUIClient.getConfigResolver().getFont(textStyle.fontToken!);
+  if (textStyle.fontToken?.value != null) {
+    final font = DigiaUIClient.getConfigResolver()
+        .getFont(textStyle.fontToken!.value!)
+        .merge(textStyle.fontToken?.font);
     fontWeight = DUIDecoder.toFontWeight(font.weight);
     fontFamily = font.fontFamily!;
     fontStyle = DUIDecoder.toFontStyle(font.style);
@@ -47,7 +49,6 @@ TextStyle? toTextStyle(DUITextStyle? textStyle) {
   Color? decorationColor = textStyle.textDecorationColor.letIfTrue(toColor);
   TextDecorationStyle? decorationStyle =
       DUIDecoder.toTextDecorationStyle(textStyle.textDecorationStyle);
-  // TODO: This shouldn't be hardcoded here.
 
   return GoogleFonts.getFont(fontFamily,
       fontWeight: fontWeight,
