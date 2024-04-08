@@ -16,6 +16,7 @@ class DUIConfigConstants {
   static const double fallbackLineHeightFactor = 1.5;
   static const String fallbackBgColorHexCode = '#FFFFFF';
   static const String fallbackBorderColorHexCode = '#FF000000';
+  static const Color fallbackBgColor = Colors.black;
 }
 
 TextStyle? toTextStyle(DUITextStyle? textStyle) {
@@ -105,6 +106,18 @@ Border? toBorder(DUIBorder? border) {
       width: border.borderWidth ?? 1.0,
       color: toColor(
           border.borderColor ?? DUIConfigConstants.fallbackBorderColorHexCode));
+}
+
+BorderSide toBorderSide(DUIBorder? borderSide) {
+  if (borderSide == null || borderSide.borderStyle != 'solid') {
+    return BorderSide.none;
+  }
+
+  return BorderSide(
+      style: BorderStyle.solid,
+      width: borderSide.borderWidth ?? 1.0,
+      color: toColor(borderSide.borderColor ??
+          DUIConfigConstants.fallbackBorderColorHexCode));
 }
 
 OutlineInputBorder? toOutlineInputBorder(DUIBorder? border) {

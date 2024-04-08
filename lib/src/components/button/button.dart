@@ -1,4 +1,8 @@
+import 'package:digia_ui/src/Utils/basic_shared_utils/dui_decoder.dart';
+import 'package:digia_ui/src/Utils/basic_shared_utils/lodash.dart';
+import 'package:digia_ui/src/Utils/util_functions.dart';
 import 'package:digia_ui/src/components/DUIText/dui_text.dart';
+import 'package:digia_ui/src/core/action/action_handler.dart';
 import 'package:digia_ui/src/core/container/dui_container.dart';
 import 'package:digia_ui/src/core/page/dui_page_bloc.dart';
 import 'package:flutter/material.dart';
@@ -38,25 +42,52 @@ class _DUIButtonState extends State<DUIButton> {
   // Not supporting it for now.
   @override
   Widget build(BuildContext context) {
-    final bloc = context.read<DUIPageBloc>();
     final styleclass = props.disabled == true
         ? props.styleClass?.copyWith(bgColor: props.disabledBackgroundColor)
         : props.styleClass;
 
-    final childToRender = DUIContainer(
-        styleClass: styleclass,
-        child: _isLoading
-            ? const SizedBox(
-                width: 32, height: 32, child: CircularProgressIndicator())
-            : DUIText(props.text));
+    ButtonStyle style =
+        ButtonStyle(shape: MaterialStateProperty.resolveWith<OutlinedBorder>(
+      (states) {
+        return RoundedRectangleBorder(
+          borderRadius:
+              DUIDecoder.toBorderRadius(styleclass?.border?.borderRadius),
+          side: toBorderSide(styleclass?.border),
+        );
+      },
+    ), backgroundColor: MaterialStateProperty.resolveWith<Color?>(
+      (states) {
+        return styleclass?.bgColor.let(toColor) ??
+            DUIConfigConstants.fallbackBgColor;
+      },
+    ));
 
-    return props.onClick == null
-        ? childToRender
-        : GestureDetector(
-            onTap: () async {
-              // bloc.add(
-              //     PostActionEvent(action: props.onClick!, context: context));
-            },
-            child: childToRender);
+    return DUIContainer(
+      styleClass: styleclass,
+      child: ElevatedButton(
+        onPressed: props.onClick.let((p0) {
+          return () =>
+              ActionHandler.instance.execute(context: context, action: p0);
+        }),
+        style: style,
+        child: DUIText(props.text),
+      ),
+    );
+
+    // Widget widget = DUIContainer(
+    //     styleClass: styleclass,
+    //     child: _isLoading
+    //         ? const SizedBox(
+    //             width: 32, height: 32, child: CircularProgressIndicator())
+    //         : DUIText(props.text));
+
+    // if (props.onClick != null) {
+    //   widget = GestureDetector(
+    //       onTap: () async => ActionHandler.instance
+    //           .execute(context: context, action: props.onClick!),
+    //       child: widget);
+    // }
+
+    // return widget;
   }
 }

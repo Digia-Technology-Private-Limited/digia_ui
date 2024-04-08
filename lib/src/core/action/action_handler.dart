@@ -1,4 +1,5 @@
 import 'package:digia_ui/digia_ui.dart';
+import 'package:digia_ui/src/Utils/expr.dart';
 import 'package:digia_ui/src/Utils/extensions.dart';
 import 'package:digia_ui/src/core/action/action_prop.dart';
 import 'package:digia_ui/src/core/page/dui_page_bloc.dart';
@@ -58,10 +59,17 @@ Map<String, ActionHandlerFn> _actionsMap = {
       throw 'Action.setPageState called on a widget which is not wrapped in DUIPageBloc';
     }
 
-    bloc.add(SetStateEvent(
-        variableName: action.data['variableName'],
-        context: context,
-        value: action.data['value']));
+    final events = action.data['events'];
+
+    if (events is List) {
+      bloc.add(SetStateEvent(
+          events: events.map((e) {
+        final value = evaluateExpression(e['value'], context, (id) => id);
+        return SingleSetStateEvent(
+            variableName: e['variableName'], context: context, value: value);
+      }).toList()));
+    }
+
     return;
   }
 };

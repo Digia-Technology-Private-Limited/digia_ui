@@ -55,7 +55,9 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
     SetStateEvent event,
     Emitter<DUIPageState> emit,
   ) {
-    state.props.variables?[event.variableName]?.set(event.value);
+    for (final element in event.events) {
+      state.props.variables?[element.variableName]?.set(element.value);
+    }
 
     emit(state.copyWith());
   }

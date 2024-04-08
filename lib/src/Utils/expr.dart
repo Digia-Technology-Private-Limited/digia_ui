@@ -16,7 +16,7 @@ bool _hasExpression(dynamic expression) {
 }
 
 T? evaluateExpression<T extends Object>(
-    dynamic expression, BuildContext context, T? Function(String) fromJsonT) {
+    dynamic expression, BuildContext context, T? Function(dynamic) fromJsonT) {
   if (expression == null) return null;
 
   if (!_hasExpression(expression)) return fromJsonT(expression);
