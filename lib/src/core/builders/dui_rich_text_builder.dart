@@ -1,3 +1,4 @@
+import 'package:digia_ui/src/components/DUIText/dui_text_style.dart';
 import 'package:digia_ui/src/core/json_widget_builder.dart';
 import 'package:digia_ui/src/core/page/props/dui_widget_json_data.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +33,7 @@ class DUIRichTextBuilder extends DUIWidgetBuilder {
       overflow: overflow,
       textAlign: textAlign,
       text: TextSpan(
-        style: toTextStyle(styleJson),
+        style: toTextStyle(DUITextStyle.fromJson(styleJson)),
         children: spanChildren,
       ),
     );
@@ -63,7 +64,7 @@ class DUIRichTextBuilder extends DUIWidgetBuilder {
                 span['text'], context, (p0) => p0 as String?);
             final styleJson =
                 span['spanStyle'] ?? span['textStyle'] ?? span['style'];
-            style = toTextStyle(styleJson);
+            style = toTextStyle(DUITextStyle.fromJson(styleJson));
           }
 
           if (text == null) return null;
