@@ -1,3 +1,4 @@
+import 'package:digia_ui/src/components/DUIText/dui_text.dart';
 import 'package:digia_ui/src/core/builders/dui_carousel_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_app_bar_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_avatar_builder.dart';
@@ -21,8 +22,8 @@ import 'package:flutter/material.dart';
 import '../core/builders/dui_container2_builder.dart';
 import '../core/builders/dui_htmlview_builder.dart';
 import '../core/builders/dui_icon_builder.dart';
+import '../core/builders/dui_rich_text_builder.dart';
 import '../core/builders/dui_scaffold_builder.dart';
-import '../core/builders/dui_text_builder2.dart';
 
 typedef WidgetFromJsonFn<T extends Widget> = T Function(
     Map<String, dynamic> json);
@@ -46,7 +47,7 @@ class DUIWidgetRegistry {
     'digia/icon': withoutRegistry(DUIIconBuilder.create),
     'digia/htmlView': withoutRegistry(DUIHtmlViewBuilder.create),
     'digia/avatar': withoutRegistry(DUIAvatarBuilder.create),
-    'digia/richText': withoutRegistry(DUITextBuilder.create),
+    'digia/richText': withoutRegistry(DUIRichTextBuilder.create),
     'digia/text': withoutRegistry(DUITextBuilder.create),
     'digia/button': withoutRegistry(DUIButtonBuilder.create),
     'digia/image': withoutRegistry(DUIImageBuilder.create),
@@ -72,7 +73,6 @@ class DUIWidgetRegistry {
     'digia/youtubePlayer': (data, {registry}) =>
         DUIYoutubePlayerBuilder.create(data),
     'digia/stack': (data, {registry}) => DUIStackBuilder.create(data),
-    'digia/text2': withoutRegistry(DUIText2Builder.create),
   };
 
   static const DUIWidgetRegistry shared = DUIWidgetRegistry();
