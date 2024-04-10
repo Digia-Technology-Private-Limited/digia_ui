@@ -24,8 +24,9 @@ Map<String, ActionHandlerFn> _actionsMap = {
       throw 'Page Id not found in Action Props';
     }
 
-    return openDUIPage(
-        pageUid: pageUId, context: context, pageArgs: action.data['pageArgs']);
+    final pageArgs = action.data['pageArgs'] ?? action.data['args'];
+
+    return openDUIPage(pageUid: pageUId, context: context, pageArgs: pageArgs);
   },
   'Action.pop': ({required action, required context}) {
     if (action.data['maybe'] == true) {
@@ -83,27 +84,20 @@ class ActionHandler {
 
   Future<dynamic>? execute({
     required BuildContext context,
-    required ActionProp action,
+    required ActionFlow actionFlow,
   }) async {
-    final executable = _actionsMap[action.type];
-    if (executable == null) {
-      print('Action of type ${action.type} not found');
-      return;
+    for (final action in actionFlow.actions) {
+      final executable = _actionsMap[action.type];
+      if (executable == null) {
+        print('Action of type ${action.type} not found');
+        continue;
+      }
+
+      executable(context: context, action: action);
     }
 
-    return executable(context: context, action: action);
+    return null;
   }
-
-  // Future<dynamic>? executeAction(
-  //     BuildContext context, ActionProp action) async {
-  //   switch (action.type) {
-  //     case 'Action.restCall':
-  //       return RestHandler().executeAction(context, action);
-
-  //   }
-
-  //   return null;
-  // }
 }
 
 bool validateSchema(Map<String, dynamic>? args, Map<String, dynamic> def) {

@@ -1,4 +1,3 @@
-import 'package:digia_ui/src/components/DUIText/dui_text.dart';
 import 'package:digia_ui/src/core/builders/dui_carousel_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_app_bar_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_avatar_builder.dart';

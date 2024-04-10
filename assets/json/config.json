@@ -2,6 +2,20 @@
   "appSettings": {
     "initialRoute": "samples-list-page"
   },
+  "appState": {
+    "variables": {
+      "pressedCount": {
+        "type": "integer",
+        "default": 0,
+        "persistent": true
+      },
+      "greeting": {
+        "type": "string",
+        "default": "Hello User",
+        "persistent": false
+      }
+    }
+  },
   "pages": {
     "samples-list-page": {
       "slug": "samples-list-page",

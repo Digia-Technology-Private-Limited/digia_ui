@@ -22,7 +22,7 @@ class DUIButtonProps {
   late DUITextProps text;
   String? disabledBackgroundColor;
   bool? disabled;
-  ActionProp? onClick;
+  ActionFlow? onClick;
   bool? setLoading;
 
   DUIButtonProps();

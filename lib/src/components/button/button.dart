@@ -4,9 +4,7 @@ import 'package:digia_ui/src/Utils/util_functions.dart';
 import 'package:digia_ui/src/components/DUIText/dui_text.dart';
 import 'package:digia_ui/src/core/action/action_handler.dart';
 import 'package:digia_ui/src/core/container/dui_container.dart';
-import 'package:digia_ui/src/core/page/dui_page_bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'button.props.dart';
 
@@ -27,7 +25,6 @@ class _DUIButtonState extends State<DUIButton> {
   late RenderBox renderbox;
   double width = 0;
   double height = 0;
-  final bool _isLoading = false;
   _DUIButtonState();
 
   @override
@@ -46,48 +43,28 @@ class _DUIButtonState extends State<DUIButton> {
         ? props.styleClass?.copyWith(bgColor: props.disabledBackgroundColor)
         : props.styleClass;
 
-    ButtonStyle style =
-        ButtonStyle(shape: MaterialStateProperty.resolveWith<OutlinedBorder>(
-      (states) {
-        return RoundedRectangleBorder(
-          borderRadius:
-              DUIDecoder.toBorderRadius(styleclass?.border?.borderRadius),
-          side: toBorderSide(styleclass?.border),
-        );
-      },
-    ), backgroundColor: MaterialStateProperty.resolveWith<Color?>(
-      (states) {
-        return styleclass?.bgColor.let(toColor) ??
-            DUIConfigConstants.fallbackBgColor;
-      },
-    ));
+    ButtonStyle style = ButtonStyle(
+        shape: MaterialStateProperty.resolveWith<OutlinedBorder>(
+          (states) => RoundedRectangleBorder(
+            borderRadius:
+                DUIDecoder.toBorderRadius(styleclass?.border?.borderRadius),
+            side: toBorderSide(styleclass?.border),
+          ),
+        ),
+        backgroundColor: MaterialStateProperty.resolveWith<Color?>(
+          (states) => styleclass?.bgColor.let(toColor),
+        ));
 
     return DUIContainer(
       styleClass: styleclass,
       child: ElevatedButton(
         onPressed: props.onClick.let((p0) {
           return () =>
-              ActionHandler.instance.execute(context: context, action: p0);
+              ActionHandler.instance.execute(context: context, actionFlow: p0);
         }),
         style: style,
         child: DUIText(props.text),
       ),
     );
-
-    // Widget widget = DUIContainer(
-    //     styleClass: styleclass,
-    //     child: _isLoading
-    //         ? const SizedBox(
-    //             width: 32, height: 32, child: CircularProgressIndicator())
-    //         : DUIText(props.text));
-
-    // if (props.onClick != null) {
-    //   widget = GestureDetector(
-    //       onTap: () async => ActionHandler.instance
-    //           .execute(context: context, action: props.onClick!),
-    //       child: widget);
-    // }
-
-    // return widget;
   }
 }

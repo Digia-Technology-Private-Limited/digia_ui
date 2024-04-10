@@ -12,9 +12,8 @@ DUIButtonProps _$DUIButtonPropsFromJson(Map<String, dynamic> json) =>
       ..text = DUITextProps.fromJson(json['text'])
       ..disabledBackgroundColor = json['disabledBackgroundColor'] as String?
       ..disabled = json['disabled'] as bool?
-      ..onClick = json['onClick'] == null
-          ? null
-          : ActionProp.fromJson(json['onClick'] as Map<String, dynamic>)
+      ..onClick =
+          json['onClick'] == null ? null : ActionFlow.fromJson(json['onClick'])
       ..setLoading = json['setLoading'] as bool?;
 
 Map<String, dynamic> _$DUIButtonPropsToJson(DUIButtonProps instance) =>

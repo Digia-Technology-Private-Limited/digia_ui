@@ -18,9 +18,4 @@ class DUITextSpan {
       _$DUITextSpanFromJson(json);
 
   Map<String, dynamic> toJson() => _$DUITextSpanToJson(this);
-
-  @override
-  String toString() {
-    return jsonEncode(this);
-  }
 }

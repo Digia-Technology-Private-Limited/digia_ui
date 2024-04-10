@@ -1,3 +1,4 @@
+import 'package:digia_ui/src/Utils/basic_shared_utils/lodash.dart';
 import 'package:digia_ui/src/components/DUIText/dui_text_style.dart';
 import 'package:digia_ui/src/core/json_widget_builder.dart';
 import 'package:digia_ui/src/core/page/props/dui_widget_json_data.dart';
@@ -26,14 +27,16 @@ class DUIRichTextBuilder extends DUIWidgetBuilder {
         data.props['maxLines'], context, (p0) => p0 as int?);
     final overflow = DUIDecoder.toTextOverflow(data.props['overflow']);
     final textAlign = DUIDecoder.toTextAlign(data.props['textAlign']);
-    final styleJson = data.props['textStyle'] ?? data.props['style'];
+    final styleJson = (data.props['textStyle'] ?? data.props['style'])
+        as Map<String, dynamic>?;
 
     return RichText(
       maxLines: maxLines,
       overflow: overflow,
       textAlign: textAlign,
       text: TextSpan(
-        style: toTextStyle(DUITextStyle.fromJson(styleJson)),
+        style: ifNotNull(
+            styleJson, (p0) => toTextStyle(DUITextStyle.fromJson(styleJson))),
         children: spanChildren,
       ),
     );
@@ -64,7 +67,9 @@ class DUIRichTextBuilder extends DUIWidgetBuilder {
                 span['text'], context, (p0) => p0 as String?);
             final styleJson =
                 span['spanStyle'] ?? span['textStyle'] ?? span['style'];
-            style = toTextStyle(DUITextStyle.fromJson(styleJson));
+
+            style = ifNotNull(
+                styleJson, (p0) => toTextStyle(DUITextStyle.fromJson(p0)));
           }
 
           if (text == null) return null;

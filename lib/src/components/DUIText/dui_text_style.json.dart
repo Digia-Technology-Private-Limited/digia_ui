@@ -1,9 +1,14 @@
 part of 'dui_text_style.dart';
 
-DUITextStyle? _$DUITextStyleFromJson(Map<String, dynamic> json) {
+DUITextStyle? _$DUITextStyleFromJson(dynamic json) {
+  if (json == null) return null;
+
   DUIFontToken? fontToken;
+
   final fontTokenJson = json['fontToken'];
-  if (fontTokenJson is String) {
+  if (fontTokenJson == null) {
+    fontToken = null;
+  } else if (fontTokenJson is String) {
     fontToken = DUIFontToken()..value = fontTokenJson;
   } else {
     fontToken = DUIFontToken()
