@@ -6,7 +6,6 @@ part 'carousel_props.g.dart';
 class DUICarouselProps {
   final String? height;
   final String? width;
-  final String? borderRadius;
   final String? aspectRatio;
   final String? childHeight;
   final String? childWidth;
@@ -19,11 +18,11 @@ class DUICarouselProps {
   final bool? enlargeCenterPage;
   final String? enlargeFactor;
   final String? childPadding;
+  final bool? reverseScroll;
 
   DUICarouselProps(
     this.height,
     this.width,
-    this.borderRadius,
     this.aspectRatio,
     this.childHeight,
     this.childWidth,
@@ -36,6 +35,7 @@ class DUICarouselProps {
     this.enlargeCenterPage,
     this.enlargeFactor,
     this.childPadding,
+    this.reverseScroll,
   );
 
   factory DUICarouselProps.fromJson(Map<String, dynamic> json) =>
