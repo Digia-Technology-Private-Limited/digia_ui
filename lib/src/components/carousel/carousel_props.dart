@@ -6,7 +6,6 @@ part 'carousel_props.g.dart';
 class DUICarouselProps {
   final String? height;
   final String? width;
-  final String? borderRadius;
   final String? aspectRatio;
   final String? childHeight;
   final String? childWidth;
@@ -24,7 +23,6 @@ class DUICarouselProps {
   DUICarouselProps(
     this.height,
     this.width,
-    this.borderRadius,
     this.aspectRatio,
     this.childHeight,
     this.childWidth,

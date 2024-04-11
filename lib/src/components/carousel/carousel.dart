@@ -1,5 +1,4 @@
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:digia_ui/src/Utils/basic_shared_utils/dui_decoder.dart';
 import 'package:digia_ui/src/components/carousel/carousel_props.dart';
 import 'package:digia_ui/src/Utils/dui_widget_registry.dart';
 import 'package:digia_ui/src/core/builders/dui_json_widget_builder.dart';
@@ -30,9 +29,6 @@ class DUICarousel extends StatelessWidget {
               height: props.childHeight?.toHeight(context),
               width: props.childWidth?.toWidth(context),
               padding: EdgeInsets.symmetric(horizontal: padding),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(
-                      double.tryParse(props.borderRadius ?? '8') ?? 8)),
               child: builder.build(context));
         }).toList(),
         options: CarouselOptions(
