@@ -51,7 +51,7 @@ class DUICarousel extends StatelessWidget {
                 double.tryParse(props.viewportFraction ?? '0.8') ?? 0.8,
             enlargeFactor: double.tryParse(props.enlargeFactor ?? '0.3') ?? 0.3,
             enlargeCenterPage: props.enlargeCenterPage,
-            reverse: props.reverse ?? false),
+            reverse: props.reverseScroll ?? false),
       ),
     );
   }
