@@ -1,7 +1,6 @@
 import 'package:digia_ui/src/components/dui_icons/dui_icon_props.dart';
 import 'package:digia_ui/src/components/utils/DUIInsets/dui_insets.dart';
 import 'package:digia_ui/src/core/action/action_prop.dart';
-import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'dui_icon_button_props.g.dart';
@@ -13,24 +12,22 @@ class DUIIconButtonProps {
   final double? iconSize;
   final DUIInsets? padding;
   final String? alignment;
-  final ButtonStyle? style;
   final ActionProp? onClick;
   final String? childAlignment;
   final double? elevation;
   final String? backgroundColor;
 
   DUIIconButtonProps({
-      this.icon,
-      this.onClick,
-      this.iconColor,
-      this.iconSize,
-      this.padding,
-      this.alignment,
-      this.style,
-      this.childAlignment,
-      this.backgroundColor,
-      this.elevation,
-    });
+    this.icon,
+    this.onClick,
+    this.iconColor,
+    this.iconSize,
+    this.padding,
+    this.alignment,
+    this.childAlignment,
+    this.backgroundColor,
+    this.elevation,
+  });
 
   factory DUIIconButtonProps.fromJson(Map<String, dynamic> json) =>
       _$DUIIconButtonPropsFromJson(json);

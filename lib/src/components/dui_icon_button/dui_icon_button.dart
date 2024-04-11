@@ -35,7 +35,8 @@ class _DUIIconButtonState extends State<DUIIconButton> {
       style: ButtonStyle(
         alignment: DUIDecoder.toAlignment(widget.props.childAlignment),
         backgroundColor: MaterialStateColor.resolveWith((states) =>
-            widget.props.backgroundColor.letIfTrue(toColor) ?? Colors.blueAccent),
+            widget.props.backgroundColor.letIfTrue(toColor) ??
+            Colors.blueAccent),
         elevation: MaterialStatePropertyAll(widget.props.elevation),
       ),
     );

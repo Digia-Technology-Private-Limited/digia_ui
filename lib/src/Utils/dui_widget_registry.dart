@@ -49,7 +49,7 @@ class DUIWidgetRegistry {
     'digia/richText': withoutRegistry(DUITextBuilder.create),
     'digia/text': withoutRegistry(DUITextBuilder.create),
     'digia/button': withoutRegistry(DUIButtonBuilder.create),
-    'digia/iconButton':withoutRegistry(DUIIconButtonBuilder.create),
+    'digia/iconButton': withoutRegistry(DUIIconButtonBuilder.create),
     'digia/image': withoutRegistry(DUIImageBuilder.create),
     'digia/listView': (data, {registry}) =>
         DUIListViewBuilder.create(data, registry: DUIWidgetRegistry.shared),
