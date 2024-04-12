@@ -1,4 +1,18 @@
-enum HttpMethod { get, post, put, delete }
+import 'package:json_annotation/json_annotation.dart';
+
+@JsonEnum()
+enum HttpMethod {
+  @JsonValue('GET')
+  get,
+  @JsonValue('POST')
+  post,
+  @JsonValue('PUT')
+  put,
+  @JsonValue('DELETE')
+  delete,
+  @JsonValue('PATCH')
+  patch
+}
 
 extension HttpMethodProperties on HttpMethod {
   String get stringValue {
@@ -11,6 +25,8 @@ extension HttpMethodProperties on HttpMethod {
         return 'PUT';
       case HttpMethod.delete:
         return 'DELETE';
+      case HttpMethod.patch:
+        return 'PATCH';
     }
   }
 }

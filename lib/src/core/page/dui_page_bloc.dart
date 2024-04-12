@@ -4,6 +4,7 @@ import 'package:digia_ui/src/core/page/dui_page_event.dart';
 import 'package:digia_ui/src/core/page/dui_page_state.dart';
 import 'package:digia_ui/src/core/page/props/dui_page_props.dart';
 import 'package:digia_ui/src/core/utils.dart';
+import 'package:digia_ui/src/network/api_request/api_request.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -40,6 +41,9 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
     final onPageLoadAction = state.props.actions['onPageLoad'];
 
     final action = ActionProp.fromJson(onPageLoadAction);
+    // final apiDataMap = _config.getAPIData(state.pageUid);
+    // final apiData = APIModel.fromJson(apiDataMap as Map<String, dynamic>? ?? {});
+    // final api = APICall(_config).execute(action, apiData);
 
     // action.data['pageParams'] = {
     //   ...?action.data['pageParams'],
@@ -63,9 +67,28 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
 // TODO: Need Action Handler
   Future<Object?> _handleAction(BuildContext? context, ActionProp action,
       Emitter<DUIPageState> emit) async {
+    if (action.data.isNotEmpty) {
+      final resp = await APICall(_config).execute(action.data);
+      print(resp);
+      // final props = DUIPageProps.fromJson(pagePropsJson['response']);
+      // emit(state.copyWith(isLoading: false, props: props));
+      return null;
+    }
+
     switch (action.type) {
       // TODO: Move to some constant
       case 'Action.loadPage':
+        emit(state.copyWith(isLoading: true));
+        final pagePropsJson = await APICall(_config).execute(action.data);
+
+        // if (pagePropsJson == null) {
+        //   throw 'API Call failed for Page: ${state.pageUid}';
+        // }
+
+        final props = DUIPageProps.fromJson(pagePropsJson['response']);
+        emit(state.copyWith(isLoading: false, props: props));
+        return null;
+
       case 'Action.rebuildPage':
         emit(state.copyWith(isLoading: true));
         final pagePropsJson = await PostAction(_config).execute(action);
