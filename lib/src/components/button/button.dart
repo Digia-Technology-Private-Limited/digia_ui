@@ -1,3 +1,9 @@
+import 'package:digia_ui/src/Utils/basic_shared_utils/dui_decoder.dart';
+import 'package:digia_ui/src/Utils/basic_shared_utils/lodash.dart';
+import 'package:digia_ui/src/Utils/util_functions.dart';
+import 'package:digia_ui/src/components/DUIText/dui_text.dart';
+import 'package:digia_ui/src/components/dui_icons/dui_icon.dart';
+import 'package:digia_ui/src/core/action/action_handler.dart';
 import 'package:flutter/material.dart';
 
 import 'button.props.dart';
@@ -35,38 +41,87 @@ class _DUIButtonState extends State<DUIButton> {
   // Not supporting it for now.
   @override
   Widget build(BuildContext context) {
-    Widget child = Container();
+    MaterialStatesController controller = MaterialStatesController();
+    Widget child =
+        (widget.props.leftIcon != null || widget.props.rightIcon != null)
+            ? Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  (widget.props.leftIcon != null)
+                      ? DUIIcon(widget.props.leftIcon!)
+                      : const SizedBox.shrink(),
+                  DUIText(widget.props.text),
+                  (widget.props.rightIcon != null)
+                      ? DUIIcon(widget.props.rightIcon!)
+                      : const SizedBox.shrink(),
+                ],
+              )
+            : DUIText(widget.props.text);
 
-    return ElevatedButton(onPressed: () {}, child: child);
+    ButtonStyle style = ButtonStyle(
+      shape: MaterialStateProperty.resolveWith<OutlinedBorder>(
+        (states) => (widget.props.styleClass != null &&
+                widget.props.styleClass!.shape != null)
+            ? DUIDecoder.toButtonShape(widget.props.styleClass!.shape!)
+            : RoundedRectangleBorder(
+                side: const BorderSide(
+                  color: Colors.transparent,
+                  width: 1.0,
+                  style: BorderStyle.solid,
+                ),
+                borderRadius: BorderRadius.circular(8),
+              ),
+      ),
+      padding: MaterialStatePropertyAll(
+        DUIDecoder.toEdgeInsets(
+          widget.props.styleClass?.padding?.toJson(),
+        ),
+      ),
+      overlayColor: const MaterialStatePropertyAll(Colors.transparent),
+      elevation: MaterialStatePropertyAll(widget.props.styleClass?.elevation),
+      iconColor: MaterialStateProperty.resolveWith(
+        (states) => widget
+            .props.styleClass?.disabledButtonStyle?.disabledChildColor
+            ?.letIfTrue(toColor),
+      ),
+      shadowColor: MaterialStatePropertyAll(
+          widget.props.styleClass?.shadowColor.letIfTrue(toColor)),
+      alignment: DUIDecoder.toAlignment(widget.props.styleClass?.alignment),
+      backgroundColor: MaterialStateProperty.resolveWith(
+        (states) =>
+            (widget.props.styleClass?.disabledButtonStyle?.isDisabled ?? false)
+                ? widget.props.styleClass?.disabledButtonStyle?.disabledBgColor
+                    .letIfTrue(toColor)
+                : (controller.value.lastOrNull == MaterialState.pressed)
+                    ? widget.props.styleClass?.pressedBgColor.letIfTrue(toColor)
+                    : widget.props.styleClass?.bgColor.letIfTrue(toColor),
+      ),
+      foregroundColor: MaterialStateProperty.resolveWith(
+        (states) => (widget.props.styleClass?.disabledButtonStyle?.isDisabled ??
+                false)
+            ? widget.props.styleClass?.disabledButtonStyle?.disabledChildColor
+                .letIfTrue(toColor)
+            : null,
+      ),
+    );
 
-    // final styleClass = props.disabled == true
-    //     ? props.styleClass?.copyWith(bgColor: props.disabledBackgroundColor)
-    //     : props.styleClass;
-    //
-    // ButtonStyle style = ButtonStyle(overlayColor: MaterialStateProperty.resolveWith<Color?>(
-    //       (states) => styleClass?.bgColor.let(toColor),
-    // ),
-    //     shape: MaterialStateProperty.resolveWith<OutlinedBorder>(
-    //       (states) => RoundedRectangleBorder(
-    //         borderRadius:
-    //             DUIDecoder.toBorderRadius(styleClass?.border?.borderRadius),
-    //         side: toBorderSide(styleClass?.border),
-    //       ),
-    //     ),
-    //     backgroundColor: MaterialStateProperty.resolveWith<Color?>(
-    //       (states) => styleClass?.bgColor.let(toColor),
-    //     ));
-    //
-    // return DUIContainer(
-    //   styleClass: styleClass,
-    //   child: ElevatedButton(
-    //     onPressed: props.onClick.let((p0) {
-    //       return () =>
-    //           ActionHandler.instance.execute(context: context, actionFlow: p0);
-    //     }),
-    //     style: style,
-    //     child: DUIText(props.text),
-    //   ),
-    // );
+    return Padding(
+      padding: DUIDecoder.toEdgeInsets(
+        widget.props.styleClass?.margin?.toJson(),
+      ),
+      child: ElevatedButton(
+        statesController: controller,
+        onPressed:
+            (widget.props.styleClass?.disabledButtonStyle?.isDisabled ?? false)
+                ? () {}
+                : props.onClick.let((p0) {
+                    return () => ActionHandler.instance
+                        .execute(context: context, actionFlow: p0);
+                  }),
+        style: style,
+        child: child,
+      ),
+    );
   }
 }
