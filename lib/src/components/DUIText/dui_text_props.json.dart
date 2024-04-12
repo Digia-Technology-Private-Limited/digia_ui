@@ -35,7 +35,7 @@ DUITextProps _$DUITextPropsFromJson(dynamic json) {
     return DUITextProps.withText(text: json);
   }
 
-  var text = json['text'] as String?;
+  var text = json['text'];
   var textSpans = (json['textSpans'] as List<dynamic>?)
       ?.nonNulls
       .map((e) => DUITextSpan.fromJson(e as Map<String, dynamic>))

@@ -32,7 +32,7 @@ class _DUITextState extends State<DUIText> {
     final textAlign = DUIDecoder.toTextAlign(props.alignment);
 
     if (mayNotUseRichText) {
-      final text = props.textSpans[0].text;
+      final text = props.textSpans[0].text.toString();
       final style = props.textSpans[0].spanStyle ?? props.textStyle;
 
       return Text(text,

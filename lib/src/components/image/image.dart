@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:digia_ui/src/components/image/image.props.dart';
 import 'package:digia_ui/src/core/container/dui_container.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_blurhash/flutter_blurhash.dart';
 import 'package:octo_image/octo_image.dart';
 
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
@@ -13,23 +14,30 @@ class DUIImage extends StatelessWidget {
   const DUIImage(this.props, {super.key}) : super();
 
   OctoPlaceholderBuilder? _placeHolderBuilderCreater() {
+    Widget widget = Container(
+      color: Colors.grey.shade50,
+    );
+
     final placeHolderValue = props.placeHolder;
 
-    if (placeHolderValue == null || placeHolderValue.isEmpty) {
-      return null;
+    if (placeHolderValue != null && placeHolderValue.isNotEmpty) {
+      widget = switch (placeHolderValue.split('/').first) {
+        'http' || 'https' => CachedNetworkImage(imageUrl: placeHolderValue),
+        'assets' => Image.asset(placeHolderValue),
+        'blurHash' => BlurHash(
+            hash: props.placeHolder!,
+            duration: const Duration(
+              microseconds: 0,
+            )),
+        _ => widget
+      };
     }
 
-    switch (props.imageSrc.split('/').first) {
-      case 'http':
-      case 'https':
-        return ((context) => CachedNetworkImage(imageUrl: placeHolderValue));
-      case 'assets':
-        return ((context) => Image.asset(placeHolderValue));
-      case 'blurHash':
-        return OctoPlaceholder.frame(); // [TODO] : This had been changed
+    if (props.aspectRatio != null) {
+      widget = AspectRatio(aspectRatio: props.aspectRatio!, child: widget);
     }
 
-    return null;
+    return (context) => widget;
   }
 
   @override
@@ -45,6 +53,8 @@ class DUIImage extends StatelessWidget {
     }
 
     return OctoImage(
+        fadeInDuration: const Duration(microseconds: 0),
+        fadeOutDuration: const Duration(microseconds: 0),
         image: imageProvider,
         fit: DUIDecoder.toBoxFit(props.fit),
         gaplessPlayback: true,
@@ -59,7 +69,10 @@ class DUIImage extends StatelessWidget {
         },
         errorBuilder: (context, error, stackTrace) {
           if (props.errorImage == null) {
-            return const Icon(Icons.error);
+            return const Icon(
+              Icons.error_outline,
+              color: Colors.red,
+            );
           }
           return Image.asset(props.errorImage!);
         });
