@@ -21,11 +21,11 @@ class DigiaUIClient {
   late String accessKey;
   late String baseUrl;
   late NetworkClient networkClient;
-  late DUIConfig config;
+  late DigiaUIConfigResolver config;
 
   bool _isInitialized = false;
 
-  static DUIConfig getConfigResolver() {
+  static DigiaUIConfigResolver getConfigResolver() {
     return _instance.config;
   }
 
@@ -46,7 +46,7 @@ class DigiaUIClient {
         await rootBundle.loadString(assetPath ?? defaultUIConfigAssetPath);
     final data = jsonDecode(string);
 
-    _instance.config = DUIConfig(data);
+    _instance.config = DigiaUIConfigResolver(data);
 
     _instance._isInitialized = true;
   }
@@ -64,7 +64,7 @@ class DigiaUIClient {
     _instance.baseUrl = baseUrl ?? defaultBaseUrl;
     Map<String, dynamic> headers = {'digia_projectId': accessKey};
     _instance.networkClient = NetworkClient(dio, _instance.baseUrl, headers);
-    _instance.config = DUIConfig(data);
+    _instance.config = DigiaUIConfigResolver(data);
 
     _instance._isInitialized = true;
   }
@@ -102,7 +102,7 @@ class DigiaUIClient {
     // if (localConfig['version'] != data['version']) {
     //   await file.writeAsString(jsonEncode(data));
     // }
-    _instance.config = DUIConfig(data);
+    _instance.config = DigiaUIConfigResolver(data);
     _instance._isInitialized = true;
   }
 

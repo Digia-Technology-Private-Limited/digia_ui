@@ -18,7 +18,8 @@ class BaseResponse<T> {
 
   @override
   String toString() {
-    return jsonEncode(this);
+    // return jsonEncode(this);
+    return jsonEncode(toJson((value) => value));
   }
 
   Map<String, dynamic> toJson(

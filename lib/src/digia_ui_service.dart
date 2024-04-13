@@ -5,13 +5,15 @@ import 'config_resolver.dart';
 class DigiaUIService {
   final String baseUrl;
   final NetworkClient httpClient;
-  final DUIConfig config;
+  final DigiaUIConfigResolver config;
 
   DigiaUIService(
       {required this.baseUrl, required this.httpClient, required this.config});
 
   DigiaUIService copyWith(
-      {String? baseUrl, NetworkClient? httpclient, DUIConfig? config}) {
+      {String? baseUrl,
+      NetworkClient? httpclient,
+      DigiaUIConfigResolver? config}) {
     return DigiaUIService(
         baseUrl: baseUrl ?? this.baseUrl,
         httpClient: httpclient ?? httpClient,

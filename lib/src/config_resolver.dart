@@ -1,13 +1,13 @@
 import 'package:digia_ui/src/Utils/dui_font.dart';
 import 'package:digia_ui/src/core/page/props/dui_page_props.dart';
 
-class DUIConfig {
+class DigiaUIConfigResolver {
   final Map<String, dynamic> _themeConfig;
   final Map<String, dynamic> _pages;
   final Map<String, dynamic> _restConfig;
   final String _initialRoute;
 
-  DUIConfig(dynamic data)
+  DigiaUIConfigResolver(dynamic data)
       : _themeConfig = data['theme'],
         _pages = data['pages'],
         _restConfig = data['rest'],

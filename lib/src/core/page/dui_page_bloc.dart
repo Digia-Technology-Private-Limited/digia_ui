@@ -13,13 +13,13 @@ import '../../Utils/basic_shared_utils/dui_decoder.dart';
 import '../../config_resolver.dart';
 
 class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
-  final DUIConfig _config;
+  final DigiaUIConfigResolver _config;
   final Function(String methodId, Map<String, dynamic>? data)?
       onExternalMethodCalled;
 
   DUIPageBloc({
     required String pageUid,
-    required DUIConfig config,
+    required DigiaUIConfigResolver config,
     this.onExternalMethodCalled,
   })  : _config = config,
         super(DUIPageState(
@@ -67,14 +67,6 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
 // TODO: Need Action Handler
   Future<Object?> _handleAction(BuildContext? context, ActionProp action,
       Emitter<DUIPageState> emit) async {
-    if (action.data.isNotEmpty) {
-      final resp = await APICall(_config).execute(action.data);
-      print(resp);
-      // final props = DUIPageProps.fromJson(pagePropsJson['response']);
-      // emit(state.copyWith(isLoading: false, props: props));
-      return null;
-    }
-
     switch (action.type) {
       // TODO: Move to some constant
       case 'Action.loadPage':
@@ -85,7 +77,7 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
         //   throw 'API Call failed for Page: ${state.pageUid}';
         // }
 
-        final props = DUIPageProps.fromJson(pagePropsJson['response']);
+        final props = DUIPageProps.fromJson(pagePropsJson['data']['response']);
         emit(state.copyWith(isLoading: false, props: props));
         return null;
 
@@ -125,6 +117,12 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
       default:
         emit(state.copyWith(isLoading: false));
         return null;
+    }
+    if (action.data.isNotEmpty) {
+      final resp = await APICall(_config).execute(action.data);
+      // final props = DUIPageProps.fromJson(pagePropsJson['response']);
+      // emit(state.copyWith(isLoading: false, props: props));
+      return resp;
     }
     return null;
   }

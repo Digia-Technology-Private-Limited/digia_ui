@@ -1,5 +1,4 @@
 import 'package:digia_ui/src/config_resolver.dart';
-import 'package:digia_ui/src/core/action/action_prop.dart';
 import 'package:digia_ui/src/digia_ui_client.dart';
 import 'package:digia_ui/src/network/core/types.dart';
 import 'package:dio/dio.dart';
@@ -59,7 +58,7 @@ class APIModel {
 
 class APICall {
   // final String projectId;
-  final DUIConfig resolver;
+  final DigiaUIConfigResolver resolver;
   // final List<APIModel> apiCalls;
   Dio? dio;
 
@@ -74,10 +73,16 @@ class APICall {
     //   ),
     //   data: apiCall.body,
     // );
-
-    final resp = await DigiaUIClient.getNetworkClient().get(
-        path: apiMap['apis']['courses']['apiUrl'],
-        fromJsonT: (json) => json as dynamic,
+    final apiUrl = apiMap['apis']?['courses']?['apiUrl'] ?? '';
+    // final apiMethod = apiMap['apis']?['courses']?['httpMethod'] as HttpMethod;
+    final apiMethod =
+        _httpMethodFromString(apiMap['apis']?['courses']?['httpMethod']);
+    // final resp = await DigiaUIClient.getNetworkClient().get(
+    //     path: apiUrl,
+    //     fromJsonT: (json) => json as dynamic,
+    //     headers: defaultHeaders);
+    final resp = await DigiaUIClient.getNetworkClient().request(
+        apiMethod, apiUrl, (json) => json as dynamic,
         headers: defaultHeaders);
     return resp.data as Map<String, dynamic>;
   }
@@ -87,3 +92,20 @@ const Map<String, String> defaultHeaders = {
   'Accept': 'application/json',
   'Content-Type': 'application/json',
 };
+
+HttpMethod _httpMethodFromString(String method) {
+  switch (method.toUpperCase()) {
+    case 'GET':
+      return HttpMethod.get;
+    case 'POST':
+      return HttpMethod.post;
+    case 'PUT':
+      return HttpMethod.put;
+    case 'DELETE':
+      return HttpMethod.delete;
+    case 'PATCH':
+      return HttpMethod.patch;
+    default:
+      throw ArgumentError('Invalid HTTP method: $method');
+  }
+}

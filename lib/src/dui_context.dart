@@ -6,10 +6,10 @@
 //   final DUIImageProviderFn? imageProvider;
 //   final DUITextStyleProvider? textStyleProvider;
 //   final DUIExternalFunctionHandler? externalFunctionHandler;
-//   final DUIConfig? duiConfig;
+//   final DigiaUIConfigResolver? DigiaUIConfigResolver;
 
 //   DUIContext(
-//       {this.duiConfig,
+//       {this.DigiaUIConfigResolver,
 //       this.iconDataProvider,
 //       this.imageProvider,
 //       this.textStyleProvider,
