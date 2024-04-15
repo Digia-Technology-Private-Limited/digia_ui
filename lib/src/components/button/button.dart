@@ -75,7 +75,6 @@ class _DUIButtonState extends State<DUIButton> {
                   : const SizedBox.shrink(),
               DUIText(
                 widget.props.text.copyWith(
-                  textSpans: [DUITextSpan(text: 'Button')],
                   textStyle: disabledTextStyle,
                 ),
               ),
