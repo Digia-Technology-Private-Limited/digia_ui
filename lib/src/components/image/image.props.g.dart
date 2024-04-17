@@ -14,6 +14,7 @@ DUIImageProps _$DUIImagePropsFromJson(Map<String, dynamic> json) =>
       errorImage: json['errorImage'] as String?,
       aspectRatio: (json['aspectRatio'] as num?)?.toDouble(),
       fit: json['fit'] as String?,
+      opacity: (json['opacity'] as num?)?.toDouble(),
     );
 
 Map<String, dynamic> _$DUIImagePropsToJson(DUIImageProps instance) =>
@@ -23,4 +24,5 @@ Map<String, dynamic> _$DUIImagePropsToJson(DUIImageProps instance) =>
       'errorImage': instance.errorImage,
       'aspectRatio': instance.aspectRatio,
       'fit': instance.fit,
+      'opacity': instance.opacity,
     };

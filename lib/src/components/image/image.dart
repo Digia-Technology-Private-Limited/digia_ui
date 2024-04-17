@@ -73,8 +73,10 @@ class _DUIImageState extends State<DUIImage> {
         placeholderBuilder: _placeHolderBuilderCreater(),
         imageBuilder: (BuildContext context, Widget widget) {
           final child = props.aspectRatio == null
-              ? widget
-              : AspectRatio(aspectRatio: props.aspectRatio!, child: widget);
+              ? Opacity(opacity: props.opacity ?? 1, child: widget)
+              : AspectRatio(
+                  aspectRatio: props.aspectRatio!,
+                  child: Opacity(opacity: props.opacity ?? 1, child: widget));
           return props.styleClass != null
               ? DUIContainer(styleClass: props.styleClass, child: child)
               : child;
