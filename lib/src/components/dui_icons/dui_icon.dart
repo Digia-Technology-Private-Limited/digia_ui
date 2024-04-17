@@ -1,8 +1,8 @@
-import 'package:digia_ui/digia_ui.dart';
 import 'package:flutter/material.dart';
 
 import '../../Utils/basic_shared_utils/lodash.dart';
 import '../../Utils/util_functions.dart';
+import '../dui_widget_scope.dart';
 import 'dui_icon_props.dart';
 import 'icon_helpers/icon_data_serialization.dart';
 

@@ -1,4 +1,3 @@
-
 import 'package:digia_ui/src/components/DUIText/dui_text_style.dart';
 import 'package:json_annotation/json_annotation.dart';
 

@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:digia_ui/src/config_resolver.dart';
+import 'package:digia_ui/src/core/pref/dui_preferences.dart';
+import 'package:digia_ui/src/models/dui_app_state.dart';
 import 'package:digia_ui/src/network/network_client.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
@@ -22,6 +24,7 @@ class DigiaUIClient {
   late String baseUrl;
   late NetworkClient networkClient;
   late DUIConfig config;
+  late DUIAppState appState;
 
   bool _isInitialized = false;
 
@@ -48,6 +51,10 @@ class DigiaUIClient {
 
     _instance.config = DUIConfig(data);
 
+    await DUIPreferences.initialize();
+
+    _instance.appState = DUIAppState.fromJson(_instance.config.appState ?? {});
+
     _instance._isInitialized = true;
   }
 
@@ -65,6 +72,10 @@ class DigiaUIClient {
     Map<String, dynamic> headers = {'digia_projectId': accessKey};
     _instance.networkClient = NetworkClient(dio, _instance.baseUrl, headers);
     _instance.config = DUIConfig(data);
+
+    await DUIPreferences.initialize();
+
+    _instance.appState = DUIAppState.fromJson(_instance.config.appState ?? {});
 
     _instance._isInitialized = true;
   }
@@ -92,6 +103,11 @@ class DigiaUIClient {
     }
 
     _instance.config = DUIConfig(data);
+
+    await DUIPreferences.initialize();
+
+    _instance.appState = DUIAppState.fromJson(_instance.config.appState ?? {});
+
     _instance._isInitialized = true;
   }
 
