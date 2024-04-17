@@ -1,3 +1,4 @@
+import 'package:digia_ui/digia_ui.dart';
 import 'package:flutter/material.dart';
 
 import '../../Utils/basic_shared_utils/lodash.dart';
@@ -14,7 +15,12 @@ class DUIIcon extends StatelessWidget {
     if (_props.iconData == null) {
       return const Text('');
     }
-    final IconData? iconData = getIconData(icondataMap: _props.iconData!);
+
+    final scope = DUIWidgetScope.of(context);
+    var iconData =
+        ifNotNull(_props.iconData, (p0) => scope?.iconDataProvider?.call(p0));
+
+    iconData ??= getIconData(icondataMap: _props.iconData!);
 
     return Icon(iconData,
         size: _props.iconSize, color: _props.iconColor.let(toColor));

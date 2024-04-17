@@ -1,6 +1,7 @@
 import 'package:digia_ui/src/core/pref/pref_util.dart';
 
 const allowedVarExpressionRegex = r'\$\{\s{0,}([\w\.-]+)\s{0,}\}';
+const stringExpressionRegex = r'\$\{\s{0,}(.+)\s{0,}\}';
 
 String? extractVar(String exp) {
   final matches = RegExp(allowedVarExpressionRegex).allMatches(exp.trim());

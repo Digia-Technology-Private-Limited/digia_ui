@@ -16,6 +16,7 @@ class DUIConfigConstants {
   static const double fallbackLineHeightFactor = 1.5;
   static const String fallbackBgColorHexCode = '#FFFFFF';
   static const String fallbackBorderColorHexCode = '#FF000000';
+  static const Color fallbackBgColor = Colors.black;
 }
 
 TextStyle? toTextStyle(DUITextStyle? textStyle) {
@@ -27,8 +28,10 @@ TextStyle? toTextStyle(DUITextStyle? textStyle) {
   double fontHeight = DUIConfigConstants.fallbackLineHeightFactor;
   String fontFamily = 'Poppins';
 
-  if (textStyle.fontToken != null) {
-    var font = DigiaUIClient.getConfigResolver().getFont(textStyle.fontToken!);
+  if (textStyle.fontToken?.value != null) {
+    final font = DigiaUIClient.getConfigResolver()
+        .getFont(textStyle.fontToken!.value!)
+        .merge(textStyle.fontToken?.font);
     fontWeight = DUIDecoder.toFontWeight(font.weight);
     fontFamily = font.fontFamily!;
     fontStyle = DUIDecoder.toFontStyle(font.style);
@@ -46,7 +49,6 @@ TextStyle? toTextStyle(DUITextStyle? textStyle) {
   Color? decorationColor = textStyle.textDecorationColor.letIfTrue(toColor);
   TextDecorationStyle? decorationStyle =
       DUIDecoder.toTextDecorationStyle(textStyle.textDecorationStyle);
-  // TODO: This shouldn't be hardcoded here.
 
   return GoogleFonts.getFont(fontFamily,
       fontWeight: fontWeight,
@@ -105,6 +107,18 @@ Border? toBorder(DUIBorder? border) {
       width: border.borderWidth ?? 1.0,
       color: toColor(
           border.borderColor ?? DUIConfigConstants.fallbackBorderColorHexCode));
+}
+
+BorderSide toBorderSide(DUIBorder? borderSide) {
+  if (borderSide == null || borderSide.borderStyle != 'solid') {
+    return BorderSide.none;
+  }
+
+  return BorderSide(
+      style: BorderStyle.solid,
+      width: borderSide.borderWidth ?? 1.0,
+      color: toColor(borderSide.borderColor ??
+          DUIConfigConstants.fallbackBorderColorHexCode));
 }
 
 OutlineInputBorder? toOutlineInputBorder(DUIBorder? border) {

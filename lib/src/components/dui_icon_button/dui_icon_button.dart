@@ -28,8 +28,6 @@ class _DUIIconButtonState extends State<DUIIconButton> {
         bloc.add(
             PostActionEvent(action: widget.props.onClick!, context: context));
       },
-      color: widget.props.iconColor.letIfTrue(toColor),
-      iconSize: widget.props.iconSize,
       padding: DUIDecoder.toEdgeInsets(widget.props.padding?.toJson()),
       alignment: DUIDecoder.toAlignment(widget.props.alignment),
       style: ButtonStyle(

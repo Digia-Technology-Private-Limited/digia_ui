@@ -8,20 +8,23 @@ part of 'button.props.dart';
 
 DUIButtonProps _$DUIButtonPropsFromJson(Map<String, dynamic> json) =>
     DUIButtonProps()
-      ..styleClass = DUIStyleClass.fromJson(json['style'])
+      ..styleClass = DUIButtonStyleClass.fromJson(json['style'])
       ..text = DUITextProps.fromJson(json['text'])
-      ..disabledBackgroundColor = json['disabledBackgroundColor'] as String?
-      ..disabled = json['disabled'] as bool?
-      ..onClick = json['onClick'] == null
+      ..rightIcon = json['rightIcon'] == null
           ? null
-          : ActionProp.fromJson(json['onClick'] as Map<String, dynamic>)
-      ..setLoading = json['setLoading'] as bool?;
+          : DUIIconProps.fromJson(json['rightIcon'])
+      ..leftIcon = json['leftIcon'] == null
+          ? null
+          : DUIIconProps.fromJson(json['leftIcon'])
+      ..disabled = json['disabled'] as bool?
+      ..onClick =
+          json['onClick'] == null ? null : ActionFlow.fromJson(json['onClick']);
 
 Map<String, dynamic> _$DUIButtonPropsToJson(DUIButtonProps instance) =>
     <String, dynamic>{
       'text': instance.text,
-      'disabledBackgroundColor': instance.disabledBackgroundColor,
+      'rightIcon': instance.rightIcon,
+      'leftIcon': instance.leftIcon,
       'disabled': instance.disabled,
       'onClick': instance.onClick,
-      'setLoading': instance.setLoading,
     };

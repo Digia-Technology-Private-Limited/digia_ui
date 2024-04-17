@@ -1,7 +1,8 @@
 import 'dart:convert';
 
 import 'package:digia_ui/src/components/DUIText/dui_text_props.dart';
-import 'package:digia_ui/src/components/utils/DUIStyleClass/dui_style_class.dart';
+import 'package:digia_ui/src/components/dui_icons/dui_icon_props.dart';
+import 'package:digia_ui/src/components/utils/dui_button_style_class/dui_button_style_class.dart';
 import 'package:digia_ui/src/core/action/action_prop.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -9,21 +10,18 @@ part 'button.props.g.dart';
 
 @JsonSerializable()
 class DUIButtonProps {
-  // double? width;
-  // double? height;
-  // String? alignment;
-  // String? backgroundColor;
-  // DUIInsets? margin;
-  // DUIInsets? padding;
   @JsonKey(
-      fromJson: DUIStyleClass.fromJson, includeToJson: false, name: 'style')
-  DUIStyleClass? styleClass;
+      fromJson: DUIButtonStyleClass.fromJson,
+      includeToJson: false,
+      name: 'style')
+  DUIButtonStyleClass? styleClass;
+
   // String? shape;
   late DUITextProps text;
-  String? disabledBackgroundColor;
+  DUIIconProps? rightIcon;
+  DUIIconProps? leftIcon;
   bool? disabled;
-  ActionProp? onClick;
-  bool? setLoading;
+  ActionFlow? onClick;
 
   DUIButtonProps();
 

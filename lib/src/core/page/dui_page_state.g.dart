@@ -7,9 +7,9 @@ part of 'dui_page_state.dart';
 // **************************************************************************
 
 abstract class _$DUIPageStateCWProxy {
-  DUIPageState uid(String uid);
+  DUIPageState pageUid(String pageUid);
 
-  DUIPageState props(DUIPageProps? props);
+  DUIPageState props(DUIPageProps props);
 
   DUIPageState isLoading(bool isLoading);
 
@@ -20,7 +20,7 @@ abstract class _$DUIPageStateCWProxy {
   /// DUIPageState(...).copyWith(id: 12, name: "My name")
   /// ````
   DUIPageState call({
-    String? uid,
+    String? pageUid,
     DUIPageProps? props,
     bool? isLoading,
   });
@@ -33,10 +33,10 @@ class _$DUIPageStateCWProxyImpl implements _$DUIPageStateCWProxy {
   final DUIPageState _value;
 
   @override
-  DUIPageState uid(String uid) => this(uid: uid);
+  DUIPageState pageUid(String pageUid) => this(pageUid: pageUid);
 
   @override
-  DUIPageState props(DUIPageProps? props) => this(props: props);
+  DUIPageState props(DUIPageProps props) => this(props: props);
 
   @override
   DUIPageState isLoading(bool isLoading) => this(isLoading: isLoading);
@@ -50,19 +50,19 @@ class _$DUIPageStateCWProxyImpl implements _$DUIPageStateCWProxy {
   /// DUIPageState(...).copyWith(id: 12, name: "My name")
   /// ````
   DUIPageState call({
-    Object? uid = const $CopyWithPlaceholder(),
+    Object? pageUid = const $CopyWithPlaceholder(),
     Object? props = const $CopyWithPlaceholder(),
     Object? isLoading = const $CopyWithPlaceholder(),
   }) {
     return DUIPageState(
-      uid: uid == const $CopyWithPlaceholder() || uid == null
-          ? _value.uid
+      pageUid: pageUid == const $CopyWithPlaceholder() || pageUid == null
+          ? _value.pageUid
           // ignore: cast_nullable_to_non_nullable
-          : uid as String,
-      props: props == const $CopyWithPlaceholder()
+          : pageUid as String,
+      props: props == const $CopyWithPlaceholder() || props == null
           ? _value.props
           // ignore: cast_nullable_to_non_nullable
-          : props as DUIPageProps?,
+          : props as DUIPageProps,
       isLoading: isLoading == const $CopyWithPlaceholder() || isLoading == null
           ? _value.isLoading
           // ignore: cast_nullable_to_non_nullable

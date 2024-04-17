@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:digia_ui/src/components/DUIText/dui_text_style.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -18,9 +16,4 @@ class DUITextSpan {
       _$DUITextSpanFromJson(json);
 
   Map<String, dynamic> toJson() => _$DUITextSpanToJson(this);
-
-  @override
-  String toString() {
-    return jsonEncode(this);
-  }
 }

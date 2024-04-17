@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 extension KeyPath on Map {
   dynamic valueFor({required String keyPath}) {
@@ -136,4 +137,14 @@ extension GeneralUtilExtension<T> on T {
   ///
   /// Otherwise return `false` to not affect logical-OR expression. As `false` denotes undefined or N/A since object is not `num`
   bool get _isNumObjectZero => (this is num) ? (this as num) == 0 : false;
+}
+
+extension ReadExtension on BuildContext {
+  T? tryRead<T>() {
+    try {
+      return read<T>();
+    } catch (exception) {
+      return null;
+    }
+  }
 }
