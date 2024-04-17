@@ -1,11 +1,11 @@
 import 'package:digia_ui/src/Utils/basic_shared_utils/lodash.dart';
 import 'package:digia_ui/src/components/DUIText/dui_text_style.dart';
+import 'package:digia_ui/src/components/dui_widget_scope.dart';
 import 'package:digia_ui/src/core/json_widget_builder.dart';
 import 'package:digia_ui/src/core/page/props/dui_widget_json_data.dart';
 import 'package:flutter/material.dart';
 
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
-import '../../Utils/expr.dart';
 import '../../Utils/util_functions.dart';
 
 class DUIRichTextBuilder extends DUIWidgetBuilder {
@@ -23,8 +23,10 @@ class DUIRichTextBuilder extends DUIWidgetBuilder {
       return const SizedBox.shrink();
     }
 
-    final maxLines = evaluateExpression<int>(
-        data.props['maxLines'], context, (p0) => p0 as int?);
+    final evaluateExpression = DUIWidgetScope.of(context)!.eval;
+
+    final maxLines =
+        evaluateExpression<int>(data.props['maxLines'], (p0) => p0 as int?);
     final overflow = DUIDecoder.toTextOverflow(data.props['overflow']);
     final textAlign = DUIDecoder.toTextAlign(data.props['textAlign']);
     final styleJson = (data.props['textStyle'] ?? data.props['style'])
@@ -43,11 +45,11 @@ class DUIRichTextBuilder extends DUIWidgetBuilder {
   }
 
   List<TextSpan>? _toTextSpan(BuildContext context, dynamic textSpan) {
+    final evaluateExpression = DUIWidgetScope.of(context)!.eval;
     if (textSpan == null) return null;
 
     if (textSpan is String) {
-      final value =
-          evaluateExpression<String>(textSpan, context, (p0) => p0 as String?);
+      final value = evaluateExpression<String>(textSpan, (p0) => p0 as String?);
       return value == null ? null : [TextSpan(text: value)];
     }
 
@@ -59,12 +61,11 @@ class DUIRichTextBuilder extends DUIWidgetBuilder {
           TextStyle? style;
 
           if (span is String) {
-            text = evaluateExpression<String>(
-                span, context, (p0) => p0 as String?);
+            text = evaluateExpression<String>(span, (p0) => p0 as String?);
             style = null;
           } else {
-            text = evaluateExpression<String>(
-                span['text'], context, (p0) => p0 as String?);
+            text =
+                evaluateExpression<String>(span['text'], (p0) => p0 as String?);
             final styleJson =
                 span['spanStyle'] ?? span['textStyle'] ?? span['style'];
 

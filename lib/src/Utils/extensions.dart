@@ -1,5 +1,10 @@
+import 'package:digia_ui/src/Utils/basic_shared_utils/lodash.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'dart:convert';
+
+import 'basic_shared_utils/num_decoder.dart';
 
 extension KeyPath on Map {
   dynamic valueFor({required String keyPath}) {
@@ -50,6 +55,25 @@ extension EmailValidator on String {
     return RegExp(
             r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
         .hasMatch(this);
+  }
+}
+
+extension ObjectExt on Object? {
+  R? typedValue<R extends Object>({R? defaultValue}) {
+    final value = this;
+    if (this == null) return defaultValue;
+    if (value is R) return value;
+
+    return switch (R) {
+      const (String) =>
+        (value is List || value is Map ? jsonEncode(value) : value.toString())
+                .tryCast<R>() ??
+            defaultValue,
+      const (int) => NumDecoder.toInt(value).tryCast<R>() ?? defaultValue,
+      const (double) => NumDecoder.toDouble(value).tryCast<R>() ?? defaultValue,
+      const (bool) => NumDecoder.toBool(value).tryCast<R>() ?? defaultValue,
+      _ => defaultValue
+    };
   }
 }
 
