@@ -6,23 +6,7 @@ part of 'dui_button_style_class.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-DUIButtonStyleClass? _$DUIButtonStyleClassFromJson(dynamic json) {
-  if (json is Map<String, dynamic> && json.isNotEmpty) {
-    return _$DUIButtonStyleClassFromDirectory(json);
-  }
-
-  if (json is! String) {
-    return null;
-  }
-
-  final styleClassMap = createStyleMap(json);
-  if (styleClassMap.isEmpty) return null;
-
-  return _$DUIButtonStyleClassFromDirectory(styleClassMap);
-}
-
-DUIButtonStyleClass _$DUIButtonStyleClassFromDirectory(
-        Map<String, dynamic> json) =>
+DUIButtonStyleClass _$DUIButtonStyleClassFromJson(Map<String, dynamic> json) =>
     DUIButtonStyleClass(
       padding:
           json['padding'] == null ? null : DUIInsets.fromJson(json['padding']),
@@ -31,10 +15,6 @@ DUIButtonStyleClass _$DUIButtonStyleClassFromDirectory(
       bgColor: json['bgColor'] as String?,
       alignment: json['alignment'] as String?,
       elevation: (json['elevation'] as num?)?.toDouble(),
-      disabledButtonStyle: json['disabledButtonStyle'] == null
-          ? null
-          : DUIDisabledButtonStyle.fromJson(
-              json['disabledButtonStyle'] as Map<String, dynamic>),
       pressedBgColor: json['pressedBgColor'] as String?,
       shape: json['shape'] == null
           ? null
@@ -49,7 +29,6 @@ Map<String, dynamic> _$DUIButtonStyleClassToJson(
       'margin': instance.margin,
       'bgColor': instance.bgColor,
       'pressedBgColor': instance.pressedBgColor,
-      'disabledButtonStyle': instance.disabledButtonStyle,
       'shape': instance.shape,
       'shadowColor': instance.shadowColor,
       'alignment': instance.alignment,

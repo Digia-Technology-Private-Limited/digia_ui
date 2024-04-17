@@ -24,4 +24,21 @@ class DUITextStyle {
       this.textDecorationStyle});
 
   static DUITextStyle? fromJson(dynamic json) => _$DUITextStyleFromJson(json);
+
+  DUITextStyle copyWith({
+    DUIFontToken? fontToken,
+    String? textColor,
+    String? textBgColor,
+    String? textDecoration,
+    String? textDecorationColor,
+    String? textDecorationStyle,
+  }) {
+    return DUITextStyle(
+      textBgColor: textBgColor ?? this.textBgColor,
+      textColor: textColor ?? this.textColor,
+      textDecoration: textDecoration ?? this.textDecoration,
+      textDecorationColor: textDecorationColor ?? this.textDecorationColor,
+      textDecorationStyle: textDecorationStyle ?? this.textDecorationStyle,
+    );
+  }
 }

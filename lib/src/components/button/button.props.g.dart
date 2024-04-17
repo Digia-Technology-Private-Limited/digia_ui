@@ -9,6 +9,8 @@ part of 'button.props.dart';
 DUIButtonProps _$DUIButtonPropsFromJson(Map<String, dynamic> json) =>
     DUIButtonProps()
       ..styleClass = DUIButtonStyleClass.fromJson(json['style'])
+      ..disabledButtonStyle = DUIDisabledButtonStyle.fromJson(
+          json['disabledButtonStyle'] as Map<String, dynamic>)
       ..text = DUITextProps.fromJson(json['text'])
       ..rightIcon = json['rightIcon'] == null
           ? null
@@ -16,7 +18,6 @@ DUIButtonProps _$DUIButtonPropsFromJson(Map<String, dynamic> json) =>
       ..leftIcon = json['leftIcon'] == null
           ? null
           : DUIIconProps.fromJson(json['leftIcon'])
-      ..disabled = json['disabled'] as bool?
       ..onClick =
           json['onClick'] == null ? null : ActionFlow.fromJson(json['onClick']);
 
@@ -25,6 +26,5 @@ Map<String, dynamic> _$DUIButtonPropsToJson(DUIButtonProps instance) =>
       'text': instance.text,
       'rightIcon': instance.rightIcon,
       'leftIcon': instance.leftIcon,
-      'disabled': instance.disabled,
       'onClick': instance.onClick,
     };

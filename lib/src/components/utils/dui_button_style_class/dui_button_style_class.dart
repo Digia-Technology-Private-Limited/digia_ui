@@ -1,4 +1,3 @@
-import 'package:digia_ui/src/Utils/util_functions.dart';
 import 'package:digia_ui/src/components/utils/DUIInsets/dui_insets.dart';
 import 'package:digia_ui/src/components/utils/button_shape/dui_button_shape.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -11,7 +10,6 @@ class DUIButtonStyleClass {
   DUIInsets? margin;
   String? bgColor;
   String? pressedBgColor;
-  DUIDisabledButtonStyle? disabledButtonStyle;
   DUIButtonShape? shape;
   String? shadowColor;
   String? alignment;
@@ -23,7 +21,6 @@ class DUIButtonStyleClass {
     this.bgColor,
     this.alignment,
     this.elevation,
-    this.disabledButtonStyle,
     this.pressedBgColor,
     this.shape,
     this.shadowColor,

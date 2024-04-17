@@ -15,12 +15,16 @@ class DUIButtonProps {
       includeToJson: false,
       name: 'style')
   DUIButtonStyleClass? styleClass;
+  @JsonKey(
+      fromJson: DUIDisabledButtonStyle.fromJson,
+      includeToJson: false,
+      name: 'disabledButtonStyle')
+  DUIDisabledButtonStyle? disabledButtonStyle;
 
   // String? shape;
   late DUITextProps text;
   DUIIconProps? rightIcon;
   DUIIconProps? leftIcon;
-  bool? disabled;
   ActionFlow? onClick;
 
   DUIButtonProps();

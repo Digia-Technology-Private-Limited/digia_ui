@@ -9,9 +9,9 @@ part 'dui_icon_button_props.g.dart';
 @JsonSerializable()
 class DUIIconButtonProps {
   @JsonKey(
-    fromJson: DUIButtonStyleClass.fromJson,
-    includeToJson: false,
-    name: 'String')
+      fromJson: DUIButtonStyleClass.fromJson,
+      includeToJson: false,
+      name: 'String')
   DUIButtonStyleClass? styleClass;
 
   final DUIIconProps? icon;
