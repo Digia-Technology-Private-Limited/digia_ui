@@ -1,4 +1,5 @@
 import 'package:digia_ui/src/Utils/basic_shared_utils/dui_decoder.dart';
+import 'package:digia_ui/src/Utils/basic_shared_utils/lodash.dart';
 import 'package:digia_ui/src/Utils/basic_shared_utils/num_decoder.dart';
 import 'package:digia_ui/src/Utils/util_functions.dart';
 import 'package:digia_ui/src/core/action/action_prop.dart';
@@ -30,41 +31,53 @@ class DUIButtonBuilder extends DUIWidgetBuilder {
 
     ButtonStyle style = ButtonStyle(
         shape: MaterialStateProperty.all(toButtonShape(data.props['shape'])),
-        padding: MaterialStateProperty.all(
-            DUIDecoder.toEdgeInsets(defaultStyleJson['padding'])),
+        padding: MaterialStateProperty.all(DUIDecoder.toEdgeInsets(
+            defaultStyleJson['padding'],
+            or: const EdgeInsets.symmetric(horizontal: 12, vertical: 4))),
         elevation: MaterialStateProperty.all(
             NumDecoder.toDouble(defaultStyleJson['elevation'])),
         shadowColor: MaterialStateProperty.all(defaultStyleJson['shadowColor']),
         alignment: DUIDecoder.toAlignment(defaultStyleJson['alignment']),
         backgroundColor: MaterialStateProperty.resolveWith((states) {
           if (states.contains(MaterialState.disabled)) {
-            return (disabledStyleJson['backgroundColor']).letIfTrue(toColor);
+            return ifNotNull(disabledStyleJson['backgroundColor'] as String?,
+                (p0) => toColor(p0));
           }
 
-          return (defaultStyleJson['backgroundColor']).letIfTrue(toColor);
+          return ifNotNull(defaultStyleJson['backgroundColor'] as String?,
+              (p0) => toColor(p0));
         }),
         foregroundColor: MaterialStateProperty.resolveWith((states) {
           if (states.contains(MaterialState.disabled)) {
-            return (disabledStyleJson['foregroundColor']).letIfTrue(toColor);
+            return ifNotNull(disabledStyleJson['foregroundColor'] as String?,
+                (p0) => toColor(p0));
           }
 
-          return (defaultStyleJson['foregroundColor']).letIfTrue(toColor);
+          return ifNotNull(defaultStyleJson['foregroundColor'] as String?,
+              (p0) => toColor(p0));
         }));
 
     final isDisabled =
         eval<bool>(data.props['isDisabled'], ((p0) => p0 as bool?)) ??
             data.props['onClick'] == null;
 
-    return ElevatedButton(
-        onPressed: isDisabled
-            ? null
-            : () {
-                final onClick = ActionFlow.fromJson(data.props['onClick']);
-                ActionHandler.instance
-                    .execute(context: context, actionFlow: onClick);
-              },
-        style: style,
-        child: content);
+    final height = DUIDecoder.getHeight(context, data.props['height']);
+    final width = DUIDecoder.getWidth(context, data.props['width']);
+
+    return SizedBox(
+      height: height,
+      width: width,
+      child: ElevatedButton(
+          onPressed: isDisabled
+              ? null
+              : () {
+                  final onClick = ActionFlow.fromJson(data.props['onClick']);
+                  ActionHandler.instance
+                      .execute(context: context, actionFlow: onClick);
+                },
+          style: style,
+          child: content),
+    );
   }
 
   Widget _buildContent(BuildContext context) {

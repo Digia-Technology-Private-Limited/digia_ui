@@ -118,7 +118,7 @@ OutlinedBorder? toButtonShape(dynamic value) {
     }
   }
 
-  final shape = value['shape'] as String?;
+  final shape = value['value'] as String?;
   final borderColor = (value['borderColor'] as String?).letIfTrue(toColor) ??
       Colors.transparent;
   final borderWidth = (value['borderWidth'] as double?) ?? 1.0;
