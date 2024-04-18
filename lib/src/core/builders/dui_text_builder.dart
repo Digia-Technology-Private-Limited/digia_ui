@@ -14,6 +14,11 @@ class DUITextBuilder extends DUIWidgetBuilder {
     return DUITextBuilder(data: data);
   }
 
+  factory DUITextBuilder.fromProps({required Map<String, dynamic>? props}) {
+    return DUITextBuilder(
+        data: DUIWidgetJsonData(type: 'digia/text', props: props));
+  }
+
   @override
   Widget build(BuildContext context) {
     final evaluateExpression = DUIWidgetScope.of(context)!.eval;

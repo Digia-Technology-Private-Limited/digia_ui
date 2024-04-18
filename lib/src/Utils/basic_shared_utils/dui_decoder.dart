@@ -1,7 +1,5 @@
 import 'package:digia_ui/src/Utils/basic_shared_utils/lodash.dart';
 import 'package:digia_ui/src/Utils/basic_shared_utils/num_decoder.dart';
-import 'package:digia_ui/src/Utils/util_functions.dart';
-import 'package:digia_ui/src/components/utils/button_shape/dui_button_shape.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
@@ -403,43 +401,6 @@ class DUIDecoder {
     }
 
     return null;
-  }
-
-  static OutlinedBorder toButtonShape(DUIButtonShape shape) {
-    switch (shape.buttonShape) {
-      case 'stadiumBorder':
-        return StadiumBorder(
-            side: BorderSide(
-          color: shape.borderColor.letIfTrue(toColor) ?? Colors.transparent,
-          width: shape.borderWidth ?? 1.0,
-          style: shape.borderStyle == 'solid'
-              ? BorderStyle.solid
-              : BorderStyle.none,
-        ));
-      case 'circular':
-        return CircleBorder(
-            eccentricity: shape.eccentricity ?? 0.0,
-            side: BorderSide(
-              color: shape.borderColor.letIfTrue(toColor) ?? Colors.transparent,
-              width: shape.borderWidth ?? 1.0,
-              style: shape.borderStyle == 'solid'
-                  ? BorderStyle.solid
-                  : BorderStyle.none,
-            ));
-      case 'none':
-      case 'roundedRectangle':
-      default:
-        return RoundedRectangleBorder(
-          side: BorderSide(
-            color: shape.borderColor.letIfTrue(toColor) ?? Colors.transparent,
-            width: shape.borderWidth ?? 1.0,
-            style: shape.borderStyle == 'solid'
-                ? BorderStyle.solid
-                : BorderStyle.none,
-          ),
-          borderRadius: toBorderRadius(shape.borderRadius),
-        );
-    }
   }
 
   static StackFit toStackFit(String? fit) {

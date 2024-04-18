@@ -97,6 +97,46 @@ Map<String, String> createStyleMap(String? styleClass) {
   });
 }
 
+OutlinedBorder? toButtonShape(dynamic value) {
+  if (value == null) {
+    return null;
+  }
+
+  if (value is String) {
+    return switch (value) {
+      'stadium' => const StadiumBorder(),
+      'circle' => const CircleBorder(),
+      'roundedRect' || _ => const RoundedRectangleBorder()
+    };
+  }
+
+  if (value is! Map) {
+    try {
+      return toButtonShape(value.toJson());
+    } catch (err) {
+      return null;
+    }
+  }
+
+  final shape = value['shape'] as String?;
+  final borderColor = (value['borderColor'] as String?).letIfTrue(toColor) ??
+      Colors.transparent;
+  final borderWidth = (value['borderWidth'] as double?) ?? 1.0;
+  final borderStyle =
+      (value['borderStyle'] == 'solid') ? BorderStyle.solid : BorderStyle.none;
+  final side =
+      BorderSide(color: borderColor, width: borderWidth, style: borderStyle);
+
+  return switch (shape) {
+    'stadium' => StadiumBorder(side: side),
+    'circle' => CircleBorder(
+        eccentricity: value['eccentricity'] as double? ?? 0.0, side: side),
+    'roundedRect' || _ => RoundedRectangleBorder(
+        borderRadius: DUIDecoder.toBorderRadius(value['borderRadius']),
+        side: side)
+  };
+}
+
 Border? toBorder(DUIBorder? border) {
   if (border == null || border.borderStyle != 'solid') {
     return null;
