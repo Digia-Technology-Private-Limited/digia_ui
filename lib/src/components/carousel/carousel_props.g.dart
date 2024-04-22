@@ -10,7 +10,6 @@ DUICarouselProps _$DUICarouselPropsFromJson(Map<String, dynamic> json) =>
     DUICarouselProps(
       json['height'] as String?,
       json['width'] as String?,
-      json['borderRadius'] as String?,
       json['aspectRatio'] as String?,
       json['childHeight'] as String?,
       json['childWidth'] as String?,
@@ -23,13 +22,13 @@ DUICarouselProps _$DUICarouselPropsFromJson(Map<String, dynamic> json) =>
       json['enlargeCenterPage'] as bool?,
       json['enlargeFactor'] as String?,
       json['childPadding'] as String?,
+      json['reverseScroll'] as bool?,
     );
 
 Map<String, dynamic> _$DUICarouselPropsToJson(DUICarouselProps instance) =>
     <String, dynamic>{
       'height': instance.height,
       'width': instance.width,
-      'borderRadius': instance.borderRadius,
       'aspectRatio': instance.aspectRatio,
       'childHeight': instance.childHeight,
       'childWidth': instance.childWidth,
@@ -42,4 +41,5 @@ Map<String, dynamic> _$DUICarouselPropsToJson(DUICarouselProps instance) =>
       'enlargeCenterPage': instance.enlargeCenterPage,
       'enlargeFactor': instance.enlargeFactor,
       'childPadding': instance.childPadding,
+      'reverseScroll': instance.reverseScroll,
     };

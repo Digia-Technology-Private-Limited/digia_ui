@@ -29,13 +29,10 @@ class DUICarousel extends StatelessWidget {
               height: props.childHeight?.toHeight(context),
               width: props.childWidth?.toWidth(context),
               padding: EdgeInsets.symmetric(horizontal: padding),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(
-                      double.tryParse(props.borderRadius ?? '8') ?? 8)),
               child: builder.build(context));
         }).toList(),
         options: CarouselOptions(
-            aspectRatio: double.tryParse(props.aspectRatio ?? '0.25') ?? 0.25,
+            aspectRatio: double.tryParse(props.aspectRatio ?? '1.78') ?? 1.78,
             autoPlay: props.autoPlay ?? false,
             autoPlayAnimationDuration: Duration(
                 milliseconds:
@@ -43,14 +40,14 @@ class DUICarousel extends StatelessWidget {
             autoPlayCurve: Curves.linear,
             autoPlayInterval: Duration(
                 milliseconds:
-                    int.tryParse(props.autoPlayInterval ?? '3000') ?? 3000),
+                    int.tryParse(props.autoPlayInterval ?? '1600') ?? 1600),
             enableInfiniteScroll: props.infiniteScroll ?? false,
             initialPage: int.tryParse(props.initialPage ?? '1') ?? 1,
             viewportFraction:
-                double.tryParse(props.viewportFraction ?? '0.5') ?? 0.5,
-            enlargeFactor:
-                double.tryParse(props.enlargeFactor ?? '0.25') ?? 0.25,
-            enlargeCenterPage: props.enlargeCenterPage),
+                double.tryParse(props.viewportFraction ?? '0.8') ?? 0.8,
+            enlargeFactor: double.tryParse(props.enlargeFactor ?? '0.3') ?? 0.3,
+            enlargeCenterPage: props.enlargeCenterPage,
+            reverse: props.reverseScroll ?? false),
       ),
     );
   }
