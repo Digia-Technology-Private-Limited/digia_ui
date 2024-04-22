@@ -7,21 +7,16 @@ part of 'dui_icon_button_props.dart';
 // **************************************************************************
 
 DUIIconButtonProps _$DUIIconButtonPropsFromJson(Map<String, dynamic> json) =>
-    DUIIconButtonProps(
-      styleClass: DUIButtonStyleClass.fromJson(json['String']),
-      icon: json['icon'] == null ? null : DUIIconProps.fromJson(json['icon']),
-      onClick:
-          json['onClick'] == null ? null : ActionFlow.fromJson(json['onClick']),
-      childAlignment: json['childAlignment'] as String?,
-      elevation: (json['elevation'] as num?)?.toDouble(),
-      backgroundColor: json['backgroundColor'] as String?,
-    );
+    DUIIconButtonProps()
+      ..styleClass = DUIButtonStyleClass.fromJson(json['String'])
+      ..disabledButtonStyle = DUIDisabledButtonStyle.fromJson(
+          json['disabledButtonStyle'] as Map<String, dynamic>)
+      ..icon = json['icon'] == null ? null : DUIIconProps.fromJson(json['icon'])
+      ..onClick =
+          json['onClick'] == null ? null : ActionFlow.fromJson(json['onClick']);
 
 Map<String, dynamic> _$DUIIconButtonPropsToJson(DUIIconButtonProps instance) =>
     <String, dynamic>{
       'icon': instance.icon,
       'onClick': instance.onClick,
-      'childAlignment': instance.childAlignment,
-      'elevation': instance.elevation,
-      'backgroundColor': instance.backgroundColor,
     };
