@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import '../Packs/font_awesome.dart' as font_awesome;
-import '../Packs/cupertino.dart' as cupertino;
-import '../Packs/line_icons.dart' as line_awesome;
+import '../packs/font_awesome.dart' as font_awesome;
+import '../packs/cupertino.dart' as cupertino;
+import '../packs/line_icons.dart' as line_awesome;
 
-import '../Packs/material.dart' as material;
+import '../packs/material.dart' as material;
 import 'icon_pack.dart';
 
 Map<String, dynamic>? serializeIcon(IconData icon, {IconPack? iconPack}) {
