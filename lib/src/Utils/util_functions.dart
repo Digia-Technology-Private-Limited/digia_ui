@@ -24,8 +24,8 @@ TextStyle? toTextStyle(DUITextStyle? textStyle) {
 
   FontWeight fontWeight = FontWeight.normal;
   FontStyle fontStyle = FontStyle.normal;
-  double fontSize = DUIConfigConstants.fallbackSize;
-  double fontHeight = DUIConfigConstants.fallbackLineHeightFactor;
+  double? fontSize;
+  double? fontHeight;
   String fontFamily = 'Poppins';
 
   if (textStyle.fontToken?.value != null) {
@@ -39,12 +39,11 @@ TextStyle? toTextStyle(DUITextStyle? textStyle) {
     fontHeight = font.height ?? DUIConfigConstants.fallbackLineHeightFactor;
   }
 
-  Color textColor = textStyle.textColor.letIfTrue(toColor) ??
-      DUIConfigConstants.fallbackTextColor;
+  Color? textColor = textStyle.textColor.letIfTrue(toColor);
 
   Color? textBgColor = textStyle.textBgColor.letIfTrue(toColor);
 
-  TextDecoration textDecoration =
+  TextDecoration? textDecoration =
       DUIDecoder.toTextDecoration(textStyle.textDecoration);
   Color? decorationColor = textStyle.textDecorationColor.letIfTrue(toColor);
   TextDecorationStyle? decorationStyle =

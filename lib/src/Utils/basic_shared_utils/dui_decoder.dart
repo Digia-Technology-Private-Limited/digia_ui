@@ -110,7 +110,7 @@ class DUIDecoder {
     return TextOverflow.clip;
   }
 
-  static TextDecoration toTextDecoration(String? textDecorationToken) {
+  static TextDecoration? toTextDecoration(String? textDecorationToken) {
     switch (textDecorationToken) {
       case 'underline':
         return TextDecoration.underline;
@@ -118,8 +118,10 @@ class DUIDecoder {
         return TextDecoration.overline;
       case 'lineThrough':
         return TextDecoration.lineThrough;
-      default:
+      case 'none':
         return TextDecoration.none;
+      default:
+        return null;
     }
   }
 
