@@ -26138,7 +26138,7 @@ Map<String, IconData> icons = {
   /// <i class="material-icons-outlined md-36">zoom_out</i> &#x2014; material icon named "zoom out" (outlined).
   'zoom_out_outlined': Icons.zoom_out_outlined,
 
-  /// <i class="material-icons md-36">zoom_out_map</i> &#x2014; material icon named "zoom out map".
+  /// <i class="material-icons md-36">zoom_out_map</i> &#x2014; material icon named "zoom out map ".
   'zoom_out_map': Icons.zoom_out_map,
 
   /// <i class="material-icons-sharp md-36">zoom_out_map</i> &#x2014; material icon named "zoom out map" (sharp).
