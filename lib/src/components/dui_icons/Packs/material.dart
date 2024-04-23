@@ -16,7 +16,7 @@ Map<String, IconData> icons = {
   /// <i class="material-icons md-36">10mp</i> &#x2014; material icon named "10mp".
   'ten_mp': Icons.ten_mp,
 
-  /// <i class="material-icons-sharp md-36">10mp</i> &#x2014; material icon named "10mp" (sharp).
+  /// <i class="material-icons-sharp md-36">10mp</i> &#x2014; material icon named "10mp" ( sharp).
   'ten_mp_sharp': Icons.ten_mp_sharp,
 
   /// <i class="material-icons-round md-36">10mp</i> &#x2014; material icon named "10mp" (round).
