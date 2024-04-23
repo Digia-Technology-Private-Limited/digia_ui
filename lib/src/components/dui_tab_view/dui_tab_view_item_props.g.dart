@@ -8,7 +8,7 @@ part of 'dui_tab_view_item_props.dart';
 
 DUITabViewItemProps _$DUITabViewItemPropsFromJson(Map<String, dynamic> json) =>
     DUITabViewItemProps(
-      json['title'] as String?,
+      json['title'] == null ? null : DUITextProps.fromJson(json['title']),
     );
 
 Map<String, dynamic> _$DUITabViewItemPropsToJson(

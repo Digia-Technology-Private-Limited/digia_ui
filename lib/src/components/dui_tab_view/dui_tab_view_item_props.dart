@@ -1,10 +1,11 @@
+import 'package:digia_ui/src/components/DUIText/dui_text_props.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'dui_tab_view_item_props.g.dart';
 
 @JsonSerializable()
 class DUITabViewItemProps {
-  final String? title;
+  final DUITextProps? title;
 
   DUITabViewItemProps(this.title);
 
