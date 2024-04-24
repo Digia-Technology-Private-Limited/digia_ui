@@ -95,10 +95,13 @@ void main() async {
                                   {
                                     "type": "digia/button",
                                     "props": {
-                                      "style": {
-                                        "bgColor": "#00224D",
-                                        "height": 40,
-                                        "border": {"borderRadius": 16},
+                                      "height": 40,
+                                      "defaultStyle": {
+                                        "backgroundColor": "#00224D",
+                                        "shape": {
+                                          "value": "roundedRect",
+                                          "borderRadius": 16
+                                        },
                                       },
                                       "text": {
                                         "text": "Decrement",
@@ -134,10 +137,13 @@ void main() async {
                                         "text": "Increment",
                                         "textStyle": {"textColor": "#FFFFFF"}
                                       },
-                                      "style": {
-                                        "bgColor": "#00224D",
-                                        "height": 40,
-                                        "border": {"borderRadius": 16}
+                                      "height": 40,
+                                      "defaultStyle": {
+                                        "backgroundColor": "#00224D",
+                                        "shape": {
+                                          "value": "roundedRect",
+                                          "borderRadius": 16
+                                        },
                                       },
                                       "onClick": {
                                         "type": "Action.setAppState",
@@ -187,10 +193,13 @@ void main() async {
                                   "text": "Reset",
                                   "textStyle": {"textColor": "#FFFFFF"}
                                 },
-                                "style": {
-                                  "bgColor": "#FF204E",
-                                  "height": 40,
-                                  "border": {"borderRadius": 16}
+                                "height": 40,
+                                "defaultStyle": {
+                                  "backgroundColor": "#FF204E",
+                                  "shape": {
+                                    "value": "roundedRect",
+                                    "borderRadius": 16
+                                  },
                                 },
                                 "onClick": {
                                   "type": "Action.setAppState",
