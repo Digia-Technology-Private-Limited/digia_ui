@@ -23,10 +23,9 @@ class DUIRichTextBuilder extends DUIWidgetBuilder {
       return const SizedBox.shrink();
     }
 
-    final evaluateExpression = DUIWidgetScope.of(context)!.eval;
+    final eval = DUIWidgetScope.of(context)!.eval;
 
-    final maxLines =
-        evaluateExpression<int>(data.props['maxLines'], (p0) => p0 as int?);
+    final maxLines = eval<int>(data.props['maxLines']);
     final overflow = DUIDecoder.toTextOverflow(data.props['overflow']);
     final textAlign = DUIDecoder.toTextAlign(data.props['textAlign']);
     final styleJson = (data.props['textStyle'] ?? data.props['style'])
@@ -45,11 +44,11 @@ class DUIRichTextBuilder extends DUIWidgetBuilder {
   }
 
   List<TextSpan>? _toTextSpan(BuildContext context, dynamic textSpan) {
-    final evaluateExpression = DUIWidgetScope.of(context)!.eval;
+    final eval = DUIWidgetScope.of(context)!.eval;
     if (textSpan == null) return null;
 
     if (textSpan is String) {
-      final value = evaluateExpression<String>(textSpan, (p0) => p0 as String?);
+      final value = eval<String>(textSpan);
       return value == null ? null : [TextSpan(text: value)];
     }
 
@@ -61,11 +60,10 @@ class DUIRichTextBuilder extends DUIWidgetBuilder {
           TextStyle? style;
 
           if (span is String) {
-            text = evaluateExpression<String>(span, (p0) => p0 as String?);
+            text = eval<String>(span);
             style = null;
           } else {
-            text =
-                evaluateExpression<String>(span['text'], (p0) => p0 as String?);
+            text = eval<String>(span['text']);
             final styleJson =
                 span['spanStyle'] ?? span['textStyle'] ?? span['style'];
 
