@@ -6,26 +6,12 @@ import 'package:flutter_blurhash/flutter_blurhash.dart';
 import 'package:octo_image/octo_image.dart';
 
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
+import '../dui_widget_scope.dart';
 
-class DUIImage extends StatefulWidget {
+class DUIImage extends StatelessWidget {
   final DUIImageProps props;
 
   const DUIImage(this.props, {super.key}) : super();
-
-  @override
-  State<StatefulWidget> createState() => _DUIImageState();
-}
-
-class _DUIImageState extends State<DUIImage> {
-  late DUIImageProps props;
-
-  _DUIImageState();
-
-  @override
-  void initState() {
-    props = widget.props;
-    super.initState();
-  }
 
   OctoPlaceholderBuilder? _placeHolderBuilderCreater() {
     Widget widget = Container(
@@ -61,7 +47,9 @@ class _DUIImageState extends State<DUIImage> {
     if (props.imageSrc.startsWith('http')) {
       imageProvider = CachedNetworkImageProvider(props.imageSrc);
     } else {
-      imageProvider = AssetImage(props.imageSrc);
+      imageProvider =
+          DUIWidgetScope.of(context)?.imageProviderFn?.call(props.imageSrc) ??
+              AssetImage(props.imageSrc);
     }
 
     return OctoImage(

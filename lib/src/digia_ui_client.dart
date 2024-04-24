@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:digia_ui/src/config_resolver.dart';
+import 'package:digia_ui/src/core/pref/dui_preferences.dart';
+import 'package:digia_ui/src/models/dui_app_state.dart';
 import 'package:digia_ui/src/network/network_client.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
@@ -16,15 +18,18 @@ class DigiaUIClient {
 
   DigiaUIClient._();
 
+  static DigiaUIClient get instance => _instance;
+
   late String accessKey;
   late String baseUrl;
   late NetworkClient networkClient;
-  late DigiaUIConfigResolver configResolver;
+  late DUIConfig config;
+  late DUIAppState appState;
 
   bool _isInitialized = false;
 
-  static DigiaUIConfigResolver getConfigResolver() {
-    return _instance.configResolver;
+  static DUIConfig getConfigResolver() {
+    return _instance.config;
   }
 
   static NetworkClient getNetworkClient() {
@@ -44,7 +49,11 @@ class DigiaUIClient {
         await rootBundle.loadString(assetPath ?? defaultUIConfigAssetPath);
     final data = jsonDecode(string);
 
-    _instance.configResolver = DigiaUIConfigResolver(data);
+    _instance.config = DUIConfig(data);
+
+    await DUIPreferences.initialize();
+
+    _instance.appState = DUIAppState.fromJson(_instance.config.appState ?? {});
 
     _instance._isInitialized = true;
   }
@@ -62,7 +71,11 @@ class DigiaUIClient {
     _instance.baseUrl = baseUrl ?? defaultBaseUrl;
     Map<String, dynamic> headers = {'digia_projectId': accessKey};
     _instance.networkClient = NetworkClient(dio, _instance.baseUrl, headers);
-    _instance.configResolver = DigiaUIConfigResolver(data);
+    _instance.config = DUIConfig(data);
+
+    await DUIPreferences.initialize();
+
+    _instance.appState = DUIAppState.fromJson(_instance.config.appState ?? {});
 
     _instance._isInitialized = true;
   }
@@ -89,7 +102,12 @@ class DigiaUIClient {
       );
     }
 
-    _instance.configResolver = DigiaUIConfigResolver(data);
+    _instance.config = DUIConfig(data);
+
+    await DUIPreferences.initialize();
+
+    _instance.appState = DUIAppState.fromJson(_instance.config.appState ?? {});
+
     _instance._isInitialized = true;
   }
 
@@ -97,6 +115,6 @@ class DigiaUIClient {
     return DigiaUIService(
         baseUrl: _instance.baseUrl,
         httpClient: _instance.networkClient,
-        config: _instance.configResolver);
+        config: _instance.config);
   }
 }

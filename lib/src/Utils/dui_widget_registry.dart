@@ -21,6 +21,7 @@ import 'package:flutter/material.dart';
 import '../core/builders/dui_container2_builder.dart';
 import '../core/builders/dui_htmlview_builder.dart';
 import '../core/builders/dui_icon_builder.dart';
+import '../core/builders/dui_rich_text_builder.dart';
 import '../core/builders/dui_scaffold_builder.dart';
 
 typedef WidgetFromJsonFn<T extends Widget> = T Function(
@@ -45,7 +46,7 @@ class DUIWidgetRegistry {
     'digia/icon': withoutRegistry(DUIIconBuilder.create),
     'digia/htmlView': withoutRegistry(DUIHtmlViewBuilder.create),
     'digia/avatar': withoutRegistry(DUIAvatarBuilder.create),
-    'digia/richText': withoutRegistry(DUITextBuilder.create),
+    'digia/richText': withoutRegistry(DUIRichTextBuilder.create),
     'digia/text': withoutRegistry(DUITextBuilder.create),
     'digia/button': withoutRegistry(DUIButtonBuilder.create),
     'digia/image': withoutRegistry(DUIImageBuilder.create),

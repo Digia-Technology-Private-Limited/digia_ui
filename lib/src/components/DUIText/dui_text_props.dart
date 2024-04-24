@@ -7,13 +7,18 @@ import 'package:digia_ui/src/components/DUIText/dui_text_style.dart';
 part 'dui_text_props.json.dart';
 
 class DUITextProps {
-  late List<DUITextSpan> textSpans;
-  late int? maxLines;
-  late String? overflow;
-  late String? alignment;
-  late DUITextStyle? textStyle;
+  List<DUITextSpan>? textSpans;
+  int? maxLines;
+  String? overflow;
+  String? alignment;
+  DUITextStyle? textStyle;
 
-  DUITextProps();
+  DUITextProps(
+      {this.textStyle,
+      this.alignment,
+      this.maxLines,
+      this.overflow,
+      this.textSpans});
 
   factory DUITextProps.withText(
       {required dynamic text,
@@ -36,5 +41,20 @@ class DUITextProps {
   @override
   String toString() {
     return jsonEncode(this);
+  }
+
+  DUITextProps copyWith(
+      {int? maxLines,
+      String? overflow,
+      String? alignment,
+      DUITextStyle? textStyle,
+      List<DUITextSpan>? textSpans}) {
+    return DUITextProps(
+      textSpans: textSpans ?? this.textSpans,
+      alignment: alignment ?? this.alignment,
+      textStyle: textStyle ?? this.textStyle,
+      overflow: overflow ?? this.overflow,
+      maxLines: maxLines ?? this.maxLines,
+    );
   }
 }
