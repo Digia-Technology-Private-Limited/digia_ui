@@ -1,6 +1,6 @@
 import 'package:digia_ui/digia_ui.dart';
-import 'package:digia_ui/src/Utils/expr.dart';
 import 'package:digia_ui/src/Utils/extensions.dart';
+import 'package:digia_ui/src/components/dui_widget_scope.dart';
 import 'package:digia_ui/src/core/action/action_prop.dart';
 import 'package:digia_ui/src/core/page/dui_page_bloc.dart';
 import 'package:digia_ui/src/core/page/dui_page_event.dart';
@@ -65,13 +65,29 @@ Map<String, ActionHandlerFn> _actionsMap = {
     if (events is List) {
       bloc.add(SetStateEvent(
           events: events.map((e) {
-        final value = evaluateExpression(e['value'], context, (id) => id);
+        final value = DUIWidgetScope.of(context)?.eval(e['value'], (id) => id);
         return SingleSetStateEvent(
             variableName: e['variableName'], context: context, value: value);
       }).toList()));
     }
 
     return;
+  },
+  'Action.setAppState': ({required action, required context}) {
+    final events = action.data['events'];
+
+    if (events is List) {
+      for (final e in events) {
+        final value = DUIWidgetScope.of(context)?.eval(e['value'], (id) => id);
+        DigiaUIClient.instance.appState.variables?[e['variableName']]
+            ?.set(value);
+      }
+
+      context.tryRead<DUIPageBloc>()?.add(SetStateEvent(events: []));
+
+      return;
+    }
+    return null;
   }
 };
 

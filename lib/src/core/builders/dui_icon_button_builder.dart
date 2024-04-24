@@ -1,3 +1,4 @@
+import 'package:digia_ui/src/core/builders/dui_icon_builder.dart';
 import 'package:digia_ui/src/core/json_widget_builder.dart';
 import 'package:digia_ui/src/core/page/props/dui_widget_json_data.dart';
 import 'package:flutter/material.dart';
@@ -5,7 +6,6 @@ import 'package:flutter/material.dart';
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
 import '../../Utils/basic_shared_utils/lodash.dart';
 import '../../Utils/util_functions.dart';
-import '../../components/dui_icons/dui_icon.dart';
 import '../../components/dui_widget_scope.dart';
 import '../action/action_handler.dart';
 import '../action/action_prop.dart';
@@ -20,7 +20,7 @@ class DUIIconButtonBuilder extends DUIWidgetBuilder {
   @override
   Widget build(BuildContext context) {
     final eval = DUIWidgetScope.of(context)!.eval;
-    final icon = DUIIcon(data.props['Icon']);
+    final icon = DUIIconBuilder.fromProps(props: data.props['icon']);
 
     final defaultStyleJson =
         data.props['defaultStyle'] as Map<String, dynamic>? ?? {};
@@ -59,7 +59,7 @@ class DUIIconButtonBuilder extends DUIWidgetBuilder {
                   ActionHandler.instance
                       .execute(context: context, actionFlow: onClick);
                 },
-          icon: icon,
+          icon: icon.buildWithContainerProps(context),
           style: style,
         ));
   }

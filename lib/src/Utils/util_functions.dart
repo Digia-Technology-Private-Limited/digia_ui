@@ -24,8 +24,8 @@ TextStyle? toTextStyle(DUITextStyle? textStyle) {
 
   FontWeight fontWeight = FontWeight.normal;
   FontStyle fontStyle = FontStyle.normal;
-  double fontSize = DUIConfigConstants.fallbackSize;
-  double fontHeight = DUIConfigConstants.fallbackLineHeightFactor;
+  double? fontSize;
+  double? fontHeight;
   String fontFamily = 'Poppins';
 
   if (textStyle.fontToken?.value != null) {
@@ -39,12 +39,11 @@ TextStyle? toTextStyle(DUITextStyle? textStyle) {
     fontHeight = font.height ?? DUIConfigConstants.fallbackLineHeightFactor;
   }
 
-  Color textColor = textStyle.textColor.letIfTrue(toColor) ??
-      DUIConfigConstants.fallbackTextColor;
+  Color? textColor = textStyle.textColor.letIfTrue(toColor);
 
   Color? textBgColor = textStyle.textBgColor.letIfTrue(toColor);
 
-  TextDecoration textDecoration =
+  TextDecoration? textDecoration =
       DUIDecoder.toTextDecoration(textStyle.textDecoration);
   Color? decorationColor = textStyle.textDecorationColor.letIfTrue(toColor);
   TextDecorationStyle? decorationStyle =
@@ -95,6 +94,46 @@ Map<String, String> createStyleMap(String? styleClass) {
     previousValue[splitValues.first.trim()] = splitValues.last.trim();
     return previousValue;
   });
+}
+
+OutlinedBorder? toButtonShape(dynamic value) {
+  if (value == null) {
+    return null;
+  }
+
+  if (value is String) {
+    return switch (value) {
+      'stadium' => const StadiumBorder(),
+      'circle' => const CircleBorder(),
+      'roundedRect' || _ => const RoundedRectangleBorder()
+    };
+  }
+
+  if (value is! Map) {
+    try {
+      return toButtonShape(value.toJson());
+    } catch (err) {
+      return null;
+    }
+  }
+
+  final shape = value['value'] as String?;
+  final borderColor = (value['borderColor'] as String?).letIfTrue(toColor) ??
+      Colors.transparent;
+  final borderWidth = (value['borderWidth'] as double?) ?? 1.0;
+  final borderStyle =
+      (value['borderStyle'] == 'solid') ? BorderStyle.solid : BorderStyle.none;
+  final side =
+      BorderSide(color: borderColor, width: borderWidth, style: borderStyle);
+
+  return switch (shape) {
+    'stadium' => StadiumBorder(side: side),
+    'circle' => CircleBorder(
+        eccentricity: value['eccentricity'] as double? ?? 0.0, side: side),
+    'roundedRect' || _ => RoundedRectangleBorder(
+        borderRadius: DUIDecoder.toBorderRadius(value['borderRadius']),
+        side: side)
+  };
 }
 
 Border? toBorder(DUIBorder? border) {

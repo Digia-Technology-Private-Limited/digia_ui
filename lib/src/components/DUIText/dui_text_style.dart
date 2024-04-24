@@ -34,6 +34,7 @@ class DUITextStyle {
     String? textDecorationStyle,
   }) {
     return DUITextStyle(
+      fontToken: fontToken ?? this.fontToken,
       textBgColor: textBgColor ?? this.textBgColor,
       textColor: textColor ?? this.textColor,
       textDecoration: textDecoration ?? this.textDecoration,

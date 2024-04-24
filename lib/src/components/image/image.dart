@@ -6,7 +6,7 @@ import 'package:flutter_blurhash/flutter_blurhash.dart';
 import 'package:octo_image/octo_image.dart';
 
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
-import '../dui_widget.dart';
+import '../dui_widget_scope.dart';
 
 class DUIImage extends StatelessWidget {
   final DUIImageProps props;

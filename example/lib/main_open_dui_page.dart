@@ -12,7 +12,17 @@ void main() async {
     'fonts': <String, dynamic>{},
     'pages': <String, dynamic>{},
     'rest': <String, dynamic>{},
-    'appSettings': <String, dynamic>{'initialRoute': ''}
+    'appSettings': <String, dynamic>{'initialRoute': ''},
+    'appState': <String, dynamic>{
+      "counter": {
+        "type": "integer",
+        "default": 0,
+      },
+      "pressedCount": {
+        "type": "integer",
+        "default": 0,
+      }
+    }
   });
   const pageUid = 'Test';
 
@@ -33,16 +43,6 @@ void main() async {
                 "onPageLoad": <String, dynamic>{
                   "type": "Action.buildPage",
                   "data": <String, dynamic>{}
-                }
-              },
-              "variables": {
-                "counter": {
-                  "type": "integer",
-                  "default": 0,
-                },
-                "pressedCount": {
-                  "type": "integer",
-                  "default": 0,
                 }
               },
               "layout": {
@@ -71,9 +71,9 @@ void main() async {
                         "children": {
                           "children": [
                             {
-                              "type": "digia/text2",
+                              "type": "digia/text",
                               "props": {
-                                "text": r"Counter Value is ${counter}",
+                                "text": r"Counter Value is ${appState.counter}",
                                 "textStyle": {
                                   "textColor": "#00224D",
                                 }
@@ -95,27 +95,31 @@ void main() async {
                                   {
                                     "type": "digia/button",
                                     "props": {
-                                      "style": {
-                                        "bgColor": "#00224D",
-                                        "height": 40,
-                                        "border": {"borderRadius": 16},
+                                      "height": 40,
+                                      "defaultStyle": {
+                                        "backgroundColor": "#00224D",
+                                        "shape": {
+                                          "value": "roundedRect",
+                                          "borderRadius": 16
+                                        },
                                       },
                                       "text": {
                                         "text": "Decrement",
                                         "textStyle": {"textColor": "#FFFFFF"}
                                       },
                                       "onClick": {
-                                        "type": "Action.setPageState",
+                                        "type": "Action.setAppState",
                                         "data": {
                                           "events": [
                                             {
                                               'variableName': "counter",
-                                              'value': r'${diff(counter, 1)}'
+                                              'value':
+                                                  r'${diff(appState.counter, 1)}'
                                             },
                                             {
                                               'variableName': "pressedCount",
                                               'value':
-                                                  r'${sum(pressedCount, 1)}'
+                                                  r'${sum(appState.pressedCount, 1)}'
                                             }
                                           ]
                                         }
@@ -133,23 +137,27 @@ void main() async {
                                         "text": "Increment",
                                         "textStyle": {"textColor": "#FFFFFF"}
                                       },
-                                      "style": {
-                                        "bgColor": "#00224D",
-                                        "height": 40,
-                                        "border": {"borderRadius": 16}
+                                      "height": 40,
+                                      "defaultStyle": {
+                                        "backgroundColor": "#00224D",
+                                        "shape": {
+                                          "value": "roundedRect",
+                                          "borderRadius": 16
+                                        },
                                       },
                                       "onClick": {
-                                        "type": "Action.setPageState",
+                                        "type": "Action.setAppState",
                                         "data": {
                                           "events": [
                                             {
                                               'variableName': "counter",
-                                              'value': r'${sum(counter, 1)}'
+                                              'value':
+                                                  r'${sum(appState.counter, 1)}'
                                             },
                                             {
                                               'variableName': "pressedCount",
                                               'value':
-                                                  r'${sum(pressedCount, 1)}'
+                                                  r'${sum(appState.pressedCount, 1)}'
                                             }
                                           ]
                                         }
@@ -164,10 +172,10 @@ void main() async {
                               "props": {"height": 20}
                             },
                             {
-                              "type": "digia/text2",
+                              "type": "digia/text",
                               "props": {
                                 "text":
-                                    r"You have pressed a total of this many times: ${pressedCount}",
+                                    r"You have pressed a total of this many times: ${appState.pressedCount}",
                                 "textStyle": {
                                   "textColor": "#00224D",
                                 }
@@ -185,13 +193,16 @@ void main() async {
                                   "text": "Reset",
                                   "textStyle": {"textColor": "#FFFFFF"}
                                 },
-                                "style": {
-                                  "bgColor": "#FF204E",
-                                  "height": 40,
-                                  "border": {"borderRadius": 16}
+                                "height": 40,
+                                "defaultStyle": {
+                                  "backgroundColor": "#FF204E",
+                                  "shape": {
+                                    "value": "roundedRect",
+                                    "borderRadius": 16
+                                  },
                                 },
                                 "onClick": {
-                                  "type": "Action.setPageState",
+                                  "type": "Action.setAppState",
                                   "data": {
                                     "events": [
                                       {'variableName': "counter", 'value': 0},

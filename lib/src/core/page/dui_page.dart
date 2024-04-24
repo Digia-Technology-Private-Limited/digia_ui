@@ -1,3 +1,4 @@
+import 'package:digia_expr/digia_expr.dart';
 import 'package:digia_ui/digia_ui.dart';
 import 'package:digia_ui/src/Utils/basic_shared_utils/lodash.dart';
 import 'package:digia_ui/src/core/page/dui_page_bloc.dart';
@@ -6,6 +7,7 @@ import 'package:digia_ui/src/types.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../components/dui_widget_scope.dart';
 import 'dui_page_event.dart';
 
 class DUIPage extends StatelessWidget {
@@ -85,9 +87,22 @@ class _DUIScreenState extends State<_DUIScreen> {
                 textStyleBuilder: widget.textStyleBuilder,
                 externalFunctionHandler: widget.externalFunctionHandler,
                 pageVars: state.props.variables,
+                enclosing: ExprContext(variables: {
+                  'appState': AppStateClass(
+                      fields: DigiaUIClient.instance.appState.variables
+                          ?.map((k, v) => MapEntry(k, v.value)))
+                }),
                 child: DUIWidget(data: p0));
           }) ??
           Center(child: Text('Props not found for page: ${state.pageUid}'));
     });
   }
+}
+
+// ignore: non_constant_identifier_names
+ExprClassInstance AppStateClass(
+    {Map<String, Object?>? fields, Map<String, ExprCallable>? methods}) {
+  return ExprClassInstance(
+      klass: ExprClass(
+          name: 'AppState', fields: fields ?? {}, methods: methods ?? {}));
 }
