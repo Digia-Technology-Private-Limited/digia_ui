@@ -114,16 +114,22 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
         onExternalMethodCalled?.call(
             action.data['methodId'] ?? '', action.data['args']);
 
+      case 'Action.showAlertDialog':
+        return showAlertDialog(
+            context: context!,
+            title: action.data['title'],
+            content: action.data['content']);
+
       default:
         emit(state.copyWith(isLoading: false));
         return null;
     }
-    if (action.data.isNotEmpty) {
-      final resp = await APICall(_config).execute(action.data);
-      // final props = DUIPageProps.fromJson(pagePropsJson['response']);
-      // emit(state.copyWith(isLoading: false, props: props));
-      return resp;
-    }
+    // if (action.data.isNotEmpty) {
+    //   final resp = await APICall(_config).execute(action.data);
+    //   // final props = DUIPageProps.fromJson(pagePropsJson['response']);
+    //   // emit(state.copyWith(isLoading: false, props: props));
+    //   return resp;
+    // }
     return null;
   }
 }

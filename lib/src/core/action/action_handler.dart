@@ -63,7 +63,13 @@ Map<String, ActionHandlerFn> _actionsMap = {
         context: context,
         value: action.data['value']));
     return;
-  }
+  },
+  'Action.showAlertDialog': ({required action, required context}) {
+    return showAlertDialog(
+        context: context,
+        title: action.data['title'],
+        content: action.data['content']);
+  },
 };
 
 class ActionHandler {
