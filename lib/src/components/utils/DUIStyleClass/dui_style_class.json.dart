@@ -23,5 +23,5 @@ DUIStyleClass _$DUIStyleClassFromDictionary(Map<String, dynamic> json) =>
           (json['bgColor'] ?? json['backgroundColor'] ?? json['bgc']) as String?
       ..border = DUIBorder.fromJson(json['border'] ?? json)
       ..alignment = json['alignment'] ?? json['al']
-      ..height = json['height'] ?? json['h']
-      ..width = json['width'] ?? json['w'];
+      ..height = json['height']?.toString() ?? json['h']?.toString()
+      ..width = json['width']?.toString() ?? json['w']?.toString();

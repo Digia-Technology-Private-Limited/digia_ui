@@ -1,11 +1,11 @@
 import 'package:digia_ui/digia_ui.dart';
 import 'package:digia_ui/src/Utils/basic_shared_utils/dui_decoder.dart';
-import 'package:digia_ui/src/Utils/basic_shared_utils/num_decoder.dart';
 import 'package:digia_ui/src/Utils/dui_widget_registry.dart';
 import 'package:digia_ui/src/Utils/extensions.dart';
-import 'package:digia_ui/src/components/dui_flex_fit.dart';
 import 'package:digia_ui/src/core/json_widget_builder.dart';
 import 'package:flutter/material.dart';
+
+import '../../components/dui_widget_creator_fn.dart';
 
 class DUIFlexBuilder extends DUIWidgetBuilder {
   Axis direction;
@@ -34,8 +34,7 @@ class DUIFlexBuilder extends DUIWidgetBuilder {
             defaultValue: CrossAxisAlignment.center),
         children: data.children['children']!.map((e) {
           return DUIFlexFit(
-              flex: NumDecoder.toInt(
-                  e.containerProps.valueFor(keyPath: 'expansion.flexValue')),
+              flex: e.containerProps.valueFor(keyPath: 'expansion.flexValue'),
               expansionType:
                   e.containerProps.valueFor(keyPath: 'expansion.type'),
               child: DUIWidget(data: e));
