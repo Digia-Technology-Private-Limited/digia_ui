@@ -1,8 +1,9 @@
-import 'package:digia_ui/src/Utils/basic_shared_utils/dui_decoder.dart';
-import 'package:digia_ui/src/components/dui_widget.dart';
-import 'package:digia_ui/src/components/dui_wrap/dui_wrap_props.dart';
-import 'package:digia_ui/src/core/page/props/dui_widget_json_data.dart';
 import 'package:flutter/material.dart';
+
+import '../../Utils/basic_shared_utils/dui_decoder.dart';
+import '../../core/page/props/dui_widget_json_data.dart';
+import '../dui_widget.dart';
+import 'dui_wrap_props.dart';
 
 class DUIWrap extends StatefulWidget {
   final DUIWrapProps props;

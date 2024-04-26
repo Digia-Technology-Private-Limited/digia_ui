@@ -1,8 +1,8 @@
 import 'dart:convert';
 
-import 'package:digia_ui/src/Utils/basic_shared_utils/num_decoder.dart';
-import 'package:digia_ui/src/components/DUIText/DUI_text_span/dui_text_span.dart';
-import 'package:digia_ui/src/components/DUIText/dui_text_style.dart';
+import '../../Utils/basic_shared_utils/num_decoder.dart';
+import 'DUI_text_span/dui_text_span.dart';
+import 'dui_text_style.dart';
 
 part 'dui_text_props.json.dart';
 

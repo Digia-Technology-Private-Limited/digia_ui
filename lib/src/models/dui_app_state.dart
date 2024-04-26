@@ -1,4 +1,4 @@
-import 'package:digia_ui/src/models/variable_def.dart';
+import 'variable_def.dart';
 
 class DUIAppState {
   Map<String, VariableDef>? variables;

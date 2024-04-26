@@ -1,6 +1,6 @@
-import 'package:digia_ui/src/Utils/util_functions.dart';
-import 'package:digia_ui/src/components/utils/DUIBorder/dui_border.dart';
-import 'package:digia_ui/src/components/utils/DUIInsets/dui_insets.dart';
+import '../../../Utils/util_functions.dart';
+import '../DUIBorder/dui_border.dart';
+import '../DUIInsets/dui_insets.dart';
 
 part 'dui_style_class.json.dart';
 

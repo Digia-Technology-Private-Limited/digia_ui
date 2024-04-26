@@ -2,10 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
-import 'package:digia_ui/src/core/builders/dui_json_widget_builder.dart';
-import 'package:digia_ui/src/core/page/props/dui_widget_json_data.dart';
-
 import '../Utils/dui_widget_registry.dart';
+import '../core/builders/dui_json_widget_builder.dart';
+import '../core/page/props/dui_widget_json_data.dart';
 
 class DUIWidget extends StatelessWidget {
   final DUIWidgetJsonData data;

@@ -1,9 +1,10 @@
-import 'package:digia_ui/src/Utils/basic_shared_utils/lodash.dart';
-import 'package:digia_ui/src/Utils/basic_shared_utils/num_decoder.dart';
-import 'package:digia_ui/src/Utils/util_functions.dart';
-import 'package:digia_ui/src/components/DUIText/dui_text.dart';
-import 'package:digia_ui/src/components/app_bar/app_bar.props.dart';
 import 'package:flutter/material.dart';
+
+import '../Utils/basic_shared_utils/lodash.dart';
+import '../Utils/basic_shared_utils/num_decoder.dart';
+import '../Utils/util_functions.dart';
+import '../components/DUIText/dui_text.dart';
+import '../components/app_bar/app_bar.props.dart';
 
 class FW {
   static SizedBox sizedBox(Map<String, dynamic> json) {

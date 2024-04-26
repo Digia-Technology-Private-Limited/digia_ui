@@ -1,5 +1,6 @@
-import 'package:digia_ui/src/components/utils/DUIStyleClass/dui_style_class.dart';
 import 'package:json_annotation/json_annotation.dart';
+
+import '../utils/DUIStyleClass/dui_style_class.dart';
 
 part 'image.props.g.dart';
 

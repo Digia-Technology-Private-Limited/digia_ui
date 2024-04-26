@@ -1,9 +1,9 @@
-import 'package:digia_ui/src/Utils/basic_shared_utils/dui_decoder.dart';
-import 'package:digia_ui/src/core/action/action_prop.dart';
 import 'package:flutter/material.dart';
 
+import '../Utils/basic_shared_utils/dui_decoder.dart';
 import '../Utils/basic_shared_utils/num_decoder.dart';
 import '../core/action/action_handler.dart';
+import '../core/action/action_prop.dart';
 
 // ignore: non_constant_identifier_names
 Widget DUIGestureDetector(

@@ -1,8 +1,5 @@
-import 'package:digia_expr/digia_expr.dart';
-import 'package:digia_ui/src/Utils/extensions.dart';
 import 'package:flutter/material.dart';
 
-import '../models/variable_def.dart';
 import '../types.dart';
 
 class DUIWidgetScope extends InheritedWidget {
@@ -10,8 +7,6 @@ class DUIWidgetScope extends InheritedWidget {
   final DUIImageProviderFn? imageProviderFn;
   final DUITextStyleBuilder? textStyleBuilder;
   final DUIExternalFunctionHandler? externalFunctionHandler;
-  final Map<String, VariableDef>? pageVars;
-  final ExprContext? enclosing;
 
   const DUIWidgetScope({
     super.key,
@@ -19,8 +14,6 @@ class DUIWidgetScope extends InheritedWidget {
     this.imageProviderFn,
     this.textStyleBuilder,
     this.externalFunctionHandler,
-    this.pageVars,
-    this.enclosing,
     required super.child,
   });
 
@@ -29,30 +22,7 @@ class DUIWidgetScope extends InheritedWidget {
     return false;
   }
 
-  static DUIWidgetScope? of(BuildContext context) {
+  static DUIWidgetScope? maybeOf(BuildContext context) {
     return context.dependOnInheritedWidgetOfExactType<DUIWidgetScope>();
   }
-
-  T? eval<T extends Object>(Object? expression,
-      [T? Function(dynamic)? fromJsonT]) {
-    if (expression == null) return null;
-
-    if (!_hasExpression(expression)) {
-      return fromJsonT?.call(expression) ?? expression.typedValue<T>();
-    }
-
-    final variables = pageVars?.map((k, v) => MapEntry(k, v.value));
-
-    return Expression.eval(expression as String,
-            ExprContext(variables: variables ?? {}, enclosing: enclosing))
-        ?.typedValue<T>();
-  }
-}
-
-bool _hasExpression(dynamic expression) {
-  if (expression == null) return false;
-
-  if (expression is! String) return false;
-
-  return Expression.hasExpression(expression);
 }

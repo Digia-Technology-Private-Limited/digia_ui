@@ -1,15 +1,16 @@
-import 'package:digia_ui/digia_ui.dart';
-import 'package:digia_ui/src/Utils/extensions.dart';
-import 'package:digia_ui/src/components/dui_widget_scope.dart';
-import 'package:digia_ui/src/core/action/action_prop.dart';
-import 'package:digia_ui/src/core/page/dui_page_bloc.dart';
-import 'package:digia_ui/src/core/page/dui_page_event.dart';
-import 'package:digia_ui/src/core/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:json_schema2/json_schema2.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
+import '../../Utils/extensions.dart';
+import '../../components/dui_widget_scope.dart';
+import '../app_state_provider.dart';
+import '../evaluator.dart';
+import '../page/dui_page_bloc.dart';
+import '../page/dui_page_event.dart';
+import '../utils.dart';
+import 'action_prop.dart';
 
 typedef ActionHandlerFn = Future<dynamic>? Function({
   required BuildContext context,
@@ -48,7 +49,7 @@ Map<String, ActionHandlerFn> _actionsMap = {
     }
   },
   'Action.callExternalFunction': ({required action, required context}) {
-    final handler = DUIWidgetScope.of(context)?.externalFunctionHandler;
+    final handler = DUIWidgetScope.maybeOf(context)?.externalFunctionHandler;
     if (handler == null) return;
 
     handler(context, action.data['methodId'], action.data['args']);
@@ -65,7 +66,11 @@ Map<String, ActionHandlerFn> _actionsMap = {
     if (events is List) {
       bloc.add(SetStateEvent(
           events: events.map((e) {
-        final value = DUIWidgetScope.of(context)?.eval(e['value'], (id) => id);
+        final value = eval(
+          e['value'],
+          context: context,
+          decoder: (p0) => p0,
+        );
         return SingleSetStateEvent(
             variableName: e['variableName'], context: context, value: value);
       }).toList()));
@@ -78,9 +83,12 @@ Map<String, ActionHandlerFn> _actionsMap = {
 
     if (events is List) {
       for (final e in events) {
-        final value = DUIWidgetScope.of(context)?.eval(e['value'], (id) => id);
-        DigiaUIClient.instance.appState.variables?[e['variableName']]
-            ?.set(value);
+        final value = eval(
+          e['value'],
+          context: context,
+          decoder: (p0) => p0,
+        );
+        AppStateProvider.maybeOf(context)?.setState(e['variableName'], value);
       }
 
       context.tryRead<DUIPageBloc>()?.add(SetStateEvent(events: []));

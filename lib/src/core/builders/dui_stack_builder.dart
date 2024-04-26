@@ -1,11 +1,11 @@
-import 'package:digia_ui/src/Utils/extensions.dart';
-import 'package:digia_ui/src/components/dui_stack/dui_stack_props.dart';
-import 'package:digia_ui/src/core/json_widget_builder.dart';
 import 'package:flutter/material.dart';
 
 import '../../../digia_ui.dart';
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
+import '../../Utils/extensions.dart';
+import '../../components/dui_stack/dui_stack_props.dart';
 import '../../components/utils/DUIInsets/dui_insets.dart';
+import '../json_widget_builder.dart';
 
 class DUIStackBuilder extends DUIWidgetBuilder {
   DUIStackBuilder({required super.data});

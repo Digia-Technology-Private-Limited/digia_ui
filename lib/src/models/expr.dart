@@ -1,5 +1,6 @@
-import 'package:digia_ui/src/Utils/extensions.dart';
 import 'package:json_annotation/json_annotation.dart';
+
+import '../Utils/extensions.dart';
 
 class ExprOr<T> {
   final T? value;

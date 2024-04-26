@@ -1,12 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:digia_ui/src/components/image/image.props.dart';
-import 'package:digia_ui/src/core/container/dui_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blurhash/flutter_blurhash.dart';
 import 'package:octo_image/octo_image.dart';
 
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
+import '../../core/container/dui_container.dart';
 import '../dui_widget_scope.dart';
+import 'image.props.dart';
 
 class DUIImage extends StatelessWidget {
   final DUIImageProps props;
@@ -47,9 +47,10 @@ class DUIImage extends StatelessWidget {
     if (props.imageSrc.startsWith('http')) {
       imageProvider = CachedNetworkImageProvider(props.imageSrc);
     } else {
-      imageProvider =
-          DUIWidgetScope.of(context)?.imageProviderFn?.call(props.imageSrc) ??
-              AssetImage(props.imageSrc);
+      imageProvider = DUIWidgetScope.maybeOf(context)
+              ?.imageProviderFn
+              ?.call(props.imageSrc) ??
+          AssetImage(props.imageSrc);
     }
 
     return OctoImage(

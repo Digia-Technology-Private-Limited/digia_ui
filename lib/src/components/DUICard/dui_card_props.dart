@@ -1,10 +1,11 @@
 import 'dart:convert';
 
-import 'package:digia_ui/src/components/DUIText/dui_text_props.dart';
-import 'package:digia_ui/src/components/image/image.props.dart';
-import 'package:digia_ui/src/components/utils/DUIInsets/dui_insets.dart';
-import 'package:digia_ui/src/components/utils/DUIStyleClass/dui_style_class.dart';
 import 'package:json_annotation/json_annotation.dart';
+
+import '../DUIText/dui_text_props.dart';
+import '../image/image.props.dart';
+import '../utils/DUIInsets/dui_insets.dart';
+import '../utils/DUIStyleClass/dui_style_class.dart';
 
 part 'dui_card_props.g.dart';
 

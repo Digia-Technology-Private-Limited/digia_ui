@@ -1,12 +1,12 @@
-import 'package:digia_ui/src/Utils/basic_shared_utils/lodash.dart';
-import 'package:digia_ui/src/components/DUIText/dui_text_style.dart';
-import 'package:digia_ui/src/components/dui_widget_scope.dart';
-import 'package:digia_ui/src/core/json_widget_builder.dart';
-import 'package:digia_ui/src/core/page/props/dui_widget_json_data.dart';
 import 'package:flutter/material.dart';
 
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
+import '../../Utils/basic_shared_utils/lodash.dart';
 import '../../Utils/util_functions.dart';
+import '../../components/DUIText/dui_text_style.dart';
+import '../evaluator.dart';
+import '../json_widget_builder.dart';
+import '../page/props/dui_widget_json_data.dart';
 
 class DUIRichTextBuilder extends DUIWidgetBuilder {
   DUIRichTextBuilder({required super.data});
@@ -23,9 +23,7 @@ class DUIRichTextBuilder extends DUIWidgetBuilder {
       return const SizedBox.shrink();
     }
 
-    final eval = DUIWidgetScope.of(context)!.eval;
-
-    final maxLines = eval<int>(data.props['maxLines']);
+    final maxLines = eval<int>(data.props['maxLines'], context: context);
     final overflow = DUIDecoder.toTextOverflow(data.props['overflow']);
     final textAlign = DUIDecoder.toTextAlign(data.props['textAlign']);
     final styleJson = (data.props['textStyle'] ?? data.props['style'])
@@ -44,11 +42,10 @@ class DUIRichTextBuilder extends DUIWidgetBuilder {
   }
 
   List<TextSpan>? _toTextSpan(BuildContext context, dynamic textSpan) {
-    final eval = DUIWidgetScope.of(context)!.eval;
     if (textSpan == null) return null;
 
     if (textSpan is String) {
-      final value = eval<String>(textSpan);
+      final value = eval<String>(textSpan, context: context);
       return value == null ? null : [TextSpan(text: value)];
     }
 
@@ -60,10 +57,10 @@ class DUIRichTextBuilder extends DUIWidgetBuilder {
           TextStyle? style;
 
           if (span is String) {
-            text = eval<String>(span);
+            text = eval<String>(span, context: context);
             style = null;
           } else {
-            text = eval<String>(span['text']);
+            text = eval<String>(span['text'], context: context);
             final styleJson =
                 span['spanStyle'] ?? span['textStyle'] ?? span['style'];
 

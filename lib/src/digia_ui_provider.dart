@@ -1,6 +1,7 @@
-import 'package:digia_ui/digia_ui.dart';
-import 'package:digia_ui/src/digia_ui_service.dart';
 import 'package:flutter/material.dart';
+
+import '../digia_ui.dart';
+import 'digia_ui_service.dart';
 
 class DigiaUIProvider extends InheritedWidget {
   late final DigiaUIService service;
