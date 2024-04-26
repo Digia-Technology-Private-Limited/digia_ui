@@ -35,13 +35,7 @@ class DUIIconBuilder extends DUIWidgetBuilder {
     iconData ??= getIconData(icondataMap: props['iconData']);
 
     return Icon(iconData,
-        size: eval<double>(
-          props['iconSize'],
-          (p0) => p0 as double?,
-        ),
-        color: eval<String>(
-          props['iconColor'],
-          (p0) => p0 as String?,
-        ).let(toColor));
+        size: eval<double>(props['iconSize']),
+        color: eval<String>(props['iconColor']).let(toColor));
   }
 }

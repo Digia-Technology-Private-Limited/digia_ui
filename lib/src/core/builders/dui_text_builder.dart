@@ -21,12 +21,10 @@ class DUITextBuilder extends DUIWidgetBuilder {
 
   @override
   Widget build(BuildContext context) {
-    final evaluateExpression = DUIWidgetScope.of(context)!.eval;
-    final text =
-        evaluateExpression<String>(data.props['text'], (p0) => p0 as String?);
+    final eval = DUIWidgetScope.of(context)!.eval;
+    final text = eval<String>(data.props['text']);
     final style = toTextStyle(DUITextStyle.fromJson(data.props['textStyle']));
-    final maxLines =
-        evaluateExpression<int>(data.props['maxLines'], (p0) => p0 as int?);
+    final maxLines = eval<int>(data.props['maxLines']);
     final overflow = DUIDecoder.toTextOverflow(data.props['overflow']);
     final textAlign = DUIDecoder.toTextAlign(data.props['textAlign']);
 

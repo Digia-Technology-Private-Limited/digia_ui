@@ -48,8 +48,7 @@ class DUIButtonBuilder extends DUIWidgetBuilder {
         }));
 
     final isDisabled =
-        eval<bool>(data.props['isDisabled'], ((p0) => p0 as bool?)) ??
-            data.props['onClick'] == null;
+        eval<bool>(data.props['isDisabled']) ?? data.props['onClick'] == null;
 
     final disabledTextColor = disabledStyleJson['disabledTextColor'] as String?;
     final disabledIconColor = disabledStyleJson['disabledIconColor'] as String?;

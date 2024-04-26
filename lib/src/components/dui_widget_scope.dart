@@ -33,15 +33,17 @@ class DUIWidgetScope extends InheritedWidget {
     return context.dependOnInheritedWidgetOfExactType<DUIWidgetScope>();
   }
 
-  T? eval<T extends Object>(
-      dynamic expression, T? Function(dynamic) fromJsonT) {
+  T? eval<T extends Object>(Object? expression,
+      [T? Function(dynamic)? fromJsonT]) {
     if (expression == null) return null;
 
-    if (!_hasExpression(expression)) return fromJsonT(expression);
+    if (!_hasExpression(expression)) {
+      return fromJsonT?.call(expression) ?? expression.typedValue<T>();
+    }
 
     final variables = pageVars?.map((k, v) => MapEntry(k, v.value));
 
-    return Expression.eval(expression,
+    return Expression.eval(expression as String,
             ExprContext(variables: variables ?? {}, enclosing: enclosing))
         ?.typedValue<T>();
   }

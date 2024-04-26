@@ -59,7 +59,7 @@ extension EmailValidator on String {
 }
 
 extension ObjectExt on Object? {
-  R? typedValue<R extends Object>({R? defaultValue}) {
+  R? typedValue<R>({R? defaultValue}) {
     final value = this;
     if (this == null) return defaultValue;
     if (value is R) return value;

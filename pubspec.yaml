@@ -79,9 +79,9 @@ dependencies:
   webview_flutter: ^4.7.0
   digia_expr:
     git:
-      url: https://github.com/Digia-Technology-Private-Limited/digia_expr.git
+      url: git@github.com:Digia-Technology-Private-Limited/digia_expr.git
       ref: main
-#    path: ../digia_expr
+    # path: ../digia_expr
 
 dev_dependencies:
   flutter_test:
