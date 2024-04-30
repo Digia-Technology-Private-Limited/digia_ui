@@ -14,8 +14,8 @@ class DUIWebViewBuilder extends DUIWidgetBuilder {
   Widget build(BuildContext context) {
     final url = data.props['url'] as String;
     WebViewController controller = WebViewController()
-    ..setJavaScriptMode(JavaScriptMode.unrestricted)
-    ..loadRequest(Uri.parse(url));
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..loadRequest(Uri.parse(url));
 
     return WebViewWidget(
       controller: controller,
