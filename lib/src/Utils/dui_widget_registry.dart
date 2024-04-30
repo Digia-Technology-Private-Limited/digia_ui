@@ -22,6 +22,7 @@ import 'package:digia_ui/src/core/builders/dui_youtube_player_builder.dart';
 import 'package:digia_ui/src/core/json_widget_builder.dart';
 import 'package:digia_ui/src/core/page/props/dui_widget_json_data.dart';
 import 'package:flutter/material.dart';
+import '../core/builders/dui_rich_text_builder.dart';
 
 typedef WidgetFromJsonFn<T extends Widget> = T Function(
     Map<String, dynamic> json);
@@ -45,7 +46,7 @@ class DUIWidgetRegistry {
     'digia/icon': withoutRegistry(DUIIconBuilder.create),
     'digia/htmlView': withoutRegistry(DUIHtmlViewBuilder.create),
     'digia/avatar': withoutRegistry(DUIAvatarBuilder.create),
-    'digia/richText': withoutRegistry(DUITextBuilder.create),
+    'digia/richText': withoutRegistry(DUIRichTextBuilder.create),
     'digia/text': withoutRegistry(DUITextBuilder.create),
     'digia/button': withoutRegistry(DUIButtonBuilder.create),
     'digia/image': withoutRegistry(DUIImageBuilder.create),

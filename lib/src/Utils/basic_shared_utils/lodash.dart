@@ -1,4 +1,5 @@
 import 'package:digia_ui/src/Utils/extensions.dart';
+import 'package:flutter/material.dart';
 
 Map<String, T> keyBy<T>(
   Iterable<T> list,
@@ -68,46 +69,34 @@ extension MoveElement<T> on List<T> {
   }
 }
 
-T? castOrNull<T>(dynamic x) {
-  try {
-    return cast<T>(x);
-  } catch (_) {
-    // ignore: avoid_print
-    print('CastError when trying to cast $x to $T!');
-    return null;
+extension CastExt<T> on T? {
+  /// Tries to cast this object to given type [R]. Returns null if the cast
+  /// fails.
+  R? tryCast<R>() {
+    if (this == null) return null;
+    try {
+      return this as R;
+    } catch (e) {
+      // ignore: avoid_print
+      debugPrint(
+          'CastError when trying to cast $this to $T!. Error: ${e.toString()}');
+      return null;
+    }
   }
+
+  R cast<R>() => this as R;
 }
 
-T castOrDefault<T>(dynamic x, {required T defaultValue}) {
-  try {
-    return cast<T>(x);
-  } on Error catch (_) {
-    // ignore: avoid_print
-    print('CastError when trying to cast $x to $T!');
-    return defaultValue;
-  }
-}
-
-T cast<T>(dynamic x) => x as T;
-
-R? ifNotNull<R, T>(T? arg, R? Function(T) f) => (arg == null) ? null : f(arg);
+R? ifNotNull<R, T>(T? t, R? Function(T) fn) => (t == null) ? null : fn(t);
 
 R? ifNotNull2<R, T0, T1>(T0? arg0, T1? arg1, R? Function(T0, T1) f) =>
     (arg0 != null && arg1 != null) ? f(arg0, arg1) : null;
 
-// R? ifTruthy<R, T>(T? arg, R? Function(T) f) =>
-//     // ignore: null_check_on_nullable_type_parameter
-//     arg.isNullEmptyFalseOrZero ? null : f(arg!);
-
 extension Let<T> on T? {
-  R? let<R>(R? Function(T) f) {
-    if (this == null) return null;
+  R? let<R>(R? Function(T) f) => ifNotNull(this, f);
 
-    return f(this as T);
-  }
-
-  R? letIf<R>(bool Function(T) predicate, R? Function(T) block) {
-    return this.let((p0) => predicate(p0) ? block(this as T) : null);
+  R? letIf<R>(bool Function(T) predicate, R? Function(T) f) {
+    return this.let((p0) => predicate(p0) ? f(this as T) : null);
   }
 
   R? letIfTrue<R>(R? Function(T) block) {
@@ -115,10 +104,10 @@ extension Let<T> on T? {
   }
 }
 
+extension LetDynamic on dynamic {
+  R? let<R>(R? Function(dynamic) fn) => ifNotNull(this, fn);
+}
+
 extension Let2<T, R> on (T?, R?) {
-  S? let<S>(S Function(T, R) block) {
-    return (this.$1 != null && this.$2 != null)
-        ? block(this.$1 as T, this.$2 as R)
-        : null;
-  }
+  S? let<S>(S Function(T, R) f) => ifNotNull2(this.$1, this.$2, f);
 }

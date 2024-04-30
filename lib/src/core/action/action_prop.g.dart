@@ -8,7 +8,7 @@ part of 'action_prop.dart';
 
 ActionProp _$ActionPropFromJson(Map<String, dynamic> json) => ActionProp(
       type: json['type'] as String,
-      data: json['data'] as Map<String, dynamic>,
+      data: json['data'] as Map<String, dynamic>? ?? const {},
     );
 
 Map<String, dynamic> _$ActionPropToJson(ActionProp instance) =>

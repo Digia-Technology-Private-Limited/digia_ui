@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:digia_ui/src/components/DUIText/dui_text_style.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -12,15 +10,10 @@ class DUITextSpan {
   DUITextStyle? spanStyle;
   String? url;
 
-  DUITextSpan();
+  DUITextSpan({this.text, this.spanStyle, this.url});
 
   factory DUITextSpan.fromJson(Map<String, dynamic> json) =>
       _$DUITextSpanFromJson(json);
 
   Map<String, dynamic> toJson() => _$DUITextSpanToJson(this);
-
-  @override
-  String toString() {
-    return jsonEncode(this);
-  }
 }
