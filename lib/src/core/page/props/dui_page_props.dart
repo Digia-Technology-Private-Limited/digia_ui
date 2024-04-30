@@ -89,9 +89,23 @@ class PageLayoutJsonConverter
       };
     });
 
+    final Map<String, List<DUIWidgetJsonData>>? persistentFootersProps =
+        ifNotNull(json['footer']?['root'] as Map<String, dynamic>?, (p0) {
+      if (p0['type'] == 'digia/floatingActionButton') {
+        return {
+          'floatingActionButton': [DUIWidgetJsonData.fromJson(p0)]
+        };
+      }
+
+      return null;
+    });
+
     return PageLayoutProps(
-        root: DUIWidgetJsonData(
-            type: 'fw/scaffold', children: {...?appBarProps, ...?bodyProps}));
+        root: DUIWidgetJsonData(type: 'fw/scaffold', children: {
+      ...?appBarProps,
+      ...?bodyProps,
+      ...?persistentFootersProps
+    }));
   }
 
   @override

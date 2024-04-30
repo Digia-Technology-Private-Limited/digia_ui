@@ -2,12 +2,17 @@ import 'package:digia_ui/src/core/builders/dui_carousel_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_app_bar_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_avatar_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_button_builder.dart';
+import 'package:digia_ui/src/core/builders/dui_container2_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_expandable_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_flex_builder.dart';
+import 'package:digia_ui/src/core/builders/dui_floating_action_button_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_gridview_builder.dart';
+import 'package:digia_ui/src/core/builders/dui_htmlview_builder.dart';
+import 'package:digia_ui/src/core/builders/dui_icon_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_image_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_listview_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_lottie_builder.dart';
+import 'package:digia_ui/src/core/builders/dui_scaffold_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_sized_box_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_spacer_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_stack_builder.dart';
@@ -17,11 +22,6 @@ import 'package:digia_ui/src/core/builders/dui_youtube_player_builder.dart';
 import 'package:digia_ui/src/core/json_widget_builder.dart';
 import 'package:digia_ui/src/core/page/props/dui_widget_json_data.dart';
 import 'package:flutter/material.dart';
-
-import '../core/builders/dui_container2_builder.dart';
-import '../core/builders/dui_htmlview_builder.dart';
-import '../core/builders/dui_icon_builder.dart';
-import '../core/builders/dui_scaffold_builder.dart';
 
 typedef WidgetFromJsonFn<T extends Widget> = T Function(
     Map<String, dynamic> json);
@@ -71,6 +71,8 @@ class DUIWidgetRegistry {
     'digia/youtubePlayer': (data, {registry}) =>
         DUIYoutubePlayerBuilder.create(data),
     'digia/stack': (data, {registry}) => DUIStackBuilder.create(data),
+    'digia/floatingActionButton':
+        withoutRegistry(DUIFloatingActionButtonBuilder.create),
   };
 
   static const DUIWidgetRegistry shared = DUIWidgetRegistry();
