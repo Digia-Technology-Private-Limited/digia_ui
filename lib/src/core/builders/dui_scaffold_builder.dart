@@ -1,5 +1,6 @@
 import 'package:digia_ui/src/Utils/basic_shared_utils/lodash.dart';
 import 'package:digia_ui/src/components/dui_widget.dart';
+import 'package:digia_ui/src/components/floating_action_button/floating_action_button.dart';
 import 'package:digia_ui/src/core/flutter_widgets.dart';
 import 'package:digia_ui/src/core/json_widget_builder.dart';
 import 'package:flutter/material.dart';
@@ -23,11 +24,22 @@ class DUIScaffoldBuilder extends DUIWidgetBuilder {
       return FW.appBar(root.props);
     });
 
+    final floatingActionButton =
+        (data.children['floatingActionButton']?.firstOrNull).let((root) {
+      if (root.type != 'digia/floatingActionButton') {
+        return null;
+      }
+
+      return DUIFloatingActionButton.floatingActionButton(
+          root.props, context, data);
+    });
+
     return Scaffold(
       appBar: appBar,
       body: data.children['body']?.firstOrNull.let((p0) {
         return SafeArea(child: DUIWidget(data: p0));
       }),
+      floatingActionButton: floatingActionButton,
     );
   }
 }

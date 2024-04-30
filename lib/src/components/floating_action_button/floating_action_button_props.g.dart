@@ -9,7 +9,11 @@ part of 'floating_action_button_props.dart';
 DUIFloatingActionButtonProps _$DUIFloatingActionButtonPropsFromJson(
         Map<String, dynamic> json) =>
     DUIFloatingActionButtonProps(
-      icon: json['icon'] as Map<String, dynamic>?,
+      buttonText: json['buttonText'] == null
+          ? null
+          : DUITextProps.fromJson(json['buttonText']),
+      leadingIcon: json['leadingIcon'] as Map<String, dynamic>?,
+      trailingIcon: json['trailingIcon'] as Map<String, dynamic>?,
       bgColor: json['bgColor'] as String?,
       enableFeedback: json['enableFeedback'] as bool?,
       elevation: (json['elevation'] as num?)?.toDouble(),
@@ -24,7 +28,9 @@ DUIFloatingActionButtonProps _$DUIFloatingActionButtonPropsFromJson(
 Map<String, dynamic> _$DUIFloatingActionButtonPropsToJson(
         DUIFloatingActionButtonProps instance) =>
     <String, dynamic>{
-      'icon': instance.icon,
+      'buttonText': instance.buttonText,
+      'leadingIcon': instance.leadingIcon,
+      'trailingIcon': instance.trailingIcon,
       'bgColor': instance.bgColor,
       'enableFeedback': instance.enableFeedback,
       'elevation': instance.elevation,

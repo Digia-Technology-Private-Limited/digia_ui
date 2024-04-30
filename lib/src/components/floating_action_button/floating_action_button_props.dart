@@ -1,11 +1,14 @@
+import 'package:digia_ui/src/components/DUIText/dui_text_props.dart';
 import 'package:digia_ui/src/core/action/action_prop.dart';
 import 'package:json_annotation/json_annotation.dart';
-
 part 'floating_action_button_props.g.dart';
 
 @JsonSerializable()
 class DUIFloatingActionButtonProps {
-  final Map<String, dynamic>? icon;
+  final DUITextProps? buttonText;
+  final Map<String, dynamic>? leadingIcon;
+  final Map<String, dynamic>? trailingIcon;
+  final double? extendedIconLabelSpacing;
   final String? bgColor;
   final bool? enableFeedback;
   final double? elevation;
@@ -15,7 +18,10 @@ class DUIFloatingActionButtonProps {
   final bool? isExtended;
 
   DUIFloatingActionButtonProps(
-      {this.icon,
+      {this.buttonText,
+      this.leadingIcon,
+      this.trailingIcon,
+      this.extendedIconLabelSpacing,
       this.bgColor,
       this.enableFeedback,
       this.elevation,
