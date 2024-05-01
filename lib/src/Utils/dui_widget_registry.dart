@@ -5,6 +5,7 @@ import 'package:digia_ui/src/core/builders/dui_button_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_expandable_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_flex_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_gridview_builder.dart';
+import 'package:digia_ui/src/core/builders/dui_icon_button_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_image_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_listview_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_lottie_builder.dart';
@@ -23,6 +24,7 @@ import '../core/builders/dui_htmlview_builder.dart';
 import '../core/builders/dui_icon_builder.dart';
 import '../core/builders/dui_rich_text_builder.dart';
 import '../core/builders/dui_scaffold_builder.dart';
+import '../core/builders/dui_webview_builder.dart';
 
 typedef WidgetFromJsonFn<T extends Widget> = T Function(
     Map<String, dynamic> json);
@@ -49,7 +51,9 @@ class DUIWidgetRegistry {
     'digia/richText': withoutRegistry(DUIRichTextBuilder.create),
     'digia/text': withoutRegistry(DUITextBuilder.create),
     'digia/button': withoutRegistry(DUIButtonBuilder.create),
+    'digia/iconButton': withoutRegistry(DUIIconButtonBuilder.create),
     'digia/image': withoutRegistry(DUIImageBuilder.create),
+    'digia/webView': withoutRegistry(DUIWebViewBuilder.create),
     'digia/listView': (data, {registry}) =>
         DUIListViewBuilder.create(data, registry: DUIWidgetRegistry.shared),
     'digia/gridView': (data, {registry}) =>
