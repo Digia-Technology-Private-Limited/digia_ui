@@ -1,7 +1,5 @@
 import 'package:digia_ui/src/Utils/basic_shared_utils/lodash.dart';
 import 'package:digia_ui/src/components/dui_widget.dart';
-import 'package:digia_ui/src/core/builders/dui_json_widget_builder.dart';
-import 'package:digia_ui/src/core/builders/dui_persistent_footer_buttons.dart';
 import 'package:digia_ui/src/core/flutter_widgets.dart';
 import 'package:digia_ui/src/core/json_widget_builder.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +28,14 @@ class DUIScaffoldBuilder extends DUIWidgetBuilder {
       if (root.type != 'digia/persistentFooterButtons') {
         return null;
       }
-      return DUIPersistentFooterButtons.listOfButtons(data, registry!, context);
+
+      List<Widget> persistentFooterButtonsList = List.generate(
+          data.children['persistentFooterButtons']!.first.children.length,
+          (index) => DUIWidget(
+              data: data.children['persistentFooterButtons']!.first
+                  .children['children']![index]));
+
+      return persistentFooterButtonsList;
     });
 
     return Scaffold(
