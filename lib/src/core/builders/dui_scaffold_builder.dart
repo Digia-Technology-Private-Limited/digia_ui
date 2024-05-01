@@ -26,6 +26,21 @@ class DUIScaffoldBuilder extends DUIWidgetBuilder {
       return FW.appBar(root.props);
     });
 
+    final persistentFooterButtons =
+        (data.children['persistentFooterButtons']?.firstOrNull).let((root) {
+      if (root.type != 'digia/persistentFooterButtons') {
+        return null;
+      }
+
+      List<Widget> persistentFooterButtonsList = List.generate(
+          data.children['persistentFooterButtons']!.first.children.length,
+          (index) => DUIWidget(
+              data: data.children['persistentFooterButtons']!.first
+                  .children['children']![index]));
+
+      return persistentFooterButtonsList;
+    });
+
     final floatingActionButton =
         (data.children['floatingActionButton']?.firstOrNull).let((root) {
       if (root.type != 'digia/floatingActionButton') {
@@ -50,6 +65,7 @@ class DUIScaffoldBuilder extends DUIWidgetBuilder {
       body: data.children['body']?.firstOrNull.let((p0) {
         return SafeArea(child: DUIWidget(data: p0));
       }),
+      persistentFooterButtons: persistentFooterButtons,
       floatingActionButton: floatingActionButton,
       floatingActionButtonLocation: DUIFloatingActionButtonLocation.fabLocation(
           floatingActionButtonProps),
