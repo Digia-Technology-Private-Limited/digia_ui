@@ -3,6 +3,7 @@ import 'package:digia_ui/src/components/dui_widget.dart';
 import 'package:digia_ui/src/core/flutter_widgets.dart';
 import 'package:digia_ui/src/core/json_widget_builder.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import '../page/props/dui_widget_json_data.dart';
 
@@ -22,9 +23,26 @@ class DUIScaffoldBuilder extends DUIWidgetBuilder {
 
       return FW.appBar(root.props);
     });
+    var fToast = FToast();
 
     return Scaffold(
-      appBar: appBar,
+      appBar: PreferredSize(
+        preferredSize: const Size(30, 100),
+        child: MouseRegion(
+          onEnter: (d) {
+            fToast.init(context);
+            fToast.showToast(
+              child: Text(
+                  'Toast Appeared, widgetId=> ${data.children['appBar']?.first}'),
+              toastDuration: const Duration(seconds: 4),
+            );
+          },
+          onExit: (d) {
+            fToast.removeCustomToast();
+          },
+          child: appBar!,
+        ),
+      ),
       body: data.children['body']?.firstOrNull.let((p0) {
         return SafeArea(child: DUIWidget(data: p0));
       }),

@@ -80,7 +80,8 @@ dependencies:
     git:
       url: git@github.com:Digia-Technology-Private-Limited/digia_expr.git
       ref: main
-    # path: ../digia_expr
+  fluttertoast: ^8.2.5
+  # path: ../digia_expr
 
 dev_dependencies:
   flutter_test:

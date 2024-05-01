@@ -8,6 +8,7 @@ part of 'dui_widget_json_data.dart';
 
 DUIWidgetJsonData _$DUIWidgetJsonDataFromJson(Map<String, dynamic> json) =>
     DUIWidgetJsonData(
+          id: json['id'] as String?,
       type: json['type'] as String,
       props: json['props'] as Map<String, dynamic>?,
       containerProps: json['containerProps'] as Map<String, dynamic>?,
@@ -17,6 +18,7 @@ DUIWidgetJsonData _$DUIWidgetJsonDataFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$DUIWidgetJsonDataToJson(DUIWidgetJsonData instance) =>
     <String, dynamic>{
       'type': instance.type,
+      'id': instance.id,
       'children': instance.children,
       'props': instance.props,
       'containerProps': instance.containerProps,

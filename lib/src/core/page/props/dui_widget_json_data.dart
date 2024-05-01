@@ -5,15 +5,18 @@ part 'dui_widget_json_data.g.dart';
 @JsonSerializable()
 class DUIWidgetJsonData {
   String type;
+  String? id;
   Map<String, dynamic> _props;
   Map<String, dynamic> _containerProps;
   @JsonKey(fromJson: _childrenFromJson)
   Map<String, List<DUIWidgetJsonData>> children;
 
   Map<String, dynamic> get props => _props;
+
   Map<String, dynamic> get containerProps => _containerProps;
 
   DUIWidgetJsonData({
+    this.id,
     required this.type,
     Map<String, dynamic>? props,
     Map<String, dynamic>? containerProps,
