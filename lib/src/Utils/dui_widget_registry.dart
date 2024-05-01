@@ -78,9 +78,9 @@ class DUIWidgetRegistry {
     'digia/youtubePlayer': (data, {registry}) =>
         DUIYoutubePlayerBuilder.create(data),
     'digia/stack': (data, {registry}) => DUIStackBuilder.create(data),
-    'digia/tab_view': (data, {registry}) =>
+    'digia/tabView': (data, {registry}) =>
         DUITabViewBuilder.create(data, registry: DUIWidgetRegistry.shared),
-    'digia/tab_view_item': (data, {registry}) =>
+    'digia/tabViewItem': (data, {registry}) =>
         DUITabViewItemBuilder.create(data, registry: DUIWidgetRegistry.shared)
   };
 
