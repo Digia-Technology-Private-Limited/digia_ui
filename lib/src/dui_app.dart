@@ -73,7 +73,7 @@ class DUIApp extends StatelessWidget {
           final initialRouteData =
               DigiaUIClient.getConfigResolver().getfirstPageData();
 
-          return DUIPage(pageUid: initialRouteData.identifier);
+          return DUIPage(pageUid: initialRouteData.uid);
         },
       ),
     );
