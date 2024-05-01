@@ -5,21 +5,13 @@ part 'dui_page_state.g.dart';
 
 @CopyWith()
 class DUIPageState {
-  final String uid;
-  DUIPageProps? props;
+  final String pageUid;
+  DUIPageProps props;
   bool isLoading;
 
   DUIPageState({
-    required this.uid,
-    this.props,
+    required this.pageUid,
+    required this.props,
     this.isLoading = false,
   });
-}
-
-class DUIPageInitData {
-  // This is unique & might be 'slug' for now.
-  String identifier;
-  Map<String, dynamic> config;
-
-  DUIPageInitData({required this.identifier, required this.config});
 }

@@ -3,6 +3,8 @@ import 'package:json_annotation/json_annotation.dart';
 
 import 'package:digia_ui/src/core/page/props/dui_widget_json_data.dart';
 
+import '../../../models/variable_def.dart';
+
 part 'dui_page_props.g.dart';
 
 @JsonSerializable()
@@ -10,6 +12,8 @@ class DUIPageProps {
   String uid;
   dynamic actions;
   dynamic inputArgs;
+  @VariablesJsonConverter()
+  Map<String, VariableDef>? variables;
   @PageLayoutJsonConverter()
   PageLayoutProps? layout;
 
@@ -17,6 +21,7 @@ class DUIPageProps {
     required this.uid,
     this.actions,
     this.inputArgs,
+    this.variables,
     required this.layout,
   });
 
@@ -89,9 +94,23 @@ class PageLayoutJsonConverter
       };
     });
 
+    final Map<String, List<DUIWidgetJsonData>>? persistentFooterProps =
+        ifNotNull(json['footer']?['root'] as Map<String, dynamic>?, (p0) {
+      if (p0['type'] == 'digia/floatingActionButton') {
+        return {
+          'floatingActionButton': [DUIWidgetJsonData.fromJson(p0)]
+        };
+      }
+
+      return null;
+    });
+
     return PageLayoutProps(
-        root: DUIWidgetJsonData(
-            type: 'fw/scaffold', children: {...?appBarProps, ...?bodyProps}));
+        root: DUIWidgetJsonData(type: 'fw/scaffold', children: {
+      ...?appBarProps,
+      ...?bodyProps,
+      ...?persistentFooterProps
+    }));
   }
 
   @override

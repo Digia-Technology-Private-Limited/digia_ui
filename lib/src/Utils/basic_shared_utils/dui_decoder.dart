@@ -110,7 +110,7 @@ class DUIDecoder {
     return TextOverflow.clip;
   }
 
-  static TextDecoration toTextDecoration(String? textDecorationToken) {
+  static TextDecoration? toTextDecoration(String? textDecorationToken) {
     switch (textDecorationToken) {
       case 'underline':
         return TextDecoration.underline;
@@ -118,8 +118,10 @@ class DUIDecoder {
         return TextDecoration.overline;
       case 'lineThrough':
         return TextDecoration.lineThrough;
-      default:
+      case 'none':
         return TextDecoration.none;
+      default:
+        return null;
     }
   }
 
@@ -184,17 +186,70 @@ class DUIDecoder {
         _ => BoxFit.none
       };
 
-  static EdgeInsets toEdgeInsets(Map<String, dynamic>? insets) {
-    if (insets == null) {
-      return EdgeInsets.zero;
+  static EdgeInsets toEdgeInsets(dynamic value,
+      {EdgeInsets or = EdgeInsets.zero}) {
+    if (value == null) return or;
+
+    if (value is List) {
+      return _toEdgeInsetsFromList(
+              value.map((e) => NumDecoder.toDouble(e)).nonNulls.toList()) ??
+          or;
     }
 
-    return EdgeInsets.fromLTRB(
-      NumDecoder.toDoubleOrDefault(insets['left'], defaultValue: 0),
-      NumDecoder.toDoubleOrDefault(insets['top'], defaultValue: 0),
-      NumDecoder.toDoubleOrDefault(insets['right'], defaultValue: 0),
-      NumDecoder.toDoubleOrDefault(insets['bottom'], defaultValue: 0),
-    );
+    if (value is String) {
+      return _toEdgeInsetsFromList(value
+              .split(',')
+              .map((e) => NumDecoder.toDouble(e))
+              .nonNulls
+              .toList()) ??
+          or;
+    }
+
+    if (value is num) {
+      return _toEdgeInsetsFromList([value.toDouble()]) ?? or;
+    }
+
+    if (value is Map<String, dynamic>) {
+      if (value['all'] != null) {
+        return EdgeInsets.all(
+            NumDecoder.toDoubleOrDefault(value['all'], defaultValue: 0));
+      }
+
+      if (value['horizontal'] != null && value['vertical'] != null) {
+        return EdgeInsets.symmetric(
+            horizontal: NumDecoder.toDoubleOrDefault(value['horizontal'],
+                defaultValue: 0),
+            vertical: NumDecoder.toDoubleOrDefault(value['vertical'],
+                defaultValue: 0));
+      }
+
+      return EdgeInsets.fromLTRB(
+        NumDecoder.toDoubleOrDefault(value['left'], defaultValue: 0),
+        NumDecoder.toDoubleOrDefault(value['top'], defaultValue: 0),
+        NumDecoder.toDoubleOrDefault(value['right'], defaultValue: 0),
+        NumDecoder.toDoubleOrDefault(value['bottom'], defaultValue: 0),
+      );
+    }
+
+    try {
+      return toEdgeInsets(value.toJson(), or: or);
+    } catch (err) {
+      return or;
+    }
+  }
+
+  static EdgeInsets? _toEdgeInsetsFromList(List<double> values) {
+    if (values.length == 1) return EdgeInsets.all(values.first);
+
+    if (values.length == 2) {
+      return EdgeInsets.symmetric(horizontal: values[0], vertical: values[1]);
+    }
+
+    if (values.length == 4) {
+      return EdgeInsets.fromLTRB(values[0], values[1], values[2], values[3]);
+    }
+
+    return null;
   }
 
   static ScrollPhysics? toScrollPhysics(dynamic physics) {
@@ -500,5 +555,36 @@ class DUIDecoder {
       'antiAliasWithSaveLayer' => Clip.antiAliasWithSaveLayer,
       _ => defaultValue
     };
+  }
+
+  static double? getWidth(BuildContext context, dynamic value) {
+    return _compute(MediaQuery.of(context).size.width, value);
+  }
+
+  static double? getHeight(BuildContext context, dynamic value) {
+    return _compute(MediaQuery.of(context).size.height, value);
+  }
+
+  static double? _compute(double extent, dynamic value) {
+    if (value == null) return null;
+
+    if (value is num) return value.toDouble();
+
+    if (value is! String) {
+      return null;
+    }
+
+    final s = value.trim();
+    if (s.isEmpty) return null;
+
+    if (s.characters.last == '%') {
+      final substring = s.substring(0, s.length - 1);
+      final factor = double.tryParse(substring);
+      if (factor == null) return null;
+
+      return extent * (factor / 100);
+    }
+
+    return double.tryParse(s);
   }
 }

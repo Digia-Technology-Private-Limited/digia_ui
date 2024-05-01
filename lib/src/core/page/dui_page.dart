@@ -1,46 +1,66 @@
+import 'package:digia_expr/digia_expr.dart';
 import 'package:digia_ui/digia_ui.dart';
 import 'package:digia_ui/src/Utils/basic_shared_utils/lodash.dart';
 import 'package:digia_ui/src/core/page/dui_page_bloc.dart';
 import 'package:digia_ui/src/core/page/dui_page_state.dart';
+import 'package:digia_ui/src/types.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../components/dui_widget_scope.dart';
 import 'dui_page_event.dart';
 
 class DUIPage extends StatelessWidget {
   final String pageUid;
-  final Function(String methodId, Map<String, dynamic>? data)?
-      onExternalMethodCalled;
-  final Map<String, dynamic>? pageArguments;
+  final Map<String, dynamic>? _pageArgs;
+  final DUIIconDataProvider? iconDataProvider;
+  final DUIImageProviderFn? imageProviderFn;
+  final DUITextStyleBuilder? textStyleBuilder;
+  final DUIExternalFunctionHandler? externalFunctionHandler;
+  final DUIConfig _config;
 
-  const DUIPage({
-    super.key,
-    required this.pageUid,
-    this.pageArguments,
-    this.onExternalMethodCalled,
-  });
+  DUIPage(
+      {super.key,
+      required this.pageUid,
+      Map<String, dynamic>? pageArgs,
+      this.iconDataProvider,
+      this.imageProviderFn,
+      this.textStyleBuilder,
+      this.externalFunctionHandler,
+      DUIConfig? config})
+      : _pageArgs = pageArgs,
+        _config = config ?? DigiaUIClient.instance.config;
 
   @override
   Widget build(BuildContext context) {
-    final configResolver = DigiaUIClient.getConfigResolver();
     return BlocProvider(
       create: (context) {
         return DUIPageBloc(
-            onExternalMethodCalled: onExternalMethodCalled,
-            initData: DUIPageInitData(
-                identifier: pageUid,
-                config: configResolver.getPageConfig(pageUid)!),
-            resolver: configResolver)
-          ..add(
-            InitPageEvent(pageParams: pageArguments),
-          );
+            pageUid: pageUid, onExternalMethodCalled: null, config: _config)
+          ..add(InitPageEvent(pageParams: _pageArgs));
       },
-      child: _DUIScreen(),
+      child: _DUIScreen(
+          iconDataProvider: iconDataProvider,
+          imageProviderFn: imageProviderFn,
+          textStyleBuilder: textStyleBuilder,
+          externalFunctionHandler: externalFunctionHandler),
     );
   }
 }
 
 class _DUIScreen extends StatefulWidget {
+  final DUIIconDataProvider? iconDataProvider;
+  final DUIImageProviderFn? imageProviderFn;
+  final DUITextStyleBuilder? textStyleBuilder;
+  final DUIExternalFunctionHandler? externalFunctionHandler;
+
+  const _DUIScreen({
+    this.iconDataProvider,
+    this.imageProviderFn,
+    this.textStyleBuilder,
+    this.externalFunctionHandler,
+  });
+
   @override
   State<_DUIScreen> createState() => _DUIScreenState();
 }
@@ -60,8 +80,29 @@ class _DUIScreenState extends State<_DUIScreen> {
         )));
       }
 
-      return state.props?.layout?.root.let((p0) => DUIWidget(data: p0)) ??
-          Center(child: Text('Props not found for page: ${state.uid}'));
+      return state.props.layout?.root.let((p0) {
+            return DUIWidgetScope(
+                iconDataProvider: widget.iconDataProvider,
+                imageProviderFn: widget.imageProviderFn,
+                textStyleBuilder: widget.textStyleBuilder,
+                externalFunctionHandler: widget.externalFunctionHandler,
+                pageVars: state.props.variables,
+                enclosing: ExprContext(variables: {
+                  'appState': AppStateClass(
+                      fields: DigiaUIClient.instance.appState.variables
+                          ?.map((k, v) => MapEntry(k, v.value)))
+                }),
+                child: DUIWidget(data: p0));
+          }) ??
+          Center(child: Text('Props not found for page: ${state.pageUid}'));
     });
   }
+}
+
+// ignore: non_constant_identifier_names
+ExprClassInstance AppStateClass(
+    {Map<String, Object?>? fields, Map<String, ExprCallable>? methods}) {
+  return ExprClassInstance(
+      klass: ExprClass(
+          name: 'AppState', fields: fields ?? {}, methods: methods ?? {}));
 }
