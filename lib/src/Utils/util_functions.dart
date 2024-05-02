@@ -105,6 +105,7 @@ OutlinedBorder? toButtonShape(dynamic value) {
     return switch (value) {
       'stadium' => const StadiumBorder(),
       'circle' => const CircleBorder(),
+      'none' => null,
       'roundedRect' || _ => const RoundedRectangleBorder()
     };
   }

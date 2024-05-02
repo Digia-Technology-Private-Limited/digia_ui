@@ -5,12 +5,15 @@ import 'package:digia_ui/src/core/builders/dui_button_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_expandable_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_flex_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_gridview_builder.dart';
+import 'package:digia_ui/src/core/builders/dui_icon_button_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_image_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_listview_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_lottie_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_sized_box_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_spacer_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_stack_builder.dart';
+import 'package:digia_ui/src/core/builders/dui_tab_view_builder.dart';
+import 'package:digia_ui/src/core/builders/dui_tab_view_item_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_text_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_wrap_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_youtube_player_builder.dart';
@@ -23,6 +26,7 @@ import '../core/builders/dui_htmlview_builder.dart';
 import '../core/builders/dui_icon_builder.dart';
 import '../core/builders/dui_rich_text_builder.dart';
 import '../core/builders/dui_scaffold_builder.dart';
+import '../core/builders/dui_webview_builder.dart';
 
 typedef WidgetFromJsonFn<T extends Widget> = T Function(
     Map<String, dynamic> json);
@@ -49,7 +53,9 @@ class DUIWidgetRegistry {
     'digia/richText': withoutRegistry(DUIRichTextBuilder.create),
     'digia/text': withoutRegistry(DUITextBuilder.create),
     'digia/button': withoutRegistry(DUIButtonBuilder.create),
+    'digia/iconButton': withoutRegistry(DUIIconButtonBuilder.create),
     'digia/image': withoutRegistry(DUIImageBuilder.create),
+    'digia/webView': withoutRegistry(DUIWebViewBuilder.create),
     'digia/listView': (data, {registry}) =>
         DUIListViewBuilder.create(data, registry: DUIWidgetRegistry.shared),
     'digia/gridView': (data, {registry}) =>
@@ -72,6 +78,10 @@ class DUIWidgetRegistry {
     'digia/youtubePlayer': (data, {registry}) =>
         DUIYoutubePlayerBuilder.create(data),
     'digia/stack': (data, {registry}) => DUIStackBuilder.create(data),
+    'digia/tabView': (data, {registry}) =>
+        DUITabViewBuilder.create(data, registry: DUIWidgetRegistry.shared),
+    'digia/tabViewItem': (data, {registry}) =>
+        DUITabViewItemBuilder.create(data, registry: DUIWidgetRegistry.shared)
   };
 
   static const DUIWidgetRegistry shared = DUIWidgetRegistry();
