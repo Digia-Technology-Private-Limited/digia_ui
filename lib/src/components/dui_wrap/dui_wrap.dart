@@ -1,4 +1,5 @@
 import 'package:digia_ui/src/Utils/basic_shared_utils/dui_decoder.dart';
+import 'package:digia_ui/src/Utils/extensions.dart';
 import 'package:digia_ui/src/components/dui_widget.dart';
 import 'package:digia_ui/src/components/dui_wrap/dui_wrap_props.dart';
 import 'package:digia_ui/src/core/page/props/dui_widget_json_data.dart';
@@ -28,9 +29,16 @@ class _DUIWrapState extends State<DUIWrap> {
       verticalDirection:
           DUIDecoder.toVerticalDirection(widget.props.verticalDirection),
       clipBehavior: DUIDecoder.toClip(widget.props.clipBehavior),
-      children: widget.children!.map((e) {
-        return DUIWidget(data: e);
-      }).toList(),
+      children: !(widget.children.isNullOrEmpty)
+          ? widget.children!.map((e) {
+              return DUIWidget(data: e);
+            }).toList()
+          : [
+              const Text(
+                'Children field is Empty!',
+                textAlign: TextAlign.center,
+              ),
+            ],
     );
   }
 }
