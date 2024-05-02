@@ -1,4 +1,5 @@
 import 'package:digia_ui/src/Utils/basic_shared_utils/lodash.dart';
+import 'package:digia_ui/src/Utils/extensions.dart';
 import 'package:digia_ui/src/components/dui_widget.dart';
 import 'package:digia_ui/src/components/floating_action_button/floating_action_button.dart';
 import 'package:digia_ui/src/components/floating_action_button/floating_action_button_props.dart';
@@ -27,16 +28,15 @@ class DUIScaffoldBuilder extends DUIWidgetBuilder {
     });
 
     final persistentFooterButtons =
-        (data.children['persistentFooterButtons']?.firstOrNull).let((root) {
-      if (root.type != 'digia/persistentFooterButtons') {
+        (data.children['persistentFooterButtons']?.firstOrNull).let((e) {
+      if (data.children['persistentFooterButtons']!.isNullOrEmpty) {
         return null;
       }
 
       List<Widget> persistentFooterButtonsList = List.generate(
-          data.children['persistentFooterButtons']!.first.children.length,
+          data.children['persistentFooterButtons']!.length,
           (index) => DUIWidget(
-              data: data.children['persistentFooterButtons']!.first
-                  .children['children']![index]));
+              data: data.children['persistentFooterButtons']![index]));
 
       return persistentFooterButtonsList;
     });
