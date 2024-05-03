@@ -17,7 +17,7 @@ class DUIHorizontalDivider extends StatelessWidget {
       thickness: props.thickness,
       indent: props.indent,
       endIndent: props.endIndent,
-      color: props.color.let(toColor),
+      color: props.color.let(toColor) ?? Colors.black,
     );
   }
 }
