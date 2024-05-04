@@ -5,6 +5,7 @@ import 'package:digia_ui/src/core/builders/dui_button_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_expandable_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_flex_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_gridview_builder.dart';
+import 'package:digia_ui/src/core/builders/dui_horizontal_divider_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_icon_button_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_image_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_listview_builder.dart';
@@ -16,6 +17,7 @@ import 'package:digia_ui/src/core/builders/dui_tab_view_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_tab_view_item_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_text_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_video_player_builder.dart';
+import 'package:digia_ui/src/core/builders/dui_vertical_divider_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_wrap_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_youtube_player_builder.dart';
 import 'package:digia_ui/src/core/json_widget_builder.dart';
@@ -83,7 +85,11 @@ class DUIWidgetRegistry {
     'digia/tabView': (data, {registry}) =>
         DUITabViewBuilder.create(data, registry: DUIWidgetRegistry.shared),
     'digia/tabViewItem': (data, {registry}) =>
-        DUITabViewItemBuilder.create(data, registry: DUIWidgetRegistry.shared)
+        DUITabViewItemBuilder.create(data, registry: DUIWidgetRegistry.shared),
+    'digia/horizontalDivider': (data, {registry}) =>
+        DUIHorizontalDividerBuilder.create(data),
+    'digia/verticalDivider': (data, {registry}) =>
+        DUIVerticalDividerBuilder.create(data)
   };
 
   static const DUIWidgetRegistry shared = DUIWidgetRegistry();
