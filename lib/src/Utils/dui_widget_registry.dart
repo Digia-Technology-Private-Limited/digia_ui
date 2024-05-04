@@ -16,6 +16,7 @@ import 'package:digia_ui/src/core/builders/dui_stack_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_tab_view_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_tab_view_item_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_text_builder.dart';
+import 'package:digia_ui/src/core/builders/dui_video_player_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_vertical_divider_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_wrap_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_youtube_player_builder.dart';
@@ -80,6 +81,7 @@ class DUIWidgetRegistry {
     'digia/youtubePlayer': (data, {registry}) =>
         DUIYoutubePlayerBuilder.create(data),
     'digia/stack': (data, {registry}) => DUIStackBuilder.create(data),
+    'digia/videoPlayer': (data, {registry}) => DUIVideoPlayer.create(data),
     'digia/tabView': (data, {registry}) =>
         DUITabViewBuilder.create(data, registry: DUIWidgetRegistry.shared),
     'digia/tabViewItem': (data, {registry}) =>
