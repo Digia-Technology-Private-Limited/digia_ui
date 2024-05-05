@@ -8,17 +8,29 @@ class DUITabViewProps {
   final bool? hasTabs;
   final String? dividerColor;
   final String? tabBarPosition;
-  final String? labelColor;
+  final String? selectedLabelColor;
+  final String? unselectedLabelColor;
   final double? dividerHeight;
   final bool? isScrollable;
   final String? indicatorColor;
   final double? viewportFraction;
-  @JsonKey(fromJson: DUITextStyle.fromJson, includeToJson: false, name: 'style')
-  DUITextStyle? styleClass;
+  @JsonKey(
+      fromJson: DUITextStyle.fromJson,
+      includeToJson: false,
+      name: 'selectedLabelStyle')
+  DUITextStyle? selectedLabelStyle;
+  @JsonKey(
+      fromJson: DUITextStyle.fromJson,
+      includeToJson: false,
+      name: 'unselectedLabelStyle')
+  DUITextStyle? unselectedLabelStyle;
 
   DUITabViewProps(
-      {required this.hasTabs,
-      this.labelColor,
+      {this.hasTabs,
+      this.selectedLabelColor,
+      this.selectedLabelStyle,
+      this.unselectedLabelColor,
+      this.unselectedLabelStyle,
       this.dividerHeight,
       this.indicatorColor,
       this.dividerColor,
