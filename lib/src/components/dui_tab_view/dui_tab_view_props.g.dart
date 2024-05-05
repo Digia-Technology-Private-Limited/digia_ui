@@ -9,21 +9,25 @@ part of 'dui_tab_view_props.dart';
 DUITabViewProps _$DUITabViewPropsFromJson(Map<String, dynamic> json) =>
     DUITabViewProps(
       hasTabs: json['hasTabs'] as bool?,
-      labelColor: json['labelColor'] as String?,
+      selectedLabelColor: json['selectedLabelColor'] as String?,
+      selectedLabelStyle: DUITextStyle.fromJson(json['style']),
+      unselectedLabelColor: json['unselectedLabelColor'] as String?,
+      unselectedLabelStyle: DUITextStyle.fromJson(json['style']),
       dividerHeight: (json['dividerHeight'] as num?)?.toDouble(),
       indicatorColor: json['indicatorColor'] as String?,
       dividerColor: json['dividerColor'] as String?,
       tabBarPosition: json['tabBarPosition'] as String?,
       isScrollable: json['isScrollable'] as bool?,
       viewportFraction: (json['viewportFraction'] as num?)?.toDouble(),
-    )..styleClass = DUITextStyle.fromJson(json['style']);
+    );
 
 Map<String, dynamic> _$DUITabViewPropsToJson(DUITabViewProps instance) =>
     <String, dynamic>{
       'hasTabs': instance.hasTabs,
       'dividerColor': instance.dividerColor,
       'tabBarPosition': instance.tabBarPosition,
-      'labelColor': instance.labelColor,
+      'selectedLabelColor': instance.selectedLabelColor,
+      'unselectedLabelColor': instance.unselectedLabelColor,
       'dividerHeight': instance.dividerHeight,
       'isScrollable': instance.isScrollable,
       'indicatorColor': instance.indicatorColor,

@@ -33,12 +33,18 @@ class _DUITabViewState extends State<DUITabView> {
               Visibility(
                 visible: widget.tabViewProps.hasTabs ?? false,
                 child: TabBar(
+                  unselectedLabelColor: widget.tabViewProps.unselectedLabelColor
+                      .letIfTrue(toColor),
+                  unselectedLabelStyle:
+                      toTextStyle(widget.tabViewProps.unselectedLabelStyle),
                   indicatorColor:
                       widget.tabViewProps.indicatorColor.letIfTrue(toColor),
-                  labelStyle: toTextStyle(widget.tabViewProps.styleClass),
+                  labelStyle:
+                      toTextStyle(widget.tabViewProps.selectedLabelStyle),
                   dividerColor:
                       widget.tabViewProps.dividerColor.letIfTrue(toColor),
-                  labelColor: widget.tabViewProps.labelColor.letIfTrue(toColor),
+                  labelColor:
+                      widget.tabViewProps.selectedLabelColor.letIfTrue(toColor),
                   dividerHeight: widget.tabViewProps.dividerHeight,
                   tabs: List.generate(
                       widget.children.length,
@@ -62,10 +68,16 @@ class _DUITabViewState extends State<DUITabView> {
               Visibility(
                 visible: widget.tabViewProps.hasTabs ?? false,
                 child: TabBar(
-                  labelStyle: toTextStyle(widget.tabViewProps.styleClass),
+                  unselectedLabelColor: widget.tabViewProps.unselectedLabelColor
+                      .letIfTrue(toColor),
+                  unselectedLabelStyle:
+                      toTextStyle(widget.tabViewProps.unselectedLabelStyle),
+                  labelStyle:
+                      toTextStyle(widget.tabViewProps.selectedLabelStyle),
                   dividerColor:
                       widget.tabViewProps.dividerColor.letIfTrue(toColor),
-                  labelColor: widget.tabViewProps.labelColor.letIfTrue(toColor),
+                  labelColor:
+                      widget.tabViewProps.selectedLabelColor.letIfTrue(toColor),
                   dividerHeight: widget.tabViewProps.dividerHeight,
                   indicator: widget.tabViewProps.indicatorColor != null
                       ? BoxDecoration(
