@@ -25,6 +25,7 @@ class DUIFlexBuilder extends DUIWidgetBuilder {
     }
 
     final widget = Flex(
+      mainAxisSize: MainAxisSize.min,
       direction: direction,
       mainAxisAlignment: DUIDecoder.toMainAxisAlginmentOrDefault(
           data.props['mainAxisAlignment'],
@@ -36,17 +37,17 @@ class DUIFlexBuilder extends DUIWidgetBuilder {
           ? data.children['children']!.map((e) {
               return DUIFlexFit(
                   flex:
-                      e.containerProps.valueFor(keyPath: 'expansion.flexValue'),
-                  expansionType:
-                      e.containerProps.valueFor(keyPath: 'expansion.type'),
-                  child: DUIWidget(data: e));
-            }).toList()
+            e.containerProps.valueFor(keyPath: 'expansion.flexValue'),
+            expansionType:
+            e.containerProps.valueFor(keyPath: 'expansion.type'),
+            child: DUIWidget(data: e));
+      }).toList()
           : [
-              const Text(
-                'Children field is Empty!',
-                textAlign: TextAlign.center,
-              ),
-            ],
+        const Text(
+          'Children field is Empty!',
+          textAlign: TextAlign.center,
+        ),
+      ],
     );
 
     if (data.props['isScrollable'] == true) {
