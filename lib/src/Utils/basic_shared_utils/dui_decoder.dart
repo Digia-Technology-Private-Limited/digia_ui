@@ -1,5 +1,6 @@
 import 'package:digia_ui/src/Utils/basic_shared_utils/lodash.dart';
 import 'package:digia_ui/src/Utils/basic_shared_utils/num_decoder.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
@@ -23,6 +24,11 @@ class DUIDecoder {
     return toMainAxisAlginment(value) ?? defaultValue;
   }
 
+  static MainAxisSize toMainAxisSizeOrDefault(String? value,
+      {required MainAxisSize defaultValue}) {
+    return toMainAxisSize(value) ?? defaultValue;
+  }
+
   static CrossAxisAlignment? toCrossAxisAlignment(String? value) {
     if (value == null) return null;
 
@@ -32,6 +38,16 @@ class DUIDecoder {
       'center' => CrossAxisAlignment.center,
       'stretch' => CrossAxisAlignment.stretch,
       'baseline' => CrossAxisAlignment.baseline,
+      _ => null
+    };
+  }
+
+  static MainAxisSize? toMainAxisSize(String? value) {
+    if (value == null) return null;
+
+    return switch (value) {
+      'min' => MainAxisSize.min,
+      'max' => MainAxisSize.max,
       _ => null
     };
   }

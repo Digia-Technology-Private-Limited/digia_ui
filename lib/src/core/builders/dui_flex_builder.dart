@@ -25,7 +25,10 @@ class DUIFlexBuilder extends DUIWidgetBuilder {
     }
 
     final widget = Flex(
-      mainAxisSize: MainAxisSize.min,
+      mainAxisSize: DUIDecoder.toMainAxisSizeOrDefault(
+        data.props['mainAxisSize'],
+        defaultValue: MainAxisSize.min,
+      ),
       direction: direction,
       mainAxisAlignment: DUIDecoder.toMainAxisAlginmentOrDefault(
           data.props['mainAxisAlignment'],
@@ -35,8 +38,8 @@ class DUIFlexBuilder extends DUIWidgetBuilder {
           defaultValue: CrossAxisAlignment.center),
       children: !(data.children['children'].isNullOrEmpty)
           ? data.children['children']!.map((e) {
-              return DUIFlexFit(
-                  flex:
+        return DUIFlexFit(
+            flex:
             e.containerProps.valueFor(keyPath: 'expansion.flexValue'),
             expansionType:
             e.containerProps.valueFor(keyPath: 'expansion.type'),
