@@ -38,6 +38,15 @@ Map<String, ActionHandlerFn> _actionsMap = {
     final pageArgs = action.data['pageArgs'] ?? action.data['args'];
     return openDUIPageInBottomSheet(pageUid: pageUId, context: context, pageArgs: pageArgs);
   },
+  'Action.openImagePicker': ({required action, required context}) {
+    if (action.data['maybe'] == true) {
+      Navigator.of(context).maybePop();
+      return;
+    }
+
+    Navigator.of(context).pop();
+    return;
+  },
   'Action.pop': ({required action, required context}) {
     if (action.data['maybe'] == true) {
       Navigator.of(context).maybePop();
