@@ -10,9 +10,9 @@ DUITabViewProps _$DUITabViewPropsFromJson(Map<String, dynamic> json) =>
     DUITabViewProps(
       hasTabs: json['hasTabs'] as bool?,
       selectedLabelColor: json['selectedLabelColor'] as String?,
-      selectedLabelStyle: DUITextStyle.fromJson(json['style']),
+      selectedLabelStyle: DUITextStyle.fromJson(json['selectedLabelStyle']),
       unselectedLabelColor: json['unselectedLabelColor'] as String?,
-      unselectedLabelStyle: DUITextStyle.fromJson(json['style']),
+      unselectedLabelStyle: DUITextStyle.fromJson(json['unselectedLabelStyle']),
       dividerHeight: (json['dividerHeight'] as num?)?.toDouble(),
       indicatorColor: json['indicatorColor'] as String?,
       dividerColor: json['dividerColor'] as String?,

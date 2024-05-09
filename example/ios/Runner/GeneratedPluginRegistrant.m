@@ -56,7 +56,7 @@
 
 @implementation GeneratedPluginRegistrant
 
-+ (void)registerWithRegistry:(NSObject <FlutterPluginRegistry> *)registry {
++ (void)registerWithRegistry:(NSObject<FlutterPluginRegistry>*)registry {
   [FPPPackageInfoPlusPlugin registerWithRegistrar:[registry registrarForPlugin:@"FPPPackageInfoPlusPlugin"]];
   [PathProviderPlugin registerWithRegistrar:[registry registrarForPlugin:@"PathProviderPlugin"]];
   [SharedPreferencesPlugin registerWithRegistrar:[registry registrarForPlugin:@"SharedPreferencesPlugin"]];

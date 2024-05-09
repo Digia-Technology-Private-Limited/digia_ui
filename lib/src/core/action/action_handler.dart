@@ -29,6 +29,17 @@ Map<String, ActionHandlerFn> _actionsMap = {
 
     return openDUIPage(pageUid: pageUId, context: context, pageArgs: pageArgs);
   },
+  'Action.navigateToPageNameInBottomSheet': (
+      {required action, required context}) {
+    final String? pageUId = action.data['pageUId'] ?? action.data['pageId'];
+
+    if (pageUId == null) {
+      throw 'Page Id not found in Action Props';
+    }
+    final pageArgs = action.data['pageArgs'] ?? action.data['args'];
+    return openDUIPageInBottomSheet(
+        pageUid: pageUId, context: context, pageArgs: pageArgs);
+  },
   'Action.pop': ({required action, required context}) {
     if (action.data['maybe'] == true) {
       Navigator.of(context).maybePop();
