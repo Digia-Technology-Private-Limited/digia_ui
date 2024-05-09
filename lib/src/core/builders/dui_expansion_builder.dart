@@ -7,12 +7,9 @@ import 'package:digia_ui/src/components/dui_widget_scope.dart';
 import 'package:digia_ui/src/components/image/image.dart';
 import 'package:digia_ui/src/components/image/image.props.dart';
 import 'package:digia_ui/src/core/builders/dui_icon_builder.dart';
-import 'package:digia_ui/src/core/builders/dui_image_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_text_builder.dart';
 import 'package:digia_ui/src/core/json_widget_builder.dart';
-import 'package:digia_ui/src/core/page/props/dui_widget_json_data.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class DUIExpansionBuilder extends DUIWidgetBuilder {
   DUIExpansionBuilder(DUIWidgetJsonData data, DUIWidgetRegistry? registry)
@@ -45,24 +42,24 @@ class DUIExpansionBuilder extends DUIWidgetBuilder {
     final expandedBorderColor =
         eval<String>(data.props['expandedBorderColor']).let(toColor);
 
-    final titleWidget = DUITextBuilder.fromProps(props: data.props["title"]);
+    final titleWidget = DUITextBuilder.fromProps(props: data.props['title']);
     final subtitleWidget =
-        DUITextBuilder.fromProps(props: data.props["subtitle"]);
+        DUITextBuilder.fromProps(props: data.props['subtitle']);
     // DUIIconBuilder? leadingWidget1 = null;
     // if (eval<String>(data.props['leadingIcon']) != null) {
     //   leadingWidget1 =
     //       DUIIconBuilder.fromProps(props: data.props["leadingIcon"]);
     // }
-    DUIImage? leadingWidget2 = null;
+    DUIImage? leadingWidget2;
     if (eval<String>(data.props['leadingImage']) != null) {
       leadingWidget2 =
           DUIImage(DUIImageProps.fromJson(data.props['leadingImage']));
     }
     final trailingCollapsedWidget =
-        DUIIconBuilder.fromProps(props: data.props["trailingCollapsed"]);
+        DUIIconBuilder.fromProps(props: data.props['trailingCollapsed']);
     final trailingExpandedWidget =
-        DUIIconBuilder.fromProps(props: data.props["trailingExpanded"]);
-    bool isExpanded = data.props["initiallyExpanded"] ?? false;
+        DUIIconBuilder.fromProps(props: data.props['trailingExpanded']);
+    bool isExpanded = data.props['initiallyExpanded'] ?? false;
     return StatefulBuilder(
       builder: (BuildContext context, StateSetter expandState) {
         return ExpansionTile(
