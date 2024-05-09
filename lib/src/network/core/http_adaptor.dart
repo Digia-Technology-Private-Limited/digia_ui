@@ -11,9 +11,14 @@ class HttpAdapter {
   static init(
       {String baseUrl = '',
       Duration connectTimeout = const Duration(seconds: 1000),
-      Map<String, dynamic>? defaultHeaders = const {Headers.contentTypeHeader: Headers.jsonContentType},
+      Map<String, dynamic>? defaultHeaders = const {
+        Headers.contentTypeHeader: Headers.jsonContentType
+      },
       List<Interceptor> interceptors = const []}) {
-    _instance._dio = Dio(BaseOptions(baseUrl: baseUrl, connectTimeout: connectTimeout, headers: defaultHeaders));
+    _instance._dio = Dio(BaseOptions(
+        baseUrl: baseUrl,
+        connectTimeout: connectTimeout,
+        headers: defaultHeaders));
     _instance._dio.interceptors.addAll(interceptors);
   }
 
@@ -21,7 +26,9 @@ class HttpAdapter {
 
   late Dio _dio;
 
-  Future<Response<T>> execute<T>(String path, HttpMethod method, {dynamic data, Map<String, dynamic>? headers}) async {
-    return _dio.fetch<T>(RequestOptions(path: path, method: method.stringValue, data: data, headers: headers));
+  Future<Response<T>> execute<T>(String path, HttpMethod method,
+      {dynamic data, Map<String, dynamic>? headers}) async {
+    return _dio.fetch<T>(RequestOptions(
+        path: path, method: method.stringValue, data: data, headers: headers));
   }
 }

@@ -15,7 +15,8 @@ class DUIIconBuilder extends DUIWidgetBuilder {
   }
 
   factory DUIIconBuilder.fromProps({required Map<String, dynamic>? props}) {
-    return DUIIconBuilder(data: DUIWidgetJsonData(type: 'digia/icon', props: props));
+    return DUIIconBuilder(
+        data: DUIWidgetJsonData(type: 'digia/icon', props: props));
   }
 
   @override
@@ -33,6 +34,8 @@ class DUIIconBuilder extends DUIWidgetBuilder {
 
     iconData ??= getIconData(icondataMap: props['iconData']);
 
-    return Icon(iconData, size: eval<double>(props['iconSize']), color: eval<String>(props['iconColor']).let(toColor));
+    return Icon(iconData,
+        size: eval<double>(props['iconSize']),
+        color: eval<String>(props['iconColor']).let(toColor));
   }
 }

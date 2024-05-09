@@ -40,9 +40,11 @@ class DUIPreferences {
     return value;
   }
 
-  Future<bool> setString(String key, String value) => _pref.setString(key, value);
+  Future<bool> setString(String key, String value) =>
+      _pref.setString(key, value);
   Future<bool> setBool(String key, bool value) => _pref.setBool(key, value);
-  Future<bool> setDouble(String key, double value) => _pref.setDouble(key, value);
+  Future<bool> setDouble(String key, double value) =>
+      _pref.setDouble(key, value);
   Future<bool> setInt(String key, int value) => _pref.setInt(key, value);
 
   Future<bool> remove(String key) {

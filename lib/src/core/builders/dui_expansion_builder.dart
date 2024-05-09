@@ -12,9 +12,11 @@ import 'package:digia_ui/src/core/json_widget_builder.dart';
 import 'package:flutter/material.dart';
 
 class DUIExpansionBuilder extends DUIWidgetBuilder {
-  DUIExpansionBuilder(DUIWidgetJsonData data, DUIWidgetRegistry? registry) : super(data: data, registry: registry);
+  DUIExpansionBuilder(DUIWidgetJsonData data, DUIWidgetRegistry? registry)
+      : super(data: data, registry: registry);
 
-  static DUIExpansionBuilder create(DUIWidgetJsonData data, {DUIWidgetRegistry? registry}) {
+  static DUIExpansionBuilder create(DUIWidgetJsonData data,
+      {DUIWidgetRegistry? registry}) {
     return DUIExpansionBuilder(data, registry);
   }
 
@@ -24,20 +26,28 @@ class DUIExpansionBuilder extends DUIWidgetBuilder {
       return fallbackWidget();
     }
     final eval = DUIWidgetScope.of(context)!.eval;
-    final color = eval<String>(data.props['expandedBackgroundColor']).let(toColor);
-    final collapsedBackgroundColor = eval<String>(data.props['collapsedBackgroundColor']).let(toColor);
-    final collapsedBorderRadius = eval<double>(data.props['collapsedBorderRadius']);
-    final collapsedBorderWidth = eval<double>(data.props['collapsedBorderWidth']);
-    final collapsedBorderColor = eval<String>(data.props['collapsedBorderColor']).let(toColor);
-    final expandedBorderRadius = eval<double>(data.props['expandedBorderRadius']);
+    final color =
+        eval<String>(data.props['expandedBackgroundColor']).let(toColor);
+    final collapsedBackgroundColor =
+        eval<String>(data.props['collapsedBackgroundColor']).let(toColor);
+    final collapsedBorderRadius =
+        eval<double>(data.props['collapsedBorderRadius']);
+    final collapsedBorderWidth =
+        eval<double>(data.props['collapsedBorderWidth']);
+    final collapsedBorderColor =
+        eval<String>(data.props['collapsedBorderColor']).let(toColor);
+    final expandedBorderRadius =
+        eval<double>(data.props['expandedBorderRadius']);
     final expandedBorderWidth = eval<double>(data.props['expandedBorderWidth']);
-    final expandedBorderColor = eval<String>(data.props['expandedBorderColor']).let(toColor);
+    final expandedBorderColor =
+        eval<String>(data.props['expandedBorderColor']).let(toColor);
 
     final titleWidget = DUITextBuilder.fromProps(props: data.props['title']);
 
     late Widget? subtitleWidget;
     if (data.props['subtitle'] != null) {
-      subtitleWidget = DUITextBuilder.fromProps(props: data.props['subtitle']).build(context);
+      subtitleWidget = DUITextBuilder.fromProps(props: data.props['subtitle'])
+          .build(context);
     }
 
     // DUIIconBuilder? leadingWidget1 = null;
@@ -47,10 +57,13 @@ class DUIExpansionBuilder extends DUIWidgetBuilder {
     // }
     DUIImage? leadingWidget2;
     if (eval<String>(data.props['leadingImage']) != null) {
-      leadingWidget2 = DUIImage(DUIImageProps.fromJson(data.props['leadingImage']));
+      leadingWidget2 =
+          DUIImage(DUIImageProps.fromJson(data.props['leadingImage']));
     }
-    final trailingCollapsedWidget = DUIIconBuilder.fromProps(props: data.props['trailingCollapsed']);
-    final trailingExpandedWidget = DUIIconBuilder.fromProps(props: data.props['trailingExpanded']);
+    final trailingCollapsedWidget =
+        DUIIconBuilder.fromProps(props: data.props['trailingCollapsed']);
+    final trailingExpandedWidget =
+        DUIIconBuilder.fromProps(props: data.props['trailingExpanded']);
     bool isExpanded = data.props['initiallyExpanded'] ?? false;
     return StatefulBuilder(
       builder: (BuildContext context, StateSetter expandState) {
@@ -59,7 +72,9 @@ class DUIExpansionBuilder extends DUIWidgetBuilder {
           title: titleWidget.build(context),
           subtitle: subtitleWidget,
           leading: (leadingWidget2 != null) ? leadingWidget2 : null,
-          trailing: isExpanded ? trailingExpandedWidget.build(context) : trailingCollapsedWidget.build(context),
+          trailing: isExpanded
+              ? trailingExpandedWidget.build(context)
+              : trailingCollapsedWidget.build(context),
           backgroundColor: color,
           collapsedBackgroundColor: collapsedBackgroundColor,
           collapsedShape: RoundedRectangleBorder(

@@ -6,17 +6,22 @@ import '../Utils/basic_shared_utils/num_decoder.dart';
 import '../core/action/action_handler.dart';
 
 // ignore: non_constant_identifier_names
-Widget DUIGestureDetector({required BuildContext context, required ActionFlow? actionFlow, required Widget child}) {
+Widget DUIGestureDetector(
+    {required BuildContext context,
+    required ActionFlow? actionFlow,
+    required Widget child}) {
   if (actionFlow == null) return child;
 
   if (actionFlow.inkwell) {
     return InkWell(
-      onTap: () => ActionHandler.instance.execute(context: context, actionFlow: actionFlow),
+      onTap: () => ActionHandler.instance
+          .execute(context: context, actionFlow: actionFlow),
       child: child,
     );
   } else {
     return GestureDetector(
-      onTap: () => ActionHandler.instance.execute(context: context, actionFlow: actionFlow),
+      onTap: () => ActionHandler.instance
+          .execute(context: context, actionFlow: actionFlow),
       child: child,
     );
   }
@@ -47,7 +52,8 @@ Widget DUIVisibility({dynamic visible, required Widget child}) {
 }
 
 // ignore: non_constant_identifier_names
-Widget DUIFlexFit({dynamic flex, dynamic expansionType, required Widget child}) {
+Widget DUIFlexFit(
+    {dynamic flex, dynamic expansionType, required Widget child}) {
   if (expansionType == null || expansionType is! String) {
     return child;
   }

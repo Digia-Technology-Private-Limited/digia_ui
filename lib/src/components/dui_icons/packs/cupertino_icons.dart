@@ -1092,7 +1092,8 @@ const Map<String, IconData> cupertinoIcons = {
   'arrow_2_circlepath_circle': CupertinoIcons.arrow_2_circlepath_circle,
 
   /// <i class='cupertino-icons md-36'>arrow_2_circlepath_circle_fill</i> &#x2014; Cupertino icon named "arrow_2_circlepath_circle_fill". Available on cupertino_icons package 1.0.0+ only.
-  'arrow_2_circlepath_circle_fill': CupertinoIcons.arrow_2_circlepath_circle_fill,
+  'arrow_2_circlepath_circle_fill':
+      CupertinoIcons.arrow_2_circlepath_circle_fill,
 
   /// <i class='cupertino-icons md-36'>arrow_2_squarepath</i> &#x2014; Cupertino icon named "arrow_2_squarepath". Available on cupertino_icons package 1.0.0+ only.
   'arrow_2_squarepath': CupertinoIcons.arrow_2_squarepath,
@@ -1126,7 +1127,8 @@ const Map<String, IconData> cupertinoIcons = {
   'arrow_counterclockwise_circle': CupertinoIcons.arrow_counterclockwise_circle,
 
   /// <i class='cupertino-icons md-36'>arrow_counterclockwise_circle_fill</i> &#x2014; Cupertino icon named "arrow_counterclockwise_circle_fill". Available on cupertino_icons package 1.0.0+ only.
-  'arrow_counterclockwise_circle_fill': CupertinoIcons.arrow_counterclockwise_circle_fill,
+  'arrow_counterclockwise_circle_fill':
+      CupertinoIcons.arrow_counterclockwise_circle_fill,
 
   /// <i class='cupertino-icons md-36'>arrow_down</i> &#x2014; Cupertino icon named "arrow_down". Available on cupertino_icons package 1.0.0+ only.
   /// This is the same icon as [down_arrow] which is available in cupertino_icons 0.1.3.
@@ -1164,7 +1166,8 @@ const Map<String, IconData> cupertinoIcons = {
 
   /// <i class='cupertino-icons md-36'>arrow_down_right_arrow_up_left</i> &#x2014; Cupertino icon named "arrow_down_right_arrow_up_left". Available on cupertino_icons package 1.0.0+ only.
   /// This is the same icon as [fullscreen_exit] which is available in cupertino_icons 0.1.3.
-  'arrow_down_right_arrow_up_left': CupertinoIcons.arrow_down_right_arrow_up_left,
+  'arrow_down_right_arrow_up_left':
+      CupertinoIcons.arrow_down_right_arrow_up_left,
 
   /// <i class='cupertino-icons md-36'>arrow_down_right_circle</i> &#x2014; Cupertino icon named "arrow_down_right_circle". Available on cupertino_icons package 1.0.0+ only.
   'arrow_down_right_circle': CupertinoIcons.arrow_down_right_circle,
@@ -1239,13 +1242,15 @@ const Map<String, IconData> cupertinoIcons = {
   'arrow_right_arrow_left_circle': CupertinoIcons.arrow_right_arrow_left_circle,
 
   /// <i class='cupertino-icons md-36'>arrow_right_arrow_left_circle_fill</i> &#x2014; Cupertino icon named "arrow_right_arrow_left_circle_fill". Available on cupertino_icons package 1.0.0+ only.
-  'arrow_right_arrow_left_circle_fill': CupertinoIcons.arrow_right_arrow_left_circle_fill,
+  'arrow_right_arrow_left_circle_fill':
+      CupertinoIcons.arrow_right_arrow_left_circle_fill,
 
   /// <i class='cupertino-icons md-36'>arrow_right_arrow_left_square</i> &#x2014; Cupertino icon named "arrow_right_arrow_left_square". Available on cupertino_icons package 1.0.0+ only.
   'arrow_right_arrow_left_square': CupertinoIcons.arrow_right_arrow_left_square,
 
   /// <i class='cupertino-icons md-36'>arrow_right_arrow_left_square_fill</i> &#x2014; Cupertino icon named "arrow_right_arrow_left_square_fill". Available on cupertino_icons package 1.0.0+ only.
-  'arrow_right_arrow_left_square_fill': CupertinoIcons.arrow_right_arrow_left_square_fill,
+  'arrow_right_arrow_left_square_fill':
+      CupertinoIcons.arrow_right_arrow_left_square_fill,
 
   /// <i class='cupertino-icons md-36'>arrow_right_circle</i> &#x2014; Cupertino icon named "arrow_right_circle". Available on cupertino_icons package 1.0.0+ only.
   'arrow_right_circle': CupertinoIcons.arrow_right_circle,
@@ -1303,13 +1308,15 @@ const Map<String, IconData> cupertinoIcons = {
   'arrow_up_arrow_down_circle': CupertinoIcons.arrow_up_arrow_down_circle,
 
   /// <i class='cupertino-icons md-36'>arrow_up_arrow_down_circle_fill</i> &#x2014; Cupertino icon named "arrow_up_arrow_down_circle_fill". Available on cupertino_icons package 1.0.0+ only.
-  'arrow_up_arrow_down_circle_fill': CupertinoIcons.arrow_up_arrow_down_circle_fill,
+  'arrow_up_arrow_down_circle_fill':
+      CupertinoIcons.arrow_up_arrow_down_circle_fill,
 
   /// <i class='cupertino-icons md-36'>arrow_up_arrow_down_square</i> &#x2014; Cupertino icon named "arrow_up_arrow_down_square". Available on cupertino_icons package 1.0.0+ only.
   'arrow_up_arrow_down_square': CupertinoIcons.arrow_up_arrow_down_square,
 
   /// <i class='cupertino-icons md-36'>arrow_up_arrow_down_square_fill</i> &#x2014; Cupertino icon named "arrow_up_arrow_down_square_fill". Available on cupertino_icons package 1.0.0+ only.
-  'arrow_up_arrow_down_square_fill': CupertinoIcons.arrow_up_arrow_down_square_fill,
+  'arrow_up_arrow_down_square_fill':
+      CupertinoIcons.arrow_up_arrow_down_square_fill,
 
   /// <i class='cupertino-icons md-36'>arrow_up_bin</i> &#x2014; Cupertino icon named "arrow_up_bin". Available on cupertino_icons package 1.0.0+ only.
   'arrow_up_bin': CupertinoIcons.arrow_up_bin,
@@ -1349,7 +1356,8 @@ const Map<String, IconData> cupertinoIcons = {
 
   /// <i class='cupertino-icons md-36'>arrow_up_left_arrow_down_right</i> &#x2014; Cupertino icon named "arrow_up_left_arrow_down_right". Available on cupertino_icons package 1.0.0+ only.
   /// This is the same icon as [fullscreen] which is available in cupertino_icons 0.1.3.
-  'arrow_up_left_arrow_down_right': CupertinoIcons.arrow_up_left_arrow_down_right,
+  'arrow_up_left_arrow_down_right':
+      CupertinoIcons.arrow_up_left_arrow_down_right,
 
   /// <i class='cupertino-icons md-36'>arrow_up_left_circle</i> &#x2014; Cupertino icon named "arrow_up_left_circle". Available on cupertino_icons package 1.0.0+ only.
   'arrow_up_left_circle': CupertinoIcons.arrow_up_left_circle,
@@ -1466,13 +1474,16 @@ const Map<String, IconData> cupertinoIcons = {
 
   /// <i class='cupertino-icons md-36'>arrowshape_turn_up_left_2_fill</i> &#x2014; Cupertino icon named "arrowshape_turn_up_left_2_fill". Available on cupertino_icons package 1.0.0+ only.
   /// This is the same icon as [reply_thick_solid] which is available in cupertino_icons 0.1.3.
-  'arrowshape_turn_up_left_2_fill': CupertinoIcons.arrowshape_turn_up_left_2_fill,
+  'arrowshape_turn_up_left_2_fill':
+      CupertinoIcons.arrowshape_turn_up_left_2_fill,
 
   /// <i class='cupertino-icons md-36'>arrowshape_turn_up_left_circle</i> &#x2014; Cupertino icon named "arrowshape_turn_up_left_circle". Available on cupertino_icons package 1.0.0+ only.
-  'arrowshape_turn_up_left_circle': CupertinoIcons.arrowshape_turn_up_left_circle,
+  'arrowshape_turn_up_left_circle':
+      CupertinoIcons.arrowshape_turn_up_left_circle,
 
   /// <i class='cupertino-icons md-36'>arrowshape_turn_up_left_circle_fill</i> &#x2014; Cupertino icon named "arrowshape_turn_up_left_circle_fill". Available on cupertino_icons package 1.0.0+ only.
-  'arrowshape_turn_up_left_circle_fill': CupertinoIcons.arrowshape_turn_up_left_circle_fill,
+  'arrowshape_turn_up_left_circle_fill':
+      CupertinoIcons.arrowshape_turn_up_left_circle_fill,
 
   /// <i class='cupertino-icons md-36'>arrowshape_turn_up_left_fill</i> &#x2014; Cupertino icon named "arrowshape_turn_up_left_fill". Available on cupertino_icons package 1.0.0+ only.
   'arrowshape_turn_up_left_fill': CupertinoIcons.arrowshape_turn_up_left_fill,
@@ -1481,10 +1492,12 @@ const Map<String, IconData> cupertinoIcons = {
   'arrowshape_turn_up_right': CupertinoIcons.arrowshape_turn_up_right,
 
   /// <i class='cupertino-icons md-36'>arrowshape_turn_up_right_circle</i> &#x2014; Cupertino icon named "arrowshape_turn_up_right_circle". Available on cupertino_icons package 1.0.0+ only.
-  'arrowshape_turn_up_right_circle': CupertinoIcons.arrowshape_turn_up_right_circle,
+  'arrowshape_turn_up_right_circle':
+      CupertinoIcons.arrowshape_turn_up_right_circle,
 
   /// <i class='cupertino-icons md-36'>arrowshape_turn_up_right_circle_fill</i> &#x2014; Cupertino icon named "arrowshape_turn_up_right_circle_fill". Available on cupertino_icons package 1.0.0+ only.
-  'arrowshape_turn_up_right_circle_fill': CupertinoIcons.arrowshape_turn_up_right_circle_fill,
+  'arrowshape_turn_up_right_circle_fill':
+      CupertinoIcons.arrowshape_turn_up_right_circle_fill,
 
   /// <i class='cupertino-icons md-36'>arrowshape_turn_up_right_fill</i> &#x2014; Cupertino icon named "arrowshape_turn_up_right_fill". Available on cupertino_icons package 1.0.0+ only.
   'arrowshape_turn_up_right_fill': CupertinoIcons.arrowshape_turn_up_right_fill,
@@ -1496,7 +1509,8 @@ const Map<String, IconData> cupertinoIcons = {
   'arrowtriangle_down_circle': CupertinoIcons.arrowtriangle_down_circle,
 
   /// <i class='cupertino-icons md-36'>arrowtriangle_down_circle_fill</i> &#x2014; Cupertino icon named "arrowtriangle_down_circle_fill". Available on cupertino_icons package 1.0.0+ only.
-  'arrowtriangle_down_circle_fill': CupertinoIcons.arrowtriangle_down_circle_fill,
+  'arrowtriangle_down_circle_fill':
+      CupertinoIcons.arrowtriangle_down_circle_fill,
 
   /// <i class='cupertino-icons md-36'>arrowtriangle_down_fill</i> &#x2014; Cupertino icon named "arrowtriangle_down_fill". Available on cupertino_icons package 1.0.0+ only.
   'arrowtriangle_down_fill': CupertinoIcons.arrowtriangle_down_fill,
@@ -1505,7 +1519,8 @@ const Map<String, IconData> cupertinoIcons = {
   'arrowtriangle_down_square': CupertinoIcons.arrowtriangle_down_square,
 
   /// <i class='cupertino-icons md-36'>arrowtriangle_down_square_fill</i> &#x2014; Cupertino icon named "arrowtriangle_down_square_fill". Available on cupertino_icons package 1.0.0+ only.
-  'arrowtriangle_down_square_fill': CupertinoIcons.arrowtriangle_down_square_fill,
+  'arrowtriangle_down_square_fill':
+      CupertinoIcons.arrowtriangle_down_square_fill,
 
   /// <i class='cupertino-icons md-36'>arrowtriangle_left</i> &#x2014; Cupertino icon named "arrowtriangle_left". Available on cupertino_icons package 1.0.0+ only.
   'arrowtriangle_left': CupertinoIcons.arrowtriangle_left,
@@ -1514,7 +1529,8 @@ const Map<String, IconData> cupertinoIcons = {
   'arrowtriangle_left_circle': CupertinoIcons.arrowtriangle_left_circle,
 
   /// <i class='cupertino-icons md-36'>arrowtriangle_left_circle_fill</i> &#x2014; Cupertino icon named "arrowtriangle_left_circle_fill". Available on cupertino_icons package 1.0.0+ only.
-  'arrowtriangle_left_circle_fill': CupertinoIcons.arrowtriangle_left_circle_fill,
+  'arrowtriangle_left_circle_fill':
+      CupertinoIcons.arrowtriangle_left_circle_fill,
 
   /// <i class='cupertino-icons md-36'>arrowtriangle_left_fill</i> &#x2014; Cupertino icon named "arrowtriangle_left_fill". Available on cupertino_icons package 1.0.0+ only.
   'arrowtriangle_left_fill': CupertinoIcons.arrowtriangle_left_fill,
@@ -1523,7 +1539,8 @@ const Map<String, IconData> cupertinoIcons = {
   'arrowtriangle_left_square': CupertinoIcons.arrowtriangle_left_square,
 
   /// <i class='cupertino-icons md-36'>arrowtriangle_left_square_fill</i> &#x2014; Cupertino icon named "arrowtriangle_left_square_fill". Available on cupertino_icons package 1.0.0+ only.
-  'arrowtriangle_left_square_fill': CupertinoIcons.arrowtriangle_left_square_fill,
+  'arrowtriangle_left_square_fill':
+      CupertinoIcons.arrowtriangle_left_square_fill,
 
   /// <i class='cupertino-icons md-36'>arrowtriangle_right</i> &#x2014; Cupertino icon named "arrowtriangle_right". Available on cupertino_icons package 1.0.0+ only.
   'arrowtriangle_right': CupertinoIcons.arrowtriangle_right,
@@ -1532,7 +1549,8 @@ const Map<String, IconData> cupertinoIcons = {
   'arrowtriangle_right_circle': CupertinoIcons.arrowtriangle_right_circle,
 
   /// <i class='cupertino-icons md-36'>arrowtriangle_right_circle_fill</i> &#x2014; Cupertino icon named "arrowtriangle_right_circle_fill". Available on cupertino_icons package 1.0.0+ only.
-  'arrowtriangle_right_circle_fill': CupertinoIcons.arrowtriangle_right_circle_fill,
+  'arrowtriangle_right_circle_fill':
+      CupertinoIcons.arrowtriangle_right_circle_fill,
 
   /// <i class='cupertino-icons md-36'>arrowtriangle_right_fill</i> &#x2014; Cupertino icon named "arrowtriangle_right_fill". Available on cupertino_icons package 1.0.0+ only.
   'arrowtriangle_right_fill': CupertinoIcons.arrowtriangle_right_fill,
@@ -1541,7 +1559,8 @@ const Map<String, IconData> cupertinoIcons = {
   'arrowtriangle_right_square': CupertinoIcons.arrowtriangle_right_square,
 
   /// <i class='cupertino-icons md-36'>arrowtriangle_right_square_fill</i> &#x2014; Cupertino icon named "arrowtriangle_right_square_fill". Available on cupertino_icons package 1.0.0+ only.
-  'arrowtriangle_right_square_fill': CupertinoIcons.arrowtriangle_right_square_fill,
+  'arrowtriangle_right_square_fill':
+      CupertinoIcons.arrowtriangle_right_square_fill,
 
   /// <i class='cupertino-icons md-36'>arrowtriangle_up</i> &#x2014; Cupertino icon named "arrowtriangle_up". Available on cupertino_icons package 1.0.0+ only.
   'arrowtriangle_up': CupertinoIcons.arrowtriangle_up,
@@ -2024,7 +2043,8 @@ const Map<String, IconData> cupertinoIcons = {
   'chevron_left_circle_fill': CupertinoIcons.chevron_left_circle_fill,
 
   /// <i class='cupertino-icons md-36'>chevron_left_slash_chevron_right</i> &#x2014; Cupertino icon named "chevron_left_slash_chevron_right". Available on cupertino_icons package 1.0.0+ only.
-  'chevron_left_slash_chevron_right': CupertinoIcons.chevron_left_slash_chevron_right,
+  'chevron_left_slash_chevron_right':
+      CupertinoIcons.chevron_left_slash_chevron_right,
 
   /// <i class='cupertino-icons md-36'>chevron_left_square</i> &#x2014; Cupertino icon named "chevron_left_square". Available on cupertino_icons package 1.0.0+ only.
   'chevron_left_square': CupertinoIcons.chevron_left_square,
@@ -2975,10 +2995,12 @@ const Map<String, IconData> cupertinoIcons = {
   'line_horizontal_3_decrease': CupertinoIcons.line_horizontal_3_decrease,
 
   /// <i class='cupertino-icons md-36'>line_horizontal_3_decrease_circle</i> &#x2014; Cupertino icon named "line_horizontal_3_decrease_circle". Available on cupertino_icons package 1.0.0+ only.
-  'line_horizontal_3_decrease_circle': CupertinoIcons.line_horizontal_3_decrease_circle,
+  'line_horizontal_3_decrease_circle':
+      CupertinoIcons.line_horizontal_3_decrease_circle,
 
   /// <i class='cupertino-icons md-36'>line_horizontal_3_decrease_circle_fill</i> &#x2014; Cupertino icon named "line_horizontal_3_decrease_circle_fill". Available on cupertino_icons package 1.0.0+ only.
-  'line_horizontal_3_decrease_circle_fill': CupertinoIcons.line_horizontal_3_decrease_circle_fill,
+  'line_horizontal_3_decrease_circle_fill':
+      CupertinoIcons.line_horizontal_3_decrease_circle_fill,
 
   /// <i class='cupertino-icons md-36'>link</i> &#x2014; Cupertino icon named "link". Available on cupertino_icons package 1.0.0+ only.
   'link': CupertinoIcons.link,
@@ -3389,37 +3411,46 @@ const Map<String, IconData> cupertinoIcons = {
   'person_crop_circle': CupertinoIcons.person_crop_circle,
 
   /// <i class='cupertino-icons md-36'>person_crop_circle_badge_checkmark</i> &#x2014; Cupertino icon named "person_crop_circle_badge_checkmark". Available on cupertino_icons package 1.0.0+ only.
-  'person_crop_circle_badge_checkmark': CupertinoIcons.person_crop_circle_badge_checkmark,
+  'person_crop_circle_badge_checkmark':
+      CupertinoIcons.person_crop_circle_badge_checkmark,
 
   /// <i class='cupertino-icons md-36'>person_crop_circle_badge_exclam</i> &#x2014; Cupertino icon named "person_crop_circle_badge_exclam". Available on cupertino_icons package 1.0.0+ only.
-  'person_crop_circle_badge_exclam': CupertinoIcons.person_crop_circle_badge_exclam,
+  'person_crop_circle_badge_exclam':
+      CupertinoIcons.person_crop_circle_badge_exclam,
 
   /// <i class='cupertino-icons md-36'>person_crop_circle_badge_minus</i> &#x2014; Cupertino icon named "person_crop_circle_badge_minus". Available on cupertino_icons package 1.0.0+ only.
-  'person_crop_circle_badge_minus': CupertinoIcons.person_crop_circle_badge_minus,
+  'person_crop_circle_badge_minus':
+      CupertinoIcons.person_crop_circle_badge_minus,
 
   /// <i class='cupertino-icons md-36'>person_crop_circle_badge_plus</i> &#x2014; Cupertino icon named "person_crop_circle_badge_plus". Available on cupertino_icons package 1.0.0+ only.
   'person_crop_circle_badge_plus': CupertinoIcons.person_crop_circle_badge_plus,
 
   /// <i class='cupertino-icons md-36'>person_crop_circle_badge_xmark</i> &#x2014; Cupertino icon named "person_crop_circle_badge_xmark". Available on cupertino_icons package 1.0.0+ only.
-  'person_crop_circle_badge_xmark': CupertinoIcons.person_crop_circle_badge_xmark,
+  'person_crop_circle_badge_xmark':
+      CupertinoIcons.person_crop_circle_badge_xmark,
 
   /// <i class='cupertino-icons md-36'>person_crop_circle_fill</i> &#x2014; Cupertino icon named "person_crop_circle_fill". Available on cupertino_icons package 1.0.0+ only.
   'person_crop_circle_fill': CupertinoIcons.person_crop_circle_fill,
 
   /// <i class='cupertino-icons md-36'>person_crop_circle_fill_badge_checkmark</i> &#x2014; Cupertino icon named "person_crop_circle_fill_badge_checkmark". Available on cupertino_icons package 1.0.0+ only.
-  'person_crop_circle_fill_badge_checkmark': CupertinoIcons.person_crop_circle_fill_badge_checkmark,
+  'person_crop_circle_fill_badge_checkmark':
+      CupertinoIcons.person_crop_circle_fill_badge_checkmark,
 
   /// <i class='cupertino-icons md-36'>person_crop_circle_fill_badge_exclam</i> &#x2014; Cupertino icon named "person_crop_circle_fill_badge_exclam". Available on cupertino_icons package 1.0.0+ only.
-  'person_crop_circle_fill_badge_exclam': CupertinoIcons.person_crop_circle_fill_badge_exclam,
+  'person_crop_circle_fill_badge_exclam':
+      CupertinoIcons.person_crop_circle_fill_badge_exclam,
 
   /// <i class='cupertino-icons md-36'>person_crop_circle_fill_badge_minus</i> &#x2014; Cupertino icon named "person_crop_circle_fill_badge_minus". Available on cupertino_icons package 1.0.0+ only.
-  'person_crop_circle_fill_badge_minus': CupertinoIcons.person_crop_circle_fill_badge_minus,
+  'person_crop_circle_fill_badge_minus':
+      CupertinoIcons.person_crop_circle_fill_badge_minus,
 
   /// <i class='cupertino-icons md-36'>person_crop_circle_fill_badge_plus</i> &#x2014; Cupertino icon named "person_crop_circle_fill_badge_plus". Available on cupertino_icons package 1.0.0+ only.
-  'person_crop_circle_fill_badge_plus': CupertinoIcons.person_crop_circle_fill_badge_plus,
+  'person_crop_circle_fill_badge_plus':
+      CupertinoIcons.person_crop_circle_fill_badge_plus,
 
   /// <i class='cupertino-icons md-36'>person_crop_circle_fill_badge_xmark</i> &#x2014; Cupertino icon named "person_crop_circle_fill_badge_xmark". Available on cupertino_icons package 1.0.0+ only.
-  'person_crop_circle_fill_badge_xmark': CupertinoIcons.person_crop_circle_fill_badge_xmark,
+  'person_crop_circle_fill_badge_xmark':
+      CupertinoIcons.person_crop_circle_fill_badge_xmark,
 
   /// <i class='cupertino-icons md-36'>person_crop_rectangle</i> &#x2014; Cupertino icon named "person_crop_rectangle". Available on cupertino_icons package 1.0.0+ only.
   'person_crop_rectangle': CupertinoIcons.person_crop_rectangle,
@@ -3582,7 +3613,8 @@ const Map<String, IconData> cupertinoIcons = {
   'plus_rectangle_fill': CupertinoIcons.plus_rectangle_fill,
 
   /// <i class='cupertino-icons md-36'>plus_rectangle_fill_on_rectangle_fill</i> &#x2014; Cupertino icon named "plus_rectangle_fill_on_rectangle_fill". Available on cupertino_icons package 1.0.0+ only.
-  'plus_rectangle_fill_on_rectangle_fill': CupertinoIcons.plus_rectangle_fill_on_rectangle_fill,
+  'plus_rectangle_fill_on_rectangle_fill':
+      CupertinoIcons.plus_rectangle_fill_on_rectangle_fill,
 
   /// <i class='cupertino-icons md-36'>plus_rectangle_on_rectangle</i> &#x2014; Cupertino icon named "plus_rectangle_on_rectangle". Available on cupertino_icons package 1.0.0+ only.
   'plus_rectangle_on_rectangle': CupertinoIcons.plus_rectangle_on_rectangle,
@@ -3597,7 +3629,8 @@ const Map<String, IconData> cupertinoIcons = {
   'plus_square_fill': CupertinoIcons.plus_square_fill,
 
   /// <i class='cupertino-icons md-36'>plus_square_fill_on_square_fill</i> &#x2014; Cupertino icon named "plus_square_fill_on_square_fill". Available on cupertino_icons package 1.0.0+ only.
-  'plus_square_fill_on_square_fill': CupertinoIcons.plus_square_fill_on_square_fill,
+  'plus_square_fill_on_square_fill':
+      CupertinoIcons.plus_square_fill_on_square_fill,
 
   /// <i class='cupertino-icons md-36'>plus_square_on_square</i> &#x2014; Cupertino icon named "plus_square_on_square". Available on cupertino_icons package 1.0.0+ only.
   'plus_square_on_square': CupertinoIcons.plus_square_on_square,
@@ -3687,10 +3720,12 @@ const Map<String, IconData> cupertinoIcons = {
   'rectangle_3_offgrid_fill': CupertinoIcons.rectangle_3_offgrid_fill,
 
   /// <i class='cupertino-icons md-36'>rectangle_arrow_up_right_arrow_down_left</i> &#x2014; Cupertino icon named "rectangle_arrow_up_right_arrow_down_left". Available on cupertino_icons package 1.0.0+ only.
-  'rectangle_arrow_up_right_arrow_down_left': CupertinoIcons.rectangle_arrow_up_right_arrow_down_left,
+  'rectangle_arrow_up_right_arrow_down_left':
+      CupertinoIcons.rectangle_arrow_up_right_arrow_down_left,
 
   /// <i class='cupertino-icons md-36'>rectangle_arrow_up_right_arrow_down_left_slash</i> &#x2014; Cupertino icon named "rectangle_arrow_up_right_arrow_down_left_slash". Available on cupertino_icons package 1.0.0+ only.
-  'rectangle_arrow_up_right_arrow_down_left_slash': CupertinoIcons.rectangle_arrow_up_right_arrow_down_left_slash,
+  'rectangle_arrow_up_right_arrow_down_left_slash':
+      CupertinoIcons.rectangle_arrow_up_right_arrow_down_left_slash,
 
   /// <i class='cupertino-icons md-36'>rectangle_badge_checkmark</i> &#x2014; Cupertino icon named "rectangle_badge_checkmark". Available on cupertino_icons package 1.0.0+ only.
   'rectangle_badge_checkmark': CupertinoIcons.rectangle_badge_checkmark,
@@ -3711,16 +3746,19 @@ const Map<String, IconData> cupertinoIcons = {
   'rectangle_fill': CupertinoIcons.rectangle_fill,
 
   /// <i class='cupertino-icons md-36'>rectangle_fill_badge_checkmark</i> &#x2014; Cupertino icon named "rectangle_fill_badge_checkmark". Available on cupertino_icons package 1.0.0+ only.
-  'rectangle_fill_badge_checkmark': CupertinoIcons.rectangle_fill_badge_checkmark,
+  'rectangle_fill_badge_checkmark':
+      CupertinoIcons.rectangle_fill_badge_checkmark,
 
   /// <i class='cupertino-icons md-36'>rectangle_fill_badge_xmark</i> &#x2014; Cupertino icon named "rectangle_fill_badge_xmark". Available on cupertino_icons package 1.0.0+ only.
   'rectangle_fill_badge_xmark': CupertinoIcons.rectangle_fill_badge_xmark,
 
   /// <i class='cupertino-icons md-36'>rectangle_fill_on_rectangle_angled_fill</i> &#x2014; Cupertino icon named "rectangle_fill_on_rectangle_angled_fill". Available on cupertino_icons package 1.0.0+ only.
-  'rectangle_fill_on_rectangle_angled_fill': CupertinoIcons.rectangle_fill_on_rectangle_angled_fill,
+  'rectangle_fill_on_rectangle_angled_fill':
+      CupertinoIcons.rectangle_fill_on_rectangle_angled_fill,
 
   /// <i class='cupertino-icons md-36'>rectangle_fill_on_rectangle_fill</i> &#x2014; Cupertino icon named "rectangle_fill_on_rectangle_fill". Available on cupertino_icons package 1.0.0+ only.
-  'rectangle_fill_on_rectangle_fill': CupertinoIcons.rectangle_fill_on_rectangle_fill,
+  'rectangle_fill_on_rectangle_fill':
+      CupertinoIcons.rectangle_fill_on_rectangle_fill,
 
   /// <i class='cupertino-icons md-36'>rectangle_grid_1x2</i> &#x2014; Cupertino icon named "rectangle_grid_1x2". Available on cupertino_icons package 1.0.0+ only.
   'rectangle_grid_1x2': CupertinoIcons.rectangle_grid_1x2,
@@ -3769,7 +3807,8 @@ const Map<String, IconData> cupertinoIcons = {
   'rectangle_stack_badge_minus': CupertinoIcons.rectangle_stack_badge_minus,
 
   /// <i class='cupertino-icons md-36'>rectangle_stack_badge_person_crop</i> &#x2014; Cupertino icon named "rectangle_stack_badge_person_crop". Available on cupertino_icons package 1.0.0+ only.
-  'rectangle_stack_badge_person_crop': CupertinoIcons.rectangle_stack_badge_person_crop,
+  'rectangle_stack_badge_person_crop':
+      CupertinoIcons.rectangle_stack_badge_person_crop,
 
   /// <i class='cupertino-icons md-36'>rectangle_stack_badge_plus</i> &#x2014; Cupertino icon named "rectangle_stack_badge_plus". Available on cupertino_icons package 1.0.0+ only.
   'rectangle_stack_badge_plus': CupertinoIcons.rectangle_stack_badge_plus,
@@ -3779,19 +3818,23 @@ const Map<String, IconData> cupertinoIcons = {
   'rectangle_stack_fill': CupertinoIcons.rectangle_stack_fill,
 
   /// <i class='cupertino-icons md-36'>rectangle_stack_fill_badge_minus</i> &#x2014; Cupertino icon named "rectangle_stack_fill_badge_minus". Available on cupertino_icons package 1.0.0+ only.
-  'rectangle_stack_fill_badge_minus': CupertinoIcons.rectangle_stack_fill_badge_minus,
+  'rectangle_stack_fill_badge_minus':
+      CupertinoIcons.rectangle_stack_fill_badge_minus,
 
   /// <i class='cupertino-icons md-36'>rectangle_stack_fill_badge_person_crop</i> &#x2014; Cupertino icon named "rectangle_stack_fill_badge_person_crop". Available on cupertino_icons package 1.0.0+ only.
-  'rectangle_stack_fill_badge_person_crop': CupertinoIcons.rectangle_stack_fill_badge_person_crop,
+  'rectangle_stack_fill_badge_person_crop':
+      CupertinoIcons.rectangle_stack_fill_badge_person_crop,
 
   /// <i class='cupertino-icons md-36'>rectangle_stack_fill_badge_plus</i> &#x2014; Cupertino icon named "rectangle_stack_fill_badge_plus". Available on cupertino_icons package 1.0.0+ only.
-  'rectangle_stack_fill_badge_plus': CupertinoIcons.rectangle_stack_fill_badge_plus,
+  'rectangle_stack_fill_badge_plus':
+      CupertinoIcons.rectangle_stack_fill_badge_plus,
 
   /// <i class='cupertino-icons md-36'>rectangle_stack_person_crop</i> &#x2014; Cupertino icon named "rectangle_stack_person_crop". Available on cupertino_icons package 1.0.0+ only.
   'rectangle_stack_person_crop': CupertinoIcons.rectangle_stack_person_crop,
 
   /// <i class='cupertino-icons md-36'>rectangle_stack_person_crop_fill</i> &#x2014; Cupertino icon named "rectangle_stack_person_crop_fill". Available on cupertino_icons package 1.0.0+ only.
-  'rectangle_stack_person_crop_fill': CupertinoIcons.rectangle_stack_person_crop_fill,
+  'rectangle_stack_person_crop_fill':
+      CupertinoIcons.rectangle_stack_person_crop_fill,
 
   /// <i class='cupertino-icons md-36'>repeat</i> &#x2014; Cupertino icon named "repeat". Available on cupertino_icons package 1.0.0+ only.
   'repeat': CupertinoIcons.repeat,
@@ -3902,7 +3945,8 @@ const Map<String, IconData> cupertinoIcons = {
   'slider_horizontal_3': CupertinoIcons.slider_horizontal_3,
 
   /// <i class='cupertino-icons md-36'>slider_horizontal_below_rectangle</i> &#x2014; Cupertino icon named "slider_horizontal_below_rectangle". Available on cupertino_icons package 1.0.0+ only.
-  'slider_horizontal_below_rectangle': CupertinoIcons.slider_horizontal_below_rectangle,
+  'slider_horizontal_below_rectangle':
+      CupertinoIcons.slider_horizontal_below_rectangle,
 
   /// <i class='cupertino-icons md-36'>slowmo</i> &#x2014; Cupertino icon named "slowmo". Available on cupertino_icons package 1.0.0+ only.
   'slowmo': CupertinoIcons.slowmo,
@@ -4029,7 +4073,8 @@ const Map<String, IconData> cupertinoIcons = {
   'square_arrow_down_on_square': CupertinoIcons.square_arrow_down_on_square,
 
   /// <i class='cupertino-icons md-36'>square_arrow_down_on_square_fill</i> &#x2014; Cupertino icon named "square_arrow_down_on_square_fill". Available on cupertino_icons package 1.0.0+ only.
-  'square_arrow_down_on_square_fill': CupertinoIcons.square_arrow_down_on_square_fill,
+  'square_arrow_down_on_square_fill':
+      CupertinoIcons.square_arrow_down_on_square_fill,
 
   /// <i class='cupertino-icons md-36'>square_arrow_left</i> &#x2014; Cupertino icon named "square_arrow_left". Available on cupertino_icons package 1.0.0+ only.
   'square_arrow_left': CupertinoIcons.square_arrow_left,
@@ -4056,7 +4101,8 @@ const Map<String, IconData> cupertinoIcons = {
   'square_arrow_up_on_square': CupertinoIcons.square_arrow_up_on_square,
 
   /// <i class='cupertino-icons md-36'>square_arrow_up_on_square_fill</i> &#x2014; Cupertino icon named "square_arrow_up_on_square_fill". Available on cupertino_icons package 1.0.0+ only.
-  'square_arrow_up_on_square_fill': CupertinoIcons.square_arrow_up_on_square_fill,
+  'square_arrow_up_on_square_fill':
+      CupertinoIcons.square_arrow_up_on_square_fill,
 
   /// <i class='cupertino-icons md-36'>square_favorites</i> &#x2014; Cupertino icon named "square_favorites". Available on cupertino_icons package 1.0.0+ only.
   'square_favorites': CupertinoIcons.square_favorites,
@@ -4074,10 +4120,12 @@ const Map<String, IconData> cupertinoIcons = {
   'square_fill': CupertinoIcons.square_fill,
 
   /// <i class='cupertino-icons md-36'>square_fill_line_vertical_square</i> &#x2014; Cupertino icon named "square_fill_line_vertical_square". Available on cupertino_icons package 1.0.0+ only.
-  'square_fill_line_vertical_square': CupertinoIcons.square_fill_line_vertical_square,
+  'square_fill_line_vertical_square':
+      CupertinoIcons.square_fill_line_vertical_square,
 
   /// <i class='cupertino-icons md-36'>square_fill_line_vertical_square_fill</i> &#x2014; Cupertino icon named "square_fill_line_vertical_square_fill". Available on cupertino_icons package 1.0.0+ only.
-  'square_fill_line_vertical_square_fill': CupertinoIcons.square_fill_line_vertical_square_fill,
+  'square_fill_line_vertical_square_fill':
+      CupertinoIcons.square_fill_line_vertical_square_fill,
 
   /// <i class='cupertino-icons md-36'>square_fill_on_circle_fill</i> &#x2014; Cupertino icon named "square_fill_on_circle_fill". Available on cupertino_icons package 1.0.0+ only.
   'square_fill_on_circle_fill': CupertinoIcons.square_fill_on_circle_fill,
@@ -4107,7 +4155,8 @@ const Map<String, IconData> cupertinoIcons = {
   'square_line_vertical_square': CupertinoIcons.square_line_vertical_square,
 
   /// <i class='cupertino-icons md-36'>square_line_vertical_square_fill</i> &#x2014; Cupertino icon named "square_line_vertical_square_fill". Available on cupertino_icons package 1.0.0+ only.
-  'square_line_vertical_square_fill': CupertinoIcons.square_line_vertical_square_fill,
+  'square_line_vertical_square_fill':
+      CupertinoIcons.square_line_vertical_square_fill,
 
   /// <i class='cupertino-icons md-36'>square_list</i> &#x2014; Cupertino icon named "square_list". Available on cupertino_icons package 1.0.0+ only.
   'square_list': CupertinoIcons.square_list,
@@ -4156,13 +4205,15 @@ const Map<String, IconData> cupertinoIcons = {
   'square_stack': CupertinoIcons.square_stack,
 
   /// <i class='cupertino-icons md-36'>square_stack_3d_down_dottedline</i> &#x2014; Cupertino icon named "square_stack_3d_down_dottedline". Available on cupertino_icons package 1.0.0+ only.
-  'square_stack_3d_down_dottedline': CupertinoIcons.square_stack_3d_down_dottedline,
+  'square_stack_3d_down_dottedline':
+      CupertinoIcons.square_stack_3d_down_dottedline,
 
   /// <i class='cupertino-icons md-36'>square_stack_3d_down_right</i> &#x2014; Cupertino icon named "square_stack_3d_down_right". Available on cupertino_icons package 1.0.0+ only.
   'square_stack_3d_down_right': CupertinoIcons.square_stack_3d_down_right,
 
   /// <i class='cupertino-icons md-36'>square_stack_3d_down_right_fill</i> &#x2014; Cupertino icon named "square_stack_3d_down_right_fill". Available on cupertino_icons package 1.0.0+ only.
-  'square_stack_3d_down_right_fill': CupertinoIcons.square_stack_3d_down_right_fill,
+  'square_stack_3d_down_right_fill':
+      CupertinoIcons.square_stack_3d_down_right_fill,
 
   /// <i class='cupertino-icons md-36'>square_stack_3d_up</i> &#x2014; Cupertino icon named "square_stack_3d_up". Available on cupertino_icons package 1.0.0+ only.
   'square_stack_3d_up': CupertinoIcons.square_stack_3d_up,
@@ -4388,7 +4439,8 @@ const Map<String, IconData> cupertinoIcons = {
   'textformat_abc': CupertinoIcons.textformat_abc,
 
   /// <i class='cupertino-icons md-36'>textformat_abc_dottedunderline</i> &#x2014; Cupertino icon named "textformat_abc_dottedunderline". Available on cupertino_icons package 1.0.0+ only.
-  'textformat_abc_dottedunderline': CupertinoIcons.textformat_abc_dottedunderline,
+  'textformat_abc_dottedunderline':
+      CupertinoIcons.textformat_abc_dottedunderline,
 
   /// <i class='cupertino-icons md-36'>textformat_alt</i> &#x2014; Cupertino icon named "textformat_alt". Available on cupertino_icons package 1.0.0+ only.
   'textformat_alt': CupertinoIcons.textformat_alt,

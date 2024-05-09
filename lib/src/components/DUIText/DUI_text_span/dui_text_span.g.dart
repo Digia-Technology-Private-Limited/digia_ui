@@ -12,7 +12,8 @@ DUITextSpan _$DUITextSpanFromJson(Map<String, dynamic> json) => DUITextSpan(
       url: json['url'] as String?,
     );
 
-Map<String, dynamic> _$DUITextSpanToJson(DUITextSpan instance) => <String, dynamic>{
+Map<String, dynamic> _$DUITextSpanToJson(DUITextSpan instance) =>
+    <String, dynamic>{
       'text': instance.text,
       'url': instance.url,
     };

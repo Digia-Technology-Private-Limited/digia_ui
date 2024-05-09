@@ -30,7 +30,8 @@ class DUICircularProgressBarProps {
         strokeAlign = strokeAlign ?? 4.0,
         strokeWidth = strokeWidth ?? 5.0;
 
-  factory DUICircularProgressBarProps.fromJson(dynamic json) => _$DUICircularProgressBarPropsFromJson(json);
+  factory DUICircularProgressBarProps.fromJson(dynamic json) =>
+      _$DUICircularProgressBarPropsFromJson(json);
 
   Map<String, dynamic> toJson() => _$DUICircularProgressBarPropsToJson(this);
 }

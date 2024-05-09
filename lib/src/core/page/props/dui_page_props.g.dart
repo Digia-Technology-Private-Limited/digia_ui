@@ -10,17 +10,21 @@ DUIPageProps _$DUIPagePropsFromJson(Map<String, dynamic> json) => DUIPageProps(
       uid: json['uid'] as String,
       actions: json['actions'],
       inputArgs: json['inputArgs'],
-      variables: _$JsonConverterFromJson<Map<String, dynamic>, Map<String, VariableDef>>(
+      variables: _$JsonConverterFromJson<Map<String, dynamic>,
+              Map<String, VariableDef>>(
           json['variables'], const VariablesJsonConverter().fromJson),
-      layout: const PageLayoutJsonConverter().fromJson(json['layout'] as Map<String, dynamic>?),
+      layout: const PageLayoutJsonConverter()
+          .fromJson(json['layout'] as Map<String, dynamic>?),
     );
 
-Map<String, dynamic> _$DUIPagePropsToJson(DUIPageProps instance) => <String, dynamic>{
+Map<String, dynamic> _$DUIPagePropsToJson(DUIPageProps instance) =>
+    <String, dynamic>{
       'uid': instance.uid,
       'actions': instance.actions,
       'inputArgs': instance.inputArgs,
-      'variables': _$JsonConverterToJson<Map<String, dynamic>, Map<String, VariableDef>>(
-          instance.variables, const VariablesJsonConverter().toJson),
+      'variables':
+          _$JsonConverterToJson<Map<String, dynamic>, Map<String, VariableDef>>(
+              instance.variables, const VariablesJsonConverter().toJson),
       'layout': const PageLayoutJsonConverter().toJson(instance.layout),
     };
 

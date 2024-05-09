@@ -23,15 +23,18 @@ class VariableDef {
   }
 }
 
-class VariablesJsonConverter extends JsonConverter<Map<String, VariableDef>, Map<String, dynamic>> {
+class VariablesJsonConverter
+    extends JsonConverter<Map<String, VariableDef>, Map<String, dynamic>> {
   const VariablesJsonConverter();
   @override
   Map<String, VariableDef> fromJson(Map<String, dynamic>? json) {
     if (json == null) return {};
 
     return json.entries.fold({}, (result, curr) {
-      result[curr.key] =
-          VariableDef(type: curr.value['type'] as String, name: curr.key, defaultValue: curr.value['default']);
+      result[curr.key] = VariableDef(
+          type: curr.value['type'] as String,
+          name: curr.key,
+          defaultValue: curr.value['default']);
       return result;
     });
   }

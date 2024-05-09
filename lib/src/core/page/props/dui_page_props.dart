@@ -25,7 +25,8 @@ class DUIPageProps {
     required this.layout,
   });
 
-  factory DUIPageProps.fromJson(Map<String, dynamic> json) => _$DUIPagePropsFromJson(json);
+  factory DUIPageProps.fromJson(Map<String, dynamic> json) =>
+      _$DUIPagePropsFromJson(json);
 
   Map<String, dynamic> toJson() => _$DUIPagePropsToJson(this);
 }
@@ -44,12 +45,14 @@ class PageBody {
 
   PageBody({required this.root});
 
-  factory PageBody.fromJson(Map<String, dynamic> json) => _$PageBodyFromJson(json);
+  factory PageBody.fromJson(Map<String, dynamic> json) =>
+      _$PageBodyFromJson(json);
 
   Map<String, dynamic> toJson() => _$PageBodyToJson(this);
 }
 
-class PageLayoutJsonConverter extends JsonConverter<PageLayoutProps?, Map<String, dynamic>?> {
+class PageLayoutJsonConverter
+    extends JsonConverter<PageLayoutProps?, Map<String, dynamic>?> {
   const PageLayoutJsonConverter();
   static final Map<String, List<DUIWidgetJsonData>> _defaultAppBarChild = {
     'appBar': [
@@ -63,7 +66,9 @@ class PageLayoutJsonConverter extends JsonConverter<PageLayoutProps?, Map<String
 
     /// If empty, show a Scaffold with a Default AppBar
     if (json.isEmpty) {
-      return PageLayoutProps(root: DUIWidgetJsonData(type: 'fw/scaffold', children: {..._defaultAppBarChild}));
+      return PageLayoutProps(
+          root: DUIWidgetJsonData(
+              type: 'fw/scaffold', children: {..._defaultAppBarChild}));
     }
 
     if (json['root'] != null) {
@@ -101,8 +106,11 @@ class PageLayoutJsonConverter extends JsonConverter<PageLayoutProps?, Map<String
     });
 
     return PageLayoutProps(
-        root: DUIWidgetJsonData(
-            type: 'fw/scaffold', children: {...?appBarProps, ...?bodyProps, ...?persistentFooterProps}));
+        root: DUIWidgetJsonData(type: 'fw/scaffold', children: {
+      ...?appBarProps,
+      ...?bodyProps,
+      ...?persistentFooterProps
+    }));
   }
 
   @override

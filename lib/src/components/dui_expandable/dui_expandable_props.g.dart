@@ -6,8 +6,12 @@ part of 'dui_expandable_props.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-DUIExpandableIconProps _$DUIExpandableIconPropsFromJson(Map<String, dynamic> json) => DUIExpandableIconProps(
-      iconPadding: json['iconPadding'] == null ? null : DUIInsets.fromJson(json['iconPadding']),
+DUIExpandableIconProps _$DUIExpandableIconPropsFromJson(
+        Map<String, dynamic> json) =>
+    DUIExpandableIconProps(
+      iconPadding: json['iconPadding'] == null
+          ? null
+          : DUIInsets.fromJson(json['iconPadding']),
       collapseIcon: json['collapseIcon'] as Map<String, dynamic>?,
       expandIcon: json['expandIcon'] as Map<String, dynamic>?,
       iconPlacement: json['iconPlacement'] as String?,
@@ -15,7 +19,9 @@ DUIExpandableIconProps _$DUIExpandableIconPropsFromJson(Map<String, dynamic> jso
       iconRotationAngle: (json['iconRotationAngle'] as num?)?.toDouble(),
     );
 
-Map<String, dynamic> _$DUIExpandableIconPropsToJson(DUIExpandableIconProps instance) => <String, dynamic>{
+Map<String, dynamic> _$DUIExpandableIconPropsToJson(
+        DUIExpandableIconProps instance) =>
+    <String, dynamic>{
       'collapseIcon': instance.collapseIcon,
       'expandIcon': instance.expandIcon,
       'iconPlacement': instance.iconPlacement,
@@ -24,7 +30,8 @@ Map<String, dynamic> _$DUIExpandableIconPropsToJson(DUIExpandableIconProps insta
       'iconRotationAngle': instance.iconRotationAngle,
     };
 
-DUIExpandableProps _$DUIExpandablePropsFromJson(Map<String, dynamic> json) => DUIExpandableProps(
+DUIExpandableProps _$DUIExpandablePropsFromJson(Map<String, dynamic> json) =>
+    DUIExpandableProps(
       json['bodyAlignment'] as String?,
       json['headerAlignment'] as String?,
       json['color'] as String?,
@@ -39,7 +46,8 @@ DUIExpandableProps _$DUIExpandablePropsFromJson(Map<String, dynamic> json) => DU
       json['initiallyExpanded'] as bool?,
     );
 
-Map<String, dynamic> _$DUIExpandablePropsToJson(DUIExpandableProps instance) => <String, dynamic>{
+Map<String, dynamic> _$DUIExpandablePropsToJson(DUIExpandableProps instance) =>
+    <String, dynamic>{
       'bodyAlignment': instance.bodyAlignment,
       'headerAlignment': instance.headerAlignment,
       'color': instance.color,

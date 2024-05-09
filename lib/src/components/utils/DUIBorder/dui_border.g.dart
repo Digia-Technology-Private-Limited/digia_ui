@@ -10,7 +10,9 @@ DUIBorder _$DUIBorderFromJson(Map<String, dynamic> json) => DUIBorder()
   ..borderStyle = json['borderStyle'] as String?
   ..borderWidth = (json['borderWidth'] as num?)?.toDouble()
   ..borderColor = json['borderColor'] as String?
-  ..borderRadius = json['borderRadius'] == null ? null : DUICornerRadius.fromJson(json['borderRadius']);
+  ..borderRadius = json['borderRadius'] == null
+      ? null
+      : DUICornerRadius.fromJson(json['borderRadius']);
 
 Map<String, dynamic> _$DUIBorderToJson(DUIBorder instance) => <String, dynamic>{
       'borderStyle': instance.borderStyle,

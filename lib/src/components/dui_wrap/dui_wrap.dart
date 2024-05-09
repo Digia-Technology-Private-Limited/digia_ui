@@ -21,11 +21,13 @@ class _DUIWrapState extends State<DUIWrap> {
     return Wrap(
       spacing: widget.props.spacing ?? 0,
       alignment: DUIDecoder.toWrapAlignment(widget.props.wrapAlignment),
-      crossAxisAlignment: DUIDecoder.toWrapCrossAlignment(widget.props.wrapCrossAlignment),
+      crossAxisAlignment:
+          DUIDecoder.toWrapCrossAlignment(widget.props.wrapCrossAlignment),
       direction: DUIDecoder.toAxis(widget.props.direction),
       runSpacing: widget.props.runSpacing ?? 0,
       runAlignment: DUIDecoder.toWrapAlignment(widget.props.runAlignment),
-      verticalDirection: DUIDecoder.toVerticalDirection(widget.props.verticalDirection),
+      verticalDirection:
+          DUIDecoder.toVerticalDirection(widget.props.verticalDirection),
       clipBehavior: DUIDecoder.toClip(widget.props.clipBehavior),
       children: !(widget.children.isNullOrEmpty)
           ? widget.children!.map((e) {

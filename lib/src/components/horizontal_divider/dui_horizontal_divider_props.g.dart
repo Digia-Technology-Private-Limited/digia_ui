@@ -6,7 +6,8 @@ part of 'dui_horizontal_divider_props.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-DUIHorizonatalDividerProps _$DUIHorizonatalDividerPropsFromJson(Map<String, dynamic> json) =>
+DUIHorizonatalDividerProps _$DUIHorizonatalDividerPropsFromJson(
+        Map<String, dynamic> json) =>
     DUIHorizonatalDividerProps(
       lineStyle: json['lineStyle'] as String?,
       color: json['color'] as String?,
@@ -16,7 +17,9 @@ DUIHorizonatalDividerProps _$DUIHorizonatalDividerPropsFromJson(Map<String, dyna
       height: (json['height'] as num?)?.toDouble(),
     );
 
-Map<String, dynamic> _$DUIHorizonatalDividerPropsToJson(DUIHorizonatalDividerProps instance) => <String, dynamic>{
+Map<String, dynamic> _$DUIHorizonatalDividerPropsToJson(
+        DUIHorizonatalDividerProps instance) =>
+    <String, dynamic>{
       'lineStyle': instance.lineStyle,
       'height': instance.height,
       'color': instance.color,

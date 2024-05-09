@@ -38,7 +38,8 @@ class DUIContainer2Props {
     this.boxFit,
   );
 
-  factory DUIContainer2Props.fromJson(Map<String, dynamic> json) => _$DUIContainer2PropsFromJson(json);
+  factory DUIContainer2Props.fromJson(Map<String, dynamic> json) =>
+      _$DUIContainer2PropsFromJson(json);
 
   Map<String, dynamic> toJson() => _$DUIContainer2PropsToJson(this);
 }

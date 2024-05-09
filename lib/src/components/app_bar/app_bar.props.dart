@@ -13,10 +13,16 @@ class DUIAppBarProps {
 
   double get elevation => _elevation;
 
-  DUIAppBarProps({required this.title, this.shadowColor, this.backgrounColor, this.iconColor, double? elevation})
+  DUIAppBarProps(
+      {required this.title,
+      this.shadowColor,
+      this.backgrounColor,
+      this.iconColor,
+      double? elevation})
       : _elevation = elevation ?? 0;
 
-  factory DUIAppBarProps.fromJson(Map<String, dynamic> json) => _$DUIAppBarPropsFromJson(json);
+  factory DUIAppBarProps.fromJson(Map<String, dynamic> json) =>
+      _$DUIAppBarPropsFromJson(json);
 
   Map<String, dynamic> toJson() => _$DUIAppBarPropsToJson(this);
 }

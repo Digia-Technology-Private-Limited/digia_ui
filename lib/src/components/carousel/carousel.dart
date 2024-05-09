@@ -34,12 +34,17 @@ class DUICarousel extends StatelessWidget {
         options: CarouselOptions(
             aspectRatio: double.tryParse(props.aspectRatio ?? '1.78') ?? 1.78,
             autoPlay: props.autoPlay ?? false,
-            autoPlayAnimationDuration: Duration(milliseconds: int.tryParse(props.animationDuration ?? '800') ?? 800),
+            autoPlayAnimationDuration: Duration(
+                milliseconds:
+                    int.tryParse(props.animationDuration ?? '800') ?? 800),
             autoPlayCurve: Curves.linear,
-            autoPlayInterval: Duration(milliseconds: int.tryParse(props.autoPlayInterval ?? '1600') ?? 1600),
+            autoPlayInterval: Duration(
+                milliseconds:
+                    int.tryParse(props.autoPlayInterval ?? '1600') ?? 1600),
             enableInfiniteScroll: props.infiniteScroll ?? false,
             initialPage: int.tryParse(props.initialPage ?? '1') ?? 1,
-            viewportFraction: double.tryParse(props.viewportFraction ?? '0.8') ?? 0.8,
+            viewportFraction:
+                double.tryParse(props.viewportFraction ?? '0.8') ?? 0.8,
             enlargeFactor: double.tryParse(props.enlargeFactor ?? '0.3') ?? 0.3,
             enlargeCenterPage: props.enlargeCenterPage,
             reverse: props.reverseScroll ?? false),

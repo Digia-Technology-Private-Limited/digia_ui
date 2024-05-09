@@ -13,6 +13,7 @@ class DUIHorizontalDividerBuilder extends DUIWidgetBuilder {
 
   @override
   Widget build(BuildContext context) {
-    return DUIHorizontalDivider(DUIHorizonatalDividerProps.fromJson(data.props));
+    return DUIHorizontalDivider(
+        DUIHorizonatalDividerProps.fromJson(data.props));
   }
 }

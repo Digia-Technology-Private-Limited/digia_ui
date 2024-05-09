@@ -8,7 +8,8 @@ class DUIFormProps {
 
   DUIFormProps();
 
-  factory DUIFormProps.fromJson(Map<String, dynamic> json) => _$DUIFormPropsFromJson(json);
+  factory DUIFormProps.fromJson(Map<String, dynamic> json) =>
+      _$DUIFormPropsFromJson(json);
 
   Map<String, dynamic> toJson() => _$DUIFormPropsToJson(this);
 }
@@ -20,7 +21,8 @@ class DUIFormChildProps {
 
   DUIFormChildProps();
 
-  factory DUIFormChildProps.fromJson(Map<String, dynamic> json) => _$DUIFormChildPropsFromJson(json);
+  factory DUIFormChildProps.fromJson(Map<String, dynamic> json) =>
+      _$DUIFormChildPropsFromJson(json);
 
   Map<String, dynamic> toJson() => _$DUIFormChildPropsToJson(this);
 }

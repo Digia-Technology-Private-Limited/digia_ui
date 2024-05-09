@@ -22,7 +22,8 @@ class DUISwitchProps {
   })  : _value = value ?? false,
         _enabled = enabled ?? true;
 
-  factory DUISwitchProps.fromJson(dynamic json) => _$DUISwitchPropsFromJson(json);
+  factory DUISwitchProps.fromJson(dynamic json) =>
+      _$DUISwitchPropsFromJson(json);
 
   Map<String, dynamic> toJson() => _$DUISwitchPropsToJson(this);
 }

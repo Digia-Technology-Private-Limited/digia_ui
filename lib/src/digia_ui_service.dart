@@ -7,10 +7,14 @@ class DigiaUIService {
   final NetworkClient httpClient;
   final DUIConfig config;
 
-  DigiaUIService({required this.baseUrl, required this.httpClient, required this.config});
+  DigiaUIService(
+      {required this.baseUrl, required this.httpClient, required this.config});
 
-  DigiaUIService copyWith({String? baseUrl, NetworkClient? httpclient, DUIConfig? config}) {
+  DigiaUIService copyWith(
+      {String? baseUrl, NetworkClient? httpclient, DUIConfig? config}) {
     return DigiaUIService(
-        baseUrl: baseUrl ?? this.baseUrl, httpClient: httpclient ?? httpClient, config: config ?? this.config);
+        baseUrl: baseUrl ?? this.baseUrl,
+        httpClient: httpclient ?? httpClient,
+        config: config ?? this.config);
   }
 }

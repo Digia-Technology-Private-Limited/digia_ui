@@ -24,7 +24,8 @@ class DUILottieProps {
     this.animate,
   });
 
-  factory DUILottieProps.fromJson(Map<String, dynamic> json) => _$DUILottiePropsFromJson(json);
+  factory DUILottieProps.fromJson(Map<String, dynamic> json) =>
+      _$DUILottiePropsFromJson(json);
 
   Map<String, dynamic> toJson() => _$DUILottiePropsToJson(this);
 }

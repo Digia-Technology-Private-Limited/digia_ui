@@ -23,7 +23,8 @@ class DUIWrapProps {
       this.verticalDirection,
       this.clipBehavior});
 
-  factory DUIWrapProps.fromJson(Map<String, dynamic> json) => _$DUIWrapPropsFromJson(json);
+  factory DUIWrapProps.fromJson(Map<String, dynamic> json) =>
+      _$DUIWrapPropsFromJson(json);
 
   Map<String, dynamic> toJson() => _$DUIWrapPropsToJson(this);
 }

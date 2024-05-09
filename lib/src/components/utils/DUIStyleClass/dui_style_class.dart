@@ -17,7 +17,14 @@ class DUIStyleClass {
   String? height;
   String? width;
 
-  DUIStyleClass({this.padding, this.margin, this.bgColor, this.border, this.alignment, this.height, this.width});
+  DUIStyleClass(
+      {this.padding,
+      this.margin,
+      this.bgColor,
+      this.border,
+      this.alignment,
+      this.height,
+      this.width});
 
   static DUIStyleClass? fromJson(dynamic json) => _$DUIStyleClassFromJson(json);
 

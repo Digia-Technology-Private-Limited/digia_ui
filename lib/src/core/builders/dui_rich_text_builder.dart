@@ -28,14 +28,16 @@ class DUIRichTextBuilder extends DUIWidgetBuilder {
     final maxLines = eval<int>(data.props['maxLines']);
     final overflow = DUIDecoder.toTextOverflow(data.props['overflow']);
     final textAlign = DUIDecoder.toTextAlign(data.props['textAlign']);
-    final styleJson = (data.props['textStyle'] ?? data.props['style']) as Map<String, dynamic>?;
+    final styleJson = (data.props['textStyle'] ?? data.props['style'])
+        as Map<String, dynamic>?;
 
     return RichText(
       maxLines: maxLines,
       overflow: overflow,
       textAlign: textAlign,
       text: TextSpan(
-        style: ifNotNull(styleJson, (p0) => toTextStyle(DUITextStyle.fromJson(styleJson))),
+        style: ifNotNull(
+            styleJson, (p0) => toTextStyle(DUITextStyle.fromJson(styleJson))),
         children: spanChildren,
       ),
     );
@@ -62,9 +64,11 @@ class DUIRichTextBuilder extends DUIWidgetBuilder {
             style = null;
           } else {
             text = eval<String>(span['text']);
-            final styleJson = span['spanStyle'] ?? span['textStyle'] ?? span['style'];
+            final styleJson =
+                span['spanStyle'] ?? span['textStyle'] ?? span['style'];
 
-            style = ifNotNull(styleJson, (p0) => toTextStyle(DUITextStyle.fromJson(p0)));
+            style = ifNotNull(
+                styleJson, (p0) => toTextStyle(DUITextStyle.fromJson(p0)));
           }
 
           if (text == null) return null;

@@ -6,7 +6,8 @@ part of 'dui_tab_view_props.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-DUITabViewProps _$DUITabViewPropsFromJson(Map<String, dynamic> json) => DUITabViewProps(
+DUITabViewProps _$DUITabViewPropsFromJson(Map<String, dynamic> json) =>
+    DUITabViewProps(
       hasTabs: json['hasTabs'] as bool?,
       selectedLabelColor: json['selectedLabelColor'] as String?,
       selectedLabelStyle: DUITextStyle.fromJson(json['selectedLabelStyle']),
@@ -20,7 +21,8 @@ DUITabViewProps _$DUITabViewPropsFromJson(Map<String, dynamic> json) => DUITabVi
       viewportFraction: (json['viewportFraction'] as num?)?.toDouble(),
     );
 
-Map<String, dynamic> _$DUITabViewPropsToJson(DUITabViewProps instance) => <String, dynamic>{
+Map<String, dynamic> _$DUITabViewPropsToJson(DUITabViewProps instance) =>
+    <String, dynamic>{
       'hasTabs': instance.hasTabs,
       'dividerColor': instance.dividerColor,
       'tabBarPosition': instance.tabBarPosition,

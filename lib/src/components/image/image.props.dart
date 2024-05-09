@@ -14,9 +14,15 @@ class DUIImageProps {
   final String? fit;
 
   DUIImageProps(
-      {this.styleClass, required this.imageSrc, this.placeHolder, this.errorImage, this.aspectRatio, this.fit});
+      {this.styleClass,
+      required this.imageSrc,
+      this.placeHolder,
+      this.errorImage,
+      this.aspectRatio,
+      this.fit});
 
-  factory DUIImageProps.fromJson(Map<String, dynamic> json) => _$DUIImagePropsFromJson(json);
+  factory DUIImageProps.fromJson(Map<String, dynamic> json) =>
+      _$DUIImagePropsFromJson(json);
 
   Map<String, dynamic> toJson() => _$DUIImagePropsToJson(this);
 }

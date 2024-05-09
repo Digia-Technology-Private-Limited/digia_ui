@@ -10,7 +10,12 @@ class DUITabView extends StatefulWidget {
   final List<DUIWidgetJsonData> children;
   final DUIWidgetRegistry? registry;
   final DUITabViewProps tabViewProps;
-  const DUITabView({required this.children, required this.tabViewProps, this.registry, Key? key}) : super(key: key);
+  const DUITabView(
+      {required this.children,
+      required this.tabViewProps,
+      this.registry,
+      Key? key})
+      : super(key: key);
 
   @override
   State<DUITabView> createState() => _DUITabViewState();
@@ -28,42 +33,61 @@ class _DUITabViewState extends State<DUITabView> {
               Visibility(
                 visible: widget.tabViewProps.hasTabs ?? false,
                 child: TabBar(
-                  unselectedLabelColor: widget.tabViewProps.unselectedLabelColor.letIfTrue(toColor),
-                  unselectedLabelStyle: toTextStyle(widget.tabViewProps.unselectedLabelStyle),
-                  indicatorColor: widget.tabViewProps.indicatorColor.letIfTrue(toColor),
-                  labelStyle: toTextStyle(widget.tabViewProps.selectedLabelStyle),
-                  dividerColor: widget.tabViewProps.dividerColor.letIfTrue(toColor),
-                  labelColor: widget.tabViewProps.selectedLabelColor.letIfTrue(toColor),
+                  unselectedLabelColor: widget.tabViewProps.unselectedLabelColor
+                      .letIfTrue(toColor),
+                  unselectedLabelStyle:
+                      toTextStyle(widget.tabViewProps.unselectedLabelStyle),
+                  indicatorColor:
+                      widget.tabViewProps.indicatorColor.letIfTrue(toColor),
+                  labelStyle:
+                      toTextStyle(widget.tabViewProps.selectedLabelStyle),
+                  dividerColor:
+                      widget.tabViewProps.dividerColor.letIfTrue(toColor),
+                  labelColor:
+                      widget.tabViewProps.selectedLabelColor.letIfTrue(toColor),
                   dividerHeight: widget.tabViewProps.dividerHeight,
                   tabs: List.generate(
-                      widget.children.length, (index) => Text(widget.children[index].props['title'] ?? 'title')),
+                      widget.children.length,
+                      (index) => Text(
+                          widget.children[index].props['title'] ?? 'title')),
                 ),
               ),
             Expanded(
                 child: TabBarView(
-                    viewportFraction: widget.tabViewProps.viewportFraction ?? 1.0,
+                    viewportFraction:
+                        widget.tabViewProps.viewportFraction ?? 1.0,
                     physics: widget.tabViewProps.isScrollable ?? false
                         ? const AlwaysScrollableScrollPhysics()
                         : const NeverScrollableScrollPhysics(),
                     children: widget.children.map((e) {
-                      final builder = DUIJsonWidgetBuilder(data: e, registry: widget.registry!);
+                      final builder = DUIJsonWidgetBuilder(
+                          data: e, registry: widget.registry!);
                       return builder.build(context);
                     }).toList())),
             if (widget.tabViewProps.tabBarPosition == 'bottom')
               Visibility(
                 visible: widget.tabViewProps.hasTabs ?? false,
                 child: TabBar(
-                  unselectedLabelColor: widget.tabViewProps.unselectedLabelColor.letIfTrue(toColor),
-                  unselectedLabelStyle: toTextStyle(widget.tabViewProps.unselectedLabelStyle),
-                  labelStyle: toTextStyle(widget.tabViewProps.selectedLabelStyle),
-                  dividerColor: widget.tabViewProps.dividerColor.letIfTrue(toColor),
-                  labelColor: widget.tabViewProps.selectedLabelColor.letIfTrue(toColor),
+                  unselectedLabelColor: widget.tabViewProps.unselectedLabelColor
+                      .letIfTrue(toColor),
+                  unselectedLabelStyle:
+                      toTextStyle(widget.tabViewProps.unselectedLabelStyle),
+                  labelStyle:
+                      toTextStyle(widget.tabViewProps.selectedLabelStyle),
+                  dividerColor:
+                      widget.tabViewProps.dividerColor.letIfTrue(toColor),
+                  labelColor:
+                      widget.tabViewProps.selectedLabelColor.letIfTrue(toColor),
                   dividerHeight: widget.tabViewProps.dividerHeight,
                   indicator: widget.tabViewProps.indicatorColor != null
-                      ? BoxDecoration(color: widget.tabViewProps.indicatorColor.letIfTrue(toColor))
+                      ? BoxDecoration(
+                          color: widget.tabViewProps.indicatorColor
+                              .letIfTrue(toColor))
                       : null,
                   tabs: List.generate(
-                      widget.children.length, (index) => Text(widget.children[index].props['title'] ?? 'title')),
+                      widget.children.length,
+                      (index) => Text(
+                          widget.children[index].props['title'] ?? 'title')),
                 ),
               ),
           ],

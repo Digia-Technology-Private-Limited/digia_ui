@@ -27,7 +27,9 @@ class DUIStackBuilder extends DUIWidgetBuilder {
               DUIInsets position = DUIInsets.fromJson(
                 e.containerProps.valueFor(keyPath: 'positioned.position'),
               );
-              final hasPosition = e.containerProps.valueFor(keyPath: 'positioned.hasPosition') ?? false;
+              final hasPosition = e.containerProps
+                      .valueFor(keyPath: 'positioned.hasPosition') ??
+                  false;
               final childWidget = DUIWidget(data: e);
 
               if (!hasPosition) {

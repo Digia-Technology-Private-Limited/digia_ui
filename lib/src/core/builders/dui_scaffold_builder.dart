@@ -27,26 +27,32 @@ class DUIScaffoldBuilder extends DUIWidgetBuilder {
       return FW.appBar(root.props);
     });
 
-    final persistentFooterButtons = (data.children['persistentFooterButtons']?.firstOrNull).let((e) {
+    final persistentFooterButtons =
+        (data.children['persistentFooterButtons']?.firstOrNull).let((e) {
       if (data.children['persistentFooterButtons']!.isNullOrEmpty) {
         return null;
       }
 
-      List<Widget> persistentFooterButtonsList = List.generate(data.children['persistentFooterButtons']!.length,
-          (index) => DUIWidget(data: data.children['persistentFooterButtons']![index]));
+      List<Widget> persistentFooterButtonsList = List.generate(
+          data.children['persistentFooterButtons']!.length,
+          (index) => DUIWidget(
+              data: data.children['persistentFooterButtons']![index]));
 
       return persistentFooterButtonsList;
     });
 
-    final floatingActionButton = (data.children['floatingActionButton']?.firstOrNull).let((root) {
+    final floatingActionButton =
+        (data.children['floatingActionButton']?.firstOrNull).let((root) {
       if (root.type != 'digia/floatingActionButton') {
         return null;
       }
 
-      return DUIFloatingActionButton.floatingActionButton(root.props, context, data);
+      return DUIFloatingActionButton.floatingActionButton(
+          root.props, context, data);
     });
 
-    final floatingActionButtonProps = (data.children['floatingActionButton']?.firstOrNull).let((root) {
+    final floatingActionButtonProps =
+        (data.children['floatingActionButton']?.firstOrNull).let((root) {
       if (root.type != 'digia/floatingActionButton') {
         return null;
       }
@@ -61,7 +67,8 @@ class DUIScaffoldBuilder extends DUIWidgetBuilder {
       }),
       persistentFooterButtons: persistentFooterButtons,
       floatingActionButton: floatingActionButton,
-      floatingActionButtonLocation: DUIFloatingActionButtonLocation.fabLocation(floatingActionButtonProps),
+      floatingActionButtonLocation: DUIFloatingActionButtonLocation.fabLocation(
+          floatingActionButtonProps),
     );
   }
 }

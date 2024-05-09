@@ -16,7 +16,8 @@ class DUIYoutubePlayerProps {
     this.loop,
   });
 
-  factory DUIYoutubePlayerProps.fromJson(Map<String, dynamic> json) => _$DUIYoutubePlayerPropsFromJson(json);
+  factory DUIYoutubePlayerProps.fromJson(Map<String, dynamic> json) =>
+      _$DUIYoutubePlayerPropsFromJson(json);
 
   Map<String, dynamic> toJson() => _$DUIYoutubePlayerPropsToJson(this);
 }

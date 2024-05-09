@@ -20,7 +20,8 @@ class SingleSetStateEvent {
   final BuildContext context;
   final Object? value;
 
-  SingleSetStateEvent({required this.variableName, required this.context, required this.value});
+  SingleSetStateEvent(
+      {required this.variableName, required this.context, required this.value});
 }
 
 class SetStateEvent extends DUIPageEvent {

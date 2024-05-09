@@ -15,7 +15,8 @@ class RestHandler {
 
   RestHandler._internal();
 
-  Future<dynamic>? executeAction(BuildContext context, ActionProp action) async {
+  Future<dynamic>? executeAction(
+      BuildContext context, ActionProp action) async {
     if (action.type != 'Action.restCall' || action.data.isEmpty) {
       return null;
     }

@@ -17,7 +17,8 @@ DUIWrapProps _$DUIWrapPropsFromJson(Map<String, dynamic> json) => DUIWrapProps(
       clipBehavior: json['clipBehavior'] as String?,
     );
 
-Map<String, dynamic> _$DUIWrapPropsToJson(DUIWrapProps instance) => <String, dynamic>{
+Map<String, dynamic> _$DUIWrapPropsToJson(DUIWrapProps instance) =>
+    <String, dynamic>{
       'spacing': instance.spacing,
       'runSpacing': instance.runSpacing,
       'wrapAlignment': instance.wrapAlignment,

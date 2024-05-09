@@ -12,7 +12,8 @@ class DUITextSpan {
 
   DUITextSpan({this.text, this.spanStyle, this.url});
 
-  factory DUITextSpan.fromJson(Map<String, dynamic> json) => _$DUITextSpanFromJson(json);
+  factory DUITextSpan.fromJson(Map<String, dynamic> json) =>
+      _$DUITextSpanFromJson(json);
 
   Map<String, dynamic> toJson() => _$DUITextSpanToJson(this);
 }

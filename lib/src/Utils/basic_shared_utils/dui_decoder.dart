@@ -19,11 +19,13 @@ class DUIDecoder {
     };
   }
 
-  static MainAxisAlignment toMainAxisAlginmentOrDefault(String? value, {required MainAxisAlignment defaultValue}) {
+  static MainAxisAlignment toMainAxisAlginmentOrDefault(String? value,
+      {required MainAxisAlignment defaultValue}) {
     return toMainAxisAlginment(value) ?? defaultValue;
   }
 
-  static MainAxisSize toMainAxisSizeOrDefault(String? value, {required MainAxisSize defaultValue}) {
+  static MainAxisSize toMainAxisSizeOrDefault(String? value,
+      {required MainAxisSize defaultValue}) {
     return toMainAxisSize(value) ?? defaultValue;
   }
 
@@ -43,10 +45,15 @@ class DUIDecoder {
   static MainAxisSize? toMainAxisSize(String? value) {
     if (value == null) return null;
 
-    return switch (value) { 'min' => MainAxisSize.min, 'max' => MainAxisSize.max, _ => null };
+    return switch (value) {
+      'min' => MainAxisSize.min,
+      'max' => MainAxisSize.max,
+      _ => null
+    };
   }
 
-  static CrossAxisAlignment toCrossAxisAlignmentOrDefault(String? value, {required CrossAxisAlignment defaultValue}) {
+  static CrossAxisAlignment toCrossAxisAlignmentOrDefault(String? value,
+      {required CrossAxisAlignment defaultValue}) {
     return toCrossAxisAlignment(value) ?? defaultValue;
   }
 
@@ -134,7 +141,8 @@ class DUIDecoder {
     }
   }
 
-  static TextDecorationStyle? toTextDecorationStyle(String? textDecorationStyleToken) {
+  static TextDecorationStyle? toTextDecorationStyle(
+      String? textDecorationStyleToken) {
     switch (textDecorationStyleToken) {
       case 'dashed':
         return TextDecorationStyle.dashed;
@@ -154,7 +162,8 @@ class DUIDecoder {
   static LaunchMode toUriLaunchMode(String? value) => switch (value) {
         'inAppWebView' || 'inApp' => LaunchMode.inAppWebView,
         'externalApplication' || 'external' => LaunchMode.externalApplication,
-        'externalNonBrowserApplication' => LaunchMode.externalNonBrowserApplication,
+        'externalNonBrowserApplication' =>
+          LaunchMode.externalNonBrowserApplication,
         _ => LaunchMode.platformDefault
       };
 
@@ -193,15 +202,23 @@ class DUIDecoder {
         _ => BoxFit.none
       };
 
-  static EdgeInsets toEdgeInsets(dynamic value, {EdgeInsets or = EdgeInsets.zero}) {
+  static EdgeInsets toEdgeInsets(dynamic value,
+      {EdgeInsets or = EdgeInsets.zero}) {
     if (value == null) return or;
 
     if (value is List) {
-      return _toEdgeInsetsFromList(value.map((e) => NumDecoder.toDouble(e)).nonNulls.toList()) ?? or;
+      return _toEdgeInsetsFromList(
+              value.map((e) => NumDecoder.toDouble(e)).nonNulls.toList()) ??
+          or;
     }
 
     if (value is String) {
-      return _toEdgeInsetsFromList(value.split(',').map((e) => NumDecoder.toDouble(e)).nonNulls.toList()) ?? or;
+      return _toEdgeInsetsFromList(value
+              .split(',')
+              .map((e) => NumDecoder.toDouble(e))
+              .nonNulls
+              .toList()) ??
+          or;
     }
 
     if (value is num) {
@@ -210,13 +227,16 @@ class DUIDecoder {
 
     if (value is Map<String, dynamic>) {
       if (value['all'] != null) {
-        return EdgeInsets.all(NumDecoder.toDoubleOrDefault(value['all'], defaultValue: 0));
+        return EdgeInsets.all(
+            NumDecoder.toDoubleOrDefault(value['all'], defaultValue: 0));
       }
 
       if (value['horizontal'] != null && value['vertical'] != null) {
         return EdgeInsets.symmetric(
-            horizontal: NumDecoder.toDoubleOrDefault(value['horizontal'], defaultValue: 0),
-            vertical: NumDecoder.toDoubleOrDefault(value['vertical'], defaultValue: 0));
+            horizontal: NumDecoder.toDoubleOrDefault(value['horizontal'],
+                defaultValue: 0),
+            vertical: NumDecoder.toDoubleOrDefault(value['vertical'],
+                defaultValue: 0));
       }
 
       return EdgeInsets.fromLTRB(
@@ -250,7 +270,9 @@ class DUIDecoder {
 
   static ScrollPhysics? toScrollPhysics(dynamic physics) {
     if (physics is bool) {
-      return physics ? const AlwaysScrollableScrollPhysics() : const NeverScrollableScrollPhysics();
+      return physics
+          ? const AlwaysScrollableScrollPhysics()
+          : const NeverScrollableScrollPhysics();
     }
 
     if (physics is String) {
@@ -295,13 +317,17 @@ class DUIDecoder {
     if (value == null) return BorderRadius.zero;
 
     if (value is List) {
-      return _toBorderRadiusFromList(value.map((e) => NumDecoder.toDoubleOrDefault(e, defaultValue: 0.0)).toList()) ??
+      return _toBorderRadiusFromList(value
+              .map((e) => NumDecoder.toDoubleOrDefault(e, defaultValue: 0.0))
+              .toList()) ??
           BorderRadius.zero;
     }
 
     if (value is String) {
-      return _toBorderRadiusFromList(
-              value.split(',').map((e) => NumDecoder.toDoubleOrDefault(e, defaultValue: 0.0)).toList()) ??
+      return _toBorderRadiusFromList(value
+              .split(',')
+              .map((e) => NumDecoder.toDoubleOrDefault(e, defaultValue: 0.0))
+              .toList()) ??
           BorderRadius.zero;
     }
 
@@ -509,7 +535,8 @@ class DUIDecoder {
     return defaultValue;
   }
 
-  static WrapAlignment toWrapAlignment(String? value, {WrapAlignment defaultValue = WrapAlignment.start}) {
+  static WrapAlignment toWrapAlignment(String? value,
+      {WrapAlignment defaultValue = WrapAlignment.start}) {
     if (value == null) return defaultValue;
 
     return switch (value) {

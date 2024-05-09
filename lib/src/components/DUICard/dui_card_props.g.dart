@@ -14,10 +14,12 @@ DUICardProps _$DUICardPropsFromJson(Map<String, dynamic> json) => DUICardProps()
   ..topCrumbText = DUITextProps.fromJson(json['topCrumbText'])
   ..spaceBtwTopCrumbTextTitle = json['spaceBtwTopCrumbTextTitle'] as String
   ..avatarText = DUITextProps.fromJson(json['avatarText'])
-  ..avatarImage = DUIImageProps.fromJson(json['avatarImage'] as Map<String, dynamic>)
+  ..avatarImage =
+      DUIImageProps.fromJson(json['avatarImage'] as Map<String, dynamic>)
   ..spaceBtwAvatarImageAndText = json['spaceBtwAvatarImageAndText'] as String;
 
-Map<String, dynamic> _$DUICardPropsToJson(DUICardProps instance) => <String, dynamic>{
+Map<String, dynamic> _$DUICardPropsToJson(DUICardProps instance) =>
+    <String, dynamic>{
       'contentPadding': instance.contentPadding,
       'image': instance.image,
       'title': instance.title,

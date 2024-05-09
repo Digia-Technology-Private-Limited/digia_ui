@@ -23,15 +23,21 @@ DUIInsets _$DUIInsetsFromJson(dynamic json) {
 
 DUIInsets _$DUIInsetsFromListOfString(List<String> list) {
   if (list.length == 1) {
-    return DUIInsets(left: list.first, top: list.first, right: list.first, bottom: list.first);
+    return DUIInsets(
+        left: list.first,
+        top: list.first,
+        right: list.first,
+        bottom: list.first);
   }
 
   if (list.length == 2) {
-    return DUIInsets(left: list.first, top: list.last, right: list.first, bottom: list.last);
+    return DUIInsets(
+        left: list.first, top: list.last, right: list.first, bottom: list.last);
   }
 
   if (list.length == 4) {
-    return DUIInsets(left: list[0], top: list[1], right: list[2], bottom: list[3]);
+    return DUIInsets(
+        left: list[0], top: list[1], right: list[2], bottom: list[3]);
   }
 
   return DUIInsets();

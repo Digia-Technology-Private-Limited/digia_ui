@@ -17,7 +17,8 @@ class ActionFlow {
     }
 
     if (json is List) {
-      return ActionFlow(actions: json.map((e) => ActionProp.fromJson(e)).toList());
+      return ActionFlow(
+          actions: json.map((e) => ActionProp.fromJson(e)).toList());
     }
 
     return ActionFlow(actions: [], inkwell: inkwell);
@@ -38,7 +39,8 @@ class ActionProp {
     this.data = const {},
   });
 
-  factory ActionProp.fromJson(Map<String, dynamic> json) => _$ActionPropFromJson(json);
+  factory ActionProp.fromJson(Map<String, dynamic> json) =>
+      _$ActionPropFromJson(json);
 
   Map<String, dynamic> toJson() => _$ActionPropToJson(this);
 }

@@ -19,7 +19,8 @@ class DUIVerticalDividerProps {
     this.width,
   });
 
-  factory DUIVerticalDividerProps.fromJson(dynamic json) => _$DUIVerticalDividerPropsFromJson(json);
+  factory DUIVerticalDividerProps.fromJson(dynamic json) =>
+      _$DUIVerticalDividerPropsFromJson(json);
 
   Map<String, dynamic> toJson() => _$DUIVerticalDividerPropsToJson(this);
 }

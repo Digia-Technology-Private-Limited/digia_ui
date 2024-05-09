@@ -22,7 +22,8 @@ DUICornerRadius _$DUICornerRadiusFromJson(dynamic json) {
   }
 
   if (json is List<int>) {
-    return _$DUICornerRadiusFromListOfDouble(json.map((e) => e.toDouble()).toList());
+    return _$DUICornerRadiusFromListOfDouble(
+        json.map((e) => e.toDouble()).toList());
   }
 
   if (json is List<double>) {
@@ -77,7 +78,8 @@ DUICornerRadius _$DUICornerRadiusFromListOfDouble(List<double> list) {
   return DUICornerRadius();
 }
 
-Map<String, dynamic> _$DUICornerRadiusToJson(DUICornerRadius instance) => <String, dynamic>{
+Map<String, dynamic> _$DUICornerRadiusToJson(DUICornerRadius instance) =>
+    <String, dynamic>{
       'topLeft': instance.topLeft,
       'topRight': instance.topRight,
       'bottomRight': instance.bottomRight,

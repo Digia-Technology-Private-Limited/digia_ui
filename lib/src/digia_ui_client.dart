@@ -36,12 +36,17 @@ class DigiaUIClient {
     return _instance.networkClient;
   }
 
-  static initialize({required String accessKey, String? assetPath, String? baseUrl, Dio? dio}) async {
+  static initialize(
+      {required String accessKey,
+      String? assetPath,
+      String? baseUrl,
+      Dio? dio}) async {
     _instance.accessKey = accessKey;
     _instance.baseUrl = baseUrl ?? defaultBaseUrl;
     Map<String, dynamic> headers = {'digia_projectId': accessKey};
     _instance.networkClient = NetworkClient(dio, _instance.baseUrl, headers);
-    final string = await rootBundle.loadString(assetPath ?? defaultUIConfigAssetPath);
+    final string =
+        await rootBundle.loadString(assetPath ?? defaultUIConfigAssetPath);
     final data = jsonDecode(string);
 
     _instance.config = DUIConfig(data);
@@ -57,7 +62,11 @@ class DigiaUIClient {
     return _instance._isInitialized;
   }
 
-  static initializeFromData({required String accessKey, String? baseUrl, Dio? dio, required dynamic data}) async {
+  static initializeFromData(
+      {required String accessKey,
+      String? baseUrl,
+      Dio? dio,
+      required dynamic data}) async {
     _instance.accessKey = accessKey;
     _instance.baseUrl = baseUrl ?? defaultBaseUrl;
     Map<String, dynamic> headers = {'digia_projectId': accessKey};
@@ -71,7 +80,8 @@ class DigiaUIClient {
     _instance._isInitialized = true;
   }
 
-  static initializeFromNetwork({required String accessKey, String? baseUrl, Dio? dio}) async {
+  static initializeFromNetwork(
+      {required String accessKey, String? baseUrl, Dio? dio}) async {
     _instance.accessKey = accessKey;
     _instance.baseUrl = baseUrl ?? defaultBaseUrl;
     Map<String, dynamic> headers = {'digia_projectId': accessKey};
@@ -102,6 +112,9 @@ class DigiaUIClient {
   }
 
   static DigiaUIService createService() {
-    return DigiaUIService(baseUrl: _instance.baseUrl, httpClient: _instance.networkClient, config: _instance.config);
+    return DigiaUIService(
+        baseUrl: _instance.baseUrl,
+        httpClient: _instance.networkClient,
+        config: _instance.config);
   }
 }

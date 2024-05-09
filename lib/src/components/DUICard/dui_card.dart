@@ -11,7 +11,8 @@ class DUICard extends StatefulWidget {
 
   const DUICard(this.props, {super.key}) : super();
 
-  factory DUICard.create(Map<String, dynamic> json) => DUICard(DUICardProps.fromJson(json));
+  factory DUICard.create(Map<String, dynamic> json) =>
+      DUICard(DUICardProps.fromJson(json));
 
   @override
   State<DUICard> createState() => _DUICardState();
@@ -43,20 +44,24 @@ class _DUICardState extends State<DUICard> {
               Expanded(
                 flex: 2,
                 child: Padding(
-                  padding: DUIDecoder.toEdgeInsets(props.contentPadding.toJson()),
+                  padding:
+                      DUIDecoder.toEdgeInsets(props.contentPadding.toJson()),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       DUIText(props.topCrumbText),
-                      SizedBox(height: NumDecoder.toDouble(props.spaceBtwTopCrumbTextTitle)),
+                      SizedBox(
+                          height: NumDecoder.toDouble(
+                              props.spaceBtwTopCrumbTextTitle)),
                       DUIText(props.title),
                       const Spacer(),
                       Row(
                         children: [
                           DUIImage(props.avatarImage),
                           SizedBox(
-                            width: NumDecoder.toDouble(props.spaceBtwAvatarImageAndText),
+                            width: NumDecoder.toDouble(
+                                props.spaceBtwAvatarImageAndText),
                           ),
                           DUIText(props.avatarText)
                         ],

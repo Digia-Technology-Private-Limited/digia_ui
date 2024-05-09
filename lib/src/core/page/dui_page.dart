@@ -35,7 +35,8 @@ class DUIPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) {
-        return DUIPageBloc(pageUid: pageUid, onExternalMethodCalled: null, config: _config)
+        return DUIPageBloc(
+            pageUid: pageUid, onExternalMethodCalled: null, config: _config)
           ..add(InitPageEvent(pageParams: _pageArgs));
       },
       child: _DUIScreen(
@@ -88,7 +89,8 @@ class _DUIScreenState extends State<_DUIScreen> {
                 pageVars: state.props.variables,
                 enclosing: ExprContext(variables: {
                   'appState': AppStateClass(
-                      fields: DigiaUIClient.instance.appState.variables?.map((k, v) => MapEntry(k, v.value)))
+                      fields: DigiaUIClient.instance.appState.variables
+                          ?.map((k, v) => MapEntry(k, v.value)))
                 }),
                 child: DUIWidget(data: p0));
           }) ??
@@ -98,6 +100,9 @@ class _DUIScreenState extends State<_DUIScreen> {
 }
 
 // ignore: non_constant_identifier_names
-ExprClassInstance AppStateClass({Map<String, Object?>? fields, Map<String, ExprCallable>? methods}) {
-  return ExprClassInstance(klass: ExprClass(name: 'AppState', fields: fields ?? {}, methods: methods ?? {}));
+ExprClassInstance AppStateClass(
+    {Map<String, Object?>? fields, Map<String, ExprCallable>? methods}) {
+  return ExprClassInstance(
+      klass: ExprClass(
+          name: 'AppState', fields: fields ?? {}, methods: methods ?? {}));
 }

@@ -4,7 +4,8 @@ import 'package:digia_ui/src/core/page/props/dui_widget_json_data.dart';
 import 'package:flutter/material.dart';
 
 final class DUIJsonWidgetBuilder extends DUIWidgetBuilder {
-  DUIJsonWidgetBuilder({required DUIWidgetJsonData data, required DUIWidgetRegistry registry})
+  DUIJsonWidgetBuilder(
+      {required DUIWidgetJsonData data, required DUIWidgetRegistry registry})
       : super(data: data, registry: registry);
 
   @override

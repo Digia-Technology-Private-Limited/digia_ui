@@ -5050,7 +5050,8 @@ Map<String, IconData> fontAwesomeIcons = {
   /// Solid House Flood-circle-arrow-right icon
   ///
   /// https://fontawesome.com/icons/house-flood-water-circle-arrow-right?style=solid
-  'houseFloodWaterCircleArrowRight': FontAwesomeIcons.houseFloodWaterCircleArrowRight,
+  'houseFloodWaterCircleArrowRight':
+      FontAwesomeIcons.houseFloodWaterCircleArrowRight,
 
   /// Solid House laptop icon
   ///
@@ -5075,7 +5076,8 @@ Map<String, IconData> fontAwesomeIcons = {
   /// Solid House Medical-circle-exclamation icon
   ///
   /// https://fontawesome.com/icons/house-medical-circle-exclamation?style=solid
-  'houseMedicalCircleExclamation': FontAwesomeIcons.houseMedicalCircleExclamation,
+  'houseMedicalCircleExclamation':
+      FontAwesomeIcons.houseMedicalCircleExclamation,
 
   /// Solid House Medical-circle-xmark icon
   ///
@@ -6855,7 +6857,8 @@ Map<String, IconData> fontAwesomeIcons = {
   /// Solid Person Walking-dashed-line-arrow-right icon
   ///
   /// https://fontawesome.com/icons/person-walking-dashed-line-arrow-right?style=solid
-  'personWalkingDashedLineArrowRight': FontAwesomeIcons.personWalkingDashedLineArrowRight,
+  'personWalkingDashedLineArrowRight':
+      FontAwesomeIcons.personWalkingDashedLineArrowRight,
 
   /// Solid Person Walking-luggage icon
   ///

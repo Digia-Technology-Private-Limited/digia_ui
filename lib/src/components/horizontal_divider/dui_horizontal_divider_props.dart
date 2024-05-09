@@ -19,7 +19,8 @@ class DUIHorizonatalDividerProps {
     this.height,
   });
 
-  factory DUIHorizonatalDividerProps.fromJson(dynamic json) => _$DUIHorizonatalDividerPropsFromJson(json);
+  factory DUIHorizonatalDividerProps.fromJson(dynamic json) =>
+      _$DUIHorizonatalDividerPropsFromJson(json);
 
   Map<String, dynamic> toJson() => _$DUIHorizonatalDividerPropsToJson(this);
 }

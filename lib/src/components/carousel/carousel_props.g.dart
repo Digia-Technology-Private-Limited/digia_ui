@@ -6,7 +6,8 @@ part of 'carousel_props.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-DUICarouselProps _$DUICarouselPropsFromJson(Map<String, dynamic> json) => DUICarouselProps(
+DUICarouselProps _$DUICarouselPropsFromJson(Map<String, dynamic> json) =>
+    DUICarouselProps(
       json['height'] as String?,
       json['width'] as String?,
       json['aspectRatio'] as String?,
@@ -24,7 +25,8 @@ DUICarouselProps _$DUICarouselPropsFromJson(Map<String, dynamic> json) => DUICar
       json['reverseScroll'] as bool?,
     );
 
-Map<String, dynamic> _$DUICarouselPropsToJson(DUICarouselProps instance) => <String, dynamic>{
+Map<String, dynamic> _$DUICarouselPropsToJson(DUICarouselProps instance) =>
+    <String, dynamic>{
       'height': instance.height,
       'width': instance.width,
       'aspectRatio': instance.aspectRatio,

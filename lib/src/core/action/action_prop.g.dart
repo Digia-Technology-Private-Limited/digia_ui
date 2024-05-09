@@ -11,7 +11,8 @@ ActionProp _$ActionPropFromJson(Map<String, dynamic> json) => ActionProp(
       data: json['data'] as Map<String, dynamic>? ?? const {},
     );
 
-Map<String, dynamic> _$ActionPropToJson(ActionProp instance) => <String, dynamic>{
+Map<String, dynamic> _$ActionPropToJson(ActionProp instance) =>
+    <String, dynamic>{
       'type': instance.type,
       'data': instance.data,
     };

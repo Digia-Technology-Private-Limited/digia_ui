@@ -21,7 +21,8 @@ class _DUIAvatarState extends State<DUIAvatar> {
   Widget build(BuildContext context) {
     return switch (widget.props.shape) {
       AvatarCircleShape(:final radius) => _getCircleAvatar(radius),
-      AvatarSquareShape(:final sideLength, :final cornerRadius) => _getSquareAvatar(sideLength, cornerRadius),
+      AvatarSquareShape(:final sideLength, :final cornerRadius) =>
+        _getSquareAvatar(sideLength, cornerRadius),
       _ => _getCircleAvatar(16.0)
     };
   }
@@ -54,7 +55,8 @@ class _DUIAvatarState extends State<DUIAvatar> {
 
   Widget? _getAvatarChildWidget() {
     if (widget.props.imageSrc != null) {
-      return DUIImage(DUIImageProps(imageSrc: widget.props.imageSrc!, fit: widget.props.imageFit));
+      return DUIImage(DUIImageProps(
+          imageSrc: widget.props.imageSrc!, fit: widget.props.imageFit));
     }
 
     return widget.props.text.let((p0) => Align(

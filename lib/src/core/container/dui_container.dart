@@ -41,11 +41,13 @@ class DUIContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final borderRadius = DUIDecoder.toBorderRadius(styleClass?.border?.borderRadius?.toJson());
+    final borderRadius =
+        DUIDecoder.toBorderRadius(styleClass?.border?.borderRadius?.toJson());
 
     return Container(
         alignment: alignment ?? DUIDecoder.toAlignment(styleClass?.alignment),
-        padding: padding ?? DUIDecoder.toEdgeInsets(styleClass?.padding?.toJson()),
+        padding:
+            padding ?? DUIDecoder.toEdgeInsets(styleClass?.padding?.toJson()),
         decoration: BoxDecoration(
             border: toBorder(styleClass?.border),
             color: color ?? styleClass?.bgColor.letIfTrue(toColor),
@@ -70,7 +72,8 @@ class DUIContainer extends StatelessWidget {
     if (parsedValue != null) return parsedValue;
 
     if (heightStringValue.characters.last == '%') {
-      final substring = heightStringValue.substring(0, heightStringValue.length - 1);
+      final substring =
+          heightStringValue.substring(0, heightStringValue.length - 1);
       final heightFactor = double.tryParse(substring);
       if (heightFactor == null) return null;
 

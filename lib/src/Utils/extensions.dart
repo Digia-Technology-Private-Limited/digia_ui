@@ -66,7 +66,9 @@ extension ObjectExt on Object? {
 
     return switch (R) {
       const (String) =>
-        (value is List || value is Map ? jsonEncode(value) : value.toString()).tryCast<R>() ?? defaultValue,
+        (value is List || value is Map ? jsonEncode(value) : value.toString())
+                .tryCast<R>() ??
+            defaultValue,
       const (int) => NumDecoder.toInt(value).tryCast<R>() ?? defaultValue,
       const (double) => NumDecoder.toDouble(value).tryCast<R>() ?? defaultValue,
       const (bool) => NumDecoder.toBool(value).tryCast<R>() ?? defaultValue,
@@ -89,7 +91,11 @@ extension GeneralUtilExtension<T> on T {
   /// - empty `String`s
   /// - empty `Iterable` (list, set, ...)
   /// - empty `Map`
-  bool get isNullOrEmpty => isNull || _isStringObjectEmpty || _isIterableObjectEmpty || _isMapObjectEmpty;
+  bool get isNullOrEmpty =>
+      isNull ||
+      _isStringObjectEmpty ||
+      _isIterableObjectEmpty ||
+      _isMapObjectEmpty;
 
   /// Returns true if object is:
   /// - null `Object`
@@ -97,7 +103,11 @@ extension GeneralUtilExtension<T> on T {
   /// - empty `Iterable` (list, map, set, ...)
   /// - false `bool`
   bool get isNullEmptyOrFalse =>
-      isNull || _isStringObjectEmpty || _isIterableObjectEmpty || _isMapObjectEmpty || _isBoolObjectFalse;
+      isNull ||
+      _isStringObjectEmpty ||
+      _isIterableObjectEmpty ||
+      _isMapObjectEmpty ||
+      _isBoolObjectFalse;
 
   /// Returns true if object is:
   /// - null `Object`
@@ -119,14 +129,16 @@ extension GeneralUtilExtension<T> on T {
   /// If `String` object, return String's method `isEmpty`
   ///
   /// Otherwise return `false` to not affect logical-OR expression. As `false` denotes undefined or N/A since object is not `String`
-  bool get _isStringObjectEmpty => (this is String) ? (this as String).isEmpty : false;
+  bool get _isStringObjectEmpty =>
+      (this is String) ? (this as String).isEmpty : false;
 
   /// **Private helper**
   ///
   /// If `Iterable` object, return Iterable's method `isEmpty`
   ///
   /// Otherwise return `false` to not affect logical-OR expression. As `false` denotes undefined or N/A since object is not `Iterable`
-  bool get _isIterableObjectEmpty => (this is Iterable) ? (this as Iterable).isEmpty : false;
+  bool get _isIterableObjectEmpty =>
+      (this is Iterable) ? (this as Iterable).isEmpty : false;
 
   /// **Private helper**
   ///
@@ -140,7 +152,8 @@ extension GeneralUtilExtension<T> on T {
   /// If `bool` object, return `isFalse` expression
   ///
   /// Otherwise return `false` to not affect logical-OR expression. As `false` denotes undefined or N/A since object is not `bool`
-  bool get _isBoolObjectFalse => (this is bool) ? (this as bool) == false : false;
+  bool get _isBoolObjectFalse =>
+      (this is bool) ? (this as bool) == false : false;
 
   /// **Private helper**
   ///

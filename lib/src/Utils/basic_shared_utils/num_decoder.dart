@@ -19,7 +19,8 @@ class NumDecoder {
     return null;
   }
 
-  static double toDoubleOrDefault(dynamic value, {required double defaultValue}) {
+  static double toDoubleOrDefault(dynamic value,
+      {required double defaultValue}) {
     return toDouble(value) ?? defaultValue;
   }
 

@@ -53,8 +53,10 @@ class _DUICustomWidgetState extends State<DUICustomWidget> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text((widget.json as Map<String, dynamic>)['title'],
-                  style: GoogleFonts.inter()
-                      .copyWith(fontSize: 18, fontWeight: FontWeight.w600, color: const Color(0xFFE7E6E2))),
+                  style: GoogleFonts.inter().copyWith(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      color: const Color(0xFFE7E6E2))),
               InkWell(
                 onTap: () {
                   setTagIndex();
@@ -62,7 +64,8 @@ class _DUICustomWidgetState extends State<DUICustomWidget> {
                 child: Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey.shade300), borderRadius: BorderRadius.circular(24)),
+                      border: Border.all(color: Colors.grey.shade300),
+                      borderRadius: BorderRadius.circular(24)),
                   child: Row(
                     children: [
                       const Icon(
@@ -85,7 +88,8 @@ class _DUICustomWidgetState extends State<DUICustomWidget> {
           ),
           Row(
             children: List.generate(
-              (widget.json['toggleItems'][tagIndex]['items'] as List<dynamic>).length,
+              (widget.json['toggleItems'][tagIndex]['items'] as List<dynamic>)
+                  .length,
               (index) => InkWell(
                 onTap: () {
                   setItemIndex(index);
@@ -98,7 +102,8 @@ class _DUICustomWidgetState extends State<DUICustomWidget> {
                     border: Border.all(color: Colors.grey.shade300),
                   ),
                   child: Text(
-                    (widget.json['toggleItems'][tagIndex]['items'][index] as Map<String, dynamic>)['timeframe'],
+                    (widget.json['toggleItems'][tagIndex]['items'][index]
+                        as Map<String, dynamic>)['timeframe'],
                     style: GoogleFonts.inter().copyWith(
                       fontSize: 14,
                       fontWeight: FontWeight.w400,
@@ -110,7 +115,8 @@ class _DUICustomWidgetState extends State<DUICustomWidget> {
             ),
           ),
           Text(
-            (widget.json['toggleItems'][tagIndex]['items'][itemIndex] as Map<String, dynamic>)['graphData'][0]['name'],
+            (widget.json['toggleItems'][tagIndex]['items'][itemIndex]
+                as Map<String, dynamic>)['graphData'][0]['name'],
             style: GoogleFonts.inter().copyWith(
               fontSize: 14,
               fontWeight: FontWeight.w400,
@@ -120,8 +126,8 @@ class _DUICustomWidgetState extends State<DUICustomWidget> {
           Row(
             children: [
               Text(
-                (widget.json['toggleItems'][tagIndex]['items'][itemIndex] as Map<String, dynamic>)['graphData'][0]
-                    ['valueText'],
+                (widget.json['toggleItems'][tagIndex]['items'][itemIndex]
+                    as Map<String, dynamic>)['graphData'][0]['valueText'],
                 style: GoogleFonts.inter().copyWith(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
@@ -131,7 +137,8 @@ class _DUICustomWidgetState extends State<DUICustomWidget> {
             ],
           ),
           Text(
-            (widget.json['toggleItems'][tagIndex]['items'][itemIndex] as Map<String, dynamic>)['graphData'][1]['name'],
+            (widget.json['toggleItems'][tagIndex]['items'][itemIndex]
+                as Map<String, dynamic>)['graphData'][1]['name'],
             style: GoogleFonts.inter().copyWith(
               fontSize: 14,
               fontWeight: FontWeight.w400,
@@ -141,8 +148,8 @@ class _DUICustomWidgetState extends State<DUICustomWidget> {
           Row(
             children: [
               Text(
-                (widget.json['toggleItems'][tagIndex]['items'][itemIndex] as Map<String, dynamic>)['graphData'][1]
-                    ['valueText'],
+                (widget.json['toggleItems'][tagIndex]['items'][itemIndex]
+                    as Map<String, dynamic>)['graphData'][1]['valueText'],
                 style: GoogleFonts.inter().copyWith(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
@@ -155,7 +162,8 @@ class _DUICustomWidgetState extends State<DUICustomWidget> {
             padding: const EdgeInsets.all(12),
             margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
             decoration: BoxDecoration(
-                border: Border.all(color: const Color(0xffffffff1a).withOpacity(0.1)),
+                border: Border.all(
+                    color: const Color(0xffffffff1a).withOpacity(0.1)),
                 borderRadius: BorderRadius.circular(12)),
             child: Column(
               children: [
@@ -167,7 +175,8 @@ class _DUICustomWidgetState extends State<DUICustomWidget> {
                       color: Color(0xFF4EB3A9),
                     ),
                     Text(
-                      ((widget.json['toggleItems'][tagIndex]['items'][itemIndex] as Map<String, dynamic>)['note']
+                      ((widget.json['toggleItems'][tagIndex]['items'][itemIndex]
+                              as Map<String, dynamic>)['note']
                           as Map<String, dynamic>)['title'],
                       style: GoogleFonts.inter().copyWith(
                         fontSize: 14,
@@ -181,7 +190,8 @@ class _DUICustomWidgetState extends State<DUICustomWidget> {
                   height: 4,
                 ),
                 Text(
-                  ((widget.json['toggleItems'][tagIndex]['items'][itemIndex] as Map<String, dynamic>)['note']
+                  ((widget.json['toggleItems'][tagIndex]['items'][itemIndex]
+                          as Map<String, dynamic>)['note']
                       as Map<String, dynamic>)['subtitle'],
                   style: GoogleFonts.inter().copyWith(
                     fontSize: 14,

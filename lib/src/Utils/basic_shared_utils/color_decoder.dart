@@ -15,7 +15,8 @@ class ColorDecoder {
   /// If the alpha value is not provided, the pattern assumes it to be 255 (fully opaque).
   /// The alpha value can be either a double ranging from 0.0 to 1.0, or a hexadecimal value
   /// ranging from 00 to FF (0 to 255 in decimal).
-  static RegExp hexColorPattern = RegExp(r'^#?([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$');
+  static RegExp hexColorPattern =
+      RegExp(r'^#?([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$');
 
   /// Checks if a given hex color string is a valid color value.
   ///
@@ -127,7 +128,8 @@ class ColorDecoder {
   ///
   /// Accepts fallback color when string parsing fails.
   ///
-  static Color fromStringOrDefault(String value, {Color defaultColor = Colors.transparent}) {
+  static Color fromStringOrDefault(String value,
+      {Color defaultColor = Colors.transparent}) {
     return fromString(value) ?? defaultColor;
   }
 
@@ -174,9 +176,12 @@ class ColorDecoder {
   /// The result will be provided as UPPER CASE, it can be changed via [toUpperCase]
   /// flag set to `false` (default is `true`). Hex can be returned without alpha
   /// channel information (transparency), with the [enableAlpha] flag set to `false`.
-  static String toHexString(Color color, {bool includeHashSign = true, bool skipAlphaIfOpaque = true}) {
+  static String toHexString(Color color,
+      {bool includeHashSign = true, bool skipAlphaIfOpaque = true}) {
     final alphaString =
-        (skipAlphaIfOpaque && _padRadix(color.alpha).toUpperCase() == 'FF') ? '' : _padRadix(color.alpha);
+        (skipAlphaIfOpaque && _padRadix(color.alpha).toUpperCase() == 'FF')
+            ? ''
+            : _padRadix(color.alpha);
     final String hex = (includeHashSign ? '#' : '') +
         alphaString +
         _padRadix(color.red) +

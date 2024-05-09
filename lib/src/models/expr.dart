@@ -20,7 +20,8 @@ class ExprJsonConv<T> extends JsonConverter<ExprOr<T>, Object?> {
   final ToJson<T>? _toJson;
   final T? defaultValue;
 
-  const ExprJsonConv({FromJson<T>? fromJson, ToJson<T>? toJson, this.defaultValue})
+  const ExprJsonConv(
+      {FromJson<T>? fromJson, ToJson<T>? toJson, this.defaultValue})
       : _fromJsonT = fromJson,
         _toJson = toJson;
 
@@ -32,7 +33,8 @@ class ExprJsonConv<T> extends JsonConverter<ExprOr<T>, Object?> {
       return ExprOr(expr: json, value: null);
     }
 
-    return ExprOr(value: _fromJsonT?.call(json) ?? json.typedValue<T>() ?? defaultValue);
+    return ExprOr(
+        value: _fromJsonT?.call(json) ?? json.typedValue<T>() ?? defaultValue);
   }
 
   @override
