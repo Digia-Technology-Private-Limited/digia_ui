@@ -43,8 +43,13 @@ class DUIExpansionBuilder extends DUIWidgetBuilder {
         eval<String>(data.props['expandedBorderColor']).let(toColor);
 
     final titleWidget = DUITextBuilder.fromProps(props: data.props['title']);
-    final subtitleWidget =
-        DUITextBuilder.fromProps(props: data.props['subtitle']);
+
+    late Widget? subtitleWidget = null;
+    if (data.props['subtitle'] != null) {
+      subtitleWidget = DUITextBuilder.fromProps(props: data.props['subtitle'])
+          .build(context);
+    }
+
     // DUIIconBuilder? leadingWidget1 = null;
     // if (eval<String>(data.props['leadingIcon']) != null) {
     //   leadingWidget1 =
@@ -65,7 +70,7 @@ class DUIExpansionBuilder extends DUIWidgetBuilder {
         return ExpansionTile(
           initiallyExpanded: data.props['initiallyExpanded'] ?? false,
           title: titleWidget.build(context),
-          subtitle: subtitleWidget.build(context),
+          subtitle: subtitleWidget,
           leading: (leadingWidget2 != null) ? leadingWidget2 : null,
           trailing: isExpanded
               ? trailingExpandedWidget.build(context)
