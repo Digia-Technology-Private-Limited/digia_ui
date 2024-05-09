@@ -3,7 +3,6 @@ import 'package:digia_ui/src/Utils/basic_shared_utils/dui_decoder.dart';
 import 'package:digia_ui/src/Utils/basic_shared_utils/lodash.dart';
 import 'package:digia_ui/src/Utils/dui_widget_registry.dart';
 import 'package:digia_ui/src/Utils/util_functions.dart';
-import 'package:digia_ui/src/components/dui_icons/icon_helpers/icon_data_serialization.dart';
 import 'package:digia_ui/src/components/dui_tab_view/dui_tab_view_props.dart';
 import 'package:digia_ui/src/core/builders/dui_icon_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_json_widget_builder.dart';
