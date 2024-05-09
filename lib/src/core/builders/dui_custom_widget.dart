@@ -162,8 +162,8 @@ class _DUICustomWidgetState extends State<DUICustomWidget> {
             padding: const EdgeInsets.all(12),
             margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
             decoration: BoxDecoration(
-                border: Border.all(
-                    color: const Color(0xffffffff).withOpacity(0.1)),
+                border:
+                    Border.all(color: const Color(0xffffffff).withOpacity(0.1)),
                 borderRadius: BorderRadius.circular(12)),
             child: Column(
               children: [
