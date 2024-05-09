@@ -3,9 +3,7 @@ import 'dart:math';
 // Read about Base 32 here:
 // https://www.connect2id.com/blog/how-to-generate-human-friendly-identifiers
 abstract class RandomIdGenerator {
-  static final _base64chars =
-      '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-_'
-          .split('');
+  static final _base64chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-_'.split('');
 
   static final _random = Random();
 

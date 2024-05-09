@@ -8,11 +8,9 @@ import 'package:digia_ui/src/core/page/props/dui_widget_json_data.dart';
 import 'package:flutter/material.dart';
 
 class DUIListViewBuilder extends DUIWidgetBuilder {
-  DUIListViewBuilder(DUIWidgetJsonData data, DUIWidgetRegistry? registry)
-      : super(data: data, registry: registry);
+  DUIListViewBuilder(DUIWidgetJsonData data, DUIWidgetRegistry? registry) : super(data: data, registry: registry);
 
-  static DUIListViewBuilder create(DUIWidgetJsonData data,
-      {DUIWidgetRegistry? registry}) {
+  static DUIListViewBuilder create(DUIWidgetJsonData data, {DUIWidgetRegistry? registry}) {
     return DUIListViewBuilder(data, registry);
   }
 
@@ -27,12 +25,10 @@ class DUIListViewBuilder extends DUIWidgetBuilder {
     return !children.isNullOrEmpty
         ? ListView.builder(
             physics: DUIDecoder.toScrollPhysics(data.props['allowScroll']),
-            shrinkWrap: NumDecoder.toBoolOrDefault(data.props['shrinkWrap'],
-                defaultValue: false),
+            shrinkWrap: NumDecoder.toBoolOrDefault(data.props['shrinkWrap'], defaultValue: false),
             itemCount: children.length,
             itemBuilder: (context, index) {
-              final builder = DUIJsonWidgetBuilder(
-                  data: children[index], registry: registry!);
+              final builder = DUIJsonWidgetBuilder(data: children[index], registry: registry!);
               return builder.build(context);
             })
         : const Text(

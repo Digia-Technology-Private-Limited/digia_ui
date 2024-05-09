@@ -6,8 +6,7 @@ part of 'circular_progress_bar_props.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-DUICircularProgressBarProps _$DUICircularProgressBarPropsFromJson(
-        Map<String, dynamic> json) =>
+DUICircularProgressBarProps _$DUICircularProgressBarPropsFromJson(Map<String, dynamic> json) =>
     DUICircularProgressBarProps(
       strokeWidth: (json['strokeWidth'] as num?)?.toDouble(),
       strokeAlign: (json['strokeAlign'] as num?)?.toDouble(),
@@ -21,9 +20,7 @@ DUICircularProgressBarProps _$DUICircularProgressBarPropsFromJson(
       curve: json['curve'] as String?,
     );
 
-Map<String, dynamic> _$DUICircularProgressBarPropsToJson(
-        DUICircularProgressBarProps instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$DUICircularProgressBarPropsToJson(DUICircularProgressBarProps instance) => <String, dynamic>{
       'strokeWidth': instance.strokeWidth,
       'strokeAlign': instance.strokeAlign,
       'thickness': instance.thickness,

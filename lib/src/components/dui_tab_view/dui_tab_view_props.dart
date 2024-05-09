@@ -14,15 +14,9 @@ class DUITabViewProps {
   final bool? isScrollable;
   final String? indicatorColor;
   final double? viewportFraction;
-  @JsonKey(
-      fromJson: DUITextStyle.fromJson,
-      includeToJson: false,
-      name: 'selectedLabelStyle')
+  @JsonKey(fromJson: DUITextStyle.fromJson, includeToJson: false, name: 'selectedLabelStyle')
   DUITextStyle? selectedLabelStyle;
-  @JsonKey(
-      fromJson: DUITextStyle.fromJson,
-      includeToJson: false,
-      name: 'unselectedLabelStyle')
+  @JsonKey(fromJson: DUITextStyle.fromJson, includeToJson: false, name: 'unselectedLabelStyle')
   DUITextStyle? unselectedLabelStyle;
 
   DUITabViewProps(

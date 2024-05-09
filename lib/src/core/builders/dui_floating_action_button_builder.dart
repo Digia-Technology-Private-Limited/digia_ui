@@ -12,7 +12,6 @@ class DUIFloatingActionButtonBuilder extends DUIWidgetBuilder {
 
   @override
   Widget build(BuildContext context) {
-    return DUIFloatingActionButton.floatingActionButton(
-        data.props, context, data);
+    return DUIFloatingActionButton.floatingActionButton(data.props, context, data);
   }
 }

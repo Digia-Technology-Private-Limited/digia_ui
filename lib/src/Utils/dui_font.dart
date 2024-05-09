@@ -13,8 +13,7 @@ class DUIFont {
 
   DUIFont({this.weight, this.size, this.height, this.style, this.fontFamily});
 
-  factory DUIFont.fromJson(Map<String, dynamic> json) =>
-      _$DUIFontFromJson(json);
+  factory DUIFont.fromJson(Map<String, dynamic> json) => _$DUIFontFromJson(json);
 
   Map<String, dynamic> toJson() => _$DUIFontToJson(this);
 

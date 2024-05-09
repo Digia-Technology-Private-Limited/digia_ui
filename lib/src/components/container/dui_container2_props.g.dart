@@ -6,8 +6,7 @@ part of 'dui_container2_props.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-DUIContainer2Props _$DUIContainer2PropsFromJson(Map<String, dynamic> json) =>
-    DUIContainer2Props(
+DUIContainer2Props _$DUIContainer2PropsFromJson(Map<String, dynamic> json) => DUIContainer2Props(
       json['width'] as String?,
       json['height'] as String?,
       json['margin'] == null ? null : DUIInsets.fromJson(json['margin']),
@@ -22,13 +21,11 @@ DUIContainer2Props _$DUIContainer2PropsFromJson(Map<String, dynamic> json) =>
       json['border'] == null ? null : DUIBorder.fromJson(json['border']),
       json['decorationImage'] == null
           ? null
-          : DUIDecorationImage.fromJson(
-              json['decorationImage'] as Map<String, dynamic>),
+          : DUIDecorationImage.fromJson(json['decorationImage'] as Map<String, dynamic>),
       json['boxFit'] as String?,
     );
 
-Map<String, dynamic> _$DUIContainer2PropsToJson(DUIContainer2Props instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$DUIContainer2PropsToJson(DUIContainer2Props instance) => <String, dynamic>{
       'width': instance.width,
       'height': instance.height,
       'maxHeight': instance.maxHeight,

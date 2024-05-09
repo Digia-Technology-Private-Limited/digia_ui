@@ -15,8 +15,7 @@ abstract class DUIWidgetBuilder {
 
   Widget build(BuildContext context);
 
-  Widget fallbackWidget() =>
-      Text('A widget of type: ${data.type} is not found');
+  Widget fallbackWidget() => Text('A widget of type: ${data.type} is not found');
 
   Widget buildWithContainerProps(BuildContext context) {
     var output = build(context);
@@ -34,16 +33,13 @@ abstract class DUIWidgetBuilder {
     // Align
     output = DUIAlign(alignment: data.containerProps['align'], child: output);
 
-    final onTapProp = ifNotNull(
-        data.containerProps['onClick'] as Map<String, dynamic>?,
-        (p0) => ActionFlow.fromJson(p0));
+    final onTapProp =
+        ifNotNull(data.containerProps['onClick'] as Map<String, dynamic>?, (p0) => ActionFlow.fromJson(p0));
 
-    output = DUIGestureDetector(
-        context: context, actionFlow: onTapProp, child: output);
+    output = DUIGestureDetector(context: context, actionFlow: onTapProp, child: output);
 
     // Visibility
-    output = DUIVisibility(
-        visible: data.containerProps['visibility'], child: output);
+    output = DUIVisibility(visible: data.containerProps['visibility'], child: output);
     return output;
   }
 }

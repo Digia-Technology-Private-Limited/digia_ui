@@ -69,12 +69,8 @@ class DUICachedImage extends StatelessWidget {
       gaplessPlayback: true,
       fit: fit,
       image: _image,
-      fadeInDuration: fadeInDuration != null
-          ? Duration(milliseconds: fadeInDuration!)
-          : Duration.zero,
-      fadeOutDuration: fadeOutDuration != null
-          ? Duration(milliseconds: fadeOutDuration!)
-          : Duration.zero,
+      fadeInDuration: fadeInDuration != null ? Duration(milliseconds: fadeInDuration!) : Duration.zero,
+      fadeOutDuration: fadeOutDuration != null ? Duration(milliseconds: fadeOutDuration!) : Duration.zero,
       imageBuilder: (BuildContext context, provider) {
         return ClipRRect(
           borderRadius: borderRadius ?? BorderRadius.zero,

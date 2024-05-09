@@ -47,9 +47,7 @@ class DUIImage extends StatelessWidget {
     if (props.imageSrc.startsWith('http')) {
       imageProvider = CachedNetworkImageProvider(props.imageSrc);
     } else {
-      imageProvider =
-          DUIWidgetScope.of(context)?.imageProviderFn?.call(props.imageSrc) ??
-              AssetImage(props.imageSrc);
+      imageProvider = DUIWidgetScope.of(context)?.imageProviderFn?.call(props.imageSrc) ?? AssetImage(props.imageSrc);
     }
 
     return OctoImage(
@@ -60,12 +58,9 @@ class DUIImage extends StatelessWidget {
         gaplessPlayback: true,
         placeholderBuilder: _placeHolderBuilderCreater(),
         imageBuilder: (BuildContext context, Widget widget) {
-          final child = props.aspectRatio == null
-              ? widget
-              : AspectRatio(aspectRatio: props.aspectRatio!, child: widget);
-          return props.styleClass != null
-              ? DUIContainer(styleClass: props.styleClass, child: child)
-              : child;
+          final child =
+              props.aspectRatio == null ? widget : AspectRatio(aspectRatio: props.aspectRatio!, child: widget);
+          return props.styleClass != null ? DUIContainer(styleClass: props.styleClass, child: child) : child;
         },
         errorBuilder: (context, error, stackTrace) {
           if (props.errorImage == null) {

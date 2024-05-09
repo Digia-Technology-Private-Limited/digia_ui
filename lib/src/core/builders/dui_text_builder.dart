@@ -15,8 +15,7 @@ class DUITextBuilder extends DUIWidgetBuilder {
   }
 
   factory DUITextBuilder.fromProps({required Map<String, dynamic>? props}) {
-    return DUITextBuilder(
-        data: DUIWidgetJsonData(type: 'digia/text', props: props));
+    return DUITextBuilder(data: DUIWidgetJsonData(type: 'digia/text', props: props));
   }
 
   @override
@@ -28,10 +27,6 @@ class DUITextBuilder extends DUIWidgetBuilder {
     final overflow = DUIDecoder.toTextOverflow(data.props['overflow']);
     final textAlign = DUIDecoder.toTextAlign(data.props['textAlign']);
 
-    return Text(text.toString(),
-        style: style,
-        maxLines: maxLines,
-        overflow: overflow,
-        textAlign: textAlign);
+    return Text(text.toString(), style: style, maxLines: maxLines, overflow: overflow, textAlign: textAlign);
   }
 }

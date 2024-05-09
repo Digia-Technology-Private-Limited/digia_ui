@@ -6,8 +6,7 @@ part of 'dui_switch_props.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-DUISwitchProps _$DUISwitchPropsFromJson(Map<String, dynamic> json) =>
-    DUISwitchProps(
+DUISwitchProps _$DUISwitchPropsFromJson(Map<String, dynamic> json) => DUISwitchProps(
       value: json['value'] as bool?,
       enabled: json['enabled'] as bool?,
       activeColor: json['activeColor'] as String?,
@@ -16,8 +15,7 @@ DUISwitchProps _$DUISwitchPropsFromJson(Map<String, dynamic> json) =>
       inactiveTrackColor: json['inactiveTrackColor'] as String?,
     );
 
-Map<String, dynamic> _$DUISwitchPropsToJson(DUISwitchProps instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$DUISwitchPropsToJson(DUISwitchProps instance) => <String, dynamic>{
       'value': instance.value,
       'enabled': instance.enabled,
       'activeColor': instance.activeColor,

@@ -16,8 +16,7 @@ class DUIVideoPlayer extends DUIWidgetBuilder {
   @override
   Widget build(BuildContext context) {
     final eval = DUIWidgetScope.of(context)!.eval;
-    VideoPlayerController videoPlayerController1 =
-        VideoPlayerController.networkUrl(
+    VideoPlayerController videoPlayerController1 = VideoPlayerController.networkUrl(
       Uri.parse(data.props['videoUrl'] as String),
     );
 
@@ -56,11 +55,7 @@ class DUIVideoPlayer extends DUIWidgetBuilder {
       looping: eval<bool>(data.props['looping']) ?? false,
       subtitle: Subtitles(
         [
-          Subtitle(
-              index: 0,
-              start: Duration.zero,
-              end: const Duration(seconds: 10),
-              text: ''),
+          Subtitle(index: 0, start: Duration.zero, end: const Duration(seconds: 10), text: ''),
         ],
       ),
       subtitleBuilder: (context, dynamic subtitle) => Container(

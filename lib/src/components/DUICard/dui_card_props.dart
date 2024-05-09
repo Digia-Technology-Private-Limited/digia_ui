@@ -23,8 +23,7 @@ class DUICardProps {
 
   DUICardProps();
 
-  factory DUICardProps.fromJson(Map<String, dynamic> json) =>
-      _$DUICardPropsFromJson(json);
+  factory DUICardProps.fromJson(Map<String, dynamic> json) => _$DUICardPropsFromJson(json);
 
   Map<String, dynamic> toJson() => _$DUICardPropsToJson(this);
 

@@ -35,11 +35,7 @@ class _DUITextState extends State<DUIText> {
       final text = props.textSpans?[0].text.toString();
       final style = props.textSpans?[0].spanStyle ?? props.textStyle;
 
-      return Text(text ?? '',
-          style: toTextStyle(style),
-          maxLines: maxLines,
-          overflow: overflow,
-          textAlign: textAlign);
+      return Text(text ?? '', style: toTextStyle(style), maxLines: maxLines, overflow: overflow, textAlign: textAlign);
     }
 
     return RichText(

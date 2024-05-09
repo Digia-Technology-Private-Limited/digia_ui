@@ -12,8 +12,7 @@ class BaseResponse<T> {
 
   BaseResponse({this.isSuccess, this.data, this.error});
 
-  factory BaseResponse.fromJson(
-          Map<String, dynamic> json, T Function(Object? json) fromJsonT) =>
+  factory BaseResponse.fromJson(Map<String, dynamic> json, T Function(Object? json) fromJsonT) =>
       _$BaseResponseFromJson(json, fromJsonT);
 
   @override

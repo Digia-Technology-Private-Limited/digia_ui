@@ -6,8 +6,7 @@ part of 'dui_lottie_props.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-DUILottieProps _$DUILottiePropsFromJson(Map<String, dynamic> json) =>
-    DUILottieProps(
+DUILottieProps _$DUILottiePropsFromJson(Map<String, dynamic> json) => DUILottieProps(
       lottiePath: json['lottiePath'] as String?,
       fit: json['fit'] as String?,
       alignment: json['alignment'] as String?,
@@ -18,8 +17,7 @@ DUILottieProps _$DUILottiePropsFromJson(Map<String, dynamic> json) =>
       animate: json['animate'] as bool?,
     );
 
-Map<String, dynamic> _$DUILottiePropsToJson(DUILottieProps instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$DUILottiePropsToJson(DUILottieProps instance) => <String, dynamic>{
       'lottiePath': instance.lottiePath,
       'fit': instance.fit,
       'alignment': instance.alignment,

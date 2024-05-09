@@ -10,8 +10,7 @@ class DUIDecorationImage {
 
   DUIDecorationImage(this.source, this.fit, this.alignment, this.opacity);
 
-  factory DUIDecorationImage.fromJson(Map<String, dynamic> json) =>
-      _$DUIDecorationImageFromJson(json);
+  factory DUIDecorationImage.fromJson(Map<String, dynamic> json) => _$DUIDecorationImageFromJson(json);
 
   Map<String, dynamic> toJson() => _$DUIDecorationImageToJson(this);
 }

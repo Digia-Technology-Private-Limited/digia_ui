@@ -26,10 +26,8 @@ class _DUILinearProgressBarState extends State<DUILinearProgressBar> {
         return SizedBox(
           width: widget.props.width,
           child: LinearProgressIndicator(
-            color: widget.props.indicatorColor.let(toColor) ??
-                Colors.blue, // [TODO]
-            backgroundColor:
-                widget.props.bgColor?.let(toColor) ?? Colors.transparent,
+            color: widget.props.indicatorColor.let(toColor) ?? Colors.blue, // [TODO]
+            backgroundColor: widget.props.bgColor?.let(toColor) ?? Colors.transparent,
             minHeight: widget.props.thickness, // done
             borderRadius: BorderRadius.circular(
               widget.props.borderRadius ?? 0.0,

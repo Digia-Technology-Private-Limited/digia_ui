@@ -12,8 +12,7 @@ class DUIStackProps {
     this.childAlignment,
   });
 
-  factory DUIStackProps.fromJson(Map<String, dynamic> json) =>
-      _$DUIStackPropsFromJson(json);
+  factory DUIStackProps.fromJson(Map<String, dynamic> json) => _$DUIStackPropsFromJson(json);
 
   Map<String, dynamic> toJson() => _$DUIStackPropsToJson(this);
 }

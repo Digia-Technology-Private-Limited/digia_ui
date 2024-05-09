@@ -9,8 +9,7 @@ class DUITextField extends StatefulWidget {
   final DUITextFieldProps props;
   const DUITextField({super.key, required this.props});
 
-  factory DUITextField.create(Map<String, dynamic> json) =>
-      DUITextField(props: DUITextFieldProps.fromJson(json));
+  factory DUITextField.create(Map<String, dynamic> json) => DUITextField(props: DUITextFieldProps.fromJson(json));
 
   @override
   State<DUITextField> createState() => _DUITextFieldState();
@@ -57,9 +56,7 @@ class _DUITextFieldState extends State<DUITextField> {
                       _obscureText = !_obscureText;
                     });
                   },
-                  child: _obscureText
-                      ? const Icon(Icons.visibility_off)
-                      : const Icon(Icons.visibility),
+                  child: _obscureText ? const Icon(Icons.visibility_off) : const Icon(Icons.visibility),
                 )
               : null,
           label: DUIText(props.label),

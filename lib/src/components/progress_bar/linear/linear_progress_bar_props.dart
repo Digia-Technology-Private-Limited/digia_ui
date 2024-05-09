@@ -29,8 +29,7 @@ class DUILinearProgressBarProps {
   })  : animationDuration = animationDuration ?? 5,
         curve = curve ?? 'linear';
 
-  factory DUILinearProgressBarProps.fromJson(dynamic json) =>
-      _$DUILinearProgressBarPropsFromJson(json);
+  factory DUILinearProgressBarProps.fromJson(dynamic json) => _$DUILinearProgressBarPropsFromJson(json);
 
   Map<String, dynamic> toJson() => _$DUILinearProgressBarPropsToJson(this);
 }

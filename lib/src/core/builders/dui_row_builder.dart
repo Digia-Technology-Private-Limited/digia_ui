@@ -6,11 +6,9 @@ import 'package:digia_ui/src/core/page/props/dui_widget_json_data.dart';
 import 'package:flutter/material.dart';
 
 class DUIRowBuilder extends DUIWidgetBuilder {
-  DUIRowBuilder(DUIWidgetJsonData data, DUIWidgetRegistry? registry)
-      : super(data: data, registry: registry);
+  DUIRowBuilder(DUIWidgetJsonData data, DUIWidgetRegistry? registry) : super(data: data, registry: registry);
 
-  static DUIRowBuilder create(DUIWidgetJsonData data,
-      {DUIWidgetRegistry? registry}) {
+  static DUIRowBuilder create(DUIWidgetJsonData data, {DUIWidgetRegistry? registry}) {
     return DUIRowBuilder(data, registry);
   }
 
@@ -21,11 +19,9 @@ class DUIRowBuilder extends DUIWidgetBuilder {
     }
 
     final rowWidget = Row(
-        mainAxisAlignment: DUIDecoder.toMainAxisAlginmentOrDefault(
-            data.props['mainAxisAlignment'],
+        mainAxisAlignment: DUIDecoder.toMainAxisAlginmentOrDefault(data.props['mainAxisAlignment'],
             defaultValue: MainAxisAlignment.start),
-        crossAxisAlignment: DUIDecoder.toCrossAxisAlignmentOrDefault(
-            data.props['crossAxisAlignment'],
+        crossAxisAlignment: DUIDecoder.toCrossAxisAlignmentOrDefault(data.props['crossAxisAlignment'],
             defaultValue: CrossAxisAlignment.center),
         children: data.children['children']!.map((e) {
           final builder = DUIJsonWidgetBuilder(data: e, registry: registry!);

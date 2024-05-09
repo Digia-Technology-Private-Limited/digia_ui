@@ -5,11 +5,9 @@ import 'package:digia_ui/src/core/json_widget_builder.dart';
 import 'package:flutter/material.dart';
 
 class DUITabViewItemBuilder extends DUIWidgetBuilder {
-  DUITabViewItemBuilder(DUIWidgetJsonData data, DUIWidgetRegistry? registry)
-      : super(data: data, registry: registry);
+  DUITabViewItemBuilder(DUIWidgetJsonData data, DUIWidgetRegistry? registry) : super(data: data, registry: registry);
 
-  static DUITabViewItemBuilder create(DUIWidgetJsonData data,
-      {DUIWidgetRegistry? registry}) {
+  static DUITabViewItemBuilder create(DUIWidgetJsonData data, {DUIWidgetRegistry? registry}) {
     return DUITabViewItemBuilder(data, registry);
   }
 

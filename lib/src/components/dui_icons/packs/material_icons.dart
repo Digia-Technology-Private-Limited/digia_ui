@@ -1340,16 +1340,13 @@ Map<String, IconData> icons = {
   'airline_seat_individual_suite': Icons.airline_seat_individual_suite,
 
   /// <i class="material-icons-sharp md-36">airline_seat_individual_suite</i> &#x2014; material icon named "airline seat individual suite" (sharp).
-  'airline_seat_individual_suite_sharp':
-      Icons.airline_seat_individual_suite_sharp,
+  'airline_seat_individual_suite_sharp': Icons.airline_seat_individual_suite_sharp,
 
   /// <i class="material-icons-round md-36">airline_seat_individual_suite</i> &#x2014; material icon named "airline seat individual suite" (round).
-  'airline_seat_individual_suite_rounded':
-      Icons.airline_seat_individual_suite_rounded,
+  'airline_seat_individual_suite_rounded': Icons.airline_seat_individual_suite_rounded,
 
   /// <i class="material-icons-outlined md-36">airline_seat_individual_suite</i> &#x2014; material icon named "airline seat individual suite" (outlined).
-  'airline_seat_individual_suite_outlined':
-      Icons.airline_seat_individual_suite_outlined,
+  'airline_seat_individual_suite_outlined': Icons.airline_seat_individual_suite_outlined,
 
   /// <i class="material-icons md-36">airline_seat_legroom_extra</i> &#x2014; material icon named "airline seat legroom extra".
   'airline_seat_legroom_extra': Icons.airline_seat_legroom_extra,
@@ -1358,12 +1355,10 @@ Map<String, IconData> icons = {
   'airline_seat_legroom_extra_sharp': Icons.airline_seat_legroom_extra_sharp,
 
   /// <i class="material-icons-round md-36">airline_seat_legroom_extra</i> &#x2014; material icon named "airline seat legroom extra" (round).
-  'airline_seat_legroom_extra_rounded':
-      Icons.airline_seat_legroom_extra_rounded,
+  'airline_seat_legroom_extra_rounded': Icons.airline_seat_legroom_extra_rounded,
 
   /// <i class="material-icons-outlined md-36">airline_seat_legroom_extra</i> &#x2014; material icon named "airline seat legroom extra" (outlined).
-  'airline_seat_legroom_extra_outlined':
-      Icons.airline_seat_legroom_extra_outlined,
+  'airline_seat_legroom_extra_outlined': Icons.airline_seat_legroom_extra_outlined,
 
   /// <i class="material-icons md-36">airline_seat_legroom_normal</i> &#x2014; material icon named "airline seat legroom normal".
   'airline_seat_legroom_normal': Icons.airline_seat_legroom_normal,
@@ -1372,27 +1367,22 @@ Map<String, IconData> icons = {
   'airline_seat_legroom_normal_sharp': Icons.airline_seat_legroom_normal_sharp,
 
   /// <i class="material-icons-round md-36">airline_seat_legroom_normal</i> &#x2014; material icon named "airline seat legroom normal" (round).
-  'airline_seat_legroom_normal_rounded':
-      Icons.airline_seat_legroom_normal_rounded,
+  'airline_seat_legroom_normal_rounded': Icons.airline_seat_legroom_normal_rounded,
 
   /// <i class="material-icons-outlined md-36">airline_seat_legroom_normal</i> &#x2014; material icon named "airline seat legroom normal" (outlined).
-  'airline_seat_legroom_normal_outlined':
-      Icons.airline_seat_legroom_normal_outlined,
+  'airline_seat_legroom_normal_outlined': Icons.airline_seat_legroom_normal_outlined,
 
   /// <i class="material-icons md-36">airline_seat_legroom_reduced</i> &#x2014; material icon named "airline seat legroom reduced".
   'airline_seat_legroom_reduced': Icons.airline_seat_legroom_reduced,
 
   /// <i class="material-icons-sharp md-36">airline_seat_legroom_reduced</i> &#x2014; material icon named "airline seat legroom reduced" (sharp).
-  'airline_seat_legroom_reduced_sharp':
-      Icons.airline_seat_legroom_reduced_sharp,
+  'airline_seat_legroom_reduced_sharp': Icons.airline_seat_legroom_reduced_sharp,
 
   /// <i class="material-icons-round md-36">airline_seat_legroom_reduced</i> &#x2014; material icon named "airline seat legroom reduced" (round).
-  'airline_seat_legroom_reduced_rounded':
-      Icons.airline_seat_legroom_reduced_rounded,
+  'airline_seat_legroom_reduced_rounded': Icons.airline_seat_legroom_reduced_rounded,
 
   /// <i class="material-icons-outlined md-36">airline_seat_legroom_reduced</i> &#x2014; material icon named "airline seat legroom reduced" (outlined).
-  'airline_seat_legroom_reduced_outlined':
-      Icons.airline_seat_legroom_reduced_outlined,
+  'airline_seat_legroom_reduced_outlined': Icons.airline_seat_legroom_reduced_outlined,
 
   /// <i class="material-icons md-36">airline_seat_recline_extra</i> &#x2014; material icon named "airline seat recline extra".
   'airline_seat_recline_extra': Icons.airline_seat_recline_extra,
@@ -1401,12 +1391,10 @@ Map<String, IconData> icons = {
   'airline_seat_recline_extra_sharp': Icons.airline_seat_recline_extra_sharp,
 
   /// <i class="material-icons-round md-36">airline_seat_recline_extra</i> &#x2014; material icon named "airline seat recline extra" (round).
-  'airline_seat_recline_extra_rounded':
-      Icons.airline_seat_recline_extra_rounded,
+  'airline_seat_recline_extra_rounded': Icons.airline_seat_recline_extra_rounded,
 
   /// <i class="material-icons-outlined md-36">airline_seat_recline_extra</i> &#x2014; material icon named "airline seat recline extra" (outlined).
-  'airline_seat_recline_extra_outlined':
-      Icons.airline_seat_recline_extra_outlined,
+  'airline_seat_recline_extra_outlined': Icons.airline_seat_recline_extra_outlined,
 
   /// <i class="material-icons md-36">airline_seat_recline_normal</i> &#x2014; material icon named "airline seat recline normal".
   'airline_seat_recline_normal': Icons.airline_seat_recline_normal,
@@ -1415,12 +1403,10 @@ Map<String, IconData> icons = {
   'airline_seat_recline_normal_sharp': Icons.airline_seat_recline_normal_sharp,
 
   /// <i class="material-icons-round md-36">airline_seat_recline_normal</i> &#x2014; material icon named "airline seat recline normal" (round).
-  'airline_seat_recline_normal_rounded':
-      Icons.airline_seat_recline_normal_rounded,
+  'airline_seat_recline_normal_rounded': Icons.airline_seat_recline_normal_rounded,
 
   /// <i class="material-icons-outlined md-36">airline_seat_recline_normal</i> &#x2014; material icon named "airline seat recline normal" (outlined).
-  'airline_seat_recline_normal_outlined':
-      Icons.airline_seat_recline_normal_outlined,
+  'airline_seat_recline_normal_outlined': Icons.airline_seat_recline_normal_outlined,
 
   /// <i class="material-icons md-36">airline_stops</i> &#x2014; material icon named "airline stops".
   'airline_stops': Icons.airline_stops,
@@ -6793,8 +6779,7 @@ Map<String, IconData> icons = {
   'directions_railway_filled_rounded': Icons.directions_railway_filled_rounded,
 
   /// <i class="material-icons-outlined md-36">directions_railway_filled</i> &#x2014; material icon named "directions railway filled" (outlined).
-  'directions_railway_filled_outlined':
-      Icons.directions_railway_filled_outlined,
+  'directions_railway_filled_outlined': Icons.directions_railway_filled_outlined,
 
   /// <i class="material-icons md-36">directions_run</i> &#x2014; material icon named "directions run".
   'directions_run': Icons.directions_run,
@@ -6866,8 +6851,7 @@ Map<String, IconData> icons = {
   'directions_transit_filled_rounded': Icons.directions_transit_filled_rounded,
 
   /// <i class="material-icons-outlined md-36">directions_transit_filled</i> &#x2014; material icon named "directions transit filled" (outlined).
-  'directions_transit_filled_outlined':
-      Icons.directions_transit_filled_outlined,
+  'directions_transit_filled_outlined': Icons.directions_transit_filled_outlined,
 
   /// <i class="material-icons md-36">directions_walk</i> &#x2014; material icon named "directions walk".
   'directions_walk': Icons.directions_walk,
@@ -7089,16 +7073,13 @@ Map<String, IconData> icons = {
   'do_not_disturb_on_total_silence': Icons.do_not_disturb_on_total_silence,
 
   /// <i class="material-icons-sharp md-36">do_not_disturb_on_total_silence</i> &#x2014; material icon named "do not disturb on total silence" (sharp).
-  'do_not_disturb_on_total_silence_sharp':
-      Icons.do_not_disturb_on_total_silence_sharp,
+  'do_not_disturb_on_total_silence_sharp': Icons.do_not_disturb_on_total_silence_sharp,
 
   /// <i class="material-icons-round md-36">do_not_disturb_on_total_silence</i> &#x2014; material icon named "do not disturb on total silence" (round).
-  'do_not_disturb_on_total_silence_rounded':
-      Icons.do_not_disturb_on_total_silence_rounded,
+  'do_not_disturb_on_total_silence_rounded': Icons.do_not_disturb_on_total_silence_rounded,
 
   /// <i class="material-icons-outlined md-36">do_not_disturb_on_total_silence</i> &#x2014; material icon named "do not disturb on total silence" (outlined).
-  'do_not_disturb_on_total_silence_outlined':
-      Icons.do_not_disturb_on_total_silence_outlined,
+  'do_not_disturb_on_total_silence_outlined': Icons.do_not_disturb_on_total_silence_outlined,
 
   /// <i class="material-icons md-36">do_not_step</i> &#x2014; material icon named "do not step".
   'do_not_step': Icons.do_not_step,
@@ -7473,8 +7454,7 @@ Map<String, IconData> icons = {
   'drive_file_rename_outline_rounded': Icons.drive_file_rename_outline_rounded,
 
   /// <i class="material-icons-outlined md-36">drive_file_rename_outline</i> &#x2014; material icon named "drive file rename outline" (outlined).
-  'drive_file_rename_outline_outlined':
-      Icons.drive_file_rename_outline_outlined,
+  'drive_file_rename_outline_outlined': Icons.drive_file_rename_outline_outlined,
 
   /// <i class="material-icons md-36">drive_folder_upload</i> &#x2014; material icon named "drive folder upload".
   'drive_folder_upload': Icons.drive_folder_upload,
@@ -10069,12 +10049,10 @@ Map<String, IconData> icons = {
   'format_textdirection_l_to_r_sharp': Icons.format_textdirection_l_to_r_sharp,
 
   /// <i class="material-icons-round md-36">format_textdirection_l_to_r</i> &#x2014; material icon named "format textdirection l to r" (round).
-  'format_textdirection_l_to_r_rounded':
-      Icons.format_textdirection_l_to_r_rounded,
+  'format_textdirection_l_to_r_rounded': Icons.format_textdirection_l_to_r_rounded,
 
   /// <i class="material-icons-outlined md-36">format_textdirection_l_to_r</i> &#x2014; material icon named "format textdirection l to r" (outlined).
-  'format_textdirection_l_to_r_outlined':
-      Icons.format_textdirection_l_to_r_outlined,
+  'format_textdirection_l_to_r_outlined': Icons.format_textdirection_l_to_r_outlined,
 
   /// <i class="material-icons md-36">format_textdirection_r_to_l</i> &#x2014; material icon named "format textdirection r to l".
   'format_textdirection_r_to_l': Icons.format_textdirection_r_to_l,
@@ -10083,12 +10061,10 @@ Map<String, IconData> icons = {
   'format_textdirection_r_to_l_sharp': Icons.format_textdirection_r_to_l_sharp,
 
   /// <i class="material-icons-round md-36">format_textdirection_r_to_l</i> &#x2014; material icon named "format textdirection r to l" (round).
-  'format_textdirection_r_to_l_rounded':
-      Icons.format_textdirection_r_to_l_rounded,
+  'format_textdirection_r_to_l_rounded': Icons.format_textdirection_r_to_l_rounded,
 
   /// <i class="material-icons-outlined md-36">format_textdirection_r_to_l</i> &#x2014; material icon named "format textdirection r to l" (outlined).
-  'format_textdirection_r_to_l_outlined':
-      Icons.format_textdirection_r_to_l_outlined,
+  'format_textdirection_r_to_l_outlined': Icons.format_textdirection_r_to_l_outlined,
 
   /// <i class="material-icons md-36">format_underline</i> &#x2014; material icon named "format underline".
   'format_underline': Icons.format_underline,
@@ -12362,12 +12338,10 @@ Map<String, IconData> icons = {
   'keyboard_double_arrow_down_sharp': Icons.keyboard_double_arrow_down_sharp,
 
   /// <i class="material-icons-round md-36">keyboard_double_arrow_down</i> &#x2014; material icon named "keyboard double arrow down" (round).
-  'keyboard_double_arrow_down_rounded':
-      Icons.keyboard_double_arrow_down_rounded,
+  'keyboard_double_arrow_down_rounded': Icons.keyboard_double_arrow_down_rounded,
 
   /// <i class="material-icons-outlined md-36">keyboard_double_arrow_down</i> &#x2014; material icon named "keyboard double arrow down" (outlined).
-  'keyboard_double_arrow_down_outlined':
-      Icons.keyboard_double_arrow_down_outlined,
+  'keyboard_double_arrow_down_outlined': Icons.keyboard_double_arrow_down_outlined,
 
   /// <i class="material-icons md-36">keyboard_double_arrow_left</i> &#x2014; material icon named "keyboard double arrow left".
   'keyboard_double_arrow_left': Icons.keyboard_double_arrow_left,
@@ -12376,12 +12350,10 @@ Map<String, IconData> icons = {
   'keyboard_double_arrow_left_sharp': Icons.keyboard_double_arrow_left_sharp,
 
   /// <i class="material-icons-round md-36">keyboard_double_arrow_left</i> &#x2014; material icon named "keyboard double arrow left" (round).
-  'keyboard_double_arrow_left_rounded':
-      Icons.keyboard_double_arrow_left_rounded,
+  'keyboard_double_arrow_left_rounded': Icons.keyboard_double_arrow_left_rounded,
 
   /// <i class="material-icons-outlined md-36">keyboard_double_arrow_left</i> &#x2014; material icon named "keyboard double arrow left" (outlined).
-  'keyboard_double_arrow_left_outlined':
-      Icons.keyboard_double_arrow_left_outlined,
+  'keyboard_double_arrow_left_outlined': Icons.keyboard_double_arrow_left_outlined,
 
   /// <i class="material-icons md-36">keyboard_double_arrow_right</i> &#x2014; material icon named "keyboard double arrow right".
   'keyboard_double_arrow_right': Icons.keyboard_double_arrow_right,
@@ -12390,12 +12362,10 @@ Map<String, IconData> icons = {
   'keyboard_double_arrow_right_sharp': Icons.keyboard_double_arrow_right_sharp,
 
   /// <i class="material-icons-round md-36">keyboard_double_arrow_right</i> &#x2014; material icon named "keyboard double arrow right" (round).
-  'keyboard_double_arrow_right_rounded':
-      Icons.keyboard_double_arrow_right_rounded,
+  'keyboard_double_arrow_right_rounded': Icons.keyboard_double_arrow_right_rounded,
 
   /// <i class="material-icons-outlined md-36">keyboard_double_arrow_right</i> &#x2014; material icon named "keyboard double arrow right" (outlined).
-  'keyboard_double_arrow_right_outlined':
-      Icons.keyboard_double_arrow_right_outlined,
+  'keyboard_double_arrow_right_outlined': Icons.keyboard_double_arrow_right_outlined,
 
   /// <i class="material-icons md-36">keyboard_double_arrow_up</i> &#x2014; material icon named "keyboard double arrow up".
   'keyboard_double_arrow_up': Icons.keyboard_double_arrow_up,
@@ -15551,12 +15521,10 @@ Map<String, IconData> icons = {
   'no_encryption_gmailerrorred_sharp': Icons.no_encryption_gmailerrorred_sharp,
 
   /// <i class="material-icons-round md-36">no_encryption_gmailerrorred</i> &#x2014; material icon named "no encryption gmailerrorred" (round).
-  'no_encryption_gmailerrorred_rounded':
-      Icons.no_encryption_gmailerrorred_rounded,
+  'no_encryption_gmailerrorred_rounded': Icons.no_encryption_gmailerrorred_rounded,
 
   /// <i class="material-icons-outlined md-36">no_encryption_gmailerrorred</i> &#x2014; material icon named "no encryption gmailerrorred" (outlined).
-  'no_encryption_gmailerrorred_outlined':
-      Icons.no_encryption_gmailerrorred_outlined,
+  'no_encryption_gmailerrorred_outlined': Icons.no_encryption_gmailerrorred_outlined,
 
   /// <i class="material-icons md-36">no_flash</i> &#x2014; material icon named "no flash".
   'no_flash': Icons.no_flash,
@@ -16363,12 +16331,10 @@ Map<String, IconData> icons = {
   'panorama_horizontal_select_sharp': Icons.panorama_horizontal_select_sharp,
 
   /// <i class="material-icons-round md-36">panorama_horizontal_select</i> &#x2014; material icon named "panorama horizontal select" (round).
-  'panorama_horizontal_select_rounded':
-      Icons.panorama_horizontal_select_rounded,
+  'panorama_horizontal_select_rounded': Icons.panorama_horizontal_select_rounded,
 
   /// <i class="material-icons-outlined md-36">panorama_horizontal_select</i> &#x2014; material icon named "panorama horizontal select" (outlined).
-  'panorama_horizontal_select_outlined':
-      Icons.panorama_horizontal_select_outlined,
+  'panorama_horizontal_select_outlined': Icons.panorama_horizontal_select_outlined,
 
   /// <i class="material-icons md-36">panorama_photosphere</i> &#x2014; material icon named "panorama photosphere".
   'panorama_photosphere': Icons.panorama_photosphere,
@@ -16389,12 +16355,10 @@ Map<String, IconData> icons = {
   'panorama_photosphere_select_sharp': Icons.panorama_photosphere_select_sharp,
 
   /// <i class="material-icons-round md-36">panorama_photosphere_select</i> &#x2014; material icon named "panorama photosphere select" (round).
-  'panorama_photosphere_select_rounded':
-      Icons.panorama_photosphere_select_rounded,
+  'panorama_photosphere_select_rounded': Icons.panorama_photosphere_select_rounded,
 
   /// <i class="material-icons-outlined md-36">panorama_photosphere_select</i> &#x2014; material icon named "panorama photosphere select" (outlined).
-  'panorama_photosphere_select_outlined':
-      Icons.panorama_photosphere_select_outlined,
+  'panorama_photosphere_select_outlined': Icons.panorama_photosphere_select_outlined,
 
   /// <i class="material-icons md-36">panorama_vertical</i> &#x2014; material icon named "panorama vertical".
   'panorama_vertical': Icons.panorama_vertical,
@@ -16439,12 +16403,10 @@ Map<String, IconData> icons = {
   'panorama_wide_angle_select_sharp': Icons.panorama_wide_angle_select_sharp,
 
   /// <i class="material-icons-round md-36">panorama_wide_angle_select</i> &#x2014; material icon named "panorama wide angle select" (round).
-  'panorama_wide_angle_select_rounded':
-      Icons.panorama_wide_angle_select_rounded,
+  'panorama_wide_angle_select_rounded': Icons.panorama_wide_angle_select_rounded,
 
   /// <i class="material-icons-outlined md-36">panorama_wide_angle_select</i> &#x2014; material icon named "panorama wide angle select" (outlined).
-  'panorama_wide_angle_select_outlined':
-      Icons.panorama_wide_angle_select_outlined,
+  'panorama_wide_angle_select_outlined': Icons.panorama_wide_angle_select_outlined,
 
   /// <i class="material-icons md-36">paragliding</i> &#x2014; material icon named "paragliding".
   'paragliding': Icons.paragliding,
@@ -17713,8 +17675,7 @@ Map<String, IconData> icons = {
   'playlist_add_check_circle_rounded': Icons.playlist_add_check_circle_rounded,
 
   /// <i class="material-icons-outlined md-36">playlist_add_check_circle</i> &#x2014; material icon named "playlist add check circle" (outlined).
-  'playlist_add_check_circle_outlined':
-      Icons.playlist_add_check_circle_outlined,
+  'playlist_add_check_circle_outlined': Icons.playlist_add_check_circle_outlined,
 
   /// <i class="material-icons md-36">playlist_add_circle</i> &#x2014; material icon named "playlist add circle".
   'playlist_add_circle': Icons.playlist_add_circle,
@@ -18083,12 +18044,10 @@ Map<String, IconData> icons = {
   'production_quantity_limits_sharp': Icons.production_quantity_limits_sharp,
 
   /// <i class="material-icons-round md-36">production_quantity_limits</i> &#x2014; material icon named "production quantity limits" (round).
-  'production_quantity_limits_rounded':
-      Icons.production_quantity_limits_rounded,
+  'production_quantity_limits_rounded': Icons.production_quantity_limits_rounded,
 
   /// <i class="material-icons-outlined md-36">production_quantity_limits</i> &#x2014; material icon named "production quantity limits" (outlined).
-  'production_quantity_limits_outlined':
-      Icons.production_quantity_limits_outlined,
+  'production_quantity_limits_outlined': Icons.production_quantity_limits_outlined,
 
   /// <i class="material-icons md-36">propane</i> &#x2014; material icon named "propane".
   'propane': Icons.propane,
@@ -20197,12 +20156,10 @@ Map<String, IconData> icons = {
   'sentiment_very_dissatisfied_sharp': Icons.sentiment_very_dissatisfied_sharp,
 
   /// <i class="material-icons-round md-36">sentiment_very_dissatisfied</i> &#x2014; material icon named "sentiment very dissatisfied" (round).
-  'sentiment_very_dissatisfied_rounded':
-      Icons.sentiment_very_dissatisfied_rounded,
+  'sentiment_very_dissatisfied_rounded': Icons.sentiment_very_dissatisfied_rounded,
 
   /// <i class="material-icons-outlined md-36">sentiment_very_dissatisfied</i> &#x2014; material icon named "sentiment very dissatisfied" (outlined).
-  'sentiment_very_dissatisfied_outlined':
-      Icons.sentiment_very_dissatisfied_outlined,
+  'sentiment_very_dissatisfied_outlined': Icons.sentiment_very_dissatisfied_outlined,
 
   /// <i class="material-icons md-36">sentiment_very_satisfied</i> &#x2014; material icon named "sentiment very satisfied".
   'sentiment_very_satisfied': Icons.sentiment_very_satisfied,
@@ -20802,8 +20759,7 @@ Map<String, IconData> icons = {
   'signal_cellular_alt_1_bar_rounded': Icons.signal_cellular_alt_1_bar_rounded,
 
   /// <i class="material-icons-outlined md-36">signal_cellular_alt_1_bar</i> &#x2014; material icon named "signal cellular alt 1 bar" (outlined).
-  'signal_cellular_alt_1_bar_outlined':
-      Icons.signal_cellular_alt_1_bar_outlined,
+  'signal_cellular_alt_1_bar_outlined': Icons.signal_cellular_alt_1_bar_outlined,
 
   /// <i class="material-icons md-36">signal_cellular_alt_2_bar</i> &#x2014; material icon named "signal cellular alt 2 bar".
   'signal_cellular_alt_2_bar': Icons.signal_cellular_alt_2_bar,
@@ -20815,40 +20771,31 @@ Map<String, IconData> icons = {
   'signal_cellular_alt_2_bar_rounded': Icons.signal_cellular_alt_2_bar_rounded,
 
   /// <i class="material-icons-outlined md-36">signal_cellular_alt_2_bar</i> &#x2014; material icon named "signal cellular alt 2 bar" (outlined).
-  'signal_cellular_alt_2_bar_outlined':
-      Icons.signal_cellular_alt_2_bar_outlined,
+  'signal_cellular_alt_2_bar_outlined': Icons.signal_cellular_alt_2_bar_outlined,
 
   /// <i class="material-icons md-36">signal_cellular_connected_no_internet_0_bar</i> &#x2014; material icon named "signal cellular connected no internet 0 bar".
-  'signal_cellular_connected_no_internet_0_bar':
-      Icons.signal_cellular_connected_no_internet_0_bar,
+  'signal_cellular_connected_no_internet_0_bar': Icons.signal_cellular_connected_no_internet_0_bar,
 
   /// <i class="material-icons-sharp md-36">signal_cellular_connected_no_internet_0_bar</i> &#x2014; material icon named "signal cellular connected no internet 0 bar" (sharp).
-  'signal_cellular_connected_no_internet_0_bar_sharp':
-      Icons.signal_cellular_connected_no_internet_0_bar_sharp,
+  'signal_cellular_connected_no_internet_0_bar_sharp': Icons.signal_cellular_connected_no_internet_0_bar_sharp,
 
   /// <i class="material-icons-round md-36">signal_cellular_connected_no_internet_0_bar</i> &#x2014; material icon named "signal cellular connected no internet 0 bar" (round).
-  'signal_cellular_connected_no_internet_0_bar_rounded':
-      Icons.signal_cellular_connected_no_internet_0_bar_rounded,
+  'signal_cellular_connected_no_internet_0_bar_rounded': Icons.signal_cellular_connected_no_internet_0_bar_rounded,
 
   /// <i class="material-icons-outlined md-36">signal_cellular_connected_no_internet_0_bar</i> &#x2014; material icon named "signal cellular connected no internet 0 bar" (outlined).
-  'signal_cellular_connected_no_internet_0_bar_outlined':
-      Icons.signal_cellular_connected_no_internet_0_bar_outlined,
+  'signal_cellular_connected_no_internet_0_bar_outlined': Icons.signal_cellular_connected_no_internet_0_bar_outlined,
 
   /// <i class="material-icons md-36">signal_cellular_connected_no_internet_4_bar</i> &#x2014; material icon named "signal cellular connected no internet 4 bar".
-  'signal_cellular_connected_no_internet_4_bar':
-      Icons.signal_cellular_connected_no_internet_4_bar,
+  'signal_cellular_connected_no_internet_4_bar': Icons.signal_cellular_connected_no_internet_4_bar,
 
   /// <i class="material-icons-sharp md-36">signal_cellular_connected_no_internet_4_bar</i> &#x2014; material icon named "signal cellular connected no internet 4 bar" (sharp).
-  'signal_cellular_connected_no_internet_4_bar_sharp':
-      Icons.signal_cellular_connected_no_internet_4_bar_sharp,
+  'signal_cellular_connected_no_internet_4_bar_sharp': Icons.signal_cellular_connected_no_internet_4_bar_sharp,
 
   /// <i class="material-icons-round md-36">signal_cellular_connected_no_internet_4_bar</i> &#x2014; material icon named "signal cellular connected no internet 4 bar" (round).
-  'signal_cellular_connected_no_internet_4_bar_rounded':
-      Icons.signal_cellular_connected_no_internet_4_bar_rounded,
+  'signal_cellular_connected_no_internet_4_bar_rounded': Icons.signal_cellular_connected_no_internet_4_bar_rounded,
 
   /// <i class="material-icons-outlined md-36">signal_cellular_connected_no_internet_4_bar</i> &#x2014; material icon named "signal cellular connected no internet 4 bar" (outlined).
-  'signal_cellular_connected_no_internet_4_bar_outlined':
-      Icons.signal_cellular_connected_no_internet_4_bar_outlined,
+  'signal_cellular_connected_no_internet_4_bar_outlined': Icons.signal_cellular_connected_no_internet_4_bar_outlined,
 
   /// <i class="material-icons md-36">signal_cellular_no_sim</i> &#x2014; material icon named "signal cellular no sim".
   'signal_cellular_no_sim': Icons.signal_cellular_no_sim,
@@ -20947,20 +20894,16 @@ Map<String, IconData> icons = {
   'signal_wifi_bad_outlined': Icons.signal_wifi_bad_outlined,
 
   /// <i class="material-icons md-36">signal_wifi_connected_no_internet_4</i> &#x2014; material icon named "signal wifi connected no internet 4".
-  'signal_wifi_connected_no_internet_4':
-      Icons.signal_wifi_connected_no_internet_4,
+  'signal_wifi_connected_no_internet_4': Icons.signal_wifi_connected_no_internet_4,
 
   /// <i class="material-icons-sharp md-36">signal_wifi_connected_no_internet_4</i> &#x2014; material icon named "signal wifi connected no internet 4" (sharp).
-  'signal_wifi_connected_no_internet_4_sharp':
-      Icons.signal_wifi_connected_no_internet_4_sharp,
+  'signal_wifi_connected_no_internet_4_sharp': Icons.signal_wifi_connected_no_internet_4_sharp,
 
   /// <i class="material-icons-round md-36">signal_wifi_connected_no_internet_4</i> &#x2014; material icon named "signal wifi connected no internet 4" (round).
-  'signal_wifi_connected_no_internet_4_rounded':
-      Icons.signal_wifi_connected_no_internet_4_rounded,
+  'signal_wifi_connected_no_internet_4_rounded': Icons.signal_wifi_connected_no_internet_4_rounded,
 
   /// <i class="material-icons-outlined md-36">signal_wifi_connected_no_internet_4</i> &#x2014; material icon named "signal wifi connected no internet 4" (outlined).
-  'signal_wifi_connected_no_internet_4_outlined':
-      Icons.signal_wifi_connected_no_internet_4_outlined,
+  'signal_wifi_connected_no_internet_4_outlined': Icons.signal_wifi_connected_no_internet_4_outlined,
 
   /// <i class="material-icons md-36">signal_wifi_off</i> &#x2014; material icon named "signal wifi off".
   'signal_wifi_off': Icons.signal_wifi_off,
@@ -20981,24 +20924,19 @@ Map<String, IconData> icons = {
   'signal_wifi_statusbar_4_bar_sharp': Icons.signal_wifi_statusbar_4_bar_sharp,
 
   /// <i class="material-icons-round md-36">signal_wifi_statusbar_4_bar</i> &#x2014; material icon named "signal wifi statusbar 4 bar" (round).
-  'signal_wifi_statusbar_4_bar_rounded':
-      Icons.signal_wifi_statusbar_4_bar_rounded,
+  'signal_wifi_statusbar_4_bar_rounded': Icons.signal_wifi_statusbar_4_bar_rounded,
 
   /// <i class="material-icons-outlined md-36">signal_wifi_statusbar_4_bar</i> &#x2014; material icon named "signal wifi statusbar 4 bar" (outlined).
-  'signal_wifi_statusbar_4_bar_outlined':
-      Icons.signal_wifi_statusbar_4_bar_outlined,
+  'signal_wifi_statusbar_4_bar_outlined': Icons.signal_wifi_statusbar_4_bar_outlined,
 
   /// <i class="material-icons md-36">signal_wifi_statusbar_connected_no_internet_4</i> &#x2014; material icon named "signal wifi statusbar connected no internet 4".
-  'signal_wifi_statusbar_connected_no_internet_4':
-      Icons.signal_wifi_statusbar_connected_no_internet_4,
+  'signal_wifi_statusbar_connected_no_internet_4': Icons.signal_wifi_statusbar_connected_no_internet_4,
 
   /// <i class="material-icons-sharp md-36">signal_wifi_statusbar_connected_no_internet_4</i> &#x2014; material icon named "signal wifi statusbar connected no internet 4" (sharp).
-  'signal_wifi_statusbar_connected_no_internet_4_sharp':
-      Icons.signal_wifi_statusbar_connected_no_internet_4_sharp,
+  'signal_wifi_statusbar_connected_no_internet_4_sharp': Icons.signal_wifi_statusbar_connected_no_internet_4_sharp,
 
   /// <i class="material-icons-round md-36">signal_wifi_statusbar_connected_no_internet_4</i> &#x2014; material icon named "signal wifi statusbar connected no internet 4" (round).
-  'signal_wifi_statusbar_connected_no_internet_4_rounded':
-      Icons.signal_wifi_statusbar_connected_no_internet_4_rounded,
+  'signal_wifi_statusbar_connected_no_internet_4_rounded': Icons.signal_wifi_statusbar_connected_no_internet_4_rounded,
 
   /// <i class="material-icons-outlined md-36">signal_wifi_statusbar_connected_no_internet_4</i> &#x2014; material icon named "signal wifi statusbar connected no internet 4" (outlined).
   'signal_wifi_statusbar_connected_no_internet_4_outlined':
@@ -21011,12 +20949,10 @@ Map<String, IconData> icons = {
   'signal_wifi_statusbar_null_sharp': Icons.signal_wifi_statusbar_null_sharp,
 
   /// <i class="material-icons-round md-36">signal_wifi_statusbar_null</i> &#x2014; material icon named "signal wifi statusbar null" (round).
-  'signal_wifi_statusbar_null_rounded':
-      Icons.signal_wifi_statusbar_null_rounded,
+  'signal_wifi_statusbar_null_rounded': Icons.signal_wifi_statusbar_null_rounded,
 
   /// <i class="material-icons-outlined md-36">signal_wifi_statusbar_null</i> &#x2014; material icon named "signal wifi statusbar null" (outlined).
-  'signal_wifi_statusbar_null_outlined':
-      Icons.signal_wifi_statusbar_null_outlined,
+  'signal_wifi_statusbar_null_outlined': Icons.signal_wifi_statusbar_null_outlined,
 
   /// <i class="material-icons md-36">signpost</i> &#x2014; material icon named "signpost".
   'signpost': Icons.signpost,
@@ -22750,12 +22686,10 @@ Map<String, IconData> icons = {
   'switch_access_shortcut_add_sharp': Icons.switch_access_shortcut_add_sharp,
 
   /// <i class="material-icons-round md-36">switch_access_shortcut_add</i> &#x2014; material icon named "switch access shortcut add" (round).
-  'switch_access_shortcut_add_rounded':
-      Icons.switch_access_shortcut_add_rounded,
+  'switch_access_shortcut_add_rounded': Icons.switch_access_shortcut_add_rounded,
 
   /// <i class="material-icons-outlined md-36">switch_access_shortcut_add</i> &#x2014; material icon named "switch access shortcut add" (outlined).
-  'switch_access_shortcut_add_outlined':
-      Icons.switch_access_shortcut_add_outlined,
+  'switch_access_shortcut_add_outlined': Icons.switch_access_shortcut_add_outlined,
 
   /// <i class="material-icons md-36">switch_account</i> &#x2014; material icon named "switch account".
   'switch_account': Icons.switch_account,
@@ -22908,27 +22842,22 @@ Map<String, IconData> icons = {
   'system_security_update_good_sharp': Icons.system_security_update_good_sharp,
 
   /// <i class="material-icons-round md-36">system_security_update_good</i> &#x2014; material icon named "system security update good" (round).
-  'system_security_update_good_rounded':
-      Icons.system_security_update_good_rounded,
+  'system_security_update_good_rounded': Icons.system_security_update_good_rounded,
 
   /// <i class="material-icons-outlined md-36">system_security_update_good</i> &#x2014; material icon named "system security update good" (outlined).
-  'system_security_update_good_outlined':
-      Icons.system_security_update_good_outlined,
+  'system_security_update_good_outlined': Icons.system_security_update_good_outlined,
 
   /// <i class="material-icons md-36">system_security_update_warning</i> &#x2014; material icon named "system security update warning".
   'system_security_update_warning': Icons.system_security_update_warning,
 
   /// <i class="material-icons-sharp md-36">system_security_update_warning</i> &#x2014; material icon named "system security update warning" (sharp).
-  'system_security_update_warning_sharp':
-      Icons.system_security_update_warning_sharp,
+  'system_security_update_warning_sharp': Icons.system_security_update_warning_sharp,
 
   /// <i class="material-icons-round md-36">system_security_update_warning</i> &#x2014; material icon named "system security update warning" (round).
-  'system_security_update_warning_rounded':
-      Icons.system_security_update_warning_rounded,
+  'system_security_update_warning_rounded': Icons.system_security_update_warning_rounded,
 
   /// <i class="material-icons-outlined md-36">system_security_update_warning</i> &#x2014; material icon named "system security update warning" (outlined).
-  'system_security_update_warning_outlined':
-      Icons.system_security_update_warning_outlined,
+  'system_security_update_warning_outlined': Icons.system_security_update_warning_outlined,
 
   /// <i class="material-icons md-36">system_update</i> &#x2014; material icon named "system update".
   'system_update': Icons.system_update,
@@ -23912,8 +23841,7 @@ Map<String, IconData> icons = {
   'transfer_within_a_station_rounded': Icons.transfer_within_a_station_rounded,
 
   /// <i class="material-icons-outlined md-36">transfer_within_a_station</i> &#x2014; material icon named "transfer within a station" (outlined).
-  'transfer_within_a_station_outlined':
-      Icons.transfer_within_a_station_outlined,
+  'transfer_within_a_station_outlined': Icons.transfer_within_a_station_outlined,
 
   /// <i class="material-icons md-36">transform</i> &#x2014; material icon named "transform".
   'transform': Icons.transform,
@@ -25869,16 +25797,13 @@ Map<String, IconData> icons = {
   'wifi_tethering_error_outlined': Icons.wifi_tethering_error_outlined,
 
   /// <i class="material-icons-sharp md-36">wifi_tethering_error_rounded</i> &#x2014; material icon named "wifi tethering error rounded" (sharp).
-  'wifi_tethering_error_rounded_sharp':
-      Icons.wifi_tethering_error_rounded_sharp,
+  'wifi_tethering_error_rounded_sharp': Icons.wifi_tethering_error_rounded_sharp,
 
   /// <i class="material-icons-round md-36">wifi_tethering_error_rounded</i> &#x2014; material icon named "wifi tethering error rounded" (round).
-  'wifi_tethering_error_rounded_rounded':
-      Icons.wifi_tethering_error_rounded_rounded,
+  'wifi_tethering_error_rounded_rounded': Icons.wifi_tethering_error_rounded_rounded,
 
   /// <i class="material-icons-outlined md-36">wifi_tethering_error_rounded</i> &#x2014; material icon named "wifi tethering error rounded" (outlined).
-  'wifi_tethering_error_rounded_outlined':
-      Icons.wifi_tethering_error_rounded_outlined,
+  'wifi_tethering_error_rounded_outlined': Icons.wifi_tethering_error_rounded_outlined,
 
   /// <i class="material-icons md-36">wifi_tethering_off</i> &#x2014; material icon named "wifi tethering off".
   'wifi_tethering_off': Icons.wifi_tethering_off,

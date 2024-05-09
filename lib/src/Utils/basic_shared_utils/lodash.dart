@@ -9,8 +9,7 @@ Map<String, T> keyBy<T>(
 }
 
 extension LodashSetValue on Map<String, dynamic> {
-  void _setValue(
-      Map<String, dynamic> object, List<String> path, dynamic value) {
+  void _setValue(Map<String, dynamic> object, List<String> path, dynamic value) {
     final lastKey = path.removeLast();
     Map<String, dynamic> current = object;
 
@@ -78,8 +77,7 @@ extension CastExt<T> on T? {
       return this as R;
     } catch (e) {
       // ignore: avoid_print
-      debugPrint(
-          'CastError when trying to cast $this to $T!. Error: ${e.toString()}');
+      debugPrint('CastError when trying to cast $this to $T!. Error: ${e.toString()}');
       return null;
     }
   }

@@ -10,11 +10,9 @@ import '../../components/dui_widget_creator_fn.dart';
 class DUIFlexBuilder extends DUIWidgetBuilder {
   Axis direction;
 
-  DUIFlexBuilder(
-      {required super.data, super.registry, required this.direction});
+  DUIFlexBuilder({required super.data, super.registry, required this.direction});
 
-  static DUIFlexBuilder create(DUIWidgetJsonData data,
-      {DUIWidgetRegistry? registry, required Axis direction}) {
+  static DUIFlexBuilder create(DUIWidgetJsonData data, {DUIWidgetRegistry? registry, required Axis direction}) {
     return DUIFlexBuilder(data: data, registry: registry, direction: direction);
   }
 
@@ -30,19 +28,15 @@ class DUIFlexBuilder extends DUIWidgetBuilder {
         defaultValue: MainAxisSize.min,
       ),
       direction: direction,
-      mainAxisAlignment: DUIDecoder.toMainAxisAlginmentOrDefault(
-          data.props['mainAxisAlignment'],
+      mainAxisAlignment: DUIDecoder.toMainAxisAlginmentOrDefault(data.props['mainAxisAlignment'],
           defaultValue: MainAxisAlignment.start),
-      crossAxisAlignment: DUIDecoder.toCrossAxisAlignmentOrDefault(
-          data.props['crossAxisAlignment'],
+      crossAxisAlignment: DUIDecoder.toCrossAxisAlignmentOrDefault(data.props['crossAxisAlignment'],
           defaultValue: CrossAxisAlignment.center),
       children: !(data.children['children'].isNullOrEmpty)
           ? data.children['children']!.map((e) {
               return DUIFlexFit(
-                  flex:
-                      e.containerProps.valueFor(keyPath: 'expansion.flexValue'),
-                  expansionType:
-                      e.containerProps.valueFor(keyPath: 'expansion.type'),
+                  flex: e.containerProps.valueFor(keyPath: 'expansion.flexValue'),
+                  expansionType: e.containerProps.valueFor(keyPath: 'expansion.type'),
                   child: DUIWidget(data: e));
             }).toList()
           : [

@@ -6,9 +6,7 @@ part of 'dui_vertical_divider_props.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-DUIVerticalDividerProps _$DUIVerticalDividerPropsFromJson(
-        Map<String, dynamic> json) =>
-    DUIVerticalDividerProps(
+DUIVerticalDividerProps _$DUIVerticalDividerPropsFromJson(Map<String, dynamic> json) => DUIVerticalDividerProps(
       lineStyle: json['lineStyle'] as String?,
       color: json['color'] as String?,
       thickness: (json['thickness'] as num?)?.toDouble(),
@@ -17,9 +15,7 @@ DUIVerticalDividerProps _$DUIVerticalDividerPropsFromJson(
       width: (json['width'] as num?)?.toDouble(),
     );
 
-Map<String, dynamic> _$DUIVerticalDividerPropsToJson(
-        DUIVerticalDividerProps instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$DUIVerticalDividerPropsToJson(DUIVerticalDividerProps instance) => <String, dynamic>{
       'lineStyle': instance.lineStyle,
       'color': instance.color,
       'width': instance.width,

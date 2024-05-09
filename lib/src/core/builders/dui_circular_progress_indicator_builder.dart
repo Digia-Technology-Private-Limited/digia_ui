@@ -13,7 +13,6 @@ class DUICircularProgressBarBuilder extends DUIWidgetBuilder {
 
   @override
   Widget build(BuildContext context) {
-    return DUICircularProgressBar(
-        DUICircularProgressBarProps.fromJson(data.props));
+    return DUICircularProgressBar(DUICircularProgressBarProps.fromJson(data.props));
   }
 }

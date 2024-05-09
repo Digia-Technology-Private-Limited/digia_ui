@@ -47,8 +47,7 @@ class AvatarSquareShape extends AvatarShape {
   final double sideLength;
   final DUICornerRadius? cornerRadius;
 
-  const AvatarSquareShape({double? sideLength, this.cornerRadius})
-      : sideLength = sideLength ?? 32.0;
+  const AvatarSquareShape({double? sideLength, this.cornerRadius}) : sideLength = sideLength ?? 32.0;
 }
 
 class AvatarCircleShape extends AvatarShape {
@@ -70,11 +69,9 @@ class DUIAvatarProps {
 
   String? bgColor;
 
-  DUIAvatarProps(
-      {this.bgColor, this.imageSrc, this.text, this.imageFit, this.shape});
+  DUIAvatarProps({this.bgColor, this.imageSrc, this.text, this.imageFit, this.shape});
 
-  factory DUIAvatarProps.fromJson(Map<String, dynamic> json) =>
-      _$DUIAvatarPropsFromJson(json);
+  factory DUIAvatarProps.fromJson(Map<String, dynamic> json) => _$DUIAvatarPropsFromJson(json);
 
   Map<String, dynamic> toJson() => _$DUIAvatarPropsToJson(this);
 }

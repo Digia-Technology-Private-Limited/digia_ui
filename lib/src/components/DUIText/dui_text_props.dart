@@ -13,19 +13,10 @@ class DUITextProps {
   String? alignment;
   DUITextStyle? textStyle;
 
-  DUITextProps(
-      {this.textStyle,
-      this.alignment,
-      this.maxLines,
-      this.overflow,
-      this.textSpans});
+  DUITextProps({this.textStyle, this.alignment, this.maxLines, this.overflow, this.textSpans});
 
   factory DUITextProps.withText(
-      {required dynamic text,
-      DUITextStyle? textStyle,
-      int? maxLines,
-      String? overflow,
-      String? alignment}) {
+      {required dynamic text, DUITextStyle? textStyle, int? maxLines, String? overflow, String? alignment}) {
     return DUITextProps()
       ..textSpans = [DUITextSpan()..text = text]
       ..textStyle = textStyle
@@ -44,11 +35,7 @@ class DUITextProps {
   }
 
   DUITextProps copyWith(
-      {int? maxLines,
-      String? overflow,
-      String? alignment,
-      DUITextStyle? textStyle,
-      List<DUITextSpan>? textSpans}) {
+      {int? maxLines, String? overflow, String? alignment, DUITextStyle? textStyle, List<DUITextSpan>? textSpans}) {
     return DUITextProps(
       textSpans: textSpans ?? this.textSpans,
       alignment: alignment ?? this.alignment,

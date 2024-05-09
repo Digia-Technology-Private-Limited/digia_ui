@@ -51,8 +51,7 @@ Map<String, ActionHandlerFn> _actionsMap = {
     final url = Uri.parse(action.data['url']);
     final canOpenUrl = await canLaunchUrl(url);
     if (canOpenUrl) {
-      return launchUrl(url,
-          mode: DUIDecoder.toUriLaunchMode(action.data['launchMode']));
+      return launchUrl(url, mode: DUIDecoder.toUriLaunchMode(action.data['launchMode']));
     } else {
       throw 'Not allowed to open url: $url';
     }
@@ -76,8 +75,7 @@ Map<String, ActionHandlerFn> _actionsMap = {
       bloc.add(SetStateEvent(
           events: events.map((e) {
         final value = DUIWidgetScope.of(context)?.eval(e['value'], (id) => id);
-        return SingleSetStateEvent(
-            variableName: e['variableName'], context: context, value: value);
+        return SingleSetStateEvent(variableName: e['variableName'], context: context, value: value);
       }).toList()));
     }
 
@@ -89,8 +87,7 @@ Map<String, ActionHandlerFn> _actionsMap = {
     if (events is List) {
       for (final e in events) {
         final value = DUIWidgetScope.of(context)?.eval(e['value'], (id) => id);
-        DigiaUIClient.instance.appState.variables?[e['variableName']]
-            ?.set(value);
+        DigiaUIClient.instance.appState.variables?[e['variableName']]?.set(value);
       }
 
       context.tryRead<DUIPageBloc>()?.add(SetStateEvent(events: []));

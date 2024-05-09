@@ -33,18 +33,13 @@ import '../core/builders/dui_rich_text_builder.dart';
 import '../core/builders/dui_scaffold_builder.dart';
 import '../core/builders/dui_webview_builder.dart';
 
-typedef WidgetFromJsonFn<T extends Widget> = T Function(
-    Map<String, dynamic> json);
+typedef WidgetFromJsonFn<T extends Widget> = T Function(Map<String, dynamic> json);
 
-typedef DUIWidgetBuilderCreatorFn = DUIWidgetBuilder?
-    Function(DUIWidgetJsonData data, {DUIWidgetRegistry? registry});
+typedef DUIWidgetBuilderCreatorFn = DUIWidgetBuilder? Function(DUIWidgetJsonData data, {DUIWidgetRegistry? registry});
 
-typedef DUIWidgetBuilderWithoutRegistryCreatorFn = DUIWidgetBuilder? Function(
-    DUIWidgetJsonData data);
+typedef DUIWidgetBuilderWithoutRegistryCreatorFn = DUIWidgetBuilder? Function(DUIWidgetJsonData data);
 
-DUIWidgetBuilderCreatorFn withoutRegistry(
-        DUIWidgetBuilderWithoutRegistryCreatorFn fn) =>
-    (data, {registry}) {
+DUIWidgetBuilderCreatorFn withoutRegistry(DUIWidgetBuilderWithoutRegistryCreatorFn fn) => (data, {registry}) {
       return fn(data);
     };
 
@@ -61,20 +56,15 @@ class DUIWidgetRegistry {
     'digia/iconButton': withoutRegistry(DUIIconButtonBuilder.create),
     'digia/image': withoutRegistry(DUIImageBuilder.create),
     'digia/webView': withoutRegistry(DUIWebViewBuilder.create),
-    'digia/listView': (data, {registry}) =>
-        DUIListViewBuilder.create(data, registry: DUIWidgetRegistry.shared),
-    'digia/gridView': (data, {registry}) =>
-        DUIGridViewBuilder.create(data, registry: DUIWidgetRegistry.shared),
-    'digia/carousel': (data, {registry}) =>
-        DUICarouselBuilder.create(data, registry: DUIWidgetRegistry.shared),
-    'digia/column': (data, {registry}) => DUIFlexBuilder.create(data,
-        registry: DUIWidgetRegistry.shared, direction: Axis.vertical),
-    'digia/row': (data, {registry}) => DUIFlexBuilder.create(data,
-        registry: DUIWidgetRegistry.shared, direction: Axis.horizontal),
-    'digia/expansionTile': (data, {registry}) =>
-        DUIExpansionBuilder.create(data, registry: DUIWidgetRegistry.shared),
-    'digia/expandable': (data, {registry}) =>
-        DUIExpandableBuilder.create(data, registry: DUIWidgetRegistry.shared),
+    'digia/listView': (data, {registry}) => DUIListViewBuilder.create(data, registry: DUIWidgetRegistry.shared),
+    'digia/gridView': (data, {registry}) => DUIGridViewBuilder.create(data, registry: DUIWidgetRegistry.shared),
+    'digia/carousel': (data, {registry}) => DUICarouselBuilder.create(data, registry: DUIWidgetRegistry.shared),
+    'digia/column': (data, {registry}) =>
+        DUIFlexBuilder.create(data, registry: DUIWidgetRegistry.shared, direction: Axis.vertical),
+    'digia/row': (data, {registry}) =>
+        DUIFlexBuilder.create(data, registry: DUIWidgetRegistry.shared, direction: Axis.horizontal),
+    'digia/expansionTile': (data, {registry}) => DUIExpansionBuilder.create(data, registry: DUIWidgetRegistry.shared),
+    'digia/expandable': (data, {registry}) => DUIExpandableBuilder.create(data, registry: DUIWidgetRegistry.shared),
     'digia/wrap': (data, {registry}) => DUIWrapBuilder.create(data),
     'digia/container': withoutRegistry(DUIContainer2Builder.create),
     'fw/sized_box': withoutRegistry(DUISizedBoxBuilder.create),
@@ -82,29 +72,21 @@ class DUIWidgetRegistry {
     'fw/appBar': withoutRegistry(DUIAppBarBuilder.create),
     'fw/scaffold': withoutRegistry(DUIScaffoldBuilder.create),
     'digia/lottie': (data, {registry}) => DUILottieBuilder.create(data),
-    'digia/youtubePlayer': (data, {registry}) =>
-        DUIYoutubePlayerBuilder.create(data),
+    'digia/youtubePlayer': (data, {registry}) => DUIYoutubePlayerBuilder.create(data),
     'digia/stack': (data, {registry}) => DUIStackBuilder.create(data),
     'digia/videoPlayer': (data, {registry}) => DUIVideoPlayer.create(data),
-    'digia/tabView': (data, {registry}) =>
-        DUITabViewBuilder.create(data, registry: DUIWidgetRegistry.shared),
-    'digia/tabViewItem': (data, {registry}) =>
-        DUITabViewItemBuilder.create(data, registry: DUIWidgetRegistry.shared),
-    'digia/horizontalDivider': (data, {registry}) =>
-        DUIHorizontalDividerBuilder.create(data),
-    'digia/verticalDivider': (data, {registry}) =>
-        DUIVerticalDividerBuilder.create(data),
-    'digia/customWidget': (data, {registry}) =>
-        DUICustomWidgetBuilder.create(data)
+    'digia/tabView': (data, {registry}) => DUITabViewBuilder.create(data, registry: DUIWidgetRegistry.shared),
+    'digia/tabViewItem': (data, {registry}) => DUITabViewItemBuilder.create(data, registry: DUIWidgetRegistry.shared),
+    'digia/horizontalDivider': (data, {registry}) => DUIHorizontalDividerBuilder.create(data),
+    'digia/verticalDivider': (data, {registry}) => DUIVerticalDividerBuilder.create(data),
+    'digia/customWidget': (data, {registry}) => DUICustomWidgetBuilder.create(data)
   };
 
   static const DUIWidgetRegistry shared = DUIWidgetRegistry();
 
-  DUIWidgetBuilder? getBuilder(DUIWidgetJsonData data,
-      {DUIWidgetRegistry? registry}) {
+  DUIWidgetBuilder? getBuilder(DUIWidgetJsonData data, {DUIWidgetRegistry? registry}) {
     final builderFn = builders[data.type];
 
-    return builderFn?.call(data,
-        registry: registry ?? DUIWidgetRegistry.shared);
+    return builderFn?.call(data, registry: registry ?? DUIWidgetRegistry.shared);
   }
 }

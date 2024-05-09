@@ -8,11 +8,9 @@ import 'package:digia_ui/src/core/page/props/dui_widget_json_data.dart';
 import 'package:flutter/material.dart';
 
 class DUIGridViewBuilder extends DUIWidgetBuilder {
-  DUIGridViewBuilder(DUIWidgetJsonData data, DUIWidgetRegistry? registry)
-      : super(data: data, registry: registry);
+  DUIGridViewBuilder(DUIWidgetJsonData data, DUIWidgetRegistry? registry) : super(data: data, registry: registry);
 
-  static DUIGridViewBuilder create(DUIWidgetJsonData data,
-      {DUIWidgetRegistry? registry}) {
+  static DUIGridViewBuilder create(DUIWidgetJsonData data, {DUIWidgetRegistry? registry}) {
     return DUIGridViewBuilder(data, registry);
   }
 
@@ -24,24 +22,14 @@ class DUIGridViewBuilder extends DUIWidgetBuilder {
         ? GridView.builder(
             itemCount: children.length,
             physics: DUIDecoder.toScrollPhysics(data.props['allowScroll']),
-            shrinkWrap: NumDecoder.toBoolOrDefault(data.props['shrinkWrap'],
-                defaultValue: false),
+            shrinkWrap: NumDecoder.toBoolOrDefault(data.props['shrinkWrap'], defaultValue: false),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: NumDecoder.toIntOrDefault(
-                    data.props['crossAxisCount'],
-                    defaultValue: 2),
-                mainAxisSpacing: NumDecoder.toDoubleOrDefault(
-                    data.props['mainAxisSpacing'],
-                    defaultValue: 0.0),
-                crossAxisSpacing: NumDecoder.toDoubleOrDefault(
-                    data.props['crossAxisSpacing'],
-                    defaultValue: 0.0),
-                childAspectRatio: NumDecoder.toDoubleOrDefault(
-                    data.props['childAspectRatio'],
-                    defaultValue: 1.0)),
+                crossAxisCount: NumDecoder.toIntOrDefault(data.props['crossAxisCount'], defaultValue: 2),
+                mainAxisSpacing: NumDecoder.toDoubleOrDefault(data.props['mainAxisSpacing'], defaultValue: 0.0),
+                crossAxisSpacing: NumDecoder.toDoubleOrDefault(data.props['crossAxisSpacing'], defaultValue: 0.0),
+                childAspectRatio: NumDecoder.toDoubleOrDefault(data.props['childAspectRatio'], defaultValue: 1.0)),
             itemBuilder: (context, index) {
-              final builder = DUIJsonWidgetBuilder(
-                  data: children[index], registry: registry!);
+              final builder = DUIJsonWidgetBuilder(data: children[index], registry: registry!);
               return builder.build(context);
             })
         : const Text(

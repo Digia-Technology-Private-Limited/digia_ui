@@ -9,12 +9,7 @@ class DUIApp extends StatelessWidget {
   final ThemeData? theme;
   final String? baseUrl;
 
-  const DUIApp(
-      {super.key,
-      required this.digiaAccessKey,
-      this.navigatorKey,
-      this.theme,
-      this.baseUrl});
+  const DUIApp({super.key, required this.digiaAccessKey, this.navigatorKey, this.theme, this.baseUrl});
 
   @override
   Widget build(BuildContext context) {
@@ -29,8 +24,7 @@ class DUIApp extends StatelessWidget {
           ),
       title: 'Digia App',
       home: FutureBuilder(
-        future: DigiaUIClient.initializeFromNetwork(
-            accessKey: digiaAccessKey, baseUrl: baseUrl),
+        future: DigiaUIClient.initializeFromNetwork(accessKey: digiaAccessKey, baseUrl: baseUrl),
         builder: (context, snapshot) {
           if (snapshot.connectionState != ConnectionState.done) {
             return const Scaffold(
@@ -40,10 +34,7 @@ class DUIApp extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text('Intializing from Cloud...'),
-                      LinearProgressIndicator()
-                    ],
+                    children: [Text('Intializing from Cloud...'), LinearProgressIndicator()],
                   ),
                 ),
               ),
@@ -70,8 +61,7 @@ class DUIApp extends StatelessWidget {
             );
           }
 
-          final initialRouteData =
-              DigiaUIClient.getConfigResolver().getfirstPageData();
+          final initialRouteData = DigiaUIClient.getConfigResolver().getfirstPageData();
 
           return DUIPage(pageUid: initialRouteData.uid);
         },

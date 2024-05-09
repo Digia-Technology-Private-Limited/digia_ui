@@ -6,11 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:digia_ui/src/core/page/props/dui_widget_json_data.dart';
 
 class DUIExpandableBuilder extends DUIWidgetBuilder {
-  DUIExpandableBuilder(DUIWidgetJsonData data, DUIWidgetRegistry? registry)
-      : super(data: data, registry: registry);
+  DUIExpandableBuilder(DUIWidgetJsonData data, DUIWidgetRegistry? registry) : super(data: data, registry: registry);
 
-  static DUIExpandableBuilder create(DUIWidgetJsonData data,
-      {DUIWidgetRegistry? registry}) {
+  static DUIExpandableBuilder create(DUIWidgetJsonData data, {DUIWidgetRegistry? registry}) {
     return DUIExpandableBuilder(data, registry);
   }
 

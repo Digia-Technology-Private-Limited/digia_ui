@@ -23,56 +23,44 @@ class DUIButtonBuilder extends DUIWidgetBuilder {
   Widget build(BuildContext context) {
     final eval = DUIWidgetScope.of(context)!.eval;
 
-    final defaultStyleJson =
-        data.props['defaultStyle'] as Map<String, dynamic>? ?? {};
-    final disabledStyleJson =
-        data.props['disabledStyle'] as Map<String, dynamic>? ?? {};
+    final defaultStyleJson = data.props['defaultStyle'] as Map<String, dynamic>? ?? {};
+    final disabledStyleJson = data.props['disabledStyle'] as Map<String, dynamic>? ?? {};
 
     ButtonStyle style = ButtonStyle(
         shape: MaterialStateProperty.all(toButtonShape(data.props['shape'])),
-        padding: MaterialStateProperty.all(DUIDecoder.toEdgeInsets(
-            defaultStyleJson['padding'],
+        padding: MaterialStateProperty.all(DUIDecoder.toEdgeInsets(defaultStyleJson['padding'],
             or: const EdgeInsets.symmetric(horizontal: 12, vertical: 4))),
-        elevation: MaterialStateProperty.all(
-            NumDecoder.toDouble(defaultStyleJson['elevation'])),
+        elevation: MaterialStateProperty.all(NumDecoder.toDouble(defaultStyleJson['elevation'])),
         shadowColor: MaterialStateProperty.all(defaultStyleJson['shadowColor']),
         alignment: DUIDecoder.toAlignment(defaultStyleJson['alignment']),
         backgroundColor: MaterialStateProperty.resolveWith((states) {
           if (states.contains(MaterialState.disabled)) {
-            return ifNotNull(disabledStyleJson['backgroundColor'] as String?,
-                (p0) => toColor(p0));
+            return ifNotNull(disabledStyleJson['backgroundColor'] as String?, (p0) => toColor(p0));
           }
 
-          return ifNotNull(defaultStyleJson['backgroundColor'] as String?,
-              (p0) => toColor(p0));
+          return ifNotNull(defaultStyleJson['backgroundColor'] as String?, (p0) => toColor(p0));
         }));
 
-    final isDisabled =
-        eval<bool>(data.props['isDisabled']) ?? data.props['onClick'] == null;
+    final isDisabled = eval<bool>(data.props['isDisabled']) ?? data.props['onClick'] == null;
 
     final disabledTextColor = disabledStyleJson['disabledTextColor'] as String?;
     final disabledIconColor = disabledStyleJson['disabledIconColor'] as String?;
     final content = _buildContent(context,
-        overrideColor: isDisabled,
-        disabledTextColor: disabledTextColor,
-        disabledIconColor: disabledIconColor);
+        overrideColor: isDisabled, disabledTextColor: disabledTextColor, disabledIconColor: disabledIconColor);
 
     return ElevatedButton(
         onPressed: isDisabled
             ? null
             : () {
                 final onClick = ActionFlow.fromJson(data.props['onClick']);
-                ActionHandler.instance
-                    .execute(context: context, actionFlow: onClick);
+                ActionHandler.instance.execute(context: context, actionFlow: onClick);
               },
         style: style,
         child: content);
   }
 
   Widget _buildContent(BuildContext context,
-      {bool overrideColor = false,
-      String? disabledTextColor,
-      String? disabledIconColor}) {
+      {bool overrideColor = false, String? disabledTextColor, String? disabledIconColor}) {
     Widget text;
     Widget? leadingIcon;
     Widget? trailingIcon;
@@ -81,8 +69,7 @@ class DUIButtonBuilder extends DUIWidgetBuilder {
       data.props['text']?['textStyle']?['textColor'] = disabledTextColor;
     }
 
-    final textBuilder = DUITextBuilder.fromProps(
-        props: data.props['text'] as Map<String, dynamic>?);
+    final textBuilder = DUITextBuilder.fromProps(props: data.props['text'] as Map<String, dynamic>?);
 
     text = textBuilder.build(context);
 
@@ -92,18 +79,15 @@ class DUIButtonBuilder extends DUIWidgetBuilder {
     }
 
     if (leadingIconProps?['iconData'] != null) {
-      leadingIcon =
-          DUIIconBuilder.fromProps(props: leadingIconProps).build(context);
+      leadingIcon = DUIIconBuilder.fromProps(props: leadingIconProps).build(context);
     }
 
-    final trailingIconProps =
-        data.props['trailingIcon'] as Map<String, dynamic>?;
+    final trailingIconProps = data.props['trailingIcon'] as Map<String, dynamic>?;
     if (overrideColor) {
       trailingIconProps?['iconColor'] = disabledIconColor;
     }
     if (trailingIconProps?['iconData'] != null) {
-      trailingIcon =
-          DUIIconBuilder.fromProps(props: trailingIconProps).build(context);
+      trailingIcon = DUIIconBuilder.fromProps(props: trailingIconProps).build(context);
     }
 
     if (leadingIcon == null && trailingIcon == null) {

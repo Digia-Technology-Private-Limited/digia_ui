@@ -13,18 +13,14 @@ import '../../config_resolver.dart';
 
 class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
   final DUIConfig _config;
-  final Function(String methodId, Map<String, dynamic>? data)?
-      onExternalMethodCalled;
+  final Function(String methodId, Map<String, dynamic>? data)? onExternalMethodCalled;
 
   DUIPageBloc({
     required String pageUid,
     required DUIConfig config,
     this.onExternalMethodCalled,
   })  : _config = config,
-        super(DUIPageState(
-            pageUid: pageUid,
-            isLoading: true,
-            props: config.getPageData(pageUid))) {
+        super(DUIPageState(pageUid: pageUid, isLoading: true, props: config.getPageData(pageUid))) {
     on<InitPageEvent>(_init);
     on<SetStateEvent>(_setState);
     // on<PostActionEvent>(
@@ -63,8 +59,7 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
   }
 
 // TODO: Need Action Handler
-  Future<Object?> _handleAction(BuildContext? context, ActionProp action,
-      Emitter<DUIPageState> emit) async {
+  Future<Object?> _handleAction(BuildContext? context, ActionProp action, Emitter<DUIPageState> emit) async {
     switch (action.type) {
       // TODO: Move to some constant
       case 'Action.loadPage':
@@ -82,15 +77,13 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
 
       case 'Action.navigateToPage':
         final pageUId = action.data['pageId'];
-        return openDUIPage(
-            pageUid: pageUId, context: context!, pageArgs: action.data['args']);
+        return openDUIPage(pageUid: pageUId, context: context!, pageArgs: action.data['args']);
 
       case 'Action.openUrl':
         final url = Uri.parse(action.data['url']);
         final canOpenUrl = await canLaunchUrl(url);
         if (canOpenUrl == true) {
-          await launchUrl(url,
-              mode: DUIDecoder.toUriLaunchMode(action.data['launchMode']));
+          await launchUrl(url, mode: DUIDecoder.toUriLaunchMode(action.data['launchMode']));
         }
 
       case 'Action.pop':
@@ -98,8 +91,7 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
           return Navigator.of(context).maybePop();
         }
       case 'Action.callExternalMethod':
-        onExternalMethodCalled?.call(
-            action.data['methodId'] ?? '', action.data['args']);
+        onExternalMethodCalled?.call(action.data['methodId'] ?? '', action.data['args']);
 
       default:
         emit(state.copyWith(isLoading: false));

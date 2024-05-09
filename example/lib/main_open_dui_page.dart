@@ -40,10 +40,7 @@ void main() async {
             pageUid: {
               'uid': pageUid,
               "actions": {
-                "onPageLoad": <String, dynamic>{
-                  "type": "Action.buildPage",
-                  "data": <String, dynamic>{}
-                }
+                "onPageLoad": <String, dynamic>{"type": "Action.buildPage", "data": <String, dynamic>{}}
               },
               "layout": {
                 "root": {
@@ -98,10 +95,7 @@ void main() async {
                                       "height": 40,
                                       "defaultStyle": {
                                         "backgroundColor": "#00224D",
-                                        "shape": {
-                                          "value": "roundedRect",
-                                          "borderRadius": 16
-                                        },
+                                        "shape": {"value": "roundedRect", "borderRadius": 16},
                                       },
                                       "text": {
                                         "text": "Decrement",
@@ -111,15 +105,10 @@ void main() async {
                                         "type": "Action.setAppState",
                                         "data": {
                                           "events": [
-                                            {
-                                              'variableName': "counter",
-                                              'value':
-                                                  r'${diff(appState.counter, 1)}'
-                                            },
+                                            {'variableName': "counter", 'value': r'${diff(appState.counter, 1)}'},
                                             {
                                               'variableName': "pressedCount",
-                                              'value':
-                                                  r'${sum(appState.pressedCount, 1)}'
+                                              'value': r'${sum(appState.pressedCount, 1)}'
                                             }
                                           ]
                                         }
@@ -140,24 +129,16 @@ void main() async {
                                       "height": 40,
                                       "defaultStyle": {
                                         "backgroundColor": "#00224D",
-                                        "shape": {
-                                          "value": "roundedRect",
-                                          "borderRadius": 16
-                                        },
+                                        "shape": {"value": "roundedRect", "borderRadius": 16},
                                       },
                                       "onClick": {
                                         "type": "Action.setAppState",
                                         "data": {
                                           "events": [
-                                            {
-                                              'variableName': "counter",
-                                              'value':
-                                                  r'${sum(appState.counter, 1)}'
-                                            },
+                                            {'variableName': "counter", 'value': r'${sum(appState.counter, 1)}'},
                                             {
                                               'variableName': "pressedCount",
-                                              'value':
-                                                  r'${sum(appState.pressedCount, 1)}'
+                                              'value': r'${sum(appState.pressedCount, 1)}'
                                             }
                                           ]
                                         }
@@ -174,8 +155,7 @@ void main() async {
                             {
                               "type": "digia/text",
                               "props": {
-                                "text":
-                                    r"You have pressed a total of this many times: ${appState.pressedCount}",
+                                "text": r"You have pressed a total of this many times: ${appState.pressedCount}",
                                 "textStyle": {
                                   "textColor": "#00224D",
                                 }
@@ -196,20 +176,14 @@ void main() async {
                                 "height": 40,
                                 "defaultStyle": {
                                   "backgroundColor": "#FF204E",
-                                  "shape": {
-                                    "value": "roundedRect",
-                                    "borderRadius": 16
-                                  },
+                                  "shape": {"value": "roundedRect", "borderRadius": 16},
                                 },
                                 "onClick": {
                                   "type": "Action.setAppState",
                                   "data": {
                                     "events": [
                                       {'variableName': "counter", 'value': 0},
-                                      {
-                                        'variableName': "pressedCount",
-                                        'value': 0
-                                      }
+                                      {'variableName': "pressedCount", 'value': 0}
                                     ]
                                   }
                                 }

@@ -38,8 +38,7 @@ class DUICarouselProps {
     this.reverseScroll,
   );
 
-  factory DUICarouselProps.fromJson(Map<String, dynamic> json) =>
-      _$DUICarouselPropsFromJson(json);
+  factory DUICarouselProps.fromJson(Map<String, dynamic> json) => _$DUICarouselPropsFromJson(json);
 
   Map<String, dynamic> toJson() => _$DUICarouselPropsToJson(this);
 }

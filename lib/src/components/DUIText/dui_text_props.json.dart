@@ -46,12 +46,10 @@ DUITextProps _$DUITextPropsFromJson(dynamic json) {
     ..textStyle = DUITextStyle.fromJson(json['textStyle'])
     ..overflow = json['overflow'] as String?
     ..maxLines = NumDecoder.toInt(json['maxLines'])
-    ..textSpans =
-        textSpans ?? ((text != null) ? [DUITextSpan()..text = text] : []);
+    ..textSpans = textSpans ?? ((text != null) ? [DUITextSpan()..text = text] : []);
 }
 
-Map<String, dynamic> _$DUITextPropsToJson(DUITextProps instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$DUITextPropsToJson(DUITextProps instance) => <String, dynamic>{
       'textSpans': instance.textSpans,
       'maxLines': instance.maxLines,
       'overflow': instance.overflow,

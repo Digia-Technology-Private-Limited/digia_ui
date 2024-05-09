@@ -40,8 +40,7 @@ class DUIContainer2 extends StatelessWidget {
     final padding = DUIDecoder.toEdgeInsets(props.padding?.toJson());
     final color = props.color.letIfTrue(toColor);
     final borderColor = props.border?.borderColor.letIfTrue(toColor);
-    final imageAlignment =
-        DUIDecoder.toAlignment(props.decorationImage?.alignment);
+    final imageAlignment = DUIDecoder.toAlignment(props.decorationImage?.alignment);
     final imageOpacity = NumDecoder.toDouble(props.decorationImage?.opacity);
 
     return Container(

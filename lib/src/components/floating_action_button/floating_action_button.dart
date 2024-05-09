@@ -35,19 +35,15 @@ class DUIFloatingActionButton {
               ),
             ),
             SizedBox(
-              width: props.leadingIcon?['iconData'] != null &&
-                      json['buttonText']?['text'] != null
+              width: props.leadingIcon?['iconData'] != null && json['buttonText']?['text'] != null
                   ? props.extendedIconLabelSpacing
                   : 0,
             ),
             Visibility(
                 visible: json['buttonText']?['text'] != null,
-                child: props.buttonText != null
-                    ? DUIText(props.buttonText!)
-                    : const SizedBox.shrink()),
+                child: props.buttonText != null ? DUIText(props.buttonText!) : const SizedBox.shrink()),
             SizedBox(
-              width: props.trailingIcon?['iconData'] != null &&
-                      json['buttonText']?['text'] != null
+              width: props.trailingIcon?['iconData'] != null && json['buttonText']?['text'] != null
                   ? props.extendedIconLabelSpacing
                   : 0,
             ),
@@ -65,8 +61,7 @@ class DUIFloatingActionButton {
 }
 
 class DUIFloatingActionButtonLocation {
-  static FloatingActionButtonLocation fabLocation(
-      DUIFloatingActionButtonProps? props) {
+  static FloatingActionButtonLocation fabLocation(DUIFloatingActionButtonProps? props) {
     FloatingActionButtonLocation fabLoc;
     switch (props?.location) {
       case 'centerFloat':

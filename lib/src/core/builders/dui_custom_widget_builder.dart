@@ -47,8 +47,7 @@ Map<String, dynamic> mapJson = {
             ],
             'note': {
               'title': 'Don’t worry about short term fluctuations!',
-              'subtitle':
-                  'Dynamic asset allocation and security selection leads to outperformance in the long-term'
+              'subtitle': 'Dynamic asset allocation and security selection leads to outperformance in the long-term'
             }
           },
           {
@@ -71,8 +70,7 @@ Map<String, dynamic> mapJson = {
             ],
             'note': {
               'title': 'Don’t worry about short term fluctuations!',
-              'subtitle':
-                  'Dynamic asset allocation and security selection leads to outperformance in the long-term'
+              'subtitle': 'Dynamic asset allocation and security selection leads to outperformance in the long-term'
             }
           },
           {
@@ -95,8 +93,7 @@ Map<String, dynamic> mapJson = {
             ],
             'note': {
               'title': 'Don’t worry about short term fluctuations!',
-              'subtitle':
-                  'Dynamic asset allocation and security selection leads to outperformance in the long-term'
+              'subtitle': 'Dynamic asset allocation and security selection leads to outperformance in the long-term'
             }
           },
           {
@@ -118,8 +115,7 @@ Map<String, dynamic> mapJson = {
               }
             ],
             'note': {
-              'title':
-                  'Since you started investing your portfolio is up by ₹7.05Cr',
+              'title': 'Since you started investing your portfolio is up by ₹7.05Cr',
               'subtitle':
                   'Our team will continue to optimise your portfolio using dynamic asset allocation and fund selection.'
             }
@@ -143,8 +139,7 @@ Map<String, dynamic> mapJson = {
               }
             ],
             'note': {
-              'title':
-                  'Since you started investing your portfolio is up by ₹7.05Cr',
+              'title': 'Since you started investing your portfolio is up by ₹7.05Cr',
               'subtitle':
                   'Our team will continue to optimise your portfolio using dynamic asset allocation and fund selection. '
             }
@@ -176,8 +171,7 @@ Map<String, dynamic> mapJson = {
             ],
             'note': {
               'title': 'Don’t worry about short term fluctuations!',
-              'subtitle':
-                  'Dynamic asset allocation and security selection leads to outperformance in the long-term'
+              'subtitle': 'Dynamic asset allocation and security selection leads to outperformance in the long-term'
             }
           },
           {
@@ -200,8 +194,7 @@ Map<String, dynamic> mapJson = {
             ],
             'note': {
               'title': 'Don’t worry about short term fluctuations!',
-              'subtitle':
-                  'Dynamic asset allocation and security selection leads to outperformance in the long-term'
+              'subtitle': 'Dynamic asset allocation and security selection leads to outperformance in the long-term'
             }
           },
           {
@@ -224,8 +217,7 @@ Map<String, dynamic> mapJson = {
             ],
             'note': {
               'title': 'Don’t worry about short term fluctuations!',
-              'subtitle':
-                  'Dynamic asset allocation and security selection leads to outperformance in the long-term'
+              'subtitle': 'Dynamic asset allocation and security selection leads to outperformance in the long-term'
             }
           },
           {
@@ -247,8 +239,7 @@ Map<String, dynamic> mapJson = {
               }
             ],
             'note': {
-              'title':
-                  'Since you started investing your portfolio is up by 33.66%',
+              'title': 'Since you started investing your portfolio is up by 33.66%',
               'subtitle':
                   'Our team will continue to optimise your portfolio using dynamic asset allocation and fund selection.'
             }
@@ -272,8 +263,7 @@ Map<String, dynamic> mapJson = {
               }
             ],
             'note': {
-              'title':
-                  'Since you started investing your portfolio is up by 33.66%',
+              'title': 'Since you started investing your portfolio is up by 33.66%',
               'subtitle':
                   'Our team will continue to optimise your portfolio using dynamic asset allocation and fund selection. '
             }
@@ -305,8 +295,7 @@ Map<String, dynamic> mapJson = {
             ],
             'note': {
               'title': 'Don’t worry about short term fluctuations!',
-              'subtitle':
-                  'Dynamic asset allocation and security selection leads to outperformance in the long-term'
+              'subtitle': 'Dynamic asset allocation and security selection leads to outperformance in the long-term'
             }
           },
           {
@@ -329,8 +318,7 @@ Map<String, dynamic> mapJson = {
             ],
             'note': {
               'title': 'Don’t worry about short term fluctuations!',
-              'subtitle':
-                  'Dynamic asset allocation and security selection leads to outperformance in the long-term'
+              'subtitle': 'Dynamic asset allocation and security selection leads to outperformance in the long-term'
             }
           },
           {
@@ -353,8 +341,7 @@ Map<String, dynamic> mapJson = {
             ],
             'note': {
               'title': 'Don’t worry about short term fluctuations!',
-              'subtitle':
-                  'Dynamic asset allocation and security selection leads to outperformance in the long-term'
+              'subtitle': 'Dynamic asset allocation and security selection leads to outperformance in the long-term'
             }
           },
           {
@@ -376,8 +363,7 @@ Map<String, dynamic> mapJson = {
               }
             ],
             'note': {
-              'title':
-                  'Since you started investing your portfolio is up by 72.44%',
+              'title': 'Since you started investing your portfolio is up by 72.44%',
               'subtitle':
                   'Our team will continue to optimise your portfolio using dynamic asset allocation and fund selection.'
             }
@@ -401,8 +387,7 @@ Map<String, dynamic> mapJson = {
               }
             ],
             'note': {
-              'title':
-                  'Since you started investing your portfolio is up by 72.44%',
+              'title': 'Since you started investing your portfolio is up by 72.44%',
               'subtitle':
                   'Our team will continue to optimise your portfolio using dynamic asset allocation and fund selection. '
             }

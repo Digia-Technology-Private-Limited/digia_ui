@@ -29,9 +29,8 @@ TextStyle? toTextStyle(DUITextStyle? textStyle) {
   String fontFamily = 'Poppins';
 
   if (textStyle.fontToken?.value != null) {
-    final font = DigiaUIClient.getConfigResolver()
-        .getFont(textStyle.fontToken!.value!)
-        .merge(textStyle.fontToken?.font);
+    final font =
+        DigiaUIClient.getConfigResolver().getFont(textStyle.fontToken!.value!).merge(textStyle.fontToken?.font);
     fontWeight = DUIDecoder.toFontWeight(font.weight);
     fontFamily = font.fontFamily!;
     fontStyle = DUIDecoder.toFontStyle(font.style);
@@ -43,11 +42,9 @@ TextStyle? toTextStyle(DUITextStyle? textStyle) {
 
   Color? textBgColor = textStyle.textBgColor.letIfTrue(toColor);
 
-  TextDecoration? textDecoration =
-      DUIDecoder.toTextDecoration(textStyle.textDecoration);
+  TextDecoration? textDecoration = DUIDecoder.toTextDecoration(textStyle.textDecoration);
   Color? decorationColor = textStyle.textDecorationColor.letIfTrue(toColor);
-  TextDecorationStyle? decorationStyle =
-      DUIDecoder.toTextDecorationStyle(textStyle.textDecorationStyle);
+  TextDecorationStyle? decorationStyle = DUIDecoder.toTextDecorationStyle(textStyle.textDecorationStyle);
 
   return GoogleFonts.getFont(fontFamily,
       fontWeight: fontWeight,
@@ -119,21 +116,17 @@ OutlinedBorder? toButtonShape(dynamic value) {
   }
 
   final shape = value['value'] as String?;
-  final borderColor = (value['borderColor'] as String?).letIfTrue(toColor) ??
-      Colors.transparent;
+  final borderColor = (value['borderColor'] as String?).letIfTrue(toColor) ?? Colors.transparent;
   final borderWidth = (value['borderWidth'] as double?) ?? 1.0;
-  final borderStyle =
-      (value['borderStyle'] == 'solid') ? BorderStyle.solid : BorderStyle.none;
-  final side =
-      BorderSide(color: borderColor, width: borderWidth, style: borderStyle);
+  final borderStyle = (value['borderStyle'] == 'solid') ? BorderStyle.solid : BorderStyle.none;
+  final side = BorderSide(color: borderColor, width: borderWidth, style: borderStyle);
 
   return switch (shape) {
     'stadium' => StadiumBorder(side: side),
-    'circle' => CircleBorder(
-        eccentricity: value['eccentricity'] as double? ?? 0.0, side: side),
-    'roundedRect' || _ => RoundedRectangleBorder(
-        borderRadius: DUIDecoder.toBorderRadius(value['borderRadius']),
-        side: side)
+    'circle' => CircleBorder(eccentricity: value['eccentricity'] as double? ?? 0.0, side: side),
+    'roundedRect' ||
+    _ =>
+      RoundedRectangleBorder(borderRadius: DUIDecoder.toBorderRadius(value['borderRadius']), side: side)
   };
 }
 
@@ -145,8 +138,7 @@ Border? toBorder(DUIBorder? border) {
   return Border.all(
       style: BorderStyle.solid,
       width: border.borderWidth ?? 1.0,
-      color: toColor(
-          border.borderColor ?? DUIConfigConstants.fallbackBorderColorHexCode));
+      color: toColor(border.borderColor ?? DUIConfigConstants.fallbackBorderColorHexCode));
 }
 
 BorderSide toBorderSide(DUIBorder? borderSide) {
@@ -157,8 +149,7 @@ BorderSide toBorderSide(DUIBorder? borderSide) {
   return BorderSide(
       style: BorderStyle.solid,
       width: borderSide.borderWidth ?? 1.0,
-      color: toColor(borderSide.borderColor ??
-          DUIConfigConstants.fallbackBorderColorHexCode));
+      color: toColor(borderSide.borderColor ?? DUIConfigConstants.fallbackBorderColorHexCode));
 }
 
 OutlineInputBorder? toOutlineInputBorder(DUIBorder? border) {
@@ -169,16 +160,14 @@ OutlineInputBorder? toOutlineInputBorder(DUIBorder? border) {
   return OutlineInputBorder(
       borderRadius: DUIDecoder.toBorderRadius(border.borderRadius?.toJson()),
       borderSide: BorderSide(
-          color: toColor(border.borderColor ??
-              DUIConfigConstants.fallbackBorderColorHexCode),
+          color: toColor(border.borderColor ?? DUIConfigConstants.fallbackBorderColorHexCode),
           width: border.borderWidth ?? 1.0));
 }
 
 // Possible Values for colorToken:
 // token: primary, hexCode: #242424, hexCode with Alpha: #FF242424
 Color toColor(String colorToken) {
-  var colorString =
-      DigiaUIClient.getConfigResolver().getColorValue(colorToken) ?? colorToken;
+  var colorString = DigiaUIClient.getConfigResolver().getColorValue(colorToken) ?? colorToken;
 
   final color = ColorDecoder.fromString(colorString);
   if (color == null) {

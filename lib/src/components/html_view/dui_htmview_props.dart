@@ -7,7 +7,6 @@ class DUIHtmlViewProps {
 
   DUIHtmlViewProps(this.content);
 
-  factory DUIHtmlViewProps.fromJson(dynamic json) =>
-      _$DUIHtmlViewPropsFromJson(json);
+  factory DUIHtmlViewProps.fromJson(dynamic json) => _$DUIHtmlViewPropsFromJson(json);
   Map<String, dynamic> toJson() => _$DUIHtmlViewPropsToJson(this);
 }

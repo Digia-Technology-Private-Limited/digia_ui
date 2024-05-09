@@ -15,8 +15,7 @@ class DUIExpandable extends StatefulWidget {
   final DUIExpandableProps props;
   final DUIWidgetRegistry? registry;
 
-  const DUIExpandable(
-      {super.key, required this.children, this.registry, required this.props});
+  const DUIExpandable({super.key, required this.children, this.registry, required this.props});
 
   @override
   State<DUIExpandable> createState() => _DUIExpandableState();
@@ -27,29 +26,22 @@ class _DUIExpandableState extends State<DUIExpandable> {
   Widget build(BuildContext context) {
     return ExpandablePanel(
       key: UniqueKey(),
-      header: (widget.children['header']?.firstOrNull)
-          .let((p0) => DUIWidget(data: p0)),
+      header: (widget.children['header']?.firstOrNull).let((p0) => DUIWidget(data: p0)),
       collapsed: DUIWidget(
         data: widget.children['collapsedView']!.first,
       ),
       expanded: DUIWidget(
         data: widget.children['expandedView']!.first,
       ),
-      controller:
-          ExpandableController(initialExpanded: widget.props.initiallyExpanded),
+      controller: ExpandableController(initialExpanded: widget.props.initiallyExpanded),
       theme: ExpandableThemeData(
-        bodyAlignment:
-            _toExpandablePanelBodyAlignment(widget.props.bodyAlignment),
-        headerAlignment:
-            _toExpandablePanelHeaderAlignment(widget.props.headerAlignment),
-        iconPlacement:
-            _toExpandablePanelIconPlacement(widget.props.icon?.iconPlacement),
+        bodyAlignment: _toExpandablePanelBodyAlignment(widget.props.bodyAlignment),
+        headerAlignment: _toExpandablePanelHeaderAlignment(widget.props.headerAlignment),
+        iconPlacement: _toExpandablePanelIconPlacement(widget.props.icon?.iconPlacement),
         // sizeCurve:,
         iconColor: widget.props.color?.letIfTrue(toColor),
         alignment: DUIDecoder.toAlignment(widget.props.alignment),
-        animationDuration: Duration(
-            milliseconds:
-                NumDecoder.toInt(widget.props.animationDuration) ?? 1000),
+        animationDuration: Duration(milliseconds: NumDecoder.toInt(widget.props.animationDuration) ?? 1000),
         collapseIcon: (widget.props.icon?.collapseIcon != null)
             ? getIconData(icondataMap: widget.props.icon!.collapseIcon!)
             : CupertinoIcons.chevron_right,
@@ -57,23 +49,19 @@ class _DUIExpandableState extends State<DUIExpandable> {
             ? getIconData(icondataMap: widget.props.icon!.expandIcon!)
             : CupertinoIcons.chevron_down,
         hasIcon: widget.props.icon != null,
-        iconPadding:
-            DUIDecoder.toEdgeInsets(widget.props.icon?.iconPadding?.toJson()),
+        iconPadding: DUIDecoder.toEdgeInsets(widget.props.icon?.iconPadding?.toJson()),
         iconSize: NumDecoder.toDouble(widget.props.icon?.iconSize),
-        iconRotationAngle:
-            ((widget.props.icon?.iconRotationAngle ?? 90.0) / 180) * pi,
+        iconRotationAngle: ((widget.props.icon?.iconRotationAngle ?? 90.0) / 180) * pi,
         tapHeaderToExpand: widget.props.tapHeaderToExpand,
         tapBodyToExpand: widget.props.tapBodyToExpand,
         tapBodyToCollapse: widget.props.tapBodyToCollapse,
         useInkWell: widget.props.useInkWell,
-        inkWellBorderRadius: BorderRadius.circular(
-            NumDecoder.toDouble(widget.props.icon?.iconSize) ?? 0),
+        inkWellBorderRadius: BorderRadius.circular(NumDecoder.toDouble(widget.props.icon?.iconSize) ?? 0),
       ),
     );
   }
 
-  ExpandablePanelBodyAlignment? _toExpandablePanelBodyAlignment(
-      String? bodyAlignment) {
+  ExpandablePanelBodyAlignment? _toExpandablePanelBodyAlignment(String? bodyAlignment) {
     if (bodyAlignment == null) return null;
 
     switch (bodyAlignment.toLowerCase()) {
@@ -88,8 +76,7 @@ class _DUIExpandableState extends State<DUIExpandable> {
     }
   }
 
-  ExpandablePanelIconPlacement? _toExpandablePanelIconPlacement(
-      String? alignment) {
+  ExpandablePanelIconPlacement? _toExpandablePanelIconPlacement(String? alignment) {
     if (alignment == null) return null;
 
     switch (alignment) {
@@ -102,8 +89,7 @@ class _DUIExpandableState extends State<DUIExpandable> {
     }
   }
 
-  ExpandablePanelHeaderAlignment? _toExpandablePanelHeaderAlignment(
-      String? alignment) {
+  ExpandablePanelHeaderAlignment? _toExpandablePanelHeaderAlignment(String? alignment) {
     if (alignment == null) return null;
 
     switch (alignment.toLowerCase()) {

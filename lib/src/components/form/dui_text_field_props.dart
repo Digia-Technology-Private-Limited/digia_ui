@@ -17,8 +17,7 @@ class DUITextFieldProps {
 
   DUITextFieldProps();
 
-  factory DUITextFieldProps.fromJson(Map<String, dynamic> json) =>
-      _$DUITextFieldPropsFromJson(json);
+  factory DUITextFieldProps.fromJson(Map<String, dynamic> json) => _$DUITextFieldPropsFromJson(json);
 
   Map<String, dynamic> toJson() => _$DUITextFieldPropsToJson(this);
 }

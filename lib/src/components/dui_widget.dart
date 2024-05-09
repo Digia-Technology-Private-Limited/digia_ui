@@ -11,10 +11,7 @@ class DUIWidget extends StatelessWidget {
   final DUIWidgetJsonData data;
   final DUIWidgetRegistry registry;
 
-  const DUIWidget(
-      {super.key,
-      required this.data,
-      this.registry = DUIWidgetRegistry.shared});
+  const DUIWidget({super.key, required this.data, this.registry = DUIWidgetRegistry.shared});
 
   factory DUIWidget.fromJson(dynamic json, {Key? key}) {
     if (json is String) {

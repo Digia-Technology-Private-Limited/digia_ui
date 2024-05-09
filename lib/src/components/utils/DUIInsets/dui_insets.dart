@@ -6,8 +6,7 @@ class DUIInsets {
   String left;
   String right;
 
-  DUIInsets(
-      {this.top = '0', this.bottom = '0', this.left = '0', this.right = '0'});
+  DUIInsets({this.top = '0', this.bottom = '0', this.left = '0', this.right = '0'});
 
   factory DUIInsets.fromJson(dynamic json) => _$DUIInsetsFromJson(json);
 

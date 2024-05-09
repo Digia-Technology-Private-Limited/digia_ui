@@ -21,8 +21,7 @@ class DUIExpandableIconProps {
     this.iconRotationAngle,
   });
 
-  factory DUIExpandableIconProps.fromJson(Map<String, dynamic> json) =>
-      _$DUIExpandableIconPropsFromJson(json);
+  factory DUIExpandableIconProps.fromJson(Map<String, dynamic> json) => _$DUIExpandableIconPropsFromJson(json);
 
   Map<String, dynamic> toJson() => _$DUIExpandableIconPropsToJson(this);
 }
@@ -57,8 +56,7 @@ class DUIExpandableProps {
       this.inkWellBorderRadius,
       this.initiallyExpanded);
 
-  factory DUIExpandableProps.fromJson(Map<String, dynamic> json) =>
-      _$DUIExpandablePropsFromJson(json);
+  factory DUIExpandableProps.fromJson(Map<String, dynamic> json) => _$DUIExpandablePropsFromJson(json);
 
   Map<String, dynamic> toJson() => _$DUIExpandablePropsToJson(this);
 

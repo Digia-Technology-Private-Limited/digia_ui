@@ -22,27 +22,18 @@ class DUIWidgetJsonData {
         _containerProps = containerProps ?? {},
         children = children ?? <String, List<DUIWidgetJsonData>>{};
 
-  factory DUIWidgetJsonData.fromJson(Map<String, dynamic> json) =>
-      _$DUIWidgetJsonDataFromJson(json);
+  factory DUIWidgetJsonData.fromJson(Map<String, dynamic> json) => _$DUIWidgetJsonDataFromJson(json);
 
   Map<String, dynamic> toJson() => _$DUIWidgetJsonDataToJson(this);
 
   static Map<String, List<DUIWidgetJsonData>> _childrenFromJson(dynamic json) {
     if (json is List) {
-      return {
-        'children': json
-            .map((e) => DUIWidgetJsonData.fromJson(e as Map<String, dynamic>))
-            .toList()
-      };
+      return {'children': json.map((e) => DUIWidgetJsonData.fromJson(e as Map<String, dynamic>)).toList()};
     }
 
     if (json is Map) {
-      return json.map<String, List<DUIWidgetJsonData>>((key, value) => MapEntry(
-          key as String,
-          value
-              .map<DUIWidgetJsonData>(
-                  (e) => DUIWidgetJsonData.fromJson(e as Map<String, dynamic>))
-              .toList()));
+      return json.map<String, List<DUIWidgetJsonData>>((key, value) => MapEntry(key as String,
+          value.map<DUIWidgetJsonData>((e) => DUIWidgetJsonData.fromJson(e as Map<String, dynamic>)).toList()));
     }
 
     return <String, List<DUIWidgetJsonData>>{};

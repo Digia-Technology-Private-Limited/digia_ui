@@ -9,8 +9,7 @@ class DigiaUIProvider extends InheritedWidget {
     this.service = service ?? DigiaUIClient.createService();
   }
 
-  static DigiaUIProvider? of(BuildContext context) =>
-      context.dependOnInheritedWidgetOfExactType<DigiaUIProvider>();
+  static DigiaUIProvider? of(BuildContext context) => context.dependOnInheritedWidgetOfExactType<DigiaUIProvider>();
 
   @override
   bool updateShouldNotify(covariant InheritedWidget oldWidget) => false;

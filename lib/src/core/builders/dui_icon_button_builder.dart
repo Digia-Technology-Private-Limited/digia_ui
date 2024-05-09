@@ -22,29 +22,22 @@ class DUIIconButtonBuilder extends DUIWidgetBuilder {
     final eval = DUIWidgetScope.of(context)!.eval;
     final icon = DUIIconBuilder.fromProps(props: data.props['icon']);
 
-    final defaultStyleJson =
-        data.props['defaultStyle'] as Map<String, dynamic>? ?? {};
-    final disabledStyleJson =
-        data.props['disabledStyle'] as Map<String, dynamic>? ?? {};
+    final defaultStyleJson = data.props['defaultStyle'] as Map<String, dynamic>? ?? {};
+    final disabledStyleJson = data.props['disabledStyle'] as Map<String, dynamic>? ?? {};
 
     ButtonStyle style = ButtonStyle(
-      padding: MaterialStateProperty.all(DUIDecoder.toEdgeInsets(
-          defaultStyleJson['padding'],
+      padding: MaterialStateProperty.all(DUIDecoder.toEdgeInsets(defaultStyleJson['padding'],
           or: const EdgeInsets.symmetric(horizontal: 12, vertical: 4))),
       alignment: DUIDecoder.toAlignment(defaultStyleJson['alignment']),
       backgroundColor: MaterialStateProperty.resolveWith((states) {
         if (states.contains(MaterialState.disabled)) {
-          return ifNotNull(disabledStyleJson['backgroundColor'] as String?,
-              (p0) => toColor(p0));
+          return ifNotNull(disabledStyleJson['backgroundColor'] as String?, (p0) => toColor(p0));
         }
-        return ifNotNull(defaultStyleJson['backgroundColor'] as String?,
-            (p0) => toColor(p0));
+        return ifNotNull(defaultStyleJson['backgroundColor'] as String?, (p0) => toColor(p0));
       }),
     );
 
-    final isDisabled =
-        eval<bool>(data.props['isDisabled'], ((p0) => p0 as bool?)) ??
-            data.props['onClick'] == null;
+    final isDisabled = eval<bool>(data.props['isDisabled'], ((p0) => p0 as bool?)) ?? data.props['onClick'] == null;
     final height = DUIDecoder.getHeight(context, data.props['height']);
     final width = DUIDecoder.getWidth(context, data.props['width']);
 
@@ -56,8 +49,7 @@ class DUIIconButtonBuilder extends DUIWidgetBuilder {
               ? null
               : () {
                   final onClick = ActionFlow.fromJson(data.props['onClick']);
-                  ActionHandler.instance
-                      .execute(context: context, actionFlow: onClick);
+                  ActionHandler.instance.execute(context: context, actionFlow: onClick);
                 },
           icon: icon.buildWithContainerProps(context),
           style: style,
