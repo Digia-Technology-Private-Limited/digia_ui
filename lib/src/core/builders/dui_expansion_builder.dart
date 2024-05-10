@@ -44,7 +44,7 @@ class DUIExpansionBuilder extends DUIWidgetBuilder {
 
     final titleWidget = DUITextBuilder.fromProps(props: data.props['title']);
 
-    late Widget? subtitleWidget;
+    Widget? subtitleWidget;
     if (data.props['subtitle'] != null) {
       subtitleWidget = DUITextBuilder.fromProps(props: data.props['subtitle'])
           .build(context);
@@ -70,7 +70,7 @@ class DUIExpansionBuilder extends DUIWidgetBuilder {
         return ExpansionTile(
           initiallyExpanded: data.props['initiallyExpanded'] ?? false,
           title: titleWidget.build(context),
-          subtitle: subtitleWidget,
+          subtitle: (subtitleWidget != null) ? subtitleWidget : null,
           leading: (leadingWidget2 != null) ? leadingWidget2 : null,
           trailing: isExpanded
               ? trailingExpandedWidget.build(context)
