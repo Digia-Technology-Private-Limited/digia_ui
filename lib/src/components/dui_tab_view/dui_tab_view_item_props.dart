@@ -6,8 +6,9 @@ part 'dui_tab_view_item_props.g.dart';
 @JsonSerializable()
 class DUITabViewItemProps {
   final DUITextProps? title;
+  final Map<String, dynamic>? icon;
 
-  DUITabViewItemProps(this.title);
+  DUITabViewItemProps(this.title, this.icon);
 
   factory DUITabViewItemProps.fromJson(Map<String, dynamic> json) =>
       _$DUITabViewItemPropsFromJson(json);

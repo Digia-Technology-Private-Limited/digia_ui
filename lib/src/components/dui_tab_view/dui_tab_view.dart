@@ -1,8 +1,10 @@
 import 'package:digia_ui/digia_ui.dart';
+import 'package:digia_ui/src/Utils/basic_shared_utils/dui_decoder.dart';
 import 'package:digia_ui/src/Utils/basic_shared_utils/lodash.dart';
 import 'package:digia_ui/src/Utils/dui_widget_registry.dart';
 import 'package:digia_ui/src/Utils/util_functions.dart';
 import 'package:digia_ui/src/components/dui_tab_view/dui_tab_view_props.dart';
+import 'package:digia_ui/src/core/builders/dui_icon_builder.dart';
 import 'package:digia_ui/src/core/builders/dui_json_widget_builder.dart';
 import 'package:flutter/material.dart';
 
@@ -33,6 +35,8 @@ class _DUITabViewState extends State<DUITabView> {
               Visibility(
                 visible: widget.tabViewProps.hasTabs ?? false,
                 child: TabBar(
+                  padding: DUIDecoder.toEdgeInsets(
+                      widget.tabViewProps.tabBarPadding),
                   unselectedLabelColor: widget.tabViewProps.unselectedLabelColor
                       .letIfTrue(toColor),
                   unselectedLabelStyle:
@@ -46,10 +50,14 @@ class _DUITabViewState extends State<DUITabView> {
                   labelColor:
                       widget.tabViewProps.selectedLabelColor.letIfTrue(toColor),
                   dividerHeight: widget.tabViewProps.dividerHeight,
-                  tabs: List.generate(
-                      widget.children.length,
-                      (index) => Text(
-                          widget.children[index].props['title'] ?? 'title')),
+                  tabs: List.generate(widget.children.length, (index) {
+                    final icon = DUIIconBuilder.fromProps(
+                        props: widget.children[index].props['icon']);
+                    return Column(children: [
+                      icon.buildWithContainerProps(context),
+                      Text(widget.children[index].props['title'] ?? ''),
+                    ]);
+                  }),
                 ),
               ),
             Expanded(
@@ -68,6 +76,8 @@ class _DUITabViewState extends State<DUITabView> {
               Visibility(
                 visible: widget.tabViewProps.hasTabs ?? false,
                 child: TabBar(
+                  padding: DUIDecoder.toEdgeInsets(
+                      widget.tabViewProps.tabBarPadding),
                   unselectedLabelColor: widget.tabViewProps.unselectedLabelColor
                       .letIfTrue(toColor),
                   unselectedLabelStyle:
@@ -84,10 +94,14 @@ class _DUITabViewState extends State<DUITabView> {
                           color: widget.tabViewProps.indicatorColor
                               .letIfTrue(toColor))
                       : null,
-                  tabs: List.generate(
-                      widget.children.length,
-                      (index) => Text(
-                          widget.children[index].props['title'] ?? 'title')),
+                  tabs: List.generate(widget.children.length, (index) {
+                    final icon = DUIIconBuilder.fromProps(
+                        props: widget.children[index].props['icon']);
+                    return Column(children: [
+                      icon.buildWithContainerProps(context),
+                      Text(widget.children[index].props['title'] ?? ''),
+                    ]);
+                  }),
                 ),
               ),
           ],
