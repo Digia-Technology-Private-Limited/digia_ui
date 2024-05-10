@@ -1,6 +1,7 @@
 import 'package:digia_expr/digia_expr.dart';
 import 'package:digia_ui/digia_ui.dart';
 import 'package:digia_ui/src/Utils/basic_shared_utils/lodash.dart';
+import 'package:digia_ui/src/analytics/mixpanel.dart';
 import 'package:digia_ui/src/core/page/dui_page_bloc.dart';
 import 'package:digia_ui/src/core/page/dui_page_state.dart';
 import 'package:digia_ui/src/types.dart';
@@ -27,9 +28,10 @@ class DUIPage extends StatelessWidget {
       this.imageProviderFn,
       this.textStyleBuilder,
       this.externalFunctionHandler,
-      DUIConfig? config})
-      : _pageArgs = pageArgs,
-        _config = config ?? DigiaUIClient.instance.config;
+      DUIConfig? config}): _pageArgs = pageArgs,
+        _config = config ?? DigiaUIClient.instance.config {
+      MixpanelManager.instance?.track('startPage',properties: {'pageUid': pageUid});
+  }
 
   @override
   Widget build(BuildContext context) {
