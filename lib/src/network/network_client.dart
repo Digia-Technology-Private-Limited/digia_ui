@@ -25,20 +25,20 @@ class NetworkClient {
       throw 'Invalid BaseUrl';
     }
 
-    if (kDebugMode) {
-      this.dio.interceptors.addAll([
-        PrettyDioLogger(
-          requestHeader: true,
-          requestBody: true,
-          responseBody: true,
-          responseHeader: false,
-          error: true,
-          compact: true,
-          // fixme if inFuture have some error related to dio, add maxWidth property and set it >100
-        ),
-        DioInterceptToCurl(),
-      ]);
-    }
+    // if (kDebugMode) {
+    //   this.dio.interceptors.addAll([
+    //     PrettyDioLogger(
+    //       requestHeader: true,
+    //       requestBody: true,
+    //       responseBody: true,
+    //       responseHeader: false,
+    //       error: true,
+    //       compact: true,
+    //       // fixme if inFuture have some error related to dio, add maxWidth property and set it >100
+    //     ),
+    //     DioInterceptToCurl(),
+    //   ]);
+    // }
   }
 
   Future<Response<T>> _execute<T>(String path, HttpMethod method,

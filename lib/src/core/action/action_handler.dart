@@ -1,5 +1,6 @@
 import 'package:digia_ui/digia_ui.dart';
 import 'package:digia_ui/src/Utils/extensions.dart';
+import 'package:digia_ui/src/analytics/mixpanel.dart';
 import 'package:digia_ui/src/components/dui_widget_scope.dart';
 import 'package:digia_ui/src/core/action/action_prop.dart';
 import 'package:digia_ui/src/core/page/dui_page_bloc.dart';
@@ -122,7 +123,7 @@ class ActionHandler {
         }
         continue;
       }
-
+      MixpanelManager.instance?.track(action.type, properties: action.data);
       executable(context: context, action: action);
     }
 
