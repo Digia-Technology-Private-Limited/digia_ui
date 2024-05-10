@@ -19,6 +19,9 @@ DUITabViewProps _$DUITabViewPropsFromJson(Map<String, dynamic> json) =>
       tabBarPosition: json['tabBarPosition'] as String?,
       isScrollable: json['isScrollable'] as bool?,
       viewportFraction: (json['viewportFraction'] as num?)?.toDouble(),
+      tabBarPadding: json['tabBarPadding'] == null
+          ? null
+          : DUIInsets.fromJson(json['tabBarPadding']),
     );
 
 Map<String, dynamic> _$DUITabViewPropsToJson(DUITabViewProps instance) =>
@@ -32,4 +35,5 @@ Map<String, dynamic> _$DUITabViewPropsToJson(DUITabViewProps instance) =>
       'isScrollable': instance.isScrollable,
       'indicatorColor': instance.indicatorColor,
       'viewportFraction': instance.viewportFraction,
+      'tabBarPadding': instance.tabBarPadding,
     };
