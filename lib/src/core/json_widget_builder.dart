@@ -21,11 +21,13 @@ abstract class DUIWidgetBuilder {
 
   Widget buildWithContainerProps(BuildContext context) {
     var output = build(context);
-    MixpanelManager.instance?.track("loadedWidget", properties: {"data": {
-      "type": data.type,
-      "props": data.props,
-      "container_props": data.containerProps
-    }});
+    MixpanelManager.instance?.track('loadedWidget', properties: {
+      'data': {
+        'type': data.type,
+        'props': data.props,
+        'container_props': data.containerProps
+      }
+    });
     if (data.containerProps.isEmpty) {
       return output;
     }

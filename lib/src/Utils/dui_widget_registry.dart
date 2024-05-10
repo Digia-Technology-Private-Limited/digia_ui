@@ -94,7 +94,7 @@ class DUIWidgetRegistry {
         DUIHorizontalDividerBuilder.create(data),
     'digia/verticalDivider': (data, {registry}) =>
         DUIVerticalDividerBuilder.create(data),
-    'digia/customWidget': (data, {registry}) =>
+    'digia/customDezervComponent': (data, {registry}) =>
         DUICustomWidgetBuilder.create(data)
   };
 
