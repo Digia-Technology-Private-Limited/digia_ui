@@ -91,7 +91,7 @@ class _DUICustomWidgetState extends State<DUICustomWidget> {
             children: List.generate(
               (widget.json['toggleItems'][tagIndex]['items'] as List<dynamic>)
                   .length,
-                  (index) => InkWell(
+              (index) => InkWell(
                 onTap: () {
                   setItemIndex(index);
                 },
@@ -104,7 +104,7 @@ class _DUICustomWidgetState extends State<DUICustomWidget> {
                   ),
                   child: Text(
                     (widget.json['toggleItems'][tagIndex]['items'][index]
-                    as Map<String, dynamic>)['timeframe'],
+                        as Map<String, dynamic>)['timeframe'],
                     style: GoogleFonts.inter().copyWith(
                       fontSize: 14,
                       fontWeight: FontWeight.w400,
