@@ -28,9 +28,11 @@ class DUIPage extends StatelessWidget {
       this.imageProviderFn,
       this.textStyleBuilder,
       this.externalFunctionHandler,
-      DUIConfig? config}): _pageArgs = pageArgs,
+      DUIConfig? config})
+      : _pageArgs = pageArgs,
         _config = config ?? DigiaUIClient.instance.config {
-      MixpanelManager.instance?.track('startPage',properties: {'pageUid': pageUid});
+    MixpanelManager.instance
+        ?.track('startPage', properties: {'pageUid': pageUid});
   }
 
   @override

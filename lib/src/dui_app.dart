@@ -12,19 +12,19 @@ class DUIApp extends StatelessWidget {
   final String? mixpanelKey;
   // final Map<String, dynamic> initProperties;
 
-  DUIApp(
-      {super.key,
-      required this.digiaAccessKey,
-      this.navigatorKey,
-      this.theme,
-      this.mixpanelKey,
-      this.baseUrl,
-      // required this.initProperties
-      }) {
-        if(mixpanelKey != null) {
-          MixpanelManager.init(mixpanelKey!, digiaAccessKey);
-        }
-      }
+  DUIApp({
+    super.key,
+    required this.digiaAccessKey,
+    this.navigatorKey,
+    this.theme,
+    this.mixpanelKey,
+    this.baseUrl,
+    // required this.initProperties
+  }) {
+    if (mixpanelKey != null) {
+      MixpanelManager.init(mixpanelKey!, digiaAccessKey);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
