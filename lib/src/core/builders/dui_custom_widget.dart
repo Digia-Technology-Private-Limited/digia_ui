@@ -1,6 +1,5 @@
 import 'package:digia_ui/src/Utils/basic_shared_utils/color_decoder.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class DUICustomWidget extends StatefulWidget {
@@ -44,8 +43,7 @@ class _DUICustomWidgetState extends State<DUICustomWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 34, horizontal: 20),
-      color: Colors.black,
+      color: const Color(0xFF100F0F),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
