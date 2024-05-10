@@ -1,5 +1,6 @@
 import 'package:digia_ui/src/Utils/basic_shared_utils/color_decoder.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class DUICustomWidget extends StatefulWidget {
@@ -87,28 +88,33 @@ class _DUICustomWidgetState extends State<DUICustomWidget> {
               )
             ],
           ),
-          Row(
-            children: List.generate(
-              (widget.json['toggleItems'][tagIndex]['items'] as List<dynamic>)
-                  .length,
-              (index) => InkWell(
-                onTap: () {
-                  setItemIndex(index);
-                },
-                child: Container(
-                  margin: const EdgeInsets.only(right: 12),
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: Colors.grey.shade300),
-                  ),
-                  child: Text(
-                    (widget.json['toggleItems'][tagIndex]['items'][index]
-                        as Map<String, dynamic>)['timeframe'],
-                    style: GoogleFonts.inter().copyWith(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                      color: const Color(0xFFE7E6E2),
+          const SizedBox(
+            height: 32,
+          ),
+          FittedBox(
+            child: Row(
+              children: List.generate(
+                (widget.json['toggleItems'][tagIndex]['items'] as List<dynamic>)
+                    .length,
+                (index) => InkWell(
+                  onTap: () {
+                    setItemIndex(index);
+                  },
+                  child: Container(
+                    margin: const EdgeInsets.only(right: 12),
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: Colors.grey.shade300),
+                    ),
+                    child: Text(
+                      (widget.json['toggleItems'][tagIndex]['items'][index]
+                          as Map<String, dynamic>)['timeframe'],
+                      style: GoogleFonts.inter().copyWith(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        color: const Color(0xFFE7E6E2),
+                      ),
                     ),
                   ),
                 ),
