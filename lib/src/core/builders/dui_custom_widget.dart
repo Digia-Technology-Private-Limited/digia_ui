@@ -43,8 +43,7 @@ class _DUICustomWidgetState extends State<DUICustomWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 34, horizontal: 20),
-      color: Colors.black,
+      color: const Color(0xFF100F0F),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -87,28 +86,33 @@ class _DUICustomWidgetState extends State<DUICustomWidget> {
               )
             ],
           ),
-          Row(
-            children: List.generate(
-              (widget.json['toggleItems'][tagIndex]['items'] as List<dynamic>)
-                  .length,
-              (index) => InkWell(
-                onTap: () {
-                  setItemIndex(index);
-                },
-                child: Container(
-                  margin: const EdgeInsets.only(right: 12),
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: Colors.grey.shade300),
-                  ),
-                  child: Text(
-                    (widget.json['toggleItems'][tagIndex]['items'][index]
-                        as Map<String, dynamic>)['timeframe'],
-                    style: GoogleFonts.inter().copyWith(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                      color: const Color(0xFFE7E6E2),
+          const SizedBox(
+            height: 32,
+          ),
+          FittedBox(
+            child: Row(
+              children: List.generate(
+                (widget.json['toggleItems'][tagIndex]['items'] as List<dynamic>)
+                    .length,
+                (index) => InkWell(
+                  onTap: () {
+                    setItemIndex(index);
+                  },
+                  child: Container(
+                    margin: const EdgeInsets.only(right: 12),
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: Colors.grey.shade300),
+                    ),
+                    child: Text(
+                      (widget.json['toggleItems'][tagIndex]['items'][index]
+                          as Map<String, dynamic>)['timeframe'],
+                      style: GoogleFonts.inter().copyWith(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        color: const Color(0xFFE7E6E2),
+                      ),
                     ),
                   ),
                 ),
