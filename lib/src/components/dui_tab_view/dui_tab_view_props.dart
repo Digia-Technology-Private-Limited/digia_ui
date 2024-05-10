@@ -1,4 +1,5 @@
 import 'package:digia_ui/src/components/DUIText/dui_text_style.dart';
+import 'package:digia_ui/src/components/utils/DUIInsets/dui_insets.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'dui_tab_view_props.g.dart';
@@ -14,6 +15,7 @@ class DUITabViewProps {
   final bool? isScrollable;
   final String? indicatorColor;
   final double? viewportFraction;
+  final DUIInsets? tabBarPadding;
   @JsonKey(
       fromJson: DUITextStyle.fromJson,
       includeToJson: false,
@@ -36,7 +38,8 @@ class DUITabViewProps {
       this.dividerColor,
       this.tabBarPosition,
       required this.isScrollable,
-      this.viewportFraction});
+      this.viewportFraction,
+      this.tabBarPadding});
 
   factory DUITabViewProps.fromJson(Map<String, dynamic> json) {
     return _$DUITabViewPropsFromJson(json);
