@@ -18,26 +18,32 @@ Future<Object?> openDUIPage(
   );
 }
 
-Future<Object?> showAlertDialog(
+Future<Widget?> showAlertDialog(
     {required BuildContext context,
+    required String type,
     required String title,
     required String content,
-    List<Widget>? actions}) {
-  return showDialog<void>(
+    String confirmText = 'Okay',
+    String cancelText = 'Cancel'}) {
+  return showAdaptiveDialog<Widget?>(
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
         title: Text(title),
-        content: Text(title),
-        actions: actions ??
-            <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text('OK'),
-              ),
-            ],
+        content: Text(content),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text(confirmText),
+          ),
+          TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(cancelText)),
+        ],
       );
     },
   );

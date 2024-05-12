@@ -65,10 +65,18 @@ Map<String, ActionHandlerFn> _actionsMap = {
     return;
   },
   'Action.showAlertDialog': ({required action, required context}) {
+    final type = action.data['method'];
+    final title = action.data['title'];
+    final content = action.data['content'];
+    final confirmText = action.data['confirmText'];
+    final cancelText = action.data['cancelText'];
     return showAlertDialog(
+        type: type,
         context: context,
-        title: action.data['title'],
-        content: action.data['content']);
+        title: title,
+        content: content,
+        confirmText: confirmText,
+        cancelText: cancelText);
   },
 };
 
