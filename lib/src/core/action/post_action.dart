@@ -9,7 +9,7 @@ const Map<String, String> defaultHeaders = {
 };
 
 class PostAction {
-  final DigiaUIConfigResolver resolver;
+  final DUIConfig resolver;
 
   PostAction(this.resolver);
 

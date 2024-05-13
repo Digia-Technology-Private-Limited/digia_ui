@@ -23,12 +23,12 @@ class DigiaUIClient {
   late String accessKey;
   late String baseUrl;
   late NetworkClient networkClient;
-  late DigiaUIConfigResolver config;
+  late DUIConfig config;
   late DUIAppState appState;
 
   bool _isInitialized = false;
 
-  static DigiaUIConfigResolver getConfigResolver() {
+  static DUIConfig getConfigResolver() {
     return _instance.config;
   }
 
@@ -49,7 +49,7 @@ class DigiaUIClient {
         await rootBundle.loadString(assetPath ?? defaultUIConfigAssetPath);
     final data = jsonDecode(string);
 
-    _instance.config = DigiaUIConfigResolver(data);
+    _instance.config = DUIConfig(data);
 
     await DUIPreferences.initialize();
 
@@ -71,7 +71,7 @@ class DigiaUIClient {
     _instance.baseUrl = baseUrl ?? defaultBaseUrl;
     Map<String, dynamic> headers = {'digia_projectId': accessKey};
     _instance.networkClient = NetworkClient(dio, _instance.baseUrl, headers);
-    _instance.config = DigiaUIConfigResolver(data);
+    _instance.config = DUIConfig(data);
 
     await DUIPreferences.initialize();
 
@@ -107,7 +107,7 @@ class DigiaUIClient {
       );
     }
 
-    _instance.config = DigiaUIConfigResolver(data);
+    _instance.config = DUIConfig(data);
     await DUIPreferences.initialize();
 
     _instance.appState = DUIAppState.fromJson(_instance.config.appState ?? {});

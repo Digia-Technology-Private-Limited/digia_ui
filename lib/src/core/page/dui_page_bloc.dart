@@ -13,13 +13,13 @@ import '../../Utils/basic_shared_utils/dui_decoder.dart';
 import '../../config_resolver.dart';
 
 class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
-  final DigiaUIConfigResolver _config;
+  final DUIConfig _config;
   final Function(String methodId, Map<String, dynamic>? data)?
       onExternalMethodCalled;
 
   DUIPageBloc({
     required String pageUid,
-    required DigiaUIConfigResolver config,
+    required DUIConfig config,
     this.onExternalMethodCalled,
   })  : _config = config,
         super(DUIPageState(

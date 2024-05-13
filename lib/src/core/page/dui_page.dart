@@ -17,7 +17,7 @@ class DUIPage extends StatelessWidget {
   final DUIImageProviderFn? imageProviderFn;
   final DUITextStyleBuilder? textStyleBuilder;
   final DUIExternalFunctionHandler? externalFunctionHandler;
-  final DigiaUIConfigResolver _config;
+  final DUIConfig _config;
 
   DUIPage(
       {super.key,
@@ -27,7 +27,7 @@ class DUIPage extends StatelessWidget {
       this.imageProviderFn,
       this.textStyleBuilder,
       this.externalFunctionHandler,
-      DigiaUIConfigResolver? config})
+      DUIConfig? config})
       : _pageArgs = pageArgs,
         _config = config ?? DigiaUIClient.instance.config {
     MixpanelManager.instance

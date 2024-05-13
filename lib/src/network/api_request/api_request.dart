@@ -58,7 +58,7 @@ class APIModel {
 
 class APICall {
   // final String projectId;
-  final DigiaUIConfigResolver resolver;
+  final DUIConfig resolver;
   // final List<APIModel> apiCalls;
   Dio? dio;
 

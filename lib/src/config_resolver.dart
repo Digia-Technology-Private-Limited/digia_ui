@@ -1,14 +1,14 @@
 import 'Utils/dui_font.dart';
 import 'core/page/props/dui_page_props.dart';
 
-class DigiaUIConfigResolver {
+class DUIConfig {
   final Map<String, dynamic> _themeConfig;
   final Map<String, dynamic> _pages;
   final Map<String, dynamic> _restConfig;
   final String _initialRoute;
   final Map<String, dynamic>? appState;
 
-  DigiaUIConfigResolver(dynamic data)
+  DUIConfig(dynamic data)
       : _themeConfig = data['theme'],
         _pages = data['pages'],
         _restConfig = data['rest'],
