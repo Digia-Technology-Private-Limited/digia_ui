@@ -1,6 +1,5 @@
-import 'package:digia_ui/src/network/network_client.dart';
-
 import 'config_resolver.dart';
+import 'network/network_client.dart';
 
 class DigiaUIService {
   final String baseUrl;

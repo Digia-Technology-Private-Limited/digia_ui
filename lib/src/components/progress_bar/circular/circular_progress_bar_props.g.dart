@@ -15,7 +15,7 @@ DUICircularProgressBarProps _$DUICircularProgressBarPropsFromJson(
       thickness: (json['thickness'] as num?)?.toDouble(),
       bgColor: json['bgColor'] as String?,
       indicatorColor: json['indicatorColor'] as String?,
-      animationDuration: json['animationDuration'] as int?,
+      animationDuration: (json['animationDuration'] as num?)?.toInt(),
       animationBeginLength: (json['animationBeginLength'] as num?)?.toDouble(),
       animationEndLength: (json['animationEndLength'] as num?)?.toDouble(),
       curve: json['curve'] as String?,

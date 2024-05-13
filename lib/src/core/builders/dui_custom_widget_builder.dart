@@ -1,7 +1,8 @@
-import 'package:digia_ui/src/core/builders/dui_custom_widget.dart';
-import 'package:digia_ui/src/core/json_widget_builder.dart';
-import 'package:digia_ui/src/core/page/props/dui_widget_json_data.dart';
 import 'package:flutter/material.dart';
+
+import '../json_widget_builder.dart';
+import '../page/props/dui_widget_json_data.dart';
+import 'dui_custom_widget.dart';
 
 class DUICustomWidgetBuilder extends DUIWidgetBuilder {
   DUICustomWidgetBuilder({required super.data});

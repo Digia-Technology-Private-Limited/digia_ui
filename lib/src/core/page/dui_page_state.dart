@@ -1,5 +1,5 @@
 import 'package:copy_with_extension/copy_with_extension.dart';
-import 'package:digia_ui/src/core/page/props/dui_page_props.dart';
+import 'props/dui_page_props.dart';
 
 part 'dui_page_state.g.dart';
 

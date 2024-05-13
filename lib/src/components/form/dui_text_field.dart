@@ -1,9 +1,10 @@
-import 'package:digia_ui/src/Utils/extensions.dart';
-import 'package:digia_ui/src/Utils/util_functions.dart';
-import 'package:digia_ui/src/components/DUIText/dui_text.dart';
-import 'package:digia_ui/src/components/form/dui_form.dart';
-import 'package:digia_ui/src/components/form/dui_text_field_props.dart';
 import 'package:flutter/material.dart';
+
+import '../../Utils/extensions.dart';
+import '../../Utils/util_functions.dart';
+import '../DUIText/dui_text.dart';
+import 'dui_form.dart';
+import 'dui_text_field_props.dart';
 
 class DUITextField extends StatefulWidget {
   final DUITextFieldProps props;

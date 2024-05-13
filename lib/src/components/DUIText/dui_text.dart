@@ -1,7 +1,8 @@
-import 'package:digia_ui/src/Utils/basic_shared_utils/dui_decoder.dart';
-import 'package:digia_ui/src/Utils/util_functions.dart';
-import 'package:digia_ui/src/components/DUIText/dui_text_props.dart';
 import 'package:flutter/material.dart';
+
+import '../../Utils/basic_shared_utils/dui_decoder.dart';
+import '../../Utils/util_functions.dart';
+import 'dui_text_props.dart';
 
 class DUIText extends StatefulWidget {
   final DUITextProps props;

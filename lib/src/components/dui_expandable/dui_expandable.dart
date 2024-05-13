@@ -1,14 +1,16 @@
-import 'package:digia_ui/digia_ui.dart';
-import 'package:digia_ui/src/Utils/basic_shared_utils/dui_decoder.dart';
-import 'package:digia_ui/src/Utils/basic_shared_utils/lodash.dart';
-import 'package:digia_ui/src/Utils/basic_shared_utils/num_decoder.dart';
-import 'package:digia_ui/src/Utils/dui_widget_registry.dart';
-import 'package:digia_ui/src/Utils/util_functions.dart';
-import 'package:digia_ui/src/components/dui_expandable/dui_expandable_props.dart';
-import 'package:digia_ui/src/components/dui_icons/icon_helpers/icon_data_serialization.dart';
+import 'dart:math' show pi;
+
 import 'package:expandable/expandable.dart';
 import 'package:flutter/cupertino.dart';
-import 'dart:math' show pi;
+
+import '../../../digia_ui.dart';
+import '../../Utils/basic_shared_utils/dui_decoder.dart';
+import '../../Utils/basic_shared_utils/lodash.dart';
+import '../../Utils/basic_shared_utils/num_decoder.dart';
+import '../../Utils/dui_widget_registry.dart';
+import '../../Utils/util_functions.dart';
+import '../dui_icons/icon_helpers/icon_data_serialization.dart';
+import 'dui_expandable_props.dart';
 
 class DUIExpandable extends StatefulWidget {
   final Map<String, List<DUIWidgetJsonData>> children;

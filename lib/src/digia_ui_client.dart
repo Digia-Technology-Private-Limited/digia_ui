@@ -1,13 +1,13 @@
 import 'dart:convert';
 
-import 'package:digia_ui/src/config_resolver.dart';
-import 'package:digia_ui/src/core/pref/dui_preferences.dart';
-import 'package:digia_ui/src/models/dui_app_state.dart';
-import 'package:digia_ui/src/network/network_client.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
 
+import 'config_resolver.dart';
+import 'core/pref/dui_preferences.dart';
 import 'digia_ui_service.dart';
+import 'models/dui_app_state.dart';
+import 'network/network_client.dart';
 
 const defaultUIConfigAssetPath = 'json/config.json';
 const defaultBaseUrl = 'https://app.digia.tech/hydrator/api';

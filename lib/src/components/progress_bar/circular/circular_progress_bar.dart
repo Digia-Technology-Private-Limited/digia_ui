@@ -1,8 +1,9 @@
-import 'package:digia_ui/src/Utils/basic_shared_utils/dui_decoder.dart';
-import 'package:digia_ui/src/Utils/basic_shared_utils/lodash.dart';
-import 'package:digia_ui/src/Utils/util_functions.dart';
-import 'package:digia_ui/src/components/progress_bar/circular/circular_progress_bar_props.dart';
 import 'package:flutter/material.dart';
+
+import '../../../Utils/basic_shared_utils/dui_decoder.dart';
+import '../../../Utils/basic_shared_utils/lodash.dart';
+import '../../../Utils/util_functions.dart';
+import 'circular_progress_bar_props.dart';
 
 class DUICircularProgressBar extends StatelessWidget {
   final DUICircularProgressBarProps props;

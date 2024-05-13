@@ -1,5 +1,6 @@
-import 'package:digia_ui/src/Utils/extensions.dart';
 import 'package:flutter/material.dart';
+
+import '../extensions.dart';
 
 Map<String, T> keyBy<T>(
   Iterable<T> list,

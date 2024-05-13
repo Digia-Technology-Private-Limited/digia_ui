@@ -1,6 +1,7 @@
-import 'package:digia_ui/src/components/DUIText/dui_text_props.dart';
-import 'package:digia_ui/src/components/utils/DUIBorder/dui_border.dart';
 import 'package:json_annotation/json_annotation.dart';
+
+import '../DUIText/dui_text_props.dart';
+import '../utils/DUIBorder/dui_border.dart';
 
 part 'dui_text_field_props.g.dart';
 

@@ -1,5 +1,6 @@
-import 'package:digia_ui/src/components/form/dui_form_props.dart';
 import 'package:flutter/material.dart';
+
+import 'dui_form_props.dart';
 
 // TODO: Create Capabilities
 GlobalKey<FormState> signUpFormGlobalKey = GlobalKey();

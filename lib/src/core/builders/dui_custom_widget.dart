@@ -1,6 +1,7 @@
-import 'package:digia_ui/src/Utils/basic_shared_utils/color_decoder.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import '../../Utils/basic_shared_utils/color_decoder.dart';
 
 class DUICustomWidget extends StatefulWidget {
   final dynamic json;

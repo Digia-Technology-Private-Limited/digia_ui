@@ -1,13 +1,13 @@
-import 'package:digia_ui/src/Utils/basic_shared_utils/lodash.dart';
-import 'package:digia_ui/src/Utils/extensions.dart';
-import 'package:digia_ui/src/Utils/util_functions.dart';
-import 'package:digia_ui/src/components/dui_widget.dart';
-import 'package:digia_ui/src/components/floating_action_button/floating_action_button.dart';
-import 'package:digia_ui/src/components/floating_action_button/floating_action_button_props.dart';
-import 'package:digia_ui/src/core/flutter_widgets.dart';
-import 'package:digia_ui/src/core/json_widget_builder.dart';
 import 'package:flutter/material.dart';
 
+import '../../Utils/basic_shared_utils/lodash.dart';
+import '../../Utils/extensions.dart';
+import '../../Utils/util_functions.dart';
+import '../../components/dui_widget.dart';
+import '../../components/floating_action_button/floating_action_button.dart';
+import '../../components/floating_action_button/floating_action_button_props.dart';
+import '../flutter_widgets.dart';
+import '../json_widget_builder.dart';
 import '../page/props/dui_widget_json_data.dart';
 
 class DUIScaffoldBuilder extends DUIWidgetBuilder {

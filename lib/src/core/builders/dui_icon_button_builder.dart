@@ -1,14 +1,14 @@
-import 'package:digia_ui/src/core/builders/dui_icon_builder.dart';
-import 'package:digia_ui/src/core/json_widget_builder.dart';
-import 'package:digia_ui/src/core/page/props/dui_widget_json_data.dart';
 import 'package:flutter/material.dart';
 
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
 import '../../Utils/basic_shared_utils/lodash.dart';
 import '../../Utils/util_functions.dart';
-import '../../components/dui_widget_scope.dart';
 import '../action/action_handler.dart';
 import '../action/action_prop.dart';
+import '../evaluator.dart';
+import '../json_widget_builder.dart';
+import '../page/props/dui_widget_json_data.dart';
+import 'dui_icon_builder.dart';
 
 class DUIIconButtonBuilder extends DUIWidgetBuilder {
   DUIIconButtonBuilder({required super.data});
@@ -19,7 +19,6 @@ class DUIIconButtonBuilder extends DUIWidgetBuilder {
 
   @override
   Widget build(BuildContext context) {
-    final eval = DUIWidgetScope.of(context)!.eval;
     final icon = DUIIconBuilder.fromProps(props: data.props['icon']);
 
     final defaultStyleJson =
@@ -42,9 +41,9 @@ class DUIIconButtonBuilder extends DUIWidgetBuilder {
       }),
     );
 
-    final isDisabled =
-        eval<bool>(data.props['isDisabled'], ((p0) => p0 as bool?)) ??
-            data.props['onClick'] == null;
+    final isDisabled = eval<bool>(data.props['isDisabled'],
+            context: context, decoder: ((p0) => p0 as bool?)) ??
+        data.props['onClick'] == null;
     final height = DUIDecoder.getHeight(context, data.props['height']);
     final width = DUIDecoder.getWidth(context, data.props['width']);
 

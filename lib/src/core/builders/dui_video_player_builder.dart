@@ -1,10 +1,11 @@
 import 'package:chewie/chewie.dart';
-import 'package:digia_ui/src/Utils/basic_shared_utils/num_decoder.dart';
-import 'package:digia_ui/src/components/dui_widget_scope.dart';
-import 'package:digia_ui/src/core/json_widget_builder.dart';
-import 'package:digia_ui/src/core/page/props/dui_widget_json_data.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
+
+import '../../Utils/basic_shared_utils/num_decoder.dart';
+import '../evaluator.dart';
+import '../json_widget_builder.dart';
+import '../page/props/dui_widget_json_data.dart';
 
 class DUIVideoPlayer extends DUIWidgetBuilder {
   DUIVideoPlayer({required super.data});
@@ -15,7 +16,6 @@ class DUIVideoPlayer extends DUIWidgetBuilder {
 
   @override
   Widget build(BuildContext context) {
-    final eval = DUIWidgetScope.of(context)!.eval;
     VideoPlayerController videoPlayerController1 =
         VideoPlayerController.networkUrl(
       Uri.parse(data.props['videoUrl'] as String),
@@ -47,13 +47,14 @@ class DUIVideoPlayer extends DUIWidgetBuilder {
           ),
         );
       },
-      showControls: eval<bool>(data.props['showControls']) ?? true,
+      showControls:
+          eval<bool>(data.props['showControls'], context: context) ?? true,
       aspectRatio: NumDecoder.toDouble(data.props['aspectRatio']),
       allowPlaybackSpeedChanging: true,
       playbackSpeeds: [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2],
       videoPlayerController: videoPlayerController1,
-      autoPlay: eval<bool>(data.props['autoPlay']) ?? true,
-      looping: eval<bool>(data.props['looping']) ?? false,
+      autoPlay: eval<bool>(data.props['autoPlay'], context: context) ?? true,
+      looping: eval<bool>(data.props['looping'], context: context) ?? false,
       subtitle: Subtitles(
         [
           Subtitle(

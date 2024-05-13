@@ -1,6 +1,8 @@
-import 'package:digia_ui/src/components/DUIText/dui_text_props.dart';
-import 'package:digia_ui/src/core/action/action_prop.dart';
 import 'package:json_annotation/json_annotation.dart';
+
+import '../../core/action/action_prop.dart';
+import '../DUIText/dui_text_props.dart';
+
 part 'floating_action_button_props.g.dart';
 
 @JsonSerializable()

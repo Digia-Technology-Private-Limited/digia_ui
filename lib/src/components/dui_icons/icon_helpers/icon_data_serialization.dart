@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import '../packs/font_awesome_icons.dart' as font_awesome;
+
 import '../packs/cupertino_icons.dart' as cupertino;
+import '../packs/font_awesome_icons.dart' as font_awesome;
 import '../packs/line_icons.dart' as line_awesome;
 import '../packs/material_icons.dart' as material;
 import 'icon_pack.dart';
