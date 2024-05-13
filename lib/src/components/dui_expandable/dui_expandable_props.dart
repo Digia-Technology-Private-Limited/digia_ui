@@ -1,5 +1,6 @@
-import 'package:digia_ui/src/components/utils/DUIInsets/dui_insets.dart';
 import 'package:json_annotation/json_annotation.dart';
+
+import '../utils/DUIInsets/dui_insets.dart';
 
 part 'dui_expandable_props.g.dart';
 

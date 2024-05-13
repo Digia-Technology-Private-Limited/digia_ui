@@ -1,5 +1,6 @@
-import 'package:digia_ui/src/Utils/json_util.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../Utils/json_util.dart';
 
 class DUIPreferences {
   static final DUIPreferences _instance = DUIPreferences._();

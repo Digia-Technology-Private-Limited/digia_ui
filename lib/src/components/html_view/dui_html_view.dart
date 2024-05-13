@@ -1,6 +1,7 @@
-import 'package:digia_ui/src/components/html_view/dui_htmview_props.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
+
+import 'dui_htmview_props.dart';
 
 class DUIHtmlView extends StatelessWidget {
   final DUIHtmlViewProps props;

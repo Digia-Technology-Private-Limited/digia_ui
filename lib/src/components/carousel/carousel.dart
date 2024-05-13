@@ -1,10 +1,11 @@
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:digia_ui/src/components/carousel/carousel_props.dart';
-import 'package:digia_ui/src/Utils/dui_widget_registry.dart';
-import 'package:digia_ui/src/core/builders/dui_json_widget_builder.dart';
-import 'package:digia_ui/src/core/page/props/dui_widget_json_data.dart';
 import 'package:flutter/material.dart';
+
+import '../../Utils/dui_widget_registry.dart';
 import '../../Utils/extensions.dart';
+import '../../core/builders/dui_json_widget_builder.dart';
+import '../../core/page/props/dui_widget_json_data.dart';
+import 'carousel_props.dart';
 
 class DUICarousel extends StatelessWidget {
   const DUICarousel(this.props, this.data, {super.key, required this.registry});

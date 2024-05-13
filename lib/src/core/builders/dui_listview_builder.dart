@@ -1,11 +1,13 @@
-import 'package:digia_ui/src/Utils/basic_shared_utils/dui_decoder.dart';
-import 'package:digia_ui/src/Utils/basic_shared_utils/num_decoder.dart';
-import 'package:digia_ui/src/Utils/dui_widget_registry.dart';
-import 'package:digia_ui/src/Utils/extensions.dart';
-import 'package:digia_ui/src/core/builders/dui_json_widget_builder.dart';
-import 'package:digia_ui/src/core/json_widget_builder.dart';
-import 'package:digia_ui/src/core/page/props/dui_widget_json_data.dart';
 import 'package:flutter/material.dart';
+
+import '../../Utils/basic_shared_utils/dui_decoder.dart';
+import '../../Utils/basic_shared_utils/num_decoder.dart';
+import '../../Utils/dui_widget_registry.dart';
+import '../evaluator.dart';
+import '../indexed_item_provider.dart';
+import '../json_widget_builder.dart';
+import '../page/props/dui_widget_json_data.dart';
+import 'dui_json_widget_builder.dart';
 
 class DUIListViewBuilder extends DUIWidgetBuilder {
   DUIListViewBuilder(DUIWidgetJsonData data, DUIWidgetRegistry? registry)
@@ -21,24 +23,54 @@ class DUIListViewBuilder extends DUIWidgetBuilder {
     if (registry == null) {
       return fallbackWidget();
     }
-
     final children = data.children['children']!;
 
-    return !children.isNullOrEmpty
-        ? ListView.builder(
-            physics: DUIDecoder.toScrollPhysics(data.props['allowScroll']),
-            shrinkWrap: NumDecoder.toBoolOrDefault(data.props['shrinkWrap'],
-                defaultValue: false),
-            itemCount: children.length,
-            itemBuilder: (context, index) {
-              final builder = DUIJsonWidgetBuilder(
-                  data: children[index], registry: registry!);
-              return builder.build(context);
-            })
-        : const Text(
-            'Children field is Empty!',
-            textAlign: TextAlign.center,
-          );
+    List items = _createDataItems(data.dataRef, context);
+    final generateChildrenDynamically = items.isNotEmpty;
+
+    if (generateChildrenDynamically) {
+      if (children.isEmpty) return const SizedBox.shrink();
+
+      return ListView.builder(
+          physics: DUIDecoder.toScrollPhysics(data.props['allowScroll']),
+          shrinkWrap: NumDecoder.toBoolOrDefault(data.props['shrinkWrap'],
+              defaultValue: false),
+          itemCount: items.length,
+          itemBuilder: (context, index) {
+            final childToRepeat = children.first;
+            return IndexedItemWidgetBuilder(
+                index: index,
+                currentItem: items[index],
+                builder: DUIJsonWidgetBuilder(
+                    data: childToRepeat, registry: registry!));
+          });
+    } else {
+      return ListView.builder(
+          physics: DUIDecoder.toScrollPhysics(data.props['allowScroll']),
+          shrinkWrap: NumDecoder.toBoolOrDefault(data.props['shrinkWrap'],
+              defaultValue: false),
+          itemCount: children.length,
+          itemBuilder: (context, index) {
+            return DUIJsonWidgetBuilder(
+                    data: children[index], registry: registry!)
+                .build(context);
+          });
+    }
+  }
+
+  List<Object> _createDataItems(
+      Map<String, dynamic> dataRef, BuildContext context) {
+    if (dataRef.isEmpty) return [];
+    if (data.dataRef['kind'] == 'json') {
+      return (data.dataRef['datum'] as List<dynamic>?)?.cast<Object>() ?? [];
+    } else {
+      return eval<List>(
+            data.dataRef['datum'],
+            context: context,
+            decoder: (p0) => p0 as List?,
+          )?.cast<Object>() ??
+          [];
+    }
   }
 
   @override

@@ -1,5 +1,5 @@
-import 'package:digia_ui/src/Utils/dui_font.dart';
-import 'package:digia_ui/src/core/page/props/dui_page_props.dart';
+import 'Utils/dui_font.dart';
+import 'core/page/props/dui_page_props.dart';
 
 class DUIConfig {
   final Map<String, dynamic> _themeConfig;

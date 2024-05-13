@@ -12,6 +12,7 @@ DUIWidgetJsonData _$DUIWidgetJsonDataFromJson(Map<String, dynamic> json) =>
       props: json['props'] as Map<String, dynamic>?,
       containerProps: json['containerProps'] as Map<String, dynamic>?,
       children: DUIWidgetJsonData._childrenFromJson(json['children']),
+      dataRef: json['dataRef'] as Map<String, dynamic>?,
     );
 
 Map<String, dynamic> _$DUIWidgetJsonDataToJson(DUIWidgetJsonData instance) =>
@@ -20,4 +21,5 @@ Map<String, dynamic> _$DUIWidgetJsonDataToJson(DUIWidgetJsonData instance) =>
       'children': instance.children,
       'props': instance.props,
       'containerProps': instance.containerProps,
+      'dataRef': instance.dataRef,
     };

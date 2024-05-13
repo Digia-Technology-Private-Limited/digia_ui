@@ -1,12 +1,13 @@
-import 'package:digia_ui/digia_ui.dart';
-import 'package:digia_ui/src/Utils/basic_shared_utils/lodash.dart';
-import 'package:digia_ui/src/Utils/util_functions.dart';
-import 'package:digia_ui/src/components/DUIText/dui_text.dart';
-import 'package:digia_ui/src/components/dui_icons/icon_helpers/icon_data_serialization.dart';
-import 'package:digia_ui/src/components/floating_action_button/floating_action_button_props.dart';
-import 'package:digia_ui/src/core/action/action_handler.dart';
-import 'package:digia_ui/src/core/action/action_prop.dart';
 import 'package:flutter/material.dart';
+
+import '../../../digia_ui.dart';
+import '../../Utils/basic_shared_utils/lodash.dart';
+import '../../Utils/util_functions.dart';
+import '../../core/action/action_handler.dart';
+import '../../core/action/action_prop.dart';
+import '../DUIText/dui_text.dart';
+import '../dui_icons/icon_helpers/icon_data_serialization.dart';
+import 'floating_action_button_props.dart';
 
 class DUIFloatingActionButton {
   static FloatingActionButton floatingActionButton(

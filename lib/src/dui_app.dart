@@ -1,8 +1,9 @@
-import 'package:digia_ui/src/analytics/mixpanel.dart';
 import 'package:flutter/material.dart';
 
-import 'package:digia_ui/src/core/page/dui_page.dart';
-import 'package:digia_ui/src/digia_ui_client.dart';
+import 'analytics/mixpanel.dart';
+import 'core/app_state_provider.dart';
+import 'core/page/dui_page.dart';
+import 'digia_ui_client.dart';
 
 class DUIApp extends StatelessWidget {
   final String digiaAccessKey;
@@ -83,7 +84,9 @@ class DUIApp extends StatelessWidget {
           final initialRouteData =
               DigiaUIClient.getConfigResolver().getfirstPageData();
 
-          return DUIPage(pageUid: initialRouteData.uid);
+          return AppStateProvider(
+              state: DigiaUIClient.instance.appState.variables,
+              child: DUIPage(pageUid: initialRouteData.uid));
         },
       ),
     );

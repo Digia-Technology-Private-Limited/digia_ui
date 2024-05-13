@@ -1,6 +1,7 @@
-import 'package:digia_ui/src/components/dui_youtube_player/dui_youtube_player_props.dart';
-import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 import 'package:flutter/material.dart';
+import 'package:youtube_player_iframe/youtube_player_iframe.dart';
+
+import 'dui_youtube_player_props.dart';
 
 class DUIYoutubePlayer extends StatefulWidget {
   final DUIYoutubePlayerProps props;

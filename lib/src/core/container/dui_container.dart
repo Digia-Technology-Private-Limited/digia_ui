@@ -1,10 +1,10 @@
-import 'package:digia_ui/src/Utils/basic_shared_utils/lodash.dart';
-import 'package:digia_ui/src/Utils/extensions.dart';
-import 'package:digia_ui/src/Utils/util_functions.dart';
-import 'package:digia_ui/src/components/utils/DUIStyleClass/dui_style_class.dart';
 import 'package:flutter/material.dart';
 
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
+import '../../Utils/basic_shared_utils/lodash.dart';
+import '../../Utils/extensions.dart';
+import '../../Utils/util_functions.dart';
+import '../../components/utils/DUIStyleClass/dui_style_class.dart';
 
 class DUIContainer extends StatelessWidget {
   final DUIStyleClass? styleClass;

@@ -1,5 +1,6 @@
-import 'package:digia_ui/src/core/page/dui_page.dart';
 import 'package:flutter/material.dart';
+
+import 'page/dui_page.dart';
 
 Future<Object?> openDUIPage(
     {required String pageUid,

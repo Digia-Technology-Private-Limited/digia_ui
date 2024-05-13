@@ -1,9 +1,8 @@
-import 'package:digia_ui/src/Utils/basic_shared_utils/lodash.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-import 'package:digia_ui/src/core/page/props/dui_widget_json_data.dart';
-
+import '../../../Utils/basic_shared_utils/lodash.dart';
 import '../../../models/variable_def.dart';
+import 'dui_widget_json_data.dart';
 
 part 'dui_page_props.g.dart';
 

@@ -1,15 +1,15 @@
-import 'package:digia_ui/src/core/action/action_prop.dart';
-import 'package:digia_ui/src/core/action/post_action.dart';
-import 'package:digia_ui/src/core/page/dui_page_event.dart';
-import 'package:digia_ui/src/core/page/dui_page_state.dart';
-import 'package:digia_ui/src/core/page/props/dui_page_props.dart';
-import 'package:digia_ui/src/core/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
 import '../../config_resolver.dart';
+import '../action/action_prop.dart';
+import '../action/post_action.dart';
+import '../utils.dart';
+import 'dui_page_event.dart';
+import 'dui_page_state.dart';
+import 'props/dui_page_props.dart';
 
 class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
   final DUIConfig _config;

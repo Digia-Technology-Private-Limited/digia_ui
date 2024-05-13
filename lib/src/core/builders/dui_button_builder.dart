@@ -1,16 +1,16 @@
-import 'package:digia_ui/src/Utils/basic_shared_utils/dui_decoder.dart';
-import 'package:digia_ui/src/Utils/basic_shared_utils/lodash.dart';
-import 'package:digia_ui/src/Utils/basic_shared_utils/num_decoder.dart';
-import 'package:digia_ui/src/Utils/util_functions.dart';
-import 'package:digia_ui/src/core/action/action_prop.dart';
-import 'package:digia_ui/src/core/builders/dui_icon_builder.dart';
-import 'package:digia_ui/src/core/builders/dui_text_builder.dart';
-import 'package:digia_ui/src/core/json_widget_builder.dart';
-import 'package:digia_ui/src/core/page/props/dui_widget_json_data.dart';
 import 'package:flutter/material.dart';
 
-import '../../components/dui_widget_scope.dart';
+import '../../Utils/basic_shared_utils/dui_decoder.dart';
+import '../../Utils/basic_shared_utils/lodash.dart';
+import '../../Utils/basic_shared_utils/num_decoder.dart';
+import '../../Utils/util_functions.dart';
 import '../action/action_handler.dart';
+import '../action/action_prop.dart';
+import '../evaluator.dart';
+import '../json_widget_builder.dart';
+import '../page/props/dui_widget_json_data.dart';
+import 'dui_icon_builder.dart';
+import 'dui_text_builder.dart';
 
 class DUIButtonBuilder extends DUIWidgetBuilder {
   DUIButtonBuilder({required super.data});
@@ -21,8 +21,6 @@ class DUIButtonBuilder extends DUIWidgetBuilder {
 
   @override
   Widget build(BuildContext context) {
-    final eval = DUIWidgetScope.of(context)!.eval;
-
     final defaultStyleJson =
         data.props['defaultStyle'] as Map<String, dynamic>? ?? {};
     final disabledStyleJson =
@@ -47,8 +45,8 @@ class DUIButtonBuilder extends DUIWidgetBuilder {
               (p0) => toColor(p0));
         }));
 
-    final isDisabled =
-        eval<bool>(data.props['isDisabled']) ?? data.props['onClick'] == null;
+    final isDisabled = eval<bool>(data.props['isDisabled'], context: context) ??
+        data.props['onClick'] == null;
 
     final disabledTextColor = disabledStyleJson['disabledTextColor'] as String?;
     final disabledIconColor = disabledStyleJson['disabledIconColor'] as String?;

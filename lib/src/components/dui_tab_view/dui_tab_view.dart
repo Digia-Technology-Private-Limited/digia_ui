@@ -1,12 +1,13 @@
-import 'package:digia_ui/digia_ui.dart';
-import 'package:digia_ui/src/Utils/basic_shared_utils/dui_decoder.dart';
-import 'package:digia_ui/src/Utils/basic_shared_utils/lodash.dart';
-import 'package:digia_ui/src/Utils/dui_widget_registry.dart';
-import 'package:digia_ui/src/Utils/util_functions.dart';
-import 'package:digia_ui/src/components/dui_tab_view/dui_tab_view_props.dart';
-import 'package:digia_ui/src/core/builders/dui_icon_builder.dart';
-import 'package:digia_ui/src/core/builders/dui_json_widget_builder.dart';
 import 'package:flutter/material.dart';
+
+import '../../../digia_ui.dart';
+import '../../Utils/basic_shared_utils/dui_decoder.dart';
+import '../../Utils/basic_shared_utils/lodash.dart';
+import '../../Utils/dui_widget_registry.dart';
+import '../../Utils/util_functions.dart';
+import '../../core/builders/dui_icon_builder.dart';
+import '../../core/builders/dui_json_widget_builder.dart';
+import 'dui_tab_view_props.dart';
 
 class DUITabView extends StatefulWidget {
   final List<DUIWidgetJsonData> children;

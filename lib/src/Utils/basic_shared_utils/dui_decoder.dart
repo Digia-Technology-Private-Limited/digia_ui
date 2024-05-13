@@ -1,8 +1,8 @@
-import 'package:digia_ui/src/Utils/basic_shared_utils/lodash.dart';
-import 'package:digia_ui/src/Utils/basic_shared_utils/num_decoder.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+
+import 'lodash.dart';
+import 'num_decoder.dart';
 
 class DUIDecoder {
   static MainAxisAlignment? toMainAxisAlginment(String? value) {

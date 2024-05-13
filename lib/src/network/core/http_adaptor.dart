@@ -1,5 +1,6 @@
-import 'types.dart';
 import 'package:dio/dio.dart';
+
+import 'types.dart';
 
 class HttpAdapter {
   static final HttpAdapter _instance = HttpAdapter._internal();

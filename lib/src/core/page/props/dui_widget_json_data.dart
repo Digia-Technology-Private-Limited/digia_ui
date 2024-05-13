@@ -9,17 +9,21 @@ class DUIWidgetJsonData {
   Map<String, dynamic> _containerProps;
   @JsonKey(fromJson: _childrenFromJson)
   Map<String, List<DUIWidgetJsonData>> children;
+  Map<String, dynamic> _dataRef;
 
   Map<String, dynamic> get props => _props;
   Map<String, dynamic> get containerProps => _containerProps;
+  Map<String, dynamic> get dataRef => _dataRef;
 
   DUIWidgetJsonData({
     required this.type,
     Map<String, dynamic>? props,
     Map<String, dynamic>? containerProps,
     Map<String, List<DUIWidgetJsonData>>? children,
+    Map<String, dynamic>? dataRef,
   })  : _props = props ?? {},
         _containerProps = containerProps ?? {},
+        _dataRef = dataRef ?? {},
         children = children ?? <String, List<DUIWidgetJsonData>>{};
 
   factory DUIWidgetJsonData.fromJson(Map<String, dynamic> json) =>
