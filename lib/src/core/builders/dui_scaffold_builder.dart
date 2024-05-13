@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../Utils/basic_shared_utils/lodash.dart';
 import '../../Utils/extensions.dart';
+import '../../Utils/util_functions.dart';
 import '../../components/dui_widget.dart';
 import '../../components/floating_action_button/floating_action_button.dart';
 import '../../components/floating_action_button/floating_action_button_props.dart';
@@ -60,15 +61,22 @@ class DUIScaffoldBuilder extends DUIWidgetBuilder {
       return DUIFloatingActionButtonProps.fromJson(root.props);
     });
 
-    return Scaffold(
-      appBar: appBar,
-      body: data.children['body']?.firstOrNull.let((p0) {
-        return SafeArea(child: DUIWidget(data: p0));
-      }),
-      persistentFooterButtons: persistentFooterButtons,
-      floatingActionButton: floatingActionButton,
-      floatingActionButtonLocation: DUIFloatingActionButtonLocation.fabLocation(
-          floatingActionButtonProps),
+    return Theme(
+      data: ThemeData(
+          scaffoldBackgroundColor: data.props['scaffoldBackgroundColor'] != null
+              ? toColor(data.props['scaffoldBackgroundColor'])
+              : null),
+      child: Scaffold(
+        appBar: appBar,
+        body: data.children['body']?.firstOrNull.let((p0) {
+          return SafeArea(child: DUIWidget(data: p0));
+        }),
+        persistentFooterButtons: persistentFooterButtons,
+        floatingActionButton: floatingActionButton,
+        floatingActionButtonLocation:
+            DUIFloatingActionButtonLocation.fabLocation(
+                floatingActionButtonProps),
+      ),
     );
   }
 }

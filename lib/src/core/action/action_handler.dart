@@ -5,6 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
 import '../../Utils/extensions.dart';
+import '../../analytics/mixpanel.dart';
 import '../../components/dui_widget_scope.dart';
 import '../app_state_provider.dart';
 import '../evaluator.dart';
@@ -29,6 +30,17 @@ Map<String, ActionHandlerFn> _actionsMap = {
     final pageArgs = action.data['pageArgs'] ?? action.data['args'];
 
     return openDUIPage(pageUid: pageUId, context: context, pageArgs: pageArgs);
+  },
+  'Action.navigateToPageNameInBottomSheet': (
+      {required action, required context}) {
+    final String? pageUId = action.data['pageUId'] ?? action.data['pageId'];
+
+    if (pageUId == null) {
+      throw 'Page Id not found in Action Props';
+    }
+    final pageArgs = action.data['pageArgs'] ?? action.data['args'];
+    return openDUIPageInBottomSheet(
+        pageUid: pageUId, context: context, pageArgs: pageArgs);
   },
   'Action.pop': ({required action, required context}) {
     if (action.data['maybe'] == true) {
@@ -119,7 +131,7 @@ class ActionHandler {
         }
         continue;
       }
-
+      MixpanelManager.instance?.track(action.type, properties: action.data);
       executable(context: context, action: action);
     }
 

@@ -13,9 +13,11 @@ class DUIImageProps {
   final String? errorImage;
   final double? aspectRatio;
   final String? fit;
+  final double? opacity;
 
   DUIImageProps(
       {this.styleClass,
+      this.opacity,
       required this.imageSrc,
       this.placeHolder,
       this.errorImage,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'analytics/mixpanel.dart';
 import 'core/app_state_provider.dart';
 import 'core/page/dui_page.dart';
 import 'digia_ui_client.dart';
@@ -9,13 +10,22 @@ class DUIApp extends StatelessWidget {
   final GlobalKey<NavigatorState>? navigatorKey;
   final ThemeData? theme;
   final String? baseUrl;
+  final String? mixpanelKey;
+  // final Map<String, dynamic> initProperties;
 
-  const DUIApp(
-      {super.key,
-      required this.digiaAccessKey,
-      this.navigatorKey,
-      this.theme,
-      this.baseUrl});
+  DUIApp({
+    super.key,
+    required this.digiaAccessKey,
+    this.navigatorKey,
+    this.theme,
+    this.mixpanelKey,
+    this.baseUrl,
+    // required this.initProperties
+  }) {
+    if (mixpanelKey != null) {
+      MixpanelManager.init(mixpanelKey!, digiaAccessKey);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

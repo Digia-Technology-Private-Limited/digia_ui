@@ -5,7 +5,9 @@ import '../core/builders/dui_avatar_builder.dart';
 import '../core/builders/dui_button_builder.dart';
 import '../core/builders/dui_carousel_builder.dart';
 import '../core/builders/dui_container2_builder.dart';
+import '../core/builders/dui_custom_widget_builder.dart';
 import '../core/builders/dui_expandable_builder.dart';
+import '../core/builders/dui_expansion_builder.dart';
 import '../core/builders/dui_flex_builder.dart';
 import '../core/builders/dui_gridview_builder.dart';
 import '../core/builders/dui_horizontal_divider_builder.dart';
@@ -69,6 +71,8 @@ class DUIWidgetRegistry {
         registry: DUIWidgetRegistry.shared, direction: Axis.vertical),
     'digia/row': (data, {registry}) => DUIFlexBuilder.create(data,
         registry: DUIWidgetRegistry.shared, direction: Axis.horizontal),
+    'digia/expansionTile': (data, {registry}) =>
+        DUIExpansionBuilder.create(data, registry: DUIWidgetRegistry.shared),
     'digia/expandable': (data, {registry}) =>
         DUIExpandableBuilder.create(data, registry: DUIWidgetRegistry.shared),
     'digia/wrap': (data, {registry}) => DUIWrapBuilder.create(data),
@@ -89,7 +93,9 @@ class DUIWidgetRegistry {
     'digia/horizontalDivider': (data, {registry}) =>
         DUIHorizontalDividerBuilder.create(data),
     'digia/verticalDivider': (data, {registry}) =>
-        DUIVerticalDividerBuilder.create(data)
+        DUIVerticalDividerBuilder.create(data),
+    'digia/customDezervComponent': (data, {registry}) =>
+        DUICustomWidgetBuilder.create(data)
   };
 
   static const DUIWidgetRegistry shared = DUIWidgetRegistry();

@@ -18,3 +18,19 @@ Future<Object?> openDUIPage(
     ),
   );
 }
+
+Future<Object?> openDUIPageInBottomSheet({
+  required String pageUid,
+  required BuildContext context,
+  Map<String, dynamic>? pageArgs,
+}) {
+  return showModalBottomSheet(
+    context: context,
+    builder: (ctx) {
+      return DUIPage(
+        pageUid: pageUid,
+        pageArgs: pageArgs,
+      );
+    },
+  );
+}
