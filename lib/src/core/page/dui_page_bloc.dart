@@ -45,10 +45,10 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
     // final apiData = APIModel.fromJson(apiDataMap as Map<String, dynamic>? ?? {});
     // final api = APICall(_config).execute(action, apiData);
 
-    // action.data['pageParams'] = {
-    //   ...?action.data['pageParams'],
-    //   ...?event.pageParams,
-    // };
+    action.data['pageParams'] = {
+      ...?action.data['pageParams'],
+      ...?event.pageParams,
+    };
 
     await _handleAction(null, action, emit);
 
@@ -59,7 +59,9 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
     SetStateEvent event,
     Emitter<DUIPageState> emit,
   ) {
-    state.props.variables?[event.variableName]?.set(event.value);
+    for (final element in event.events) {
+      state.props.variables?[element.variableName]?.set(element.value);
+    }
 
     emit(state.copyWith());
   }

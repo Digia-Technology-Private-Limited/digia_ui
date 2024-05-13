@@ -6,7 +6,7 @@ import 'package:flutter_blurhash/flutter_blurhash.dart';
 import 'package:octo_image/octo_image.dart';
 
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
-import '../dui_widget.dart';
+import '../dui_widget_scope.dart';
 
 class DUIImage extends StatelessWidget {
   final DUIImageProps props;
@@ -52,29 +52,32 @@ class DUIImage extends StatelessWidget {
               AssetImage(props.imageSrc);
     }
 
-    return OctoImage(
-        fadeInDuration: const Duration(microseconds: 0),
-        fadeOutDuration: const Duration(microseconds: 0),
-        image: imageProvider,
-        fit: DUIDecoder.toBoxFit(props.fit),
-        gaplessPlayback: true,
-        placeholderBuilder: _placeHolderBuilderCreater(),
-        imageBuilder: (BuildContext context, Widget widget) {
-          final child = props.aspectRatio == null
-              ? widget
-              : AspectRatio(aspectRatio: props.aspectRatio!, child: widget);
-          return props.styleClass != null
-              ? DUIContainer(styleClass: props.styleClass, child: child)
-              : child;
-        },
-        errorBuilder: (context, error, stackTrace) {
-          if (props.errorImage == null) {
-            return const Icon(
-              Icons.error_outline,
-              color: Colors.red,
-            );
-          }
-          return Image.asset(props.errorImage!);
-        });
+    return Opacity(
+      opacity: props.opacity ?? 1,
+      child: OctoImage(
+          fadeInDuration: const Duration(microseconds: 0),
+          fadeOutDuration: const Duration(microseconds: 0),
+          image: imageProvider,
+          fit: DUIDecoder.toBoxFit(props.fit),
+          gaplessPlayback: true,
+          placeholderBuilder: _placeHolderBuilderCreater(),
+          imageBuilder: (BuildContext context, Widget widget) {
+            final child = props.aspectRatio == null
+                ? widget
+                : AspectRatio(aspectRatio: props.aspectRatio!, child: widget);
+            return props.styleClass != null
+                ? DUIContainer(styleClass: props.styleClass, child: child)
+                : child;
+          },
+          errorBuilder: (context, error, stackTrace) {
+            if (props.errorImage == null) {
+              return const Icon(
+                Icons.error_outline,
+                color: Colors.red,
+              );
+            }
+            return Image.asset(props.errorImage!);
+          }),
+    );
   }
 }

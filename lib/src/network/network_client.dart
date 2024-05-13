@@ -1,7 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:dio_intercept_to_curl/dio_intercept_to_curl.dart';
-import 'package:flutter/foundation.dart';
-import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 import 'api_response/base_response.dart';
 import 'core/types.dart';
@@ -25,20 +22,20 @@ class NetworkClient {
       throw 'Invalid BaseUrl';
     }
 
-    if (kDebugMode) {
-      this.dio.interceptors.addAll([
-        PrettyDioLogger(
-          requestHeader: true,
-          requestBody: true,
-          responseBody: true,
-          responseHeader: false,
-          error: true,
-          compact: true,
-          // fixme if inFuture have some error related to dio, add maxWidth property and set it >100
-        ),
-        DioInterceptToCurl(),
-      ]);
-    }
+    // if (kDebugMode) {
+    //   this.dio.interceptors.addAll([
+    //     PrettyDioLogger(
+    //       requestHeader: true,
+    //       requestBody: true,
+    //       responseBody: true,
+    //       responseHeader: false,
+    //       error: true,
+    //       compact: true,
+    //       // fixme if inFuture have some error related to dio, add maxWidth property and set it >100
+    //     ),
+    //     DioInterceptToCurl(),
+    //   ]);
+    // }
   }
 
   Future<Response<T>> _execute<T>(String path, HttpMethod method,

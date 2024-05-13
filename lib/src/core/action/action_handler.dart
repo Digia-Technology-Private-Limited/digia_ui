@@ -1,9 +1,12 @@
 import 'package:digia_ui/digia_ui.dart';
 import 'package:digia_ui/src/Utils/extensions.dart';
+import 'package:digia_ui/src/analytics/mixpanel.dart';
+import 'package:digia_ui/src/components/dui_widget_scope.dart';
 import 'package:digia_ui/src/core/action/action_prop.dart';
 import 'package:digia_ui/src/core/page/dui_page_bloc.dart';
 import 'package:digia_ui/src/core/page/dui_page_event.dart';
 import 'package:digia_ui/src/core/utils.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:json_schema2/json_schema2.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -23,8 +26,20 @@ Map<String, ActionHandlerFn> _actionsMap = {
       throw 'Page Id not found in Action Props';
     }
 
-    return openDUIPage(
-        pageUid: pageUId, context: context, pageArgs: action.data['pageArgs']);
+    final pageArgs = action.data['pageArgs'] ?? action.data['args'];
+
+    return openDUIPage(pageUid: pageUId, context: context, pageArgs: pageArgs);
+  },
+  'Action.navigateToPageNameInBottomSheet': (
+      {required action, required context}) {
+    final String? pageUId = action.data['pageUId'] ?? action.data['pageId'];
+
+    if (pageUId == null) {
+      throw 'Page Id not found in Action Props';
+    }
+    final pageArgs = action.data['pageArgs'] ?? action.data['args'];
+    return openDUIPageInBottomSheet(
+        pageUid: pageUId, context: context, pageArgs: pageArgs);
   },
   'Action.pop': ({required action, required context}) {
     if (action.data['maybe'] == true) {
@@ -58,11 +73,34 @@ Map<String, ActionHandlerFn> _actionsMap = {
       throw 'Action.setPageState called on a widget which is not wrapped in DUIPageBloc';
     }
 
-    bloc.add(SetStateEvent(
-        variableName: action.data['variableName'],
-        context: context,
-        value: action.data['value']));
+    final events = action.data['events'];
+
+    if (events is List) {
+      bloc.add(SetStateEvent(
+          events: events.map((e) {
+        final value = DUIWidgetScope.of(context)?.eval(e['value'], (id) => id);
+        return SingleSetStateEvent(
+            variableName: e['variableName'], context: context, value: value);
+      }).toList()));
+    }
+
     return;
+  },
+  'Action.setAppState': ({required action, required context}) {
+    final events = action.data['events'];
+
+    if (events is List) {
+      for (final e in events) {
+        final value = DUIWidgetScope.of(context)?.eval(e['value'], (id) => id);
+        DigiaUIClient.instance.appState.variables?[e['variableName']]
+            ?.set(value);
+      }
+
+      context.tryRead<DUIPageBloc>()?.add(SetStateEvent(events: []));
+
+      return;
+    }
+    return null;
   }
 };
 
@@ -75,27 +113,22 @@ class ActionHandler {
 
   Future<dynamic>? execute({
     required BuildContext context,
-    required ActionProp action,
+    required ActionFlow actionFlow,
   }) async {
-    final executable = _actionsMap[action.type];
-    if (executable == null) {
-      print('Action of type ${action.type} not found');
-      return;
+    for (final action in actionFlow.actions) {
+      final executable = _actionsMap[action.type];
+      if (executable == null) {
+        if (kDebugMode) {
+          print('Action of type ${action.type} not found');
+        }
+        continue;
+      }
+      MixpanelManager.instance?.track(action.type, properties: action.data);
+      executable(context: context, action: action);
     }
 
-    return executable(context: context, action: action);
+    return null;
   }
-
-  // Future<dynamic>? executeAction(
-  //     BuildContext context, ActionProp action) async {
-  //   switch (action.type) {
-  //     case 'Action.restCall':
-  //       return RestHandler().executeAction(context, action);
-
-  //   }
-
-  //   return null;
-  // }
 }
 
 bool validateSchema(Map<String, dynamic>? args, Map<String, dynamic> def) {

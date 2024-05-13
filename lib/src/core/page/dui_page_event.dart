@@ -15,12 +15,17 @@ class InitPageEvent extends DUIPageEvent {
 //   PostActionEvent({required this.action, required this.context});
 // }
 
-class SetStateEvent extends DUIPageEvent {
+class SingleSetStateEvent {
   final String variableName;
   final BuildContext context;
-  // TODO: This will be some form of an Expression.
   final Object? value;
 
-  SetStateEvent(
+  SingleSetStateEvent(
       {required this.variableName, required this.context, required this.value});
+}
+
+class SetStateEvent extends DUIPageEvent {
+  final List<SingleSetStateEvent> events;
+
+  SetStateEvent({required this.events});
 }
