@@ -20,30 +20,38 @@ class DUIStackBuilder extends DUIWidgetBuilder {
     final children = data.children['children'] ?? [];
 
     return Stack(
-        alignment: DUIDecoder.toStackChildAlignment(props.childAlignment),
-        fit: DUIDecoder.toStackFit(props.fit),
-        children: children.map((e) {
-          DUIInsets position = DUIInsets.fromJson(
-            e.containerProps.valueFor(keyPath: 'positioned.position'),
-          );
-          final hasPosition =
-              e.containerProps.valueFor(keyPath: 'positioned.hasPosition') ??
+      alignment: DUIDecoder.toStackChildAlignment(props.childAlignment),
+      fit: DUIDecoder.toStackFit(props.fit),
+      children: !children.isNullOrEmpty
+          ? children.map((e) {
+              DUIInsets position = DUIInsets.fromJson(
+                e.containerProps.valueFor(keyPath: 'positioned.position'),
+              );
+              final hasPosition = e.containerProps
+                      .valueFor(keyPath: 'positioned.hasPosition') ??
                   false;
-          final childWidget = DUIWidget(data: e);
+              final childWidget = DUIWidget(data: e);
 
-          if (!hasPosition) {
-            return childWidget;
-          }
+              if (!hasPosition) {
+                return childWidget;
+              }
 
-          return Positioned(
-            top: double.tryParse(position.top),
-            bottom: double.tryParse(position.bottom),
-            left: double.tryParse(position.left),
-            right: double.tryParse(position.right),
-            child: DUIWidget(
-              data: e,
-            ),
-          );
-        }).toList());
+              return Positioned(
+                top: double.tryParse(position.top),
+                bottom: double.tryParse(position.bottom),
+                left: double.tryParse(position.left),
+                right: double.tryParse(position.right),
+                child: DUIWidget(
+                  data: e,
+                ),
+              );
+            }).toList()
+          : [
+              const Text(
+                'Children field is Empty!',
+                textAlign: TextAlign.center,
+              ),
+            ],
+    );
   }
 }

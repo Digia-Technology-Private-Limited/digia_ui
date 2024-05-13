@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
+import '../../Utils/extensions.dart';
 import '../../core/page/props/dui_widget_json_data.dart';
 import '../dui_widget.dart';
 import 'dui_wrap_props.dart';
@@ -29,9 +30,16 @@ class _DUIWrapState extends State<DUIWrap> {
       verticalDirection:
           DUIDecoder.toVerticalDirection(widget.props.verticalDirection),
       clipBehavior: DUIDecoder.toClip(widget.props.clipBehavior),
-      children: widget.children!.map((e) {
-        return DUIWidget(data: e);
-      }).toList(),
+      children: !(widget.children.isNullOrEmpty)
+          ? widget.children!.map((e) {
+              return DUIWidget(data: e);
+            }).toList()
+          : [
+              const Text(
+                'Children field is Empty!',
+                textAlign: TextAlign.center,
+              ),
+            ],
     );
   }
 }
