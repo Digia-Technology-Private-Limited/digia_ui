@@ -1,16 +1,25 @@
-import 'package:digia_ui/src/core/action/action_prop.dart';
-import 'package:digia_ui/src/core/action/post_action.dart';
-import 'package:digia_ui/src/core/page/dui_page_event.dart';
-import 'package:digia_ui/src/core/page/dui_page_state.dart';
-import 'package:digia_ui/src/core/page/props/dui_page_props.dart';
-import 'package:digia_ui/src/core/utils.dart';
-import 'package:digia_ui/src/network/api_request/api_request.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
 import '../../config_resolver.dart';
+import '../../network/api_request/api_request.dart';
+import '../action/action_prop.dart';
+import '../action/post_action.dart';
+import '../utils.dart';
+import 'dui_page_event.dart';
+import 'dui_page_state.dart';
+import 'props/dui_page_props.dart';
+
+/// Usecases:
+/// 1. Static Pages
+/// 2. Data Driven Pages
+///
+/// Questions to Answer:
+/// 1. How to figure out if a page is Static or Data Driven
+/// 2. if  Data Driven
+///   2.a: how to access the data post availability. ex: dataSource.jokeName
 
 class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
   final DUIConfig _config;
@@ -40,17 +49,17 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
     // It will either be Action.loadPage or Action.buildPage
     final onPageLoadAction = state.props.actions['onPageLoad'];
 
-    final action = ActionProp.fromJson(onPageLoadAction);
+    final action = onPageLoadAction?.actions.first;
     // final apiDataMap = _config.getAPIData(state.pageUid);
     // final apiData = APIModel.fromJson(apiDataMap as Map<String, dynamic>? ?? {});
     // final api = APICall(_config).execute(action, apiData);
 
-    action.data['pageParams'] = {
+    action?.data['pageParams'] = {
       ...?action.data['pageParams'],
       ...?event.pageParams,
     };
 
-    await _handleAction(null, action, emit);
+    await _handleAction(null, action!, emit);
 
     return;
   }

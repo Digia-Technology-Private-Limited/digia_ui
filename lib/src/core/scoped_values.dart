@@ -14,9 +14,10 @@ ExprContext? createScope(BuildContext context) {
   final pageVars = context.read<DUIPageBloc>().state.props.variables;
   scope = ifNotNull(
           pageVars,
-          (p0) => ExprContext(
-              variables: p0.map((k, v) => MapEntry(k, v.value)),
-              enclosing: scope)) ??
+          (p0) => ExprContext(variables: {
+                ...p0.map((k, v) => MapEntry(k, v.value)),
+                'dataSource': context.read<DUIPageBloc>().state.dataSource
+              }, enclosing: scope)) ??
       scope;
 
   final indexedItemProvider = IndexedItemWidgetBuilder.maybeOf(context);

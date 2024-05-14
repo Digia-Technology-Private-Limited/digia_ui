@@ -8,6 +8,7 @@ class DUIPageState {
   final String pageUid;
   DUIPageProps props;
   bool isLoading;
+  Object? dataSource;
 
   DUIPageState({
     required this.pageUid,

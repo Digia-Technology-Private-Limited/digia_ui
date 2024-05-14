@@ -1,8 +1,9 @@
-import 'package:digia_ui/src/config_resolver.dart';
-import 'package:digia_ui/src/digia_ui_client.dart';
-import 'package:digia_ui/src/network/core/types.dart';
 import 'package:dio/dio.dart';
 import 'package:json_annotation/json_annotation.dart';
+
+import '../../config_resolver.dart';
+import '../../digia_ui_client.dart';
+import '../core/types.dart';
 
 part 'api_request.g.dart';
 
@@ -10,45 +11,23 @@ part 'api_request.g.dart';
 
 @JsonSerializable()
 class APIModel {
-  final String apiName;
-  final String apiUrl;
+  final String id;
+  final String name;
+  final String url;
   final HttpMethod httpMethod;
   final Map<String, dynamic> headers;
   final Map<String, dynamic> body;
   final Map<String, dynamic> variables;
 
-  APIModel(
-    this.variables,
-    this.headers,
-    this.body, {
-    required this.apiName,
-    required this.apiUrl,
+  APIModel({
+    required this.id,
+    required this.name,
+    required this.url,
     required this.httpMethod,
+    required this.headers,
+    required this.body,
+    required this.variables,
   });
-
-  // factory APIModel.fromJson(Map<String, dynamic>? json) {
-  //   return APIModel(
-  //     apiName: json?['apiName'],
-  //     apiUrl: json?['apiUrl'],
-  //     httpMethod: HttpMethod.values.firstWhere(
-  //       (e) => e.toString().toLowerCase() == '${json?['httpMethod']['httpMethod']}',
-  //     ),
-  //     json?['variables'],
-  //     json?['headers'],
-  //     json?['body'],
-  //   );
-  // }
-
-  // Map<String, dynamic> toJson() {
-  //   return {
-  //     'apiName': apiName,
-  //     'apiUrl': apiUrl,
-  //     'httpMethod': httpMethod.toString(),
-  //     'headers': headers,
-  //     'body': body,
-  //     'variables': variables,
-  //   };
-  // }
 
   factory APIModel.fromJson(Map<String, dynamic> json) =>
       _$APIModelFromJson(json);
