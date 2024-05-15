@@ -79,10 +79,10 @@ dependencies:
   flutter_blurhash: ^0.8.2
   webview_flutter: ^4.7.0
   digia_expr:
-    # git:
-    #   url: git@github.com:Digia-Technology-Private-Limited/digia_expr.git
-    #   ref: main
-    path: ../digia_expr
+    git:
+      url: git@github.com:Digia-Technology-Private-Limited/digia_expr.git
+      ref: main
+    # path: ../digia_expr
   chewie: ^1.8.1
   video_player: ^2.8.6
   # path: ../digia_expr
