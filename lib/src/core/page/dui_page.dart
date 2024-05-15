@@ -84,6 +84,10 @@ class _DUIScreenState extends State<_DUIScreen> {
       }
 
       return state.props.layout?.root.let((p0) {
+            if (state.dataSource != null) {
+              print((state.dataSource as Map<String, dynamic>)['data']
+                  ['response']['title']);
+            }
             return DUIWidgetScope(
                 iconDataProvider: widget.iconDataProvider,
                 imageProviderFn: widget.imageProviderFn,

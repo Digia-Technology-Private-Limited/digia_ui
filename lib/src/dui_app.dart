@@ -97,6 +97,16 @@ class DUIApp extends StatelessWidget {
 
 Map<String, dynamic> json = {
   'appSettings': {'initialRoute': 'courses'},
+  'appState': {
+    'variables': {
+      'pressedCount': {'type': 'integer', 'default': 0, 'persistent': true},
+      'greeting': {
+        'type': 'string',
+        'default': 'Hello User',
+        'persistent': false
+      }
+    }
+  },
   'pages': {
     'courses': {
       'slug': 'courses',
@@ -105,21 +115,145 @@ Map<String, dynamic> json = {
         'onPageLoad': {
           'type': 'Action.loadPage',
           'data': {
-            'apis': {
-              'courses': {
-                'apiName': 'courses',
-                'httpMethod': 'GET',
-                'apiUrl': 'https://demo5020025.mockable.io/',
-                'headers': {},
-                'variables': {},
-                'body': {}
-              }
-            }
+            'dataSourceId': '12345',
+            'variables': {'randomSeed': 'abcd'}
           }
         }
       },
       'inputArgs': null,
-      'layout': null
+      'layout': {
+        'body': {'root': null},
+        'header': null,
+        'footer': null,
+        'root': {
+          'type': 'fw/scaffold',
+          'props': null,
+          'containerProps': null,
+          'children': {
+            'body': [
+              {
+                'type': 'digia/column',
+                'props': {
+                  'mainAxisAlignment': 'start',
+                  'crossAxisAlignment': 'center',
+                  'isScrollable': null
+                },
+                'containerProps': {
+                  'style': {'padding': '10,10,10,10', 'bgColor': '#FFFFFF'}
+                },
+                'children': {
+                  'children': [
+                    {
+                      'type': 'digia/text',
+                      'props': {
+                        'text': 'BYTES',
+                        'textStyle': {
+                          'textColor': '#FFFFFF',
+                          'fontToken': 'displaylarge',
+                          'textBgColor': null
+                        },
+                        'alignment': 'start',
+                        'maxLines': null
+                      },
+                      'containerProps': {
+                        'style': {
+                          'bgColor': '#00C063',
+                          'alignment': 'center',
+                          'padding': '0,0,0,0',
+                          'margin': '0,0,0,0',
+                          'borderStyle': 'none',
+                          'borderWidth': 2,
+                          'borderRadius': '18,18,18,18',
+                          'width': '400',
+                          'height': '45%',
+                          'borderColor': null
+                        },
+                        'align': 'none'
+                      }
+                    },
+                    {
+                      'type': 'digia/richText',
+                      'props': {
+                        'textSpans': [
+                          {
+                            'text': 'Stoppage for your\n',
+                            'spanStyle': {
+                              'textColor': '#101213',
+                              'fontToken': 'headlinelarge'
+                            }
+                          },
+                          {
+                            'text': 'Curiosity',
+                            'spanStyle': {
+                              'fontToken': 'headlinelarge',
+                              'textColor': '#1C4494',
+                              'textDecorationColor': null,
+                              'textDecorationStyle': 'solid'
+                            }
+                          }
+                        ]
+                      },
+                      'containerProps': {
+                        'style': {
+                          'alignment': 'centerLeft',
+                          'padding': '0,0,0,0',
+                          'margin': '16,20,0,0'
+                        }
+                      }
+                    },
+                    {
+                      'type': 'digia/text',
+                      'props': {
+                        'text':
+                            'Discover Bytes, an intuitive and versatile Content Platform powered by Digia.',
+                        'textStyle': {'fontToken': 'titlemedium'},
+                        'alignment': 'start'
+                      },
+                      'containerProps': {
+                        'style': {'margin': '16,20,0,0'}
+                      }
+                    },
+                    {
+                      'type': 'digia/button',
+                      'props': {
+                        'text': {
+                          'text': 'Get Started',
+                          'textStyle': {
+                            'fontToken': 'titlemedium',
+                            'textColor': '#FFFFFF',
+                            'textBgColor': null
+                          }
+                        },
+                        'onClick': null,
+                        'style': {'bgColor': null}
+                      },
+                      'containerProps': {
+                        'style': {
+                          'bgColor': '#04A24C',
+                          'borderWidth': null,
+                          'padding': '10,10,10,10',
+                          'alignment': 'none',
+                          'borderRadius': '25,25,25,25',
+                          'margin': '16,30,0,0'
+                        },
+                        'align': 'topLeft',
+                        'onClick': {
+                          'type': 'Action.navigateToPage',
+                          'data': {
+                            'pageId': 'courses-65a4e1b85cc29694890b42e8',
+                            'args': {},
+                            'url': null
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      }
     },
     'bytes-onboarding': {
       'slug': 'bytes-onboarding',
@@ -302,18 +436,31 @@ Map<String, dynamic> json = {
   },
   'rest': {
     'baseUrl': 'https://app.digia.tech/hydrator/api',
-    'defaultHeaders': {},
+    'defaultHeaders': {
+      // 'x-device-id': '${localstorage.deviceId}',
+      // 'x-auth-token': '${localstorage.authToken}'
+    },
     'apis': {
+      '12345': {
+        'id': '12345',
+        'httpMethod': 'GET',
+        'url': 'https://demo5020025.mockable.io/',
+        'headers': {'x-random-seed': '{{randomSeed}}'},
+        'variables': {
+          'randomSeed': {'type': 'string'}
+        },
+        'body': {}
+      },
       'courses': {
         'httpMethod': 'GET',
-        'apiUrl': 'https://demo5020025.mockable.io/',
+        'url': 'https://demo5020025.mockable.io/',
         'headers': {},
         'variables': {},
         'body': {}
       },
       'articles': {
         'httpMethod': 'GET',
-        'apiUrl': 'https://demo5020025.mockable.io/',
+        'url': 'https://demo5020025.mockable.io/',
         'headers': {},
         'variables': {
           'courseID': {'type': 'number', 'isList': false, 'defaultValue': '1'}

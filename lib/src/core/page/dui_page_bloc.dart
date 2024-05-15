@@ -50,16 +50,16 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
     final onPageLoadAction = state.props.actions['onPageLoad'];
 
     final action = onPageLoadAction?.actions.first;
-    // final apiDataMap = _config.getAPIData(state.pageUid);
-    // final apiData = APIModel.fromJson(apiDataMap as Map<String, dynamic>? ?? {});
-    // final api = APICall(_config).execute(action, apiData);
+    final actionDataSourceMap = action!.data;
+    final dataSourceId = actionDataSourceMap['dataSourceId'];
+    final variablesMap = actionDataSourceMap['variables'];
 
-    action?.data['pageParams'] = {
+    action.data['pageParams'] = {
       ...?action.data['pageParams'],
       ...?event.pageParams,
     };
 
-    await _handleAction(null, action!, emit);
+    await _handleAction(null, action, emit);
 
     return;
   }
@@ -82,14 +82,12 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
       // TODO: Move to some constant
       case 'Action.loadPage':
         emit(state.copyWith(isLoading: true));
-        final pagePropsJson = await APICall(_config).execute(action.data);
+        final apiData = _config.getAPIData();
+        final apiResponseData = await APICall(_config).execute(apiData!);
 
-        // if (pagePropsJson == null) {
-        //   throw 'API Call failed for Page: ${state.pageUid}';
-        // }
-
-        final props = DUIPageProps.fromJson(pagePropsJson['data']['response']);
-        emit(state.copyWith(isLoading: false, props: props));
+        // final props = DUIPageProps.fromJson(pagePropsJson['data']['response']);
+        emit(state.copyWith(isLoading: false, dataSource: apiResponseData));
+        // emit(state.copyWith(isLoading: false, props: props));
         return null;
 
       case 'Action.rebuildPage':
@@ -121,6 +119,7 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
         if (context != null) {
           return Navigator.of(context).maybePop();
         }
+
       case 'Action.callExternalMethod':
         onExternalMethodCalled?.call(
             action.data['methodId'] ?? '', action.data['args']);

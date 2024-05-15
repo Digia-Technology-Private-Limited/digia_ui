@@ -52,10 +52,10 @@ class APICall {
     //   ),
     //   data: apiCall.body,
     // );
-    final apiUrl = apiMap['apis']?['courses']?['apiUrl'] ?? '';
+    // final apiUrl = apiMap['apis']?['courses']?['apiUrl'] ?? '';
+    final apiUrl = apiMap['12345']['url'];
     // final apiMethod = apiMap['apis']?['courses']?['httpMethod'] as HttpMethod;
-    final apiMethod =
-        _httpMethodFromString(apiMap['apis']?['courses']?['httpMethod']);
+    final apiMethod = _httpMethodFromString(apiMap['12345']?['httpMethod']);
     // final resp = await DigiaUIClient.getNetworkClient().get(
     //     path: apiUrl,
     //     fromJsonT: (json) => json as dynamic,

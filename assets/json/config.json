@@ -123,7 +123,7 @@
       "uid": "joke",
       "actions": {
         "onPageLoad": {
-          "type": "Action.callRestApi",
+          "type": "Action.loadPage",
           "data": {
             "dataSourceId": "12345",
             "variables": {

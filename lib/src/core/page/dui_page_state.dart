@@ -14,5 +14,6 @@ class DUIPageState {
     required this.pageUid,
     required this.props,
     this.isLoading = false,
+    this.dataSource,
   });
 }
