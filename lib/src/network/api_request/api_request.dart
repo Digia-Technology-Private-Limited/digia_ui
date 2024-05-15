@@ -43,25 +43,27 @@ class APICall {
 
   APICall(this.resolver);
 
-  Future<Map<String, dynamic>> execute(Map<String, dynamic> apiMap) async {
-    // final resp = await dio?.request(
-    //   apiCall.apiUrl,
-    //   options: Options(
-    //     method: apiCall.httpMethod.toString(),
-    //     headers: apiCall.headers,
-    //   ),
-    //   data: apiCall.body,
-    // );
-    // final apiUrl = apiMap['apis']?['courses']?['apiUrl'] ?? '';
-    final apiUrl = apiMap['12345']['url'];
-    // final apiMethod = apiMap['apis']?['courses']?['httpMethod'] as HttpMethod;
-    final apiMethod = _httpMethodFromString(apiMap['12345']?['httpMethod']);
-    // final resp = await DigiaUIClient.getNetworkClient().get(
-    //     path: apiUrl,
-    //     fromJsonT: (json) => json as dynamic,
-    //     headers: defaultHeaders);
+  dynamic buildUrl(dynamic apiUrl, Map<String, dynamic> variablesMap) {
+    if (apiUrl is String && apiUrl.isNotEmpty) {
+      if (variablesMap.isNotEmpty) {
+        final courseID = variablesMap['courseID'];
+        if (courseID != null) {
+          return '$apiUrl$courseID';
+        }
+      }
+    } else {
+      throw ArgumentError('Invalid API URL');
+    }
+  }
+
+  Future<Map<String, dynamic>> execute(String dataSourceId,
+      Map<String, dynamic> apiMap, Map<String, dynamic> variablesMap) async {
+    final apiUrl = apiMap[dataSourceId]['url'];
+    final url = buildUrl(apiUrl, variablesMap);
+    final apiMethod =
+        _httpMethodFromString(apiMap[dataSourceId]?['httpMethod']);
     final resp = await DigiaUIClient.getNetworkClient().request(
-        apiMethod, apiUrl, (json) => json as dynamic,
+        apiMethod, url, (json) => json as dynamic,
         headers: defaultHeaders);
     return resp.data as Map<String, dynamic>;
   }

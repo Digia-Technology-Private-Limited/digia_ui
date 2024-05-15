@@ -50,16 +50,13 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
     final onPageLoadAction = state.props.actions['onPageLoad'];
 
     final action = onPageLoadAction?.actions.first;
-    final actionDataSourceMap = action!.data;
-    final dataSourceId = actionDataSourceMap['dataSourceId'];
-    final variablesMap = actionDataSourceMap['variables'];
 
-    action.data['pageParams'] = {
+    action?.data['pageParams'] = {
       ...?action.data['pageParams'],
       ...?event.pageParams,
     };
 
-    await _handleAction(null, action, emit);
+    await _handleAction(null, action!, emit);
 
     return;
   }
@@ -82,12 +79,14 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
       // TODO: Move to some constant
       case 'Action.loadPage':
         emit(state.copyWith(isLoading: true));
-        final apiData = _config.getAPIData();
-        final apiResponseData = await APICall(_config).execute(apiData!);
+        final apiMap = _config.getAPIData();
+        final actionDataSourceMap = action.data;
+        final dataSourceId = actionDataSourceMap['dataSourceId'];
+        final variablesMap = actionDataSourceMap['variables'];
+        final apiResponseData =
+            await APICall(_config).execute(dataSourceId, apiMap!, variablesMap);
 
-        // final props = DUIPageProps.fromJson(pagePropsJson['data']['response']);
         emit(state.copyWith(isLoading: false, dataSource: apiResponseData));
-        // emit(state.copyWith(isLoading: false, props: props));
         return null;
 
       case 'Action.rebuildPage':
@@ -127,12 +126,6 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
       default:
         emit(state.copyWith(isLoading: false));
         return null;
-    }
-    if (action.data.isNotEmpty) {
-      final resp = await APICall(_config).execute(action.data);
-      // final props = DUIPageProps.fromJson(pagePropsJson['response']);
-      // emit(state.copyWith(isLoading: false, props: props));
-      return resp;
     }
     return null;
   }

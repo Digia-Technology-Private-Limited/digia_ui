@@ -116,7 +116,7 @@ Map<String, dynamic> json = {
           'type': 'Action.loadPage',
           'data': {
             'dataSourceId': '12345',
-            'variables': {'randomSeed': 'abcd'}
+            'variables': {'courseID': '1'}
           }
         }
       },
@@ -444,10 +444,10 @@ Map<String, dynamic> json = {
       '12345': {
         'id': '12345',
         'httpMethod': 'GET',
-        'url': 'https://demo5020025.mockable.io/',
-        'headers': {'x-random-seed': '{{randomSeed}}'},
+        'url': 'https://jsonplaceholder.typicode.com/todos/',
+        'headers': {'x-course-id': '{{courseId}}'},
         'variables': {
-          'randomSeed': {'type': 'string'}
+          'courseId': {'type': 'string'}
         },
         'body': {}
       },
