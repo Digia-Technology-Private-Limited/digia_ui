@@ -234,6 +234,17 @@ class APICall {
     final pathSegments = getPathSegments(apiUrl); // 'posts'
     final queryParams = getQueryParams(apiUrl); // '1'
 
+    void handleRequest(List<String> pathSegments, List<Property> queryParams) {
+      String path = pathSegments.join("/");
+      String queryString =
+          queryParams.map((e) => '${e.key}=${e.value}').join('&');
+      String url = 'https://example.com/$path?$queryString';
+      apiConfig['url'] = url;
+      createExecutableHttpRequest(apiConfig, variablesMap);
+    }
+
+    handleRequest(pathSegments, queryParams);
+
     // hardcoded way
     // apiUrl = apiUrl
     //     .replaceAll('{{path}}', pathSegments)
@@ -260,26 +271,26 @@ class APICall {
         _buildHeadersWithVariables(apiConfig['headers'], variablesMap);
     // headers.addAll(Map<String, dynamic>.from(defaultHeaders));
 
-    final apiModel = APIModel(
-      id: id,
-      name: name,
-      url: Url(
-        value: apiUrl,
-        components: UrlComponent(
-          scheme: scheme,
-          host: host,
-          pathSegments: pathSegments,
-          queryParams: queryParams,
-        ),
-      ),
-      httpMethod: httpMethod,
-      headers: headers as Map<String, dynamic>,
-      body: apiConfig['body'] as Map<String, dynamic>,
-      variables: variablesMap as Map<String, dynamic>,
-    );
+    // final apiModel = APIModel(
+    //   id: id,
+    //   name: name,
+    //   url: Url(
+    //     value: apiUrl,
+    //     components: UrlComponent(
+    //       scheme: scheme,
+    //       host: host,
+    //       pathSegments: pathSegments,
+    //       queryParams: queryParams,
+    //     ),
+    //   ),
+    //   httpMethod: httpMethod,
+    //   headers: headers as Map<String, dynamic>,
+    //   body: apiConfig['body'] as Map<String, dynamic>,
+    //   variables: variablesMap as Map<String, dynamic>,
+    // );
 
-    final variables = apiModel.variables;
-    final executableUrl = createExecutableHttpRequest(apiModel, variables);
+    // final variables = apiModel.variables;
+    final executableUrl = createExecutableHttpRequest(apiConfig, variablesMap);
 
     final response = await DigiaUIClient.getNetworkClient().request(
         httpMethod, executableUrl.url.value, (json) => json as dynamic,
@@ -293,14 +304,15 @@ class APICall {
   }
 
   ExecutableHttpData createExecutableHttpRequest(
-      APIModel restConfig, Map<String, dynamic> variablesMap) {
+      Map<String, dynamic> restConfig, Map<String, dynamic> variablesMap) {
     final urlComponent =
-        _fillUrlComponent(restConfig.url.components, variablesMap);
+        _fillUrlComponent(restConfig['url'].components, variablesMap);
     final urlString = _buildUrl(urlComponent);
 
     final headers =
-        _buildHeadersWithVariables(restConfig.headers, variablesMap);
-    final body = _buildRequestBody(restConfig.body, restConfig.httpMethod);
+        _buildHeadersWithVariables(restConfig['headers'], variablesMap);
+    final body =
+        _buildRequestBody(restConfig['body'], restConfig['httpMethod']);
 
     return ExecutableHttpData(
       url: Url(
@@ -312,7 +324,7 @@ class APICall {
             queryParams: urlComponent.queryParams,
           )),
       requestInit: RequestInit(
-        method: restConfig.httpMethod.toString(),
+        method: restConfig['httpMethod'].toString(),
         headers: headers,
         body: body,
       ),
