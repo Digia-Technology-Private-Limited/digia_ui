@@ -53,8 +53,6 @@ class NetworkClient {
           await _execute(path, method, data: data, headers: headers);
 
       if (response.statusCode == 200) {
-        // return BaseResponse.fromJson(response.data, fromJsonT);
-        // return BaseResponse(isSuccess: true, data: response.data, error: null);
         return BaseResponse(
             isSuccess: true, data: fromJsonT(response.data), error: null);
       } else {
@@ -73,12 +71,5 @@ class NetworkClient {
       Map<String, dynamic> headers = const {}}) async {
     return request(HttpMethod.post, path, fromJsonT,
         data: data, headers: headers);
-  }
-
-  Future<BaseResponse<T>> get<T>(
-      {required String path,
-      T Function(Object? json)? fromJsonT,
-      Map<String, dynamic> headers = const {}}) async {
-    return request(HttpMethod.get, path, fromJsonT!, headers: headers);
   }
 }

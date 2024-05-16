@@ -55,6 +55,5 @@ class DUIConfig {
 
   Map<String, dynamic>? getAPIData() {
     return _restConfig['apis'];
-    // return _pages[pageUid]['actions']['onPageLoad']['data']['apis'][pageUid];
   }
 }

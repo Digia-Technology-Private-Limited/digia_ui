@@ -9,7 +9,7 @@ part of 'api_request.dart';
 APIModel _$APIModelFromJson(Map<String, dynamic> json) => APIModel(
       id: json['id'] as String,
       name: json['name'] as String,
-      url: json['url'] as String,
+      url: json['url']! as Url,
       httpMethod: $enumDecode(_$HttpMethodEnumMap, json['httpMethod']),
       headers: json['headers'] as Map<String, dynamic>,
       body: json['body'] as Map<String, dynamic>,
