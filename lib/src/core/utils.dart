@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../Utils/basic_shared_utils/dui_decoder.dart';
 import '../Utils/basic_shared_utils/lodash.dart';
+import '../Utils/basic_shared_utils/num_decoder.dart';
 import '../Utils/util_functions.dart';
 import 'builders/dui_icon_builder.dart';
 import 'builders/dui_text_builder.dart';
@@ -32,9 +33,9 @@ Future<Object?> openDUIPageInBottomSheet({
   Map<String, dynamic>? pageArgs,
 }) {
   return showModalBottomSheet(
-    barrierColor: eval<String>(style['bgColor']['data'], context: context)
-            ?.letIfTrue(toColor) ??
-        Colors.black.withOpacity(0.4),
+    barrierColor:
+        eval<String>(style['bgColor'], context: context).letIfTrue(toColor) ??
+            Colors.black.withOpacity(0.4),
     context: context,
     builder: (ctx) {
       return Column(
@@ -44,28 +45,25 @@ Future<Object?> openDUIPageInBottomSheet({
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                DUITextBuilder.fromProps(props: style['text']['data'])
-                    .build(context),
-                DUIIconBuilder.fromProps(props: style['icon']['data'])
-                    .build(context)
+                DUITextBuilder.fromProps(props: style['text']).build(context),
+                DUIIconBuilder.fromProps(props: style['icon']).build(context)
               ],
             ),
           ),
           Container(
             height: MediaQuery.sizeOf(context).height * 0.6,
             decoration: BoxDecoration(
-              borderRadius: DUIDecoder.toBorderRadius(
-                style['borderRadius']['data'],
-              ),
-              border: (style['borderStyle']['data'] != null &&
-                      style['borderStyle']['data'] == 'solid')
+              borderRadius: DUIDecoder.toBorderRadius(style['borderRadius']),
+              border: (style['borderStyle'] != null &&
+                      style['borderStyle'] == 'solid')
                   ? Border.all(
                       style: BorderStyle.solid,
-                      color: eval<String>(style['borderColor']['data'],
-                                  context: context)
-                              ?.letIfTrue(toColor) ??
-                          Colors.transparent,
-                      width: (style['borderWidth']['data'] as double?) ?? 1.0,
+                      color:
+                          eval<String>(style['borderColor'], context: context)
+                                  .letIfTrue(toColor) ??
+                              Colors.transparent,
+                      width: NumDecoder.toDoubleOrDefault(style['borderWidth'],
+                          defaultValue: 1.0),
                     )
                   : null,
             ),

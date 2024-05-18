@@ -5,9 +5,7 @@ import 'lodash.dart';
 import 'num_decoder.dart';
 
 class DUIDecoder {
-  static MainAxisAlignment? toMainAxisAlginment(String? value) {
-    if (value == null) return null;
-
+  static MainAxisAlignment? toMainAxisAlginment(dynamic value) {
     return switch (value) {
       'start' => MainAxisAlignment.start,
       'end' => MainAxisAlignment.end,
@@ -19,43 +17,35 @@ class DUIDecoder {
     };
   }
 
-  static MainAxisAlignment toMainAxisAlginmentOrDefault(String? value,
+  static MainAxisAlignment toMainAxisAlginmentOrDefault(dynamic value,
       {required MainAxisAlignment defaultValue}) {
     return toMainAxisAlginment(value) ?? defaultValue;
   }
 
-  static MainAxisSize toMainAxisSizeOrDefault(String? value,
+  static MainAxisSize toMainAxisSizeOrDefault(dynamic value,
       {required MainAxisSize defaultValue}) {
     return toMainAxisSize(value) ?? defaultValue;
   }
 
-  static CrossAxisAlignment? toCrossAxisAlignment(String? value) {
-    if (value == null) return null;
+  static CrossAxisAlignment? toCrossAxisAlignment(dynamic value) =>
+      switch (value) {
+        'start' => CrossAxisAlignment.start,
+        'end' => CrossAxisAlignment.end,
+        'center' => CrossAxisAlignment.center,
+        'stretch' => CrossAxisAlignment.stretch,
+        'baseline' => CrossAxisAlignment.baseline,
+        _ => null
+      };
 
-    return switch (value) {
-      'start' => CrossAxisAlignment.start,
-      'end' => CrossAxisAlignment.end,
-      'center' => CrossAxisAlignment.center,
-      'stretch' => CrossAxisAlignment.stretch,
-      'baseline' => CrossAxisAlignment.baseline,
-      _ => null
-    };
-  }
+  static MainAxisSize? toMainAxisSize(dynamic value) => switch (value) {
+        'min' => MainAxisSize.min,
+        'max' => MainAxisSize.max,
+        _ => null
+      };
 
-  static MainAxisSize? toMainAxisSize(String? value) {
-    if (value == null) return null;
-
-    return switch (value) {
-      'min' => MainAxisSize.min,
-      'max' => MainAxisSize.max,
-      _ => null
-    };
-  }
-
-  static CrossAxisAlignment toCrossAxisAlignmentOrDefault(String? value,
-      {required CrossAxisAlignment defaultValue}) {
-    return toCrossAxisAlignment(value) ?? defaultValue;
-  }
+  static CrossAxisAlignment toCrossAxisAlignmentOrDefault(dynamic value,
+          {required CrossAxisAlignment defaultValue}) =>
+      toCrossAxisAlignment(value) ?? defaultValue;
 
   static FontWeight toFontWeight(String? weight) {
     switch (weight?.toLowerCase()) {
@@ -86,16 +76,10 @@ class DUIDecoder {
     return FontWeight.normal;
   }
 
-  static FontStyle toFontStyle(String? style) {
-    switch (style) {
-      case 'italic':
-        return FontStyle.italic;
-    }
+  static FontStyle toFontStyle(dynamic style) =>
+      switch (style) { 'italic' => FontStyle.italic, _ => FontStyle.normal };
 
-    return FontStyle.normal;
-  }
-
-  static TextAlign toTextAlign(String? alignment) {
+  static TextAlign toTextAlign(dynamic alignment) {
     switch (alignment) {
       case 'right':
         return TextAlign.right;
@@ -111,7 +95,7 @@ class DUIDecoder {
     return TextAlign.start;
   }
 
-  static TextOverflow toTextOverflow(String? overflow) {
+  static TextOverflow toTextOverflow(dynamic overflow) {
     switch (overflow) {
       case 'fade':
         return TextOverflow.fade;
@@ -126,7 +110,7 @@ class DUIDecoder {
     return TextOverflow.clip;
   }
 
-  static TextDecoration? toTextDecoration(String? textDecorationToken) {
+  static TextDecoration? toTextDecoration(dynamic textDecorationToken) {
     switch (textDecorationToken) {
       case 'underline':
         return TextDecoration.underline;
@@ -142,7 +126,7 @@ class DUIDecoder {
   }
 
   static TextDecorationStyle? toTextDecorationStyle(
-      String? textDecorationStyleToken) {
+      dynamic textDecorationStyleToken) {
     switch (textDecorationStyleToken) {
       case 'dashed':
         return TextDecorationStyle.dashed;
