@@ -10,8 +10,8 @@ import 'models/dui_app_state.dart';
 import 'network/network_client.dart';
 
 const defaultUIConfigAssetPath = 'assets/json/dui_config.json';
-const defaultBaseUrl = 'https://app.digia.tech/hydrator/api';
-// const defaultBaseUrl = 'http://localhost:5000/hydrator/api';
+const defaultBaseUrl = 'https://app.digia.tech/api/v1';
+// const defaultBaseUrl = 'http://localhost:3000/api/v1';
 
 class DigiaUIClient {
   static final DigiaUIClient _instance = DigiaUIClient._();
@@ -87,6 +87,11 @@ class DigiaUIClient {
     Map<String, dynamic> headers = {'digia_projectId': accessKey};
     _instance.networkClient = NetworkClient(dio, _instance.baseUrl, headers);
 
+    // final file = File('config.json');
+    // if (!file.existsSync()) {
+    // file.createSync();
+    // }
+
     final resp = await _instance.networkClient.post(
       path: '/config/getAppConfig',
       fromJsonT: (json) => json as dynamic,
@@ -103,7 +108,6 @@ class DigiaUIClient {
     }
 
     _instance.config = DUIConfig(data);
-
     await DUIPreferences.initialize();
 
     _instance.appState = DUIAppState.fromJson(_instance.config.appState ?? {});

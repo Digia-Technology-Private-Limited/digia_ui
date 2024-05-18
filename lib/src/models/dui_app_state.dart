@@ -7,6 +7,6 @@ class DUIAppState {
 
   factory DUIAppState.fromJson(Map<String, dynamic> json) {
     return DUIAppState(
-        variables: const VariablesJsonConverter().fromJson(json));
+        variables: const VariablesJsonConverter().fromJson(json['variables']));
   }
 }

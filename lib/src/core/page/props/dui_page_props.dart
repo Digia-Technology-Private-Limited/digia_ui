@@ -2,6 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 import '../../../Utils/basic_shared_utils/lodash.dart';
 import '../../../models/variable_def.dart';
+import '../../action/action_prop.dart';
 import 'dui_widget_json_data.dart';
 
 part 'dui_page_props.g.dart';
@@ -9,7 +10,7 @@ part 'dui_page_props.g.dart';
 @JsonSerializable()
 class DUIPageProps {
   String uid;
-  dynamic actions;
+  Map<String, ActionFlow> actions;
   dynamic inputArgs;
   @VariablesJsonConverter()
   Map<String, VariableDef>? variables;
@@ -18,11 +19,11 @@ class DUIPageProps {
 
   DUIPageProps({
     required this.uid,
-    this.actions,
+    Map<String, ActionFlow>? actions,
     this.inputArgs,
     this.variables,
     required this.layout,
-  });
+  }) : actions = actions ?? {};
 
   factory DUIPageProps.fromJson(Map<String, dynamic> json) =>
       _$DUIPagePropsFromJson(json);

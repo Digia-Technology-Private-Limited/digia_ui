@@ -82,6 +82,7 @@ dependencies:
     git:
       url: git@github.com:Digia-Technology-Private-Limited/digia_expr.git
       ref: main
+    # path: ../digia_expr
   chewie: ^1.8.1
   video_player: ^2.8.6
   # path: ../digia_expr
