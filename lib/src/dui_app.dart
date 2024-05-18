@@ -3,18 +3,26 @@ import 'package:flutter/material.dart';
 import 'package:digia_ui/src/core/page/dui_page.dart';
 import 'package:digia_ui/src/digia_ui_client.dart';
 
+enum Environment { staging, production, version }
+
 class DUIApp extends StatelessWidget {
   final String digiaAccessKey;
   final GlobalKey<NavigatorState>? navigatorKey;
   final ThemeData? theme;
   final String? baseUrl;
+  final String? projectId;
+  final Environment environment;
+  final int version;
 
   const DUIApp(
       {super.key,
       required this.digiaAccessKey,
+      required this.environment,
       this.navigatorKey,
       this.theme,
-      this.baseUrl});
+      this.baseUrl,
+      this.projectId,
+      required this.version});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +38,11 @@ class DUIApp extends StatelessWidget {
       title: 'Digia App',
       home: FutureBuilder(
         future: DigiaUIClient.initializeFromNetwork(
-            accessKey: digiaAccessKey, baseUrl: baseUrl),
+            accessKey: digiaAccessKey,
+            environment: Environment.staging,
+            projectId: projectId,
+            version: version,
+            baseUrl: baseUrl),
         builder: (context, snapshot) {
           if (snapshot.connectionState != ConnectionState.done) {
             return const Scaffold(
