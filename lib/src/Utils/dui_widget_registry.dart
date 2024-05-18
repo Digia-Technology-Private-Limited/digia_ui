@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import '../core/builders/bottom_navigation_bar_item_builder.dart';
 import '../core/builders/dui_app_bar_builder.dart';
 import '../core/builders/dui_avatar_builder.dart';
 import '../core/builders/dui_button_builder.dart';
@@ -96,6 +96,8 @@ class DUIWidgetRegistry {
         DUIVerticalDividerBuilder.create(data),
     'digia/customDezervComponent': (data, {registry}) =>
         DUICustomWidgetBuilder.create(data),
+    'digia/navigationBarItem': (data, {registry}) =>
+        DUIBottomNavigationBarItemBuilder.create(data, registry: registry),
     'digia/textField': (data, {registry}) => DUITextFieldBuilder.create(data),
   };
 
