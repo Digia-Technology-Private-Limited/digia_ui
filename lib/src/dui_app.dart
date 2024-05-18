@@ -40,10 +40,8 @@ class DUIApp extends StatelessWidget {
           ),
       title: 'Digia App',
       home: FutureBuilder(
-        // future: DigiaUIClient.initializeFromNetwork(
-        //     accessKey: digiaAccessKey, baseUrl: baseUrl),
-        future: DigiaUIClient.initializeFromData(
-            accessKey: digiaAccessKey, data: json),
+        future: DigiaUIClient.initializeFromNetwork(
+            accessKey: digiaAccessKey, baseUrl: baseUrl),
         builder: (context, snapshot) {
           if (snapshot.connectionState != ConnectionState.done) {
             return const Scaffold(

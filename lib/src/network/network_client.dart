@@ -38,6 +38,18 @@ class NetworkClient {
     // }
   }
 
+  Future<Response<Object?>> execute({
+    required String url,
+    required HttpMethod method,
+    Map<String, dynamic>? headers,
+    Object? data,
+  }) {
+    // TODO: This is user's  network client. Make it more accessible.
+    return Dio().request(url,
+        data: data,
+        options: Options(method: method.stringValue, headers: headers));
+  }
+
   Future<Response<T>> _execute<T>(String path, HttpMethod method,
       {dynamic data, Map<String, dynamic>? headers}) async {
     return dio.request<T>(path,
@@ -53,8 +65,7 @@ class NetworkClient {
           await _execute(path, method, data: data, headers: headers);
 
       if (response.statusCode == 200) {
-        return BaseResponse(
-            isSuccess: true, data: fromJsonT(response.data), error: null);
+        return BaseResponse.fromJson(response.data, fromJsonT);
       } else {
         return BaseResponse(
             isSuccess: false, data: null, error: {'code': response.statusCode});

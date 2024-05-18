@@ -4,22 +4,14 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
 import '../../config_resolver.dart';
-import '../../network/api_request/api_request.dart';
 import '../action/action_prop.dart';
+import '../action/api_handler.dart';
 import '../action/post_action.dart';
+import '../evaluator.dart';
 import '../utils.dart';
 import 'dui_page_event.dart';
 import 'dui_page_state.dart';
 import 'props/dui_page_props.dart';
-
-/// Usecases:
-/// 1. Static Pages
-/// 2. Data Driven Pages
-///
-/// Questions to Answer:
-/// 1. How to figure out if a page is Static or Data Driven
-/// 2. if  Data Driven
-///   2.a: how to access the data post availability. ex: dataSource.jokeName
 
 class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
   final DUIConfig _config;
@@ -29,16 +21,16 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
   DUIPageBloc({
     required String pageUid,
     required DUIConfig config,
+    Map<String, dynamic>? pageArgs,
     this.onExternalMethodCalled,
   })  : _config = config,
         super(DUIPageState(
             pageUid: pageUid,
             isLoading: true,
+            pageArgs: pageArgs,
             props: config.getPageData(pageUid))) {
     on<InitPageEvent>(_init);
     on<SetStateEvent>(_setState);
-    // on<PostActionEvent>(
-    //     (event, emit) => _handleAction(event.context, event.action, emit));
   }
 
   void _init(
@@ -51,12 +43,7 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
 
     final action = onPageLoadAction?.actions.first;
 
-    action?.data['pageParams'] = {
-      ...?action.data['pageParams'],
-      ...?event.pageParams,
-    };
-
-    await _handleAction(null, action!, emit);
+    await _handleAction(event.context, action!, emit);
 
     return;
   }
@@ -73,20 +60,22 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
   }
 
 // TODO: Need Action Handler
-  Future<Object?> _handleAction(BuildContext? context, ActionProp action,
+  Future<Object?> _handleAction(BuildContext context, ActionProp action,
       Emitter<DUIPageState> emit) async {
     switch (action.type) {
-      // TODO: Move to some constant
       case 'Action.loadPage':
         emit(state.copyWith(isLoading: true));
-        final apiMap = _config.getAPIData();
-        final actionDataSourceMap = action.data;
-        final dataSourceId = actionDataSourceMap['dataSourceId'];
-        final variablesMap = actionDataSourceMap['variables'];
-        final apiResponseData =
-            await APICall(_config).execute(dataSourceId, apiMap!, variablesMap);
+        final apiDataSourceId = action.data['dataSourceId'];
+        Map<String, dynamic>? apiDataSourceArgs = action.data['args'];
 
-        emit(state.copyWith(isLoading: false, dataSource: apiResponseData));
+        final apiModel = _config.getApiDataSource(apiDataSourceId);
+
+        final args = apiDataSourceArgs
+            ?.map((key, value) => MapEntry(key, eval(value, context: context)));
+        final response =
+            await ApiHandler.instance.execute(apiModel: apiModel, args: args);
+
+        emit(state.copyWith(isLoading: false, dataSource: response));
         return null;
 
       case 'Action.rebuildPage':

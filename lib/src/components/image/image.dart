@@ -5,6 +5,7 @@ import 'package:octo_image/octo_image.dart';
 
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
 import '../../core/container/dui_container.dart';
+import '../../core/evaluator.dart';
 import '../dui_widget_scope.dart';
 import 'image.props.dart';
 
@@ -43,14 +44,14 @@ class DUIImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ImageProvider imageProvider;
+    final imageSource = eval<String>(props.imageSrc, context: context) ?? '';
     // Network Image
-    if (props.imageSrc.startsWith('http')) {
-      imageProvider = CachedNetworkImageProvider(props.imageSrc);
+    if (imageSource.startsWith('http')) {
+      imageProvider = CachedNetworkImageProvider(imageSource);
     } else {
-      imageProvider = DUIWidgetScope.maybeOf(context)
-              ?.imageProviderFn
-              ?.call(props.imageSrc) ??
-          AssetImage(props.imageSrc);
+      imageProvider =
+          DUIWidgetScope.maybeOf(context)?.imageProviderFn?.call(imageSource) ??
+              AssetImage(imageSource);
     }
 
     return Opacity(

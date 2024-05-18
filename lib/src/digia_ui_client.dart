@@ -10,8 +10,8 @@ import 'models/dui_app_state.dart';
 import 'network/network_client.dart';
 
 const defaultUIConfigAssetPath = 'assets/json/dui_config.json';
-const defaultBaseUrl = 'https://app.digia.tech/hydrator/api';
-// const defaultBaseUrl = 'http://localhost:5000/hydrator/api';
+const defaultBaseUrl = 'https://app.digia.tech/api/v1';
+// const defaultBaseUrl = 'http://localhost:3000/api/v1';
 
 class DigiaUIClient {
   static final DigiaUIClient _instance = DigiaUIClient._();

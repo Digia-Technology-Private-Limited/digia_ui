@@ -1,5 +1,6 @@
 import 'Utils/dui_font.dart';
 import 'core/page/props/dui_page_props.dart';
+import 'network/api_request/api_request.dart';
 
 class DUIConfig {
   final Map<String, dynamic> _themeConfig;
@@ -53,7 +54,7 @@ class DUIConfig {
     return _restConfig['defaultHeaders'];
   }
 
-  Map<String, dynamic>? getAPIData() {
-    return _restConfig['apis'];
+  APIModel getApiDataSource(String id) {
+    return APIModel.fromJson(_restConfig['resources'][id]);
   }
 }

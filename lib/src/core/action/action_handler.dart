@@ -4,6 +4,7 @@ import 'package:json_schema2/json_schema2.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
+import '../../Utils/basic_shared_utils/lodash.dart';
 import '../../Utils/extensions.dart';
 import '../../analytics/mixpanel.dart';
 import '../../components/dui_widget_scope.dart';
@@ -27,9 +28,14 @@ Map<String, ActionHandlerFn> _actionsMap = {
       throw 'Page Id not found in Action Props';
     }
 
-    final pageArgs = action.data['pageArgs'] ?? action.data['args'];
+    Map<String, dynamic>? pageArgs =
+        action.data['pageArgs'] ?? action.data['args'];
 
-    return openDUIPage(pageUid: pageUId, context: context, pageArgs: pageArgs);
+    final evaluatedArgs = pageArgs
+        ?.map((key, value) => MapEntry(key, eval(value, context: context)));
+
+    return openDUIPage(
+        pageUid: pageUId, context: context, pageArgs: evaluatedArgs);
   },
   'Action.navigateToPageNameInBottomSheet': (
       {required action, required context}) {
@@ -52,8 +58,9 @@ Map<String, ActionHandlerFn> _actionsMap = {
     return;
   },
   'Action.openUrl': ({required action, required context}) async {
-    final url = Uri.parse(action.data['url']);
-    final canOpenUrl = await canLaunchUrl(url);
+    final url =
+        eval<String>(action.data['url'], context: context).let(Uri.parse);
+    final canOpenUrl = url != null && await canLaunchUrl(url);
     if (canOpenUrl) {
       return launchUrl(url,
           mode: DUIDecoder.toUriLaunchMode(action.data['launchMode']));

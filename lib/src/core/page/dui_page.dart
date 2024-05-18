@@ -39,8 +39,10 @@ class DUIPage extends StatelessWidget {
     return BlocProvider(
       create: (context) {
         return DUIPageBloc(
-            pageUid: pageUid, onExternalMethodCalled: null, config: _config)
-          ..add(InitPageEvent(pageParams: _pageArgs));
+            pageUid: pageUid,
+            onExternalMethodCalled: null,
+            config: _config,
+            pageArgs: _pageArgs);
       },
       child: _DUIScreen(
           iconDataProvider: iconDataProvider,
@@ -69,6 +71,12 @@ class _DUIScreen extends StatefulWidget {
 }
 
 class _DUIScreenState extends State<_DUIScreen> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<DUIPageBloc>().add(InitPageEvent(context));
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<DUIPageBloc, DUIPageState>(builder: (context, state) {
