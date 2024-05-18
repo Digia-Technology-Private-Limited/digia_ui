@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import '../Utils/basic_shared_utils/dui_decoder.dart';
 import '../Utils/basic_shared_utils/lodash.dart';
 import '../Utils/util_functions.dart';
+import 'builders/dui_icon_builder.dart';
+import 'builders/dui_text_builder.dart';
 import 'evaluator.dart';
 import 'page/dui_page.dart';
 
@@ -37,16 +39,18 @@ Future<Object?> openDUIPageInBottomSheet({
     builder: (ctx) {
       return Column(
         children: [
-          // Padding(
-          //   padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          //   child: Row(
-          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //     children: [
-          //       DUITextBuilder.fromProps(props: style['text']['data']).build(context),
-          //       DUIIconBuilder.fromProps(props: style['icon']['data']).build(context)
-          //     ],
-          //   ),
-          // ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                DUITextBuilder.fromProps(props: style['text']['data'])
+                    .build(context),
+                DUIIconBuilder.fromProps(props: style['icon']['data'])
+                    .build(context)
+              ],
+            ),
+          ),
           Container(
             height: MediaQuery.sizeOf(context).height * 0.6,
             decoration: BoxDecoration(
