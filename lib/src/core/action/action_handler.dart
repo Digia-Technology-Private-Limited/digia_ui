@@ -23,9 +23,15 @@ typedef ActionHandlerFn = Future<dynamic>? Function({
 Map<String, ActionHandlerFn> _actionsMap = {
   'Action.navigateToPage': ({required action, required context}) {
     final String? pageUId = action.data['pageUId'] ?? action.data['pageId'];
+    final String? pageType = action.data['pageType'] ?? action.data['pageType'];
+    final Map<String, dynamic> styleData =
+        action.data['style']['data'] ?? action.data['style']['data'];
 
     if (pageUId == null) {
       throw 'Page Id not found in Action Props';
+    }
+    if (pageType == null) {
+      throw 'Page Type not found in Action Props';
     }
 
     Map<String, dynamic>? pageArgs =
@@ -34,20 +40,23 @@ Map<String, ActionHandlerFn> _actionsMap = {
     final evaluatedArgs = pageArgs
         ?.map((key, value) => MapEntry(key, eval(value, context: context)));
 
-    return openDUIPage(
-        pageUid: pageUId, context: context, pageArgs: evaluatedArgs);
+    return pageType == 'bottomSheet'
+        ? openDUIPageInBottomSheet(
+            pageUid: pageUId, context: context, style: styleData)
+        : openDUIPage(
+            pageUid: pageUId, context: context, pageArgs: evaluatedArgs);
   },
-  'Action.navigateToPageNameInBottomSheet': (
-      {required action, required context}) {
-    final String? pageUId = action.data['pageUId'] ?? action.data['pageId'];
-
-    if (pageUId == null) {
-      throw 'Page Id not found in Action Props';
-    }
-    final pageArgs = action.data['pageArgs'] ?? action.data['args'];
-    return openDUIPageInBottomSheet(
-        pageUid: pageUId, context: context, pageArgs: pageArgs);
-  },
+  // 'Action.navigateToPageNameInBottomSheet': (
+  //     {required action, required context}) {
+  //   final String? pageUId = action.data['pageUId'] ?? action.data['pageId'];
+  //
+  //   if (pageUId == null) {
+  //     throw 'Page Id not found in Action Props';
+  //   }
+  //   final pageArgs = action.data['pageArgs'] ?? action.data['args'];
+  //   return openDUIPageInBottomSheet(
+  //       pageUid: pageUId, context: context, pageArgs: pageArgs);
+  // },
   'Action.pop': ({required action, required context}) {
     if (action.data['maybe'] == true) {
       Navigator.of(context).maybePop();
