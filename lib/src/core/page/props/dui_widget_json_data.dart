@@ -15,6 +15,10 @@ class DUIWidgetJsonData {
   Map<String, dynamic> get containerProps => _containerProps;
   Map<String, dynamic> get dataRef => _dataRef;
 
+  DUIWidgetJsonData? getChild(String key) {
+    return children[key]?.firstOrNull;
+  }
+
   DUIWidgetJsonData({
     required this.type,
     Map<String, dynamic>? props,

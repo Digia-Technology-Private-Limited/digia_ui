@@ -8,7 +8,9 @@ part of 'dui_page_props.dart';
 
 DUIPageProps _$DUIPagePropsFromJson(Map<String, dynamic> json) => DUIPageProps(
       uid: json['uid'] as String,
-      actions: json['actions'],
+      actions: (json['actions'] as Map<String, dynamic>?)?.map(
+        (k, e) => MapEntry(k, ActionFlow.fromJson(e)),
+      ),
       inputArgs: json['inputArgs'],
       variables: _$JsonConverterFromJson<Map<String, dynamic>,
               Map<String, VariableDef>>(

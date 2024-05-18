@@ -5,7 +5,9 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
 import '../../config_resolver.dart';
 import '../action/action_prop.dart';
+import '../action/api_handler.dart';
 import '../action/post_action.dart';
+import '../evaluator.dart';
 import '../utils.dart';
 import 'dui_page_event.dart';
 import 'dui_page_state.dart';
@@ -19,16 +21,16 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
   DUIPageBloc({
     required String pageUid,
     required DUIConfig config,
+    Map<String, dynamic>? pageArgs,
     this.onExternalMethodCalled,
   })  : _config = config,
         super(DUIPageState(
             pageUid: pageUid,
             isLoading: true,
+            pageArgs: pageArgs,
             props: config.getPageData(pageUid))) {
     on<InitPageEvent>(_init);
     on<SetStateEvent>(_setState);
-    // on<PostActionEvent>(
-    //     (event, emit) => _handleAction(event.context, event.action, emit));
   }
 
   void _init(
@@ -39,14 +41,9 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
     // It will either be Action.loadPage or Action.buildPage
     final onPageLoadAction = state.props.actions['onPageLoad'];
 
-    final action = ActionProp.fromJson(onPageLoadAction);
+    final action = onPageLoadAction?.actions.first;
 
-    action.data['pageParams'] = {
-      ...?action.data['pageParams'],
-      ...?event.pageParams,
-    };
-
-    await _handleAction(null, action, emit);
+    await _handleAction(event.context, action!, emit);
 
     return;
   }
@@ -63,11 +60,24 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
   }
 
 // TODO: Need Action Handler
-  Future<Object?> _handleAction(BuildContext? context, ActionProp action,
+  Future<Object?> _handleAction(BuildContext context, ActionProp action,
       Emitter<DUIPageState> emit) async {
     switch (action.type) {
-      // TODO: Move to some constant
       case 'Action.loadPage':
+        emit(state.copyWith(isLoading: true));
+        final apiDataSourceId = action.data['dataSourceId'];
+        Map<String, dynamic>? apiDataSourceArgs = action.data['args'];
+
+        final apiModel = _config.getApiDataSource(apiDataSourceId);
+
+        final args = apiDataSourceArgs
+            ?.map((key, value) => MapEntry(key, eval(value, context: context)));
+        final response =
+            await ApiHandler.instance.execute(apiModel: apiModel, args: args);
+
+        emit(state.copyWith(isLoading: false, dataSource: response));
+        return null;
+
       case 'Action.rebuildPage':
         emit(state.copyWith(isLoading: true));
         final pagePropsJson = await PostAction(_config).execute(action);
@@ -97,6 +107,7 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
         if (context != null) {
           return Navigator.of(context).maybePop();
         }
+
       case 'Action.callExternalMethod':
         onExternalMethodCalled?.call(
             action.data['methodId'] ?? '', action.data['args']);

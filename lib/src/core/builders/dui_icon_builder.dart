@@ -35,6 +35,7 @@ class DUIIconBuilder extends DUIWidgetBuilder {
 
     return Icon(iconData,
         size: eval<double>(props['iconSize'], context: context),
-        color: eval<String>(props['iconColor'], context: context).let(toColor));
+        color: eval<String>(props['iconColor'], context: context)
+            .letIfTrue(toColor));
   }
 }
