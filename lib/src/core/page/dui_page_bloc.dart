@@ -93,7 +93,7 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
       case 'Action.navigateToPage':
         final pageUId = action.data['pageId'];
         return openDUIPage(
-            pageUid: pageUId, context: context!, pageArgs: action.data['args']);
+            pageUid: pageUId, context: context, pageArgs: action.data['args']);
 
       case 'Action.openUrl':
         final url = Uri.parse(action.data['url']);
@@ -104,9 +104,7 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
         }
 
       case 'Action.pop':
-        if (context != null) {
-          return Navigator.of(context).maybePop();
-        }
+        return Navigator.of(context).maybePop();
 
       case 'Action.callExternalMethod':
         onExternalMethodCalled?.call(
