@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import '../core/builders/bottom_navigation_bar_item_builder.dart';
 import '../core/builders/dui_app_bar_builder.dart';
 import '../core/builders/dui_avatar_builder.dart';
 import '../core/builders/dui_button_builder.dart';
@@ -24,6 +24,7 @@ import '../core/builders/dui_stack_builder.dart';
 import '../core/builders/dui_tab_view_builder.dart';
 import '../core/builders/dui_tab_view_item_builder.dart';
 import '../core/builders/dui_text_builder.dart';
+import '../core/builders/dui_text_field_builder.dart';
 import '../core/builders/dui_vertical_divider_builder.dart';
 import '../core/builders/dui_video_player_builder.dart';
 import '../core/builders/dui_webview_builder.dart';
@@ -94,7 +95,10 @@ class DUIWidgetRegistry {
     'digia/verticalDivider': (data, {registry}) =>
         DUIVerticalDividerBuilder.create(data),
     'digia/customDezervComponent': (data, {registry}) =>
-        DUICustomWidgetBuilder.create(data)
+        DUICustomWidgetBuilder.create(data),
+    'digia/navigationBarItem': (data, {registry}) =>
+        DUIBottomNavigationBarItemBuilder.create(data, registry: registry),
+    'digia/textField': (data, {registry}) => DUITextFieldBuilder.create(data),
   };
 
   static const DUIWidgetRegistry shared = DUIWidgetRegistry();
