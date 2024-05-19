@@ -7,5 +7,5 @@ const String baseUrl = 'https://app.digia.tech/api/v1';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(DUIApp(digiaAccessKey: "66444872c15d1a24707d58c8", baseUrl: baseUrl));
+  runApp(const DUIApp(digiaAccessKey: "66444872c15d1a24707d58c8", baseUrl: baseUrl, environment: Environment.staging, version: 2,));
 }

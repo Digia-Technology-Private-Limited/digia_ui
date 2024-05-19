@@ -3,10 +3,12 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
 
-import 'config_resolver.dart';
+import '../digia_ui.dart';
 import 'core/pref/dui_preferences.dart';
 import 'digia_ui_service.dart';
 import 'models/dui_app_state.dart';
+import 'network/api_response/base_response.dart';
+import 'network/core/types.dart';
 import 'network/network_client.dart';
 
 const defaultUIConfigAssetPath = 'assets/json/dui_config.json';
@@ -25,6 +27,9 @@ class DigiaUIClient {
   late NetworkClient networkClient;
   late DUIConfig config;
   late DUIAppState appState;
+  late int version;
+  late Environment environment;
+  late String projectId;
 
   bool _isInitialized = false;
 
@@ -81,23 +86,46 @@ class DigiaUIClient {
   }
 
   static initializeFromNetwork(
-      {required String accessKey, String? baseUrl, Dio? dio}) async {
+      {required String accessKey,
+      required Environment environment,
+      String? projectId,
+      required int version,
+      String? baseUrl,
+      Dio? dio}) async {
+    BaseResponse resp;
+    _instance.environment = environment;
+    _instance.projectId = projectId ?? '';
+    _instance.version = version;
     _instance.accessKey = accessKey;
     _instance.baseUrl = baseUrl ?? defaultBaseUrl;
     Map<String, dynamic> headers = {'digia_projectId': accessKey};
     _instance.networkClient = NetworkClient(dio, _instance.baseUrl, headers);
 
-    // final file = File('config.json');
-    // if (!file.existsSync()) {
-    // file.createSync();
-    // }
+    String requestPath;
+    dynamic requestData;
+    switch (environment) {
+      case Environment.staging:
+        requestPath = '/hydrator/api/config/getAppConfig';
+        break;
+      case Environment.production:
+        requestPath = '/hydrator/api/config/getAppConfigProduction';
+        break;
+      case Environment.version:
+        requestPath = '/hydrator/api/config/getAppConfigForVersion';
+        requestData = jsonEncode(
+          {'version': version},
+        );
+        break;
+      default:
+        requestPath = '/config/getAppConfig';
+    }
 
-    final resp = await _instance.networkClient.post(
-      path: '/config/getAppConfig',
-      fromJsonT: (json) => json as dynamic,
-      data: jsonEncode(
-        {'projectId': accessKey},
-      ),
+    resp = await _instance.networkClient.request(
+      HttpMethod.post,
+      requestPath,
+      headers: headers,
+      (json) => json as dynamic,
+      data: requestData,
     );
 
     final data = resp.data['response'] as Map<String, dynamic>?;
