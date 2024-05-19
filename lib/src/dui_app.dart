@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'analytics/mixpanel.dart';
 import 'core/app_state_provider.dart';
 import 'core/page/dui_page.dart';
 import 'digia_ui_client.dart';
@@ -19,16 +18,16 @@ class DUIApp extends StatelessWidget {
 
   // final Map<String, dynamic> initProperties;
 
-  const DUIApp({super.key,
-    required this.digiaAccessKey,
-    required this.environment,
-    this.navigatorKey,
-    this.theme,
-    this.baseUrl,
-    this.mixpanelKey,
-    this.projectId,
-    required this.version});
-
+  const DUIApp(
+      {super.key,
+      required this.digiaAccessKey,
+      required this.environment,
+      this.navigatorKey,
+      this.theme,
+      this.baseUrl,
+      this.mixpanelKey,
+      this.projectId,
+      required this.version});
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +88,7 @@ class DUIApp extends StatelessWidget {
           }
 
           final initialRouteData =
-          DigiaUIClient.getConfigResolver().getfirstPageData();
+              DigiaUIClient.getConfigResolver().getfirstPageData();
 
           return AppStateProvider(
               state: DigiaUIClient.instance.appState.variables,
@@ -210,7 +209,7 @@ Map<String, dynamic> json = {
                       'type': 'digia/text',
                       'props': {
                         'text':
-                        'Discover Bytes, an intuitive and versatile Content Platform powered by Digia.',
+                            'Discover Bytes, an intuitive and versatile Content Platform powered by Digia.',
                         'textStyle': {'fontToken': 'titlemedium'},
                         'alignment': 'start'
                       },
@@ -351,7 +350,7 @@ Map<String, dynamic> json = {
                       'type': 'digia/text',
                       'props': {
                         'text':
-                        'Discover Bytes, an intuitive and versatile Content Platform powered by Digia.',
+                            'Discover Bytes, an intuitive and versatile Content Platform powered by Digia.',
                         'textStyle': {'fontToken': 'titlemedium'},
                         'alignment': 'start'
                       },
@@ -674,7 +673,7 @@ Map<String, dynamic> json2 = {
                       'type': 'digia/text',
                       'props': {
                         'text':
-                        'Discover Bytes, an intuitive and versatile Content Platform powered by Digia.',
+                            'Discover Bytes, an intuitive and versatile Content Platform powered by Digia.',
                         'textStyle': {'fontToken': 'titlemedium'},
                         'alignment': 'start'
                       },

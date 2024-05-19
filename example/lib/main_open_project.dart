@@ -11,6 +11,6 @@ void main() async {
     digiaAccessKey: "66444872c15d1a24707d58c8",
     baseUrl: baseUrl,
     environment: Environment.staging,
-    version: 2,
+    version: 1,
   ));
 }
