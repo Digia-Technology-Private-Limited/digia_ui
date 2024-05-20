@@ -29,8 +29,11 @@ Map<String, ActionHandlerFn> _actionsMap = {
     }
 
     final String openAs = action.data['pageType'] ?? 'fullPage';
-    final Map<String, dynamic> bottomSheetStyling =
-        action.data.valueFor(keyPath: 'style.data') ?? {};
+    final Map<String, dynamic> bottomSheetStyling = action.data['style']
+        // fixme not working as below
+        // action.data.valueFor(keyPath: 'style.data')
+        ??
+        {};
 
     Map<String, dynamic>? pageArgs =
         action.data['pageArgs'] ?? action.data['args'];
