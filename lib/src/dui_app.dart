@@ -1,31 +1,34 @@
 import 'package:flutter/material.dart';
 
-import 'analytics/mixpanel.dart';
 import 'core/app_state_provider.dart';
 import 'core/page/dui_page.dart';
 import 'digia_ui_client.dart';
+
+enum Environment { staging, production, version }
 
 class DUIApp extends StatelessWidget {
   final String digiaAccessKey;
   final GlobalKey<NavigatorState>? navigatorKey;
   final ThemeData? theme;
   final String? baseUrl;
+  final String? projectId;
+  final Environment environment;
+  final int version;
   final String? mixpanelKey;
+
   // final Map<String, dynamic> initProperties;
 
-  DUIApp({
+  const DUIApp({
     super.key,
     required this.digiaAccessKey,
+    required this.environment,
     this.navigatorKey,
     this.theme,
-    this.mixpanelKey,
     this.baseUrl,
-    // required this.initProperties
-  }) {
-    if (mixpanelKey != null) {
-      MixpanelManager.init(mixpanelKey!, digiaAccessKey);
-    }
-  }
+    this.mixpanelKey,
+    this.projectId,
+    required this.version,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +44,12 @@ class DUIApp extends StatelessWidget {
       title: 'Digia App',
       home: FutureBuilder(
         future: DigiaUIClient.initializeFromNetwork(
-            accessKey: digiaAccessKey, baseUrl: baseUrl),
+          accessKey: digiaAccessKey,
+          environment: Environment.staging,
+          projectId: projectId,
+          version: version,
+          baseUrl: baseUrl,
+        ),
         builder: (context, snapshot) {
           if (snapshot.connectionState != ConnectionState.done) {
             return const Scaffold(
