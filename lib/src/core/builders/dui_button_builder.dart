@@ -27,16 +27,16 @@ class DUIButtonBuilder extends DUIWidgetBuilder {
         data.props['disabledStyle'] as Map<String, dynamic>? ?? {};
 
     ButtonStyle style = ButtonStyle(
-        shape: WidgetStateProperty.all(toButtonShape(data.props['shape'])),
-        padding: WidgetStateProperty.all(DUIDecoder.toEdgeInsets(
+        shape: MaterialStateProperty.all(toButtonShape(data.props['shape'])),
+        padding: MaterialStateProperty.all(DUIDecoder.toEdgeInsets(
             defaultStyleJson['padding'],
             or: const EdgeInsets.symmetric(horizontal: 12, vertical: 4))),
-        elevation: WidgetStateProperty.all(
+        elevation: MaterialStateProperty.all(
             NumDecoder.toDouble(defaultStyleJson['elevation'])),
-        shadowColor: WidgetStateProperty.all(defaultStyleJson['shadowColor']),
+        shadowColor: MaterialStateProperty.all(defaultStyleJson['shadowColor']),
         alignment: DUIDecoder.toAlignment(defaultStyleJson['alignment']),
-        backgroundColor: WidgetStateProperty.resolveWith((states) {
-          if (states.contains(WidgetState.disabled)) {
+        backgroundColor: MaterialStateProperty.resolveWith((states) {
+          if (states.contains(MaterialState.disabled)) {
             return ifNotNull(disabledStyleJson['backgroundColor'] as String?,
                 (p0) => toColor(p0));
           }
