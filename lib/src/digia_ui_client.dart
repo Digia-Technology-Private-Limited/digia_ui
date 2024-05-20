@@ -1,9 +1,11 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
 
 import '../digia_ui.dart';
+import 'Utils/basic_shared_utils/random_gen.dart';
 import 'core/pref/dui_preferences.dart';
 import 'digia_ui_service.dart';
 import 'models/dui_app_state.dart';
@@ -92,38 +94,46 @@ class DigiaUIClient {
       required int version,
       String? baseUrl,
       Dio? dio}) async {
+    await DUIPreferences.initialize();
     BaseResponse resp;
     _instance.environment = environment;
     _instance.projectId = projectId ?? '';
     _instance.version = version;
     _instance.accessKey = accessKey;
     _instance.baseUrl = baseUrl ?? defaultBaseUrl;
-    Map<String, dynamic> headers = {'digia_projectId': accessKey};
-    _instance.networkClient = NetworkClient(dio, _instance.baseUrl, headers);
+
+    Map<String, dynamic> apiParams = {
+      'digia_projectId': accessKey,
+      'version': version,
+      'platform': instance._getPlatform(),
+      'deviceId': await instance._getDeviceId(DUIPreferences.instance)
+    };
+    _instance.networkClient = NetworkClient(dio, _instance.baseUrl, apiParams);
 
     String requestPath;
     dynamic requestData;
     switch (environment) {
       case Environment.staging:
         requestPath = '/hydrator/api/config/getAppConfig';
+        requestData = jsonEncode(apiParams);
         break;
       case Environment.production:
         requestPath = '/hydrator/api/config/getAppConfigProduction';
+        requestData = jsonEncode(apiParams);
         break;
       case Environment.version:
         requestPath = '/hydrator/api/config/getAppConfigForVersion';
-        requestData = jsonEncode(
-          {'version': version},
-        );
+        requestData = jsonEncode(apiParams);
         break;
       default:
         requestPath = '/config/getAppConfig';
+        requestData = jsonEncode(apiParams);
     }
 
     resp = await _instance.networkClient.request(
       HttpMethod.post,
       requestPath,
-      headers: headers,
+      headers: apiParams,
       (json) => json as dynamic,
       data: requestData,
     );
@@ -136,7 +146,6 @@ class DigiaUIClient {
     }
 
     _instance.config = DUIConfig(data);
-    await DUIPreferences.initialize();
 
     _instance.appState = DUIAppState.fromJson(_instance.config.appState ?? {});
 
@@ -148,5 +157,32 @@ class DigiaUIClient {
         baseUrl: _instance.baseUrl,
         httpClient: _instance.networkClient,
         config: _instance.config);
+  }
+
+  Future<String> _getDeviceId(DUIPreferences pref) async {
+    String? deviceId = pref.getString('deviceId');
+    if (deviceId == null) {
+      deviceId = RandomIdGenerator.getBase64(16);
+      await pref.setString('deviceId', deviceId);
+      return deviceId;
+    } else {
+      return deviceId;
+    }
+  }
+
+  String _getPlatform() {
+    if (Platform.isIOS) {
+      return 'ios';
+    } else if (Platform.isFuchsia) {
+      return 'fuchsia';
+    } else if (Platform.isMacOS) {
+      return 'mac';
+    } else if (Platform.isWindows) {
+      return 'windows';
+    } else if (Platform.isLinux) {
+      return 'linux';
+    } else {
+      return 'android';
+    }
   }
 }

@@ -18,16 +18,17 @@ class DUIApp extends StatelessWidget {
 
   // final Map<String, dynamic> initProperties;
 
-  const DUIApp(
-      {super.key,
-      required this.digiaAccessKey,
-      required this.environment,
-      this.navigatorKey,
-      this.theme,
-      this.baseUrl,
-      this.mixpanelKey,
-      this.projectId,
-      required this.version});
+  const DUIApp({
+    super.key,
+    required this.digiaAccessKey,
+    required this.environment,
+    this.navigatorKey,
+    this.theme,
+    this.baseUrl,
+    this.mixpanelKey,
+    this.projectId,
+    required this.version,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -43,11 +44,12 @@ class DUIApp extends StatelessWidget {
       title: 'Digia App',
       home: FutureBuilder(
         future: DigiaUIClient.initializeFromNetwork(
-            accessKey: digiaAccessKey,
-            environment: Environment.staging,
-            projectId: projectId,
-            version: version,
-            baseUrl: baseUrl),
+          accessKey: digiaAccessKey,
+          environment: Environment.staging,
+          projectId: projectId,
+          version: version,
+          baseUrl: baseUrl,
+        ),
         builder: (context, snapshot) {
           if (snapshot.connectionState != ConnectionState.done) {
             return const Scaffold(
