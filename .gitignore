@@ -48,4 +48,5 @@ pubspec.lock
 .vscode/launch.json
 example/ios/Podfile.lock
 macos/Podfile.lock
-android/local.properties
+# FVM Version Cache
+.fvm/
