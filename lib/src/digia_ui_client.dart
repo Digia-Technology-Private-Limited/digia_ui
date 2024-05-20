@@ -3,9 +3,9 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
+import 'package:platform_device_id_v3/platform_device_id.dart';
 
 import '../digia_ui.dart';
-import 'Utils/basic_shared_utils/random_gen.dart';
 import 'core/pref/dui_preferences.dart';
 import 'digia_ui_service.dart';
 import 'models/dui_app_state.dart';
@@ -106,7 +106,7 @@ class DigiaUIClient {
       'digia_projectId': accessKey,
       'version': version,
       'platform': instance._getPlatform(),
-      'deviceId': await instance._getDeviceId(DUIPreferences.instance)
+      'deviceId': await PlatformDeviceId.getDeviceId
     };
     _instance.networkClient = NetworkClient(dio, _instance.baseUrl, apiParams);
 
@@ -157,17 +157,6 @@ class DigiaUIClient {
         baseUrl: _instance.baseUrl,
         httpClient: _instance.networkClient,
         config: _instance.config);
-  }
-
-  Future<String> _getDeviceId(DUIPreferences pref) async {
-    String? deviceId = pref.getString('deviceId');
-    if (deviceId == null) {
-      deviceId = RandomIdGenerator.getBase64(16);
-      await pref.setString('deviceId', deviceId);
-      return deviceId;
-    } else {
-      return deviceId;
-    }
   }
 
   String _getPlatform() {
