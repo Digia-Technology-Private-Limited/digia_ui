@@ -59,6 +59,7 @@ class DUIDezervDialPadBuilder extends DUIWidgetBuilder {
           child: Text(
             number.toString(),
             style: GoogleFonts.inter(
+              color: const Color(0xFFFFFFFF),
               fontWeight: FontWeight.w600,
               fontSize: 20,
             ),
