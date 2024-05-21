@@ -32,7 +32,6 @@ class DigiaUIClient {
   late DUIAppState appState;
   late int version;
   late Environment environment;
-  late String projectId;
 
   bool _isInitialized = false;
 
@@ -98,7 +97,6 @@ class DigiaUIClient {
     await DUIPreferences.initialize();
     BaseResponse resp;
     _instance.environment = environment;
-    _instance.projectId = projectId ?? '';
     _instance.version = version;
     _instance.accessKey = accessKey;
     _instance.baseUrl = baseUrl ?? defaultBaseUrl;
