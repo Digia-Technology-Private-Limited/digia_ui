@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:platform_device_id_v3/platform_device_id.dart';
 
@@ -104,6 +105,7 @@ class DigiaUIClient {
 
     Map<String, dynamic> apiParams = {
       'digia_projectId': accessKey,
+      'projectId': accessKey,
       'version': version,
       'platform': instance._getPlatform(),
       'deviceId': await PlatformDeviceId.getDeviceId
@@ -114,15 +116,15 @@ class DigiaUIClient {
     dynamic requestData;
     switch (environment) {
       case Environment.staging:
-        requestPath = '/hydrator/api/config/getAppConfig';
+        requestPath = '/config/getAppConfig';
         requestData = jsonEncode(apiParams);
         break;
       case Environment.production:
-        requestPath = '/hydrator/api/config/getAppConfigProduction';
+        requestPath = '/config/getAppConfigProduction';
         requestData = jsonEncode(apiParams);
         break;
       case Environment.version:
-        requestPath = '/hydrator/api/config/getAppConfigForVersion';
+        requestPath = '/config/getAppConfigForVersion';
         requestData = jsonEncode(apiParams);
         break;
       default:
@@ -160,18 +162,12 @@ class DigiaUIClient {
   }
 
   String _getPlatform() {
-    if (Platform.isIOS) {
-      return 'ios';
-    } else if (Platform.isFuchsia) {
-      return 'fuchsia';
-    } else if (Platform.isMacOS) {
-      return 'mac';
-    } else if (Platform.isWindows) {
-      return 'windows';
-    } else if (Platform.isLinux) {
-      return 'linux';
-    } else {
-      return 'android';
-    }
+    if (kIsWeb) return 'mobile_web';
+
+    if (Platform.isIOS) return 'ios';
+
+    if (Platform.isAndroid) return 'android';
+
+    return 'mobile_web';
   }
 }
