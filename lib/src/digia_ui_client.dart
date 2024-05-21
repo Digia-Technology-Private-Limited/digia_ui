@@ -91,24 +91,33 @@ class DigiaUIClient {
       {required String accessKey,
       required Environment environment,
       String? projectId,
-      required int version,
+      int? version,
       String? baseUrl,
       Dio? dio}) async {
     await DUIPreferences.initialize();
     BaseResponse resp;
     _instance.environment = environment;
     _instance.projectId = projectId ?? '';
-    _instance.version = version;
+    _instance.version = version!;
     _instance.accessKey = accessKey;
     _instance.baseUrl = baseUrl ?? defaultBaseUrl;
 
     Map<String, dynamic> apiParams = {
       'digia_projectId': accessKey,
-      'version': version,
       'platform': instance._getPlatform(),
       'deviceId': await PlatformDeviceId.getDeviceId
     };
-    _instance.networkClient = NetworkClient(dio, _instance.baseUrl, apiParams);
+    Map<String, dynamic> apiParamsWithVersion = {
+      'digia_projectId': accessKey,
+      'platform': instance._getPlatform(),
+      'version': version,
+      'deviceId': await PlatformDeviceId.getDeviceId
+    };
+    _instance.networkClient = NetworkClient(
+      dio,
+      _instance.baseUrl,
+      environment == Environment.version ? apiParamsWithVersion : apiParams,
+    );
 
     String requestPath;
     dynamic requestData;
@@ -123,7 +132,7 @@ class DigiaUIClient {
         break;
       case Environment.version:
         requestPath = '/hydrator/api/config/getAppConfigForVersion';
-        requestData = jsonEncode(apiParams);
+        requestData = jsonEncode(apiParamsWithVersion);
         break;
       default:
         requestPath = '/config/getAppConfig';

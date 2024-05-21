@@ -13,7 +13,7 @@ class DUIApp extends StatelessWidget {
   final String? baseUrl;
   final String? projectId;
   final Environment environment;
-  final int version;
+  final int? version;
   final String? mixpanelKey;
 
   // final Map<String, dynamic> initProperties;
@@ -27,7 +27,7 @@ class DUIApp extends StatelessWidget {
     this.baseUrl,
     this.mixpanelKey,
     this.projectId,
-    required this.version,
+    this.version,
   });
 
   @override
@@ -47,7 +47,7 @@ class DUIApp extends StatelessWidget {
           accessKey: digiaAccessKey,
           environment: Environment.staging,
           projectId: projectId,
-          version: version,
+          version: version ?? 1,
           baseUrl: baseUrl,
         ),
         builder: (context, snapshot) {
