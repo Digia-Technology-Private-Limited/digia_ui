@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:platform_device_id_v3/platform_device_id.dart';
 
@@ -169,18 +170,12 @@ class DigiaUIClient {
   }
 
   String _getPlatform() {
-    if (Platform.isIOS) {
-      return 'ios';
-    } else if (Platform.isFuchsia) {
-      return 'fuchsia';
-    } else if (Platform.isMacOS) {
-      return 'mac';
-    } else if (Platform.isWindows) {
-      return 'windows';
-    } else if (Platform.isLinux) {
-      return 'linux';
-    } else {
-      return 'android';
-    }
+    if (kIsWeb) return 'mobile_web';
+
+    if (Platform.isIOS) return 'ios';
+
+    if (Platform.isAndroid) return 'android';
+
+    return 'mobile_web';
   }
 }
