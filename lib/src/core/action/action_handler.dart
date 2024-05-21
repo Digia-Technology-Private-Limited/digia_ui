@@ -1,3 +1,4 @@
+import 'package:derry/error.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:json_schema2/json_schema2.dart';
@@ -8,6 +9,7 @@ import '../../Utils/basic_shared_utils/lodash.dart';
 import '../../Utils/extensions.dart';
 import '../../analytics/mixpanel.dart';
 import '../../components/dui_widget_scope.dart';
+import '../../types.dart';
 import '../app_state_provider.dart';
 import '../evaluator.dart';
 import '../page/dui_page_bloc.dart';
@@ -75,11 +77,16 @@ Map<String, ActionHandlerFn> _actionsMap = {
       throw 'Not allowed to open url: $url';
     }
   },
-  'Action.callExternalFunction': ({required action, required context}) {
-    final handler = DUIWidgetScope.maybeOf(context)?.externalFunctionHandler;
+  'Action.handleDigiaMessage': ({required action, required context}) {
+    final handler = DUIWidgetScope.maybeOf(context)?.onMessageReceived;
     if (handler == null) return;
 
-    handler(context, action.data['methodId'], action.data['args']);
+    final name = action.data['name'];
+    final body = action.data['body'];
+
+    handler(MessagePayload(
+        context: context, name: name, body: _eval(body, context)));
+
     return;
   },
   'Action.setPageState': ({required action, required context}) {
