@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../digia_ui.dart';
 import '../../Utils/basic_shared_utils/lodash.dart';
-import '../../analytics/mixpanel.dart';
 import '../../components/dui_widget_scope.dart';
 import '../../types.dart';
 import 'dui_page_bloc.dart';
@@ -30,8 +29,8 @@ class DUIPage extends StatelessWidget {
       DUIConfig? config})
       : _pageArgs = pageArgs,
         _config = config ?? DigiaUIClient.instance.config {
-    MixpanelManager.instance
-        ?.track('startPage', properties: {'pageUid': pageUid});
+    // MixpanelManager.instance
+    //     ?.track('startPage', properties: {'pageUid': pageUid});
   }
 
   @override

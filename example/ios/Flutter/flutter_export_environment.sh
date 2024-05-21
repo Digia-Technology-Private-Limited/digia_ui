@@ -1,6 +1,6 @@
 #!/bin/sh
 # This is a generated file; do not edit or check into version control.
-export "FLUTTER_ROOT=D:\MyStuf\Programing\Softwares\flutter"
+export "FLUTTER_ROOT=D:\MyStuf\Programing\Softwares\flutter 3.19.0"
 export "FLUTTER_APPLICATION_PATH=C:\Users\HP\AndroidStudioProjects\digia_ui\example"
 export "COCOAPODS_PARALLEL_CODE_SIGN=true"
 export "FLUTTER_TARGET=lib\main.dart"

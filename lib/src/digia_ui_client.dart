@@ -123,15 +123,15 @@ class DigiaUIClient {
     dynamic requestData;
     switch (environment) {
       case Environment.staging:
-        requestPath = '/hydrator/api/config/getAppConfig';
+        requestPath = '/config/getAppConfig';
         requestData = jsonEncode(apiParams);
         break;
       case Environment.production:
-        requestPath = '/hydrator/api/config/getAppConfigProduction';
+        requestPath = '/config/getAppConfigProduction';
         requestData = jsonEncode(apiParams);
         break;
       case Environment.version:
-        requestPath = '/hydrator/api/config/getAppConfigForVersion';
+        requestPath = '/config/getAppConfigForVersion';
         requestData = jsonEncode(apiParamsWithVersion);
         break;
       default:

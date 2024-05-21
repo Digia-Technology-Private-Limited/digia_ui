@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../Utils/basic_shared_utils/lodash.dart';
 import '../Utils/dui_widget_registry.dart';
-import '../analytics/mixpanel.dart';
 import '../components/dui_widget_creator_fn.dart';
 import '../components/utils/DUIStyleClass/dui_style_class.dart';
 import 'action/action_prop.dart';
@@ -22,13 +21,13 @@ abstract class DUIWidgetBuilder {
 
   Widget buildWithContainerProps(BuildContext context) {
     var output = build(context);
-    MixpanelManager.instance?.track('loadedWidget', properties: {
-      'data': {
-        'type': data.type,
-        'props': data.props,
-        'container_props': data.containerProps
-      }
-    });
+    // MixpanelManager.instance?.track('loadedWidget', properties: {
+    //   'data': {
+    //     'type': data.type,
+    //     'props': data.props,
+    //     'container_props': data.containerProps
+    //   }
+    // });
     if (data.containerProps.isEmpty) {
       return output;
     }
