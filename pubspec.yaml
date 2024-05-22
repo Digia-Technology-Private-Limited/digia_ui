@@ -86,7 +86,8 @@ dependencies:
   chewie: ^1.8.1
   video_player: ^2.8.6
   derry: ^1.5.0
-  platform_device_id_v3: ^1.0.0
+  # device_info_plus: ^10.1.0
+  uuid: ^4.4.0
   # path: ../digia_expr
 
 dev_dependencies:
