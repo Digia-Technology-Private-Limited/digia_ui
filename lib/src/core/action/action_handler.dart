@@ -75,7 +75,7 @@ Map<String, ActionHandlerFn> _actionsMap = {
       throw 'Not allowed to open url: $url';
     }
   },
-  'Action.callExternalFunction': ({required action, required context}) {
+  'Action.callExternalMethod': ({required action, required context}) {
     final handler = DUIWidgetScope.maybeOf(context)?.externalFunctionHandler;
     if (handler == null) return;
 
