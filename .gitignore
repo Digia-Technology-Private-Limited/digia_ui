@@ -8,6 +8,8 @@
 .buildlog/
 .history
 .svn/
+.fvm/
+.fvmrc
 migrate_working_dir/
 
 # IntelliJ related
@@ -48,5 +50,7 @@ pubspec.lock
 .vscode/launch.json
 example/ios/Podfile.lock
 macos/Podfile.lock
+
 # FVM Version Cache
 .fvm/
+

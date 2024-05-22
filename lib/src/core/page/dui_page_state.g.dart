@@ -89,7 +89,7 @@ class _$DUIPageStateCWProxyImpl implements _$DUIPageStateCWProxy {
       dataSource: dataSource == const $CopyWithPlaceholder()
           ? _value.dataSource
           // ignore: cast_nullable_to_non_nullable
-          : dataSource,
+          : dataSource as Object?,
     );
   }
 }

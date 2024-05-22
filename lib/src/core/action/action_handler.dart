@@ -22,24 +22,20 @@ typedef ActionHandlerFn = Future<dynamic>? Function({
 
 Map<String, ActionHandlerFn> _actionsMap = {
   'Action.navigateToPage': ({required action, required context}) {
-    final String? pageUId = action.data['pageUId'] ?? action.data['pageId'];
+    final String? pageUId = action.data['pageUid'] ?? action.data['pageId'];
 
     if (pageUId == null) {
       throw 'Page Id not found in Action Props';
     }
 
-    final String openAs = action.data['pageType'] ?? 'fullPage';
-    final Map<String, dynamic> bottomSheetStyling = action.data['style']
-        // fixme not working as below
-        // action.data.valueFor(keyPath: 'style.data')
-        ??
-        {};
+    final String openAs =
+        action.data['openAs'] ?? action.data['pageType'] ?? 'fullPage';
+    final Map<String, dynamic> bottomSheetStyling = action.data['style'] ?? {};
 
     Map<String, dynamic>? pageArgs =
         action.data['pageArgs'] ?? action.data['args'];
 
-    final evaluatedArgs = pageArgs
-        ?.map((key, value) => MapEntry(key, eval(value, context: context)));
+    final evaluatedArgs = _eval(pageArgs, context);
 
     return switch (openAs) {
       'bottomSheet' => openDUIPageInBottomSheet(
@@ -171,3 +167,21 @@ const Map<String, String> defaultHeaders = {
   'Accept': 'application/json',
   'Content-Type': 'application/json',
 };
+
+_eval(dynamic pageArgs, BuildContext context) {
+  if (pageArgs == null) return null;
+
+  if (pageArgs is String || pageArgs is num || pageArgs is bool) {
+    return eval(pageArgs, context: context);
+  }
+
+  if (pageArgs is Map<String, dynamic>) {
+    return pageArgs.map((key, value) => MapEntry(key, _eval(value, context)));
+  }
+
+  if (pageArgs is List) {
+    return pageArgs.map((e) => _eval(e, context));
+  }
+
+  return null;
+}
