@@ -1,4 +1,3 @@
-import 'package:derry/error.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:json_schema2/json_schema2.dart';
