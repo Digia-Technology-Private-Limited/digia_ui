@@ -7,8 +7,8 @@ import '../../components/bottom_nav_bar/bottom_nav_bar.dart';
 import '../../components/bottom_nav_bar/bottom_nav_bar_props.dart';
 import '../../components/floating_action_button/floating_action_button.dart';
 import '../../components/floating_action_button/floating_action_button_props.dart';
-import '../flutter_widgets.dart';
 import '../json_widget_builder.dart';
+import 'dui_app_bar_builder.dart';
 
 class DUIScaffoldBuilder extends DUIWidgetBuilder {
   final DUIFloatingActionButtonProps? duiFloatingActionButtonProps;
@@ -35,7 +35,8 @@ class DUIScaffoldBuilder extends DUIWidgetBuilder {
             return null;
           }
 
-          return FW.appBar(root.props);
+          return DUIAppBarBuilder(data: root).build(context)
+              as PreferredSizeWidget;
         });
 
         final persistentFooterButtons =

@@ -6,14 +6,14 @@ class DUIWidgetScope extends InheritedWidget {
   final DUIIconDataProvider? iconDataProvider;
   final DUIImageProviderFn? imageProviderFn;
   final DUITextStyleBuilder? textStyleBuilder;
-  final DUIExternalFunctionHandler? externalFunctionHandler;
+  final DUIMessageHandler? onMessageReceived;
 
   const DUIWidgetScope({
     super.key,
     this.iconDataProvider,
     this.imageProviderFn,
     this.textStyleBuilder,
-    this.externalFunctionHandler,
+    this.onMessageReceived,
     required super.child,
   });
 
