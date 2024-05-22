@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 
 import 'core/app_state_provider.dart';
 import 'core/page/dui_page.dart';
+import 'core/pref/dui_preferences.dart';
 import 'digia_ui_client.dart';
 
 enum Environment { staging, production, version }
@@ -15,6 +17,7 @@ class DUIApp extends StatelessWidget {
   final int version;
   final String? mixpanelKey;
   final Object? data;
+  static String? uuid;
 
   // final Map<String, dynamic> initProperties;
 
@@ -29,7 +32,13 @@ class DUIApp extends StatelessWidget {
       required this.version,
       this.data});
 
-  _makeFuture() {
+  _makeFuture() async {
+    uuid = DUIPreferences.instance.getString('uuid');
+    if (uuid == null) {
+      uuid = const Uuid().v4();
+      DUIPreferences.instance.setString('uuid', uuid!);
+    }
+
     if (data != null) {
       return DigiaUIClient.initializeFromData(
           accessKey: digiaAccessKey, data: data);

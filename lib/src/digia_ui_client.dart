@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:platform_device_id/platform_device_id.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 
 import '../digia_ui.dart';
 import 'core/pref/dui_preferences.dart';
@@ -106,7 +106,7 @@ class DigiaUIClient {
       'projectId': accessKey,
       'version': version,
       'platform': instance._getPlatform(),
-      'deviceId': await PlatformDeviceId.getDeviceId
+      'deviceId': DUIApp.uuid
     };
     _instance.networkClient = NetworkClient(dio, _instance.baseUrl, apiParams);
 
