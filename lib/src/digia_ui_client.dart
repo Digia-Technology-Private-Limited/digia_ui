@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:platform_device_id/platform_device_id.dart';
+import 'package:uuid/uuid.dart';
 
 import '../digia_ui.dart';
 import 'core/pref/dui_preferences.dart';
@@ -59,6 +59,7 @@ class DigiaUIClient {
     _instance.config = DUIConfig(data);
 
     await DUIPreferences.initialize();
+    setUuid();
 
     _instance.appState = DUIAppState.fromJson(_instance.config.appState ?? {});
 
@@ -67,6 +68,14 @@ class DigiaUIClient {
 
   static bool isInitialized() {
     return _instance._isInitialized;
+  }
+
+  static void setUuid() {
+    DUIApp.uuid = DUIPreferences.instance.getString('uuid');
+    if (DUIApp.uuid == null) {
+      DUIApp.uuid = const Uuid().v4();
+      DUIPreferences.instance.setString('uuid', DUIApp.uuid!);
+    }
   }
 
   static initializeFromData(
@@ -81,6 +90,7 @@ class DigiaUIClient {
     _instance.config = DUIConfig(data);
 
     await DUIPreferences.initialize();
+    setUuid();
 
     _instance.appState = DUIAppState.fromJson(_instance.config.appState ?? {});
 
@@ -95,6 +105,7 @@ class DigiaUIClient {
       String? baseUrl,
       Dio? dio}) async {
     await DUIPreferences.initialize();
+    setUuid();
     BaseResponse resp;
     _instance.environment = environment;
     _instance.version = version;
@@ -106,7 +117,7 @@ class DigiaUIClient {
       'projectId': accessKey,
       'version': version,
       'platform': instance._getPlatform(),
-      'deviceId': await PlatformDeviceId.getDeviceId
+      'deviceId': DUIApp.uuid
     };
     _instance.networkClient = NetworkClient(dio, _instance.baseUrl, apiParams);
 

@@ -15,6 +15,7 @@ class DUIApp extends StatelessWidget {
   final int version;
   final String? mixpanelKey;
   final Object? data;
+  static String? uuid;
 
   // final Map<String, dynamic> initProperties;
 
@@ -29,7 +30,7 @@ class DUIApp extends StatelessWidget {
       required this.version,
       this.data});
 
-  _makeFuture() {
+  _makeFuture() async {
     if (data != null) {
       return DigiaUIClient.initializeFromData(
           accessKey: digiaAccessKey, data: data);
