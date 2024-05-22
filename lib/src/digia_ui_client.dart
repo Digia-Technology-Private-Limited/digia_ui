@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:platform_device_id_v3/platform_device_id.dart';
+import 'package:platform_device_id/platform_device_id.dart';
 
 import '../digia_ui.dart';
 import 'core/pref/dui_preferences.dart';
