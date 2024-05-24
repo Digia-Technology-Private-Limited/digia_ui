@@ -87,6 +87,7 @@ dependencies:
   video_player: ^2.8.6
   derry: ^1.5.0
   platform_device_id_v3: ^1.0.0
+  fluttertoast: ^8.2.5
   # path: ../digia_expr
 
 dev_dependencies:
