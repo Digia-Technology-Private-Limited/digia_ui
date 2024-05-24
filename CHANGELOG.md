@@ -6,7 +6,7 @@ Digia Ui Sdk.
 
 ## [0.0.4] - 2023-05-23
 
-updated lottie version
+updated lottie version, and pop on digia message
 
 ## [0.0.3] - 2023-05-23
 
