@@ -30,8 +30,8 @@ class DUIPage extends StatelessWidget {
       DUIConfig? config})
       : _pageArgs = pageArgs,
         _config = config ?? DigiaUIClient.instance.config {
-    MixpanelManager.instance
-        ?.track('startPage', properties: {'pageUid': pageUid});
+    // MixpanelManager.instance
+    //     ?.track('startPage', properties: {'pageUid': pageUid});
   }
 
   @override
