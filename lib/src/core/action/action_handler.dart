@@ -86,6 +86,7 @@ Map<String, ActionHandlerFn> _actionsMap = {
     handler(MessagePayload(
         context: context, name: name, body: _eval(body, context)));
 
+    Navigator.of(context).pop();
     return;
   },
   'Action.setPageState': ({required action, required context}) {
