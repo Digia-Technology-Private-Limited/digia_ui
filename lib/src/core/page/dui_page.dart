@@ -39,10 +39,7 @@ class DUIPage extends StatelessWidget {
     return BlocProvider(
       create: (context) {
         return DUIPageBloc(
-            pageUid: pageUid,
-            onExternalMethodCalled: null,
-            config: _config,
-            pageArgs: _pageArgs);
+            pageUid: pageUid, config: _config, pageArgs: _pageArgs);
       },
       child: _DUIScreen(
           iconDataProvider: iconDataProvider,

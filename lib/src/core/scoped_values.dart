@@ -12,15 +12,13 @@ ExprContext? createScope(BuildContext context) {
   scope = AppStateProvider.maybeOf(context)?.exprContext;
 
   final pageState = context.read<DUIPageBloc>().state;
-  if (pageState.dataSource != null ||
-      pageState.props.variables != null ||
-      pageState.pageArgs != null) {
-    scope = ExprContext(variables: {
-      ...?pageState.props.variables?.map((k, v) => MapEntry(k, v.value)),
-      'pageParams': pageState.pageArgs,
-      'dataSource': pageState.dataSource
-    }, enclosing: scope);
-  }
+  final Map<String, Object?> pageScopedVars = {
+    ...?pageState.props.variables?.map((k, v) => MapEntry(k, v.value)),
+    'pageParams': pageState.props.inputArgs?.map(
+        (key, value) => MapEntry(key, pageState.pageArgs?[key] ?? value.value)),
+    'dataSource': pageState.dataSource
+  };
+  scope = ExprContext(variables: pageScopedVars, enclosing: scope);
 
   final indexedItemProvider = IndexedItemWidgetBuilder.maybeOf(context);
   scope = ifNotNull(indexedItemProvider, (p0) {

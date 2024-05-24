@@ -11,7 +11,9 @@ DUIPageProps _$DUIPagePropsFromJson(Map<String, dynamic> json) => DUIPageProps(
       actions: (json['actions'] as Map<String, dynamic>?)?.map(
         (k, e) => MapEntry(k, ActionFlow.fromJson(e)),
       ),
-      inputArgs: json['inputArgs'],
+      inputArgs: _$JsonConverterFromJson<Map<String, dynamic>,
+              Map<String, VariableDef>>(
+          json['inputArgs'], const VariablesJsonConverter().fromJson),
       variables: _$JsonConverterFromJson<Map<String, dynamic>,
               Map<String, VariableDef>>(
           json['variables'], const VariablesJsonConverter().fromJson),
@@ -23,7 +25,9 @@ Map<String, dynamic> _$DUIPagePropsToJson(DUIPageProps instance) =>
     <String, dynamic>{
       'uid': instance.uid,
       'actions': instance.actions,
-      'inputArgs': instance.inputArgs,
+      'inputArgs':
+          _$JsonConverterToJson<Map<String, dynamic>, Map<String, VariableDef>>(
+              instance.inputArgs, const VariablesJsonConverter().toJson),
       'variables':
           _$JsonConverterToJson<Map<String, dynamic>, Map<String, VariableDef>>(
               instance.variables, const VariablesJsonConverter().toJson),

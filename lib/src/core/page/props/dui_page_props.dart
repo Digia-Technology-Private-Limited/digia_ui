@@ -11,7 +11,8 @@ part 'dui_page_props.g.dart';
 class DUIPageProps {
   String uid;
   Map<String, ActionFlow> actions;
-  dynamic inputArgs;
+  @VariablesJsonConverter()
+  Map<String, VariableDef>? inputArgs;
   @VariablesJsonConverter()
   Map<String, VariableDef>? variables;
   @PageLayoutJsonConverter()
