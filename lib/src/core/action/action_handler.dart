@@ -6,7 +6,6 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
 import '../../Utils/basic_shared_utils/lodash.dart';
 import '../../Utils/extensions.dart';
-import '../../analytics/mixpanel.dart';
 import '../../components/dui_widget_scope.dart';
 import '../../types.dart';
 import '../app_state_provider.dart';
@@ -152,7 +151,6 @@ class ActionHandler {
         }
         continue;
       }
-      //   MixpanelManager.instance?.track(action.type, properties: action.data);
       executable(context: context, action: action);
     }
 
