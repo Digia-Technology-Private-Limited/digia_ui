@@ -13,7 +13,6 @@ class DUIApp extends StatelessWidget {
   final String? baseUrl;
   final Environment environment;
   final int version;
-  final String? mixpanelKey;
   final Object? data;
   static String? uuid;
 
@@ -26,7 +25,6 @@ class DUIApp extends StatelessWidget {
       this.navigatorKey,
       this.theme,
       this.baseUrl,
-      this.mixpanelKey,
       required this.version,
       this.data});
 

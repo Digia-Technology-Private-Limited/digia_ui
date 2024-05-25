@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import '../core/builders/bottom_navigation_bar_item_builder.dart';
+import '../core/builders/dezerv_stepper_builder.dart';
+import '../core/builders/dezerv_component/dezerv_dial_pad_builder.dart';
 import '../core/builders/dui_app_bar_builder.dart';
 import '../core/builders/dui_avatar_builder.dart';
 import '../core/builders/dui_button_builder.dart';
 import '../core/builders/dui_carousel_builder.dart';
+import '../core/builders/dui_circular_progress_indicator_builder.dart';
 import '../core/builders/dui_container2_builder.dart';
 import '../core/builders/dui_custom_widget_builder.dart';
 import '../core/builders/dui_expandable_builder.dart';
@@ -100,7 +103,13 @@ class DUIWidgetRegistry {
     'digia/navigationBarItem': (data, {registry}) =>
         DUIBottomNavigationBarItemBuilder.create(data, registry: registry),
     'digia/textField': (data, {registry}) => DUITextFieldBuilder.create(data),
-    'digia/futureBuilder': (data, {registry}) => DUIFutureBuilder(data: data)
+    'digia/stepper': (data, {registry}) =>
+        DezervStepperBuilder.create(data, registry: DUIWidgetRegistry.shared),
+    'digia/dezerv/dialPad': (data, {registry}) =>
+        DUIDezervDialPadBuilder.create(data),
+    'digia/futureBuilder': (data, {registry}) => DUIFutureBuilder(data: data),
+    'digia/circularProgressIndicator': (data, {registry}) =>
+        DUICircularProgressBarBuilder(data: data),
   };
 
   static const DUIWidgetRegistry shared = DUIWidgetRegistry();
