@@ -152,7 +152,7 @@ class ActionHandler {
         }
         continue;
       }
-   //   MixpanelManager.instance?.track(action.type, properties: action.data);
+      //   MixpanelManager.instance?.track(action.type, properties: action.data);
       executable(context: context, action: action);
     }
 
