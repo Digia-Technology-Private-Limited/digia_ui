@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../core/builders/bottom_navigation_bar_item_builder.dart';
+import '../core/builders/dezerv_stepper_builder.dart';
 import '../core/builders/dui_app_bar_builder.dart';
 import '../core/builders/dui_avatar_builder.dart';
 import '../core/builders/dui_button_builder.dart';
@@ -99,6 +100,8 @@ class DUIWidgetRegistry {
     'digia/navigationBarItem': (data, {registry}) =>
         DUIBottomNavigationBarItemBuilder.create(data, registry: registry),
     'digia/textField': (data, {registry}) => DUITextFieldBuilder.create(data),
+    'digia/stepper': (data, {registry}) =>
+        DezervStepperBuilder.create(data, registry: DUIWidgetRegistry.shared),
   };
 
   static const DUIWidgetRegistry shared = DUIWidgetRegistry();

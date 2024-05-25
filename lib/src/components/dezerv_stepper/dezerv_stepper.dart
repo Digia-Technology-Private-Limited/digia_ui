@@ -1,5 +1,15 @@
 import 'package:flutter/material.dart';
 
+import '../../../digia_ui.dart';
+import '../../Utils/basic_shared_utils/lodash.dart';
+import '../../Utils/dui_widget_registry.dart';
+import '../../Utils/util_functions.dart';
+import '../DUIText/dui_text.dart';
+import '../DUIText/dui_text_style.dart';
+import '../dui_icons/icon_helpers/icon_data_serialization.dart';
+import 'dezerv_stepper_props.dart';
+import 'dz_step.dart';
+
 const double _V_TEXT_LEFT_PADDING = 32;
 const double _V_TEXT_BOTTOM_PADDING = 32;
 const double _V_TEXT_IN_BETWEEN_PADDING = 4;
@@ -8,42 +18,54 @@ const double _MAX_PROGRESS_LENGTH = 300;
 // const double _STEP_DIMENSION = _STEP_RADIUS * 2;
 
 class DZStepper extends StatefulWidget {
-  const DZStepper({
-    super.key,
-    // required this.completedIndex,
-    required this.currentIndex,
-    this.direction = Axis.horizontal,
-    required this.steps,
-    this.showActiveState = false,
-    this.sidePadding = 40,
-    this.iconRadius = 10,
-  });
+  const DZStepper(
+      {super.key,
+      // required this.completedIndex,
+      required this.props,
+      this.data,
+      this.registry});
 
   // final int completedIndex;
-  final int currentIndex;
-  final Axis direction;
-  final List<DZStep> steps;
-  final bool showActiveState;
-
-  /// [sidePadding] is required in horizontal direction so can calculate height of text
-  final double sidePadding;
-  final double iconRadius;
+  final DezervStepperProps props;
+  final DUIWidgetJsonData? data;
+  final DUIWidgetRegistry? registry;
 
   @override
   State<DZStepper> createState() => _DZStepperState();
 }
 
 class _DZStepperState extends State<DZStepper> {
-  int get _stepsLength => widget.steps.length;
-  int get _stepIndex => widget.currentIndex /* ?? widget.completedIndex */;
+  late double currentIndex;
+  late Axis direction;
+  late List<DZStep> steps;
+  late bool showActiveState;
+
+  /// [sidePadding] is required in horizontal direction so can calculate height of text
+  late double sidePadding;
+  late double iconRadius;
+
+  @override
+  void initState() {
+    currentIndex = widget.props.currentIndex ?? 0;
+    steps = widget.props.steps ?? [];
+    showActiveState = widget.props.showActiveState ?? false;
+    sidePadding = widget.props.sidePadding ?? 40;
+    iconRadius = widget.props.iconRadius ?? 10;
+    direction = Axis.vertical;
+
+    super.initState();
+  }
+
+  int get _stepsLength => steps.length;
+  int get _stepIndex => currentIndex.toInt() /* ?? widget.completedIndex */;
   late int _stepCircleIndex = _stepIndex;
-  late final double _stepDimension = widget.iconRadius * 2;
+  late final double _stepDimension = iconRadius * 2;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      child: widget.direction == Axis.horizontal
+      child: direction == Axis.horizontal
           ? _buildHorizontalStepper()
           : _buildVerticalStepper(),
     );
@@ -63,7 +85,7 @@ class _DZStepperState extends State<DZStepper> {
         );
       }
 
-      buildTitles.add(widget.steps[index].title);
+      buildTitles.add(DUIText(widget.props.steps![index].title!));
     }
 
     return Column(
@@ -96,14 +118,16 @@ class _DZStepperState extends State<DZStepper> {
   }
 
   Widget _buildVerticalStep(int index) {
-    final DZStep dzStep = widget.steps[index];
+    final DZStep dzStep = steps[index];
     final bool isCompleted =
-        widget.showActiveState ? index < _stepIndex : index <= _stepCircleIndex;
+        showActiveState ? index < _stepIndex : index <= _stepCircleIndex;
 
-    double itemLength = _getContentHeight(dzStep.title, dzStep.subtitle);
+    double itemLength = _getContentHeight(
+        DUIText(widget.props.steps![index].title!),
+        DUIText(widget.props.steps![index].subtitle!));
     // When it's small animated icon
-    if (widget.showActiveState && !isCompleted) {
-      itemLength -= widget.iconRadius;
+    if (showActiveState && !isCompleted) {
+      itemLength -= iconRadius;
     } else {
       itemLength -= _stepDimension;
     }
@@ -115,10 +139,10 @@ class _DZStepperState extends State<DZStepper> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              dzStep.title,
+              DUIText(dzStep.title!),
               if (dzStep.subtitle != null) ...{
                 const SizedBox(height: _V_TEXT_IN_BETWEEN_PADDING),
-                dzStep.subtitle!,
+                DUIText(dzStep.subtitle!),
               },
               if (index < _stepsLength - 1)
                 const SizedBox(height: _V_TEXT_BOTTOM_PADDING)
@@ -130,7 +154,10 @@ class _DZStepperState extends State<DZStepper> {
           children: [
             _buildStepIcon(index),
             if (index < (_stepsLength - 1))
-              _buildProgressBar(index, itemLength),
+              Padding(
+                padding: const EdgeInsets.only(left: 4),
+                child: _buildProgressBar(index, itemLength),
+              ),
           ],
         ),
       ],
@@ -140,52 +167,56 @@ class _DZStepperState extends State<DZStepper> {
   Widget _buildStepIcon(int index) {
     final bool isActive = index <= _stepCircleIndex;
     final bool isCompleted =
-        widget.showActiveState ? index < _stepIndex : index <= _stepCircleIndex;
+        showActiveState ? index < _stepIndex : index <= _stepCircleIndex;
 
-    final DZStepIcon? dzStepIcon = widget.steps[index].stepIcon;
+    final Icon? dzStepIcon = Icon(
+        getIconData(icondataMap: widget.props.steps![index].stepIcon!) ??
+            Icons.circle);
     final Widget? stepIcon;
 
-    if (widget.showActiveState && index == widget.currentIndex && isActive) {
-      stepIcon = dzStepIcon?.activeIcon ??
+    if (showActiveState && index == currentIndex && isActive) {
+      stepIcon = dzStepIcon ??
           DZActiveStepIcon(
-            circleColor: widget.direction == Axis.horizontal
-                ? DZColors.accentSeaGreen
-                : DZColors.foreground50,
+            circleColor: direction == Axis.horizontal
+                ? widget.props.circleColor.letIfTrue(toColor) ?? Colors.red
+                : widget.props.circleColor.letIfTrue(toColor) ?? Colors.red,
           );
     } else {
       // Inactive state
-      if (widget.showActiveState && !isCompleted) {
-        stepIcon = dzStepIcon?.inactiveIcon ??
+      if (showActiveState && !isCompleted) {
+        stepIcon = dzStepIcon ??
             Container(
-              height: widget.iconRadius,
-              width: widget.iconRadius,
+              height: iconRadius,
+              width: iconRadius,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: DZColors.foreground30,
+                  color:
+                      widget.props.circleColor.letIfTrue(toColor) ?? Colors.red,
                   width: 2,
                 ),
               ),
             );
       } else if (isCompleted) {
-        stepIcon = dzStepIcon?.completedIcon;
+        stepIcon = dzStepIcon;
       } else {
-        stepIcon = dzStepIcon?.inactiveIcon;
+        stepIcon = Icon(Icons.run_circle_outlined);
       }
     }
 
     return SizedBox(
-      width: widget.direction == Axis.vertical ? _stepDimension : null,
-      height: widget.direction == Axis.horizontal ? _stepDimension : null,
+      width: direction == Axis.vertical ? _stepDimension : null,
+      height: direction == Axis.horizontal ? _stepDimension : null,
       child: stepIcon ??
           CircleAvatar(
-            radius: widget.iconRadius,
-            backgroundColor:
-                isCompleted ? DZColors.accentSeaGreen : DZColors.foreground30,
+            radius: iconRadius,
+            backgroundColor: isCompleted
+                ? Colors.white.withOpacity(0.16)
+                : Colors.green.withOpacity(0.18),
             child: isCompleted
                 ? const Icon(
                     Icons.circle,
-                    color: DZColors.background,
+                    color: Colors.white,
                     size: 8,
                   )
                 : null,
@@ -195,12 +226,13 @@ class _DZStepperState extends State<DZStepper> {
 
   Widget _buildProgressBar(int index, double itemLength) {
     return ProgressBar(
-      progressValue: index < widget.currentIndex ? itemLength : 0,
+      progressValue: index < currentIndex ? itemLength : 0,
       barLength: itemLength,
-      direction: widget.direction,
+      direction: direction,
+      barColor: widget.props.circleColor,
       onComplete: () {
         setState(() {
-          _stepCircleIndex = widget.currentIndex;
+          _stepCircleIndex = currentIndex.toInt();
         });
       },
     );
@@ -208,26 +240,22 @@ class _DZStepperState extends State<DZStepper> {
 
 // Gets first and last title height to adjust and center title in horizontal stepper
   EdgeInsets _getHorizontalPadding() {
-    final double firstTitleWidth = getTextSize(
-      context: context,
-      dzText: widget.steps.first.title,
-    ).width;
-    final double lastTitleWidth = getTextSize(
-      context: context,
-      dzText: widget.steps.last.title,
-    ).width;
+    final double firstTitleWidth = widget.props.firstTitleWidth!;
+    final double lastTitleWidth = widget.props.lastTitleWidth!;
     // Divider the title width by 2 to half it and remove step circle radius
     return EdgeInsets.only(
-        left: (firstTitleWidth / 2) - widget.iconRadius,
-        right: (lastTitleWidth / 2) - widget.iconRadius);
+        left: (firstTitleWidth / 2) - iconRadius,
+        right: (lastTitleWidth / 2) - iconRadius);
   }
 
-  double _getContentHeight(DZText title, DZHtmlText? subTitle) {
+  double _getContentHeight(DUIText title, DUIText? subTitle) {
     final double titleHeight = getTextHeight(
       context: context,
-      text: title.text,
-      textStyle: title.style.style,
-      widthToRemove: widget.sidePadding + _V_TEXT_LEFT_PADDING,
+      text: title.props.textSpans![0].text,
+      textStyle: TextStyle(
+          fontSize: title.props.textStyle?.fontToken?.font?.size ?? 16,
+          height: title.props.textStyle?.fontToken?.font?.height ?? 1),
+      widthToRemove: sidePadding + _V_TEXT_LEFT_PADDING,
     );
 
     double subTitleHeight = 0;
@@ -235,9 +263,11 @@ class _DZStepperState extends State<DZStepper> {
       subTitleHeight = _V_TEXT_IN_BETWEEN_PADDING;
       subTitleHeight += getTextHeight(
         context: context,
-        text: removeAllHtmlTags(subTitle.text),
-        textStyle: subTitle.style.style,
-        widthToRemove: widget.sidePadding + _V_TEXT_LEFT_PADDING,
+        text: removeAllHtmlTags(subTitle.props.textSpans![0].text),
+        textStyle: TextStyle(
+            fontSize: title.props.textStyle?.fontToken?.font?.size ?? 14,
+            height: title.props.textStyle?.fontToken?.font?.height ?? 1),
+        widthToRemove: sidePadding + _V_TEXT_LEFT_PADDING,
       );
     } else {
       subTitleHeight = 8;
@@ -248,6 +278,49 @@ class _DZStepperState extends State<DZStepper> {
 
     return itemHeight;
   }
+
+  String removeAllHtmlTags(String htmlText) {
+    RegExp exp = RegExp(r"<[^>]*>", multiLine: true, caseSensitive: true);
+
+    return htmlText.replaceAll(exp, '');
+  }
+
+  int getNoOfTextLines({
+    required BuildContext context,
+    required String text,
+    required TextStyle textStyle,
+    double widthToRemove = 40,
+  }) {
+    final span = TextSpan(text: text, style: textStyle);
+    final textPainter =
+        TextPainter(text: span, textDirection: TextDirection.ltr);
+    textPainter.layout(
+        maxWidth: MediaQuery.of(context).size.width - widthToRemove);
+    final int numLines = textPainter.computeLineMetrics().length;
+    return numLines;
+  }
+
+// Only DZText and DZHtmlText is accepted
+// Currently it's dynamic until a super class is made
+  double getTextHeight({
+    required BuildContext context,
+    required String text,
+    required TextStyle? textStyle,
+    double widthToRemove = 40,
+  }) {
+    if (textStyle == null) {
+      return 0;
+    }
+
+    final int noOfLinesTitle = getNoOfTextLines(
+      context: context,
+      text: text,
+      textStyle: textStyle,
+      widthToRemove: widthToRemove,
+    );
+    return (noOfLinesTitle *
+        (textStyle.fontSize! * textStyle.height!)); // To get height
+  }
 }
 
 class ProgressBar extends StatefulWidget {
@@ -255,14 +328,15 @@ class ProgressBar extends StatefulWidget {
   final double barLength;
   final Axis direction;
   final VoidCallback? onComplete;
+  final String? barColor;
 
-  const ProgressBar({
-    super.key,
-    required this.progressValue,
-    required this.barLength,
-    this.direction = Axis.horizontal,
-    this.onComplete,
-  });
+  const ProgressBar(
+      {super.key,
+      required this.progressValue,
+      required this.barLength,
+      this.direction = Axis.horizontal,
+      this.onComplete,
+      this.barColor});
 
   @override
   State<ProgressBar> createState() => _ProgressBarState();
@@ -289,6 +363,7 @@ class _ProgressBarState extends State<ProgressBar>
     _progressAnimationController.addListener(() {
       setState(() {});
     });
+    animator();
   }
 
   @override
@@ -301,19 +376,30 @@ class _ProgressBarState extends State<ProgressBar>
     }
   }
 
+  void animator() async {
+    await Future.delayed(Duration(milliseconds: 200));
+    setState(() {
+      animate = true;
+    });
+  }
+
+  bool animate = false;
+
   @override
   Widget build(BuildContext context) {
     final bool isHorizontal = widget.direction == Axis.horizontal;
 
-    return Container(
-      height: isHorizontal ? 2 : widget.barLength,
+    return AnimatedContainer(
+      duration: Duration(seconds: 1),
+      // this needs to be fixed in case of horizontal bar
+      height: animate ? widget.barLength : 0,
       width: isHorizontal ? widget.barLength : 2,
       margin: EdgeInsets.symmetric(
         horizontal: isHorizontal ? 2 : 0,
         vertical: isHorizontal ? 0 : 2,
       ),
       decoration: BoxDecoration(
-        color: DZColors.foreground16,
+        color: widget.barColor.letIfTrue(toColor) ?? Colors.grey,
         borderRadius: BorderRadius.circular(2),
       ),
       child: Align(
@@ -324,7 +410,7 @@ class _ProgressBarState extends State<ProgressBar>
           height: isHorizontal ? null : _lengthAnimation.value,
           width: isHorizontal ? _lengthAnimation.value : null,
           decoration: BoxDecoration(
-            color: DZColors.accentSeaGreen,
+            color: widget.barColor.letIfTrue(toColor) ?? Colors.grey,
             borderRadius: BorderRadius.circular(2),
           ),
         ),
@@ -354,8 +440,9 @@ class _ProgressBarState extends State<ProgressBar>
 class DZActiveStepIcon extends StatefulWidget {
   const DZActiveStepIcon({
     super.key,
-    this.circleColor = DZColors.accentSeaGreen,
+    this.circleColor = Colors.grey,
   });
+
   final Color circleColor;
 
   @override
@@ -415,29 +502,17 @@ class _DZActiveStepIconState extends State<DZActiveStepIcon>
   }
 }
 
-class DZStepIcon {
-  final Widget? activeIcon;
-  final Widget? inactiveIcon;
-  final Widget? completedIcon;
+// class DZStepIcon {
+//   final Widget? activeIcon;
+//   final Widget? inactiveIcon;
+//   final Widget? completedIcon;
 
-  const DZStepIcon({
-    this.activeIcon,
-    this.inactiveIcon,
-    this.completedIcon,
-  });
-}
-
-class DZStep {
-  final DZText title;
-  final DZHtmlText? subtitle;
-  final DZStepIcon? stepIcon;
-
-  const DZStep({
-    required this.title,
-    this.subtitle,
-    this.stepIcon,
-  });
-}
+//   const DZStepIcon({
+//     this.activeIcon,
+//     this.inactiveIcon,
+//     this.completedIcon,
+//   });
+// }
 
 /*
 
@@ -485,10 +560,3 @@ class DZStep {
       }
 
 */
-
-class DZColors {
-  static const Color foreground30 = Colors.grey;
-  static const Color foreground50 = Colors.grey;
-  static const Color accentSeaGreen = Colors.greenAccent;
-  static const Color background = Colors.brown;
-}
