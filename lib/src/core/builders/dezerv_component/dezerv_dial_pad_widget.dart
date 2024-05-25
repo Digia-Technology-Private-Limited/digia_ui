@@ -19,6 +19,7 @@ class _DezervDialPadState extends State<DezervDialPad> {
   late final num _minimumAmount;
   late final num _maximumAmount;
   late final num _defaultAmount;
+  late final num dialPadOutput;
   late final String _formattedMinimumAmount;
   late final String _formattedMaximumAmount;
   late bool _isValidAmount;
@@ -26,6 +27,7 @@ class _DezervDialPadState extends State<DezervDialPad> {
   @override
   void initState() {
     _defaultAmount = widget.props.defaultAmount ?? 0;
+    dialPadOutput = widget.props.dialPadOutput ?? 0;
     _minimumAmount = widget.props.minimumSipAmount ?? 0;
     _maximumAmount = widget.props.maximumSipAmount ?? 1000000;
     _isValidAmount = true;
@@ -131,7 +133,9 @@ class _DezervDialPadState extends State<DezervDialPad> {
         _userSelectedAmount = tempAmount;
       }
     }
-    setState(() {});
+    setState(() {
+      dialPadOutput = int.parse(_userSelectedAmount);
+    });
   }
 
   void _onKeypadBackTap() {
@@ -149,7 +153,9 @@ class _DezervDialPadState extends State<DezervDialPad> {
       _isValidAmount = false;
       _userSelectedAmount = '0';
     }
-    setState(() {});
+    setState(() {
+      dialPadOutput = int.parse(_userSelectedAmount);
+    });
   }
 
   /// Convert from 1,20,000.25 to 1,20,000
