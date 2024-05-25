@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 import 'api_response/base_response.dart';
 import 'core/types.dart';
@@ -21,6 +22,15 @@ class NetworkClient {
     if (baseUrl.isEmpty) {
       throw 'Invalid BaseUrl';
     }
+
+    dio?.interceptors.add(PrettyDioLogger(
+        requestHeader: true,
+        requestBody: true,
+        responseBody: true,
+        responseHeader: false,
+        error: true,
+        compact: true,
+        maxWidth: 90));
 
     // if (kDebugMode) {
     //   this.dio.interceptors.addAll([

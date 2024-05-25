@@ -5,11 +5,29 @@ import '../core/types.dart';
 part 'api_request.g.dart';
 
 @JsonSerializable()
+class PropertyType {
+  String? key;
+  String? value;
+  String? type;
+
+  PropertyType({
+    this.key,
+    this.value,
+    this.type,
+  });
+
+  factory PropertyType.fromJson(Map<String, dynamic> json) =>
+      _$PropertyTypeFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PropertyTypeToJson(this);
+}
+
+@JsonSerializable()
 class APIModel {
   final String id;
   final String url;
   final HttpMethod method;
-  final Map<String, dynamic>? headers;
+  final List<PropertyType>? headers;
   final Map<String, dynamic>? body;
   final Map<String, dynamic>? variables;
 

@@ -6,11 +6,26 @@ part of 'api_request.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+PropertyType _$PropertyTypeFromJson(Map<String, dynamic> json) => PropertyType(
+      key: json['key'] as String?,
+      value: json['value'] as String?,
+      type: json['type'] as String?,
+    );
+
+Map<String, dynamic> _$PropertyTypeToJson(PropertyType instance) =>
+    <String, dynamic>{
+      'key': instance.key,
+      'value': instance.value,
+      'type': instance.type,
+    };
+
 APIModel _$APIModelFromJson(Map<String, dynamic> json) => APIModel(
       id: json['id'] as String,
       url: json['url'] as String,
       method: $enumDecode(_$HttpMethodEnumMap, json['method']),
-      headers: json['headers'] as Map<String, dynamic>?,
+      headers: (json['headers'] as List<dynamic>?)
+          ?.map((e) => PropertyType.fromJson(e as Map<String, dynamic>))
+          .toList(),
       body: json['body'] as Map<String, dynamic>?,
       variables: json['variables'] as Map<String, dynamic>?,
     );

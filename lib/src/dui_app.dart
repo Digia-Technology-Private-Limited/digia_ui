@@ -1,3 +1,4 @@
+import 'package:chucker_flutter/chucker_flutter.dart';
 import 'package:flutter/material.dart';
 
 import 'core/app_state_provider.dart';
@@ -15,6 +16,7 @@ class DUIApp extends StatelessWidget {
   final int version;
   final Object? data;
   static String? uuid;
+  final Map<String, String> defaultHeaders;
 
   // final Map<String, dynamic> initProperties;
 
@@ -26,7 +28,8 @@ class DUIApp extends StatelessWidget {
       this.theme,
       this.baseUrl,
       required this.version,
-      this.data});
+      this.data,
+      required this.defaultHeaders});
 
   _makeFuture() async {
     if (data != null) {
@@ -38,12 +41,14 @@ class DUIApp extends StatelessWidget {
         accessKey: digiaAccessKey,
         environment: environment,
         version: version,
-        baseUrl: baseUrl);
+        baseUrl: baseUrl,
+        defaultHeaders: defaultHeaders);
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorObservers: [ChuckerFlutter.navigatorObserver],
       // key: key,
       debugShowCheckedModeBanner: false,
       theme: theme ??

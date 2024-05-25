@@ -32,6 +32,7 @@ class DigiaUIClient {
   late DUIAppState appState;
   late int version;
   late Environment environment;
+  late Map<String, dynamic> defaultHeaders;
 
   bool _isInitialized = false;
 
@@ -103,7 +104,8 @@ class DigiaUIClient {
       String? projectId,
       required int version,
       String? baseUrl,
-      Dio? dio}) async {
+      Dio? dio,
+      required Map<String, dynamic> defaultHeaders}) async {
     await DUIPreferences.initialize();
     setUuid();
     BaseResponse resp;
@@ -111,40 +113,46 @@ class DigiaUIClient {
     _instance.version = version;
     _instance.accessKey = accessKey;
     _instance.baseUrl = baseUrl ?? defaultBaseUrl;
+    _instance.defaultHeaders = defaultHeaders;
 
-    Map<String, dynamic> apiParams = {
+    Map<String, dynamic> digiaHeaders = {
       'digia_projectId': accessKey,
       'projectId': accessKey,
       'version': version,
       'platform': instance._getPlatform(),
-      'deviceId': DUIApp.uuid
+      'deviceId': DUIApp.uuid,
     };
-    _instance.networkClient = NetworkClient(dio, _instance.baseUrl, apiParams);
+
+    Map<String, dynamic> headers = {
+      ...defaultHeaders,
+      // ...digiaHeaders,
+    };
+    _instance.networkClient = NetworkClient(dio, _instance.baseUrl, headers);
 
     String requestPath;
     dynamic requestData;
     switch (environment) {
       case Environment.staging:
         requestPath = '/config/getAppConfig';
-        requestData = jsonEncode(apiParams);
+        requestData = jsonEncode(digiaHeaders);
         break;
       case Environment.production:
         requestPath = '/config/getAppConfigProduction';
-        requestData = jsonEncode(apiParams);
+        requestData = jsonEncode(digiaHeaders);
         break;
       case Environment.version:
         requestPath = '/config/getAppConfigForVersion';
-        requestData = jsonEncode(apiParams);
+        requestData = jsonEncode(digiaHeaders);
         break;
       default:
         requestPath = '/config/getAppConfig';
-        requestData = jsonEncode(apiParams);
+        requestData = jsonEncode(digiaHeaders);
     }
 
     resp = await _instance.networkClient.request(
       HttpMethod.post,
       requestPath,
-      headers: apiParams,
+      headers: headers,
       (json) => json as dynamic,
       data: requestData,
     );
