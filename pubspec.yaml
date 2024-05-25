@@ -82,9 +82,8 @@ dependencies:
   chewie: ^1.8.1
   video_player: ^2.8.6
   derry: ^1.5.0
-  # device_info_plus: ^10.1.0
+  fluttertoast: ^8.2.5
   uuid: ^4.4.0
-  # path: ../digia_expr
 
 dev_dependencies:
   flutter_test:

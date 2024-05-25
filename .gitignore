@@ -45,7 +45,7 @@ app.*.map.json
 /example/android/app/profile
 /example/android/app/release
 android/local.properties
-
+/android/local.properties
 pubspec.lock
 .vscode/launch.json
 example/ios/Podfile.lock
