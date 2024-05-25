@@ -6,8 +6,8 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
 import '../../Utils/basic_shared_utils/lodash.dart';
 import '../../Utils/extensions.dart';
-import '../../analytics/mixpanel.dart';
 import '../../components/dui_widget_scope.dart';
+import '../../types.dart';
 import '../app_state_provider.dart';
 import '../evaluator.dart';
 import '../page/dui_page_bloc.dart';
@@ -22,24 +22,20 @@ typedef ActionHandlerFn = Future<dynamic>? Function({
 
 Map<String, ActionHandlerFn> _actionsMap = {
   'Action.navigateToPage': ({required action, required context}) {
-    final String? pageUId = action.data['pageUId'] ?? action.data['pageId'];
+    final String? pageUId = action.data['pageUid'] ?? action.data['pageId'];
 
     if (pageUId == null) {
       throw 'Page Id not found in Action Props';
     }
 
-    final String openAs = action.data['pageType'] ?? 'fullPage';
-    final Map<String, dynamic> bottomSheetStyling = action.data['style']
-        // fixme not working as below
-        // action.data.valueFor(keyPath: 'style.data')
-        ??
-        {};
+    final String openAs =
+        action.data['openAs'] ?? action.data['pageType'] ?? 'fullPage';
+    final Map<String, dynamic> bottomSheetStyling = action.data['style'] ?? {};
 
     Map<String, dynamic>? pageArgs =
         action.data['pageArgs'] ?? action.data['args'];
 
-    final evaluatedArgs = pageArgs
-        ?.map((key, value) => MapEntry(key, eval(value, context: context)));
+    final evaluatedArgs = _eval(pageArgs, context);
 
     return switch (openAs) {
       'bottomSheet' => openDUIPageInBottomSheet(
@@ -79,11 +75,17 @@ Map<String, ActionHandlerFn> _actionsMap = {
       throw 'Not allowed to open url: $url';
     }
   },
-  'Action.callExternalFunction': ({required action, required context}) {
-    final handler = DUIWidgetScope.maybeOf(context)?.externalFunctionHandler;
+  'Action.handleDigiaMessage': ({required action, required context}) {
+    final handler = DUIWidgetScope.maybeOf(context)?.onMessageReceived;
     if (handler == null) return;
 
-    handler(context, action.data['methodId'], action.data['args']);
+    final name = action.data['name'];
+    final body = action.data['body'];
+
+    handler(MessagePayload(
+        context: context, name: name, body: _eval(body, context)));
+
+    Navigator.of(context).pop();
     return;
   },
   'Action.setPageState': ({required action, required context}) {
@@ -149,7 +151,6 @@ class ActionHandler {
         }
         continue;
       }
-      MixpanelManager.instance?.track(action.type, properties: action.data);
       executable(context: context, action: action);
     }
 
@@ -171,3 +172,21 @@ const Map<String, String> defaultHeaders = {
   'Accept': 'application/json',
   'Content-Type': 'application/json',
 };
+
+_eval(dynamic pageArgs, BuildContext context) {
+  if (pageArgs == null) return null;
+
+  if (pageArgs is String || pageArgs is num || pageArgs is bool) {
+    return eval(pageArgs, context: context);
+  }
+
+  if (pageArgs is Map<String, dynamic>) {
+    return pageArgs.map((key, value) => MapEntry(key, _eval(value, context)));
+  }
+
+  if (pageArgs is List) {
+    return pageArgs.map((e) => _eval(e, context));
+  }
+
+  return null;
+}

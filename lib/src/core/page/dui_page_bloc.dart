@@ -14,17 +14,13 @@ import 'dui_page_state.dart';
 import 'props/dui_page_props.dart';
 
 class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
-  final DUIConfig _config;
-  final Function(String methodId, Map<String, dynamic>? data)?
-      onExternalMethodCalled;
+  final DUIConfig config;
 
   DUIPageBloc({
     required String pageUid,
-    required DUIConfig config,
+    required this.config,
     Map<String, dynamic>? pageArgs,
-    this.onExternalMethodCalled,
-  })  : _config = config,
-        super(DUIPageState(
+  }) : super(DUIPageState(
             pageUid: pageUid,
             isLoading: true,
             pageArgs: pageArgs,
@@ -68,7 +64,7 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
         final apiDataSourceId = action.data['dataSourceId'];
         Map<String, dynamic>? apiDataSourceArgs = action.data['args'];
 
-        final apiModel = _config.getApiDataSource(apiDataSourceId);
+        final apiModel = config.getApiDataSource(apiDataSourceId);
 
         final args = apiDataSourceArgs
             ?.map((key, value) => MapEntry(key, eval(value, context: context)));
@@ -80,7 +76,7 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
 
       case 'Action.rebuildPage':
         emit(state.copyWith(isLoading: true));
-        final pagePropsJson = await PostAction(_config).execute(action);
+        final pagePropsJson = await PostAction(config).execute(action);
 
         if (pagePropsJson == null) {
           throw 'Props not found for Page: ${state.pageUid}';
@@ -105,10 +101,6 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
 
       case 'Action.pop':
         return Navigator.of(context).maybePop();
-
-      case 'Action.callExternalMethod':
-        onExternalMethodCalled?.call(
-            action.data['methodId'] ?? '', action.data['args']);
 
       default:
         emit(state.copyWith(isLoading: false));
