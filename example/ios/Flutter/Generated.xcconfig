@@ -1,8 +1,8 @@
 // This is a generated file; do not edit or check into version control.
-FLUTTER_ROOT=D:\MyStuf\Programing\Softwares\flutter
-FLUTTER_APPLICATION_PATH=C:\Users\HP\AndroidStudioProjects\digia_ui\example
+FLUTTER_ROOT=/Users/anupamsingh/Desktop/flutter
+FLUTTER_APPLICATION_PATH=/Users/anupamsingh/Desktop/Digia/digia_ui/example
 COCOAPODS_PARALLEL_CODE_SIGN=true
-FLUTTER_TARGET=lib\main.dart
+FLUTTER_TARGET=lib/main.dart
 FLUTTER_BUILD_DIR=build
 FLUTTER_BUILD_NAME=1.0.0
 FLUTTER_BUILD_NUMBER=1

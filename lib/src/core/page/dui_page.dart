@@ -16,7 +16,7 @@ class DUIPage extends StatelessWidget {
   final DUIIconDataProvider? iconDataProvider;
   final DUIImageProviderFn? imageProviderFn;
   final DUITextStyleBuilder? textStyleBuilder;
-  final DUIExternalFunctionHandler? externalFunctionHandler;
+  final DUIMessageHandler? onMessageReceived;
   final DUIConfig _config;
 
   DUIPage(
@@ -26,12 +26,12 @@ class DUIPage extends StatelessWidget {
       this.iconDataProvider,
       this.imageProviderFn,
       this.textStyleBuilder,
-      this.externalFunctionHandler,
+      this.onMessageReceived,
       DUIConfig? config})
       : _pageArgs = pageArgs,
         _config = config ?? DigiaUIClient.instance.config {
-    MixpanelManager.instance
-        ?.track('startPage', properties: {'pageUid': pageUid});
+    // MixpanelManager.instance
+    //     ?.track('startPage', properties: {'pageUid': pageUid});
   }
 
   @override
@@ -39,16 +39,13 @@ class DUIPage extends StatelessWidget {
     return BlocProvider(
       create: (context) {
         return DUIPageBloc(
-            pageUid: pageUid,
-            onExternalMethodCalled: null,
-            config: _config,
-            pageArgs: _pageArgs);
+            pageUid: pageUid, config: _config, pageArgs: _pageArgs);
       },
       child: _DUIScreen(
           iconDataProvider: iconDataProvider,
           imageProviderFn: imageProviderFn,
           textStyleBuilder: textStyleBuilder,
-          externalFunctionHandler: externalFunctionHandler),
+          onMessageReceived: onMessageReceived),
     );
   }
 }
@@ -57,13 +54,13 @@ class _DUIScreen extends StatefulWidget {
   final DUIIconDataProvider? iconDataProvider;
   final DUIImageProviderFn? imageProviderFn;
   final DUITextStyleBuilder? textStyleBuilder;
-  final DUIExternalFunctionHandler? externalFunctionHandler;
+  final DUIMessageHandler? onMessageReceived;
 
   const _DUIScreen({
     this.iconDataProvider,
     this.imageProviderFn,
     this.textStyleBuilder,
-    this.externalFunctionHandler,
+    this.onMessageReceived,
   });
 
   @override
@@ -96,7 +93,7 @@ class _DUIScreenState extends State<_DUIScreen> {
                 iconDataProvider: widget.iconDataProvider,
                 imageProviderFn: widget.imageProviderFn,
                 textStyleBuilder: widget.textStyleBuilder,
-                externalFunctionHandler: widget.externalFunctionHandler,
+                onMessageReceived: widget.onMessageReceived,
                 child: DUIWidget(data: p0));
           }) ??
           Center(child: Text('Props not found for page: ${state.pageUid}'));
