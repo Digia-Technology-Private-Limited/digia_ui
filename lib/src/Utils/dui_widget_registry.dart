@@ -8,6 +8,7 @@ import '../core/builders/dui_container2_builder.dart';
 import '../core/builders/dui_custom_widget_builder.dart';
 import '../core/builders/dui_expandable_builder.dart';
 import '../core/builders/dui_flex_builder.dart';
+import '../core/builders/dui_future_builder.dart';
 import '../core/builders/dui_gridview_builder.dart';
 import '../core/builders/dui_horizontal_divider_builder.dart';
 import '../core/builders/dui_htmlview_builder.dart';
@@ -99,6 +100,7 @@ class DUIWidgetRegistry {
     'digia/navigationBarItem': (data, {registry}) =>
         DUIBottomNavigationBarItemBuilder.create(data, registry: registry),
     'digia/textField': (data, {registry}) => DUITextFieldBuilder.create(data),
+    'digia/futureBuilder': (data, {registry}) => DUIFutureBuilder(data: data)
   };
 
   static const DUIWidgetRegistry shared = DUIWidgetRegistry();
