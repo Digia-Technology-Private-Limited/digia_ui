@@ -52,7 +52,9 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
       state.props.variables?[element.variableName]?.set(element.value);
     }
 
-    emit(state.copyWith());
+    if (event.rebuildPage) {
+      emit(state.copyWith());
+    }
   }
 
 // TODO: Need Action Handler
