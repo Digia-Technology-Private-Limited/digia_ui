@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import '../../../Utils/extensions.dart';
+import '../../page/dui_page_bloc.dart';
 import 'dezerv_dial_pad_widget_props.dart';
 import 'dezerv_flex_grid_view.dart';
 
@@ -131,7 +133,16 @@ class _DezervDialPadState extends State<DezervDialPad> {
         _userSelectedAmount = tempAmount;
       }
     }
-    setState(() {});
+    setState(() {
+      // Read the list of variables from the current page
+      final bloc = context.tryRead<DUIPageBloc>();
+      if (bloc == null) {
+        throw 'SetStateEvent called on a widget which is not wrapped in DUIPageBloc';
+      }
+      final state = bloc.state;
+      final variables = state.props.variables;
+      variables?.entries.first.value.set(int.parse(_userSelectedAmount));
+    });
   }
 
   void _onKeypadBackTap() {
@@ -149,7 +160,15 @@ class _DezervDialPadState extends State<DezervDialPad> {
       _isValidAmount = false;
       _userSelectedAmount = '0';
     }
-    setState(() {});
+    setState(() {
+      final bloc = context.tryRead<DUIPageBloc>();
+      if (bloc == null) {
+        throw 'SetStateEvent called on a widget which is not wrapped in DUIPageBloc';
+      }
+      final state = bloc.state;
+      final variables = state.props.variables;
+      variables?.entries.first.value.set(int.parse(_userSelectedAmount));
+    });
   }
 
   /// Convert from 1,20,000.25 to 1,20,000
