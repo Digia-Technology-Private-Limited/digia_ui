@@ -16,48 +16,10 @@ class DUIFutureBuilder extends DUIWidgetBuilder {
   DUIFutureBuilder(
       {required super.data, super.registry = DUIWidgetRegistry.shared});
 
-  Future<Object?> _makeFuture(BuildContext context) async {
-    final type = data.props['type'];
-    if (type == null) return Future.error('Type not selected');
-
-    switch (type) {
-      case 'api':
-        final apiDataSourceId = data.props['dataSourceId'];
-        Map<String, dynamic>? apiDataSourceArgs = data.props['args'];
-
-        final apiModel = (context.tryRead<DUIPageBloc>()?.config ??
-                DigiaUIClient.getConfigResolver())
-            .getApiDataSource(apiDataSourceId);
-
-        final args = apiDataSourceArgs
-            ?.map((key, value) => MapEntry(key, eval(value, context: context)));
-
-        return ApiHandler.instance.execute(apiModel: apiModel, args: args).then(
-            (value) {
-          final successAction = ActionFlow.fromJson(data.props['onSuccess']);
-          return ActionHandler.instance.execute(
-              context: context,
-              actionFlow: successAction,
-              enclosing: ExprContext(variables: {'response': value}));
-        }, onError: (e) async {
-          final errorAction = ActionFlow.fromJson(data.props['onError']);
-          await ActionHandler.instance.execute(
-              context: context,
-              actionFlow: errorAction,
-              enclosing: ExprContext(variables: {'error': e}));
-        });
-
-      case 'delay':
-        return Future.delayed(
-            Duration(milliseconds: data.props['durationInMs'] ?? 0));
-    }
-    return Future.any([]);
-  }
-
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: _makeFuture(context),
+        future: _makeFuture(data.props['future'], context),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return data
@@ -79,4 +41,45 @@ class DUIFutureBuilder extends DUIWidgetBuilder {
               const SizedBox.shrink();
         });
   }
+}
+
+Future<Object?> _makeFuture(
+    Map<String, dynamic> future, BuildContext context) async {
+  final type = future['futureType'];
+  if (type == null) return Future.error('Type not selected');
+
+  switch (type) {
+    case 'api':
+      final apiDataSourceId = future.valueFor(keyPath: 'dataSource.id');
+      Map<String, dynamic>? apiDataSourceArgs =
+          future.valueFor(keyPath: 'dataSource.args');
+
+      final apiModel = (context.tryRead<DUIPageBloc>()?.config ??
+              DigiaUIClient.getConfigResolver())
+          .getApiDataSource(apiDataSourceId);
+
+      final args = apiDataSourceArgs
+          ?.map((key, value) => MapEntry(key, eval(value, context: context)));
+
+      return ApiHandler.instance.execute(apiModel: apiModel, args: args).then(
+          (value) {
+        final successAction =
+            ActionFlow.fromJson(future.valueFor(keyPath: 'onSuccess'));
+        return ActionHandler.instance.execute(
+            context: context,
+            actionFlow: successAction,
+            enclosing: ExprContext(variables: {'response': value}));
+      }, onError: (e) async {
+        final errorAction =
+            ActionFlow.fromJson(future.valueFor(keyPath: 'onError'));
+        await ActionHandler.instance.execute(
+            context: context,
+            actionFlow: errorAction,
+            enclosing: ExprContext(variables: {'error': e}));
+      });
+
+    case 'delay':
+      return Future.delayed(Duration(milliseconds: future['durationInMs']));
+  }
+  return Future.error('No future type selected.');
 }
