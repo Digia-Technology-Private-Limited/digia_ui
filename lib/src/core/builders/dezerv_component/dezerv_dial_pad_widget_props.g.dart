@@ -11,7 +11,6 @@ DezervDialPadProps _$DezervDialPadPropsFromJson(Map<String, dynamic> json) =>
       defaultAmount: (json['defaultAmount'] as num?)?.toDouble(),
       maximumSipAmount: (json['maximumSipAmount'] as num?)?.toDouble(),
       minimumSipAmount: (json['minimumSipAmount'] as num?)?.toDouble(),
-      dialPadOutput: (json['dialPadOutput'] as num?)?.toDouble(),
     );
 
 Map<String, dynamic> _$DezervDialPadPropsToJson(DezervDialPadProps instance) =>
@@ -19,5 +18,4 @@ Map<String, dynamic> _$DezervDialPadPropsToJson(DezervDialPadProps instance) =>
       'defaultAmount': instance.defaultAmount,
       'maximumSipAmount': instance.maximumSipAmount,
       'minimumSipAmount': instance.minimumSipAmount,
-      'dialPadOutput': instance.dialPadOutput,
     };

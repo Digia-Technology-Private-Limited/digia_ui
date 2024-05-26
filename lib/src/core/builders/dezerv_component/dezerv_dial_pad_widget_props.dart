@@ -7,13 +7,9 @@ class DezervDialPadProps {
   final double? defaultAmount;
   final double? maximumSipAmount;
   final num? minimumSipAmount;
-  final double? dialPadOutput;
 
   DezervDialPadProps(
-      {this.defaultAmount,
-      this.maximumSipAmount,
-      this.minimumSipAmount,
-      this.dialPadOutput});
+      {this.defaultAmount, this.maximumSipAmount, this.minimumSipAmount});
 
   factory DezervDialPadProps.fromJson(Map<String, dynamic> json) {
     return _$DezervDialPadPropsFromJson(json);

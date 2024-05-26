@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import '../../../Utils/extensions.dart';
+import '../../page/dui_page_bloc.dart';
 import 'dezerv_dial_pad_widget_props.dart';
 import 'dezerv_flex_grid_view.dart';
 
@@ -19,7 +21,6 @@ class _DezervDialPadState extends State<DezervDialPad> {
   late final num _minimumAmount;
   late final num _maximumAmount;
   late final num _defaultAmount;
-  late final num dialPadOutput;
   late final String _formattedMinimumAmount;
   late final String _formattedMaximumAmount;
   late bool _isValidAmount;
@@ -27,7 +28,6 @@ class _DezervDialPadState extends State<DezervDialPad> {
   @override
   void initState() {
     _defaultAmount = widget.props.defaultAmount ?? 0;
-    dialPadOutput = widget.props.dialPadOutput ?? 0;
     _minimumAmount = widget.props.minimumSipAmount ?? 0;
     _maximumAmount = widget.props.maximumSipAmount ?? 1000000;
     _isValidAmount = true;
@@ -134,7 +134,14 @@ class _DezervDialPadState extends State<DezervDialPad> {
       }
     }
     setState(() {
-      dialPadOutput = int.parse(_userSelectedAmount);
+      // Read the list of variables from the current page
+      final bloc = context.tryRead<DUIPageBloc>();
+      if (bloc == null) {
+        throw 'SetStateEvent called on a widget which is not wrapped in DUIPageBloc';
+      }
+      final state = bloc.state;
+      final variables = state.props.variables;
+      variables?.entries.first.value.set(int.parse(_userSelectedAmount));
     });
   }
 
@@ -154,7 +161,13 @@ class _DezervDialPadState extends State<DezervDialPad> {
       _userSelectedAmount = '0';
     }
     setState(() {
-      dialPadOutput = int.parse(_userSelectedAmount);
+      final bloc = context.tryRead<DUIPageBloc>();
+      if (bloc == null) {
+        throw 'SetStateEvent called on a widget which is not wrapped in DUIPageBloc';
+      }
+      final state = bloc.state;
+      final variables = state.props.variables;
+      variables?.entries.first.value.set(int.parse(_userSelectedAmount));
     });
   }
 
