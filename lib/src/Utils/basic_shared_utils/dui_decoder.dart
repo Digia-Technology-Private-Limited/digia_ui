@@ -441,33 +441,18 @@ class DUIDecoder {
     }
   }
 
-  static StrokeCap? toStrokeCap(String? cap) {
-    if (cap == null) {
-      return null;
-    }
+  static StrokeCap? toStrokeCap(dynamic value) => switch (value) {
+        'round' => StrokeCap.round,
+        'butt' => StrokeCap.butt,
+        'square' => StrokeCap.square,
+        _ => null
+      };
 
-    switch (cap) {
-      case 'round':
-        return StrokeCap.round;
-      case 'butt':
-        return StrokeCap.butt;
-      case 'square':
-        return StrokeCap.square;
-    }
-
-    return null;
-  }
-
-  static StackFit toStackFit(String? fit) {
-    switch (fit) {
-      case 'expand':
-        return StackFit.expand;
-      case 'passthrough':
-        return StackFit.passthrough;
-      default:
-        return StackFit.loose;
-    }
-  }
+  static StackFit toStackFit(dynamic value) => switch (value) {
+        'expand' => StackFit.expand,
+        'passthrough' => StackFit.passthrough,
+        _ => StackFit.loose
+      };
 
   static AlignmentDirectional toStackChildAlignment(String? fit) {
     switch (fit) {

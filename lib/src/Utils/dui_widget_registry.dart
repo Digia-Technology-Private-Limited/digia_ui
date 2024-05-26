@@ -6,10 +6,12 @@ import '../core/builders/dui_app_bar_builder.dart';
 import '../core/builders/dui_avatar_builder.dart';
 import '../core/builders/dui_button_builder.dart';
 import '../core/builders/dui_carousel_builder.dart';
+import '../core/builders/dui_circular_progress_indicator_builder.dart';
 import '../core/builders/dui_container2_builder.dart';
 import '../core/builders/dui_custom_widget_builder.dart';
 import '../core/builders/dui_expandable_builder.dart';
 import '../core/builders/dui_flex_builder.dart';
+import '../core/builders/dui_future_builder.dart';
 import '../core/builders/dui_gridview_builder.dart';
 import '../core/builders/dui_horizontal_divider_builder.dart';
 import '../core/builders/dui_htmlview_builder.dart';
@@ -105,6 +107,9 @@ class DUIWidgetRegistry {
         DezervStepperBuilder.create(data, registry: DUIWidgetRegistry.shared),
     'digia/dezerv/dialPad': (data, {registry}) =>
         DUIDezervDialPadBuilder.create(data),
+    'digia/futureBuilder': (data, {registry}) => DUIFutureBuilder(data: data),
+    'digia/circularProgressBar': (data, {registry}) =>
+        DUICircularProgressBarBuilder(data: data),
   };
 
   static const DUIWidgetRegistry shared = DUIWidgetRegistry();

@@ -11,7 +11,7 @@ class APIModel {
   final HttpMethod method;
   final Map<String, dynamic>? headers;
   final Map<String, dynamic>? body;
-  final Map<String, dynamic>? variables;
+  // final Map<String, dynamic>? variables;
 
   APIModel({
     required this.id,
@@ -19,7 +19,7 @@ class APIModel {
     required this.method,
     required this.headers,
     required this.body,
-    required this.variables,
+    // required this.variables,
   });
 
   factory APIModel.fromJson(Map<String, dynamic> json) =>
