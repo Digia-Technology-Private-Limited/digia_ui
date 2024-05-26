@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-
+import 'package:google_fonts/google_fonts.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'dezerv_dial_pad_widget_props.dart';
 import 'dezerv_flex_grid_view.dart';
 
 class DezervDialPad extends StatefulWidget {
-  const DezervDialPad({super.key});
+  const DezervDialPad({super.key, required this.props});
+
+  final DezervDialPadProps props;
 
   @override
   State<DezervDialPad> createState() => _DezervDialPadState();
@@ -14,15 +16,22 @@ class DezervDialPad extends StatefulWidget {
 
 class _DezervDialPadState extends State<DezervDialPad> {
   late String _userSelectedAmount;
-  late final num _minimumAmount = _getMinAmount();
-  late final num _maximumAmount = _getMaxAmount();
-  late final String _formattedMinimumAmount =
-      _toCurrencyWithoutDecimal(_minimumAmount);
-  bool _isValidAmount = true;
+  late final num _minimumAmount;
+  late final num _maximumAmount;
+  late final num _defaultAmount;
+  late final String _formattedMinimumAmount;
+  late final String _formattedMaximumAmount;
+  late bool _isValidAmount;
 
   @override
   void initState() {
-    _userSelectedAmount = '0';
+    _defaultAmount = widget.props.defaultAmount ?? 0;
+    _minimumAmount = widget.props.minimumSipAmount ?? 0;
+    _maximumAmount = widget.props.maximumSipAmount ?? 1000000;
+    _isValidAmount = true;
+    _formattedMinimumAmount = _toCurrencyWithoutDecimal(_minimumAmount);
+    _formattedMaximumAmount = _toCurrencyWithoutDecimal(_maximumAmount);
+    _userSelectedAmount = _defaultAmount.toString();
     super.initState();
   }
 
@@ -37,9 +46,9 @@ class _DezervDialPadState extends State<DezervDialPad> {
             int.parse(_userSelectedAmount),
           ).replaceFirst('₹', '₹ '),
           style: GoogleFonts.inter(
-            color: _userSelectedAmount == '0'
-                ? const Color(0xff969593)
-                : const Color(0xffE7E6E2),
+            color: _isValidAmount
+                ? const Color(0xffE7E6E2)
+                : const Color.fromARGB(255, 255, 40, 25),
             fontWeight: FontWeight.w700,
             fontSize: 40,
           ),
@@ -114,7 +123,7 @@ class _DezervDialPadState extends State<DezervDialPad> {
         _userSelectedAmount = tempAmount;
       } else if (int.parse(tempAmount) > _maximumAmount) {
         Fluttertoast.showToast(
-          msg: 'Maximum allowed amount is $_formattedMinimumAmount',
+          msg: 'Maximum allowed amount is $_formattedMaximumAmount',
           gravity: ToastGravity.BOTTOM,
         );
       } else {
@@ -141,14 +150,6 @@ class _DezervDialPadState extends State<DezervDialPad> {
       _userSelectedAmount = '0';
     }
     setState(() {});
-  }
-
-  num _getMinAmount() {
-    return 20000;
-  }
-
-  num _getMaxAmount() {
-    return 100000;
   }
 
   /// Convert from 1,20,000.25 to 1,20,000
