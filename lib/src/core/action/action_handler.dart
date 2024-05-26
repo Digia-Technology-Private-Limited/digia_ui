@@ -6,6 +6,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
 import '../../Utils/basic_shared_utils/lodash.dart';
+import '../../Utils/basic_shared_utils/num_decoder.dart';
 import '../../Utils/extensions.dart';
 import '../../components/dui_widget_scope.dart';
 import '../../types.dart';
@@ -99,19 +100,24 @@ Map<String, ActionHandlerFn> _actionsMap = {
     }
 
     final events = action.data['events'];
+    final bool rebuildPage =
+        NumDecoder.toBool(action.data['rebuildPage']) ?? true;
 
     if (events is List) {
       bloc.add(SetStateEvent(
           events: events.map((e) {
-        final value = eval(
-          e['value'],
-          context: context,
-          enclosing: enclosing,
-          decoder: (p0) => p0,
-        );
-        return SingleSetStateEvent(
-            variableName: e['variableName'], context: context, value: value);
-      }).toList()));
+            final value = eval(
+              e['value'],
+              context: context,
+              enclosing: enclosing,
+              decoder: (p0) => p0,
+            );
+            return SingleSetStateEvent(
+                variableName: e['variableName'],
+                context: context,
+                value: value);
+          }).toList(),
+          rebuildPage: rebuildPage));
     }
 
     return;
@@ -130,7 +136,9 @@ Map<String, ActionHandlerFn> _actionsMap = {
         AppStateProvider.maybeOf(context)?.setState(e['variableName'], value);
       }
 
-      context.tryRead<DUIPageBloc>()?.add(SetStateEvent(events: []));
+      context
+          .tryRead<DUIPageBloc>()
+          ?.add(SetStateEvent(events: [], rebuildPage: true));
 
       return;
     }
