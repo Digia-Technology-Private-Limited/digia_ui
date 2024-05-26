@@ -163,10 +163,11 @@ class DigiaUIClient {
 
     await downloadFunctionsFile(_instance.config.functionsFilePath);
 
-    var jsFunction = JSFunctions();
+    //JSFunction needs to be singleton here.. Sample on how to call it
+    // var jsFunction = JSFunctions();
 
-    Timer(const Duration(seconds: 1),
-        () => jsFunction.callJs('getNextDate', {'number': 27}));
+    // Timer(const Duration(seconds: 1),
+    //     () => jsFunction.callJs('getNextDate', {'number': 27}));
 
     _instance.appState = DUIAppState.fromJson(_instance.config.appState ?? {});
 
