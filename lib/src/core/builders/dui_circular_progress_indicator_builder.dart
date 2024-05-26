@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../components/progress_bar/circular/circular_progress_bar.dart';
-import '../../components/progress_bar/circular/circular_progress_bar_props.dart';
+import '../../Utils/basic_shared_utils/dui_decoder.dart';
+import '../../Utils/basic_shared_utils/lodash.dart';
+import '../../Utils/util_functions.dart';
+import '../evaluator.dart';
 import '../json_widget_builder.dart';
 import '../page/props/dui_widget_json_data.dart';
 
@@ -14,7 +16,23 @@ class DUICircularProgressBarBuilder extends DUIWidgetBuilder {
 
   @override
   Widget build(BuildContext context) {
-    return DUICircularProgressBar(
-        DUICircularProgressBarProps.fromJson(data.props));
+    final bgColor = eval<String>(data.props['bgColor'], context: context)
+        .letIfTrue(toColor);
+    final indicatorColor =
+        eval<String>(data.props['indicatorColor'], context: context)
+            .letIfTrue(toColor);
+    final strokeWidth =
+        eval<double>(data.props['strokeWidth'], context: context);
+
+    final strokeAlign =
+        eval<double>(data.props['stokeAlign'], context: context);
+
+    return CircularProgressIndicator(
+      backgroundColor: bgColor,
+      color: indicatorColor,
+      strokeWidth: strokeWidth ?? 4.0,
+      strokeAlign: strokeAlign ?? CircularProgressIndicator.strokeAlignCenter,
+      strokeCap: DUIDecoder.toStrokeCap(data.props['strokeCap']),
+    );
   }
 }
