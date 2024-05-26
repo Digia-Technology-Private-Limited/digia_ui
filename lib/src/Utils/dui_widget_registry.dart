@@ -108,7 +108,7 @@ class DUIWidgetRegistry {
     'digia/dezerv/dialPad': (data, {registry}) =>
         DUIDezervDialPadBuilder.create(data),
     'digia/futureBuilder': (data, {registry}) => DUIFutureBuilder(data: data),
-    'digia/circularProgressIndicator': (data, {registry}) =>
+    'digia/circularProgressBar': (data, {registry}) =>
         DUICircularProgressBarBuilder(data: data),
   };
 
