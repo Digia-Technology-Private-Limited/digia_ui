@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -7,6 +8,8 @@ import 'package:flutter/services.dart';
 import 'package:uuid/uuid.dart';
 
 import '../digia_ui.dart';
+import 'core/functions/js_functions.dart';
+import 'core/functions/download.dart';
 import 'core/pref/dui_preferences.dart';
 import 'digia_ui_service.dart';
 import 'models/dui_app_state.dart';
@@ -157,6 +160,13 @@ class DigiaUIClient {
     }
 
     _instance.config = DUIConfig(data);
+
+    await downloadFunctionsFile(_instance.config.functionsFilePath);
+
+    var jsFunction = JSFunctions();
+
+    Timer(const Duration(seconds: 1),
+        () => jsFunction.callJs('getNextDate', {'number': 27}));
 
     _instance.appState = DUIAppState.fromJson(_instance.config.appState ?? {});
 
