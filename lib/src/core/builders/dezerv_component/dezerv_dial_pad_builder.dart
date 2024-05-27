@@ -15,7 +15,7 @@ class DUIDezervDialPadBuilder extends DUIWidgetBuilder {
   @override
   Widget build(BuildContext context) {
     return DezervDialPad(
-      props: DezervDialPadProps.fromJson(data.props),
+      props: data.props,
     );
   }
 }
