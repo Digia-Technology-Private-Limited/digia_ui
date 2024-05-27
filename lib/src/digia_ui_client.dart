@@ -52,7 +52,7 @@ class DigiaUIClient {
     _instance.accessKey = accessKey;
     _instance.baseUrl = baseUrl ?? defaultBaseUrl;
     Map<String, dynamic> headers = {'digia_projectId': accessKey};
-    _instance.networkClient = NetworkClient(_instance.baseUrl, headers, networkConfiguration);
+    _instance.networkClient = NetworkClient(_instance.baseUrl, headers, networkConfiguration, null);
     final string =
         await rootBundle.loadString(assetPath ?? defaultUIConfigAssetPath);
     final data = jsonDecode(string);
@@ -83,11 +83,12 @@ class DigiaUIClient {
       {required String accessKey,
       String? baseUrl,
       required dynamic data,
-      required NetworkConfiguration networkConfiguration}) async {
+      required NetworkConfiguration networkConfiguration,
+      DeveloperConfig? developerConfig}) async {
     _instance.accessKey = accessKey;
     _instance.baseUrl = baseUrl ?? defaultBaseUrl;
     Map<String, dynamic> headers = {'digia_projectId': accessKey};
-    _instance.networkClient = NetworkClient(_instance.baseUrl, headers, networkConfiguration);
+    _instance.networkClient = NetworkClient(_instance.baseUrl, headers, networkConfiguration, developerConfig);
     _instance.config = DUIConfig(data);
 
     await DUIPreferences.initialize();
@@ -104,7 +105,8 @@ class DigiaUIClient {
       String? projectId,
       required int version,
       String? baseUrl,
-      required NetworkConfiguration networkConfiguration}) async {
+      required NetworkConfiguration networkConfiguration,
+      DeveloperConfig? developerConfig}) async {
     await DUIPreferences.initialize();
     setUuid();
     BaseResponse resp;
@@ -120,7 +122,7 @@ class DigiaUIClient {
       'platform': instance._getPlatform(),
       'deviceId': DUIApp.uuid
     };
-    _instance.networkClient = NetworkClient(_instance.baseUrl, apiParams, networkConfiguration);
+    _instance.networkClient = NetworkClient(_instance.baseUrl, apiParams, networkConfiguration, developerConfig);
 
     String requestPath;
     dynamic requestData;
