@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +26,16 @@ typedef ActionHandlerFn = Future<dynamic>? Function({
 });
 
 Map<String, ActionHandlerFn> _actionsMap = {
+  'Action.delay': ({required action, required context, enclosing}) async {
+    final durationInMs = eval<double>(action.data['durationInMs'],
+        context: context, enclosing: enclosing);
+
+    if (durationInMs != null) {
+      await Future.delayed(Duration(milliseconds: durationInMs.toInt()));
+    } else {
+      log('Wait Duration is null');
+    }
+  },
   'Action.navigateToPage': ({required action, required context, enclosing}) {
     final String? pageUId = action.data['pageUid'] ?? action.data['pageId'];
 
