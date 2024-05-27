@@ -123,15 +123,19 @@ class _DezervDialPadState extends State<DezervDialPad> {
       final String tempAmount = _userSelectedAmount + selectedNumber.toString();
       if (int.parse(tempAmount) < _minimumAmount) {
         _isValidAmount = false;
-        _userSelectedAmount = tempAmount;
+        setState(() {
+          _userSelectedAmount = tempAmount;
+        });
       } else if (int.parse(tempAmount) > _maximumAmount) {
         Fluttertoast.showToast(
           msg: 'Maximum allowed amount is $_formattedMaximumAmount',
           gravity: ToastGravity.BOTTOM,
         );
       } else {
-        _isValidAmount = true;
-        _userSelectedAmount = tempAmount;
+        setState(() {
+          _userSelectedAmount = tempAmount;
+          _isValidAmount = true;
+        });
       }
     }
     setState(() {
@@ -156,13 +160,19 @@ class _DezervDialPadState extends State<DezervDialPad> {
 
       if ((int.parse(_userSelectedAmount) > _maximumAmount) ||
           (int.parse(_userSelectedAmount) < _minimumAmount)) {
-        _isValidAmount = false;
+        setState(() {
+          _isValidAmount = false;
+        });
       } else {
-        _isValidAmount = true;
+        setState(() {
+          _isValidAmount = true;
+        });
       }
     } else {
-      _isValidAmount = false;
-      _userSelectedAmount = '0';
+      setState(() {
+        _userSelectedAmount = '0';
+        _isValidAmount = false;
+      });
     }
     setState(() {
       final bloc = context.tryRead<DUIPageBloc>();
