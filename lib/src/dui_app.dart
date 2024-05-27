@@ -1,5 +1,7 @@
+import 'package:chucker_flutter/chucker_flutter.dart';
 import 'package:flutter/material.dart';
 
+import '../digia_ui.dart';
 import 'core/app_state_provider.dart';
 import 'core/page/dui_page.dart';
 import 'digia_ui_client.dart';
@@ -17,6 +19,7 @@ class DUIApp extends StatelessWidget {
   final Object? data;
   static String? uuid;
   final NetworkConfiguration networkConfiguration;
+  final DeveloperConfig? developerConfig;
 
   // final Map<String, dynamic> initProperties;
 
@@ -29,12 +32,16 @@ class DUIApp extends StatelessWidget {
       this.baseUrl,
       required this.version,
       required this.networkConfiguration,
+      this.developerConfig,
       this.data});
 
   _makeFuture() async {
     if (data != null) {
       return DigiaUIClient.initializeFromData(
-          accessKey: digiaAccessKey, data: data, networkConfiguration: networkConfiguration);
+          accessKey: digiaAccessKey,
+          data: data,
+          networkConfiguration: networkConfiguration,
+          developerConfig: developerConfig);
     }
 
     return DigiaUIClient.initializeFromNetwork(
@@ -42,8 +49,8 @@ class DUIApp extends StatelessWidget {
         environment: environment,
         version: version,
         baseUrl: baseUrl,
-        //drive this at a later stage from appConfig API
-        networkConfiguration: networkConfiguration);
+        networkConfiguration: networkConfiguration,
+        developerConfig: developerConfig);
   }
 
   @override
@@ -51,6 +58,7 @@ class DUIApp extends StatelessWidget {
     return MaterialApp(
       // key: key,
       debugShowCheckedModeBanner: false,
+      navigatorObservers: [ChuckerFlutter.navigatorObserver],
       theme: theme ??
           ThemeData(
             fontFamily: 'Poppins',

@@ -1,16 +1,34 @@
 import 'dart:io';
 
+import 'package:chucker_flutter/chucker_flutter.dart';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'package:flutter/foundation.dart';
 
+import '../../digia_ui.dart';
 import 'api_response/base_response.dart';
 import 'core/types.dart';
-import 'netwok_config.dart';
 
-String proxy = Platform.isAndroid ? '' : '';
+void configureDeveloperOptions(Dio dio, DeveloperConfig? developerConfig) {
+  if (developerConfig == null) {
+    return;
+  }
+  if (!kIsWeb && kDebugMode && developerConfig.proxyUrl != null) {
+    dio.httpClientAdapter = IOHttpClientAdapter(
+      createHttpClient: () {
+        return HttpClient()
+          ..findProxy = ((uri) => 'PROXY ${developerConfig.proxyUrl}')
+          ..badCertificateCallback = (cert, host, port) => true;
+      },
+    );
+  }
+  if (developerConfig.enableChucker) {
+    dio.interceptors.add(ChuckerDioInterceptor());
+  }
+}
 
-Dio _createDigiaDio(String baseUrl, Map<String, dynamic> headers) {
+Dio _createDigiaDio(String baseUrl, Map<String, dynamic> headers,
+    DeveloperConfig? developerConfig) {
   var dio = Dio(BaseOptions(
       baseUrl: baseUrl,
       connectTimeout: const Duration(seconds: 1000),
@@ -18,33 +36,17 @@ Dio _createDigiaDio(String baseUrl, Map<String, dynamic> headers) {
         ...headers,
         Headers.contentTypeHeader: Headers.jsonContentType,
       }));
-  if (kDebugMode && proxy != '') {
-    dio.httpClientAdapter = IOHttpClientAdapter(
-      createHttpClient: () {
-        return HttpClient()
-          ..findProxy = ((uri) => 'PROXY $proxy')
-          ..badCertificateCallback = (cert, host, port) => true;
-      },
-    );
-  }
+  configureDeveloperOptions(dio, developerConfig);
   return dio;
 }
 
-Dio _createProjectDio(NetworkConfiguration projectNetworkConfiguration) {
+Dio _createProjectDio(NetworkConfiguration projectNetworkConfiguration, DeveloperConfig? developerConfig) {
   var dio = Dio(BaseOptions(
       connectTimeout: Duration(seconds: projectNetworkConfiguration.timeout),
       headers: {
         ...projectNetworkConfiguration.defaultHeaders,
       }));
-  if (kDebugMode && proxy != '') {
-    dio.httpClientAdapter = IOHttpClientAdapter(
-      createHttpClient: () {
-        return HttpClient()
-          ..findProxy = ((uri) => 'PROXY $proxy')
-          ..badCertificateCallback = (cert, host, port) => true;
-      },
-    );
-  }
+  configureDeveloperOptions(dio, developerConfig);
   return dio;
 }
 
@@ -52,14 +54,16 @@ class NetworkClient {
   final Dio digiaDioInstance;
   final Dio projectDioInstance;
 
-  NetworkClient(String baseUrl, Map<String, dynamic> digiaHeaders,
-      NetworkConfiguration projectNetworkConfiguration)
-      : digiaDioInstance = _createDigiaDio(baseUrl, digiaHeaders),
-        projectDioInstance = _createProjectDio(projectNetworkConfiguration) {
+  NetworkClient(
+      String baseUrl,
+      Map<String, dynamic> digiaHeaders,
+      NetworkConfiguration projectNetworkConfiguration,
+      DeveloperConfig? developerConfig)
+      : digiaDioInstance = _createDigiaDio(baseUrl, digiaHeaders, developerConfig),
+        projectDioInstance = _createProjectDio(projectNetworkConfiguration, developerConfig) {
     if (baseUrl.isEmpty) {
       throw 'Invalid BaseUrl';
     }
-
     // if (kDebugMode) {
     //   this.dio.interceptors.addAll([
     //     PrettyDioLogger(
@@ -89,16 +93,14 @@ class NetworkClient {
           .toSet()
           .intersection(additionalHeaders.keys.toSet());
       for (var key in commonKeys) {
-         additionalHeaders.remove(key);
+        additionalHeaders.remove(key);
       }
     }
-  
+
     return projectDioInstance.request(url,
         data: data,
-        options: Options(
-          method: method.stringValue,
-          headers: additionalHeaders
-        ));
+        options:
+            Options(method: method.stringValue, headers: additionalHeaders));
   }
 
   Future<Response<T>> _execute<T>(String path, HttpMethod method,
