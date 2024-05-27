@@ -12,6 +12,7 @@ import 'digia_ui_service.dart';
 import 'models/dui_app_state.dart';
 import 'network/api_response/base_response.dart';
 import 'network/core/types.dart';
+import 'network/netwok_config.dart';
 import 'network/network_client.dart';
 
 const defaultUIConfigAssetPath = 'assets/json/dui_config.json';
@@ -47,11 +48,11 @@ class DigiaUIClient {
       {required String accessKey,
       String? assetPath,
       String? baseUrl,
-      Dio? dio}) async {
+      required NetworkConfiguration networkConfiguration}) async {
     _instance.accessKey = accessKey;
     _instance.baseUrl = baseUrl ?? defaultBaseUrl;
     Map<String, dynamic> headers = {'digia_projectId': accessKey};
-    _instance.networkClient = NetworkClient(dio, _instance.baseUrl, headers);
+    _instance.networkClient = NetworkClient(_instance.baseUrl, headers, networkConfiguration);
     final string =
         await rootBundle.loadString(assetPath ?? defaultUIConfigAssetPath);
     final data = jsonDecode(string);
@@ -81,12 +82,12 @@ class DigiaUIClient {
   static initializeFromData(
       {required String accessKey,
       String? baseUrl,
-      Dio? dio,
-      required dynamic data}) async {
+      required dynamic data,
+      required NetworkConfiguration networkConfiguration}) async {
     _instance.accessKey = accessKey;
     _instance.baseUrl = baseUrl ?? defaultBaseUrl;
     Map<String, dynamic> headers = {'digia_projectId': accessKey};
-    _instance.networkClient = NetworkClient(dio, _instance.baseUrl, headers);
+    _instance.networkClient = NetworkClient(_instance.baseUrl, headers, networkConfiguration);
     _instance.config = DUIConfig(data);
 
     await DUIPreferences.initialize();
@@ -103,7 +104,7 @@ class DigiaUIClient {
       String? projectId,
       required int version,
       String? baseUrl,
-      Dio? dio}) async {
+      required NetworkConfiguration networkConfiguration}) async {
     await DUIPreferences.initialize();
     setUuid();
     BaseResponse resp;
@@ -119,7 +120,7 @@ class DigiaUIClient {
       'platform': instance._getPlatform(),
       'deviceId': DUIApp.uuid
     };
-    _instance.networkClient = NetworkClient(dio, _instance.baseUrl, apiParams);
+    _instance.networkClient = NetworkClient(_instance.baseUrl, apiParams, networkConfiguration);
 
     String requestPath;
     dynamic requestData;
@@ -141,7 +142,7 @@ class DigiaUIClient {
         requestData = jsonEncode(apiParams);
     }
 
-    resp = await _instance.networkClient.request(
+    resp = await _instance.networkClient.requestInternal(
       HttpMethod.post,
       requestPath,
       headers: apiParams,
