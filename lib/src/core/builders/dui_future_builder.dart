@@ -32,7 +32,10 @@ class DUIFutureBuilder extends DUIWidgetBuilder {
             return data
                     .getChild('errorWidget')
                     .let((p0) => DUIWidget(data: p0)) ??
-                Text('Error: ${snapshot.error}');
+                Text(
+                  'Error: ${snapshot.error?.toString()}',
+                  style: const TextStyle(color: Colors.red),
+                );
           }
 
           return data
@@ -76,6 +79,7 @@ Future<Object?> _makeFuture(
             context: context,
             actionFlow: errorAction,
             enclosing: ExprContext(variables: {'error': e}));
+        throw e;
       });
 
     case 'delay':

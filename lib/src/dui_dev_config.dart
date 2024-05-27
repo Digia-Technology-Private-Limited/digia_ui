@@ -8,4 +8,3 @@ class DeveloperConfig {
     this.enableChucker = false,
   });
 }
-

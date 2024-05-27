@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:uuid/uuid.dart';
@@ -12,7 +11,6 @@ import 'digia_ui_service.dart';
 import 'models/dui_app_state.dart';
 import 'network/api_response/base_response.dart';
 import 'network/core/types.dart';
-import 'network/netwok_config.dart';
 import 'network/network_client.dart';
 
 const defaultUIConfigAssetPath = 'assets/json/dui_config.json';
@@ -52,7 +50,8 @@ class DigiaUIClient {
     _instance.accessKey = accessKey;
     _instance.baseUrl = baseUrl ?? defaultBaseUrl;
     Map<String, dynamic> headers = {'digia_projectId': accessKey};
-    _instance.networkClient = NetworkClient(_instance.baseUrl, headers, networkConfiguration, null);
+    _instance.networkClient =
+        NetworkClient(_instance.baseUrl, headers, networkConfiguration, null);
     final string =
         await rootBundle.loadString(assetPath ?? defaultUIConfigAssetPath);
     final data = jsonDecode(string);
@@ -88,7 +87,8 @@ class DigiaUIClient {
     _instance.accessKey = accessKey;
     _instance.baseUrl = baseUrl ?? defaultBaseUrl;
     Map<String, dynamic> headers = {'digia_projectId': accessKey};
-    _instance.networkClient = NetworkClient(_instance.baseUrl, headers, networkConfiguration, developerConfig);
+    _instance.networkClient = NetworkClient(
+        _instance.baseUrl, headers, networkConfiguration, developerConfig);
     _instance.config = DUIConfig(data);
 
     await DUIPreferences.initialize();
@@ -122,7 +122,8 @@ class DigiaUIClient {
       'platform': instance._getPlatform(),
       'deviceId': DUIApp.uuid
     };
-    _instance.networkClient = NetworkClient(_instance.baseUrl, apiParams, networkConfiguration, developerConfig);
+    _instance.networkClient = NetworkClient(
+        _instance.baseUrl, apiParams, networkConfiguration, developerConfig);
 
     String requestPath;
     dynamic requestData;
