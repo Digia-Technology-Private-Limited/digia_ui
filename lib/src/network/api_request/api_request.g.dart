@@ -12,7 +12,7 @@ APIModel _$APIModelFromJson(Map<String, dynamic> json) => APIModel(
       method: $enumDecode(_$HttpMethodEnumMap, json['method']),
       headers: json['headers'] as Map<String, dynamic>?,
       body: json['body'] as Map<String, dynamic>?,
-      variables: json['variables'] as Map<String, dynamic>?,
+      // variables: json['variables'] as Map<String, dynamic>?,
     );
 
 Map<String, dynamic> _$APIModelToJson(APIModel instance) => <String, dynamic>{
@@ -21,7 +21,7 @@ Map<String, dynamic> _$APIModelToJson(APIModel instance) => <String, dynamic>{
       'method': _$HttpMethodEnumMap[instance.method]!,
       'headers': instance.headers,
       'body': instance.body,
-      'variables': instance.variables,
+      // 'variables': instance.variables,
     };
 
 const _$HttpMethodEnumMap = {

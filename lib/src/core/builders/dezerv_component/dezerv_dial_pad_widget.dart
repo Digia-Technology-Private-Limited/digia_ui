@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+
 import '../../../Utils/extensions.dart';
 import '../../page/dui_page_bloc.dart';
 import 'dezerv_dial_pad_widget_props.dart';
@@ -141,7 +142,10 @@ class _DezervDialPadState extends State<DezervDialPad> {
       }
       final state = bloc.state;
       final variables = state.props.variables;
-      variables?.entries.first.value.set(int.parse(_userSelectedAmount));
+      variables?.entries
+          .firstWhere((element) => element.key == 'sipValue')
+          .value
+          .set(int.parse(_userSelectedAmount));
     });
   }
 
@@ -167,7 +171,10 @@ class _DezervDialPadState extends State<DezervDialPad> {
       }
       final state = bloc.state;
       final variables = state.props.variables;
-      variables?.entries.first.value.set(int.parse(_userSelectedAmount));
+      variables?.entries
+          .firstWhere((element) => element.key == 'sipValue')
+          .value
+          .set(int.parse(_userSelectedAmount));
     });
   }
 

@@ -26,6 +26,7 @@ class SingleSetStateEvent {
 
 class SetStateEvent extends DUIPageEvent {
   final List<SingleSetStateEvent> events;
+  final bool rebuildPage;
 
-  SetStateEvent({required this.events});
+  SetStateEvent({required this.events, required this.rebuildPage});
 }

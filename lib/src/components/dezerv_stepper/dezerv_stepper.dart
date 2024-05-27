@@ -5,7 +5,6 @@ import '../../Utils/basic_shared_utils/lodash.dart';
 import '../../Utils/dui_widget_registry.dart';
 import '../../Utils/util_functions.dart';
 import '../DUIText/dui_text.dart';
-import '../DUIText/dui_text_style.dart';
 import '../dui_icons/icon_helpers/icon_data_serialization.dart';
 import 'dezerv_stepper_props.dart';
 import 'dz_step.dart';
@@ -169,7 +168,7 @@ class _DZStepperState extends State<DZStepper> {
     final bool isCompleted =
         showActiveState ? index < _stepIndex : index <= _stepCircleIndex;
 
-    final Icon? dzStepIcon = Icon(
+    final Icon dzStepIcon = Icon(
         getIconData(icondataMap: widget.props.steps![index].stepIcon!) ??
             Icons.circle);
     final Widget? stepIcon;
@@ -200,7 +199,7 @@ class _DZStepperState extends State<DZStepper> {
       } else if (isCompleted) {
         stepIcon = dzStepIcon;
       } else {
-        stepIcon = Icon(Icons.run_circle_outlined);
+        stepIcon = const Icon(Icons.run_circle_outlined);
       }
     }
 
@@ -280,7 +279,7 @@ class _DZStepperState extends State<DZStepper> {
   }
 
   String removeAllHtmlTags(String htmlText) {
-    RegExp exp = RegExp(r"<[^>]*>", multiLine: true, caseSensitive: true);
+    RegExp exp = RegExp(r'<[^>]*>', multiLine: true, caseSensitive: true);
 
     return htmlText.replaceAll(exp, '');
   }
@@ -377,7 +376,7 @@ class _ProgressBarState extends State<ProgressBar>
   }
 
   void animator() async {
-    await Future.delayed(Duration(milliseconds: 200));
+    await Future.delayed(const Duration(milliseconds: 200));
     setState(() {
       animate = true;
     });
@@ -390,7 +389,7 @@ class _ProgressBarState extends State<ProgressBar>
     final bool isHorizontal = widget.direction == Axis.horizontal;
 
     return AnimatedContainer(
-      duration: Duration(seconds: 1),
+      duration: const Duration(seconds: 1),
       // this needs to be fixed in case of horizontal bar
       height: animate ? widget.barLength : 0,
       width: isHorizontal ? widget.barLength : 2,
