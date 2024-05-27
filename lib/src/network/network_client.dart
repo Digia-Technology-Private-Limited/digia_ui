@@ -40,7 +40,8 @@ Dio _createDigiaDio(String baseUrl, Map<String, dynamic> headers,
   return dio;
 }
 
-Dio _createProjectDio(NetworkConfiguration projectNetworkConfiguration, DeveloperConfig? developerConfig) {
+Dio _createProjectDio(NetworkConfiguration projectNetworkConfiguration,
+    DeveloperConfig? developerConfig) {
   var dio = Dio(BaseOptions(
       connectTimeout: Duration(seconds: projectNetworkConfiguration.timeout),
       headers: {
@@ -59,8 +60,10 @@ class NetworkClient {
       Map<String, dynamic> digiaHeaders,
       NetworkConfiguration projectNetworkConfiguration,
       DeveloperConfig? developerConfig)
-      : digiaDioInstance = _createDigiaDio(baseUrl, digiaHeaders, developerConfig),
-        projectDioInstance = _createProjectDio(projectNetworkConfiguration, developerConfig) {
+      : digiaDioInstance =
+            _createDigiaDio(baseUrl, digiaHeaders, developerConfig),
+        projectDioInstance =
+            _createProjectDio(projectNetworkConfiguration, developerConfig) {
     if (baseUrl.isEmpty) {
       throw 'Invalid BaseUrl';
     }

@@ -10,7 +10,6 @@ import '../evaluator.dart';
 import '../utils.dart';
 import 'dui_page_event.dart';
 import 'dui_page_state.dart';
-import 'props/dui_page_props.dart';
 
 class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
   final DUIConfig config;

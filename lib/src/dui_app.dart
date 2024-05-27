@@ -3,9 +3,6 @@ import 'package:flutter/material.dart';
 
 import '../digia_ui.dart';
 import 'core/app_state_provider.dart';
-import 'core/page/dui_page.dart';
-import 'digia_ui_client.dart';
-import 'network/netwok_config.dart';
 
 enum Environment { staging, production, version }
 
