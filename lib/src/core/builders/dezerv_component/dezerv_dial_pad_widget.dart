@@ -4,14 +4,14 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
 import '../../../Utils/extensions.dart';
+import '../../evaluator.dart';
 import '../../page/dui_page_bloc.dart';
-import 'dezerv_dial_pad_widget_props.dart';
 import 'dezerv_flex_grid_view.dart';
 
 class DezervDialPad extends StatefulWidget {
   const DezervDialPad({super.key, required this.props});
 
-  final DezervDialPadProps props;
+  final Map<String, dynamic> props;
 
   @override
   State<DezervDialPad> createState() => _DezervDialPadState();
@@ -28,9 +28,13 @@ class _DezervDialPadState extends State<DezervDialPad> {
 
   @override
   void initState() {
-    _defaultAmount = widget.props.defaultAmount ?? 0;
-    _minimumAmount = widget.props.minimumSipAmount ?? 0;
-    _maximumAmount = widget.props.maximumSipAmount ?? 1000000;
+    _defaultAmount =
+        eval<num>(widget.props['defaultAmount'], context: context) ?? 0;
+    _minimumAmount =
+        eval<num>(widget.props['minimumSipAmount'], context: context) ?? 0;
+    _maximumAmount =
+        eval<num>(widget.props['maximumSipAmount'], context: context) ??
+            1000000;
     _isValidAmount = true;
     _formattedMinimumAmount = _toCurrencyWithoutDecimal(_minimumAmount);
     _formattedMaximumAmount = _toCurrencyWithoutDecimal(_maximumAmount);
@@ -147,7 +151,7 @@ class _DezervDialPadState extends State<DezervDialPad> {
       final state = bloc.state;
       final variables = state.props.variables;
       variables?.entries
-          .firstWhere((element) => element.key == 'sipValue')
+          .firstWhere((element) => element.key == 'selectedSipAmount')
           .value
           .set(int.parse(_userSelectedAmount));
     });
@@ -182,7 +186,7 @@ class _DezervDialPadState extends State<DezervDialPad> {
       final state = bloc.state;
       final variables = state.props.variables;
       variables?.entries
-          .firstWhere((element) => element.key == 'sipValue')
+          .firstWhere((element) => element.key == 'selectedSipAmount')
           .value
           .set(int.parse(_userSelectedAmount));
     });
