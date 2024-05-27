@@ -177,7 +177,8 @@ class ActionHandler {
         }
         continue;
       }
-      executable.call(context: context, action: action, enclosing: enclosing);
+      await executable.call(
+          context: context, action: action, enclosing: enclosing);
     }
 
     return null;

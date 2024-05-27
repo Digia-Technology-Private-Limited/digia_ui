@@ -25,7 +25,11 @@ class ActionFlow {
 
     if (json['steps'] is List) {
       return ActionFlow(
-          actions: json.map((e) => ActionProp.fromJson(e)).toList(),
+          actions: json['steps']
+              .where((e) => e != null)
+              .map((e) => ActionProp.fromJson(e))
+              .cast<ActionProp>()
+              .toList(),
           inkwell: inkwell);
     }
 
