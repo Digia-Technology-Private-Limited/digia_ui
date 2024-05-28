@@ -4,7 +4,12 @@ Digia Ui Sdk.
 
 ## Getting Started
 
+## [0.0.7-beta.2] - 2023-05-28
 
+Whats new
+
+1. Now chain actions to do more
+2. Get API success/failures
 
 ## [0.0.6-beta.2] - 2023-05-28
 
