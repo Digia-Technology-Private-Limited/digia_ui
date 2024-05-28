@@ -4,7 +4,6 @@ import 'package:getwidget/getwidget.dart';
 import '../../../digia_ui.dart';
 import '../../Utils/basic_shared_utils/color_decoder.dart';
 import '../../Utils/basic_shared_utils/num_decoder.dart';
-import '../../components/dui_icons/icon_helpers/icon_data_serialization.dart';
 import '../evaluator.dart';
 import '../json_widget_builder.dart';
 import 'dui_icon_builder.dart';

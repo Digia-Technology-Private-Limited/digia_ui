@@ -239,8 +239,8 @@ class _DZStepperState extends State<DZStepper> {
 
 // Gets first and last title height to adjust and center title in horizontal stepper
   EdgeInsets _getHorizontalPadding() {
-    final double firstTitleWidth = widget.props.firstTitleWidth!;
-    final double lastTitleWidth = widget.props.lastTitleWidth!;
+    final double firstTitleWidth = widget.props.firstTitleWidth ?? 24;
+    final double lastTitleWidth = widget.props.lastTitleWidth ?? 24;
     // Divider the title width by 2 to half it and remove step circle radius
     return EdgeInsets.only(
         left: (firstTitleWidth / 2) - iconRadius,
