@@ -4,6 +4,7 @@ import '../../../digia_ui.dart';
 import '../../Utils/basic_shared_utils/lodash.dart';
 import '../../Utils/dui_widget_registry.dart';
 import '../../Utils/util_functions.dart';
+import '../../core/evaluator.dart';
 import '../DUIText/dui_text.dart';
 import '../dui_icons/icon_helpers/icon_data_serialization.dart';
 import 'dezerv_stepper_props.dart';
@@ -45,11 +46,14 @@ class _DZStepperState extends State<DZStepper> {
 
   @override
   void initState() {
-    currentIndex = widget.props.currentIndex ?? 0;
+    currentIndex =
+        eval<double>(widget.props.currentIndex, context: context) ?? 0;
     steps = widget.props.steps ?? [];
-    showActiveState = widget.props.showActiveState ?? false;
-    sidePadding = widget.props.sidePadding ?? 40;
-    iconRadius = widget.props.iconRadius ?? 10;
+    showActiveState =
+        eval<bool>(widget.props.showActiveState, context: context) ?? false;
+    sidePadding =
+        eval<double>(widget.props.sidePadding, context: context) ?? 40;
+    iconRadius = eval<double>(widget.props.iconRadius, context: context) ?? 10;
     direction = Axis.vertical;
 
     super.initState();
@@ -168,10 +172,16 @@ class _DZStepperState extends State<DZStepper> {
     final bool isCompleted =
         showActiveState ? index < _stepIndex : index <= _stepCircleIndex;
 
-    final Icon dzStepIcon = Icon(
-        getIconData(icondataMap: widget.props.steps![index].stepIcon!) ??
-            Icons.circle);
-    final Widget? stepIcon;
+    Icon? dzStepIcon = Icon(
+        getIconData(
+            icondataMap: widget.props.steps?[index].stepIcon?['iconData']),
+        size: eval<double>(widget.props.steps![index].stepIcon?['iconSize'],
+            context: context),
+        color: eval<String>(widget.props.steps?[index].stepIcon?['iconColor'],
+                context: context)
+            .letIfTrue(toColor));
+
+    Widget? stepIcon;
 
     if (showActiveState && index == currentIndex && isActive) {
       stepIcon = dzStepIcon ??
@@ -239,8 +249,12 @@ class _DZStepperState extends State<DZStepper> {
 
 // Gets first and last title height to adjust and center title in horizontal stepper
   EdgeInsets _getHorizontalPadding() {
-    final double firstTitleWidth = widget.props.firstTitleWidth ?? 24;
-    final double lastTitleWidth = widget.props.lastTitleWidth ?? 24;
+    // final double firstTitleWidth = widget.props.firstTitleWidth ?? 24;
+    final double firstTitleWidth =
+        eval<double>(widget.props.firstTitleWidth, context: context) ?? 24;
+    // final double lastTitleWidth = widget.props.lastTitleWidth ?? 24;
+    final double lastTitleWidth =
+        eval<double>(widget.props.lastTitleWidth, context: context) ?? 24;
     // Divider the title width by 2 to half it and remove step circle radius
     return EdgeInsets.only(
         left: (firstTitleWidth / 2) - iconRadius,

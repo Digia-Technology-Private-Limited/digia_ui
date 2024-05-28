@@ -62,7 +62,7 @@ class DUICheckboxBuilder extends DUIWidgetBuilder {
         inactiveIcon: inactiveIcon,
         size: size ?? 24,
         onChanged: (val) {
-          value = val;
+          value = eval<bool>(val, context: context) ?? false;
         },
         value: value,
       ),
