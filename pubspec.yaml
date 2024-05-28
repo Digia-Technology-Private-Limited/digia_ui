@@ -85,6 +85,7 @@ dependencies:
   fluttertoast: ^8.2.5
   uuid: ^4.4.0
   chucker_flutter: ^1.7.2
+  getwidget: ^4.0.0
 
 dev_dependencies:
   flutter_test:
