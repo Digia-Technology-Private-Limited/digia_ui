@@ -31,7 +31,7 @@ class ApiHandler {
           url: url,
           method: apiModel.method,
           additionalHeaders: headers,
-          data: apiModel.body);
+          data: body);
       stopwatch.stop();
       stopwatch.reset();
       DigiaUIClient.instance.duiAnalytics?.onDataSourceSuccess(
