@@ -167,10 +167,8 @@ class DigiaUIClient {
     _instance.config = DUIConfig(data);
 
     _instance.jsFunctions = JSFunctions();
-    _instance.jsFunctions.fetchJsFile(_instance.config.functionsFilePath);
-
-    Timer(const Duration(seconds: 5),
-        () => _instance.jsFunctions.callJs('getNextDate', {'number': 27}));
+    await _instance.jsFunctions.fetchJsFile(_instance.config.functionsFilePath);
+    // _instance.jsFunctions.callJs('test3', {'number': 27});
 
     _instance.appState = DUIAppState.fromJson(_instance.config.appState ?? {});
 

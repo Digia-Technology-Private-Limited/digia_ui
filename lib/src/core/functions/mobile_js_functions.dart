@@ -8,25 +8,20 @@ import './js_functions.dart';
 class MobileJsFunctions implements JSFunctions {
   JavascriptRuntime runtime = getJavascriptRuntime();
   late String jsFile;
-  MobileJsFunctions() {
-    initJs();
-  }
 
-  void initJs() async {
-    final file = File(await localPath + "/functions.js");
+  @override
+  Future fetchJsFile(String path) async {
+    await downloadFunctionsFile(path);
+    final file = File('${await localPath}/functions.js');
     jsFile = file.readAsStringSync(encoding: utf8);
   }
 
   @override
-  void fetchJsFile(String path) async {
-    await downloadFunctionsFile(path);
-  }
-
-  @override
   dynamic callJs(String fnName, dynamic v1) async {
-    JsEvalResult jsEvalResult = runtime.evaluate('$jsFile$fnName($v1)');
-    print('Result() executed in ${json.encode(jsEvalResult.rawResult)}');
-    return jsEvalResult.rawResult;
+    JsEvalResult jsEvalResult = runtime.evaluate('$jsFile;JSON.stringify($fnName($v1))');
+    print('Result() executed in ${jsEvalResult.stringResult}');
+    var finalRes = json.decode(jsEvalResult.stringResult);
+    return finalRes;
   }
 }
 
