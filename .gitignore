@@ -8,6 +8,8 @@
 .buildlog/
 .history
 .svn/
+.fvm/
+.fvmrc
 migrate_working_dir/
 
 # IntelliJ related
@@ -42,8 +44,13 @@ app.*.map.json
 /example/android/app/debug
 /example/android/app/profile
 /example/android/app/release
-
+android/local.properties
+/android/local.properties
 pubspec.lock
 .vscode/launch.json
 example/ios/Podfile.lock
 macos/Podfile.lock
+
+# FVM Version Cache
+.fvm/
+

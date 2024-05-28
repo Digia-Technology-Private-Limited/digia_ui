@@ -1,13 +1,11 @@
-import 'package:digia_ui/src/Utils/basic_shared_utils/lodash.dart';
-import 'package:digia_ui/src/Utils/basic_shared_utils/num_decoder.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
-class DUIDecoder {
-  static MainAxisAlignment? toMainAxisAlginment(String? value) {
-    if (value == null) return null;
+import 'lodash.dart';
+import 'num_decoder.dart';
 
+class DUIDecoder {
+  static MainAxisAlignment? toMainAxisAlginment(dynamic value) {
     return switch (value) {
       'start' => MainAxisAlignment.start,
       'end' => MainAxisAlignment.end,
@@ -19,43 +17,35 @@ class DUIDecoder {
     };
   }
 
-  static MainAxisAlignment toMainAxisAlginmentOrDefault(String? value,
+  static MainAxisAlignment toMainAxisAlginmentOrDefault(dynamic value,
       {required MainAxisAlignment defaultValue}) {
     return toMainAxisAlginment(value) ?? defaultValue;
   }
 
-  static MainAxisSize toMainAxisSizeOrDefault(String? value,
+  static MainAxisSize toMainAxisSizeOrDefault(dynamic value,
       {required MainAxisSize defaultValue}) {
     return toMainAxisSize(value) ?? defaultValue;
   }
 
-  static CrossAxisAlignment? toCrossAxisAlignment(String? value) {
-    if (value == null) return null;
+  static CrossAxisAlignment? toCrossAxisAlignment(dynamic value) =>
+      switch (value) {
+        'start' => CrossAxisAlignment.start,
+        'end' => CrossAxisAlignment.end,
+        'center' => CrossAxisAlignment.center,
+        'stretch' => CrossAxisAlignment.stretch,
+        'baseline' => CrossAxisAlignment.baseline,
+        _ => null
+      };
 
-    return switch (value) {
-      'start' => CrossAxisAlignment.start,
-      'end' => CrossAxisAlignment.end,
-      'center' => CrossAxisAlignment.center,
-      'stretch' => CrossAxisAlignment.stretch,
-      'baseline' => CrossAxisAlignment.baseline,
-      _ => null
-    };
-  }
+  static MainAxisSize? toMainAxisSize(dynamic value) => switch (value) {
+        'min' => MainAxisSize.min,
+        'max' => MainAxisSize.max,
+        _ => null
+      };
 
-  static MainAxisSize? toMainAxisSize(String? value) {
-    if (value == null) return null;
-
-    return switch (value) {
-      'min' => MainAxisSize.min,
-      'max' => MainAxisSize.max,
-      _ => null
-    };
-  }
-
-  static CrossAxisAlignment toCrossAxisAlignmentOrDefault(String? value,
-      {required CrossAxisAlignment defaultValue}) {
-    return toCrossAxisAlignment(value) ?? defaultValue;
-  }
+  static CrossAxisAlignment toCrossAxisAlignmentOrDefault(dynamic value,
+          {required CrossAxisAlignment defaultValue}) =>
+      toCrossAxisAlignment(value) ?? defaultValue;
 
   static FontWeight toFontWeight(String? weight) {
     switch (weight?.toLowerCase()) {
@@ -86,16 +76,10 @@ class DUIDecoder {
     return FontWeight.normal;
   }
 
-  static FontStyle toFontStyle(String? style) {
-    switch (style) {
-      case 'italic':
-        return FontStyle.italic;
-    }
+  static FontStyle toFontStyle(dynamic style) =>
+      switch (style) { 'italic' => FontStyle.italic, _ => FontStyle.normal };
 
-    return FontStyle.normal;
-  }
-
-  static TextAlign toTextAlign(String? alignment) {
+  static TextAlign toTextAlign(dynamic alignment) {
     switch (alignment) {
       case 'right':
         return TextAlign.right;
@@ -111,7 +95,7 @@ class DUIDecoder {
     return TextAlign.start;
   }
 
-  static TextOverflow toTextOverflow(String? overflow) {
+  static TextOverflow toTextOverflow(dynamic overflow) {
     switch (overflow) {
       case 'fade':
         return TextOverflow.fade;
@@ -126,7 +110,7 @@ class DUIDecoder {
     return TextOverflow.clip;
   }
 
-  static TextDecoration? toTextDecoration(String? textDecorationToken) {
+  static TextDecoration? toTextDecoration(dynamic textDecorationToken) {
     switch (textDecorationToken) {
       case 'underline':
         return TextDecoration.underline;
@@ -142,7 +126,7 @@ class DUIDecoder {
   }
 
   static TextDecorationStyle? toTextDecorationStyle(
-      String? textDecorationStyleToken) {
+      dynamic textDecorationStyleToken) {
     switch (textDecorationStyleToken) {
       case 'dashed':
         return TextDecorationStyle.dashed;
@@ -457,33 +441,18 @@ class DUIDecoder {
     }
   }
 
-  static StrokeCap? toStrokeCap(String? cap) {
-    if (cap == null) {
-      return null;
-    }
+  static StrokeCap? toStrokeCap(dynamic value) => switch (value) {
+        'round' => StrokeCap.round,
+        'butt' => StrokeCap.butt,
+        'square' => StrokeCap.square,
+        _ => null
+      };
 
-    switch (cap) {
-      case 'round':
-        return StrokeCap.round;
-      case 'butt':
-        return StrokeCap.butt;
-      case 'square':
-        return StrokeCap.square;
-    }
-
-    return null;
-  }
-
-  static StackFit toStackFit(String? fit) {
-    switch (fit) {
-      case 'expand':
-        return StackFit.expand;
-      case 'passthrough':
-        return StackFit.passthrough;
-      default:
-        return StackFit.loose;
-    }
-  }
+  static StackFit toStackFit(dynamic value) => switch (value) {
+        'expand' => StackFit.expand,
+        'passthrough' => StackFit.passthrough,
+        _ => StackFit.loose
+      };
 
   static AlignmentDirectional toStackChildAlignment(String? fit) {
     switch (fit) {

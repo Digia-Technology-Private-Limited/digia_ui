@@ -1,5 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import '../../Utils/basic_shared_utils/num_decoder.dart';
+
 part 'action_prop.g.dart';
 
 class ActionFlow {
@@ -8,20 +10,30 @@ class ActionFlow {
 
   ActionFlow({required this.actions, this.inkwell = true});
 
+  factory ActionFlow.empty() => ActionFlow(actions: []);
+
   factory ActionFlow.fromJson(dynamic json) {
-    final inkwell = json['inkwell'] as bool? ?? true;
+    if (json == null) return ActionFlow.empty();
+
+    final inkwell =
+        NumDecoder.toBoolOrDefault(json['inkwell'], defaultValue: true);
 
     // Backward compatibility
     if (_isActionProp(json)) {
-      return ActionFlow(actions: [ActionProp.fromJson(json)]);
+      return ActionFlow(actions: [ActionProp.fromJson(json)], inkwell: inkwell);
     }
 
-    if (json is List) {
+    if (json['steps'] is List) {
       return ActionFlow(
-          actions: json.map((e) => ActionProp.fromJson(e)).toList());
+          actions: json['steps']
+              .where((e) => e != null)
+              .map((e) => ActionProp.fromJson(e))
+              .cast<ActionProp>()
+              .toList(),
+          inkwell: inkwell);
     }
 
-    return ActionFlow(actions: [], inkwell: inkwell);
+    return ActionFlow.empty();
   }
 
   Map<String, dynamic> toJson() => {'actions': actions.map((e) => e.toJson())};

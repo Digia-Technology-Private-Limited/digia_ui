@@ -1,7 +1,8 @@
-import 'package:digia_ui/src/Utils/basic_shared_utils/dui_decoder.dart';
-import 'package:digia_ui/src/components/dui_lottie/dui_lottie_props.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+
+import '../../Utils/basic_shared_utils/dui_decoder.dart';
+import 'dui_lottie_props.dart';
 
 class DUILottie extends StatefulWidget {
   final DUILottieProps props;

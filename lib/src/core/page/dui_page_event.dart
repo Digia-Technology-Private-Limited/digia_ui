@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 abstract class DUIPageEvent {}
 
 class InitPageEvent extends DUIPageEvent {
-  final Map<String, dynamic>? pageParams;
+  final BuildContext context;
 
-  InitPageEvent({this.pageParams});
+  InitPageEvent(this.context);
 }
 
 // class PostActionEvent extends DUIPageEvent {
@@ -26,6 +26,7 @@ class SingleSetStateEvent {
 
 class SetStateEvent extends DUIPageEvent {
   final List<SingleSetStateEvent> events;
+  final bool rebuildPage;
 
-  SetStateEvent({required this.events});
+  SetStateEvent({required this.events, required this.rebuildPage});
 }

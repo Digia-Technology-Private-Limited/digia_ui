@@ -1,8 +1,9 @@
-import 'package:digia_ui/src/components/dui_avatar/avatar.dart';
-import 'package:digia_ui/src/components/dui_avatar/avatar_props.dart';
-import 'package:digia_ui/src/core/json_widget_builder.dart';
-import 'package:digia_ui/src/core/page/props/dui_widget_json_data.dart';
 import 'package:flutter/material.dart';
+
+import '../../components/dui_avatar/avatar.dart';
+import '../../components/dui_avatar/avatar_props.dart';
+import '../json_widget_builder.dart';
+import '../page/props/dui_widget_json_data.dart';
 
 class DUIAvatarBuilder extends DUIWidgetBuilder {
   DUIAvatarBuilder({required super.data});

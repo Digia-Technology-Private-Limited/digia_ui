@@ -36,7 +36,7 @@ DUIExpandableProps _$DUIExpandablePropsFromJson(Map<String, dynamic> json) =>
       json['headerAlignment'] as String?,
       json['color'] as String?,
       json['alignment'] as String?,
-      json['animationDuration'] as int?,
+      (json['animationDuration'] as num?)?.toInt(),
       DUIExpandableProps._iconFromJson(json['icon'] as Map<String, dynamic>),
       json['tapHeaderToExpand'] as bool?,
       json['tapBodyToExpand'] as bool?,

@@ -1,7 +1,8 @@
-import 'package:digia_ui/src/components/container/dui_container2_props.dart';
-import 'package:digia_ui/src/core/json_widget_builder.dart';
 import 'package:flutter/material.dart';
+
 import '../../components/container/dui_container2.dart';
+import '../../components/container/dui_container2_props.dart';
+import '../json_widget_builder.dart';
 import '../page/props/dui_widget_json_data.dart';
 
 class DUIContainer2Builder extends DUIWidgetBuilder {

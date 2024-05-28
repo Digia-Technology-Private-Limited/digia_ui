@@ -9,6 +9,7 @@ part of 'image.props.dart';
 DUIImageProps _$DUIImagePropsFromJson(Map<String, dynamic> json) =>
     DUIImageProps(
       styleClass: DUIStyleClass.fromJson(json['styleClass']),
+      opacity: (json['opacity'] as num?)?.toDouble(),
       imageSrc: json['imageSrc'] as String,
       placeHolder: json['placeHolder'] as String?,
       errorImage: json['errorImage'] as String?,
@@ -23,4 +24,5 @@ Map<String, dynamic> _$DUIImagePropsToJson(DUIImageProps instance) =>
       'errorImage': instance.errorImage,
       'aspectRatio': instance.aspectRatio,
       'fit': instance.fit,
+      'opacity': instance.opacity,
     };

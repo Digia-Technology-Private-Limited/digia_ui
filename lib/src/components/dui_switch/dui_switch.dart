@@ -1,7 +1,8 @@
-import 'package:digia_ui/src/Utils/basic_shared_utils/lodash.dart';
-import 'package:digia_ui/src/Utils/util_functions.dart';
-import 'package:digia_ui/src/components/dui_switch/dui_switch_props.dart';
 import 'package:flutter/material.dart';
+
+import '../../Utils/basic_shared_utils/lodash.dart';
+import '../../Utils/util_functions.dart';
+import 'dui_switch_props.dart';
 
 class DUISwitch extends StatefulWidget {
   final DUISwitchProps props;

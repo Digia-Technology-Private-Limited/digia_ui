@@ -1,12 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:digia_ui/src/components/image/image.props.dart';
-import 'package:digia_ui/src/core/container/dui_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blurhash/flutter_blurhash.dart';
 import 'package:octo_image/octo_image.dart';
 
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
+import '../../core/container/dui_container.dart';
+import '../../core/evaluator.dart';
 import '../dui_widget_scope.dart';
+import 'image.props.dart';
 
 class DUIImage extends StatelessWidget {
   final DUIImageProps props;
@@ -43,38 +44,42 @@ class DUIImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ImageProvider imageProvider;
+    final imageSource = eval<String>(props.imageSrc, context: context) ?? '';
     // Network Image
-    if (props.imageSrc.startsWith('http')) {
-      imageProvider = CachedNetworkImageProvider(props.imageSrc);
+    if (imageSource.startsWith('http')) {
+      imageProvider = CachedNetworkImageProvider(imageSource);
     } else {
       imageProvider =
-          DUIWidgetScope.of(context)?.imageProviderFn?.call(props.imageSrc) ??
-              AssetImage(props.imageSrc);
+          DUIWidgetScope.maybeOf(context)?.imageProviderFn?.call(imageSource) ??
+              AssetImage(imageSource);
     }
 
-    return OctoImage(
-        fadeInDuration: const Duration(microseconds: 0),
-        fadeOutDuration: const Duration(microseconds: 0),
-        image: imageProvider,
-        fit: DUIDecoder.toBoxFit(props.fit),
-        gaplessPlayback: true,
-        placeholderBuilder: _placeHolderBuilderCreater(),
-        imageBuilder: (BuildContext context, Widget widget) {
-          final child = props.aspectRatio == null
-              ? widget
-              : AspectRatio(aspectRatio: props.aspectRatio!, child: widget);
-          return props.styleClass != null
-              ? DUIContainer(styleClass: props.styleClass, child: child)
-              : child;
-        },
-        errorBuilder: (context, error, stackTrace) {
-          if (props.errorImage == null) {
-            return const Icon(
-              Icons.error_outline,
-              color: Colors.red,
-            );
-          }
-          return Image.asset(props.errorImage!);
-        });
+    return Opacity(
+      opacity: props.opacity ?? 1,
+      child: OctoImage(
+          fadeInDuration: const Duration(microseconds: 0),
+          fadeOutDuration: const Duration(microseconds: 0),
+          image: imageProvider,
+          fit: DUIDecoder.toBoxFit(props.fit),
+          gaplessPlayback: true,
+          placeholderBuilder: _placeHolderBuilderCreater(),
+          imageBuilder: (BuildContext context, Widget widget) {
+            final child = props.aspectRatio == null
+                ? widget
+                : AspectRatio(aspectRatio: props.aspectRatio!, child: widget);
+            return props.styleClass != null
+                ? DUIContainer(styleClass: props.styleClass, child: child)
+                : child;
+          },
+          errorBuilder: (context, error, stackTrace) {
+            if (props.errorImage == null) {
+              return const Icon(
+                Icons.error_outline,
+                color: Colors.red,
+              );
+            }
+            return Image.asset(props.errorImage!);
+          }),
+    );
   }
 }

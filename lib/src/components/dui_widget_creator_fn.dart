@@ -1,9 +1,10 @@
-import 'package:digia_ui/src/Utils/basic_shared_utils/dui_decoder.dart';
-import 'package:digia_ui/src/core/action/action_prop.dart';
 import 'package:flutter/material.dart';
 
+import '../Utils/basic_shared_utils/dui_decoder.dart';
 import '../Utils/basic_shared_utils/num_decoder.dart';
 import '../core/action/action_handler.dart';
+import '../core/action/action_prop.dart';
+import '../core/evaluator.dart';
 
 // ignore: non_constant_identifier_names
 Widget DUIGestureDetector(
@@ -40,8 +41,10 @@ Widget DUIAlign({dynamic alignment, required Widget child}) {
 }
 
 // ignore: non_constant_identifier_names
-Widget DUIVisibility({dynamic visible, required Widget child}) {
-  final value = NumDecoder.toBool(visible);
+Widget DUIVisibility(
+    {dynamic visible, required Widget child, required BuildContext context}) {
+  // final value = NumDecoder.toBool(visible);
+  final value = eval<bool>(visible, context: context);
 
   if (value == null) return child;
 

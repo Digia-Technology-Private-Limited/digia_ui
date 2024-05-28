@@ -1,12 +1,13 @@
-import 'package:digia_ui/src/Utils/basic_shared_utils/dui_decoder.dart';
-import 'package:digia_ui/src/Utils/basic_shared_utils/lodash.dart';
-import 'package:digia_ui/src/Utils/util_functions.dart';
-import 'package:digia_ui/src/components/DUIText/dui_text.dart';
-import 'package:digia_ui/src/components/dui_avatar/avatar_props.dart';
-import 'package:digia_ui/src/components/image/image.dart';
-import 'package:digia_ui/src/components/image/image.props.dart';
-import 'package:digia_ui/src/components/utils/DUICornerRadius/dui_corner_radius.dart';
 import 'package:flutter/material.dart';
+
+import '../../Utils/basic_shared_utils/dui_decoder.dart';
+import '../../Utils/basic_shared_utils/lodash.dart';
+import '../../Utils/util_functions.dart';
+import '../DUIText/dui_text.dart';
+import '../image/image.dart';
+import '../image/image.props.dart';
+import '../utils/DUICornerRadius/dui_corner_radius.dart';
+import 'avatar_props.dart';
 
 class DUIAvatar extends StatefulWidget {
   final DUIAvatarProps props;

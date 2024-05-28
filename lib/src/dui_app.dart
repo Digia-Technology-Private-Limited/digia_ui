@@ -1,26 +1,61 @@
+import 'package:chucker_flutter/chucker_flutter.dart';
 import 'package:flutter/material.dart';
 
-import 'package:digia_ui/src/core/page/dui_page.dart';
-import 'package:digia_ui/src/digia_ui_client.dart';
+import '../digia_ui.dart';
+import 'core/app_state_provider.dart';
+
+enum Environment { staging, production, version }
 
 class DUIApp extends StatelessWidget {
   final String digiaAccessKey;
   final GlobalKey<NavigatorState>? navigatorKey;
   final ThemeData? theme;
   final String? baseUrl;
+  final Environment environment;
+  final int version;
+  final Object? data;
+  static String? uuid;
+  final NetworkConfiguration networkConfiguration;
+  final DeveloperConfig? developerConfig;
+
+  // final Map<String, dynamic> initProperties;
 
   const DUIApp(
       {super.key,
       required this.digiaAccessKey,
+      required this.environment,
       this.navigatorKey,
       this.theme,
-      this.baseUrl});
+      this.baseUrl,
+      required this.version,
+      required this.networkConfiguration,
+      this.developerConfig,
+      this.data});
+
+  _makeFuture() async {
+    if (data != null) {
+      return DigiaUIClient.initializeFromData(
+          accessKey: digiaAccessKey,
+          data: data,
+          networkConfiguration: networkConfiguration,
+          developerConfig: developerConfig);
+    }
+
+    return DigiaUIClient.initializeFromNetwork(
+        accessKey: digiaAccessKey,
+        environment: environment,
+        version: version,
+        baseUrl: baseUrl,
+        networkConfiguration: networkConfiguration,
+        developerConfig: developerConfig);
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       // key: key,
       debugShowCheckedModeBanner: false,
+      navigatorObservers: [ChuckerFlutter.navigatorObserver],
       theme: theme ??
           ThemeData(
             fontFamily: 'Poppins',
@@ -29,8 +64,7 @@ class DUIApp extends StatelessWidget {
           ),
       title: 'Digia App',
       home: FutureBuilder(
-        future: DigiaUIClient.initializeFromNetwork(
-            accessKey: digiaAccessKey, baseUrl: baseUrl),
+        future: _makeFuture(),
         builder: (context, snapshot) {
           if (snapshot.connectionState != ConnectionState.done) {
             return const Scaffold(
@@ -73,7 +107,9 @@ class DUIApp extends StatelessWidget {
           final initialRouteData =
               DigiaUIClient.getConfigResolver().getfirstPageData();
 
-          return DUIPage(pageUid: initialRouteData.uid);
+          return AppStateProvider(
+              state: DigiaUIClient.instance.appState.variables,
+              child: DUIPage(pageUid: initialRouteData.uid));
         },
       ),
     );

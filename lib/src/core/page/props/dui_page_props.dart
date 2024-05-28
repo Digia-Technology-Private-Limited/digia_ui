@@ -1,17 +1,18 @@
-import 'package:digia_ui/src/Utils/basic_shared_utils/lodash.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-import 'package:digia_ui/src/core/page/props/dui_widget_json_data.dart';
-
+import '../../../Utils/basic_shared_utils/lodash.dart';
 import '../../../models/variable_def.dart';
+import '../../action/action_prop.dart';
+import 'dui_widget_json_data.dart';
 
 part 'dui_page_props.g.dart';
 
 @JsonSerializable()
 class DUIPageProps {
   String uid;
-  dynamic actions;
-  dynamic inputArgs;
+  Map<String, ActionFlow> actions;
+  @VariablesJsonConverter()
+  Map<String, VariableDef>? inputArgs;
   @VariablesJsonConverter()
   Map<String, VariableDef>? variables;
   @PageLayoutJsonConverter()
@@ -19,11 +20,11 @@ class DUIPageProps {
 
   DUIPageProps({
     required this.uid,
-    this.actions,
+    Map<String, ActionFlow>? actions,
     this.inputArgs,
     this.variables,
     required this.layout,
-  });
+  }) : actions = actions ?? {};
 
   factory DUIPageProps.fromJson(Map<String, dynamic> json) =>
       _$DUIPagePropsFromJson(json);

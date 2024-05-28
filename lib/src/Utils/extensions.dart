@@ -1,9 +1,9 @@
-import 'package:digia_ui/src/Utils/basic_shared_utils/lodash.dart';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'dart:convert';
-
+import 'basic_shared_utils/lodash.dart';
 import 'basic_shared_utils/num_decoder.dart';
 
 extension KeyPath on Map {
@@ -59,7 +59,7 @@ extension EmailValidator on String {
 }
 
 extension ObjectExt on Object? {
-  R? typedValue<R>({R? defaultValue}) {
+  R? toType<R>({R? defaultValue}) {
     final value = this;
     if (this == null) return defaultValue;
     if (value is R) return value;

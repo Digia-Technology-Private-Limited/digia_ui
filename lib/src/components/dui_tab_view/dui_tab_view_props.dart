@@ -1,6 +1,7 @@
-import 'package:digia_ui/src/components/DUIText/dui_text_style.dart';
-import 'package:digia_ui/src/components/utils/DUIInsets/dui_insets.dart';
 import 'package:json_annotation/json_annotation.dart';
+
+import '../DUIText/dui_text_style.dart';
+import '../utils/DUIInsets/dui_insets.dart';
 
 part 'dui_tab_view_props.g.dart';
 

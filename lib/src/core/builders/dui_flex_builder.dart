@@ -1,11 +1,11 @@
-import 'package:digia_ui/digia_ui.dart';
-import 'package:digia_ui/src/Utils/basic_shared_utils/dui_decoder.dart';
-import 'package:digia_ui/src/Utils/dui_widget_registry.dart';
-import 'package:digia_ui/src/Utils/extensions.dart';
-import 'package:digia_ui/src/core/json_widget_builder.dart';
 import 'package:flutter/material.dart';
 
+import '../../../digia_ui.dart';
+import '../../Utils/basic_shared_utils/dui_decoder.dart';
+import '../../Utils/dui_widget_registry.dart';
+import '../../Utils/extensions.dart';
 import '../../components/dui_widget_creator_fn.dart';
+import '../json_widget_builder.dart';
 
 class DUIFlexBuilder extends DUIWidgetBuilder {
   Axis direction;

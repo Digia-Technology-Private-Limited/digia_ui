@@ -1,7 +1,8 @@
-import 'package:digia_ui/src/Utils/basic_shared_utils/num_decoder.dart';
-import 'package:digia_ui/src/components/DUIText/dui_text_props.dart';
-import 'package:digia_ui/src/components/utils/DUICornerRadius/dui_corner_radius.dart';
 import 'package:json_annotation/json_annotation.dart';
+
+import '../../Utils/basic_shared_utils/num_decoder.dart';
+import '../DUIText/dui_text_props.dart';
+import '../utils/DUICornerRadius/dui_corner_radius.dart';
 
 part 'avatar_props.g.dart';
 

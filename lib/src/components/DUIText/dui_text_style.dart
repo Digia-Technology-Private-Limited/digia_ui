@@ -1,4 +1,4 @@
-import 'package:digia_ui/src/Utils/dui_font.dart';
+import '../../Utils/dui_font.dart';
 
 part 'dui_text_style.json.dart';
 

@@ -1,11 +1,12 @@
-import 'package:digia_ui/src/Utils/basic_shared_utils/lodash.dart';
-import 'package:digia_ui/src/Utils/dui_widget_registry.dart';
-import 'package:digia_ui/src/components/dui_widget_creator_fn.dart';
-import 'package:digia_ui/src/components/utils/DUIStyleClass/dui_style_class.dart';
-import 'package:digia_ui/src/core/action/action_prop.dart';
-import 'package:digia_ui/src/core/container/dui_container.dart';
-import 'package:digia_ui/src/core/page/props/dui_widget_json_data.dart';
 import 'package:flutter/material.dart';
+
+import '../Utils/basic_shared_utils/lodash.dart';
+import '../Utils/dui_widget_registry.dart';
+import '../components/dui_widget_creator_fn.dart';
+import '../components/utils/DUIStyleClass/dui_style_class.dart';
+import 'action/action_prop.dart';
+import 'container/dui_container.dart';
+import 'page/props/dui_widget_json_data.dart';
 
 abstract class DUIWidgetBuilder {
   DUIWidgetJsonData data;
@@ -20,7 +21,6 @@ abstract class DUIWidgetBuilder {
 
   Widget buildWithContainerProps(BuildContext context) {
     var output = build(context);
-
     if (data.containerProps.isEmpty) {
       return output;
     }
@@ -43,7 +43,9 @@ abstract class DUIWidgetBuilder {
 
     // Visibility
     output = DUIVisibility(
-        visible: data.containerProps['visibility'], child: output);
+        visible: data.containerProps['visibility'],
+        child: output,
+        context: context);
     return output;
   }
 }

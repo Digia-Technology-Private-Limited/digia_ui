@@ -1,17 +1,21 @@
 import 'dart:convert';
+import 'dart:io';
 
-import 'package:digia_ui/src/config_resolver.dart';
-import 'package:digia_ui/src/core/pref/dui_preferences.dart';
-import 'package:digia_ui/src/models/dui_app_state.dart';
-import 'package:digia_ui/src/network/network_client.dart';
-import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:uuid/uuid.dart';
 
+import '../digia_ui.dart';
+import 'core/pref/dui_preferences.dart';
 import 'digia_ui_service.dart';
+import 'models/dui_app_state.dart';
+import 'network/api_response/base_response.dart';
+import 'network/core/types.dart';
+import 'network/network_client.dart';
 
 const defaultUIConfigAssetPath = 'assets/json/dui_config.json';
-const defaultBaseUrl = 'https://app.digia.tech/hydrator/api';
-// const defaultBaseUrl = 'http://localhost:5000/hydrator/api';
+const defaultBaseUrl = 'https://app.digia.tech/api/v1';
+// const defaultBaseUrl = 'http://localhost:3000/api/v1';
 
 class DigiaUIClient {
   static final DigiaUIClient _instance = DigiaUIClient._();
@@ -25,6 +29,8 @@ class DigiaUIClient {
   late NetworkClient networkClient;
   late DUIConfig config;
   late DUIAppState appState;
+  late int version;
+  late Environment environment;
 
   bool _isInitialized = false;
 
@@ -40,11 +46,12 @@ class DigiaUIClient {
       {required String accessKey,
       String? assetPath,
       String? baseUrl,
-      Dio? dio}) async {
+      required NetworkConfiguration networkConfiguration}) async {
     _instance.accessKey = accessKey;
     _instance.baseUrl = baseUrl ?? defaultBaseUrl;
     Map<String, dynamic> headers = {'digia_projectId': accessKey};
-    _instance.networkClient = NetworkClient(dio, _instance.baseUrl, headers);
+    _instance.networkClient =
+        NetworkClient(_instance.baseUrl, headers, networkConfiguration, null);
     final string =
         await rootBundle.loadString(assetPath ?? defaultUIConfigAssetPath);
     final data = jsonDecode(string);
@@ -52,6 +59,7 @@ class DigiaUIClient {
     _instance.config = DUIConfig(data);
 
     await DUIPreferences.initialize();
+    setUuid();
 
     _instance.appState = DUIAppState.fromJson(_instance.config.appState ?? {});
 
@@ -62,18 +70,29 @@ class DigiaUIClient {
     return _instance._isInitialized;
   }
 
+  static void setUuid() {
+    DUIApp.uuid = DUIPreferences.instance.getString('uuid');
+    if (DUIApp.uuid == null) {
+      DUIApp.uuid = const Uuid().v4();
+      DUIPreferences.instance.setString('uuid', DUIApp.uuid!);
+    }
+  }
+
   static initializeFromData(
       {required String accessKey,
       String? baseUrl,
-      Dio? dio,
-      required dynamic data}) async {
+      required dynamic data,
+      required NetworkConfiguration networkConfiguration,
+      DeveloperConfig? developerConfig}) async {
     _instance.accessKey = accessKey;
     _instance.baseUrl = baseUrl ?? defaultBaseUrl;
     Map<String, dynamic> headers = {'digia_projectId': accessKey};
-    _instance.networkClient = NetworkClient(dio, _instance.baseUrl, headers);
+    _instance.networkClient = NetworkClient(
+        _instance.baseUrl, headers, networkConfiguration, developerConfig);
     _instance.config = DUIConfig(data);
 
     await DUIPreferences.initialize();
+    setUuid();
 
     _instance.appState = DUIAppState.fromJson(_instance.config.appState ?? {});
 
@@ -81,18 +100,57 @@ class DigiaUIClient {
   }
 
   static initializeFromNetwork(
-      {required String accessKey, String? baseUrl, Dio? dio}) async {
+      {required String accessKey,
+      required Environment environment,
+      String? projectId,
+      required int version,
+      String? baseUrl,
+      required NetworkConfiguration networkConfiguration,
+      DeveloperConfig? developerConfig}) async {
+    await DUIPreferences.initialize();
+    setUuid();
+    BaseResponse resp;
+    _instance.environment = environment;
+    _instance.version = version;
     _instance.accessKey = accessKey;
     _instance.baseUrl = baseUrl ?? defaultBaseUrl;
-    Map<String, dynamic> headers = {'digia_projectId': accessKey};
-    _instance.networkClient = NetworkClient(dio, _instance.baseUrl, headers);
 
-    final resp = await _instance.networkClient.post(
-      path: '/config/getAppConfig',
-      fromJsonT: (json) => json as dynamic,
-      data: jsonEncode(
-        {'projectId': accessKey},
-      ),
+    Map<String, dynamic> apiParams = {
+      'digia_projectId': accessKey,
+      'projectId': accessKey,
+      'version': version,
+      'platform': instance._getPlatform(),
+      'deviceId': DUIApp.uuid
+    };
+    _instance.networkClient = NetworkClient(
+        _instance.baseUrl, apiParams, networkConfiguration, developerConfig);
+
+    String requestPath;
+    dynamic requestData;
+    switch (environment) {
+      case Environment.staging:
+        requestPath = '/config/getAppConfig';
+        requestData = jsonEncode(apiParams);
+        break;
+      case Environment.production:
+        requestPath = '/config/getAppConfigProduction';
+        requestData = jsonEncode(apiParams);
+        break;
+      case Environment.version:
+        requestPath = '/config/getAppConfigForVersion';
+        requestData = jsonEncode(apiParams);
+        break;
+      default:
+        requestPath = '/config/getAppConfig';
+        requestData = jsonEncode(apiParams);
+    }
+
+    resp = await _instance.networkClient.requestInternal(
+      HttpMethod.post,
+      requestPath,
+      headers: apiParams,
+      (json) => json as dynamic,
+      data: requestData,
     );
 
     final data = resp.data['response'] as Map<String, dynamic>?;
@@ -104,8 +162,6 @@ class DigiaUIClient {
 
     _instance.config = DUIConfig(data);
 
-    await DUIPreferences.initialize();
-
     _instance.appState = DUIAppState.fromJson(_instance.config.appState ?? {});
 
     _instance._isInitialized = true;
@@ -116,5 +172,15 @@ class DigiaUIClient {
         baseUrl: _instance.baseUrl,
         httpClient: _instance.networkClient,
         config: _instance.config);
+  }
+
+  String _getPlatform() {
+    if (kIsWeb) return 'mobile_web';
+
+    if (Platform.isIOS) return 'ios';
+
+    if (Platform.isAndroid) return 'android';
+
+    return 'mobile_web';
   }
 }

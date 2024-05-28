@@ -125,9 +125,13 @@
         "onPageLoad": {
           "type": "Action.loadPage",
           "data": {
-            "pageId": "joke"
+            "dataSourceId": "12345",
+            "variables": {
+              "randomSeed": "abcd"
+            }
           }
-        }
+        },
+        "onRefresh": {}
       },
       "inputArgs": null,
       "layout": null
@@ -163,7 +167,26 @@
   },
   "rest": {
     "baseUrl": "https://app.digia.tech/hydrator/api",
-    "defaultHeaders": {}
+    "defaultHeaders": {
+      "x-device-id": "${localstorage.deviceId}",
+      "x-auth-token": "${localstorage.authToken}"
+    },
+    "apis": {
+      "12345": {
+        "id": "12345",
+        "httpMethod": "GET",
+        "url": "https://demo5020025.mockable.io/",
+        "headers": {
+          "x-random-seed": "{{randomSeed}}"
+        },
+        "variables": {
+          "randomSeed": {
+            "type": "string"
+          }
+        },
+        "body": {}
+      }
+    }
   },
   "theme": {
     "colors": {

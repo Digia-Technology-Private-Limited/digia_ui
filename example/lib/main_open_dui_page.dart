@@ -2,28 +2,34 @@ import 'package:digia_ui/digia_ui.dart';
 import 'package:flutter/material.dart';
 
 // const String baseUrl = 'http://localhost:5000/hydrator/api';
-const String baseUrl = 'https://app.digia.tech/hydrator/api';
+const String baseUrl = 'https://app.digia.tech/api/v1';
 
 void main() async {
-  await DigiaUIClient.initializeFromData(accessKey: "", data: const {
-    'theme': <String, dynamic>{
-      'colors': {'light': <String, dynamic>{}},
-    },
-    'fonts': <String, dynamic>{},
-    'pages': <String, dynamic>{},
-    'rest': <String, dynamic>{},
-    'appSettings': <String, dynamic>{'initialRoute': ''},
-    'appState': <String, dynamic>{
-      "counter": {
-        "type": "integer",
-        "default": 0,
+  await DigiaUIClient.initializeFromData(
+      accessKey: "",
+      data: const {
+        'theme': <String, dynamic>{
+          'colors': {'light': <String, dynamic>{}},
+        },
+        'fonts': <String, dynamic>{},
+        'pages': <String, dynamic>{},
+        'rest': <String, dynamic>{},
+        'appSettings': <String, dynamic>{'initialRoute': ''},
+        'appState': <String, dynamic>{
+          "counter": {
+            "type": "integer",
+            "default": 0,
+          },
+          "pressedCount": {
+            "type": "integer",
+            "default": 0,
+          }
+        }
       },
-      "pressedCount": {
-        "type": "integer",
-        "default": 0,
-      }
-    }
-  });
+      networkConfiguration: NetworkConfiguration(defaultHeaders: {
+        "Authorization":
+            "Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJkZXZpY2UiOjQsImV4cCI6MTcxNjgwNjc2NSwiaWF0IjoxNzE2Nzg4NzY1LCJqayI6ImF1dGgiLCJ1c2VyIjp7ImlkIjoiNjY0NjAxOWE1Yjg5ZWE0ZTU2ZTcxOTlkIiwiaXNRdWl6VGFrZW4iOmZhbHNlLCJwaG9uZSI6IiIsIkludml0ZSI6eyJUb2tlbiI6IiIsIkV4cGlyYXRpb25FcG9jaCI6MH0sIndoYXRzYXBwT3B0aW4iOmZhbHNlLCJhb2ZEZXRhaWxzIjp7InBlcm1hbmVudEFkZHJlc3MiOnt9LCJiaXJ0aENpdHkiOiIiLCJwb2xpdGljYWxseUV4cG9zZWQiOmZhbHNlLCJjdXJyZW50QWRkcmVzcyI6e319LCJDeWJyaWxsYUFjY291bnRJRCI6IiIsIkN5YnJpbGxhQWNjb3VudE9sZElEIjowLCJBY2NvdW50SUQiOiIwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAiLCJDeWJyaWxsYUludmVzdG9ySUQiOjAsIkludmVzdG9ySUQiOiIwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAiLCJPbGRNZW1iZXJQYXJ0bmVyIjowLCJMaW5rZWRpblBob3RvU2F2ZWQiOmZhbHNlLCJpbnZpdGVBY2Nlc3NQaG9uZSI6IiIsImVtcGxveWVyTmFtZSI6IiIsInJlZmVycmFsVXNlcklkIjoiMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwIiwiaXNJbnZpdGVBY2Nlc3NQaG9uZVZlcmlmaWVkIjpmYWxzZSwiYXBwbGljYW50c0FoZWFkIjowLCJpc0ludml0ZVdoYXRzYXBwTm90aWZ5IjpmYWxzZSwicGluIjoiIiwiaW52aXRlRXh0ZW5zaW9uUmVhc29uIjoiIiwicXVpelRva2VuIjoiIiwiY3licmlsbGFNYW5kYXRlSWQiOjAsInJ0YUN5YnJpbGxhTWFuZGF0ZUlkIjowLCJzaXBJRCI6IjAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMCIsIk9uYm9hcmRpbmdNb2RlIjowLCJ1dG0iOnt9LCJvYmplY3RpdmUiOnsiaWQiOiIwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAifSwicG9ydGZvbGlvUmV2aWV3SUQiOiIwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAiLCJwbXNFeHBlcnRDYWxsRGV0YWlscyI6eyJsYXN0VXBkYXRlZFRzIjoiMDAwMS0wMS0wMVQwMDowMDowMFoifSwiYXBwc2ZseWVyVVRNIjp7fSwiY3JlYXRlZEJ5IjoiMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwIiwiZGV6ZXJ2QXBwUmF0aW5nQ2xpY2tlZCI6ZmFsc2UsImFtbERldGFpbHMiOnt9fX0.sZD5wQmGkjhLTY5eyxKa6sTeo8CMcZcrhYgtHkkF4yPrTqfFbOPnhiOAbqEjCPJYetLWTDj7zeVDnx-ytiZC9g",
+      }, timeout: 30));
   const pageUid = 'Test';
 
   WidgetsFlutterBinding.ensureInitialized();

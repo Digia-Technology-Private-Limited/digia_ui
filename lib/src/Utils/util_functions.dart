@@ -1,13 +1,13 @@
-import 'package:digia_ui/src/Utils/basic_shared_utils/color_decoder.dart';
-import 'package:digia_ui/src/Utils/basic_shared_utils/dui_decoder.dart';
-import 'package:digia_ui/src/Utils/basic_shared_utils/lodash.dart';
-import 'package:digia_ui/src/components/DUIText/DUI_text_span/dui_text_span.dart';
-import 'package:digia_ui/src/components/DUIText/dui_text_style.dart';
-import 'package:digia_ui/src/components/utils/DUIBorder/dui_border.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../digia_ui.dart';
+import '../components/DUIText/DUI_text_span/dui_text_span.dart';
+import '../components/DUIText/dui_text_style.dart';
+import '../components/utils/DUIBorder/dui_border.dart';
+import 'basic_shared_utils/color_decoder.dart';
+import 'basic_shared_utils/dui_decoder.dart';
+import 'basic_shared_utils/lodash.dart';
 
 class DUIConfigConstants {
   static const double fallbackSize = 14;

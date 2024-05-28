@@ -1,46 +1,76 @@
-import 'package:digia_ui/digia_ui.dart';
-import 'package:digia_ui/src/Utils/extensions.dart';
-import 'package:digia_ui/src/components/dui_widget_scope.dart';
-import 'package:digia_ui/src/core/action/action_prop.dart';
-import 'package:digia_ui/src/core/page/dui_page_bloc.dart';
-import 'package:digia_ui/src/core/page/dui_page_event.dart';
-import 'package:digia_ui/src/core/utils.dart';
+import 'dart:developer';
+
+import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:json_schema2/json_schema2.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
+import '../../Utils/basic_shared_utils/lodash.dart';
+import '../../Utils/basic_shared_utils/num_decoder.dart';
+import '../../Utils/extensions.dart';
+import '../../components/dui_widget_scope.dart';
+import '../../types.dart';
+import '../app_state_provider.dart';
+import '../evaluator.dart';
+import '../page/dui_page_bloc.dart';
+import '../page/dui_page_event.dart';
+import '../utils.dart';
+import 'action_prop.dart';
 
 typedef ActionHandlerFn = Future<dynamic>? Function({
   required BuildContext context,
   required ActionProp action,
+  ExprContext? enclosing,
 });
 
 Map<String, ActionHandlerFn> _actionsMap = {
-  'Action.navigateToPage': ({required action, required context}) {
-    final String? pageUId = action.data['pageUId'] ?? action.data['pageId'];
+  'Action.delay': ({required action, required context, enclosing}) async {
+    final durationInMs = eval<double>(action.data['durationInMs'],
+        context: context, enclosing: enclosing);
+
+    if (durationInMs != null) {
+      await Future.delayed(Duration(milliseconds: durationInMs.toInt()));
+    } else {
+      log('Wait Duration is null');
+    }
+  },
+  'Action.navigateToPage': ({required action, required context, enclosing}) {
+    final String? pageUId = action.data['pageUid'] ?? action.data['pageId'];
 
     if (pageUId == null) {
       throw 'Page Id not found in Action Props';
     }
 
-    final pageArgs = action.data['pageArgs'] ?? action.data['args'];
+    final String openAs =
+        action.data['openAs'] ?? action.data['pageType'] ?? 'fullPage';
+    final Map<String, dynamic> bottomSheetStyling = action.data['style'] ?? {};
 
-    return openDUIPage(pageUid: pageUId, context: context, pageArgs: pageArgs);
-  },
-  'Action.navigateToPageNameInBottomSheet': (
-      {required action, required context}) {
-    final String? pageUId = action.data['pageUId'] ?? action.data['pageId'];
+    Map<String, dynamic>? pageArgs =
+        action.data['pageArgs'] ?? action.data['args'];
 
-    if (pageUId == null) {
-      throw 'Page Id not found in Action Props';
-    }
-    final pageArgs = action.data['pageArgs'] ?? action.data['args'];
-    return openDUIPageInBottomSheet(
-        pageUid: pageUId, context: context, pageArgs: pageArgs);
+    final evaluatedArgs = _eval(pageArgs, context, enclosing);
+
+    return switch (openAs) {
+      'bottomSheet' => openDUIPageInBottomSheet(
+          pageUid: pageUId, context: context, style: bottomSheetStyling),
+      'fullPage' || _ => openDUIPage(
+          pageUid: pageUId, context: context, pageArgs: evaluatedArgs),
+    };
   },
-  'Action.pop': ({required action, required context}) {
+  // 'Action.navigateToPageNameInBottomSheet': (
+  //     {required action, required context}) {
+  //   final String? pageUId = action.data['pageUId'] ?? action.data['pageId'];
+  //
+  //   if (pageUId == null) {
+  //     throw 'Page Id not found in Action Props';
+  //   }
+  //   final pageArgs = action.data['pageArgs'] ?? action.data['args'];
+  //   return openDUIPageInBottomSheet(
+  //       pageUid: pageUId, context: context, pageArgs: pageArgs);
+  // },
+  'Action.pop': ({required action, required context, enclosing}) {
     if (action.data['maybe'] == true) {
       Navigator.of(context).maybePop();
       return;
@@ -49,9 +79,11 @@ Map<String, ActionHandlerFn> _actionsMap = {
     Navigator.of(context).pop();
     return;
   },
-  'Action.openUrl': ({required action, required context}) async {
-    final url = Uri.parse(action.data['url']);
-    final canOpenUrl = await canLaunchUrl(url);
+  'Action.openUrl': ({required action, required context, enclosing}) async {
+    final url =
+        eval<String>(action.data['url'], context: context, enclosing: enclosing)
+            .let(Uri.parse);
+    final canOpenUrl = url != null && await canLaunchUrl(url);
     if (canOpenUrl) {
       return launchUrl(url,
           mode: DUIDecoder.toUriLaunchMode(action.data['launchMode']));
@@ -59,43 +91,66 @@ Map<String, ActionHandlerFn> _actionsMap = {
       throw 'Not allowed to open url: $url';
     }
   },
-  'Action.callExternalFunction': ({required action, required context}) {
-    final handler = DUIWidgetScope.of(context)?.externalFunctionHandler;
+  'Action.handleDigiaMessage': (
+      {required action, required context, enclosing}) {
+    final handler = DUIWidgetScope.maybeOf(context)?.onMessageReceived;
     if (handler == null) return;
 
-    handler(context, action.data['methodId'], action.data['args']);
+    final name = action.data['name'];
+    final body = action.data['body'];
+
+    handler(MessagePayload(
+        context: context, name: name, body: _eval(body, context, enclosing)));
+
+    Navigator.of(context).pop();
     return;
   },
-  'Action.setPageState': ({required action, required context}) {
+  'Action.setPageState': ({required action, required context, enclosing}) {
     final bloc = context.tryRead<DUIPageBloc>();
     if (bloc == null) {
       throw 'Action.setPageState called on a widget which is not wrapped in DUIPageBloc';
     }
 
     final events = action.data['events'];
+    final bool rebuildPage =
+        NumDecoder.toBool(action.data['rebuildPage']) ?? true;
 
     if (events is List) {
       bloc.add(SetStateEvent(
           events: events.map((e) {
-        final value = DUIWidgetScope.of(context)?.eval(e['value'], (id) => id);
-        return SingleSetStateEvent(
-            variableName: e['variableName'], context: context, value: value);
-      }).toList()));
+            final value = eval(
+              e['value'],
+              context: context,
+              enclosing: enclosing,
+              decoder: (p0) => p0,
+            );
+            return SingleSetStateEvent(
+                variableName: e['variableName'],
+                context: context,
+                value: value);
+          }).toList(),
+          rebuildPage: rebuildPage));
     }
 
     return;
   },
-  'Action.setAppState': ({required action, required context}) {
+  'Action.setAppState': ({required action, required context, enclosing}) {
     final events = action.data['events'];
 
     if (events is List) {
       for (final e in events) {
-        final value = DUIWidgetScope.of(context)?.eval(e['value'], (id) => id);
-        DigiaUIClient.instance.appState.variables?[e['variableName']]
-            ?.set(value);
+        final value = eval(
+          e['value'],
+          context: context,
+          enclosing: enclosing,
+          decoder: (p0) => p0,
+        );
+        AppStateProvider.maybeOf(context)?.setState(e['variableName'], value);
       }
 
-      context.tryRead<DUIPageBloc>()?.add(SetStateEvent(events: []));
+      context
+          .tryRead<DUIPageBloc>()
+          ?.add(SetStateEvent(events: [], rebuildPage: true));
 
       return;
     }
@@ -110,10 +165,10 @@ class ActionHandler {
 
   static ActionHandler get instance => _instance;
 
-  Future<dynamic>? execute({
-    required BuildContext context,
-    required ActionFlow actionFlow,
-  }) async {
+  Future<dynamic>? execute(
+      {required BuildContext context,
+      required ActionFlow actionFlow,
+      ExprContext? enclosing}) async {
     for (final action in actionFlow.actions) {
       final executable = _actionsMap[action.type];
       if (executable == null) {
@@ -122,8 +177,8 @@ class ActionHandler {
         }
         continue;
       }
-
-      executable(context: context, action: action);
+      await executable.call(
+          context: context, action: action, enclosing: enclosing);
     }
 
     return null;
@@ -144,3 +199,22 @@ const Map<String, String> defaultHeaders = {
   'Accept': 'application/json',
   'Content-Type': 'application/json',
 };
+
+_eval(dynamic pageArgs, BuildContext context, ExprContext? enclosing) {
+  if (pageArgs == null) return null;
+
+  if (pageArgs is String || pageArgs is num || pageArgs is bool) {
+    return eval(pageArgs, context: context, enclosing: enclosing);
+  }
+
+  if (pageArgs is Map<String, dynamic>) {
+    return pageArgs
+        .map((key, value) => MapEntry(key, _eval(value, context, enclosing)));
+  }
+
+  if (pageArgs is List) {
+    return pageArgs.map((e) => _eval(e, context, enclosing));
+  }
+
+  return null;
+}

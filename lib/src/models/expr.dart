@@ -1,5 +1,6 @@
-import 'package:digia_ui/src/Utils/extensions.dart';
 import 'package:json_annotation/json_annotation.dart';
+
+import '../Utils/extensions.dart';
 
 class ExprOr<T> {
   final T? value;
@@ -34,7 +35,7 @@ class ExprJsonConv<T> extends JsonConverter<ExprOr<T>, Object?> {
     }
 
     return ExprOr(
-        value: _fromJsonT?.call(json) ?? json.typedValue<T>() ?? defaultValue);
+        value: _fromJsonT?.call(json) ?? json.toType<T>() ?? defaultValue);
   }
 
   @override

@@ -8,8 +8,12 @@ part of 'dui_page_props.dart';
 
 DUIPageProps _$DUIPagePropsFromJson(Map<String, dynamic> json) => DUIPageProps(
       uid: json['uid'] as String,
-      actions: json['actions'],
-      inputArgs: json['inputArgs'],
+      actions: (json['actions'] as Map<String, dynamic>?)?.map(
+        (k, e) => MapEntry(k, ActionFlow.fromJson(e)),
+      ),
+      inputArgs: _$JsonConverterFromJson<Map<String, dynamic>,
+              Map<String, VariableDef>>(
+          json['inputArgs'], const VariablesJsonConverter().fromJson),
       variables: _$JsonConverterFromJson<Map<String, dynamic>,
               Map<String, VariableDef>>(
           json['variables'], const VariablesJsonConverter().fromJson),
@@ -21,7 +25,9 @@ Map<String, dynamic> _$DUIPagePropsToJson(DUIPageProps instance) =>
     <String, dynamic>{
       'uid': instance.uid,
       'actions': instance.actions,
-      'inputArgs': instance.inputArgs,
+      'inputArgs':
+          _$JsonConverterToJson<Map<String, dynamic>, Map<String, VariableDef>>(
+              instance.inputArgs, const VariablesJsonConverter().toJson),
       'variables':
           _$JsonConverterToJson<Map<String, dynamic>, Map<String, VariableDef>>(
               instance.variables, const VariablesJsonConverter().toJson),

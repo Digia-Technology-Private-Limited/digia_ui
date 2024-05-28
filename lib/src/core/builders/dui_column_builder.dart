@@ -1,9 +1,10 @@
-import 'package:digia_ui/src/Utils/basic_shared_utils/dui_decoder.dart';
-import 'package:digia_ui/src/Utils/dui_widget_registry.dart';
-import 'package:digia_ui/src/core/builders/dui_json_widget_builder.dart';
-import 'package:digia_ui/src/core/json_widget_builder.dart';
-import 'package:digia_ui/src/core/page/props/dui_widget_json_data.dart';
 import 'package:flutter/material.dart';
+
+import '../../Utils/basic_shared_utils/dui_decoder.dart';
+import '../../Utils/dui_widget_registry.dart';
+import '../json_widget_builder.dart';
+import '../page/props/dui_widget_json_data.dart';
+import 'dui_json_widget_builder.dart';
 
 class DUIColumnBuilder extends DUIWidgetBuilder {
   DUIColumnBuilder(DUIWidgetJsonData data, DUIWidgetRegistry? registry)

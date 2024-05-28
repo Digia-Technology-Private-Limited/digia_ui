@@ -1,5 +1,6 @@
-import 'package:digia_ui/src/components/utils/DUICornerRadius/dui_corner_radius.dart';
 import 'package:json_annotation/json_annotation.dart';
+
+import '../DUICornerRadius/dui_corner_radius.dart';
 
 part 'dui_border.g.dart';
 

@@ -1,10 +1,11 @@
-import 'package:digia_ui/src/Utils/basic_shared_utils/lodash.dart';
-import 'package:digia_ui/src/Utils/extensions.dart';
-import 'package:digia_ui/src/Utils/util_functions.dart';
-import 'package:digia_ui/src/components/utils/DUIStyleClass/dui_style_class.dart';
 import 'package:flutter/material.dart';
 
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
+import '../../Utils/basic_shared_utils/lodash.dart';
+import '../../Utils/extensions.dart';
+import '../../Utils/util_functions.dart';
+import '../../components/utils/DUIStyleClass/dui_style_class.dart';
+import '../evaluator.dart';
 
 class DUIContainer extends StatelessWidget {
   final DUIStyleClass? styleClass;
@@ -50,7 +51,9 @@ class DUIContainer extends StatelessWidget {
             padding ?? DUIDecoder.toEdgeInsets(styleClass?.padding?.toJson()),
         decoration: BoxDecoration(
             border: toBorder(styleClass?.border),
-            color: color ?? styleClass?.bgColor.letIfTrue(toColor),
+            color: color ??
+                eval<String>(styleClass?.bgColor, context: context)
+                    .letIfTrue(toColor),
             borderRadius: borderRadius),
         foregroundDecoration: foregroundDecoration,
         width: width ?? double.tryParse(styleClass?.width ?? ''),

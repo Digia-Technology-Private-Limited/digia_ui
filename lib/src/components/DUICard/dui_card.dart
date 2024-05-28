@@ -1,10 +1,11 @@
-import 'package:digia_ui/src/Utils/basic_shared_utils/dui_decoder.dart';
-import 'package:digia_ui/src/Utils/basic_shared_utils/num_decoder.dart';
-import 'package:digia_ui/src/components/DUICard/dui_card_props.dart';
-import 'package:digia_ui/src/components/DUIText/dui_text.dart';
-import 'package:digia_ui/src/components/image/image.dart';
-import 'package:digia_ui/src/core/container/dui_container.dart';
 import 'package:flutter/material.dart';
+
+import '../../Utils/basic_shared_utils/dui_decoder.dart';
+import '../../Utils/basic_shared_utils/num_decoder.dart';
+import '../../core/container/dui_container.dart';
+import '../DUIText/dui_text.dart';
+import '../image/image.dart';
+import 'dui_card_props.dart';
 
 class DUICard extends StatefulWidget {
   final DUICardProps props;

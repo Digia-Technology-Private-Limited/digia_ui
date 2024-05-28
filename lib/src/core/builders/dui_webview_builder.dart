@@ -1,7 +1,8 @@
-import 'package:digia_ui/src/core/json_widget_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+
 import '../../../digia_ui.dart';
+import '../json_widget_builder.dart';
 
 class DUIWebViewBuilder extends DUIWidgetBuilder {
   DUIWebViewBuilder({required super.data});

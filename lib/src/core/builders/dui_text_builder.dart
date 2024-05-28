@@ -1,11 +1,11 @@
-import 'package:digia_ui/src/components/dui_widget_scope.dart';
-import 'package:digia_ui/src/core/json_widget_builder.dart';
-import 'package:digia_ui/src/core/page/props/dui_widget_json_data.dart';
 import 'package:flutter/material.dart';
 
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
 import '../../Utils/util_functions.dart';
 import '../../components/DUIText/dui_text_style.dart';
+import '../evaluator.dart';
+import '../json_widget_builder.dart';
+import '../page/props/dui_widget_json_data.dart';
 
 class DUITextBuilder extends DUIWidgetBuilder {
   DUITextBuilder({required super.data});
@@ -21,10 +21,9 @@ class DUITextBuilder extends DUIWidgetBuilder {
 
   @override
   Widget build(BuildContext context) {
-    final eval = DUIWidgetScope.of(context)!.eval;
-    final text = eval<String>(data.props['text']);
+    final text = eval<String>(data.props['text'], context: context);
     final style = toTextStyle(DUITextStyle.fromJson(data.props['textStyle']));
-    final maxLines = eval<int>(data.props['maxLines']);
+    final maxLines = eval<int>(data.props['maxLines'], context: context);
     final overflow = DUIDecoder.toTextOverflow(data.props['overflow']);
     final textAlign = DUIDecoder.toTextAlign(data.props['textAlign']);
 

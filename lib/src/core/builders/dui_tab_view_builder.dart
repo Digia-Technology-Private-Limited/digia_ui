@@ -1,10 +1,10 @@
-import 'package:digia_ui/digia_ui.dart';
-import 'package:digia_ui/src/Utils/dui_widget_registry.dart';
-import 'package:digia_ui/src/components/dui_tab_view/dui_tab_view.dart';
-import 'package:digia_ui/src/components/dui_tab_view/dui_tab_view_props.dart';
-
-import 'package:digia_ui/src/core/json_widget_builder.dart';
 import 'package:flutter/material.dart';
+
+import '../../../digia_ui.dart';
+import '../../Utils/dui_widget_registry.dart';
+import '../../components/dui_tab_view/dui_tab_view.dart';
+import '../../components/dui_tab_view/dui_tab_view_props.dart';
+import '../json_widget_builder.dart';
 
 class DUITabViewBuilder extends DUIWidgetBuilder {
   DUITabViewBuilder(DUIWidgetJsonData data, DUIWidgetRegistry? registry)
