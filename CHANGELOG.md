@@ -4,6 +4,24 @@ Digia Ui Sdk.
 
 ## Getting Started
 
+
+
+## [0.0.6-beta.2] - 2023-05-28
+
+Whats new
+
+1. Added new future builder support
+2. Devtools like chucker and proxy support
+3. Default base headers support for apis
+
+## [0.0.6] - 2023-05-27
+
+Whats new
+
+1. Added new future builder support
+2. Devtools like chucker and proxy support
+3. Default base headers support for apis
+
 ## [0.0.6] - 2023-05-27
 
 Whats new
