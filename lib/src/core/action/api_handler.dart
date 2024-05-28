@@ -63,10 +63,3 @@ class ApiHandler {
     });
   }
 }
-
-class ApiServerError extends Error {
-  dynamic data;
-  int? statusCode;
-  String url;
-  ApiServerError(this.data, this.statusCode, this.url);
-}
