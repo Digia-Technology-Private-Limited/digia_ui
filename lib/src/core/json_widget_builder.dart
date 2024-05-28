@@ -43,7 +43,9 @@ abstract class DUIWidgetBuilder {
 
     // Visibility
     output = DUIVisibility(
-        visible: data.containerProps['visibility'], child: output);
+        visible: data.containerProps['visibility'],
+        child: output,
+        context: context);
     return output;
   }
 }
