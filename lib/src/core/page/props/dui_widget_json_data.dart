@@ -46,11 +46,24 @@ class DUIWidgetJsonData {
 
     if (json is Map) {
       return json.map<String, List<DUIWidgetJsonData>>((key, value) => MapEntry(
-          key as String,
-          value
-              .map<DUIWidgetJsonData>(
-                  (e) => DUIWidgetJsonData.fromJson(e as Map<String, dynamic>))
-              .toList()));
+            key as String,
+            () {
+              if (value is List) {
+                return value
+                    .map<DUIWidgetJsonData>((e) =>
+                        DUIWidgetJsonData.fromJson(e as Map<String, dynamic>))
+                    .toList();
+              }
+
+              if (value is Map) {
+                return [
+                  DUIWidgetJsonData.fromJson(value as Map<String, dynamic>)
+                ];
+              }
+
+              return <DUIWidgetJsonData>[];
+            }(),
+          ));
     }
 
     return <String, List<DUIWidgetJsonData>>{};

@@ -35,7 +35,7 @@ class ExprJsonConv<T> extends JsonConverter<ExprOr<T>, Object?> {
     }
 
     return ExprOr(
-        value: _fromJsonT?.call(json) ?? json.typedValue<T>() ?? defaultValue);
+        value: _fromJsonT?.call(json) ?? json.toType<T>() ?? defaultValue);
   }
 
   @override

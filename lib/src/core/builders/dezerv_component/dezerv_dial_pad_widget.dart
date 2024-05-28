@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'dezerv_dial_pad_widget_props.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+
+import '../../../Utils/extensions.dart';
+import '../../evaluator.dart';
+import '../../page/dui_page_bloc.dart';
 import 'dezerv_flex_grid_view.dart';
 
 class DezervDialPad extends StatefulWidget {
   const DezervDialPad({super.key, required this.props});
 
-  final DezervDialPadProps props;
+  final Map<String, dynamic> props;
 
   @override
   State<DezervDialPad> createState() => _DezervDialPadState();
@@ -25,9 +28,13 @@ class _DezervDialPadState extends State<DezervDialPad> {
 
   @override
   void initState() {
-    _defaultAmount = widget.props.defaultAmount ?? 0;
-    _minimumAmount = widget.props.minimumSipAmount ?? 0;
-    _maximumAmount = widget.props.maximumSipAmount ?? 1000000;
+    _defaultAmount =
+        eval<num>(widget.props['defaultAmount'], context: context) ?? 0;
+    _minimumAmount =
+        eval<num>(widget.props['minimumSipAmount'], context: context) ?? 0;
+    _maximumAmount =
+        eval<num>(widget.props['maximumSipAmount'], context: context) ??
+            1000000;
     _isValidAmount = true;
     _formattedMinimumAmount = _toCurrencyWithoutDecimal(_minimumAmount);
     _formattedMaximumAmount = _toCurrencyWithoutDecimal(_maximumAmount);
@@ -120,18 +127,34 @@ class _DezervDialPadState extends State<DezervDialPad> {
       final String tempAmount = _userSelectedAmount + selectedNumber.toString();
       if (int.parse(tempAmount) < _minimumAmount) {
         _isValidAmount = false;
-        _userSelectedAmount = tempAmount;
+        setState(() {
+          _userSelectedAmount = tempAmount;
+        });
       } else if (int.parse(tempAmount) > _maximumAmount) {
         Fluttertoast.showToast(
           msg: 'Maximum allowed amount is $_formattedMaximumAmount',
           gravity: ToastGravity.BOTTOM,
         );
       } else {
-        _isValidAmount = true;
-        _userSelectedAmount = tempAmount;
+        setState(() {
+          _userSelectedAmount = tempAmount;
+          _isValidAmount = true;
+        });
       }
     }
-    setState(() {});
+    setState(() {
+      // Read the list of variables from the current page
+      final bloc = context.tryRead<DUIPageBloc>();
+      if (bloc == null) {
+        throw 'SetStateEvent called on a widget which is not wrapped in DUIPageBloc';
+      }
+      final state = bloc.state;
+      final variables = state.props.variables;
+      variables?.entries
+          .firstWhere((element) => element.key == 'selectedSipAmount')
+          .value
+          .set(int.parse(_userSelectedAmount));
+    });
   }
 
   void _onKeypadBackTap() {
@@ -141,15 +164,32 @@ class _DezervDialPadState extends State<DezervDialPad> {
 
       if ((int.parse(_userSelectedAmount) > _maximumAmount) ||
           (int.parse(_userSelectedAmount) < _minimumAmount)) {
-        _isValidAmount = false;
+        setState(() {
+          _isValidAmount = false;
+        });
       } else {
-        _isValidAmount = true;
+        setState(() {
+          _isValidAmount = true;
+        });
       }
     } else {
-      _isValidAmount = false;
-      _userSelectedAmount = '0';
+      setState(() {
+        _userSelectedAmount = '0';
+        _isValidAmount = false;
+      });
     }
-    setState(() {});
+    setState(() {
+      final bloc = context.tryRead<DUIPageBloc>();
+      if (bloc == null) {
+        throw 'SetStateEvent called on a widget which is not wrapped in DUIPageBloc';
+      }
+      final state = bloc.state;
+      final variables = state.props.variables;
+      variables?.entries
+          .firstWhere((element) => element.key == 'selectedSipAmount')
+          .value
+          .set(int.parse(_userSelectedAmount));
+    });
   }
 
   /// Convert from 1,20,000.25 to 1,20,000

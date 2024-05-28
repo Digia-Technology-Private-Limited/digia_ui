@@ -20,10 +20,10 @@ class ApiHandler {
         MapEntry(_hydrateTemplate(key, args), _hydrateTemplate(value, args)));
 
     final networkClient = DigiaUIClient.getNetworkClient();
-    final response = await networkClient.execute(
+    final response = await networkClient.requestProject(
         url: url,
         method: apiModel.method,
-        headers: headers,
+        additionalHeaders: headers,
         data: apiModel.body);
     return response.data;
   }

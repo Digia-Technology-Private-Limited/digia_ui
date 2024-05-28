@@ -7,3 +7,5 @@ export 'package:digia_ui/src/core/page/props/dui_widget_json_data.dart';
 export 'package:digia_ui/src/digia_ui_client.dart';
 export 'package:digia_ui/src/digia_ui_provider.dart';
 export 'package:digia_ui/src/dui_app.dart';
+export 'package:digia_ui/src/dui_dev_config.dart';
+export 'package:digia_ui/src/network/netwok_config.dart';
