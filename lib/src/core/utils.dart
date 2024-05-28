@@ -30,7 +30,8 @@ Future<Widget?> openDUIPageInBottomSheet({
   Map<String, dynamic>? pageArgs,
 }) {
   return showModalBottomSheet(
-    scrollControlDisabledMaxHeightRatio: 0.7,
+    scrollControlDisabledMaxHeightRatio:
+        eval<double>(style['maxHeightRatio'], context: context) ?? 0.7,
     barrierColor:
         eval<String>(style['bgColor'], context: context).letIfTrue(toColor) ??
             Colors.black.withOpacity(0.4),
@@ -61,7 +62,10 @@ Future<Widget?> openDUIPageInBottomSheet({
                       width: 24,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
-                        color: Colors.white.withOpacity(0.1),
+                        color:
+                            eval<String>(style['iconBgColor'], context: context)
+                                    .letIfTrue(toColor) ??
+                                Colors.black.withOpacity(0.3),
                       ),
                       child: Icon(
                         getIconData(icondataMap: style['icon']['iconData']),
