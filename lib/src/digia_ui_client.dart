@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:uuid/uuid.dart';
 
 import '../digia_ui.dart';
+import 'analytics/dui_analytics.dart';
 import 'core/pref/dui_preferences.dart';
 import 'digia_ui_service.dart';
 import 'models/dui_app_state.dart';
@@ -31,6 +32,7 @@ class DigiaUIClient {
   late DUIAppState appState;
   late int version;
   late Environment environment;
+  late DUIAnalytics? duiAnalytics;
 
   bool _isInitialized = false;
 
@@ -106,7 +108,8 @@ class DigiaUIClient {
       required int version,
       String? baseUrl,
       required NetworkConfiguration networkConfiguration,
-      DeveloperConfig? developerConfig}) async {
+      DeveloperConfig? developerConfig,
+      DUIAnalytics? duiAnalytics}) async {
     await DUIPreferences.initialize();
     setUuid();
     BaseResponse resp;
@@ -114,6 +117,7 @@ class DigiaUIClient {
     _instance.version = version;
     _instance.accessKey = accessKey;
     _instance.baseUrl = baseUrl ?? defaultBaseUrl;
+    _instance.duiAnalytics = duiAnalytics;
 
     Map<String, dynamic> apiParams = {
       'digia_projectId': accessKey,
