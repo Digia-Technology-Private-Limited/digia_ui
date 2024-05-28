@@ -31,6 +31,7 @@ class DigiaUIClient {
   late DUIAppState appState;
   late int version;
   late Environment environment;
+  late DUIAnalytics? duiAnalytics;
 
   bool _isInitialized = false;
 
@@ -106,7 +107,8 @@ class DigiaUIClient {
       required int version,
       String? baseUrl,
       required NetworkConfiguration networkConfiguration,
-      DeveloperConfig? developerConfig}) async {
+      DeveloperConfig? developerConfig,
+      DUIAnalytics? duiAnalytics}) async {
     await DUIPreferences.initialize();
     setUuid();
     BaseResponse resp;
@@ -114,6 +116,7 @@ class DigiaUIClient {
     _instance.version = version;
     _instance.accessKey = accessKey;
     _instance.baseUrl = baseUrl ?? defaultBaseUrl;
+    _instance.duiAnalytics = duiAnalytics;
 
     Map<String, dynamic> apiParams = {
       'digia_projectId': accessKey,
