@@ -2,6 +2,7 @@ import 'package:chucker_flutter/chucker_flutter.dart';
 import 'package:flutter/material.dart';
 
 import '../digia_ui.dart';
+import 'analytics/dui_analytics.dart';
 import 'core/app_state_provider.dart';
 
 enum Environment { staging, production, version }
@@ -17,6 +18,7 @@ class DUIApp extends StatelessWidget {
   static String? uuid;
   final NetworkConfiguration networkConfiguration;
   final DeveloperConfig? developerConfig;
+  final DUIAnalytics? analytics;
 
   // final Map<String, dynamic> initProperties;
 
@@ -30,6 +32,7 @@ class DUIApp extends StatelessWidget {
       required this.version,
       required this.networkConfiguration,
       this.developerConfig,
+      this.analytics,
       this.data});
 
   _makeFuture() async {
@@ -47,7 +50,8 @@ class DUIApp extends StatelessWidget {
         version: version,
         baseUrl: baseUrl,
         networkConfiguration: networkConfiguration,
-        developerConfig: developerConfig);
+        developerConfig: developerConfig,
+        duiAnalytics: analytics);
   }
 
   @override
