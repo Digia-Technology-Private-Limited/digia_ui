@@ -31,6 +31,7 @@ class ApiHandler {
           additionalHeaders: headers,
           data: apiModel.body);
       stopwatch.stop();
+      stopwatch.reset();
       DigiaUIClient.instance.duiAnalytics?.onDataSourceSuccess(
           'api',
           url,
@@ -38,18 +39,15 @@ class ApiHandler {
           {'responseTime': stopwatch.elapsedMilliseconds});
       return response.data;
     } on DioException catch (e) {
-      DigiaUIClient.instance.duiAnalytics?.onDataSourceError('api', url, {
-        'request': e.requestOptions,
-        'statusCode': e.response?.statusCode,
-        'data': e.response?.data,
-        'errType': e.type,
-        'message': e.message,
-        'error': e.error
-      });
+      DigiaUIClient.instance.duiAnalytics?.onDataSourceError(
+          'api',
+          url,
+          ApiServerInfo(e.response?.data, e.requestOptions,
+              e.response?.statusCode, e.error, e.message));
       rethrow;
     } catch (e) {
       DigiaUIClient.instance.duiAnalytics?.onDataSourceError(
-          'api', url, {'errType': 'internal_error', 'error': e});
+          'api', url, ApiServerInfo(null, null, -1, e, null));
       rethrow;
     }
   }
