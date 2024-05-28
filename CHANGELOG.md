@@ -4,7 +4,7 @@ Digia Ui Sdk.
 
 ## Getting Started
 
-## [0.0.7-beta.2] - 2023-05-28
+## [0.0.6-beta.3] - 2023-05-28
 
 Whats new
 
