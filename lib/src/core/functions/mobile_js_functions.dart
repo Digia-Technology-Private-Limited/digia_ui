@@ -18,6 +18,11 @@ class MobileJsFunctions implements JSFunctions {
   }
 
   @override
+  void fetchJsFile(String path) async {
+    await downloadFunctionsFile(path);
+  }
+
+  @override
   dynamic callJs(String fnName, dynamic v1) async {
     JsEvalResult jsEvalResult = runtime.evaluate('$jsFile$fnName($v1)');
     print('Result() executed in ${json.encode(jsEvalResult.rawResult)}');

@@ -34,6 +34,7 @@ class DigiaUIClient {
   late DUIAppState appState;
   late int version;
   late Environment environment;
+  late JSFunctions jsFunctions;
 
   bool _isInitialized = false;
 
@@ -165,13 +166,11 @@ class DigiaUIClient {
 
     _instance.config = DUIConfig(data);
 
-    await downloadFunctionsFile(_instance.config.functionsFilePath);
+    _instance.jsFunctions = JSFunctions();
+    _instance.jsFunctions.fetchJsFile(_instance.config.functionsFilePath);
 
-    //JSFunction needs to be singleton here.. Sample on how to call it
-    // var jsFunction = JSFunctions();
-
-    // Timer(const Duration(seconds: 1),
-    //     () => jsFunction.callJs('getNextDate', {'number': 27}));
+    Timer(const Duration(seconds: 5),
+        () => _instance.jsFunctions.callJs('getNextDate', {'number': 27}));
 
     _instance.appState = DUIAppState.fromJson(_instance.config.appState ?? {});
 

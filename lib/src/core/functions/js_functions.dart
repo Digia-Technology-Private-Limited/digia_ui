@@ -5,4 +5,5 @@ import 'js_functions_stub.dart'
 abstract class JSFunctions {
   factory JSFunctions() => getJSFunction();
   dynamic callJs(String fnName, dynamic data);
+  fetchJsFile(String path);
 }
