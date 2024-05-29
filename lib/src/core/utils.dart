@@ -6,21 +6,27 @@ import '../components/dui_icons/icon_helpers/icon_data_serialization.dart';
 import 'evaluator.dart';
 import 'page/dui_page.dart';
 
+class DUIPageRoute<T> extends MaterialPageRoute<T> {
+  DUIPageRoute(
+      {required String pageUid,
+      required BuildContext context,
+      Map<String, dynamic>? pageArgs})
+      : super(
+            settings: RouteSettings(name: pageUid),
+            builder: (context) {
+              return DUIPage(
+                pageUid: pageUid,
+                pageArgs: pageArgs,
+              );
+            });
+}
+
 Future<Object?> openDUIPage(
     {required String pageUid,
     required BuildContext context,
     Map<String, dynamic>? pageArgs}) {
-  return Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (ctx) {
-        return DUIPage(
-          pageUid: pageUid,
-          pageArgs: pageArgs,
-        );
-      },
-    ),
-  );
+  return Navigator.push(context,
+      DUIPageRoute(pageUid: pageUid, context: context, pageArgs: pageArgs));
 }
 
 Future<Widget?> openDUIPageInBottomSheet({
