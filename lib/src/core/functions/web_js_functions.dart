@@ -9,12 +9,8 @@ class WebJsFunctions implements JSFunctions {
   callJs(String fnName, dynamic v1) {
     var obj = js.JsObject.jsify(v1);
     var res = js.context.callMethod(fnName, [obj]);
-    var finalRes = jsonDecode(
-       js.context['JSON'].callMethod(
-           'stringify',
-           [res]
-       )
-    );
+    var finalRes =
+        jsonDecode(js.context['JSON'].callMethod('stringify', [res]));
     return finalRes;
   }
 
