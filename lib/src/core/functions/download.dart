@@ -23,7 +23,7 @@ Future<void> downloadFunctionsFile(String url) async {
     if (response.statusCode == 200) {
       // Write the response body to a file
       var path = await localPath;
-      final file = File(path + "/functions.js");
+      final file = File('$path/functions.js');
       await file.writeAsBytes(response.data);
       print('File downloaded successfully to $path');
     } else {

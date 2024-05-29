@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -8,7 +7,6 @@ import 'package:uuid/uuid.dart';
 
 import '../digia_ui.dart';
 import 'core/functions/js_functions.dart';
-import 'core/functions/download.dart';
 import 'core/pref/dui_preferences.dart';
 import 'digia_ui_service.dart';
 import 'models/dui_app_state.dart';
