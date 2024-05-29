@@ -25,10 +25,9 @@ class ActionFlow {
     // Backward compatibility
     if (_isActionProp(json)) {
       return ActionFlow(
-        actions: [ActionProp.fromJson(json)],
-        inkwell: inkwell,
-        analyticsData: json['analyticsData']
-      );
+          actions: [ActionProp.fromJson(json)],
+          inkwell: inkwell,
+          analyticsData: json['analyticsData']);
     }
 
     if (json['steps'] is List) {

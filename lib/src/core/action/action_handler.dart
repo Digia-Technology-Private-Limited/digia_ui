@@ -128,7 +128,9 @@ Map<String, ActionHandlerFn> _actionsMap = {
     final body = action.data['body'];
 
     handler(MessagePayload(
-        context: context, name: name, body: evalDynamic(body, context, enclosing)));
+        context: context,
+        name: name,
+        body: evalDynamic(body, context, enclosing)));
 
     return;
   },
@@ -196,8 +198,10 @@ class ActionHandler {
       {required BuildContext context,
       required ActionFlow actionFlow,
       ExprContext? enclosing}) async {
-    var analyticsData = evalDynamic(actionFlow.analyticsData, context, enclosing);
-    if(analyticsData != null && (analyticsData as Map<String, dynamic>).isNotEmpty) {
+    var analyticsData =
+        evalDynamic(actionFlow.analyticsData, context, enclosing);
+    if (analyticsData != null &&
+        (analyticsData as Map<String, dynamic>).isNotEmpty) {
       DigiaUIClient.instance.duiAnalytics?.onEvent(analyticsData);
     }
     for (final action in actionFlow.actions) {
@@ -211,7 +215,7 @@ class ActionHandler {
       await executable.call(
           context: context, action: action, enclosing: enclosing);
     }
-   
+
     return null;
   }
 }

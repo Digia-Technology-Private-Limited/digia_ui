@@ -15,7 +15,7 @@ class MobileJsFunctions implements JSFunctions {
       await downloadFunctionsFile(path);
       final file = File('${await localPath}/functions.js');
       jsFile = file.readAsStringSync(encoding: utf8);
-    } catch (e){
+    } catch (e) {
       print('file not found');
     }
   }

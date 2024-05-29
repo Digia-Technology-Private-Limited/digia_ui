@@ -1,4 +1,3 @@
-
 import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/material.dart';
 
@@ -12,8 +11,8 @@ evalDynamic(dynamic pageArgs, BuildContext context, ExprContext? enclosing) {
   }
 
   if (pageArgs is Map<String, dynamic>) {
-    return pageArgs
-        .map((key, value) => MapEntry(key, evalDynamic(value, context, enclosing)));
+    return pageArgs.map(
+        (key, value) => MapEntry(key, evalDynamic(value, context, enclosing)));
   }
 
   if (pageArgs is List) {

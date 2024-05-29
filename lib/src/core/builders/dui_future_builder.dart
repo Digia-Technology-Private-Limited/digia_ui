@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/material.dart';
 
@@ -29,6 +31,12 @@ class DUIFutureBuilder extends DUIWidgetBuilder {
           }
 
           if (snapshot.hasError) {
+            Future.delayed(const Duration(seconds: 0), () async {
+              final actionFlow =
+                  ActionFlow.fromJson(data.props['postErrorAction']);
+              await ActionHandler.instance
+                  .execute(context: context, actionFlow: actionFlow);
+            });
             return data
                     .getChild('errorWidget')
                     .let((p0) => DUIWidget(data: p0)) ??
@@ -38,6 +46,12 @@ class DUIFutureBuilder extends DUIWidgetBuilder {
                 );
           }
 
+          Future.delayed(const Duration(seconds: 0), () async {
+            final actionFlow =
+                ActionFlow.fromJson(data.props['postSuccessAction']);
+            await ActionHandler.instance
+                .execute(context: context, actionFlow: actionFlow);
+          });
           return data
                   .getChild('successWidget')
                   .let((p0) => DUIWidget(data: p0)) ??

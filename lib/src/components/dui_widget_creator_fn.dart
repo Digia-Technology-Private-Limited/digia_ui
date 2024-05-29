@@ -11,7 +11,7 @@ Widget DUIGestureDetector(
     {required BuildContext context,
     required ActionFlow? actionFlow,
     required Widget child}) {
-  if (actionFlow == null) return child;
+  if (actionFlow == null || actionFlow.actions.isEmpty) return child;
 
   if (actionFlow.inkwell) {
     return InkWell(
