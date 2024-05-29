@@ -8,12 +8,11 @@ class InitPageEvent extends DUIPageEvent {
   InitPageEvent(this.context);
 }
 
-// class PostActionEvent extends DUIPageEvent {
-//   final ActionProp action;
-//   final BuildContext context;
+class RebuildPageEvent extends DUIPageEvent {
+  final BuildContext context;
 
-//   PostActionEvent({required this.action, required this.context});
-// }
+  RebuildPageEvent(this.context);
+}
 
 class SingleSetStateEvent {
   final String variableName;

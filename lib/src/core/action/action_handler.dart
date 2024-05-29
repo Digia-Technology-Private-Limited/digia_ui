@@ -26,6 +26,11 @@ typedef ActionHandlerFn = Future<dynamic>? Function({
 });
 
 Map<String, ActionHandlerFn> _actionsMap = {
+  'Action.rebuildPage': ({required action, required context, enclosing}) {
+    final bloc = context.tryRead<DUIPageBloc>();
+    bloc?.add(RebuildPageEvent(context));
+    return null;
+  },
   'Action.delay': ({required action, required context, enclosing}) async {
     final durationInMs = eval<double>(action.data['durationInMs'],
         context: context, enclosing: enclosing);
@@ -71,12 +76,24 @@ Map<String, ActionHandlerFn> _actionsMap = {
   //       pageUid: pageUId, context: context, pageArgs: pageArgs);
   // },
   'Action.pop': ({required action, required context, enclosing}) {
-    if (action.data['maybe'] == true) {
-      Navigator.of(context).maybePop();
-      return;
+    final popUntilNamedRoute =
+        NumDecoder.toBool(action.data['shouldPopUntil']) ?? false;
+    final routeNametoPopUntil = eval<String>(action.data['routeNameToPopUntil'],
+        context: context, enclosing: enclosing);
+
+    if (popUntilNamedRoute && routeNametoPopUntil != null) {
+      Navigator.popUntil(context, ModalRoute.withName(routeNametoPopUntil));
     }
 
     Navigator.of(context).pop();
+    return;
+  },
+
+  'Action.popUntil': ({required action, required context, enclosing}) {
+    final routeName = action.data['route'];
+    if (routeName == null || routeName is! String || routeName.isEmpty) return;
+
+    Navigator.of(context).popUntil(ModalRoute.withName(routeName));
     return;
   },
   'Action.openUrl': ({required action, required context, enclosing}) async {
@@ -155,7 +172,7 @@ Map<String, ActionHandlerFn> _actionsMap = {
       return;
     }
     return null;
-  }
+  },
 };
 
 class ActionHandler {
