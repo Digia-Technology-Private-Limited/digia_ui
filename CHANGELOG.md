@@ -4,6 +4,13 @@ Digia Ui Sdk.
 
 ## Getting Started
 
+## [0.0.6-beta.4] - 2023-05-29
+
+Whats new
+
+1. Support for popUntil
+2. Added Digia analytics for apis and actions
+
 ## [0.0.6-beta.3] - 2023-05-28
 
 Whats new
