@@ -23,8 +23,8 @@ void main() async {
 
 class MyAnalytics extends DUIAnalytics {
   @override
-  void onClick(String widgetName, String pageName, metaData) {
-    // TODO: implement onClick
+  void onEvent(Map<String, dynamic> data) {
+    print(data.toString());
   }
 
   @override
@@ -45,10 +45,5 @@ class MyAnalytics extends DUIAnalytics {
       'metaData': metaData.toString(),
       'perfData': perfData.toString()
     });
-  }
-
-  @override
-  void onPageLoad(String pageName, metaData, perfData) {
-    // TODO: implement onPageLoad
   }
 }

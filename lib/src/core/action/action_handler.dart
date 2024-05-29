@@ -6,9 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:json_schema2/json_schema2.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../digia_ui.dart';
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
 import '../../Utils/basic_shared_utils/lodash.dart';
 import '../../Utils/basic_shared_utils/num_decoder.dart';
+import '../../Utils/expr.dart';
 import '../../Utils/extensions.dart';
 import '../../components/dui_widget_scope.dart';
 import '../../types.dart';
@@ -55,7 +57,7 @@ Map<String, ActionHandlerFn> _actionsMap = {
     Map<String, dynamic>? pageArgs =
         action.data['pageArgs'] ?? action.data['args'];
 
-    final evaluatedArgs = _eval(pageArgs, context, enclosing);
+    final evaluatedArgs = evalDynamic(pageArgs, context, enclosing);
 
     final widgetScope = DUIWidgetScope.maybeOf(context);
 
@@ -126,7 +128,7 @@ Map<String, ActionHandlerFn> _actionsMap = {
     final body = action.data['body'];
 
     handler(MessagePayload(
-        context: context, name: name, body: _eval(body, context, enclosing)));
+        context: context, name: name, body: evalDynamic(body, context, enclosing)));
 
     return;
   },
@@ -194,6 +196,10 @@ class ActionHandler {
       {required BuildContext context,
       required ActionFlow actionFlow,
       ExprContext? enclosing}) async {
+    var analyticsData = evalDynamic(actionFlow.analyticsData, context, enclosing);
+    if(analyticsData != null && (analyticsData as Map<String, dynamic>).isNotEmpty) {
+      DigiaUIClient.instance.duiAnalytics?.onEvent(analyticsData);
+    }
     for (final action in actionFlow.actions) {
       final executable = _actionsMap[action.type];
       if (executable == null) {
@@ -205,7 +211,7 @@ class ActionHandler {
       await executable.call(
           context: context, action: action, enclosing: enclosing);
     }
-
+   
     return null;
   }
 }
@@ -224,22 +230,3 @@ const Map<String, String> defaultHeaders = {
   'Accept': 'application/json',
   'Content-Type': 'application/json',
 };
-
-_eval(dynamic pageArgs, BuildContext context, ExprContext? enclosing) {
-  if (pageArgs == null) return null;
-
-  if (pageArgs is String || pageArgs is num || pageArgs is bool) {
-    return eval(pageArgs, context: context, enclosing: enclosing);
-  }
-
-  if (pageArgs is Map<String, dynamic>) {
-    return pageArgs
-        .map((key, value) => MapEntry(key, _eval(value, context, enclosing)));
-  }
-
-  if (pageArgs is List) {
-    return pageArgs.map((e) => _eval(e, context, enclosing));
-  }
-
-  return null;
-}

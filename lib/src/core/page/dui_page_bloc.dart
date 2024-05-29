@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../config_resolver.dart';
+import '../../../digia_ui.dart';
+import '../../Utils/expr.dart';
 import '../action/action_prop.dart';
 import '../action/api_handler.dart';
 import '../evaluator.dart';
@@ -31,8 +32,14 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
   ) async {
     // Assumption is that onPageLoadAction will not be null.
     // It will either be Action.loadPage or Action.buildPage
+    
     final onPageLoadAction = state.props.actions['onPageLoad'];
 
+    var eventData = evalDynamic(onPageLoadAction?.analyticsData, event.context, null); 
+    if(eventData != null && (eventData as Map<String, dynamic>).isNotEmpty) {
+      DigiaUIClient.instance.duiAnalytics?.onEvent(eventData);
+    }
+    
     final action = onPageLoadAction?.actions.first;
 
     await _handleAction(event.context, action!, emit);
