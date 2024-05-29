@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../../digia_ui.dart';
-import '../../Utils/basic_shared_utils/dui_decoder.dart';
 import '../../Utils/expr.dart';
-import '../../config_resolver.dart';
 import '../action/action_prop.dart';
 import '../action/api_handler.dart';
 import '../evaluator.dart';
-import '../utils.dart';
 import 'dui_page_event.dart';
 import 'dui_page_state.dart';
 
@@ -27,6 +23,7 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
             props: config.getPageData(pageUid))) {
     on<InitPageEvent>(_init);
     on<SetStateEvent>(_setState);
+    on<RebuildPageEvent>(_rebuildPage);
   }
 
   void _init(
@@ -48,6 +45,10 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
     return;
   }
 
+  void _rebuildPage(RebuildPageEvent event, Emitter<DUIPageState> emit) {
+    emit(state.copyWith());
+  }
+
   void _setState(
     SetStateEvent event,
     Emitter<DUIPageState> emit,
@@ -61,7 +62,6 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
     }
   }
 
-// TODO: Need Action Handler
   Future<Object?> _handleAction(BuildContext context, ActionProp action,
       Emitter<DUIPageState> emit) async {
     switch (action.type) {
@@ -80,26 +80,9 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
         emit(state.copyWith(isLoading: false, dataSource: response));
         return null;
 
-      case 'Action.navigateToPage':
-        final pageUId = action.data['pageId'];
-        return openDUIPage(
-            pageUid: pageUId, context: context, pageArgs: action.data['args']);
-
-      case 'Action.openUrl':
-        final url = Uri.parse(action.data['url']);
-        final canOpenUrl = await canLaunchUrl(url);
-        if (canOpenUrl == true) {
-          await launchUrl(url,
-              mode: DUIDecoder.toUriLaunchMode(action.data['launchMode']));
-        }
-
-      case 'Action.pop':
-        return Navigator.of(context).maybePop();
-
       default:
         emit(state.copyWith(isLoading: false));
         return null;
     }
-    return null;
   }
 }
