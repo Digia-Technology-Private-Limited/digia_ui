@@ -23,7 +23,7 @@ class DUITabViewProps {
   final String? borderColor;
   final double? borderWidth;
   final bool? isIconAtLeft;
-  final DUIInsets? borderRadius;
+  final String? borderRadius;
   @JsonKey(
       fromJson: DUITextStyle.fromJson,
       includeToJson: false,

@@ -30,9 +30,7 @@ DUITabViewProps _$DUITabViewPropsFromJson(Map<String, dynamic> json) =>
       borderColor: json['borderColor'] as String?,
       borderWidth: (json['borderWidth'] as num?)?.toDouble(),
       isIconAtLeft: json['isIconAtLeft'] as bool?,
-      borderRadius: json['borderRadius'] == null
-          ? null
-          : DUIInsets.fromJson(json['borderRadius']),
+      borderRadius: json['borderRadius'] as String?,
     );
 
 Map<String, dynamic> _$DUITabViewPropsToJson(DUITabViewProps instance) =>
