@@ -26,6 +26,11 @@ typedef ActionHandlerFn = Future<dynamic>? Function({
 });
 
 Map<String, ActionHandlerFn> _actionsMap = {
+  'Action.rebuildPage': ({required action, required context, enclosing}) {
+    final bloc = context.tryRead<DUIPageBloc>();
+    bloc?.add(RebuildPageEvent(context));
+    return null;
+  },
   'Action.delay': ({required action, required context, enclosing}) async {
     final durationInMs = eval<double>(action.data['durationInMs'],
         context: context, enclosing: enclosing);
@@ -87,8 +92,13 @@ Map<String, ActionHandlerFn> _actionsMap = {
   //       pageUid: pageUId, context: context, pageArgs: pageArgs);
   // },
   'Action.pop': ({required action, required context, enclosing}) {
-    if (action.data['maybe'] == true) {
-      Navigator.of(context).maybePop();
+    final popUntilNamedRoute =
+        NumDecoder.toBool(action.data['shouldPopUntil']) ?? false;
+    final routeNametoPopUntil = eval<String>(action.data['routeNameToPopUntil'],
+        context: context, enclosing: enclosing);
+
+    if (popUntilNamedRoute && routeNametoPopUntil != null) {
+      Navigator.popUntil(context, ModalRoute.withName(routeNametoPopUntil));
       return;
     }
 
@@ -170,7 +180,7 @@ Map<String, ActionHandlerFn> _actionsMap = {
       return;
     }
     return null;
-  }
+  },
 };
 
 class ActionHandler {

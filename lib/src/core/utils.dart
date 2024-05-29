@@ -7,6 +7,29 @@ import '../types.dart';
 import 'evaluator.dart';
 import 'page/dui_page.dart';
 
+class DUIPageRoute<T> extends MaterialPageRoute<T> {
+  DUIPageRoute({
+    required String pageUid,
+    required BuildContext context,
+    Map<String, dynamic>? pageArgs,
+    DUIMessageHandler? onMessageReceived,
+    DUIIconDataProvider? iconDataProvider,
+    DUIImageProviderFn? imageProviderFn,
+    DUITextStyleBuilder? textStyleBuilder,
+  }) : super(
+            settings: RouteSettings(name: '/duiRoute-$pageUid'),
+            builder: (context) {
+              return DUIPage(
+                pageUid: pageUid,
+                pageArgs: pageArgs,
+                iconDataProvider: iconDataProvider,
+                imageProviderFn: imageProviderFn,
+                textStyleBuilder: textStyleBuilder,
+                onMessageReceived: onMessageReceived,
+              );
+            });
+}
+
 Future<Object?> openDUIPage({
   required String pageUid,
   required BuildContext context,
@@ -17,20 +40,15 @@ Future<Object?> openDUIPage({
   DUITextStyleBuilder? textStyleBuilder,
 }) {
   return Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (ctx) {
-        return DUIPage(
-          pageUid: pageUid,
-          pageArgs: pageArgs,
-          iconDataProvider: iconDataProvider,
-          imageProviderFn: imageProviderFn,
-          textStyleBuilder: textStyleBuilder,
-          onMessageReceived: onMessageReceived,
-        );
-      },
-    ),
-  );
+      context,
+      DUIPageRoute(
+        pageUid: pageUid,
+        context: context,
+        onMessageReceived: onMessageReceived,
+        iconDataProvider: iconDataProvider,
+        imageProviderFn: imageProviderFn,
+        textStyleBuilder: textStyleBuilder,
+      ));
 }
 
 Future<Widget?> openDUIPageInBottomSheet({
