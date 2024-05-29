@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -6,6 +7,8 @@ import 'package:flutter/services.dart';
 import 'package:uuid/uuid.dart';
 
 import '../digia_ui.dart';
+import 'core/functions/js_functions.dart';
+import 'core/functions/download.dart';
 import 'core/pref/dui_preferences.dart';
 import 'digia_ui_service.dart';
 import 'models/dui_app_state.dart';
@@ -31,6 +34,7 @@ class DigiaUIClient {
   late DUIAppState appState;
   late int version;
   late Environment environment;
+  late JSFunctions jsFunctions;
   late DUIAnalytics? duiAnalytics;
 
   bool _isInitialized = false;
@@ -164,6 +168,10 @@ class DigiaUIClient {
     }
 
     _instance.config = DUIConfig(data);
+
+    _instance.jsFunctions = JSFunctions();
+    await _instance.jsFunctions.fetchJsFile(_instance.config.functionsFilePath);
+    // _instance.jsFunctions.callJs('test3', {'number': 27});
 
     _instance.appState = DUIAppState.fromJson(_instance.config.appState ?? {});
 
