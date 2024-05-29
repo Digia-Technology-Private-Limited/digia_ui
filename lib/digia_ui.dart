@@ -1,5 +1,6 @@
 library digia_ui;
 
+export 'package:digia_ui/src/analytics/dui_analytics.dart';
 export 'package:digia_ui/src/components/dui_widget.dart';
 export 'package:digia_ui/src/config_resolver.dart';
 export 'package:digia_ui/src/core/page/dui_page.dart';

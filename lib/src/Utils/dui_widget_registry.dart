@@ -7,6 +7,7 @@ import '../core/builders/dui_app_bar_builder.dart';
 import '../core/builders/dui_avatar_builder.dart';
 import '../core/builders/dui_button_builder.dart';
 import '../core/builders/dui_carousel_builder.dart';
+import '../core/builders/dui_checkbox_builder.dart';
 import '../core/builders/dui_circular_progress_indicator_builder.dart';
 import '../core/builders/dui_container2_builder.dart';
 import '../core/builders/dui_custom_widget_builder.dart';
@@ -111,6 +112,7 @@ class DUIWidgetRegistry {
     'digia/futureBuilder': (data, {registry}) => DUIFutureBuilder(data: data),
     'digia/circularProgressBar': (data, {registry}) =>
         DUICircularProgressBarBuilder(data: data),
+    'digia/checkbox': withoutRegistry(DUICheckboxBuilder.create),
   };
 
   static const DUIWidgetRegistry shared = DUIWidgetRegistry();

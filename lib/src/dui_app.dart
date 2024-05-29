@@ -17,6 +17,7 @@ class DUIApp extends StatelessWidget {
   static String? uuid;
   final NetworkConfiguration networkConfiguration;
   final DeveloperConfig? developerConfig;
+  final DUIAnalytics? analytics;
 
   // final Map<String, dynamic> initProperties;
 
@@ -30,6 +31,7 @@ class DUIApp extends StatelessWidget {
       required this.version,
       required this.networkConfiguration,
       this.developerConfig,
+      this.analytics,
       this.data});
 
   _makeFuture() async {
@@ -47,7 +49,8 @@ class DUIApp extends StatelessWidget {
         version: version,
         baseUrl: baseUrl,
         networkConfiguration: networkConfiguration,
-        developerConfig: developerConfig);
+        developerConfig: developerConfig,
+        duiAnalytics: analytics);
   }
 
   @override
