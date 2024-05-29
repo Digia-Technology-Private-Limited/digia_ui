@@ -11,9 +11,13 @@ class MobileJsFunctions implements JSFunctions {
 
   @override
   Future fetchJsFile(String path) async {
-    await downloadFunctionsFile(path);
-    final file = File('${await localPath}/functions.js');
-    jsFile = file.readAsStringSync(encoding: utf8);
+    try {
+      await downloadFunctionsFile(path);
+      final file = File('${await localPath}/functions.js');
+      jsFile = file.readAsStringSync(encoding: utf8);
+    } catch (e){
+      print('file not found');
+    }
   }
 
   @override
