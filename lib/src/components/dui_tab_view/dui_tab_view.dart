@@ -24,7 +24,28 @@ class DUITabView extends StatefulWidget {
   State<DUITabView> createState() => _DUITabViewState();
 }
 
-class _DUITabViewState extends State<DUITabView> {
+class _DUITabViewState extends State<DUITabView>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: widget.children.length, vsync: this);
+    _tabController.addListener(_handleTabSelection);
+  }
+
+  @override
+  void dispose() {
+    _tabController.removeListener(_handleTabSelection);
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  void _handleTabSelection() {
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -36,6 +57,7 @@ class _DUITabViewState extends State<DUITabView> {
               Visibility(
                 visible: widget.tabViewProps.hasTabs ?? false,
                 child: TabBar(
+                  controller: _tabController,
                   padding: DUIDecoder.toEdgeInsets(
                       widget.tabViewProps.tabBarPadding),
                   unselectedLabelColor: widget.tabViewProps.unselectedLabelColor
@@ -51,18 +73,45 @@ class _DUITabViewState extends State<DUITabView> {
                   labelColor:
                       widget.tabViewProps.selectedLabelColor.letIfTrue(toColor),
                   dividerHeight: widget.tabViewProps.dividerHeight,
+                  labelPadding: EdgeInsets.symmetric(horizontal: 8),
                   tabs: List.generate(widget.children.length, (index) {
                     final icon = DUIIconBuilder.fromProps(
                         props: widget.children[index].props['icon']);
-                    return Column(children: [
-                      icon.buildWithContainerProps(context),
-                      Text(widget.children[index].props['title'] ?? ''),
-                    ]);
+                    final isSelected = _tabController.index == index;
+                    return Container(
+                      padding: DUIDecoder.toEdgeInsets(
+                          widget.tabViewProps.tabPadding),
+                      decoration: BoxDecoration(
+                        color: isSelected
+                            ? widget.tabViewProps.selectedBgColor
+                                ?.letIfTrue(toColor)
+                            : widget.tabViewProps.nonSelectedBgColor
+                                ?.letIfTrue(toColor),
+                        borderRadius: DUIDecoder.toBorderRadius(
+                            widget.tabViewProps.borderRadius),
+                        border: Border.all(
+                          color: widget.tabViewProps.borderColor
+                                  ?.letIfTrue(toColor) ??
+                              Colors.transparent,
+                          width: widget.tabViewProps.borderWidth ?? 1.0,
+                        ),
+                      ),
+                      child: widget.tabViewProps.isIconAtLeft == true
+                          ? Row(children: [
+                              icon.buildWithContainerProps(context),
+                              Text(widget.children[index].props['title'] ?? ''),
+                            ])
+                          : Column(children: [
+                              icon.buildWithContainerProps(context),
+                              Text(widget.children[index].props['title'] ?? ''),
+                            ]),
+                    );
                   }),
                 ),
               ),
             Expanded(
                 child: TabBarView(
+                    controller: _tabController,
                     viewportFraction:
                         widget.tabViewProps.viewportFraction ?? 1.0,
                     physics: widget.tabViewProps.isScrollable ?? false
@@ -77,6 +126,7 @@ class _DUITabViewState extends State<DUITabView> {
               Visibility(
                 visible: widget.tabViewProps.hasTabs ?? false,
                 child: TabBar(
+                  controller: _tabController,
                   padding: DUIDecoder.toEdgeInsets(
                       widget.tabViewProps.tabBarPadding),
                   unselectedLabelColor: widget.tabViewProps.unselectedLabelColor
@@ -98,10 +148,35 @@ class _DUITabViewState extends State<DUITabView> {
                   tabs: List.generate(widget.children.length, (index) {
                     final icon = DUIIconBuilder.fromProps(
                         props: widget.children[index].props['icon']);
-                    return Column(children: [
-                      icon.buildWithContainerProps(context),
-                      Text(widget.children[index].props['title'] ?? ''),
-                    ]);
+                    final isSelected = _tabController.index == index;
+                    return Container(
+                      padding: DUIDecoder.toEdgeInsets(
+                          widget.tabViewProps.tabPadding),
+                      decoration: BoxDecoration(
+                        color: isSelected
+                            ? widget.tabViewProps.selectedBgColor
+                                ?.letIfTrue(toColor)
+                            : widget.tabViewProps.nonSelectedBgColor
+                                ?.letIfTrue(toColor),
+                        borderRadius: DUIDecoder.toBorderRadius(
+                            widget.tabViewProps.borderRadius),
+                        border: Border.all(
+                          color: widget.tabViewProps.borderColor
+                                  ?.letIfTrue(toColor) ??
+                              Colors.transparent,
+                          width: widget.tabViewProps.borderWidth ?? 1.0,
+                        ),
+                      ),
+                      child: widget.tabViewProps.isIconAtLeft == true
+                          ? Row(children: [
+                              icon.buildWithContainerProps(context),
+                              Text(widget.children[index].props['title'] ?? ''),
+                            ])
+                          : Column(children: [
+                              icon.buildWithContainerProps(context),
+                              Text(widget.children[index].props['title'] ?? ''),
+                            ]),
+                    );
                   }),
                 ),
               ),

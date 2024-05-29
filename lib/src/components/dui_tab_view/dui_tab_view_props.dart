@@ -17,6 +17,13 @@ class DUITabViewProps {
   final String? indicatorColor;
   final double? viewportFraction;
   final DUIInsets? tabBarPadding;
+  final DUIInsets? tabPadding;
+  final String? selectedBgColor;
+  final String? nonSelectedBgColor;
+  final String? borderColor;
+  final double? borderWidth;
+  final bool? isIconAtLeft;
+  final DUIInsets? borderRadius;
   @JsonKey(
       fromJson: DUITextStyle.fromJson,
       includeToJson: false,
@@ -28,19 +35,27 @@ class DUITabViewProps {
       name: 'unselectedLabelStyle')
   DUITextStyle? unselectedLabelStyle;
 
-  DUITabViewProps(
-      {this.hasTabs,
-      this.selectedLabelColor,
-      this.selectedLabelStyle,
-      this.unselectedLabelColor,
-      this.unselectedLabelStyle,
-      this.dividerHeight,
-      this.indicatorColor,
-      this.dividerColor,
-      this.tabBarPosition,
-      required this.isScrollable,
-      this.viewportFraction,
-      this.tabBarPadding});
+  DUITabViewProps({
+    this.hasTabs,
+    this.selectedLabelColor,
+    this.selectedLabelStyle,
+    this.unselectedLabelColor,
+    this.unselectedLabelStyle,
+    this.dividerHeight,
+    this.indicatorColor,
+    this.dividerColor,
+    this.tabBarPosition,
+    required this.isScrollable,
+    this.viewportFraction,
+    this.tabBarPadding,
+    this.tabPadding,
+    this.selectedBgColor,
+    this.nonSelectedBgColor,
+    this.borderColor,
+    this.borderWidth,
+    this.isIconAtLeft,
+    this.borderRadius,
+  });
 
   factory DUITabViewProps.fromJson(Map<String, dynamic> json) {
     return _$DUITabViewPropsFromJson(json);
