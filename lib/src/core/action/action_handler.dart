@@ -57,11 +57,27 @@ Map<String, ActionHandlerFn> _actionsMap = {
 
     final evaluatedArgs = _eval(pageArgs, context, enclosing);
 
+    final widgetScope = DUIWidgetScope.maybeOf(context);
+
     return switch (openAs) {
       'bottomSheet' => openDUIPageInBottomSheet(
-          pageUid: pageUId, context: context, style: bottomSheetStyling),
+          pageUid: pageUId,
+          context: context,
+          style: bottomSheetStyling,
+          iconDataProvider: widgetScope?.iconDataProvider,
+          imageProviderFn: widgetScope?.imageProviderFn,
+          textStyleBuilder: widgetScope?.textStyleBuilder,
+          onMessageReceived: widgetScope?.onMessageReceived,
+        ),
       'fullPage' || _ => openDUIPage(
-          pageUid: pageUId, context: context, pageArgs: evaluatedArgs),
+          pageUid: pageUId,
+          context: context,
+          pageArgs: evaluatedArgs,
+          iconDataProvider: widgetScope?.iconDataProvider,
+          imageProviderFn: widgetScope?.imageProviderFn,
+          textStyleBuilder: widgetScope?.textStyleBuilder,
+          onMessageReceived: widgetScope?.onMessageReceived,
+        ),
     };
   },
   // 'Action.navigateToPageNameInBottomSheet': (
@@ -112,7 +128,6 @@ Map<String, ActionHandlerFn> _actionsMap = {
     handler(MessagePayload(
         context: context, name: name, body: _eval(body, context, enclosing)));
 
-    Navigator.of(context).pop();
     return;
   },
   'Action.setPageState': ({required action, required context, enclosing}) {

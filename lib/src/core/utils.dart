@@ -3,30 +3,52 @@ import '../Utils/basic_shared_utils/dui_decoder.dart';
 import '../Utils/basic_shared_utils/lodash.dart';
 import '../Utils/util_functions.dart';
 import '../components/dui_icons/icon_helpers/icon_data_serialization.dart';
+import '../types.dart';
 import 'evaluator.dart';
 import 'page/dui_page.dart';
 
 class DUIPageRoute<T> extends MaterialPageRoute<T> {
-  DUIPageRoute(
-      {required String pageUid,
-      required BuildContext context,
-      Map<String, dynamic>? pageArgs})
-      : super(
-            settings: RouteSettings(name: pageUid),
+  DUIPageRoute({
+    required String pageUid,
+    required BuildContext context,
+    Map<String, dynamic>? pageArgs,
+    DUIMessageHandler? onMessageReceived,
+    DUIIconDataProvider? iconDataProvider,
+    DUIImageProviderFn? imageProviderFn,
+    DUITextStyleBuilder? textStyleBuilder,
+  }) : super(
+            settings: RouteSettings(name: '/duiRoute-$pageUid'),
             builder: (context) {
               return DUIPage(
                 pageUid: pageUid,
                 pageArgs: pageArgs,
+                iconDataProvider: iconDataProvider,
+                imageProviderFn: imageProviderFn,
+                textStyleBuilder: textStyleBuilder,
+                onMessageReceived: onMessageReceived,
               );
             });
 }
 
-Future<Object?> openDUIPage(
-    {required String pageUid,
-    required BuildContext context,
-    Map<String, dynamic>? pageArgs}) {
-  return Navigator.push(context,
-      DUIPageRoute(pageUid: pageUid, context: context, pageArgs: pageArgs));
+Future<Object?> openDUIPage({
+  required String pageUid,
+  required BuildContext context,
+  Map<String, dynamic>? pageArgs,
+  DUIMessageHandler? onMessageReceived,
+  DUIIconDataProvider? iconDataProvider,
+  DUIImageProviderFn? imageProviderFn,
+  DUITextStyleBuilder? textStyleBuilder,
+}) {
+  return Navigator.push(
+      context,
+      DUIPageRoute(
+        pageUid: pageUid,
+        context: context,
+        onMessageReceived: onMessageReceived,
+        iconDataProvider: iconDataProvider,
+        imageProviderFn: imageProviderFn,
+        textStyleBuilder: textStyleBuilder,
+      ));
 }
 
 Future<Widget?> openDUIPageInBottomSheet({
@@ -34,6 +56,10 @@ Future<Widget?> openDUIPageInBottomSheet({
   required BuildContext context,
   required Map<String, dynamic> style,
   Map<String, dynamic>? pageArgs,
+  DUIMessageHandler? onMessageReceived,
+  DUIIconDataProvider? iconDataProvider,
+  DUIImageProviderFn? imageProviderFn,
+  DUITextStyleBuilder? textStyleBuilder,
 }) {
   return showModalBottomSheet(
     scrollControlDisabledMaxHeightRatio:
@@ -54,6 +80,10 @@ Future<Widget?> openDUIPageInBottomSheet({
               DUIPage(
                 pageUid: pageUid,
                 pageArgs: pageArgs,
+                onMessageReceived: onMessageReceived,
+                iconDataProvider: iconDataProvider,
+                imageProviderFn: imageProviderFn,
+                textStyleBuilder: textStyleBuilder,
               ),
               Align(
                 alignment: Alignment.topRight,
