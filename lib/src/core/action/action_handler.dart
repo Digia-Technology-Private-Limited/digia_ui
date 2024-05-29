@@ -61,8 +61,9 @@ Map<String, ActionHandlerFn> _actionsMap = {
 
     final widgetScope = DUIWidgetScope.maybeOf(context);
 
-    return switch (openAs) {
-      'bottomSheet' => openDUIPageInBottomSheet(
+    switch (openAs) {
+      case 'bottomSheet':
+        return openDUIPageInBottomSheet(
           pageUid: pageUId,
           context: context,
           style: bottomSheetStyling,
@@ -70,8 +71,30 @@ Map<String, ActionHandlerFn> _actionsMap = {
           imageProviderFn: widgetScope?.imageProviderFn,
           textStyleBuilder: widgetScope?.textStyleBuilder,
           onMessageReceived: widgetScope?.onMessageReceived,
-        ),
-      'fullPage' || _ => openDUIPage(
+        );
+      case 'fullPage' || _:
+        final removePreviousScreensInStack = NumDecoder.toBoolOrDefault(
+            action.data['shouldRemovePreviousScreensInStack'],
+            defaultValue: false);
+        final routeNametoRemoveUntil = eval<String>(
+            action.data['routeNametoRemoveUntil'],
+            context: context,
+            enclosing: enclosing);
+        if (removePreviousScreensInStack && routeNametoRemoveUntil != null) {
+          return Navigator.pushAndRemoveUntil(
+              context,
+              DUIPageRoute(
+                pageUid: pageUId,
+                context: context,
+                pageArgs: evaluatedArgs,
+                iconDataProvider: widgetScope?.iconDataProvider,
+                imageProviderFn: widgetScope?.imageProviderFn,
+                textStyleBuilder: widgetScope?.textStyleBuilder,
+                onMessageReceived: widgetScope?.onMessageReceived,
+              ),
+              ModalRoute.withName(routeNametoRemoveUntil));
+        }
+        return openDUIPage(
           pageUid: pageUId,
           context: context,
           pageArgs: evaluatedArgs,
@@ -79,8 +102,8 @@ Map<String, ActionHandlerFn> _actionsMap = {
           imageProviderFn: widgetScope?.imageProviderFn,
           textStyleBuilder: widgetScope?.textStyleBuilder,
           onMessageReceived: widgetScope?.onMessageReceived,
-        ),
-    };
+        );
+    }
   },
   // 'Action.navigateToPageNameInBottomSheet': (
   //     {required action, required context}) {

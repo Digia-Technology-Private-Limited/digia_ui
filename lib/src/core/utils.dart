@@ -17,7 +17,7 @@ class DUIPageRoute<T> extends MaterialPageRoute<T> {
     DUIImageProviderFn? imageProviderFn,
     DUITextStyleBuilder? textStyleBuilder,
   }) : super(
-            settings: RouteSettings(name: '/duiRoute-$pageUid'),
+            settings: RouteSettings(name: '/duiPageRoute-$pageUid'),
             builder: (context) {
               return DUIPage(
                 pageUid: pageUid,
