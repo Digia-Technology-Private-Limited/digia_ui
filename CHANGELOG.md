@@ -4,6 +4,13 @@ Digia Ui Sdk.
 
 ## Getting Started
 
+
+## [0.0.6-beta.4] - 2023-05-29
+
+Whats new
+
+1. Support for pushAndRemoveUntil
+
 ## [0.0.6-beta.4] - 2023-05-29
 
 Whats new
