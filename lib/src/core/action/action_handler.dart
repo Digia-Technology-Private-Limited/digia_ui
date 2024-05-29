@@ -88,14 +88,6 @@ Map<String, ActionHandlerFn> _actionsMap = {
     Navigator.of(context).pop();
     return;
   },
-
-  'Action.popUntil': ({required action, required context, enclosing}) {
-    final routeName = action.data['route'];
-    if (routeName == null || routeName is! String || routeName.isEmpty) return;
-
-    Navigator.of(context).popUntil(ModalRoute.withName(routeName));
-    return;
-  },
   'Action.openUrl': ({required action, required context, enclosing}) async {
     final url =
         eval<String>(action.data['url'], context: context, enclosing: enclosing)
