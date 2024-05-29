@@ -83,6 +83,7 @@ Map<String, ActionHandlerFn> _actionsMap = {
 
     if (popUntilNamedRoute && routeNametoPopUntil != null) {
       Navigator.popUntil(context, ModalRoute.withName(routeNametoPopUntil));
+      return;
     }
 
     Navigator.of(context).pop();
