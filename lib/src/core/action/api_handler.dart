@@ -76,7 +76,7 @@ class ApiHandler {
     }
 
     if (json is List) {
-      return json.map((e) => _hydrateTemplateInDynamic(json, values)).toList();
+      return json.map((e) => _hydrateTemplateInDynamic(e, values)).toList();
     }
 
     if (json is! String) return json;
