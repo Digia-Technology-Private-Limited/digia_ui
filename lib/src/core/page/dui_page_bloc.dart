@@ -36,7 +36,9 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
     final onPageLoadAction = state.props.actions['onPageLoad'];
 
     var eventData = evalDynamic(onPageLoadAction?.analyticsData, event.context, null); 
-    DigiaUIClient.instance.duiAnalytics?.onEvent(eventData);
+    if(eventData != null && (eventData as Map<String, dynamic>).isNotEmpty) {
+      DigiaUIClient.instance.duiAnalytics?.onEvent(eventData);
+    }
     
     final action = onPageLoadAction?.actions.first;
 

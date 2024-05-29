@@ -188,8 +188,8 @@ class ActionHandler {
       {required BuildContext context,
       required ActionFlow actionFlow,
       ExprContext? enclosing}) async {
-    var analyticsData = evalDynamic(actionFlow.analyticsData, context, enclosing) as Map<String, dynamic>;
-    if(analyticsData.isNotEmpty) {
+    var analyticsData = evalDynamic(actionFlow.analyticsData, context, enclosing);
+    if(analyticsData != null && (analyticsData as Map<String, dynamic>).isNotEmpty) {
       DigiaUIClient.instance.duiAnalytics?.onEvent(analyticsData);
     }
     for (final action in actionFlow.actions) {
