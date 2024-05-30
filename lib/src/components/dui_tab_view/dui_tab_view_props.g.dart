@@ -31,6 +31,7 @@ DUITabViewProps _$DUITabViewPropsFromJson(Map<String, dynamic> json) =>
       borderWidth: (json['borderWidth'] as num?)?.toDouble(),
       isIconAtLeft: json['isIconAtLeft'] as bool?,
       borderRadius: json['borderRadius'] as String?,
+      tabAlignment: json['tabAlignment'] as String?,
     );
 
 Map<String, dynamic> _$DUITabViewPropsToJson(DUITabViewProps instance) =>
@@ -52,4 +53,5 @@ Map<String, dynamic> _$DUITabViewPropsToJson(DUITabViewProps instance) =>
       'borderWidth': instance.borderWidth,
       'isIconAtLeft': instance.isIconAtLeft,
       'borderRadius': instance.borderRadius,
+      'tabAlignment': instance.tabAlignment,
     };

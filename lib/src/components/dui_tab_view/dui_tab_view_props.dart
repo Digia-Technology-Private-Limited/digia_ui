@@ -24,6 +24,7 @@ class DUITabViewProps {
   final double? borderWidth;
   final bool? isIconAtLeft;
   final String? borderRadius;
+  final String? tabAlignment;
   @JsonKey(
       fromJson: DUITextStyle.fromJson,
       includeToJson: false,
@@ -55,6 +56,7 @@ class DUITabViewProps {
     this.borderWidth,
     this.isIconAtLeft,
     this.borderRadius,
+    this.tabAlignment,
   });
 
   factory DUITabViewProps.fromJson(Map<String, dynamic> json) {

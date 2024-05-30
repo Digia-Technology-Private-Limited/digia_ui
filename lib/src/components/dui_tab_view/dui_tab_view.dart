@@ -24,13 +24,19 @@ class DUITabView extends StatefulWidget {
   State<DUITabView> createState() => _DUITabViewState();
 }
 
-class _DUITabViewState extends State<DUITabView>
-    with SingleTickerProviderStateMixin {
+class _DUITabViewState extends State<DUITabView> with TickerProviderStateMixin {
   late TabController _tabController;
+  bool isTabScrollable = false;
+  TabAlignment tabAlignment = TabAlignment.fill;
 
   @override
   void initState() {
     super.initState();
+    _initializeTabController();
+    _updateTabAlignment();
+  }
+
+  void _initializeTabController() {
     _tabController = TabController(length: widget.children.length, vsync: this);
     _tabController.addListener(_handleTabSelection);
   }
@@ -42,7 +48,41 @@ class _DUITabViewState extends State<DUITabView>
     super.dispose();
   }
 
+  @override
+  void didUpdateWidget(covariant DUITabView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.children.length != oldWidget.children.length) {
+      _tabController.removeListener(_handleTabSelection);
+      _tabController.dispose();
+      _initializeTabController();
+    }
+    if (widget.tabViewProps.tabAlignment !=
+        oldWidget.tabViewProps.tabAlignment) {
+      _updateTabAlignment();
+    }
+  }
+
   void _handleTabSelection() {
+    setState(() {});
+  }
+
+  void _updateTabAlignment() {
+    if (widget.tabViewProps.tabAlignment != null) {
+      String alignment = widget.tabViewProps.tabAlignment!;
+      if (alignment == 'start') {
+        isTabScrollable = true;
+        tabAlignment = TabAlignment.start;
+      } else if (alignment == 'center') {
+        isTabScrollable = true;
+        tabAlignment = TabAlignment.center;
+      } else {
+        isTabScrollable = false;
+        tabAlignment = TabAlignment.fill;
+      }
+    } else {
+      isTabScrollable = false;
+      tabAlignment = TabAlignment.fill;
+    }
     setState(() {});
   }
 
@@ -73,39 +113,14 @@ class _DUITabViewState extends State<DUITabView>
                   labelColor:
                       widget.tabViewProps.selectedLabelColor.letIfTrue(toColor),
                   dividerHeight: widget.tabViewProps.dividerHeight,
-                  labelPadding: EdgeInsets.symmetric(horizontal: 8),
+                  isScrollable: isTabScrollable,
+                  tabAlignment: tabAlignment,
                   tabs: List.generate(widget.children.length, (index) {
                     final icon = DUIIconBuilder.fromProps(
                         props: widget.children[index].props['icon']);
                     final isSelected = _tabController.index == index;
-                    return Container(
-                      padding: DUIDecoder.toEdgeInsets(
-                          widget.tabViewProps.tabPadding),
-                      decoration: BoxDecoration(
-                        color: isSelected
-                            ? widget.tabViewProps.selectedBgColor
-                                ?.letIfTrue(toColor)
-                            : widget.tabViewProps.nonSelectedBgColor
-                                ?.letIfTrue(toColor),
-                        borderRadius: DUIDecoder.toBorderRadius(
-                            widget.tabViewProps.borderRadius),
-                        border: Border.all(
-                          color: widget.tabViewProps.borderColor
-                                  ?.letIfTrue(toColor) ??
-                              Colors.transparent,
-                          width: widget.tabViewProps.borderWidth ?? 1.0,
-                        ),
-                      ),
-                      child: widget.tabViewProps.isIconAtLeft == true
-                          ? Row(children: [
-                              icon.buildWithContainerProps(context),
-                              Text(widget.children[index].props['title'] ?? ''),
-                            ])
-                          : Column(children: [
-                              icon.buildWithContainerProps(context),
-                              Text(widget.children[index].props['title'] ?? ''),
-                            ]),
-                    );
+                    return tabData(
+                        index: index, isSelected: isSelected, icon: icon);
                   }),
                 ),
               ),
@@ -145,44 +160,70 @@ class _DUITabViewState extends State<DUITabView>
                           color: widget.tabViewProps.indicatorColor
                               .letIfTrue(toColor))
                       : null,
+                  isScrollable: isTabScrollable,
+                  tabAlignment: tabAlignment,
                   tabs: List.generate(widget.children.length, (index) {
                     final icon = DUIIconBuilder.fromProps(
                         props: widget.children[index].props['icon']);
                     final isSelected = _tabController.index == index;
-                    return Container(
-                      padding: DUIDecoder.toEdgeInsets(
-                          widget.tabViewProps.tabPadding),
-                      decoration: BoxDecoration(
-                        color: isSelected
-                            ? widget.tabViewProps.selectedBgColor
-                                ?.letIfTrue(toColor)
-                            : widget.tabViewProps.nonSelectedBgColor
-                                ?.letIfTrue(toColor),
-                        borderRadius: DUIDecoder.toBorderRadius(
-                            widget.tabViewProps.borderRadius),
-                        border: Border.all(
-                          color: widget.tabViewProps.borderColor
-                                  ?.letIfTrue(toColor) ??
-                              Colors.transparent,
-                          width: widget.tabViewProps.borderWidth ?? 1.0,
-                        ),
-                      ),
-                      child: widget.tabViewProps.isIconAtLeft == true
-                          ? Row(children: [
-                              icon.buildWithContainerProps(context),
-                              Text(widget.children[index].props['title'] ?? ''),
-                            ])
-                          : Column(children: [
-                              icon.buildWithContainerProps(context),
-                              Text(widget.children[index].props['title'] ?? ''),
-                            ]),
-                    );
+                    return tabData(
+                        index: index, isSelected: isSelected, icon: icon);
                   }),
                 ),
               ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget tabData(
+      {required int index,
+      required bool isSelected,
+      required DUIIconBuilder icon}) {
+    return Container(
+      padding: DUIDecoder.toEdgeInsets(widget.tabViewProps.tabPadding),
+      decoration: BoxDecoration(
+        color: isSelected
+            ? widget.tabViewProps.selectedBgColor?.letIfTrue(toColor)
+            : widget.tabViewProps.nonSelectedBgColor?.letIfTrue(toColor),
+        borderRadius:
+            DUIDecoder.toBorderRadius(widget.tabViewProps.borderRadius),
+        border: Border.all(
+          color: widget.tabViewProps.borderColor?.letIfTrue(toColor) ??
+              Colors.transparent,
+          width: widget.tabViewProps.borderWidth ?? 1.0,
+        ),
+      ),
+      child: widget.tabViewProps.isIconAtLeft == true
+          ? Row(children: [
+              ColorFiltered(
+                colorFilter: ColorFilter.mode(
+                    (isSelected
+                            ? widget.tabViewProps.selectedLabelColor
+                                .letIfTrue(toColor)
+                            : widget.tabViewProps.unselectedLabelColor
+                                .letIfTrue(toColor)) ??
+                        Colors.black,
+                    BlendMode.srcIn),
+                child: icon.buildWithContainerProps(context),
+              ),
+              Text(widget.children[index].props['title'] ?? ''),
+            ])
+          : Column(children: [
+              ColorFiltered(
+                colorFilter: ColorFilter.mode(
+                    (isSelected
+                            ? widget.tabViewProps.selectedLabelColor
+                                .letIfTrue(toColor)
+                            : widget.tabViewProps.unselectedLabelColor
+                                .letIfTrue(toColor)) ??
+                        Colors.black,
+                    BlendMode.srcIn),
+                child: icon.buildWithContainerProps(context),
+              ),
+              Text(widget.children[index].props['title'] ?? ''),
+            ]),
     );
   }
 }
