@@ -48,6 +48,7 @@ Future<Object?> openDUIPage({
         iconDataProvider: iconDataProvider,
         imageProviderFn: imageProviderFn,
         textStyleBuilder: textStyleBuilder,
+        pageArgs: pageArgs
       ));
 }
 
