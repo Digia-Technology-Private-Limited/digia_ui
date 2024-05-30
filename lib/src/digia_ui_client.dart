@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:uuid/uuid.dart';
@@ -169,6 +170,7 @@ class DigiaUIClient {
 
     _instance.jsFunctions = JSFunctions();
     await _instance.jsFunctions.fetchJsFile(_instance.config.functionsFilePath);
+
     // _instance.jsFunctions.callJs('test3', {'number': 27});
 
     _instance.appState = DUIAppState.fromJson(_instance.config.appState ?? {});
@@ -181,6 +183,31 @@ class DigiaUIClient {
         baseUrl: _instance.baseUrl,
         httpClient: _instance.networkClient,
         config: _instance.config);
+  }
+
+  ExprContext get exprContext => ExprContext(variables: {
+        'js': ExprClassInstance(
+            klass: ExprClass(name: 'js', fields: {}, methods: {
+          'eval': ExprCallableImpl(
+              fn: (evaluator, arguments) {
+                return _instance.jsFunctions.callJs(
+                    _toValue<String>(evaluator, arguments[0])!,
+                    arguments
+                        .skip(1)
+                        .map((e) => _toValue(evaluator, e))
+                        .toList());
+              },
+              arity: 2)
+        }))
+      });
+
+  T? _toValue<T>(evaluator, Object obj) {
+    if (obj is ASTNode) {
+      final result = evaluator.eval(obj);
+      return result as T?;
+    }
+
+    return obj as T?;
   }
 
   String _getPlatform() {
