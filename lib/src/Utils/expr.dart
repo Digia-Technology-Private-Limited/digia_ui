@@ -16,7 +16,7 @@ evalDynamic(dynamic pageArgs, BuildContext context, ExprContext? enclosing) {
   }
 
   if (pageArgs is List) {
-    return pageArgs.map((e) => evalDynamic(e, context, enclosing).toList());
+    return pageArgs.map((e) => evalDynamic(e, context, enclosing)).toList();
   }
 
   return null;
