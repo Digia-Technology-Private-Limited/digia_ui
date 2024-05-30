@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../Utils/basic_shared_utils/dui_decoder.dart';
 import '../Utils/basic_shared_utils/lodash.dart';
 import '../Utils/dui_widget_registry.dart';
 import '../components/dui_widget_creator_fn.dart';
@@ -42,14 +43,8 @@ abstract class DUIWidgetBuilder {
         context: context,
         actionFlow: onTapProp,
         child: output,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(styleClass!.border!.borderRadius!.topLeft),
-          topRight: Radius.circular(styleClass.border!.borderRadius!.topRight),
-          bottomLeft:
-              Radius.circular(styleClass.border!.borderRadius!.bottomLeft),
-          bottomRight:
-              Radius.circular(styleClass.border!.borderRadius!.bottomRight),
-        ));
+        borderRadius:
+            DUIDecoder.toBorderRadius(styleClass?.border?.borderRadius));
 
     // Visibility
     output = DUIVisibility(
