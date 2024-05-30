@@ -42,14 +42,13 @@ Future<Object?> openDUIPage({
   return Navigator.push(
       context,
       DUIPageRoute(
-        pageUid: pageUid,
-        context: context,
-        onMessageReceived: onMessageReceived,
-        iconDataProvider: iconDataProvider,
-        imageProviderFn: imageProviderFn,
-        textStyleBuilder: textStyleBuilder,
-        pageArgs: pageArgs
-      ));
+          pageUid: pageUid,
+          context: context,
+          onMessageReceived: onMessageReceived,
+          iconDataProvider: iconDataProvider,
+          imageProviderFn: imageProviderFn,
+          textStyleBuilder: textStyleBuilder,
+          pageArgs: pageArgs));
 }
 
 Future<Widget?> openDUIPageInBottomSheet({

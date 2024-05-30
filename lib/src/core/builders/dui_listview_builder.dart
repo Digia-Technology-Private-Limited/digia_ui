@@ -26,7 +26,8 @@ class DUIListViewBuilder extends DUIWidgetBuilder {
     final children = data.children['children']!;
 
     List items = _createDataItems(data.dataRef, context);
-    final generateChildrenDynamically = items.isNotEmpty;
+    final generateChildrenDynamically =
+        data.dataRef.isNotEmpty && data.dataRef['kind'] != null;
 
     if (generateChildrenDynamically) {
       if (children.isEmpty) return const SizedBox.shrink();

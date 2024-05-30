@@ -75,8 +75,11 @@ Future<Object?> _makeFuture(
               DigiaUIClient.getConfigResolver())
           .getApiDataSource(apiDataSourceId);
 
-      final args = apiDataSourceArgs
-          ?.map((key, value) => MapEntry(key, eval(value, context: context)));
+      final args = apiDataSourceArgs?.map((key, value) {
+        final evalue = eval(value, context: context);
+        final dvalue = apiModel.variables?[key]?.defaultValue;
+        return MapEntry(key, evalue ?? dvalue);
+      });
 
       return ApiHandler.instance.execute(apiModel: apiModel, args: args).then(
           (value) {
