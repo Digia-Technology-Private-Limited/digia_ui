@@ -67,6 +67,7 @@ Map<String, ActionHandlerFn> _actionsMap = {
           pageUid: pageUId,
           context: context,
           style: bottomSheetStyling,
+          pageArgs: evaluatedArgs,
           iconDataProvider: widgetScope?.iconDataProvider,
           imageProviderFn: widgetScope?.imageProviderFn,
           textStyleBuilder: widgetScope?.textStyleBuilder,
