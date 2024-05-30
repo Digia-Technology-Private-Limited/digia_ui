@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../Utils/basic_shared_utils/dui_decoder.dart';
 import '../Utils/basic_shared_utils/lodash.dart';
 import '../Utils/dui_widget_registry.dart';
 import '../components/dui_widget_creator_fn.dart';
@@ -39,7 +40,11 @@ abstract class DUIWidgetBuilder {
         (p0) => ActionFlow.fromJson(p0));
 
     output = DUIGestureDetector(
-        context: context, actionFlow: onTapProp, child: output);
+        context: context,
+        actionFlow: onTapProp,
+        child: output,
+        borderRadius:
+            DUIDecoder.toBorderRadius(styleClass?.border?.borderRadius));
 
     // Visibility
     output = DUIVisibility(
