@@ -4,6 +4,7 @@ import '../../Utils/basic_shared_utils/dui_decoder.dart';
 import '../../Utils/basic_shared_utils/lodash.dart';
 import '../../Utils/basic_shared_utils/num_decoder.dart';
 import '../../Utils/util_functions.dart';
+import '../../components/dui_button_bounce_animation.dart';
 import '../action/action_handler.dart';
 import '../action/action_prop.dart';
 import '../evaluator.dart';
@@ -48,6 +49,13 @@ class DUIButtonBuilder extends DUIWidgetBuilder {
     final isDisabled = eval<bool>(data.props['isDisabled'], context: context) ??
         data.props['onClick'] == null;
 
+    final isHaptic = eval<bool>(data.props['isHaptic'], context: context) ??
+        data.props['isHaptic'] == null;
+
+    final bounceToggle =
+        eval<bool>(data.props['bounceToggle'], context: context) ??
+            data.props['bounceToggle'] == null;
+
     final disabledTextColor = disabledStyleJson['disabledTextColor'] as String?;
     final disabledIconColor = disabledStyleJson['disabledIconColor'] as String?;
     final content = _buildContent(context,
@@ -55,16 +63,26 @@ class DUIButtonBuilder extends DUIWidgetBuilder {
         disabledTextColor: disabledTextColor,
         disabledIconColor: disabledIconColor);
 
-    return ElevatedButton(
-        onPressed: isDisabled
-            ? null
-            : () {
-                final onClick = ActionFlow.fromJson(data.props['onClick']);
-                ActionHandler.instance
-                    .execute(context: context, actionFlow: onClick);
-              },
-        style: style,
-        child: content);
+    final onPressedAction = isDisabled
+        ? null
+        : () {
+            final onClick = ActionFlow.fromJson(data.props['onClick']);
+            ActionHandler.instance
+                .execute(context: context, actionFlow: onClick);
+          };
+
+    if (!bounceToggle && !isHaptic) {
+      return ElevatedButton(
+          onPressed: onPressedAction, style: style, child: content);
+    } else {
+      return ButtonBounceAnimation(
+        onPressed: onPressedAction,
+        enableHaptics: isHaptic,
+        enableBounceAnimation: bounceToggle,
+        child: ElevatedButton(
+            onPressed: onPressedAction, style: style, child: content),
+      );
+    }
   }
 
   Widget _buildContent(BuildContext context,
