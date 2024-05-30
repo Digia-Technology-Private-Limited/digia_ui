@@ -39,7 +39,17 @@ abstract class DUIWidgetBuilder {
         (p0) => ActionFlow.fromJson(p0));
 
     output = DUIGestureDetector(
-        context: context, actionFlow: onTapProp, child: output);
+        context: context,
+        actionFlow: onTapProp,
+        child: output,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(styleClass!.border!.borderRadius!.topLeft),
+          topRight: Radius.circular(styleClass.border!.borderRadius!.topRight),
+          bottomLeft:
+              Radius.circular(styleClass.border!.borderRadius!.bottomLeft),
+          bottomRight:
+              Radius.circular(styleClass.border!.borderRadius!.bottomRight),
+        ));
 
     // Visibility
     output = DUIVisibility(

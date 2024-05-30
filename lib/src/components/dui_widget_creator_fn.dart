@@ -10,13 +10,15 @@ import '../core/evaluator.dart';
 Widget DUIGestureDetector(
     {required BuildContext context,
     required ActionFlow? actionFlow,
-    required Widget child}) {
+    required Widget child,
+    BorderRadius? borderRadius}) {
   if (actionFlow == null || actionFlow.actions.isEmpty) return child;
 
   if (actionFlow.inkwell) {
     return InkWell(
       onTap: () => ActionHandler.instance
           .execute(context: context, actionFlow: actionFlow),
+      borderRadius: borderRadius,
       child: child,
     );
   } else {
