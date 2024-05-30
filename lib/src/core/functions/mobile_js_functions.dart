@@ -21,7 +21,7 @@ class MobileJsFunctions implements JSFunctions {
   }
 
   @override
-  dynamic callJs(String fnName, dynamic v1) async {
+  dynamic callJs(String fnName, dynamic v1) {
     JsEvalResult jsEvalResult =
         runtime.evaluate('$jsFile;JSON.stringify($fnName($v1))');
     print('Result() executed in ${jsEvalResult.stringResult}');
