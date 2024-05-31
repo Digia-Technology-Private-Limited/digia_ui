@@ -54,3 +54,5 @@ macos/Podfile.lock
 # FVM Version Cache
 .fvm/
 
+ios/Flutter/flutter_export_environment.sh
+ios/Flutter/Generated.xcconfig
