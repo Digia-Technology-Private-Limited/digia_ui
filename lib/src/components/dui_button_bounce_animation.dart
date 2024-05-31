@@ -74,7 +74,7 @@ class _ButtonBounceAnimationState extends State<ButtonBounceAnimation>
         //         child: widget.child,
         //       )
         //     : widget.child,
-        child: widget.child,
+        child: AbsorbPointer(child: widget.child),
       ),
     );
   }
