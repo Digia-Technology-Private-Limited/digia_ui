@@ -1,5 +1,5 @@
 abstract class DUIAnalytics {
-  void onEvent(Map<String, dynamic> metaData);
+  void onEvent(List<Map<String, dynamic>> metaData);
   void onDataSourceSuccess(
       String dataSourceType, String source, dynamic metaData, dynamic perfData);
   void onDataSourceError(

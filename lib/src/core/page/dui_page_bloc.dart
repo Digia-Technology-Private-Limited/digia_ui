@@ -37,7 +37,12 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
 
     var eventData =
         evalDynamic(onPageLoadAction?.analyticsData, event.context, null);
-    if (eventData != null && (eventData as Map<String, dynamic>).isNotEmpty) {
+    if (eventData != null &&
+        (eventData
+                .where((e) => e != null)
+                .cast<Map<String, dynamic>>()
+                .toList())
+            .isNotEmpty) {
       DigiaUIClient.instance.duiAnalytics?.onEvent(eventData);
     }
 

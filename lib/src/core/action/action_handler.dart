@@ -224,7 +224,11 @@ class ActionHandler {
     var analyticsData =
         evalDynamic(actionFlow.analyticsData, context, enclosing);
     if (analyticsData != null &&
-        (analyticsData as Map<String, dynamic>).isNotEmpty) {
+        (analyticsData
+                .where((e) => e != null)
+                .cast<Map<String, dynamic>>()
+                .toList())
+            .isNotEmpty) {
       DigiaUIClient.instance.duiAnalytics?.onEvent(analyticsData);
     }
     for (final action in actionFlow.actions) {
