@@ -73,7 +73,7 @@ class DUIAnimatedButtonBuilder extends DUIWidgetBuilder {
       enableHaptics: isHaptic,
       enableBounceAnimation: true,
       child: TextButton(
-        onPressed: null,
+        onPressed: () {},
         style: style,
         child: content,
       ),
