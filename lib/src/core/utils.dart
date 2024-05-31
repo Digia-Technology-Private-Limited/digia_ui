@@ -70,50 +70,56 @@ Future<Widget?> openDUIPageInBottomSheet({
     context: context,
     builder: (ctx) {
       return Container(
-        color: eval<String>(style['bgColor'], context: context)
-                .letIfTrue(toColor) ??
-            Colors.black.withOpacity(0.4),
-        child: ClipRRect(
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: style['borderColor'] != null
+                ? eval<String>(style['borderColor'], context: context)
+                        .letIfTrue(toColor) ??
+                    Colors.black.withOpacity(0.4)
+                : eval<String>(style['bgColor'], context: context)
+                        .letIfTrue(toColor) ??
+                    Colors.black.withOpacity(0.4),
+          ),
+          color: eval<String>(style['bgColor'], context: context)
+                  .letIfTrue(toColor) ??
+              Colors.black.withOpacity(0.4),
           borderRadius: DUIDecoder.toBorderRadius(style['borderRadius']),
-          child: Stack(
-            children: [
-              DUIPage(
-                pageUid: pageUid,
-                pageArgs: pageArgs,
-                onMessageReceived: onMessageReceived,
-                iconDataProvider: iconDataProvider,
-                imageProviderFn: imageProviderFn,
-                textStyleBuilder: textStyleBuilder,
-              ),
-              Align(
-                alignment: Alignment.topRight,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 20, right: 20, left: 20),
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.maybePop(context);
-                    },
-                    child: Container(
-                      height: 24,
-                      width: 24,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        color:
-                            eval<String>(style['iconBgColor'], context: context)
-                                    .letIfTrue(toColor) ??
-                                Colors.black.withOpacity(0.3),
-                      ),
-                      child: Icon(
-                        getIconData(icondataMap: style['icon']['iconData']),
-                        color: Colors.white.withOpacity(0.5),
-                        size: 16,
-                      ),
-                    ),
+        ),
+        child: Stack(
+          children: [
+            DUIPage(
+              pageUid: pageUid,
+              pageArgs: pageArgs,
+              onMessageReceived: onMessageReceived,
+              iconDataProvider: iconDataProvider,
+              imageProviderFn: imageProviderFn,
+              textStyleBuilder: textStyleBuilder,
+            ),
+            Align(
+              alignment: Alignment.topRight,
+              child: InkWell(
+                onTap: () {
+                  Navigator.maybePop(context);
+                },
+                child: Container(
+                  margin: const EdgeInsets.only(top: 20, right: 20, left: 20),
+                  height: 24,
+                  width: 24,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    color: eval<String>(style['iconBgColor'], context: context)
+                            .letIfTrue(toColor) ??
+                        Colors.black.withOpacity(0.3),
+                  ),
+                  child: Icon(
+                    getIconData(icondataMap: style['icon']['iconData']),
+                    color: Colors.white.withOpacity(0.5),
+                    size: 16,
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       );
     },
