@@ -113,7 +113,8 @@ Future<Widget?> openDUIPageInBottomSheet({
                   ),
                   child: Icon(
                     getIconData(icondataMap: style['icon']['iconData']),
-                    color: Colors.white.withOpacity(0.5),
+                    color: eval<String>(style['icon']['iconColor'], context: context)
+                        .letIfTrue(toColor)??Colors.white.withOpacity(0.5),
                     size: style['icon']['iconSize'],
                   ),
                 ),
