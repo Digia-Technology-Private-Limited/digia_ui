@@ -15,11 +15,13 @@ Widget DUIGestureDetector(
   if (actionFlow == null || actionFlow.actions.isEmpty) return child;
 
   if (actionFlow.inkwell) {
-    return InkWell(
-      onTap: () => ActionHandler.instance
-          .execute(context: context, actionFlow: actionFlow),
-      borderRadius: borderRadius,
-      child: child,
+    return Material(
+      child: InkWell(
+        onTap: () => ActionHandler.instance
+            .execute(context: context, actionFlow: actionFlow),
+        borderRadius: borderRadius,
+        child: child,
+      ),
     );
   } else {
     return GestureDetector(
