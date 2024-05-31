@@ -16,6 +16,7 @@ Widget DUIGestureDetector(
 
   if (actionFlow.inkwell) {
     return Material(
+      color: Colors.transparent,
       child: InkWell(
         onTap: () => ActionHandler.instance
             .execute(context: context, actionFlow: actionFlow),
