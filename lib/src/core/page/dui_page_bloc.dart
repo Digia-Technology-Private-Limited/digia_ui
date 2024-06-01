@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../digia_ui.dart';
-import '../../Utils/expr.dart';
 import '../action/action_prop.dart';
 import '../action/api_handler.dart';
+import '../analytics_handler.dart';
 import '../evaluator.dart';
 import 'dui_page_event.dart';
 import 'dui_page_state.dart';
@@ -27,7 +27,7 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
   }
 
   void _init(
-    InitPageEvent event,
+    InitPageEvent blocEvent,
     Emitter<DUIPageState> emit,
   ) async {
     // Assumption is that onPageLoadAction will not be null.
@@ -35,25 +35,12 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
 
     final onPageLoadAction = state.props.actions['onPageLoad'];
 
-    var eventData =
-        evalDynamic(onPageLoadAction?.analyticsData, event.context, null);
-    eventData != null
-        ? eventData
-            .where((e) => e != null)
-            .cast<Map<String, dynamic>>()
-            .toList()
-            .isNotEmpty
-        : eventData;
-    if (eventData != null && (eventData).isNotEmpty) {
-      DigiaUIClient.instance.duiAnalytics?.onEvent(eventData
-          .where((e) => e != null)
-          .cast<Map<String, dynamic>>()
-          .toList());
-    }
+    AnalyticsHandler.instance.execute(
+        context: blocEvent.context, events: onPageLoadAction?.analyticsData);
 
     final action = onPageLoadAction?.actions.first;
 
-    await _handleAction(event.context, action!, emit);
+    await _handleAction(blocEvent.context, action!, emit);
 
     return;
   }
