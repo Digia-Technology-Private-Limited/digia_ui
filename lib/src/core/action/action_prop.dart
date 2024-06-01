@@ -7,12 +7,9 @@ part 'action_prop.g.dart';
 class ActionFlow {
   final List<ActionProp> actions;
   final bool inkwell;
-  final Map<String, dynamic>? analyticsData;
+  final List<Map<String, dynamic>>? analyticsData;
 
-  ActionFlow(
-      {required this.actions,
-      this.inkwell = true,
-      this.analyticsData = const {}});
+  ActionFlow({required this.actions, this.inkwell = true, this.analyticsData});
 
   factory ActionFlow.empty() => ActionFlow(actions: []);
 
@@ -32,13 +29,16 @@ class ActionFlow {
 
     if (json['steps'] is List) {
       return ActionFlow(
-          actions: json['steps']
-              .where((e) => e != null)
-              .map((e) => ActionProp.fromJson(e))
-              .cast<ActionProp>()
-              .toList(),
-          inkwell: inkwell,
-          analyticsData: json['analyticsData']);
+        actions: json['steps']
+            .where((e) => e != null)
+            .map((e) => ActionProp.fromJson(e))
+            .cast<ActionProp>()
+            .toList(),
+        inkwell: inkwell,
+        analyticsData: (json['analyticsData'] as List<Map<String, dynamic>?>?)
+            ?.nonNulls
+            .toList(),
+      );
     }
 
     return ActionFlow.empty();

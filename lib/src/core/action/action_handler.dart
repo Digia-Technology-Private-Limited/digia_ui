@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:json_schema2/json_schema2.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../../digia_ui.dart';
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
 import '../../Utils/basic_shared_utils/lodash.dart';
 import '../../Utils/basic_shared_utils/num_decoder.dart';
@@ -14,6 +13,7 @@ import '../../Utils/expr.dart';
 import '../../Utils/extensions.dart';
 import '../../components/dui_widget_scope.dart';
 import '../../types.dart';
+import '../analytics_handler.dart';
 import '../app_state_provider.dart';
 import '../evaluator.dart';
 import '../page/dui_page_bloc.dart';
@@ -222,12 +222,11 @@ class ActionHandler {
       {required BuildContext context,
       required ActionFlow actionFlow,
       ExprContext? enclosing}) async {
-    var analyticsData =
-        evalDynamic(actionFlow.analyticsData, context, enclosing);
-    if (analyticsData != null &&
-        (analyticsData as Map<String, dynamic>).isNotEmpty) {
-      DigiaUIClient.instance.duiAnalytics?.onEvent(analyticsData);
-    }
+    AnalyticsHandler.instance.execute(
+        context: context,
+        events: actionFlow.analyticsData,
+        enclosing: enclosing);
+
     for (final action in actionFlow.actions) {
       final executable = _actionsMap[action.type];
       if (executable == null) {
