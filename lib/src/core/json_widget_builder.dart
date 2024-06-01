@@ -31,10 +31,6 @@ abstract class DUIWidgetBuilder {
     if (styleClass != null) {
       output = DUIContainer(styleClass: styleClass, child: output);
     }
-
-    // Align
-    output = DUIAlign(alignment: data.containerProps['align'], child: output);
-
     final onTapProp = ifNotNull(
         data.containerProps['onClick'] as Map<String, dynamic>?,
         (p0) => ActionFlow.fromJson(p0));
@@ -45,6 +41,9 @@ abstract class DUIWidgetBuilder {
         child: output,
         borderRadius:
             DUIDecoder.toBorderRadius(styleClass?.border?.borderRadius));
+
+    // Align
+    output = DUIAlign(alignment: data.containerProps['align'], child: output);
 
     // Visibility
     output = DUIVisibility(
