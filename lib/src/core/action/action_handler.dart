@@ -223,13 +223,17 @@ class ActionHandler {
       ExprContext? enclosing}) async {
     var analyticsData =
         evalDynamic(actionFlow.analyticsData, context, enclosing);
-    if (analyticsData != null &&
-        (analyticsData
-                .where((e) => e != null)
-                .cast<Map<String, dynamic>>()
-                .toList())
-            .isNotEmpty) {
-      DigiaUIClient.instance.duiAnalytics?.onEvent(analyticsData);
+    analyticsData != null
+        ? analyticsData
+            .where((e) => e != null)
+            .cast<Map<String, dynamic>>()
+            .toList()
+        : analyticsData;
+    if (analyticsData != null && (analyticsData).isNotEmpty) {
+      DigiaUIClient.instance.duiAnalytics?.onEvent(analyticsData
+          .where((e) => e != null)
+          .cast<Map<String, dynamic>>()
+          .toList());
     }
     for (final action in actionFlow.actions) {
       final executable = _actionsMap[action.type];

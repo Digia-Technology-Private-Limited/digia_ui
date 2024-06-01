@@ -23,8 +23,8 @@ void main() async {
 
 class MyAnalytics extends DUIAnalytics {
   @override
-  void onEvent(Map<String, dynamic> data) {
-    print(data.toString());
+  void onEvent(List<Map<String, dynamic>> metaData) {
+    print(metaData.toString());
   }
 
   @override

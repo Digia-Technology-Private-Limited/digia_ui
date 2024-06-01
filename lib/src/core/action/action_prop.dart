@@ -38,10 +38,12 @@ class ActionFlow {
             .cast<ActionProp>()
             .toList(),
         inkwell: inkwell,
-        analyticsData: json['analyticsData']
-            .where((e) => e != null)
-            .cast<Map<String, dynamic>>()
-            .toList(),
+        analyticsData: json['analyticsData'] != null
+            ? json['analyticsData']
+                .where((e) => e != null)
+                .cast<Map<String, dynamic>>()
+                .toList()
+            : [],
       );
     }
 
