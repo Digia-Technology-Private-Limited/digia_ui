@@ -27,7 +27,7 @@ class _DezervDialPadState extends State<DezervDialPad> {
   late bool _isValidAmount;
 
   @override
-  void initState() {
+  void didChangeDependencies() {
     _defaultAmount =
         eval<num>(widget.props['defaultAmount'], context: context) ?? 0;
     _minimumAmount =
@@ -39,7 +39,7 @@ class _DezervDialPadState extends State<DezervDialPad> {
     _formattedMinimumAmount = _toCurrencyWithoutDecimal(_minimumAmount);
     _formattedMaximumAmount = _toCurrencyWithoutDecimal(_maximumAmount);
     _userSelectedAmount = _defaultAmount.toString();
-    super.initState();
+    super.didChangeDependencies();
   }
 
   final List<int> _numbersList = [1, 2, 3, 4, 5, 6, 7, 8, 9, -1, 0, -1];
