@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import '../Utils/basic_shared_utils/dui_decoder.dart';
 import '../Utils/basic_shared_utils/lodash.dart';
+import '../Utils/extensions.dart';
 import '../Utils/util_functions.dart';
-import '../components/dui_icons/icon_helpers/icon_data_serialization.dart';
+import '../components/utils/DUIBorder/dui_border.dart';
 import '../types.dart';
+import 'builders/dui_icon_builder.dart';
 import 'evaluator.dart';
 import 'page/dui_page.dart';
 
@@ -71,18 +73,9 @@ Future<Widget?> openDUIPageInBottomSheet({
     builder: (ctx) {
       return Container(
         decoration: BoxDecoration(
-          border: Border.all(
-            color: style['borderColor'] != null
-                ? eval<String>(style['borderColor'], context: context)
-                        .letIfTrue(toColor) ??
-                    Colors.black.withOpacity(0.4)
-                : eval<String>(style['bgColor'], context: context)
-                        .letIfTrue(toColor) ??
-                    Colors.black.withOpacity(0.4),
-          ),
+          border: toBorder(DUIBorder.fromJson(style)),
           color: eval<String>(style['bgColor'], context: context)
-                  .letIfTrue(toColor) ??
-              Colors.black.withOpacity(0.4),
+              .letIfTrue(toColor),
           borderRadius: DUIDecoder.toBorderRadius(style['borderRadius']),
         ),
         child: Stack(
@@ -95,31 +88,29 @@ Future<Widget?> openDUIPageInBottomSheet({
               imageProviderFn: imageProviderFn,
               textStyleBuilder: textStyleBuilder,
             ),
-            Align(
-              alignment: Alignment.topRight,
-              child: InkWell(
-                onTap: () {
-                  Navigator.maybePop(context);
-                },
-                child: Container(
-                  margin: const EdgeInsets.only(top: 20, right: 20, left: 20),
-                  height: 24,
-                  width: 24,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: eval<String>(style['iconBgColor'], context: context)
-                            .letIfTrue(toColor) ??
-                        Colors.black.withOpacity(0.3),
-                  ),
-                  child: Icon(
-                    getIconData(icondataMap: style['icon']['iconData']),
-                    color: eval<String>(style['icon']['iconColor'], context: context)
-                        .letIfTrue(toColor)??Colors.white.withOpacity(0.5),
-                    size: style['icon']['iconSize'],
+            // TODO => Remove this crap from here.
+            // Should be send from inside DUIPage itself.
+            if (!style
+                .valueFor(keyPath: 'icon.iconData')
+                .isNullEmptyFalseOrZero)
+              Align(
+                alignment: Alignment.topRight,
+                child: InkWell(
+                  onTap: () {
+                    Navigator.maybePop(context);
+                  },
+                  child: Container(
+                    margin: const EdgeInsets.only(top: 20, right: 20, left: 20),
+                    height: 24,
+                    width: 24,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        color: Colors.white.withOpacity(0.1)),
+                    child: DUIIconBuilder.fromProps(props: style['icon'])
+                        .build(context),
                   ),
                 ),
               ),
-            ),
           ],
         ),
       );
