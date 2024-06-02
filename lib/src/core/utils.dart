@@ -97,18 +97,22 @@ Future<Widget?> openDUIPageInBottomSheet({
               Positioned(
                 top: 24,
                 right: 20,
-                child: InkWell(
-                  onTap: () {
-                    Navigator.maybePop(context);
-                  },
-                  child: Container(
-                    height: 24,
-                    width: 24,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        color: Colors.white.withOpacity(0.1)),
-                    child: DUIIconBuilder.fromProps(props: style['icon'])
-                        .build(context),
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.maybePop(context);
+                    },
+                    borderRadius: BorderRadius.circular(12),
+                    child: Container(
+                      height: 24,
+                      width: 24,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          color: Colors.white.withOpacity(0.1)),
+                      child: DUIIconBuilder.fromProps(props: style['icon'])
+                          .build(context),
+                    ),
                   ),
                 ),
               ),
