@@ -19,6 +19,12 @@ class DUIButtonBuilder extends DUIWidgetBuilder {
     return DUIButtonBuilder(data: data);
   }
 
+  factory DUIButtonBuilder.fromProps(Map<String, dynamic> props) {
+    return DUIButtonBuilder(
+      data: DUIWidgetJsonData(type: 'digia/button', props: props),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final defaultStyleJson =

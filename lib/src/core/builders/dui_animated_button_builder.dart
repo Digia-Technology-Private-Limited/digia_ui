@@ -20,6 +20,12 @@ class DUIAnimatedButtonBuilder extends DUIWidgetBuilder {
     return DUIAnimatedButtonBuilder(data: data);
   }
 
+  factory DUIAnimatedButtonBuilder.fromProps(Map<String, dynamic> props) {
+    return DUIAnimatedButtonBuilder(
+      data: DUIWidgetJsonData(type: 'digia/animatedButton', props: props),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final defaultStyleJson =

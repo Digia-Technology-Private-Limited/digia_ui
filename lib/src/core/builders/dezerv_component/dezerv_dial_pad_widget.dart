@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import '../../../Utils/extensions.dart';
 import '../../evaluator.dart';
 import '../../page/dui_page_bloc.dart';
+import '../dui_animated_button_builder.dart';
 import 'dezerv_flex_grid_view.dart';
 
 class DezervDialPad extends StatefulWidget {
@@ -47,31 +48,40 @@ class _DezervDialPadState extends State<DezervDialPad> {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          _toCurrencyWithoutDecimal(
-            int.parse(_userSelectedAmount),
-          ).replaceFirst('₹', '₹ '),
-          style: GoogleFonts.inter(
-            color: _isValidAmount
-                ? const Color(0xffE7E6E2)
-                : const Color.fromARGB(255, 255, 40, 25),
-            fontWeight: FontWeight.w700,
-            fontSize: 40,
-          ),
-          textAlign: TextAlign.center,
+        Column(
+          children: [
+            Text(
+              _toCurrencyWithoutDecimal(
+                int.parse(_userSelectedAmount),
+              ).replaceFirst('₹', '₹ '),
+              style: GoogleFonts.inter(
+                color: _isValidAmount
+                    ? const Color(0xffE7E6E2)
+                    : const Color.fromARGB(255, 255, 40, 25),
+                fontWeight: FontWeight.w700,
+                fontSize: 40,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(
+              height: 48,
+            ),
+            FlexGridView(
+              spacing: 0,
+              itemCount: _numbersList.length,
+              rowCount: 3,
+              itemBuilder: (int index) => Expanded(
+                child: _buildKeyPadTile(index),
+              ),
+            ),
+          ],
         ),
-        const SizedBox(
-          height: 48,
-        ),
-        FlexGridView(
-          spacing: 0,
-          itemCount: _numbersList.length,
-          rowCount: 3,
-          itemBuilder: (int index) => Expanded(
-            child: _buildKeyPadTile(index),
-          ),
-        ),
+        DUIAnimatedButtonBuilder.fromProps({
+          ...widget.props['confirmButton'],
+          'isDisabled': !_isValidAmount
+        }).build(context)
       ],
     );
   }
