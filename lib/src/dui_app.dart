@@ -1,4 +1,4 @@
-import 'package:chucker_flutter/chucker_flutter.dart';
+// import 'package:chucker_flutter/chucker_flutter.dart';
 import 'package:flutter/material.dart';
 
 import '../digia_ui.dart';
@@ -58,7 +58,7 @@ class DUIApp extends StatelessWidget {
     return MaterialApp(
       // key: key,
       debugShowCheckedModeBanner: false,
-      navigatorObservers: [ChuckerFlutter.navigatorObserver],
+      // navigatorObservers: [ChuckerFlutter.navigatorObserver],
       theme: theme ??
           ThemeData(
             fontFamily: 'Poppins',
