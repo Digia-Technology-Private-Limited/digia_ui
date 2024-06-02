@@ -31,19 +31,22 @@ abstract class DUIWidgetBuilder {
 
     // Styling
     final styleClass = DUIStyleClass.fromJson(data.containerProps['style']);
-    output = wrapInContainer(
-        context: context, styleClass: styleClass, child: output);
 
     final onTapProp = ifNotNull(
         data.containerProps['onClick'] as Map<String, dynamic>?,
         (p0) => ActionFlow.fromJson(p0));
-
+        
     output = DUIGestureDetector(
         context: context,
         actionFlow: onTapProp,
         child: output,
         borderRadius:
             DUIDecoder.toBorderRadius(styleClass?.border?.borderRadius));
+
+    output = wrapInContainer(
+        context: context, styleClass: styleClass, child: output);
+
+    
 
     // Align
     output = DUIAlign(alignment: data.containerProps['align'], child: output);
