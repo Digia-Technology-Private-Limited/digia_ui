@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../Utils/basic_shared_utils/color_decoder.dart';
 import '../Utils/basic_shared_utils/dui_decoder.dart';
 import '../Utils/basic_shared_utils/lodash.dart';
 import '../Utils/extensions.dart';
@@ -53,6 +54,7 @@ Future<Object?> openDUIPage({
           pageArgs: pageArgs));
 }
 
+// TODO: Needs to be redesigned from scratch;
 Future<Widget?> openDUIPageInBottomSheet({
   required String pageUid,
   required BuildContext context,
@@ -63,23 +65,26 @@ Future<Widget?> openDUIPageInBottomSheet({
   DUIImageProviderFn? imageProviderFn,
   DUITextStyleBuilder? textStyleBuilder,
 }) {
+  final bgColor =
+      eval<String>(style['bgColor'], context: context).letIfTrue(toColor);
+  final barrierColor = eval<String>(style['barrierColor'], context: context)
+          .letIfTrue(toColor) ??
+      ColorDecoder.fromHexString('#2e2e2e').withOpacity(0.6);
   return showModalBottomSheet(
-    scrollControlDisabledMaxHeightRatio:
-        eval<double>(style['maxHeightRatio'], context: context) ?? 0.7,
-    barrierColor:
-        eval<String>(style['bgColor'], context: context).letIfTrue(toColor) ??
-            Colors.black.withOpacity(0.4),
+    backgroundColor: bgColor,
+    scrollControlDisabledMaxHeightRatio: 0.7,
+    barrierColor: barrierColor,
     context: context,
     builder: (ctx) {
       return Container(
+        clipBehavior: Clip.hardEdge,
         decoration: BoxDecoration(
+          color: bgColor,
           border: toBorder(DUIBorder.fromJson(style)),
-          color: eval<String>(style['bgColor'], context: context)
-              .letIfTrue(toColor),
           borderRadius: DUIDecoder.toBorderRadius(style['borderRadius']),
         ),
-        child: Stack(
-          children: [
+        child: SafeArea(
+          child: Stack(children: [
             DUIPage(
               pageUid: pageUid,
               pageArgs: pageArgs,
@@ -88,17 +93,15 @@ Future<Widget?> openDUIPageInBottomSheet({
               imageProviderFn: imageProviderFn,
               textStyleBuilder: textStyleBuilder,
             ),
-            // TODO => Remove this crap from here.
-            // Should be send from inside DUIPage itself.
             if (style.valueFor(keyPath: 'icon.iconData') != null)
-              Align(
-                alignment: Alignment.topRight,
+              Positioned(
+                top: 24,
+                right: 20,
                 child: InkWell(
                   onTap: () {
                     Navigator.maybePop(context);
                   },
                   child: Container(
-                    margin: const EdgeInsets.only(top: 20, right: 20, left: 20),
                     height: 24,
                     width: 24,
                     decoration: BoxDecoration(
@@ -109,7 +112,7 @@ Future<Widget?> openDUIPageInBottomSheet({
                   ),
                 ),
               ),
-          ],
+          ]),
         ),
       );
     },
