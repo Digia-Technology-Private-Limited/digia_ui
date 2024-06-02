@@ -6,7 +6,7 @@ import 'package:intl/intl.dart';
 import '../../../Utils/extensions.dart';
 import '../../evaluator.dart';
 import '../../page/dui_page_bloc.dart';
-import '../dui_button_builder.dart';
+import '../dui_animated_button_builder.dart';
 import 'dezerv_flex_grid_view.dart';
 
 class DezervDialPad extends StatefulWidget {
@@ -78,7 +78,7 @@ class _DezervDialPadState extends State<DezervDialPad> {
             ),
           ],
         ),
-        DUIButtonBuilder.fromProps({
+        DUIAnimatedButtonBuilder.fromProps({
           ...widget.props['confirmButton'],
           'isDisabled': !_isValidAmount
         }).build(context)
