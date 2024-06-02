@@ -50,8 +50,7 @@ class DUIAnimatedButtonBuilder extends DUIWidgetBuilder {
     final isDisabled = eval<bool>(data.props['isDisabled'], context: context) ??
         data.props['onClick'] == null;
 
-    final isHaptic =
-        eval<bool>(data.props['isHaptic'], context: context) ?? true;
+    final isHaptic = eval<bool>(data.props['haptic'], context: context) ?? true;
 
     final disabledTextColor = disabledStyleJson['disabledTextColor'] as String?;
     final disabledIconColor = disabledStyleJson['disabledIconColor'] as String?;
