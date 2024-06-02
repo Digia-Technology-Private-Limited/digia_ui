@@ -90,9 +90,7 @@ Future<Widget?> openDUIPageInBottomSheet({
             ),
             // TODO => Remove this crap from here.
             // Should be send from inside DUIPage itself.
-            if (!style
-                .valueFor(keyPath: 'icon.iconData')
-                .isNullEmptyFalseOrZero)
+            if (style.valueFor(keyPath: 'icon.iconData') != null)
               Align(
                 alignment: Alignment.topRight,
                 child: InkWell(

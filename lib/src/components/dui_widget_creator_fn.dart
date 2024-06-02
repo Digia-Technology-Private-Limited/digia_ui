@@ -48,6 +48,7 @@ Widget wrapInContainer(
         color: bgColor.letIfTrue(toColor),
         border: border,
         borderRadius: borderRadius),
+    child: child,
   );
 }
 
