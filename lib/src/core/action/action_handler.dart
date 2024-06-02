@@ -43,11 +43,12 @@ Map<String, ActionHandlerFn> _actionsMap = {
       log('Wait Duration is null');
     }
   },
-  'Action.navigateToPage': ({required action, required context, enclosing}) {
+  'Action.navigateToPage': (
+      {required action, required context, enclosing}) async {
     final String? pageUId = action.data['pageUid'] ?? action.data['pageId'];
 
     if (pageUId == null) {
-      throw 'Page Id not found in Action Props';
+      throw ArgumentError('Null value', 'pageId');
     }
 
     final String openAs =
@@ -61,9 +62,13 @@ Map<String, ActionHandlerFn> _actionsMap = {
 
     final widgetScope = DUIWidgetScope.maybeOf(context);
 
+    final waitForResult =
+        NumDecoder.toBool(action.data['waitForResult']) ?? false;
+    Object? result;
+
     switch (openAs) {
       case 'bottomSheet':
-        return openDUIPageInBottomSheet(
+        result = await openDUIPageInBottomSheet(
           pageUid: pageUId,
           context: context,
           style: bottomSheetStyling,
@@ -81,54 +86,57 @@ Map<String, ActionHandlerFn> _actionsMap = {
             action.data['routeNametoRemoveUntil'],
             context: context,
             enclosing: enclosing);
-        if (removePreviousScreensInStack && routeNametoRemoveUntil != null) {
-          return Navigator.pushAndRemoveUntil(
-              context,
-              DUIPageRoute(
-                pageUid: pageUId,
-                context: context,
-                pageArgs: evaluatedArgs,
-                iconDataProvider: widgetScope?.iconDataProvider,
-                imageProviderFn: widgetScope?.imageProviderFn,
-                textStyleBuilder: widgetScope?.textStyleBuilder,
-                onMessageReceived: widgetScope?.onMessageReceived,
-              ),
-              ModalRoute.withName(routeNametoRemoveUntil));
-        }
-        return openDUIPage(
-          pageUid: pageUId,
-          context: context,
-          pageArgs: evaluatedArgs,
-          iconDataProvider: widgetScope?.iconDataProvider,
-          imageProviderFn: widgetScope?.imageProviderFn,
-          textStyleBuilder: widgetScope?.textStyleBuilder,
-          onMessageReceived: widgetScope?.onMessageReceived,
-        );
+
+        result = await NavigatorHelper.push(
+            context,
+            DUIPageRoute(
+              pageUid: pageUId,
+              context: context,
+              pageArgs: evaluatedArgs,
+              iconDataProvider: widgetScope?.iconDataProvider,
+              imageProviderFn: widgetScope?.imageProviderFn,
+              textStyleBuilder: widgetScope?.textStyleBuilder,
+              onMessageReceived: widgetScope?.onMessageReceived,
+            ),
+            removeRoutesUntilPredicate: routeNametoRemoveUntil.letIf(
+                (_) => removePreviousScreensInStack,
+                (p0) => ModalRoute.withName(p0)));
     }
+    if (waitForResult && context.mounted) {
+      final onResultActionflow = ActionFlow.fromJson(action.data['onResult']);
+      await ActionHandler.instance.execute(
+          context: context,
+          actionFlow: onResultActionflow,
+          enclosing: ExprContext(variables: {
+            'result': result,
+          }, enclosing: enclosing));
+    }
+    return result;
   },
-  // 'Action.navigateToPageNameInBottomSheet': (
-  //     {required action, required context}) {
-  //   final String? pageUId = action.data['pageUId'] ?? action.data['pageId'];
-  //
-  //   if (pageUId == null) {
-  //     throw 'Page Id not found in Action Props';
-  //   }
-  //   final pageArgs = action.data['pageArgs'] ?? action.data['args'];
-  //   return openDUIPageInBottomSheet(
-  //       pageUid: pageUId, context: context, pageArgs: pageArgs);
-  // },
   'Action.pop': ({required action, required context, enclosing}) {
-    final popUntilNamedRoute =
-        NumDecoder.toBool(action.data['shouldPopUntil']) ?? false;
+    final maybe = eval<bool>(action.data['maybe'],
+            context: context, enclosing: enclosing) ??
+        false;
+
+    final result =
+        eval(action.data['result'], context: context, enclosing: enclosing);
+
+    if (maybe) {
+      return Navigator.of(context).maybePop(result);
+    }
+
+    Navigator.of(context).pop(result);
+    return null;
+  },
+  'Action.popUntil': ({required action, required context, enclosing}) {
     final routeNametoPopUntil = eval<String>(action.data['routeNameToPopUntil'],
         context: context, enclosing: enclosing);
-
-    if (popUntilNamedRoute && routeNametoPopUntil != null) {
-      Navigator.popUntil(context, ModalRoute.withName(routeNametoPopUntil));
+    if (routeNametoPopUntil == null) {
+      Navigator.of(context).pop();
       return;
     }
 
-    Navigator.of(context).pop();
+    Navigator.popUntil(context, ModalRoute.withName(routeNametoPopUntil));
     return;
   },
   'Action.openUrl': ({required action, required context, enclosing}) async {
@@ -257,3 +265,16 @@ const Map<String, String> defaultHeaders = {
   'Accept': 'application/json',
   'Content-Type': 'application/json',
 };
+
+abstract class NavigatorHelper {
+  static Future<T?> push<T extends Object?>(
+      BuildContext context, Route<T> newRoute,
+      {RoutePredicate? removeRoutesUntilPredicate}) {
+    if (removeRoutesUntilPredicate == null) {
+      return Navigator.push<T>(context, newRoute);
+    }
+
+    return Navigator.pushAndRemoveUntil<T>(
+        context, newRoute, removeRoutesUntilPredicate);
+  }
+}
