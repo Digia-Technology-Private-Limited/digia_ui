@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import 'package:digia_expr/digia_expr.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:json_schema2/json_schema2.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -237,12 +236,16 @@ class ActionHandler {
 
     for (final action in actionFlow.actions) {
       final executable = _actionsMap[action.type];
-      if (executable == null) {
-        if (kDebugMode) {
-          print('Action of type ${action.type} not found');
-        }
+
+      if (!context.mounted) continue;
+
+      final disableAction = eval<bool>(action.disableActionIf,
+          context: context, enclosing: enclosing);
+
+      if (executable == null || disableAction == true) {
         continue;
       }
+
       await executable.call(
           context: context, action: action, enclosing: enclosing);
     }

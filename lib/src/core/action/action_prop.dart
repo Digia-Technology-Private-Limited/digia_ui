@@ -53,11 +53,10 @@ class ActionFlow {
 class ActionProp {
   final String type;
   final Map<String, dynamic> data;
+  final dynamic disableActionIf;
 
-  const ActionProp({
-    required this.type,
-    this.data = const {},
-  });
+  const ActionProp(
+      {required this.type, this.data = const {}, this.disableActionIf});
 
   factory ActionProp.fromJson(Map<String, dynamic> json) =>
       _$ActionPropFromJson(json);
