@@ -50,6 +50,12 @@ extension Util on BorderRadiusGeometry {
   }
 }
 
+extension IsZero on EdgeInsetsGeometry {
+  bool isZero() {
+    return this == EdgeInsets.zero;
+  }
+}
+
 extension EmailValidator on String {
   bool isValidEmail() {
     return RegExp(
