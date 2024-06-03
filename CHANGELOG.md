@@ -2,6 +2,10 @@
 
 Digia Ui Sdk.
 
+## [0.0.6-beta.16] - 2023-06-03
+
+Support for Checkbox
+
 ## [0.0.6-beta.15] - 2023-05-31
 
 Support for Checkbox
