@@ -28,16 +28,21 @@ class ActionFlow {
     }
 
     if (json['steps'] is List) {
+      final steps = json['steps']
+          .where((e) => e != null)
+          .map((e) => ActionProp.fromJson(e))
+          .cast<ActionProp>()
+          .toList();
+      final analyticsDataJson = (json['analyticsData'] as List?);
+
+      final ad = analyticsDataJson
+          ?.where((e) => e != null)
+          .cast<Map<String, dynamic>>()
+          .toList();
       return ActionFlow(
-        actions: json['steps']
-            .where((e) => e != null)
-            .map((e) => ActionProp.fromJson(e))
-            .cast<ActionProp>()
-            .toList(),
+        actions: steps,
         inkwell: inkwell,
-        analyticsData: (json['analyticsData'] as List<Map<String, dynamic>?>?)
-            ?.nonNulls
-            .toList(),
+        analyticsData: ad,
       );
     }
 

@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import '../../digia_ui.dart';
 import '../Utils/expr.dart';
 
-typedef AnalyticsEvent = Map<String, dynamic>;
-
 class AnalyticsHandler {
   static final AnalyticsHandler _instance = AnalyticsHandler._();
 
@@ -15,13 +13,21 @@ class AnalyticsHandler {
 
   Future<dynamic>? execute(
       {required BuildContext context,
-      required List<AnalyticsEvent>? events,
+      required List<Map<String, dynamic>>? events,
       ExprContext? enclosing}) async {
-    final data =
-        evalDynamic(events, context, enclosing) as List<AnalyticsEvent>?;
+    if (events == null) return;
 
-    if (data != null && data.isNotEmpty) {
-      DigiaUIClient.instance.duiAnalytics?.onEvent(data);
+    final data = evalDynamic(events, context, enclosing);
+
+    if (data is! List || data.isEmpty) return;
+
+    final analyticEvents = data
+        .where((e) => e != null && e is Map<String, dynamic>)
+        .map((e) => AnalyticEvent.fromJson(e))
+        .toList();
+
+    if (analyticEvents.isNotEmpty) {
+      DigiaUIClient.instance.duiAnalytics?.onEvent(analyticEvents);
     }
   }
 }
