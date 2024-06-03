@@ -48,7 +48,8 @@ class _DezervDialPadState extends State<DezervDialPad> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Column(
           children: [
@@ -78,10 +79,14 @@ class _DezervDialPadState extends State<DezervDialPad> {
             ),
           ],
         ),
-        DUIAnimatedButtonBuilder.fromProps({
-          ...widget.props['confirmButton'],
-          'isDisabled': !_isValidAmount
-        }).build(context)
+        const SizedBox(height: 20),
+        SizedBox(
+          height: 56,
+          child: DUIAnimatedButtonBuilder.fromProps({
+            ...widget.props['confirmButton'],
+            'isDisabled': !_isValidAmount
+          }).build(context),
+        )
       ],
     );
   }
