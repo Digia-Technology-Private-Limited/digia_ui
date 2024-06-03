@@ -178,11 +178,10 @@ Map<String, ActionHandlerFn> _actionsMap = {
     if (events is List) {
       bloc.add(SetStateEvent(
           events: events.map((e) {
-            final value = eval(
+            final value = evalDynamic(
               e['value'],
-              context: context,
-              enclosing: enclosing,
-              decoder: (p0) => p0,
+              context,
+              enclosing,
             );
             return SingleSetStateEvent(
                 variableName: e['variableName'],
