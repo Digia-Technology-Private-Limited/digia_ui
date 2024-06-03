@@ -55,7 +55,7 @@ Future<Object?> openDUIPage({
 }
 
 // TODO: Needs to be redesigned from scratch;
-Future<Widget?> openDUIPageInBottomSheet({
+Future<T?> openDUIPageInBottomSheet<T>({
   required String pageUid,
   required BuildContext context,
   required Map<String, dynamic> style,
@@ -70,7 +70,7 @@ Future<Widget?> openDUIPageInBottomSheet({
   final barrierColor = eval<String>(style['barrierColor'], context: context)
           .letIfTrue(toColor) ??
       ColorDecoder.fromHexString('#2e2e2e').withOpacity(0.6);
-  return showModalBottomSheet(
+  return showModalBottomSheet<T>(
     backgroundColor: bgColor,
     scrollControlDisabledMaxHeightRatio: 0.7,
     barrierColor: barrierColor,
