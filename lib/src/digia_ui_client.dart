@@ -185,7 +185,7 @@ class DigiaUIClient {
         config: _instance.config);
   }
 
-  ExprContext get exprContext => ExprContext(variables: {
+  Map<String, Object?> get jsVars => {
         'js': ExprClassInstance(
             klass: ExprClass(name: 'js', fields: {}, methods: {
           'eval': ExprCallableImpl(
@@ -199,7 +199,7 @@ class DigiaUIClient {
               },
               arity: 2)
         }))
-      });
+      };
 
   T? _toValue<T>(evaluator, Object obj) {
     if (obj is ASTNode) {
