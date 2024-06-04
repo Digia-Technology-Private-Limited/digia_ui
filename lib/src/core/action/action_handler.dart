@@ -57,7 +57,15 @@ Map<String, ActionHandlerFn> _actionsMap = {
     Map<String, dynamic>? pageArgs =
         action.data['pageArgs'] ?? action.data['args'];
 
-    final evaluatedArgs = evalDynamic(pageArgs, context, enclosing);
+    final pageProps =
+        context.tryRead<DUIPageBloc>()?.config.getPageData(pageUId);
+    final filteredArgs = ifNotNull(
+        pageArgs?.entries
+            .where((e) => pageProps?.inputArgs?[e.key] != null)
+            .cast<MapEntry<String, dynamic>>(),
+        Map<String, dynamic>.fromEntries);
+
+    final evaluatedArgs = evalDynamic(filteredArgs, context, enclosing);
 
     final widgetScope = DUIWidgetScope.maybeOf(context);
 
@@ -176,18 +184,20 @@ Map<String, ActionHandlerFn> _actionsMap = {
         NumDecoder.toBool(action.data['rebuildPage']) ?? true;
 
     if (events is List) {
+      final variableDefs = bloc.state.props.variables;
+
       bloc.add(SetStateEvent(
-          events: events.map((e) {
-            final value = evalDynamic(
-              e['value'],
-              context,
-              enclosing,
-            );
-            return SingleSetStateEvent(
-                variableName: e['variableName'],
-                context: context,
-                value: value);
-          }).toList(),
+          events: events
+              .where((e) => variableDefs?[e['variableName']] != null)
+              .map((e) => SingleSetStateEvent(
+                  variableName: e['variableName'],
+                  context: context,
+                  value: evalDynamic(
+                    e['value'],
+                    context,
+                    enclosing,
+                  )))
+              .toList(),
           rebuildPage: rebuildPage));
     }
 
