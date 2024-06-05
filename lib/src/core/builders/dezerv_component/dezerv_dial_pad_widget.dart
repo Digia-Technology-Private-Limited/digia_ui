@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
@@ -26,6 +25,8 @@ class _DezervDialPadState extends State<DezervDialPad> {
   late final String _formattedMinimumAmount;
   late final String _formattedMaximumAmount;
   late bool _isValidAmount;
+  late TextEditingController amountController;
+  late String notValidMessage;
 
   @override
   void didChangeDependencies() {
@@ -40,6 +41,11 @@ class _DezervDialPadState extends State<DezervDialPad> {
     _formattedMinimumAmount = _toCurrencyWithoutDecimal(_minimumAmount);
     _formattedMaximumAmount = _toCurrencyWithoutDecimal(_maximumAmount);
     _userSelectedAmount = _defaultAmount.toString();
+    amountController = TextEditingController(
+        text: _toCurrencyWithoutDecimal(
+      int.parse(_userSelectedAmount),
+    ).replaceFirst('₹', '₹ '));
+    notValidMessage = '';
     super.didChangeDependencies();
   }
 
@@ -52,19 +58,41 @@ class _DezervDialPadState extends State<DezervDialPad> {
       children: [
         Column(
           children: [
-            Text(
-              _toCurrencyWithoutDecimal(
-                int.parse(_userSelectedAmount),
-              ).replaceFirst('₹', '₹ '),
+            TextField(
+              cursorRadius: Radius.zero,
+              enabled: true,
+              enableInteractiveSelection: false,
+              keyboardType: TextInputType.none,
+              autofocus: true,
+              controller: amountController,
+              textAlign: TextAlign.center,
+              cursorColor: const Color(0xFFE7E6E2),
               style: GoogleFonts.inter(
-                color: _isValidAmount
-                    ? const Color(0xffE7E6E2)
-                    : const Color.fromARGB(255, 255, 40, 25),
+                color: const Color(0xFFE7E6E2),
                 fontWeight: FontWeight.w700,
                 fontSize: 40,
               ),
-              textAlign: TextAlign.center,
+              decoration: const InputDecoration(
+                focusColor: Colors.transparent,
+                border: InputBorder.none,
+                focusedBorder: InputBorder.none,
+                errorBorder: InputBorder.none,
+                enabledBorder: InputBorder.none,
+                disabledBorder: InputBorder.none,
+                focusedErrorBorder: InputBorder.none,
+              ),
             ),
+            !_isValidAmount
+                ? Text(
+                    notValidMessage,
+                    style: GoogleFonts.inter(
+                      color: const Color.fromARGB(255, 255, 40, 25),
+                      fontWeight: FontWeight.w400,
+                      fontSize: 16,
+                    ),
+                    textAlign: TextAlign.center,
+                  )
+                : const SizedBox.shrink(),
             const SizedBox(
               height: 48,
             ),
@@ -133,21 +161,40 @@ class _DezervDialPadState extends State<DezervDialPad> {
   void _onKeypadNumberTap(int selectedNumber) {
     if (_userSelectedAmount == '0') {
       _userSelectedAmount = selectedNumber.toString();
+      setState(() {
+        notValidMessage = 'Sorry! Amount should be at least ₹$_minimumAmount';
+        amountController.text = _toCurrencyWithoutDecimal(
+          int.parse(_userSelectedAmount),
+        ).replaceFirst('₹', '₹ ');
+      });
     } else {
       final String tempAmount = _userSelectedAmount + selectedNumber.toString();
       if (int.parse(tempAmount) < _minimumAmount) {
         _isValidAmount = false;
         setState(() {
+          notValidMessage = 'Sorry! Amount should be at least ₹$_minimumAmount';
           _userSelectedAmount = tempAmount;
+          amountController.text = _toCurrencyWithoutDecimal(
+            int.parse(_userSelectedAmount),
+          ).replaceFirst('₹', '₹ ');
         });
       } else if (int.parse(tempAmount) > _maximumAmount) {
-        Fluttertoast.showToast(
-          msg: 'Maximum allowed amount is $_formattedMaximumAmount',
-          gravity: ToastGravity.BOTTOM,
-        );
+        setState(() {
+          notValidMessage =
+              'Sorry! Amount should not be more than ₹$_maximumAmount';
+          _isValidAmount = false;
+        });
+
+        // Fluttertoast.showToast(
+        //   msg: 'Maximum allowed amount is $_formattedMaximumAmount',
+        //   gravity: ToastGravity.BOTTOM,
+        // );
       } else {
         setState(() {
           _userSelectedAmount = tempAmount;
+          amountController.text = _toCurrencyWithoutDecimal(
+            int.parse(_userSelectedAmount),
+          ).replaceFirst('₹', '₹ ');
           _isValidAmount = true;
         });
       }
@@ -171,11 +218,17 @@ class _DezervDialPadState extends State<DezervDialPad> {
     if (_userSelectedAmount.length != 1) {
       _userSelectedAmount =
           _userSelectedAmount.substring(0, _userSelectedAmount.length - 1);
+      setState(() {
+        amountController.text = _toCurrencyWithoutDecimal(
+          int.parse(_userSelectedAmount),
+        ).replaceFirst('₹', '₹ ');
+      });
 
       if ((int.parse(_userSelectedAmount) > _maximumAmount) ||
           (int.parse(_userSelectedAmount) < _minimumAmount)) {
         setState(() {
           _isValidAmount = false;
+          notValidMessage = 'Sorry! Amount should be at least ₹$_minimumAmount';
         });
       } else {
         setState(() {
@@ -185,7 +238,11 @@ class _DezervDialPadState extends State<DezervDialPad> {
     } else {
       setState(() {
         _userSelectedAmount = '0';
+        amountController.text = _toCurrencyWithoutDecimal(
+          int.parse(_userSelectedAmount),
+        ).replaceFirst('₹', '₹ ');
         _isValidAmount = false;
+        notValidMessage = 'Sorry! Amount should be at least ₹$_minimumAmount';
       });
     }
     setState(() {
