@@ -19,6 +19,8 @@ class DezervDialPad extends StatefulWidget {
 
 class _DezervDialPadState extends State<DezervDialPad> {
   late String _userSelectedAmount;
+  late String _maxAmountErrorText;
+  late String _minAmountErrorText;
   late final num _minimumAmount;
   late final num _maximumAmount;
   late final num _defaultAmount;
@@ -26,7 +28,7 @@ class _DezervDialPadState extends State<DezervDialPad> {
   late final String _formattedMaximumAmount;
   late bool _isValidAmount;
   late TextEditingController amountController;
-  late String notValidMessage;
+  late bool _isMaximum;
 
   @override
   void didChangeDependencies() {
@@ -34,6 +36,12 @@ class _DezervDialPadState extends State<DezervDialPad> {
         eval<num>(widget.props['defaultAmount'], context: context) ?? 0;
     _minimumAmount =
         eval<num>(widget.props['minimumSipAmount'], context: context) ?? 0;
+    _maxAmountErrorText =
+        eval<String>(widget.props['maxAmountErrorText'], context: context) ??
+            'Sorry! Amount should not be more than ₹$_maximumAmount';
+    _minAmountErrorText =
+        eval<String>(widget.props['minAmountErrorText'], context: context) ??
+            'Sorry! Amount should be at least ₹$_minimumAmount';
     _maximumAmount =
         eval<num>(widget.props['maximumSipAmount'], context: context) ??
             1000000;
@@ -45,7 +53,7 @@ class _DezervDialPadState extends State<DezervDialPad> {
         text: _toCurrencyWithoutDecimal(
       int.parse(_userSelectedAmount),
     ).replaceFirst('₹', '₹ '));
-    notValidMessage = '';
+    _isMaximum = false;
     super.didChangeDependencies();
   }
 
@@ -82,9 +90,12 @@ class _DezervDialPadState extends State<DezervDialPad> {
                 focusedErrorBorder: InputBorder.none,
               ),
             ),
+            SizedBox(
+              height: !_isValidAmount ? 16 : 22,
+            ),
             !_isValidAmount
                 ? Text(
-                    notValidMessage,
+                    _isMaximum ? _maxAmountErrorText : _minAmountErrorText,
                     style: GoogleFonts.inter(
                       color: const Color.fromARGB(255, 255, 40, 25),
                       fontWeight: FontWeight.w400,
@@ -93,8 +104,8 @@ class _DezervDialPadState extends State<DezervDialPad> {
                     textAlign: TextAlign.center,
                   )
                 : const SizedBox.shrink(),
-            const SizedBox(
-              height: 48,
+            SizedBox(
+              height: !_isValidAmount ? 8 : 23,
             ),
             FlexGridView(
               spacing: 0,
@@ -162,7 +173,7 @@ class _DezervDialPadState extends State<DezervDialPad> {
     if (_userSelectedAmount == '0') {
       _userSelectedAmount = selectedNumber.toString();
       setState(() {
-        notValidMessage = 'Sorry! Amount should be at least ₹$_minimumAmount';
+        _isMaximum = false;
         amountController.text = _toCurrencyWithoutDecimal(
           int.parse(_userSelectedAmount),
         ).replaceFirst('₹', '₹ ');
@@ -172,7 +183,7 @@ class _DezervDialPadState extends State<DezervDialPad> {
       if (int.parse(tempAmount) < _minimumAmount) {
         _isValidAmount = false;
         setState(() {
-          notValidMessage = 'Sorry! Amount should be at least ₹$_minimumAmount';
+          _isMaximum = false;
           _userSelectedAmount = tempAmount;
           amountController.text = _toCurrencyWithoutDecimal(
             int.parse(_userSelectedAmount),
@@ -180,8 +191,7 @@ class _DezervDialPadState extends State<DezervDialPad> {
         });
       } else if (int.parse(tempAmount) > _maximumAmount) {
         setState(() {
-          notValidMessage =
-              'Sorry! Amount should not be more than ₹$_maximumAmount';
+          _isMaximum = true;
           _isValidAmount = false;
         });
 
@@ -228,7 +238,7 @@ class _DezervDialPadState extends State<DezervDialPad> {
           (int.parse(_userSelectedAmount) < _minimumAmount)) {
         setState(() {
           _isValidAmount = false;
-          notValidMessage = 'Sorry! Amount should be at least ₹$_minimumAmount';
+          _isMaximum = false;
         });
       } else {
         setState(() {
@@ -242,7 +252,7 @@ class _DezervDialPadState extends State<DezervDialPad> {
           int.parse(_userSelectedAmount),
         ).replaceFirst('₹', '₹ ');
         _isValidAmount = false;
-        notValidMessage = 'Sorry! Amount should be at least ₹$_minimumAmount';
+        _isMaximum = false;
       });
     }
     setState(() {
