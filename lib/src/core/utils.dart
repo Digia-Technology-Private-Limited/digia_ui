@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import '../Utils/basic_shared_utils/color_decoder.dart';
 import '../Utils/basic_shared_utils/dui_decoder.dart';
@@ -72,53 +74,78 @@ Future<T?> openDUIPageInBottomSheet<T>({
       ColorDecoder.fromHexString('#2e2e2e').withOpacity(0.6);
   return showModalBottomSheet<T>(
     backgroundColor: bgColor,
-    scrollControlDisabledMaxHeightRatio: 0.7,
+    scrollControlDisabledMaxHeightRatio: 1,
     barrierColor: barrierColor,
     context: context,
     builder: (ctx) {
-      return Container(
-        clipBehavior: Clip.hardEdge,
-        decoration: BoxDecoration(
-          color: bgColor,
-          border: toBorder(DUIBorder.fromJson(style)),
-          borderRadius: DUIDecoder.toBorderRadius(style['borderRadius']),
-        ),
-        child: SafeArea(
-          child: Stack(children: [
-            DUIPage(
-              pageUid: pageUid,
-              pageArgs: pageArgs,
-              onMessageReceived: onMessageReceived,
-              iconDataProvider: iconDataProvider,
-              imageProviderFn: imageProviderFn,
-              textStyleBuilder: textStyleBuilder,
-            ),
-            if (style.valueFor(keyPath: 'icon.iconData') != null)
-              Positioned(
-                top: 24,
-                right: 20,
-                child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.maybePop(context);
-                    },
-                    borderRadius: BorderRadius.circular(12),
-                    child: Container(
-                      height: 24,
-                      width: 24,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          color: Colors.white.withOpacity(0.1)),
-                      child: DUIIconBuilder.fromProps(props: style['icon'])
-                          .build(context),
+      return BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Flexible(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: bgColor,
+                  border: toBorder(DUIBorder.fromJson(style)),
+                  borderRadius:
+                      DUIDecoder.toBorderRadius(style['borderRadius']),
+                ),
+                clipBehavior: Clip.hardEdge,
+                // elevation: 2,
+                child: SafeArea(
+                  child: Stack(children: [
+                    DUIPage(
+                      pageUid: pageUid,
+                      pageArgs: pageArgs,
+                      onMessageReceived: onMessageReceived,
+                      iconDataProvider: iconDataProvider,
+                      imageProviderFn: imageProviderFn,
+                      textStyleBuilder: textStyleBuilder,
                     ),
-                  ),
+                    if (style.valueFor(keyPath: 'icon.iconData') != null)
+                      Positioned(
+                        top: 24,
+                        right: 20,
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.maybePop(context);
+                          },
+                          borderRadius: BorderRadius.circular(12),
+                          child: Container(
+                            height: 24,
+                            width: 24,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12),
+                                color: Colors.white.withOpacity(0.1)),
+                            child:
+                                DUIIconBuilder.fromProps(props: style['icon'])
+                                    .build(context),
+                          ),
+                        ),
+                      ),
+                  ]),
                 ),
               ),
-          ]),
+            ),
+          ],
         ),
       );
     },
   );
 }
+
+
+
+
+// Container(
+//         clipBehavior: Clip.hardEdge,
+//         decoration: BoxDecoration(
+//           color: bgColor,
+//           border: toBorder(DUIBorder.fromJson(style)),
+//           borderRadius: DUIDecoder.toBorderRadius(style['borderRadius']),
+//         ),
+//         child: 
+        
+//       );
