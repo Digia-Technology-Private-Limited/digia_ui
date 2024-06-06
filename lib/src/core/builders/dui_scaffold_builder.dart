@@ -32,11 +32,28 @@ class DUIScaffoldBuilder extends DUIWidgetBuilder {
           if (root.type != 'fw/appBar') {
             return null;
           }
-          return DUIAppBarBuilder(data: root).build(context)
-              as PreferredSizeWidget;
+
+          // Icon Data
+          Icon? leadingIcon;
+          Icon? trailingIcon;
+          if (data.children['drawer']?.first.type == 'fw/drawer') {
+            leadingIcon = const Icon(Icons.menu);
+          }
+          if (data.children['drawer']?.first.type == 'fw/endDrawer') {
+            trailingIcon = const Icon(Icons.menu);
+          }
+          return DUIAppBarBuilder.create(root,
+                  leadingIcon: leadingIcon, trailingIcon: trailingIcon)
+              ?.build(context) as PreferredSizeWidget;
         });
         final drawer = (data.children['drawer']?.firstOrNull).let((root) {
           if (root.type != 'fw/drawer') {
+            return null;
+          }
+          return DUIDrawerBuilder.create(root).build(context);
+        });
+        final endDrawer = (data.children['drawer']?.firstOrNull).let((root) {
+          if (root.type != 'fw/endDrawer') {
             return null;
           }
           return DUIDrawerBuilder.create(root).build(context);
@@ -85,6 +102,7 @@ class DUIScaffoldBuilder extends DUIWidgetBuilder {
                 ? Scaffold(
                     appBar: appBar,
                     drawer: drawer,
+                    endDrawer: endDrawer,
                     body: data.children['body']?.firstOrNull.let((p0) {
                       return SafeArea(child: DUIWidget(data: p0));
                     }),
@@ -97,6 +115,7 @@ class DUIScaffoldBuilder extends DUIWidgetBuilder {
                 : Scaffold(
                     appBar: appBar,
                     drawer: drawer,
+                    endDrawer: endDrawer,
                     bottomNavigationBar: bottomNavigationBar,
                     body: SafeArea(
                       child: DUIPage(
