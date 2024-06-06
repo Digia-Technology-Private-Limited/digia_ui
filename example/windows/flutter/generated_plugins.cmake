@@ -4,7 +4,6 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   flutter_js
-  share_plus
   url_launcher_windows
 )
 
