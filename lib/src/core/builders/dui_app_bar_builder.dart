@@ -21,6 +21,9 @@ class DUIAppBarBuilder extends DUIWidgetBuilder {
 
   @override
   Widget build(BuildContext context) {
+    final ModalRoute<dynamic>? parentRoute = ModalRoute.of(context);
+    final bool useCloseButton =
+        parentRoute is PageRoute<dynamic> && parentRoute.fullscreenDialog;
     return AppBar(
       title:
           DUITextBuilder.fromProps(props: data.props['title']).build(context),
@@ -31,7 +34,18 @@ class DUIAppBarBuilder extends DUIWidgetBuilder {
       iconTheme: IconThemeData(
           color: (data.props['iconColor'] as String?).letIfTrue(toColor)),
       automaticallyImplyLeading: false,
-      leading: leadingIcon != null ? const DrawerButton() : null,
+      leading: leadingIcon != null
+          ? IconButton(
+              icon: leadingIcon!,
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+            )
+          : parentRoute?.impliesAppBarDismissal ?? false
+              ? useCloseButton
+                  ? const CloseButton()
+                  : const BackButton()
+              : null,
       actions: [
         Builder(builder: (context) {
           if (trailingIcon != null) {
