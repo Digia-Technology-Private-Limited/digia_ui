@@ -101,7 +101,7 @@ class _ButtonBounceAnimationState extends State<ButtonBounceAnimation>
       await _animationCompleter.future;
       _animationCompleter = Completer();
       if (widget.enableHaptics) {
-        HapticFeedback.vibrate();
+        HapticFeedback.lightImpact();
       }
       await _bounceAnimationController.reverse();
     }
