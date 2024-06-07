@@ -33,7 +33,7 @@ class DUIAppBarBuilder extends DUIWidgetBuilder {
       backgroundColor:
           (data.props['backgrounColor'] as String?).letIfTrue(toColor),
       iconTheme: IconThemeData(
-          color: (data.props['iconTheme'] as String?).letIfTrue(toColor)),
+          color: (data.props['iconColor'] as String?).letIfTrue(toColor)),
       automaticallyImplyLeading: false,
       leading: Builder(builder: (context) {
         if (leadingIcon != null) {
