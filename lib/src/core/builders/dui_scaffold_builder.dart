@@ -36,27 +36,34 @@ class DUIScaffoldBuilder extends DUIWidgetBuilder {
           // Icon Data
           Icon? leadingIcon;
           Icon? trailingIcon;
-          if (data.children['drawer']?.first.type == 'fw/drawer') {
+          if (data.children['drawer'] != null &&
+              data.children['drawer']!.isNotEmpty &&
+              data.children['drawer']!.any((e) => e.type == 'fw/drawer')) {
             leadingIcon = const Icon(Icons.menu);
           }
-          if (data.children['drawer']?.first.type == 'fw/endDrawer') {
+
+          if (data.children['drawer'] != null &&
+              data.children['drawer']!.isNotEmpty &&
+              data.children['drawer']!.any((e) => e.type == 'fw/endDrawer')) {
             trailingIcon = const Icon(Icons.menu);
           }
           return DUIAppBarBuilder.create(root,
                   leadingIcon: leadingIcon, trailingIcon: trailingIcon)
               ?.build(context) as PreferredSizeWidget;
         });
-        final drawer = (data.children['drawer']?.firstOrNull).let((root) {
-          if (root.type != 'fw/drawer') {
+        final drawer = (data.children['drawer']
+            ?.where((element) => element.type == 'fw/drawer')).let((root) {
+          if (root.isEmpty) {
             return null;
           }
-          return DUIDrawerBuilder.create(root).build(context);
+          return DUIDrawerBuilder.create(root.first).build(context);
         });
-        final endDrawer = (data.children['drawer']?.firstOrNull).let((root) {
-          if (root.type != 'fw/endDrawer') {
+        final endDrawer = (data.children['drawer']
+            ?.where((element) => element.type == 'fw/endDrawer')).let((root) {
+          if (root.isEmpty) {
             return null;
           }
-          return DUIDrawerBuilder.create(root).build(context);
+          return DUIDrawerBuilder.create(root.first).build(context);
         });
         final persistentFooterButtons =
             (data.children['persistentFooterButtons']).let((child) {

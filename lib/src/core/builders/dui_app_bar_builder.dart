@@ -5,6 +5,7 @@ import '../../Utils/util_functions.dart';
 import '../evaluator.dart';
 import '../json_widget_builder.dart';
 import '../page/props/dui_widget_json_data.dart';
+import 'dui_icon_builder.dart';
 import 'dui_text_builder.dart';
 
 class DUIAppBarBuilder extends DUIWidgetBuilder {
@@ -32,25 +33,28 @@ class DUIAppBarBuilder extends DUIWidgetBuilder {
       backgroundColor:
           (data.props['backgrounColor'] as String?).letIfTrue(toColor),
       iconTheme: IconThemeData(
-          color: (data.props['iconColor'] as String?).letIfTrue(toColor)),
+          color: (data.props['iconTheme'] as String?).letIfTrue(toColor)),
       automaticallyImplyLeading: false,
-      leading: leadingIcon != null
-          ? IconButton(
-              icon: leadingIcon!,
-              onPressed: () {
-                Scaffold.of(context).openDrawer();
-              },
-            )
-          : parentRoute?.impliesAppBarDismissal ?? false
-              ? useCloseButton
-                  ? const CloseButton()
-                  : const BackButton()
-              : null,
+      leading: Builder(builder: (context) {
+        if (leadingIcon != null) {
+          return IconButton(
+            icon: DUIIconBuilder.fromProps(props: data.props['drawerIcon'])
+                .build(context),
+            onPressed: () {
+              Scaffold.of(context).openDrawer();
+            },
+          );
+        } else if (parentRoute?.impliesAppBarDismissal ?? false) {
+          return useCloseButton ? const CloseButton() : const BackButton();
+        }
+        return const SizedBox();
+      }),
       actions: [
         Builder(builder: (context) {
           if (trailingIcon != null) {
             return IconButton(
-              icon: trailingIcon!,
+              icon: DUIIconBuilder.fromProps(props: data.props['endDrawerIcon'])
+                  .build(context),
               onPressed: () {
                 Scaffold.of(context).openEndDrawer();
               },
