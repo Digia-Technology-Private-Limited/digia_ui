@@ -14,6 +14,7 @@ import '../core/builders/dui_container2_builder.dart';
 import '../core/builders/dui_custom_widget_builder.dart';
 import '../core/builders/dui_drawer_builder.dart';
 import '../core/builders/dui_expandable_builder.dart';
+import '../core/builders/dui_expansion_builder.dart';
 import '../core/builders/dui_flex_builder.dart';
 import '../core/builders/dui_future_builder.dart';
 import '../core/builders/dui_gridview_builder.dart';
@@ -79,8 +80,8 @@ class DUIWidgetRegistry {
         registry: DUIWidgetRegistry.shared, direction: Axis.vertical),
     'digia/row': (data, {registry}) => DUIFlexBuilder.create(data,
         registry: DUIWidgetRegistry.shared, direction: Axis.horizontal),
-    // 'digia/expansionTile': (data, {registry}) =>
-    //     DUIExpansionBuilder.create(data, registry: DUIWidgetRegistry.shared),
+    'digia/expansionTile': (data, {registry}) =>
+        DUIExpansionBuilder.create(data, registry: DUIWidgetRegistry.shared),
     'digia/expandable': (data, {registry}) =>
         DUIExpandableBuilder.create(data, registry: DUIWidgetRegistry.shared),
     'digia/wrap': (data, {registry}) => DUIWrapBuilder.create(data),
