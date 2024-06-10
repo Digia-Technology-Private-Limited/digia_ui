@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../digia_ui.dart';
+import '../../Utils/basic_shared_utils/dui_decoder.dart';
 import '../../Utils/basic_shared_utils/lodash.dart';
 import '../../Utils/dui_widget_registry.dart';
 import '../../Utils/extensions.dart';
@@ -24,66 +25,66 @@ class DUIExpansionBuilder extends DUIWidgetBuilder {
     if (registry == null) {
       return fallbackWidget();
     }
-    final color =
-        eval<String>(data.props['expandedBackgroundColor'], context: context)
-            .letIfTrue(toColor);
-    final collapsedBackgroundColor =
-        eval<String>(data.props['collapsedBackgroundColor'], context: context)
-            .letIfTrue(toColor);
-    final collapsedBorderRadius =
-        eval<double>(data.props['collapsedBorderRadius'], context: context);
-    final collapsedBorderWidth =
-        eval<double>(data.props['collapsedBorderWidth'], context: context);
-    final collapsedBorderColor =
-        eval<String>(data.props['collapsedBorderColor'], context: context)
-            .letIfTrue(toColor);
-    final expandedBorderRadius =
-        eval<double>(data.props['expandedBorderRadius'], context: context);
-    final expandedBorderWidth =
-        eval<double>(data.props['expandedBorderWidth'], context: context);
-    final expandedBorderColor =
-        eval<String>(data.props['expandedBorderColor'], context: context)
-            .letIfTrue(toColor);
 
-    final titleWidget = DUITextBuilder.fromProps(props: data.props['title']);
-
-    final leadingWidget1 =
-        DUIIconBuilder.fromProps(props: data.props['leadingIcon']);
-    // DUIImage? leadingWidget2;
-    // if (eval<String>(data.props['leadingImage'], context: context) != null) {
-    //   leadingWidget2 =
-    //       DUIImage(DUIImageProps.fromJson(data.props['leadingImage']));
-    // }
-    final trailingCollapsedWidget =
-        DUIIconBuilder.fromProps(props: data.props['trailingCollapsed']);
-    final trailingExpandedWidget =
-        DUIIconBuilder.fromProps(props: data.props['trailingExpanded']);
     bool isExpanded = data.props['initiallyExpanded'] ?? false;
     return StatefulBuilder(
       builder: (BuildContext context, StateSetter expandState) {
         return ExpansionTile(
-          initiallyExpanded: data.props['initiallyExpanded'] ?? false,
-          title: titleWidget.build(context),
+          title: DUITextBuilder.fromProps(props: data.props['title'])
+              .build(context),
+          initiallyExpanded:
+              eval<bool>(data.props['initiallyExpanded'], context: context) ??
+                  false,
           // subtitle: DUITextBuilder.fromProps(props: data.props['subtitle'])
           //     .build(context),
-          leading: leadingWidget1.build(context),
+          leading: DUIIconBuilder.fromProps(props: data.props['leadingIcon'])
+              .build(context),
           trailing: isExpanded
-              ? trailingExpandedWidget.build(context)
-              : trailingCollapsedWidget.build(context),
-          backgroundColor: color,
-          collapsedBackgroundColor: collapsedBackgroundColor,
+              ? DUIIconBuilder.fromProps(props: data.props['trailingExpanded'])
+                  .build(context)
+              : DUIIconBuilder.fromProps(props: data.props['trailingCollapsed'])
+                  .build(context),
+          backgroundColor: eval<String>(data.props['expandedBackgroundColor'],
+                  context: context)
+              .letIfTrue(toColor),
+          collapsedBackgroundColor: eval<String>(
+                  data.props['collapsedBackgroundColor'],
+                  context: context)
+              .letIfTrue(toColor),
           collapsedShape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(collapsedBorderRadius ?? 12),
+            borderRadius: BorderRadius.circular(eval<double>(
+                    data.props['collapsedBorderRadius'],
+                    context: context) ??
+                12),
             side: BorderSide(
-              color: collapsedBorderColor ?? Colors.white,
-              width: collapsedBorderWidth ?? 1,
+              color: eval<String>(data.props['collapsedBorderColor'],
+                          context: context)
+                      .letIfTrue(toColor) ??
+                  Colors.transparent,
+              width: eval<double>(data.props['collapsedBorderWidth'],
+                      context: context) ??
+                  1,
             ),
           ),
+          expandedCrossAxisAlignment: DUIDecoder.toCrossAxisAlignmentOrDefault(
+              data.props['expandedCrossAxisAlignment'],
+              defaultValue: CrossAxisAlignment.center),
+          expandedAlignment: DUIDecoder.toAlignment(
+            data.props['expandedAlignment'],
+          ),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(expandedBorderRadius ?? 12),
+            borderRadius: BorderRadius.circular(eval<double>(
+                    data.props['expandedBorderRadius'],
+                    context: context) ??
+                12),
             side: BorderSide(
-              color: expandedBorderColor ?? Colors.transparent,
-              width: expandedBorderWidth ?? 0,
+              color: eval<String>(data.props['expandedBorderColor'],
+                          context: context)
+                      .letIfTrue(toColor) ??
+                  Colors.transparent,
+              width: eval<double>(data.props['expandedBorderWidth'],
+                      context: context) ??
+                  1,
             ),
           ),
           onExpansionChanged: (value) {
@@ -110,6 +111,6 @@ class DUIExpansionBuilder extends DUIWidgetBuilder {
 
   @override
   Widget fallbackWidget() {
-    return const Text('Registry not found for Column');
+    return const Text('Registry not found for Expansion Tile');
   }
 }
