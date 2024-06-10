@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../digia_ui.dart';
 import '../../Utils/basic_shared_utils/lodash.dart';
-import '../../Utils/extensions.dart';
 import '../../Utils/util_functions.dart';
 import '../../components/bottom_nav_bar/bottom_nav_bar.dart';
 import '../../components/bottom_nav_bar/bottom_nav_bar_props.dart';
@@ -40,17 +39,8 @@ class DUIScaffoldBuilder extends DUIWidgetBuilder {
         });
 
         final persistentFooterButtons =
-            (data.children['persistentFooterButtons']?.firstOrNull).let((e) {
-          if (data.children['persistentFooterButtons']!.isNullOrEmpty) {
-            return null;
-          }
-
-          List<Widget> persistentFooterButtonsList = List.generate(
-              data.children['persistentFooterButtons']!.length,
-              (index) => DUIWidget(
-                  data: data.children['persistentFooterButtons']![index]));
-
-          return persistentFooterButtonsList;
+            (data.children['persistentFooterButtons']).let((child) {
+          return child.map((e) => DUIWidget(data: e)).toList();
         });
 
         final floatingActionButton =
@@ -87,47 +77,47 @@ class DUIScaffoldBuilder extends DUIWidgetBuilder {
         // Key for DUIPage widget
         final pageKey = UniqueKey();
 
-        return Theme(
-          data: ThemeData(
+        final themeData = Theme.of(context).copyWith(
+            dividerTheme: const DividerThemeData(color: Colors.transparent),
             scaffoldBackgroundColor:
-                data.props['scaffoldBackgroundColor'] != null
-                    ? toColor(data.props['scaffoldBackgroundColor'])
-                    : null,
-          ),
-          child: bottomNavigationBar == null
-              ? Scaffold(
-                  appBar: appBar,
-                  body: data.children['body']?.firstOrNull.let((p0) {
-                    return SafeArea(child: DUIWidget(data: p0));
-                  }),
-                  persistentFooterButtons: persistentFooterButtons,
-                  floatingActionButton: floatingActionButton,
-                  floatingActionButtonLocation:
-                      DUIFloatingActionButtonLocation.fabLocation(
-                          floatingActionButtonProps),
-                )
-              : Scaffold(
-                  appBar: appBar,
-                  bottomNavigationBar: bottomNavigationBar,
-                  body: SafeArea(
-                    child: DUIPage(
-                      key: pageKey,
-                      pageUid: List.generate(
-                          data.children['bottomNavigationBar']![0]
-                              .children['children']!.length,
-                          (index) => data
-                              .children['bottomNavigationBar']![0]
-                              .children['children']![index]
-                              .props['pageId'])[bottomNavBarIndex],
+                (data.props['scaffoldBackgroundColor'] as String?)
+                    .let(toColor));
+
+        return Theme(
+            data: themeData,
+            child: bottomNavigationBar == null
+                ? Scaffold(
+                    appBar: appBar,
+                    body: data.children['body']?.firstOrNull.let((p0) {
+                      return SafeArea(child: DUIWidget(data: p0));
+                    }),
+                    persistentFooterButtons: persistentFooterButtons,
+                    floatingActionButton: floatingActionButton,
+                    floatingActionButtonLocation:
+                        DUIFloatingActionButtonLocation.fabLocation(
+                            floatingActionButtonProps),
+                  )
+                : Scaffold(
+                    appBar: appBar,
+                    bottomNavigationBar: bottomNavigationBar,
+                    body: SafeArea(
+                      child: DUIPage(
+                        key: pageKey,
+                        pageUid: List.generate(
+                            data.children['bottomNavigationBar']![0]
+                                .children['children']!.length,
+                            (index) => data
+                                .children['bottomNavigationBar']![0]
+                                .children['children']![index]
+                                .props['pageId'])[bottomNavBarIndex],
+                      ),
                     ),
-                  ),
-                  persistentFooterButtons: persistentFooterButtons,
-                  floatingActionButton: floatingActionButton,
-                  floatingActionButtonLocation:
-                      DUIFloatingActionButtonLocation.fabLocation(
-                          floatingActionButtonProps),
-                ),
-        );
+                    persistentFooterButtons: persistentFooterButtons,
+                    floatingActionButton: floatingActionButton,
+                    floatingActionButtonLocation:
+                        DUIFloatingActionButtonLocation.fabLocation(
+                            floatingActionButtonProps),
+                  ));
       },
     );
   }

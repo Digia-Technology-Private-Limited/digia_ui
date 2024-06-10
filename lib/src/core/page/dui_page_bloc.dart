@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:url_launcher/url_launcher.dart';
 
-import '../../Utils/basic_shared_utils/dui_decoder.dart';
-import '../../config_resolver.dart';
+import '../../../digia_ui.dart';
 import '../action/action_prop.dart';
 import '../action/api_handler.dart';
+import '../analytics_handler.dart';
 import '../evaluator.dart';
-import '../utils.dart';
 import 'dui_page_event.dart';
 import 'dui_page_state.dart';
 
@@ -25,21 +23,30 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
             props: config.getPageData(pageUid))) {
     on<InitPageEvent>(_init);
     on<SetStateEvent>(_setState);
+    on<RebuildPageEvent>(_rebuildPage);
   }
 
   void _init(
-    InitPageEvent event,
+    InitPageEvent blocEvent,
     Emitter<DUIPageState> emit,
   ) async {
     // Assumption is that onPageLoadAction will not be null.
     // It will either be Action.loadPage or Action.buildPage
+
     final onPageLoadAction = state.props.actions['onPageLoad'];
+
+    AnalyticsHandler.instance.execute(
+        context: blocEvent.context, events: onPageLoadAction?.analyticsData);
 
     final action = onPageLoadAction?.actions.first;
 
-    await _handleAction(event.context, action!, emit);
+    await _handleAction(blocEvent.context, action!, emit);
 
     return;
+  }
+
+  void _rebuildPage(RebuildPageEvent event, Emitter<DUIPageState> emit) {
+    emit(state.copyWith());
   }
 
   void _setState(
@@ -55,7 +62,6 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
     }
   }
 
-// TODO: Need Action Handler
   Future<Object?> _handleAction(BuildContext context, ActionProp action,
       Emitter<DUIPageState> emit) async {
     switch (action.type) {
@@ -74,26 +80,9 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
         emit(state.copyWith(isLoading: false, dataSource: response));
         return null;
 
-      case 'Action.navigateToPage':
-        final pageUId = action.data['pageId'];
-        return openDUIPage(
-            pageUid: pageUId, context: context, pageArgs: action.data['args']);
-
-      case 'Action.openUrl':
-        final url = Uri.parse(action.data['url']);
-        final canOpenUrl = await canLaunchUrl(url);
-        if (canOpenUrl == true) {
-          await launchUrl(url,
-              mode: DUIDecoder.toUriLaunchMode(action.data['launchMode']));
-        }
-
-      case 'Action.pop':
-        return Navigator.of(context).maybePop();
-
       default:
         emit(state.copyWith(isLoading: false));
         return null;
     }
-    return null;
   }
 }

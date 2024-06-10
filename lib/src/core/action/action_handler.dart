@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import 'package:digia_expr/digia_expr.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:json_schema2/json_schema2.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -9,9 +8,11 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
 import '../../Utils/basic_shared_utils/lodash.dart';
 import '../../Utils/basic_shared_utils/num_decoder.dart';
+import '../../Utils/expr.dart';
 import '../../Utils/extensions.dart';
 import '../../components/dui_widget_scope.dart';
 import '../../types.dart';
+import '../analytics_handler.dart';
 import '../app_state_provider.dart';
 import '../evaluator.dart';
 import '../page/dui_page_bloc.dart';
@@ -26,6 +27,11 @@ typedef ActionHandlerFn = Future<dynamic>? Function({
 });
 
 Map<String, ActionHandlerFn> _actionsMap = {
+  'Action.rebuildPage': ({required action, required context, enclosing}) {
+    final bloc = context.tryRead<DUIPageBloc>();
+    bloc?.add(RebuildPageEvent(context));
+    return null;
+  },
   'Action.delay': ({required action, required context, enclosing}) async {
     final durationInMs = eval<double>(action.data['durationInMs'],
         context: context, enclosing: enclosing);
@@ -36,11 +42,12 @@ Map<String, ActionHandlerFn> _actionsMap = {
       log('Wait Duration is null');
     }
   },
-  'Action.navigateToPage': ({required action, required context, enclosing}) {
+  'Action.navigateToPage': (
+      {required action, required context, enclosing}) async {
     final String? pageUId = action.data['pageUid'] ?? action.data['pageId'];
 
     if (pageUId == null) {
-      throw 'Page Id not found in Action Props';
+      throw ArgumentError('Null value', 'pageId');
     }
 
     final String openAs =
@@ -50,33 +57,93 @@ Map<String, ActionHandlerFn> _actionsMap = {
     Map<String, dynamic>? pageArgs =
         action.data['pageArgs'] ?? action.data['args'];
 
-    final evaluatedArgs = _eval(pageArgs, context, enclosing);
+    final pageProps =
+        context.tryRead<DUIPageBloc>()?.config.getPageData(pageUId);
+    final filteredArgs = ifNotNull(
+        pageArgs?.entries
+            .where((e) => pageProps?.inputArgs?[e.key] != null)
+            .cast<MapEntry<String, dynamic>>(),
+        Map<String, dynamic>.fromEntries);
 
-    return switch (openAs) {
-      'bottomSheet' => openDUIPageInBottomSheet(
-          pageUid: pageUId, context: context, style: bottomSheetStyling),
-      'fullPage' || _ => openDUIPage(
-          pageUid: pageUId, context: context, pageArgs: evaluatedArgs),
-    };
+    final evaluatedArgs = evalDynamic(filteredArgs, context, enclosing);
+
+    final widgetScope = DUIWidgetScope.maybeOf(context);
+
+    final waitForResult =
+        NumDecoder.toBool(action.data['waitForResult']) ?? false;
+    Object? result;
+
+    switch (openAs) {
+      case 'bottomSheet':
+        result = await openDUIPageInBottomSheet(
+          pageUid: pageUId,
+          context: context,
+          style: bottomSheetStyling,
+          pageArgs: evaluatedArgs,
+          iconDataProvider: widgetScope?.iconDataProvider,
+          imageProviderFn: widgetScope?.imageProviderFn,
+          textStyleBuilder: widgetScope?.textStyleBuilder,
+          onMessageReceived: widgetScope?.onMessageReceived,
+        );
+      case 'fullPage' || _:
+        final removePreviousScreensInStack = NumDecoder.toBoolOrDefault(
+            action.data['shouldRemovePreviousScreensInStack'],
+            defaultValue: false);
+        final routeNametoRemoveUntil = eval<String>(
+            action.data['routeNametoRemoveUntil'],
+            context: context,
+            enclosing: enclosing);
+
+        result = await NavigatorHelper.push(
+            context,
+            DUIPageRoute(
+              pageUid: pageUId,
+              context: context,
+              pageArgs: evaluatedArgs,
+              iconDataProvider: widgetScope?.iconDataProvider,
+              imageProviderFn: widgetScope?.imageProviderFn,
+              textStyleBuilder: widgetScope?.textStyleBuilder,
+              onMessageReceived: widgetScope?.onMessageReceived,
+            ),
+            removeRoutesUntilPredicate: routeNametoRemoveUntil.letIf(
+                (_) => removePreviousScreensInStack,
+                (p0) => ModalRoute.withName(p0)));
+    }
+    if (waitForResult && context.mounted) {
+      final onResultActionflow = ActionFlow.fromJson(action.data['onResult']);
+      await ActionHandler.instance.execute(
+          context: context,
+          actionFlow: onResultActionflow,
+          enclosing: ExprContext(variables: {
+            'result': result,
+          }, enclosing: enclosing));
+    }
+    return result;
   },
-  // 'Action.navigateToPageNameInBottomSheet': (
-  //     {required action, required context}) {
-  //   final String? pageUId = action.data['pageUId'] ?? action.data['pageId'];
-  //
-  //   if (pageUId == null) {
-  //     throw 'Page Id not found in Action Props';
-  //   }
-  //   final pageArgs = action.data['pageArgs'] ?? action.data['args'];
-  //   return openDUIPageInBottomSheet(
-  //       pageUid: pageUId, context: context, pageArgs: pageArgs);
-  // },
   'Action.pop': ({required action, required context, enclosing}) {
-    if (action.data['maybe'] == true) {
-      Navigator.of(context).maybePop();
+    final maybe = eval<bool>(action.data['maybe'],
+            context: context, enclosing: enclosing) ??
+        false;
+
+    final result =
+        eval(action.data['result'], context: context, enclosing: enclosing);
+
+    if (maybe) {
+      return Navigator.of(context).maybePop(result);
+    }
+
+    Navigator.of(context).pop(result);
+    return null;
+  },
+  'Action.popUntil': ({required action, required context, enclosing}) {
+    final routeNametoPopUntil = eval<String>(action.data['routeNameToPopUntil'],
+        context: context, enclosing: enclosing);
+    if (routeNametoPopUntil == null) {
+      Navigator.of(context).pop();
       return;
     }
 
-    Navigator.of(context).pop();
+    Navigator.popUntil(context, ModalRoute.withName(routeNametoPopUntil));
     return;
   },
   'Action.openUrl': ({required action, required context, enclosing}) async {
@@ -100,9 +167,10 @@ Map<String, ActionHandlerFn> _actionsMap = {
     final body = action.data['body'];
 
     handler(MessagePayload(
-        context: context, name: name, body: _eval(body, context, enclosing)));
+        context: context,
+        name: name,
+        body: evalDynamic(body, context, enclosing)));
 
-    Navigator.of(context).pop();
     return;
   },
   'Action.setPageState': ({required action, required context, enclosing}) {
@@ -116,19 +184,20 @@ Map<String, ActionHandlerFn> _actionsMap = {
         NumDecoder.toBool(action.data['rebuildPage']) ?? true;
 
     if (events is List) {
+      final variableDefs = bloc.state.props.variables;
+
       bloc.add(SetStateEvent(
-          events: events.map((e) {
-            final value = eval(
-              e['value'],
-              context: context,
-              enclosing: enclosing,
-              decoder: (p0) => p0,
-            );
-            return SingleSetStateEvent(
-                variableName: e['variableName'],
-                context: context,
-                value: value);
-          }).toList(),
+          events: events
+              .where((e) => variableDefs?[e['variableName']] != null)
+              .map((e) => SingleSetStateEvent(
+                  variableName: e['variableName'],
+                  context: context,
+                  value: evalDynamic(
+                    e['value'],
+                    context,
+                    enclosing,
+                  )))
+              .toList(),
           rebuildPage: rebuildPage));
     }
 
@@ -155,7 +224,7 @@ Map<String, ActionHandlerFn> _actionsMap = {
       return;
     }
     return null;
-  }
+  },
 };
 
 class ActionHandler {
@@ -169,14 +238,23 @@ class ActionHandler {
       {required BuildContext context,
       required ActionFlow actionFlow,
       ExprContext? enclosing}) async {
+    AnalyticsHandler.instance.execute(
+        context: context,
+        events: actionFlow.analyticsData,
+        enclosing: enclosing);
+
     for (final action in actionFlow.actions) {
       final executable = _actionsMap[action.type];
-      if (executable == null) {
-        if (kDebugMode) {
-          print('Action of type ${action.type} not found');
-        }
+
+      if (!context.mounted) continue;
+
+      final disableAction = eval<bool>(action.disableActionIf,
+          context: context, enclosing: enclosing);
+
+      if (executable == null || disableAction == true) {
         continue;
       }
+
       await executable.call(
           context: context, action: action, enclosing: enclosing);
     }
@@ -200,21 +278,15 @@ const Map<String, String> defaultHeaders = {
   'Content-Type': 'application/json',
 };
 
-_eval(dynamic pageArgs, BuildContext context, ExprContext? enclosing) {
-  if (pageArgs == null) return null;
+abstract class NavigatorHelper {
+  static Future<T?> push<T extends Object?>(
+      BuildContext context, Route<T> newRoute,
+      {RoutePredicate? removeRoutesUntilPredicate}) {
+    if (removeRoutesUntilPredicate == null) {
+      return Navigator.push<T>(context, newRoute);
+    }
 
-  if (pageArgs is String || pageArgs is num || pageArgs is bool) {
-    return eval(pageArgs, context: context, enclosing: enclosing);
+    return Navigator.pushAndRemoveUntil<T>(
+        context, newRoute, removeRoutesUntilPredicate);
   }
-
-  if (pageArgs is Map<String, dynamic>) {
-    return pageArgs
-        .map((key, value) => MapEntry(key, _eval(value, context, enclosing)));
-  }
-
-  if (pageArgs is List) {
-    return pageArgs.map((e) => _eval(e, context, enclosing));
-  }
-
-  return null;
 }

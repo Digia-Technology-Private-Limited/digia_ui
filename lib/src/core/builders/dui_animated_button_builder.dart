@@ -4,6 +4,7 @@ import '../../Utils/basic_shared_utils/dui_decoder.dart';
 import '../../Utils/basic_shared_utils/lodash.dart';
 import '../../Utils/basic_shared_utils/num_decoder.dart';
 import '../../Utils/util_functions.dart';
+import '../../components/dui_button_bounce_animation.dart';
 import '../action/action_handler.dart';
 import '../action/action_prop.dart';
 import '../evaluator.dart';
@@ -12,16 +13,16 @@ import '../page/props/dui_widget_json_data.dart';
 import 'dui_icon_builder.dart';
 import 'dui_text_builder.dart';
 
-class DUIButtonBuilder extends DUIWidgetBuilder {
-  DUIButtonBuilder({required super.data});
+class DUIAnimatedButtonBuilder extends DUIWidgetBuilder {
+  DUIAnimatedButtonBuilder({required super.data});
 
-  static DUIButtonBuilder create(DUIWidgetJsonData data) {
-    return DUIButtonBuilder(data: data);
+  static DUIAnimatedButtonBuilder create(DUIWidgetJsonData data) {
+    return DUIAnimatedButtonBuilder(data: data);
   }
 
-  factory DUIButtonBuilder.fromProps(Map<String, dynamic> props) {
-    return DUIButtonBuilder(
-      data: DUIWidgetJsonData(type: 'digia/button', props: props),
+  factory DUIAnimatedButtonBuilder.fromProps(Map<String, dynamic> props) {
+    return DUIAnimatedButtonBuilder(
+      data: DUIWidgetJsonData(type: 'digia/animatedButton', props: props),
     );
   }
 
@@ -39,8 +40,9 @@ class DUIButtonBuilder extends DUIWidgetBuilder {
             or: const EdgeInsets.symmetric(horizontal: 12, vertical: 4))),
         elevation: MaterialStateProperty.all(
             NumDecoder.toDouble(defaultStyleJson['elevation'])),
-        shadowColor: MaterialStateProperty.all(defaultStyleJson['shadowColor']),
         alignment: DUIDecoder.toAlignment(defaultStyleJson['alignment']),
+        splashFactory: NoSplash.splashFactory,
+        overlayColor: MaterialStateProperty.all(Colors.transparent),
         backgroundColor: MaterialStateProperty.resolveWith((states) {
           if (states.contains(MaterialState.disabled)) {
             return ifNotNull(disabledStyleJson['backgroundColor'] as String?,
@@ -54,6 +56,8 @@ class DUIButtonBuilder extends DUIWidgetBuilder {
     final isDisabled = eval<bool>(data.props['isDisabled'], context: context) ??
         data.props['onClick'] == null;
 
+    final isHaptic = eval<bool>(data.props['haptic'], context: context) ?? true;
+
     final disabledTextColor = disabledStyleJson['disabledTextColor'] as String?;
     final disabledIconColor = disabledStyleJson['disabledIconColor'] as String?;
     final content = _buildContent(context,
@@ -61,16 +65,24 @@ class DUIButtonBuilder extends DUIWidgetBuilder {
         disabledTextColor: disabledTextColor,
         disabledIconColor: disabledIconColor);
 
-    return ElevatedButton(
-        onPressed: isDisabled
-            ? null
-            : () {
-                final onClick = ActionFlow.fromJson(data.props['onClick']);
-                ActionHandler.instance
-                    .execute(context: context, actionFlow: onClick);
-              },
+    final onPressedAction = isDisabled
+        ? null
+        : () {
+            final onClick = ActionFlow.fromJson(data.props['onClick']);
+            ActionHandler.instance
+                .execute(context: context, actionFlow: onClick);
+          };
+
+    return ButtonBounceAnimation(
+      onPressed: onPressedAction,
+      enableHaptics: isHaptic,
+      enableBounceAnimation: true,
+      child: TextButton(
+        onPressed: isDisabled ? null : () {},
         style: style,
-        child: content);
+        child: content,
+      ),
+    );
   }
 
   Widget _buildContent(BuildContext context,

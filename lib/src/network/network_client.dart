@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:chucker_flutter/chucker_flutter.dart';
+// import 'package:chucker_flutter/chucker_flutter.dart';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'package:flutter/foundation.dart';
@@ -23,7 +23,7 @@ void configureDeveloperOptions(Dio dio, DeveloperConfig? developerConfig) {
     );
   }
   if (developerConfig.enableChucker) {
-    dio.interceptors.add(ChuckerDioInterceptor());
+    // dio.interceptors.add(ChuckerDioInterceptor());
   }
 }
 

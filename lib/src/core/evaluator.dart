@@ -14,11 +14,8 @@ T? eval<T extends Object>(Object? expression,
     return decoder?.call(expression) ?? expression.toType<T>();
   }
 
-  final scope = createScope(context);
-
-  scope?.enclosing = enclosing;
-
-  return Expression.eval(expression as String, scope ?? enclosing)?.toType<T>();
+  return Expression.eval(expression as String, createScope(context, enclosing))
+      ?.toType<T>();
 }
 
 bool hasExpression(dynamic expression) {

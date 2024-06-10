@@ -11,14 +11,19 @@ class MobileJsFunctions implements JSFunctions {
 
   @override
   Future fetchJsFile(String path) async {
-    await downloadFunctionsFile(path);
-    final file = File('${await localPath}/functions.js');
-    jsFile = file.readAsStringSync(encoding: utf8);
+    try {
+      await downloadFunctionsFile(path);
+      final file = File('${await localPath}/functions.js');
+      jsFile = file.readAsStringSync(encoding: utf8);
+    } catch (e) {
+      print('file not found');
+    }
   }
 
   @override
-  dynamic callJs(String fnName, dynamic v1) async {
-    JsEvalResult jsEvalResult = runtime.evaluate('$jsFile;JSON.stringify($fnName($v1))');
+  dynamic callJs(String fnName, dynamic v1) {
+    JsEvalResult jsEvalResult =
+        runtime.evaluate('$jsFile;JSON.stringify($fnName($v1))');
     print('Result() executed in ${jsEvalResult.stringResult}');
     var finalRes = json.decode(jsEvalResult.stringResult);
     return finalRes;

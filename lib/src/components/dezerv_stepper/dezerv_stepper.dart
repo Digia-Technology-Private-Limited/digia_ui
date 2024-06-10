@@ -4,6 +4,7 @@ import '../../../digia_ui.dart';
 import '../../Utils/basic_shared_utils/lodash.dart';
 import '../../Utils/dui_widget_registry.dart';
 import '../../Utils/util_functions.dart';
+import '../../core/builders/dui_text_builder.dart';
 import '../../core/evaluator.dart';
 import '../DUIText/dui_text.dart';
 import '../dui_icons/icon_helpers/icon_data_serialization.dart';
@@ -88,7 +89,8 @@ class _DZStepperState extends State<DZStepper> {
         );
       }
 
-      buildTitles.add(DUIText(widget.props.steps![index].title!));
+      buildTitles.add(DUITextBuilder.fromProps(
+          props: {'text': widget.props.steps![index].title!}).build(context));
     }
 
     return Column(

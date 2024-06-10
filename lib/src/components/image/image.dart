@@ -16,7 +16,7 @@ class DUIImage extends StatelessWidget {
 
   OctoPlaceholderBuilder? _placeHolderBuilderCreater() {
     Widget widget = Container(
-      color: Colors.grey.shade50,
+      color: Colors.transparent,
     );
 
     final placeHolderValue = props.placeHolder;

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:getwidget/getwidget.dart';
 
 import '../../../digia_ui.dart';
-import '../../Utils/basic_shared_utils/color_decoder.dart';
+import '../../Utils/basic_shared_utils/dui_decoder.dart';
+import '../../Utils/basic_shared_utils/lodash.dart';
 import '../../Utils/basic_shared_utils/num_decoder.dart';
+import '../../Utils/extensions.dart';
+import '../../Utils/util_functions.dart';
 import '../evaluator.dart';
 import '../json_widget_builder.dart';
 import 'dui_icon_builder.dart';
@@ -22,50 +24,47 @@ class DUICheckboxBuilder extends DUIWidgetBuilder {
 
   @override
   Widget build(BuildContext context) {
-    Widget? activeIcon;
-    Widget? inactiveIcon;
     final props = data.props;
 
-    var value = eval<bool>(props['value'], context: context) ?? false;
-    final size = NumDecoder.toDouble(props['size']);
-    final activeBgColor =
-        ColorDecoder.fromHexString(props['activeBgColor'] ?? '#04A24C');
-    final inactiveBgColor =
-        ColorDecoder.fromHexString(props['inactiveBgColor'] ?? '#E0E0E0');
-    final activeIconProps = data.props['activeIcon'] as Map<String, dynamic>?;
+    final value = eval<bool>(props['value'], context: context) ?? false;
 
-    final inactiveIconProps =
-        data.props['inactiveIcon'] as Map<String, dynamic>?;
+    final size = NumDecoder.toDouble(props['size']) ?? 24;
 
-    if (activeIconProps?['iconData'] != null) {
-      activeIcon =
-          DUIIconBuilder.fromProps(props: activeIconProps).build(context);
-    }
-    if (inactiveIconProps?['iconData'] != null) {
-      inactiveIcon =
-          DUIIconBuilder.fromProps(props: inactiveIconProps).build(context);
-    }
+    final activeColor = (props['activeColor'] as String?).letIfTrue(toColor);
+    final inactiveColor =
+        (props['inactiveColor'] as String?).letIfTrue(toColor);
+    final BoxShape shape = switch (props.valueFor(keyPath: 'shape.value')) {
+      'circle' => BoxShape.circle,
+      _ => BoxShape.rectangle
+    };
+    final borderRadius = DUIDecoder.toBorderRadius(props['shape.borderRadius']);
+    final activeBorderColor =
+        (props['activeBorderColor'] as String?).letIfTrue(toColor);
+    final inactiveBorderColor =
+        (props['inactiveBorderColor'] as String?).letIfTrue(toColor);
+    final borderWidth = NumDecoder.toDouble(props['borderWidth']);
 
-    return Transform.scale(
-      scale: (size ?? 24) / 24,
-      child: GFCheckbox(
-        type: props['shape'] == 'circle'
-            ? GFCheckboxType.circle
-            : GFCheckboxType.square,
-        activeBgColor: activeBgColor,
-        activeIcon: activeIcon ??
-            const Icon(
-              Icons.check,
-              size: 16,
-            ),
-        inactiveBgColor: inactiveBgColor,
-        inactiveIcon: inactiveIcon,
-        size: size ?? 24,
-        onChanged: (val) {
-          value = eval<bool>(val, context: context) ?? false;
-        },
-        value: value,
-      ),
+    final activeIcon =
+        DUIIconBuilder.fromProps(props: data.props['activeIcon']);
+    final inactiveIcon = (data.props['inactiveIcon'] as Map<String, dynamic>?)
+        .let((p0) => DUIIconBuilder.fromProps(props: p0));
+
+    return Center(
+      child: Container(
+          width: size,
+          height: size,
+          decoration: BoxDecoration(
+              color: value ? activeColor : inactiveColor,
+              shape: shape,
+              borderRadius: shape == BoxShape.circle ? null : borderRadius,
+              border: Border.all(
+                  width: borderWidth ?? 1.0,
+                  style:
+                      borderWidth == 0.0 ? BorderStyle.none : BorderStyle.solid,
+                  color: (value ? activeBorderColor : inactiveBorderColor) ??
+                      Colors.grey)),
+          child:
+              value ? activeIcon.build(context) : inactiveIcon?.build(context)),
     );
   }
 }

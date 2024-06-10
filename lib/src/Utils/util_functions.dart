@@ -8,6 +8,7 @@ import '../components/utils/DUIBorder/dui_border.dart';
 import 'basic_shared_utils/color_decoder.dart';
 import 'basic_shared_utils/dui_decoder.dart';
 import 'basic_shared_utils/lodash.dart';
+import 'basic_shared_utils/num_decoder.dart';
 
 class DUIConfigConstants {
   static const double fallbackSize = 14;
@@ -121,7 +122,8 @@ OutlinedBorder? toButtonShape(dynamic value) {
   final shape = value['value'] as String?;
   final borderColor = (value['borderColor'] as String?).letIfTrue(toColor) ??
       Colors.transparent;
-  final borderWidth = (value['borderWidth'] as double?) ?? 1.0;
+  final borderWidth =
+      NumDecoder.toDoubleOrDefault(value['borderWidth'], defaultValue: 1.0);
   final borderStyle =
       (value['borderStyle'] == 'solid') ? BorderStyle.solid : BorderStyle.none;
   final side =
@@ -130,7 +132,9 @@ OutlinedBorder? toButtonShape(dynamic value) {
   return switch (shape) {
     'stadium' => StadiumBorder(side: side),
     'circle' => CircleBorder(
-        eccentricity: value['eccentricity'] as double? ?? 0.0, side: side),
+        eccentricity: NumDecoder.toDoubleOrDefault(value['eccentricity'],
+            defaultValue: 0.0),
+        side: side),
     'roundedRect' || _ => RoundedRectangleBorder(
         borderRadius: DUIDecoder.toBorderRadius(value['borderRadius']),
         side: side)
