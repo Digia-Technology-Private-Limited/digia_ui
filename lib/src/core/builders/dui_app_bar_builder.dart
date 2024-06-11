@@ -26,6 +26,7 @@ class DUIAppBarBuilder extends DUIWidgetBuilder {
     final bool useCloseButton =
         parentRoute is PageRoute<dynamic> && parentRoute.fullscreenDialog;
     return AppBar(
+      centerTitle: eval<bool>(data.props['centerTitle'], context: context),
       title:
           DUITextBuilder.fromProps(props: data.props['title']).build(context),
       elevation: eval<double>(data.props['elevation'], context: context),
