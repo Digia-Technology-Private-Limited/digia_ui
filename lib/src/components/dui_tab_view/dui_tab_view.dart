@@ -40,12 +40,12 @@ class _DUITabViewState extends State<DUITabView> {
                       widget.tabViewProps.tabBarPadding),
                   unselectedLabelColor: widget.tabViewProps.unselectedLabelColor
                       .letIfTrue(toColor),
-                  unselectedLabelStyle:
-                      toTextStyle(widget.tabViewProps.unselectedLabelStyle),
+                  unselectedLabelStyle: toTextStyle(
+                      widget.tabViewProps.unselectedLabelStyle, context),
                   indicatorColor:
                       widget.tabViewProps.indicatorColor.letIfTrue(toColor),
-                  labelStyle:
-                      toTextStyle(widget.tabViewProps.selectedLabelStyle),
+                  labelStyle: toTextStyle(
+                      widget.tabViewProps.selectedLabelStyle, context),
                   dividerColor:
                       widget.tabViewProps.dividerColor.letIfTrue(toColor),
                   labelColor:
@@ -81,10 +81,10 @@ class _DUITabViewState extends State<DUITabView> {
                       widget.tabViewProps.tabBarPadding),
                   unselectedLabelColor: widget.tabViewProps.unselectedLabelColor
                       .letIfTrue(toColor),
-                  unselectedLabelStyle:
-                      toTextStyle(widget.tabViewProps.unselectedLabelStyle),
-                  labelStyle:
-                      toTextStyle(widget.tabViewProps.selectedLabelStyle),
+                  unselectedLabelStyle: toTextStyle(
+                      widget.tabViewProps.unselectedLabelStyle, context),
+                  labelStyle: toTextStyle(
+                      widget.tabViewProps.selectedLabelStyle, context),
                   dividerColor:
                       widget.tabViewProps.dividerColor.letIfTrue(toColor),
                   labelColor:

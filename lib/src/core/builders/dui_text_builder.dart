@@ -22,7 +22,8 @@ class DUITextBuilder extends DUIWidgetBuilder {
   @override
   Widget build(BuildContext context) {
     final text = eval<String>(data.props['text'], context: context);
-    final style = toTextStyle(DUITextStyle.fromJson(data.props['textStyle']));
+    final style =
+        toTextStyle(DUITextStyle.fromJson(data.props['textStyle']), context);
     final maxLines = eval<int>(data.props['maxLines'], context: context);
     final overflow = DUIDecoder.toTextOverflow(data.props['overflow']);
     final textAlign = DUIDecoder.toTextAlign(data.props['alignment']);

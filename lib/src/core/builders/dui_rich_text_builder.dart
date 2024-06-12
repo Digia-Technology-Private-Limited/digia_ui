@@ -34,8 +34,8 @@ class DUIRichTextBuilder extends DUIWidgetBuilder {
       overflow: overflow,
       textAlign: textAlign,
       text: TextSpan(
-        style: ifNotNull(
-            styleJson, (p0) => toTextStyle(DUITextStyle.fromJson(styleJson))),
+        style: ifNotNull(styleJson,
+            (p0) => toTextStyle(DUITextStyle.fromJson(styleJson), context)),
         children: spanChildren,
       ),
     );
@@ -64,8 +64,8 @@ class DUIRichTextBuilder extends DUIWidgetBuilder {
             final styleJson =
                 span['spanStyle'] ?? span['textStyle'] ?? span['style'];
 
-            style = ifNotNull(
-                styleJson, (p0) => toTextStyle(DUITextStyle.fromJson(p0)));
+            style = ifNotNull(styleJson,
+                (p0) => toTextStyle(DUITextStyle.fromJson(p0), context));
           }
 
           if (text == null) return null;

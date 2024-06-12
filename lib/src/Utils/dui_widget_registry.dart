@@ -13,6 +13,7 @@ import '../core/builders/dui_checkbox_builder.dart';
 import '../core/builders/dui_circular_progress_indicator_builder.dart';
 import '../core/builders/dui_container2_builder.dart';
 import '../core/builders/dui_custom_widget_builder.dart';
+import '../core/builders/dui_drawer_builder.dart';
 import '../core/builders/dui_expandable_builder.dart';
 import '../core/builders/dui_flex_builder.dart';
 import '../core/builders/dui_future_builder.dart';
@@ -88,6 +89,10 @@ class DUIWidgetRegistry {
     'fw/sized_box': withoutRegistry(DUISizedBoxBuilder.create),
     'fw/spacer': withoutRegistry(DUISpacerBuilder.create),
     'fw/appBar': withoutRegistry(DUIAppBarBuilder.create),
+    'fw/drawer': (data, {registry}) =>
+        DUIDrawerBuilder.create(data, registry: DUIWidgetRegistry.shared),
+    'fw/endDrawer': (data, {registry}) =>
+        DUIDrawerBuilder.create(data, registry: DUIWidgetRegistry.shared),
     'fw/scaffold': withoutRegistry(DUIScaffoldBuilder.create),
     'digia/lottie': (data, {registry}) => DUILottieBuilder.create(data),
     'digia/youtubePlayer': (data, {registry}) =>

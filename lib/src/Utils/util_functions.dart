@@ -5,6 +5,7 @@ import '../../digia_ui.dart';
 import '../components/DUIText/DUI_text_span/dui_text_span.dart';
 import '../components/DUIText/dui_text_style.dart';
 import '../components/utils/DUIBorder/dui_border.dart';
+import '../core/evaluator.dart';
 import 'basic_shared_utils/color_decoder.dart';
 import 'basic_shared_utils/dui_decoder.dart';
 import 'basic_shared_utils/lodash.dart';
@@ -20,7 +21,7 @@ class DUIConfigConstants {
   static const Color fallbackBgColor = Colors.black;
 }
 
-TextStyle? toTextStyle(DUITextStyle? textStyle) {
+TextStyle? toTextStyle(DUITextStyle? textStyle, BuildContext context) {
   if (textStyle == null) return null;
 
   FontWeight fontWeight = FontWeight.normal;
@@ -40,7 +41,8 @@ TextStyle? toTextStyle(DUITextStyle? textStyle) {
     fontHeight = font.height ?? DUIConfigConstants.fallbackLineHeightFactor;
   }
 
-  Color? textColor = textStyle.textColor.letIfTrue(toColor);
+  Color? textColor =
+      eval<String>(textStyle.textColor, context: context).letIfTrue(toColor);
 
   Color? textBgColor = textStyle.textBgColor.letIfTrue(toColor);
 
@@ -62,10 +64,10 @@ TextStyle? toTextStyle(DUITextStyle? textStyle) {
       decorationStyle: decorationStyle);
 }
 
-TextSpan toTextSpan(DUITextSpan textSpan) {
+TextSpan toTextSpan(DUITextSpan textSpan, BuildContext context) {
   return TextSpan(
     text: textSpan.text.toString(),
-    style: toTextStyle(textSpan.spanStyle),
+    style: toTextStyle(textSpan.spanStyle, context),
     // recognizer: TapGestureRecognizer()
     //   ..onTap = () async {
     //     //todo change onTap functionality according to backend latter
