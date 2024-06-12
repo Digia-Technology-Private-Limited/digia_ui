@@ -90,6 +90,8 @@ class DUIWidgetRegistry {
     'fw/appBar': withoutRegistry(DUIAppBarBuilder.create),
     'fw/drawer': (data, {registry}) =>
         DUIDrawerBuilder.create(data, registry: DUIWidgetRegistry.shared),
+    'fw/endDrawer': (data, {registry}) =>
+        DUIDrawerBuilder.create(data, registry: DUIWidgetRegistry.shared),
     'fw/scaffold': withoutRegistry(DUIScaffoldBuilder.create),
     'digia/lottie': (data, {registry}) => DUILottieBuilder.create(data),
     'digia/youtubePlayer': (data, {registry}) =>
