@@ -11,11 +11,11 @@ import 'dui_text_builder.dart';
 class DUIAppBarBuilder extends DUIWidgetBuilder {
   DUIAppBarBuilder({required super.data, this.leadingIcon, this.trailingIcon});
 
-  final Icon? leadingIcon;
-  final Icon? trailingIcon;
+  final Widget? leadingIcon;
+  final Widget? trailingIcon;
 
   static DUIAppBarBuilder? create(DUIWidgetJsonData data,
-      {Icon? leadingIcon, Icon? trailingIcon}) {
+      {Widget? leadingIcon, Widget? trailingIcon}) {
     return DUIAppBarBuilder(
         data: data, leadingIcon: leadingIcon, trailingIcon: trailingIcon);
   }
@@ -34,34 +34,42 @@ class DUIAppBarBuilder extends DUIWidgetBuilder {
           (data.props['backgrounColor'] as String?).letIfTrue(toColor),
       iconTheme: IconThemeData(
           color: (data.props['iconColor'] as String?).letIfTrue(toColor)),
-      automaticallyImplyLeading: false,
-      leading: Builder(builder: (context) {
-        if (leadingIcon != null) {
-          return IconButton(
-            icon: DUIIconBuilder.fromProps(props: data.props['drawerIcon'])
-                .build(context),
-            onPressed: () {
-              Scaffold.of(context).openDrawer();
-            },
-          );
-        } else if (parentRoute?.impliesAppBarDismissal ?? false) {
-          return useCloseButton ? const CloseButton() : const BackButton();
-        }
-        return const SizedBox();
-      }),
+      automaticallyImplyLeading: true,
+      leading: leadingIcon != null
+          ? Builder(
+              builder: (context) => IconButton(
+                  icon: leadingIcon is SizedBox
+                      ? const DrawerButtonIcon()
+                      : leadingIcon!,
+                  onPressed: () {
+                    Scaffold.of(context).openDrawer();
+                  }))
+          : (parentRoute?.impliesAppBarDismissal ?? false
+              ? (useCloseButton
+                  ? const CloseButton()
+                  : (DUIIconBuilder.fromProps(props: data.props['backIcon'])
+                          .build(context) is SizedBox
+                      ? const BackButton()
+                      : IconButton(
+                          icon: DUIIconBuilder.fromProps(
+                                  props: data.props['backIcon'])
+                              .build(context),
+                          onPressed: () => Navigator.maybePop(context),
+                        )))
+              : const SizedBox()),
       actions: [
-        Builder(builder: (context) {
-          if (trailingIcon != null) {
-            return IconButton(
-              icon: DUIIconBuilder.fromProps(props: data.props['endDrawerIcon'])
-                  .build(context),
-              onPressed: () {
-                Scaffold.of(context).openEndDrawer();
-              },
-            );
-          }
-          return const SizedBox();
-        }),
+        trailingIcon != null
+            ? Builder(builder: (context) {
+                return IconButton(
+                    icon: trailingIcon is SizedBox &&
+                            (trailingIcon as SizedBox).child == null
+                        ? const EndDrawerButtonIcon()
+                        : trailingIcon!,
+                    onPressed: () {
+                      Scaffold.of(context).openEndDrawer();
+                    });
+              })
+            : const SizedBox()
       ],
     );
   }

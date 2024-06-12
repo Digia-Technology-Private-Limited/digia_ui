@@ -9,6 +9,7 @@ import '../../components/floating_action_button/floating_action_button_props.dar
 import '../json_widget_builder.dart';
 import 'dui_app_bar_builder.dart';
 import 'dui_drawer_builder.dart';
+import 'dui_icon_builder.dart';
 
 class DUIScaffoldBuilder extends DUIWidgetBuilder {
   final DUIFloatingActionButtonProps? duiFloatingActionButtonProps;
@@ -33,22 +34,41 @@ class DUIScaffoldBuilder extends DUIWidgetBuilder {
             return null;
           }
 
-          // Icon Data
-          Icon? leadingIcon;
-          Icon? trailingIcon;
-          if (data.children['drawer'] != null &&
-              data.children['drawer']!.isNotEmpty &&
-              data.children['drawer']!.any((e) => e.type == 'fw/drawer')) {
-            leadingIcon = const Icon(Icons.menu);
+          // leading and trailing
+          Widget? leadingIcon() {
+            if (data.children['drawer'] == null ||
+                data.children['drawer']!
+                    .where((element) => element.type == 'fw/drawer')
+                    .isEmpty) {
+              return null;
+            }
+
+            return DUIIconBuilder.fromProps(
+                    props: data.children['drawer']
+                        ?.where((e) => e.type == 'fw/drawer')
+                        .first
+                        .props['drawerIcon'])
+                .build(context);
           }
 
-          if (data.children['drawer'] != null &&
-              data.children['drawer']!.isNotEmpty &&
-              data.children['drawer']!.any((e) => e.type == 'fw/endDrawer')) {
-            trailingIcon = const Icon(Icons.menu);
+          Widget? trailingIcon() {
+            if (data.children['drawer'] == null ||
+                data.children['drawer']!
+                    .where((element) => element.type == 'fw/endDrawer')
+                    .isEmpty) {
+              return null;
+            }
+
+            return DUIIconBuilder.fromProps(
+                    props: data.children['drawer']
+                        ?.where((e) => e.type == 'fw/endDrawer')
+                        .first
+                        .props['drawerIcon'])
+                .build(context);
           }
+
           return DUIAppBarBuilder.create(root,
-                  leadingIcon: leadingIcon, trailingIcon: trailingIcon)
+                  leadingIcon: leadingIcon(), trailingIcon: trailingIcon())
               ?.build(context) as PreferredSizeWidget;
         });
         final drawer = (data.children['drawer']
