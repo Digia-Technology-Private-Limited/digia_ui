@@ -158,6 +158,20 @@ Map<String, ActionHandlerFn> _actionsMap = {
       throw 'Not allowed to open url: $url';
     }
   },
+  'Action.openDrawer': ({required action, required context, enclosing}) {
+    final choice = eval<String>(action.data['choice'],
+        context: context, enclosing: enclosing);
+    final scaffold = Scaffold.maybeOf(context);
+    if (choice == 'openDrawer') {
+      scaffold?.openDrawer();
+    } else if (choice == 'openEndDrawer') {
+      scaffold?.openEndDrawer();
+    } else {
+      scaffold?.closeDrawer();
+      scaffold?.closeEndDrawer();
+    }
+    return;
+  },
   'Action.handleDigiaMessage': (
       {required action, required context, enclosing}) {
     final handler = DUIWidgetScope.maybeOf(context)?.onMessageReceived;
