@@ -37,7 +37,7 @@ class _DUITextState extends State<DUIText> {
       final style = props.textSpans?[0].spanStyle ?? props.textStyle;
 
       return Text(text ?? '',
-          style: toTextStyle(style),
+          style: toTextStyle(style, context),
           maxLines: maxLines,
           overflow: overflow,
           textAlign: textAlign);
@@ -48,9 +48,9 @@ class _DUITextState extends State<DUIText> {
       overflow: overflow,
       textAlign: textAlign,
       text: TextSpan(
-        style: toTextStyle(props.textStyle),
-        children: props.textSpans?.map(toTextSpan).toList(),
-      ),
+          style: toTextStyle(props.textStyle, context),
+          children:
+              props.textSpans?.map((e) => toTextSpan(e, context)).toList()),
     );
   }
 }

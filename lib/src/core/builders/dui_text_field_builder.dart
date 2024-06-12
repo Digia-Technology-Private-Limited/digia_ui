@@ -17,8 +17,8 @@ class DUITextFieldBuilder extends DUIWidgetBuilder {
 
   @override
   Widget build(BuildContext context) {
-    final style =
-        toTextStyle(DUITextStyle.fromJson(data.props['inputTextStyle']));
+    final style = toTextStyle(
+        DUITextStyle.fromJson(data.props['inputTextStyle']), context);
     final maxLength = data.props['maxLength'];
     final hintText = data.props['hintText'];
     final maxLines = data.props['maxLines'];
@@ -29,7 +29,7 @@ class DUITextFieldBuilder extends DUIWidgetBuilder {
     final enabled = data.props['enabled'] ?? true;
     final labelText = data.props['labelText'] as String?;
     final labelStyle =
-        toTextStyle(DUITextStyle.fromJson(data.props['labelStyle']));
+        toTextStyle(DUITextStyle.fromJson(data.props['labelStyle']), context);
     final contentPadding =
         DUIDecoder.toEdgeInsets(data.props['contentPadding']);
 
