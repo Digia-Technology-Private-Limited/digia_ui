@@ -38,38 +38,42 @@ class DUICalendarBuilder extends DUIWidgetBuilder {
         eval<String>(data.props['startingDayOfWeek'], context: context);
 
     // Header Props
+    final headerStyle = data.props['headerStyle'];
     final titleCentered =
-        eval<bool>(data.props['titleCentered'], context: context);
-    final formatButtonVisible =
-        eval<bool>(data.props['formatButtonVisible'], context: context);
-    final formatButtonShowsNext =
-        eval<bool>(data.props['formatButtonShowsNext'], context: context);
-    final titleTextStyle =
-        toTextStyle(DUITextStyle.fromJson(data.props['textStyle']));
+        eval<bool>(headerStyle?['titleCentered'], context: context);
+    final titleTextStyle = toTextStyle(
+        DUITextStyle.fromJson(headerStyle?['titleTextStyle']), context);
     final leftChevronVisible =
-        eval<bool>(data.props['leftChevronVisible'], context: context);
+        eval<bool>(headerStyle?['leftChevronVisible'], context: context);
+    final leftChevronIcon =
+        DUIIconBuilder.fromProps(props: headerStyle?['leftChevronIcon'])
+            .build(context);
     final rightChevronVisible =
-        eval<bool>(data.props['rightChevronVisible'], context: context);
+        eval<bool>(headerStyle?['rightChevronVisible'], context: context);
+    final rightChevronIcon = DUIIconBuilder.fromProps(
+      props: headerStyle?['rightChevronIcon'],
+    ).build(context);
 
     // Days of the Week Props
-    final weekdayStyle =
-        toTextStyle(DUITextStyle.fromJson(data.props['weekdayStyle']));
-    final weekendStyle =
-        toTextStyle(DUITextStyle.fromJson(data.props['weekendStyle']));
+    final daysOfWeekStyle = data.props['daysOfWeekStyle'];
+    final weekdayStyle = toTextStyle(
+        DUITextStyle.fromJson(daysOfWeekStyle?['weekdayStyle']), context);
+    final weekendStyle = toTextStyle(
+        DUITextStyle.fromJson(daysOfWeekStyle?['weekendStyle']), context);
 
     // Calendar Style Props
+    final calendarStyle = data.props['calendarStyle'];
     final isTodayHighlighted =
-        eval<bool>(data.props['isTodayHighlighted'], context: context);
+        eval<bool>(calendarStyle?['isTodayHighlighted'], context: context);
     final outsideDaysVisible =
-        eval<bool>(data.props['outsideDaysVisible'], context: context);
+        eval<bool>(calendarStyle?['outsideDaysVisible'], context: context);
     final rangeHighlightColor =
-        eval<String>(data.props['rangeHighlightColor'], context: context)
+        eval<String>(calendarStyle?['rangeHighlightColor'], context: context)
             .letIfTrue(toColor);
 
-    //
-
+    // Range Selection Mode
     final rangeSelectionMode =
-        eval<String>(data.props['choice'], context: context);
+        eval<String>(data.props['rangeSelectionMode'], context: context);
 
     return TableCalendar(
       focusedDay:
@@ -90,37 +94,50 @@ class DUICalendarBuilder extends DUIWidgetBuilder {
       startingDayOfWeek: startingDayOfWeek == 'monday'
           ? StartingDayOfWeek.monday
           : StartingDayOfWeek.sunday,
-      headerStyle: HeaderStyle(
-        titleCentered: titleCentered ?? false,
-        formatButtonVisible: formatButtonVisible ?? true,
-        formatButtonShowsNext: formatButtonShowsNext ?? true,
-        titleTextStyle: titleTextStyle ?? const TextStyle(fontSize: 17.0),
-        leftChevronIcon:
-            DUIIconBuilder.fromProps(props: data.props['leftChevronIcon'])
-                .build(context),
-        rightChevronIcon: DUIIconBuilder.fromProps(
-          props: data.props['rightChevronIcon'],
-        ).build(context),
-        leftChevronVisible: leftChevronVisible ?? true,
-        rightChevronVisible: rightChevronVisible ?? true,
-      ),
-      daysOfWeekStyle: DaysOfWeekStyle(
-        weekdayStyle: weekdayStyle ?? const TextStyle(color: Color(0xFF4F4F4F)),
-        weekendStyle: weekendStyle ?? const TextStyle(color: Color(0xFF6A6A6A)),
-      ),
-      calendarStyle: CalendarStyle(
-        isTodayHighlighted: isTodayHighlighted ?? true,
-        outsideDaysVisible: outsideDaysVisible ?? true,
-        rangeHighlightColor: rangeHighlightColor ?? const Color(0xFFBBDDFF),
-      ),
+      headerStyle: headerStyle != null
+          ? HeaderStyle(
+              formatButtonVisible: false,
+              titleCentered: titleCentered ?? true,
+              titleTextStyle: titleTextStyle ?? const TextStyle(fontSize: 17.0),
+              leftChevronIcon: leftChevronIcon is SizedBox
+                  ? const Icon(Icons.chevron_left)
+                  : leftChevronIcon,
+              rightChevronIcon: rightChevronIcon is SizedBox
+                  ? const Icon(Icons.chevron_right)
+                  : rightChevronIcon,
+              leftChevronVisible: leftChevronVisible ?? true,
+              rightChevronVisible: rightChevronVisible ?? true,
+            )
+          : const HeaderStyle(
+              formatButtonVisible: false,
+              titleCentered: true,
+            ),
+      daysOfWeekStyle: daysOfWeekStyle != null
+          ? DaysOfWeekStyle(
+              weekdayStyle:
+                  weekdayStyle ?? const TextStyle(color: Color(0xFF4F4F4F)),
+              weekendStyle:
+                  weekendStyle ?? const TextStyle(color: Color(0xFF6A6A6A)),
+            )
+          : const DaysOfWeekStyle(),
+      calendarStyle: calendarStyle != null
+          ? CalendarStyle(
+              isTodayHighlighted: isTodayHighlighted ?? true,
+              outsideDaysVisible: outsideDaysVisible ?? true,
+              rangeHighlightColor:
+                  rangeHighlightColor ?? const Color(0xFFBBDDFF),
+            )
+          : const CalendarStyle(),
       rangeSelectionMode: rangeSelectionMode == 'Range'
           ? RangeSelectionMode.enforced
           : RangeSelectionMode.disabled,
       onDaySelected: (selectedDay, focusedDay) {
         print('Selected: $selectedDay');
+        print('Focused: $focusedDay');
       },
       onRangeSelected: (start, end, focusedDay) {
         print('Range selected: $start - $end');
+        print('Focused: $focusedDay');
       },
     );
   }
