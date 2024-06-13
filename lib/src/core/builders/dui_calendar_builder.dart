@@ -59,14 +59,11 @@ class DUICalendarBuilder extends DUIWidgetBuilder {
               .build(context);
       final rightChevronPadding =
           DUIDecoder.toEdgeInsets(headerStyle?['rightChevronPadding']);
-      final headerColor =
-          headerStyle?['decoration']?['color'].letIfTrue(toColor);
-      final headerBorderColor =
-          headerStyle?['decoration']?['borderColor'].letIfTrue(toColor);
-      final headerBorderWidth =
-          headerStyle?['decoration']?['borderWidth'] ?? 1.0;
-      final headerBorderRadius = DUIDecoder.toBorderRadius(
-          headerStyle?['decoration']?['borderRadius']);
+      final headerColor = headerStyle?['color'].letIfTrue(toColor);
+      final headerBorderColor = headerStyle?['borderColor'].letIfTrue(toColor);
+      final headerBorderWidth = headerStyle?['borderWidth'] ?? 1.0;
+      final headerBorderRadius =
+          DUIDecoder.toBorderRadius(headerStyle?['borderRadius']);
 
       return HeaderStyle(
         formatButtonVisible: false,
@@ -102,14 +99,12 @@ class DUICalendarBuilder extends DUIWidgetBuilder {
           DUITextStyle.fromJson(daysOfWeekStyle?['weekdayStyle']), context);
       final weekendStyle = toTextStyle(
           DUITextStyle.fromJson(daysOfWeekStyle?['weekendStyle']), context);
-      final daysOfWeekColor =
-          daysOfWeekStyle?['decoration']?['color'].letIfTrue(toColor);
+      final daysOfWeekColor = daysOfWeekStyle?['color'].letIfTrue(toColor);
       final daysOfWeekBorderColor =
-          daysOfWeekStyle?['decoration']?['borderColor'].letIfTrue(toColor);
-      final daysOfWeekBorderWidth =
-          daysOfWeekStyle?['decoration']?['borderWidth'] ?? 1.0;
-      final daysOfWeekBorderRadius = DUIDecoder.toBorderRadius(
-          daysOfWeekStyle?['decoration']?['borderRadius']);
+          daysOfWeekStyle?['borderColor'].letIfTrue(toColor);
+      final daysOfWeekBorderWidth = daysOfWeekStyle?['borderWidth'] ?? 1.0;
+      final daysOfWeekBorderRadius =
+          DUIDecoder.toBorderRadius(daysOfWeekStyle?['borderRadius']);
 
       return DaysOfWeekStyle(
         weekdayStyle: weekdayStyle ?? const TextStyle(color: Color(0xFF4F4F4F)),
@@ -139,9 +134,8 @@ class DUICalendarBuilder extends DUIWidgetBuilder {
           .letIfTrue(toColor, defaultValue: const Color(0xFFBBDDFF));
       final outsideDaysVisible = calendarStyle?['outsideDaysVisible'];
       final isTodayHighlighted = calendarStyle?['isTodayHighlighted'];
-      final tableBorderColor =
-          calendarStyle?['tableBorder']?['color'].letIfTrue(toColor);
-      final tableBorderWidth = calendarStyle?['tableBorder']?['width'] ?? 1.0;
+      final tableBorderColor = calendarStyle?['color'].letIfTrue(toColor);
+      final tableBorderWidth = calendarStyle?['width'] ?? 1.0;
       final tableBorder = TableBorder(
         top: BorderSide(
           color: tableBorderColor ?? Colors.black,
@@ -177,7 +171,7 @@ class DUICalendarBuilder extends DUIWidgetBuilder {
     }
 
     // Range Selection Mode
-    final selectionMode = data.props['rangeSelectionMode'];
+    final selectionMode = data.props['selectionMode'];
 
     return TableCalendar(
       focusedDay:
