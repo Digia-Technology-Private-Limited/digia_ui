@@ -12,8 +12,8 @@ void main() async {
       baseUrl: baseUrl,
       environment: Environment.staging,
       version: 1,
-      developerConfig:
-          DeveloperConfig(enableChucker: false, proxyUrl: "192.168.1.86:9090"),
+      // developerConfig:
+      //     DeveloperConfig(enableChucker: false, proxyUrl: "192.168.1.86:9090"),
       networkConfiguration:
           NetworkConfiguration(defaultHeaders: {}, timeout: 30),
       analytics: MyAnalytics()));
