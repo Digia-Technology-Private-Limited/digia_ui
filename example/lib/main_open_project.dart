@@ -2,8 +2,8 @@ import 'package:digia_ui/digia_ui.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-// const String baseUrl = 'http://localhost:3000/api/v1';
-const String baseUrl = 'https://dev.digia.tech/api/v1';
+const String baseUrl = 'http://localhost:3000/api/v1';
+// const String baseUrl = 'https://dev.digia.tech/api/v1';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -12,19 +12,14 @@ void main() async {
       baseUrl: baseUrl,
       environment: Environment.staging,
       version: 1,
-      // developerConfig:
-      //     DeveloperConfig(enableChucker: true, proxyUrl: "192.168.0.118:9090"),
+      developerConfig:
+          DeveloperConfig(enableChucker: false, proxyUrl: "192.168.1.86:9090"),
       networkConfiguration:
           NetworkConfiguration(defaultHeaders: {}, timeout: 30),
       analytics: MyAnalytics()));
 }
 
 class MyAnalytics extends DUIAnalytics {
-  @override
-  void onEvent(List<AnalyticEvent> events) {
-    print(events.toString());
-  }
-
   @override
   void onDataSourceError(String dataSourceType, String source, errorInfo) {
     print({
@@ -44,4 +39,7 @@ class MyAnalytics extends DUIAnalytics {
       'perfData': perfData.toString()
     });
   }
+
+  @override
+  void onEvent(List<AnalyticEvent> events) {}
 }
