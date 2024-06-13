@@ -29,7 +29,8 @@ class DUIDrawerBuilder extends DUIWidgetBuilder {
       clipBehavior: DUIDecoder.toClip(data.props['clipBehavior']),
       width: eval<double>(data.props['width'], context: context),
       elevation: eval<double>(data.props['elevation'], context: context),
-      child: DUIWidget(data: data.children['child']!.first),
+      child: (data.children['child']?.firstOrNull)
+          .let((p0) => DUIWidget(data: p0)),
     );
   }
 }
