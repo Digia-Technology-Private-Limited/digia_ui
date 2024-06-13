@@ -4,11 +4,14 @@ import '../../Utils/basic_shared_utils/lodash.dart';
 import '../../Utils/util_functions.dart';
 import '../../components/bottom_nav_bar/bottom_nav_bar.dart';
 import '../../components/bottom_nav_bar/bottom_nav_bar_props.dart';
+import '../../components/dui_widget_creator_fn.dart';
 import '../../components/floating_action_button/floating_action_button.dart';
 import '../../components/floating_action_button/floating_action_button_props.dart';
+import '../action/action_prop.dart';
 import '../json_widget_builder.dart';
 import 'dui_app_bar_builder.dart';
 import 'dui_drawer_builder.dart';
+import 'dui_icon_builder.dart';
 
 class DUIScaffoldBuilder extends DUIWidgetBuilder {
   final DUIFloatingActionButtonProps? duiFloatingActionButtonProps;
@@ -33,38 +36,65 @@ class DUIScaffoldBuilder extends DUIWidgetBuilder {
             return null;
           }
 
-          // Icon Data
-          Icon? leadingIcon;
-          Icon? trailingIcon;
-          if (data.children['drawer'] != null &&
-              data.children['drawer']!.isNotEmpty &&
-              data.children['drawer']!.any((e) => e.type == 'fw/drawer')) {
-            leadingIcon = const Icon(Icons.menu);
+          // leading and trailing
+          Widget? leadingIcon() {
+            return (data.children['drawer']?.firstOrNull?.props['drawerIcon']
+                    as Map<String, dynamic>?)
+                .let(
+              (p0) {
+                if (p0['iconData'] == null) return null;
+
+                return Builder(builder: (context) {
+                  final icon =
+                      DUIIconBuilder.fromProps(props: p0).build(context);
+                  return DUIGestureDetector(
+                      context: context,
+                      actionFlow: ActionFlow(actions: [
+                        ActionProp.fromJson({
+                          'type': 'Action.controlDrawer',
+                          'data': {'choice': 'openDrawer'}
+                        })
+                      ]),
+                      child: icon);
+                });
+              },
+            );
           }
 
-          if (data.children['drawer'] != null &&
-              data.children['drawer']!.isNotEmpty &&
-              data.children['drawer']!.any((e) => e.type == 'fw/endDrawer')) {
-            trailingIcon = const Icon(Icons.menu);
+          Widget? trailingIcon() {
+            return (data.children['endDrawer']?.firstOrNull?.props['drawerIcon']
+                    as Map<String, dynamic>?)
+                .let(
+              (p0) {
+                if (p0['iconData'] == null) return null;
+
+                return Builder(builder: (context) {
+                  final icon =
+                      DUIIconBuilder.fromProps(props: p0).build(context);
+                  return DUIGestureDetector(
+                      context: context,
+                      actionFlow: ActionFlow(actions: [
+                        ActionProp.fromJson({
+                          'type': 'Action.controlDrawer',
+                          'data': {'choice': 'openEndDrawer'}
+                        })
+                      ]),
+                      child: icon);
+                });
+              },
+            );
           }
+
           return DUIAppBarBuilder.create(root,
-                  leadingIcon: leadingIcon, trailingIcon: trailingIcon)
+                  leadingIcon: leadingIcon(), trailingIcon: trailingIcon())
               ?.build(context) as PreferredSizeWidget;
         });
-        final drawer = (data.children['drawer']
-            ?.where((element) => element.type == 'fw/drawer')).let((root) {
-          if (root.isEmpty) {
-            return null;
-          }
-          return DUIDrawerBuilder.create(root.first).build(context);
-        });
-        final endDrawer = (data.children['drawer']
-            ?.where((element) => element.type == 'fw/endDrawer')).let((root) {
-          if (root.isEmpty) {
-            return null;
-          }
-          return DUIDrawerBuilder.create(root.first).build(context);
-        });
+        final drawer = ifNotNull(data.children['drawer']?.firstOrNull,
+            (p0) => DUIDrawerBuilder(p0, registry));
+
+        final endDrawer = ifNotNull(data.children['endDrawer']?.firstOrNull,
+            (p0) => DUIDrawerBuilder(p0, registry));
+
         final persistentFooterButtons =
             (data.children['persistentFooterButtons']).let((child) {
           return child.map((e) => DUIWidget(data: e)).toList();
@@ -108,8 +138,8 @@ class DUIScaffoldBuilder extends DUIWidgetBuilder {
             child: bottomNavigationBar == null
                 ? Scaffold(
                     appBar: appBar,
-                    drawer: drawer,
-                    endDrawer: endDrawer,
+                    drawer: drawer?.build(context),
+                    endDrawer: endDrawer?.build(context),
                     body: data.children['body']?.firstOrNull.let((p0) {
                       return SafeArea(child: DUIWidget(data: p0));
                     }),
@@ -121,8 +151,8 @@ class DUIScaffoldBuilder extends DUIWidgetBuilder {
                   )
                 : Scaffold(
                     appBar: appBar,
-                    drawer: drawer,
-                    endDrawer: endDrawer,
+                    drawer: drawer?.build(context),
+                    endDrawer: endDrawer?.build(context),
                     bottomNavigationBar: bottomNavigationBar,
                     body: SafeArea(
                       child: DUIPage(
