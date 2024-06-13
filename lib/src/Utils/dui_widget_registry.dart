@@ -89,9 +89,7 @@ class DUIWidgetRegistry {
     'fw/sized_box': withoutRegistry(DUISizedBoxBuilder.create),
     'fw/spacer': withoutRegistry(DUISpacerBuilder.create),
     'fw/appBar': withoutRegistry(DUIAppBarBuilder.create),
-    'fw/drawer': (data, {registry}) =>
-        DUIDrawerBuilder.create(data, registry: DUIWidgetRegistry.shared),
-    'fw/endDrawer': (data, {registry}) =>
+    'digia/drawer': (data, {registry}) =>
         DUIDrawerBuilder.create(data, registry: DUIWidgetRegistry.shared),
     'fw/scaffold': withoutRegistry(DUIScaffoldBuilder.create),
     'digia/lottie': (data, {registry}) => DUILottieBuilder.create(data),

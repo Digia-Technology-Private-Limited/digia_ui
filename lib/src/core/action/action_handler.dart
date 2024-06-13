@@ -158,7 +158,7 @@ Map<String, ActionHandlerFn> _actionsMap = {
       throw 'Not allowed to open url: $url';
     }
   },
-  'Action.openDrawer': ({required action, required context, enclosing}) {
+  'Action.controlDrawer': ({required action, required context, enclosing}) {
     final choice = eval<String>(action.data['choice'],
         context: context, enclosing: enclosing);
     final scaffold = Scaffold.maybeOf(context);
