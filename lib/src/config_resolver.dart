@@ -7,8 +7,10 @@ class DUIConfig {
   final Map<String, dynamic> _pages;
   final Map<String, dynamic> _restConfig;
   final String _initialRoute;
-  final String functionsFilePath;
+  final String? functionsFilePath;
   final Map<String, dynamic>? appState;
+  final bool? versionUpdated;
+  final int? version;
 
   DUIConfig(dynamic data)
       : _themeConfig = data['theme'],
@@ -16,6 +18,8 @@ class DUIConfig {
         _restConfig = data['rest'],
         _initialRoute = data['appSettings']['initialRoute'],
         appState = data['appState'],
+        version = data['version'],
+        versionUpdated = data['versionUpdated'],
         functionsFilePath = data['functionsFilePath'];
 
   // TODO: @tushar - Add support for light / dark theme
