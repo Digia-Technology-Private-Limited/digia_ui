@@ -33,6 +33,8 @@ class DUIListViewBuilder extends DUIWidgetBuilder {
       if (children.isEmpty) return const SizedBox.shrink();
 
       return ListView.builder(
+          scrollDirection: DUIDecoder.toAxis(data.props['scrollDirection'],
+              defaultValue: Axis.vertical),
           physics: DUIDecoder.toScrollPhysics(data.props['allowScroll']),
           shrinkWrap: NumDecoder.toBoolOrDefault(data.props['shrinkWrap'],
               defaultValue: false),
@@ -47,6 +49,8 @@ class DUIListViewBuilder extends DUIWidgetBuilder {
           });
     } else {
       return ListView.builder(
+          scrollDirection: DUIDecoder.toAxis(data.props['scrollDirection'],
+              defaultValue: Axis.vertical),
           physics: DUIDecoder.toScrollPhysics(data.props['allowScroll']),
           shrinkWrap: NumDecoder.toBoolOrDefault(data.props['shrinkWrap'],
               defaultValue: false),
