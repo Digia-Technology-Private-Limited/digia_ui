@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_js/flutter_js.dart';
+import '../../Utils/file_operations.dart';
 import '../functions/download.dart';
 import './js_functions.dart';
 
@@ -13,8 +14,7 @@ class MobileJsFunctions implements JSFunctions {
   Future fetchJsFile(String path) async {
     try {
       await downloadFunctionsFile(path);
-      final file = File('${await localPath}/functions.js');
-      jsFile = file.readAsStringSync(encoding: utf8);
+      jsFile = await readFileString('functions.js') ?? '';
     } catch (e) {
       print('file not found');
     }
