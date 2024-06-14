@@ -42,7 +42,7 @@ class DUICalendarBuilder extends DUIWidgetBuilder {
     HeaderStyle headerStyleFromJson(BuildContext context) {
       final headerStyle = data.props['headerStyle'];
       late BoxShape shape;
-      headerStyle['shape'] == 'circle'
+      headerStyle?['shape'] == 'circle'
           ? shape = BoxShape.circle
           : shape = BoxShape.rectangle;
       final titleTextStyle = toTextStyle(
@@ -91,7 +91,7 @@ class DUICalendarBuilder extends DUIWidgetBuilder {
       final daysOfWeekStyle = data.props['daysOfWeekStyle'];
 
       late BoxShape shape;
-      daysOfWeekStyle['shape'] == 'circle'
+      daysOfWeekStyle?['shape'] == 'circle'
           ? shape = BoxShape.circle
           : shape = BoxShape.rectangle;
 
@@ -130,11 +130,13 @@ class DUICalendarBuilder extends DUIWidgetBuilder {
       final cellAlignment =
           DUIDecoder.toAlignment(calendarStyle?['cellAlignment'] ?? 'center');
       final rangeHighlightScale = calendarStyle?['rangeHighlightScale'] ?? 1.0;
-      final rangeHighlightColor = calendarStyle?['rangeHighlightColor']
-          .letIfTrue(toColor, defaultValue: const Color(0xFFBBDDFF));
+      final rangeHighlightColor =
+          calendarStyle?['rangeHighlightColor'].letIfTrue(toColor) ??
+              const Color(0xFFBBDDFF);
       final outsideDaysVisible = calendarStyle?['outsideDaysVisible'];
       final isTodayHighlighted = calendarStyle?['isTodayHighlighted'];
-      final tableBorderColor = calendarStyle?['color'].letIfTrue(toColor);
+      final tableBorderColor =
+          calendarStyle?['color'].letIfTrue(toColor) ?? Colors.black;
       final tableBorderWidth = calendarStyle?['width'] ?? 1.0;
       final tableBorder = TableBorder(
         top: BorderSide(
