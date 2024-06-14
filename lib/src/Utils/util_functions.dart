@@ -193,3 +193,13 @@ Color toColor(String colorToken) {
 
   return color;
 }
+
+Color? makeColor(dynamic color) {
+  if (color == null) return null;
+
+  if (color is Color) return color;
+
+  if (color is! String) return null;
+
+  return ColorDecoder.fromString(color);
+}
