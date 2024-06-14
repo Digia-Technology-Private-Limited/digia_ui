@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../digia_ui.dart';
 import '../Utils/basic_shared_utils/lodash.dart';
+import '../components/dui_widget_scope.dart';
 import 'app_state_provider.dart';
 import 'indexed_item_provider.dart';
 import 'page/dui_page_bloc.dart';
@@ -17,10 +18,18 @@ ExprContext createScope(BuildContext context, ExprContext? localScope) {
 
   // Prepare Page Level Vars
   final pageState = context.read<DUIPageBloc>().state;
+  final widgetVariables = pageState.widgetVars.map((k, v) => MapEntry(
+      k,
+      ExprClassInstance(
+          klass: ExprClass(
+              name: k,
+              fields: v.map((k1, v1) => MapEntry(k1, v1())),
+              methods: {}))));
   ExprContext pageScope = ExprContext(
       name: 'page/${pageState.pageUid}',
       variables: {
         ...?pageState.props.variables?.map((k, v) => MapEntry(k, v.value)),
+        ...widgetVariables,
         'pageParams': pageState.props.inputArgs?.map((key, value) =>
             MapEntry(key, pageState.pageArgs?[key] ?? value.value)),
         'dataSource': pageState.dataSource
