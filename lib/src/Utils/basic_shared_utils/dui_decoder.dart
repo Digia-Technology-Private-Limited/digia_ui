@@ -495,13 +495,12 @@ class DUIDecoder {
 
     switch (value) {
       case 'horizontal':
-        Axis.horizontal;
-
+        return Axis.horizontal;
       case 'vertical':
-        Axis.vertical;
+        return Axis.vertical;
+      default:
+        return defaultValue;
     }
-
-    return defaultValue;
   }
 
   static WrapAlignment toWrapAlignment(String? value,
