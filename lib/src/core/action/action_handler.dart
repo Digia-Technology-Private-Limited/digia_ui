@@ -172,6 +172,39 @@ Map<String, ActionHandlerFn> _actionsMap = {
     }
     return;
   },
+  'Action.openDialog': ({required action, required context, enclosing}) async {
+    final String? pageUId = action.data['pageUid'] ?? action.data['pageId'];
+
+    if (pageUId == null) {
+      throw ArgumentError('Null value', 'pageId');
+    }
+
+    Map<String, dynamic>? pageArgs =
+        action.data['pageArgs'] ?? action.data['args'];
+
+    final pageProps =
+        context.tryRead<DUIPageBloc>()?.config.getPageData(pageUId);
+    final filteredArgs = ifNotNull(
+        pageArgs?.entries
+            .where((e) => pageProps?.inputArgs?[e.key] != null)
+            .cast<MapEntry<String, dynamic>>(),
+        Map<String, dynamic>.fromEntries);
+
+    final evaluatedArgs = evalDynamic(filteredArgs, context, enclosing);
+
+    final widgetScope = DUIWidgetScope.maybeOf(context);
+
+    Object? result;
+    result = await openDialog(
+      pageUid: pageUId,
+      context: context,
+      pageArgs: evaluatedArgs,
+      iconDataProvider: widgetScope?.iconDataProvider,
+      imageProviderFn: widgetScope?.imageProviderFn,
+      textStyleBuilder: widgetScope?.textStyleBuilder,
+    );
+    return result;
+  },
   'Action.handleDigiaMessage': (
       {required action, required context, enclosing}) {
     final handler = DUIWidgetScope.maybeOf(context)?.onMessageReceived;

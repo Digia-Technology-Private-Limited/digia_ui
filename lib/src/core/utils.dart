@@ -146,3 +146,28 @@ Future<T?> openDUIPageInBottomSheet<T>({
 //         child:
 
 //       );
+
+Future<T?> openDialog<T>({
+  required String pageUid,
+  required BuildContext context,
+  Map<String, dynamic>? pageArgs,
+  DUIIconDataProvider? iconDataProvider,
+  DUIImageProviderFn? imageProviderFn,
+  DUITextStyleBuilder? textStyleBuilder,
+}) {
+  return showDialog(
+      context: context,
+      useSafeArea: true,
+      useRootNavigator: false,
+      builder: (context) {
+        return Dialog(
+          child: DUIPage(
+            pageUid: pageUid,
+            pageArgs: pageArgs,
+            iconDataProvider: iconDataProvider,
+            imageProviderFn: imageProviderFn,
+            textStyleBuilder: textStyleBuilder,
+          ),
+        );
+      });
+}
