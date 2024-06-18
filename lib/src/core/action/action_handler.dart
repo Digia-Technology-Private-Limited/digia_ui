@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:json_schema2/json_schema2.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -170,6 +171,30 @@ Map<String, ActionHandlerFn> _actionsMap = {
       scaffold?.closeDrawer();
       scaffold?.closeEndDrawer();
     }
+    return;
+  },
+  'Action.showToast': ({required action, required context, enclosing}) {
+    final message = eval<String>(action.data['message'],
+        context: context, enclosing: enclosing);
+    final duration = eval<double>(action.data['duration'],
+        context: context, enclosing: enclosing);
+
+    final toast = FToast().init(context);
+    toast.showToast(
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(25.0),
+          color: Colors.black,
+        ),
+        child: Text(
+          message ?? '',
+          style: const TextStyle(color: Colors.white),
+        ),
+      ),
+      gravity: ToastGravity.BOTTOM,
+      toastDuration: Duration(seconds: duration ?? 2),
+    );
     return;
   },
   'Action.handleDigiaMessage': (
