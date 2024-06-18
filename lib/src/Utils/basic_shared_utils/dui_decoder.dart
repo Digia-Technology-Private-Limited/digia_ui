@@ -176,7 +176,7 @@ class DUIDecoder {
     return null;
   }
 
-  static BoxFit toBoxFit(String? fitValue) => switch (fitValue) {
+  static BoxFit toBoxFit(dynamic fitValue) => switch (fitValue) {
         'fill' => BoxFit.fill,
         'contain' => BoxFit.contain,
         'cover' => BoxFit.cover,
@@ -495,13 +495,12 @@ class DUIDecoder {
 
     switch (value) {
       case 'horizontal':
-        Axis.horizontal;
-
+        return Axis.horizontal;
       case 'vertical':
-        Axis.vertical;
+        return Axis.vertical;
+      default:
+        return defaultValue;
     }
-
-    return defaultValue;
   }
 
   static WrapAlignment toWrapAlignment(String? value,
@@ -531,7 +530,7 @@ class DUIDecoder {
     };
   }
 
-  static Clip toClip(String? value, {Clip defaultValue = Clip.none}) {
+  static Clip toClip(dynamic value, {Clip defaultValue = Clip.none}) {
     if (value == null) return defaultValue;
 
     return switch (value) {

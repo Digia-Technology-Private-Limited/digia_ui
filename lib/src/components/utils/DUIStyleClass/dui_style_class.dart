@@ -16,6 +16,7 @@ class DUIStyleClass {
   String? alignment;
   String? height;
   String? width;
+  String? clipBehavior;
 
   DUIStyleClass(
       {this.padding,
@@ -24,7 +25,8 @@ class DUIStyleClass {
       this.border,
       this.alignment,
       this.height,
-      this.width});
+      this.width,
+      this.clipBehavior});
 
   static DUIStyleClass? fromJson(dynamic json) => _$DUIStyleClassFromJson(json);
 
@@ -36,15 +38,16 @@ class DUIStyleClass {
     String? alignment,
     String? height,
     String? width,
+    String? clipBehavior,
   }) {
     return DUIStyleClass(
-      padding: padding ?? this.padding,
-      margin: margin ?? this.margin,
-      bgColor: bgColor ?? this.bgColor,
-      border: border ?? this.border,
-      alignment: alignment ?? this.alignment,
-      height: height ?? this.height,
-      width: width ?? this.width,
-    );
+        padding: padding ?? this.padding,
+        margin: margin ?? this.margin,
+        bgColor: bgColor ?? this.bgColor,
+        border: border ?? this.border,
+        alignment: alignment ?? this.alignment,
+        height: height ?? this.height,
+        width: width ?? this.width,
+        clipBehavior: clipBehavior ?? this.clipBehavior);
   }
 }

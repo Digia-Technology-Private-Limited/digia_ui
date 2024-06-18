@@ -2,6 +2,11 @@
 
 Digia Ui Sdk.
 
+## [0.0.6-beta.20] - 2023-06-14
+
+- Support for Dynamic Text Color
+- Bug fixes
+
 ## [0.0.6-beta.19] - 2023-06-06
 
 Bug fixes + Validations
