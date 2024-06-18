@@ -17,10 +17,18 @@ ExprContext createScope(BuildContext context, ExprContext? localScope) {
 
   // Prepare Page Level Vars
   final pageState = context.read<DUIPageBloc>().state;
+  final widgetVariables = pageState.widgetVars.map((k, v) => MapEntry(
+      k,
+      ExprClassInstance(
+          klass: ExprClass(
+              name: k,
+              fields: v.map((k1, v1) => MapEntry(k1, v1())),
+              methods: {}))));
   ExprContext pageScope = ExprContext(
       name: 'page/${pageState.pageUid}',
       variables: {
         ...?pageState.props.variables?.map((k, v) => MapEntry(k, v.value)),
+        ...widgetVariables,
         'pageParams': pageState.props.inputArgs?.map((key, value) =>
             MapEntry(key, pageState.pageArgs?[key] ?? value.value)),
         'dataSource': pageState.dataSource
