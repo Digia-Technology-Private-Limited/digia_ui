@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../digia_ui.dart';
 import '../Utils/basic_shared_utils/lodash.dart';
-import '../components/dui_widget_scope.dart';
 import 'app_state_provider.dart';
 import 'indexed_item_provider.dart';
 import 'page/dui_page_bloc.dart';

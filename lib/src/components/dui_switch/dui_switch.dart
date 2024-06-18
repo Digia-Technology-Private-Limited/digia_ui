@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../dui_base_stateful_widget.dart';
 
 class DUISwitch extends BaseStatefulWidget {
-  final String? name;
   final bool enabled;
   final bool? value;
   final Color? activeColor;
@@ -13,7 +12,7 @@ class DUISwitch extends BaseStatefulWidget {
 
   const DUISwitch(
       {super.key,
-      this.name,
+      super.varName,
       required this.enabled,
       this.value,
       this.activeColor,
@@ -58,7 +57,4 @@ class _DUISwitchState extends DUIWidgetState<DUISwitch> {
   Map<String, Function> getVariables() {
     return {'value': () => _value, 'enabled': () => widget.enabled};
   }
-
-  @override
-  String? get name => widget.name;
 }
