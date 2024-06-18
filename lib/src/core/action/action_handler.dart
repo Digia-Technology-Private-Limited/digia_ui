@@ -194,6 +194,9 @@ Map<String, ActionHandlerFn> _actionsMap = {
 
     final widgetScope = DUIWidgetScope.maybeOf(context);
 
+    final waitForResult =
+        NumDecoder.toBool(action.data['waitForResult']) ?? false;
+
     Object? result;
     result = await openDialog(
       pageUid: pageUId,
@@ -203,6 +206,16 @@ Map<String, ActionHandlerFn> _actionsMap = {
       imageProviderFn: widgetScope?.imageProviderFn,
       textStyleBuilder: widgetScope?.textStyleBuilder,
     );
+
+    if (waitForResult && context.mounted) {
+      final onResultActionflow = ActionFlow.fromJson(action.data['onResult']);
+      await ActionHandler.instance.execute(
+          context: context,
+          actionFlow: onResultActionflow,
+          enclosing: ExprContext(variables: {
+            'result': result,
+          }, enclosing: enclosing));
+    }
     return result;
   },
   'Action.handleDigiaMessage': (
