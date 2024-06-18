@@ -64,12 +64,17 @@ class _DUICalendarState extends DUIWidgetState<DUICalendar> {
   String _selectedDateISO = '';
   DateTime kFirstDay = DateTime(1970, 1, 1);
   DateTime kLastDay = DateTime(2100, 1, 1);
-  late final ValueNotifier<DateTime> _focusedDay;
+  DateTime _focusedDay = DateTime.now();
+  DateTime? _selectedDay;
+  DateTime? _rangeStart;
+  DateTime? _rangeEnd;
 
   @override
   void initState() {
     super.initState();
-    _focusedDay = ValueNotifier(DateTime.now());
+    _focusedDay = widget.focusedDay != null
+        ? DateTime.parse(widget.focusedDay!)
+        : DateTime.now();
     _selectedDateISO = widget.currentDay ?? DateTime.now().toIso8601String();
     _selectedRangeISO = (
       startIso: widget.rangeStartDay ?? DateTime.now().toIso8601String(),
@@ -81,7 +86,7 @@ class _DUICalendarState extends DUIWidgetState<DUICalendar> {
   @override
   void dispose() {
     super.dispose();
-    _focusedDay.dispose();
+    _focusedDay = DateTime.now();
     _selectedDateISO = '';
     _selectedRangeISO = (startIso: '', endIso: '');
   }
@@ -91,12 +96,14 @@ class _DUICalendarState extends DUIWidgetState<DUICalendar> {
     return TableCalendar(
       focusedDay: widget.focusedDay != null
           ? DateTime.parse(widget.focusedDay!)
-          : _focusedDay.value,
+          : _focusedDay,
       firstDay: kFirstDay,
       lastDay: kLastDay,
-      currentDay: widget.currentDay != null
-          ? DateTime.parse(widget.currentDay!)
-          : DateTime.now(),
+      // currentDay: widget.currentDay != null
+      //     ? DateTime.parse(widget.currentDay!)
+      //     : DateTime.now(),
+      rangeStartDay: _rangeStart,
+      rangeEndDay: _rangeEnd,
       calendarFormat: widget.calendarFormat == 'Week'
           ? CalendarFormat.week
           : widget.calendarFormat == '2 Weeks'
@@ -118,17 +125,24 @@ class _DUICalendarState extends DUIWidgetState<DUICalendar> {
       headerStyle: headerStyleFromJson(context),
       daysOfWeekStyle: daysOfWeekStyleFromJson(context),
       calendarStyle: calendarStyleFromJson(context),
-      selectedDayPredicate: (day) {
-        return isSameDay(DateTime.tryParse(_selectedDateISO), day);
-      },
+      selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
       onDaySelected: (selectedDay, focusedDay) {
-        setState(() {
-          _focusedDay.value = selectedDay;
-          _selectedDateISO = selectedDay.toIso8601String();
-        });
+        if (!isSameDay(_selectedDay, selectedDay)) {
+          setState(() {
+            _selectedDay = selectedDay;
+            _focusedDay = focusedDay;
+            _rangeStart = null;
+            _rangeEnd = null;
+            _selectedDateISO = selectedDay.toIso8601String();
+          });
+        }
       },
       onRangeSelected: (start, end, focusedDay) {
         setState(() {
+          _selectedDay = focusedDay;
+          _focusedDay = focusedDay;
+          _rangeStart = start;
+          _rangeEnd = end;
           _selectedRangeISO = (
             startIso: start!.toIso8601String(),
             endIso: end!.toIso8601String()
@@ -136,10 +150,7 @@ class _DUICalendarState extends DUIWidgetState<DUICalendar> {
         });
       },
       onPageChanged: (focusedDay) {
-        setState(() {
-          _focusedDay.value = focusedDay;
-          _selectedDateISO = focusedDay.toIso8601String();
-        });
+        _focusedDay = focusedDay;
       },
     );
   }
@@ -294,34 +305,13 @@ class _DUICalendarState extends DUIWidgetState<DUICalendar> {
   Map<String, Function> getVariables() {
     return {
       'selectedDate': () => _selectedDateISO,
-      'selectedRange': () => _selectedRangeISO,
+      'selectedRange': () => {
+            'start': _selectedRangeISO.startIso,
+            'end': _selectedRangeISO.endIso,
+          },
     };
   }
 
   @override
   String? get name => widget.name;
-
-  DateTime _previousWeek(DateTime week) {
-    return week.subtract(const Duration(days: 7));
-  }
-
-  DateTime _nextWeek(DateTime week) {
-    return week.add(const Duration(days: 7));
-  }
-
-  DateTime _previousMonth(DateTime month) {
-    if (month.month == 1) {
-      return DateTime(month.year - 1, 12);
-    } else {
-      return DateTime(month.year, month.month - 1);
-    }
-  }
-
-  DateTime _nextMonth(DateTime month) {
-    if (month.month == 12) {
-      return DateTime(month.year + 1, 1);
-    } else {
-      return DateTime(month.year, month.month + 1);
-    }
-  }
 }
