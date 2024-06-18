@@ -8,7 +8,7 @@ Future<void> downloadFunctionsFile(String url, {int retry = 0}) async {
     // Send a GET request to the provided URL
     final response = await Dio().request(url,
         options: Options(
-          sendTimeout: const Duration(seconds: 5),
+            sendTimeout: const Duration(seconds: 5),
             method: HttpMethod.get.stringValue,
             responseType: ResponseType.bytes));
 
