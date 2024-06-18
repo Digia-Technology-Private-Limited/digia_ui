@@ -29,7 +29,7 @@ class DUICalendarBuilder extends DUIWidgetBuilder {
       weekNumbersVisible: data.props['weekNumbersVisible'],
       rangeStartDay: data.props['rangeStartDay'],
       rangeEndDay: data.props['rangeEndDay'],
-      selectionMode: data.props['selectionMode'],
+      selectionMode: data.props['selectionMode']['value'],
       headerStyle: data.props['headerStyle'],
       daysOfWeekStyle: data.props['daysOfWeekStyle'],
       calendarStyle: data.props['calendarStyle'],
