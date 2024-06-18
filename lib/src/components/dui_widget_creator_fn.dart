@@ -49,7 +49,6 @@ Widget wrapInContainer(
         color: bgColor.letIfTrue(toColor),
         border: border,
         borderRadius: borderRadius),
-    // No idea why I have made the below hack, but code breaks w/o it.
     clipBehavior: !borderRadius.isZero() ? Clip.hardEdge : Clip.none,
     child: child,
   );
