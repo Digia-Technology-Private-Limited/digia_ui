@@ -176,7 +176,7 @@ Map<String, ActionHandlerFn> _actionsMap = {
   'Action.showToast': ({required action, required context, enclosing}) {
     final message = eval<String>(action.data['message'],
         context: context, enclosing: enclosing);
-    final duration = eval<double>(action.data['duration'],
+    final duration = eval<int>(action.data['duration'],
         context: context, enclosing: enclosing);
 
     final toast = FToast().init(context);
