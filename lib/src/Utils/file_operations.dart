@@ -58,5 +58,3 @@ Future<bool> doesFileExist(String fileName) async {
     return false;
   }
 }
-
-

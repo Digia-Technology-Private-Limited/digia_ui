@@ -4,12 +4,13 @@ part 'dui_widget_json_data.g.dart';
 
 @JsonSerializable()
 class DUIWidgetJsonData {
-  String type;
-  Map<String, dynamic> _props;
-  Map<String, dynamic> _containerProps;
+  final String type;
+  final Map<String, dynamic> _props;
+  final Map<String, dynamic> _containerProps;
   @JsonKey(fromJson: _childrenFromJson)
-  Map<String, List<DUIWidgetJsonData>> children;
-  Map<String, dynamic> _dataRef;
+  final Map<String, List<DUIWidgetJsonData>> children;
+  final Map<String, dynamic> _dataRef;
+  final String? varName;
 
   Map<String, dynamic> get props => _props;
   Map<String, dynamic> get containerProps => _containerProps;
@@ -19,13 +20,14 @@ class DUIWidgetJsonData {
     return children[key]?.firstOrNull;
   }
 
-  DUIWidgetJsonData({
-    required this.type,
-    Map<String, dynamic>? props,
-    Map<String, dynamic>? containerProps,
-    Map<String, List<DUIWidgetJsonData>>? children,
-    Map<String, dynamic>? dataRef,
-  })  : _props = props ?? {},
+  DUIWidgetJsonData(
+      {required this.type,
+      Map<String, dynamic>? props,
+      Map<String, dynamic>? containerProps,
+      Map<String, List<DUIWidgetJsonData>>? children,
+      Map<String, dynamic>? dataRef,
+      this.varName})
+      : _props = props ?? {},
         _containerProps = containerProps ?? {},
         _dataRef = dataRef ?? {},
         children = children ?? <String, List<DUIWidgetJsonData>>{};

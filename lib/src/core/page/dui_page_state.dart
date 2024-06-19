@@ -10,6 +10,7 @@ class DUIPageState {
   bool isLoading;
   Object? dataSource;
   Map<String, dynamic>? pageArgs;
+  Map<String, Map<String, Function>> widgetVars;
 
   DUIPageState({
     required this.pageUid,
@@ -17,5 +18,6 @@ class DUIPageState {
     this.pageArgs,
     this.isLoading = false,
     this.dataSource,
+    required this.widgetVars,
   });
 }

@@ -20,10 +20,15 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
             pageUid: pageUid,
             isLoading: true,
             pageArgs: pageArgs,
-            props: config.getPageData(pageUid))) {
+            props: config.getPageData(pageUid),
+            widgetVars: {})) {
     on<InitPageEvent>(_init);
     on<SetStateEvent>(_setState);
     on<RebuildPageEvent>(_rebuildPage);
+  }
+
+  void register(String widgetName, Map<String, Function> getters) {
+    state.widgetVars[widgetName] = getters;
   }
 
   void _init(

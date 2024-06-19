@@ -88,7 +88,7 @@ class DUIApp extends StatelessWidget {
           }
 
           if (snapshot.hasError) {
-            return const Scaffold(
+            return Scaffold(
               body: SafeArea(
                 child: Align(
                   alignment: Alignment.center,
@@ -97,8 +97,8 @@ class DUIApp extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'Could not fetch Config.',
-                        style: TextStyle(color: Colors.red, fontSize: 24),
+                        'Could not fetch Config. ${snapshot.error?.toString()}',
+                        style: const TextStyle(color: Colors.red, fontSize: 24),
                       ),
                     ],
                   ),

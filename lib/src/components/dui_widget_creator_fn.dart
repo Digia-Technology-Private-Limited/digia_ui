@@ -26,6 +26,7 @@ Widget wrapInContainer(
       DUIDecoder.toBorderRadius(styleClass.border?.borderRadius?.toJson());
   final height = styleClass.height?.toHeight(context);
   final width = styleClass.width?.toWidth(context);
+  // final clipBehavior = DUIDecoder.toClip(styleClass.clipBehavior);
 
   // Probably unnecessary Optimisation:
   // Remove Container if all values are null or empty.
@@ -48,6 +49,7 @@ Widget wrapInContainer(
         color: bgColor.letIfTrue(toColor),
         border: border,
         borderRadius: borderRadius),
+    clipBehavior: !borderRadius.isZero() ? Clip.hardEdge : Clip.none,
     child: child,
   );
 }
@@ -87,6 +89,18 @@ Widget DUIAlign({dynamic alignment, required Widget child}) {
 
   return Align(
     alignment: value,
+    child: child,
+  );
+}
+
+// ignore: non_constant_identifier_names
+Widget DUIAspectRatio({dynamic value, required Widget child}) {
+  final aspectRatio = NumDecoder.toDouble(value);
+
+  if (aspectRatio == null) return child;
+
+  return AspectRatio(
+    aspectRatio: aspectRatio,
     child: child,
   );
 }
