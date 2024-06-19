@@ -63,32 +63,32 @@ class _DUICalendarState extends DUIWidgetState<DUICalendar> {
   String _selectedDateISO = '';
   DateTime kFirstDay = DateTime(1970, 1, 1);
   DateTime kLastDay = DateTime(2100, 1, 1);
-  late DateTime _focusedDay;
+  DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
   DateTime? _rangeStart;
   DateTime? _rangeEnd;
 
-  @override
-  void initState() {
-    super.initState();
-    _focusedDay = widget.focusedDay != null
-        ? DateTime.parse(widget.focusedDay!)
-        : DateTime.now();
-    _selectedDateISO = widget.currentDay ?? DateTime.now().toIso8601String();
-    _selectedRangeISO = (
-      startIso: widget.rangeStartDay ?? DateTime.now().toIso8601String(),
-      endIso: widget.rangeEndDay ??
-          DateTime.now().add(const Duration(days: 7)).toIso8601String()
-    );
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _focusedDay = widget.focusedDay != null
+  //       ? DateTime.parse(widget.focusedDay!)
+  //       : DateTime.now();
+  //   _selectedDateISO = widget.currentDay ?? DateTime.now().toIso8601String();
+  //   _selectedRangeISO = (
+  //     startIso: widget.rangeStartDay ?? DateTime.now().toIso8601String(),
+  //     endIso: widget.rangeEndDay ??
+  //         DateTime.now().add(const Duration(days: 7)).toIso8601String()
+  //   );
+  // }
 
-  @override
-  void dispose() {
-    super.dispose();
-    _focusedDay = DateTime.now();
-    _selectedDateISO = '';
-    _selectedRangeISO = (startIso: '', endIso: '');
-  }
+  // @override
+  // void dispose() {
+  //   super.dispose();
+  //   _focusedDay = DateTime.now();
+  //   _selectedDateISO = '';
+  //   _selectedRangeISO = (startIso: '', endIso: '');
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -137,7 +137,6 @@ class _DUICalendarState extends DUIWidgetState<DUICalendar> {
         }
       },
       onRangeSelected: (start, end, focusedDay) {
-        print('Range selected: $start - $end');
         setState(() {
           _selectedDay = null;
           _focusedDay = focusedDay;
