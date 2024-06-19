@@ -218,8 +218,9 @@ Map<String, ActionHandlerFn> _actionsMap = {
 
     final evaluatedArgs = evalDynamic(filteredArgs, context, enclosing);
     final barrierDismissible =
-        NumDecoder.toBool(action.data['barrierDismissible']);
-    final barrierColor = makeColor(action.data['barrierColor']);
+        eval<bool>(action.data['barrierDismissible'], context: context);
+    final barrierColor = eval<String>(action.data['barrierColor'],
+        context: context, enclosing: enclosing);
 
     final widgetScope = DUIWidgetScope.maybeOf(context);
 
@@ -235,7 +236,7 @@ Map<String, ActionHandlerFn> _actionsMap = {
       imageProviderFn: widgetScope?.imageProviderFn,
       textStyleBuilder: widgetScope?.textStyleBuilder,
       barrierDismissible: barrierDismissible,
-      barrierColor: barrierColor,
+      barrierColor: makeColor(barrierColor),
     );
 
     if (waitForResult && context.mounted) {
