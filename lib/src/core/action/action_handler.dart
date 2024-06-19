@@ -11,6 +11,7 @@ import '../../Utils/basic_shared_utils/lodash.dart';
 import '../../Utils/basic_shared_utils/num_decoder.dart';
 import '../../Utils/expr.dart';
 import '../../Utils/extensions.dart';
+import '../../Utils/util_functions.dart';
 import '../../components/dui_widget_scope.dart';
 import '../../types.dart';
 import '../analytics_handler.dart';
@@ -196,6 +197,58 @@ Map<String, ActionHandlerFn> _actionsMap = {
       toastDuration: Duration(seconds: duration ?? 2),
     );
     return;
+  },
+  'Action.openDialog': ({required action, required context, enclosing}) async {
+    final String? pageUId = action.data['pageUid'] ?? action.data['pageId'];
+
+    if (pageUId == null) {
+      throw ArgumentError('Null value', 'pageId');
+    }
+
+    Map<String, dynamic>? pageArgs =
+        action.data['pageArgs'] ?? action.data['args'];
+
+    final pageProps =
+        context.tryRead<DUIPageBloc>()?.config.getPageData(pageUId);
+    final filteredArgs = ifNotNull(
+        pageArgs?.entries
+            .where((e) => pageProps?.inputArgs?[e.key] != null)
+            .cast<MapEntry<String, dynamic>>(),
+        Map<String, dynamic>.fromEntries);
+
+    final evaluatedArgs = evalDynamic(filteredArgs, context, enclosing);
+    final barrierDismissible =
+        eval<bool>(action.data['barrierDismissible'], context: context);
+    final barrierColor = eval<String>(action.data['barrierColor'],
+        context: context, enclosing: enclosing);
+
+    final widgetScope = DUIWidgetScope.maybeOf(context);
+
+    final waitForResult =
+        NumDecoder.toBool(action.data['waitForResult']) ?? false;
+
+    Object? result;
+    result = await openDialog(
+      pageUid: pageUId,
+      context: context,
+      pageArgs: evaluatedArgs,
+      iconDataProvider: widgetScope?.iconDataProvider,
+      imageProviderFn: widgetScope?.imageProviderFn,
+      textStyleBuilder: widgetScope?.textStyleBuilder,
+      barrierDismissible: barrierDismissible,
+      barrierColor: makeColor(barrierColor),
+    );
+
+    if (waitForResult && context.mounted) {
+      final onResultActionflow = ActionFlow.fromJson(action.data['onResult']);
+      await ActionHandler.instance.execute(
+          context: context,
+          actionFlow: onResultActionflow,
+          enclosing: ExprContext(variables: {
+            'result': result,
+          }, enclosing: enclosing));
+    }
+    return result;
   },
   'Action.handleDigiaMessage': (
       {required action, required context, enclosing}) {

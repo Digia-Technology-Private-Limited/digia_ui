@@ -182,6 +182,7 @@ OutlineInputBorder? toOutlineInputBorder(DUIBorder? border) {
 
 // Possible Values for colorToken:
 // token: primary, hexCode: #242424, hexCode with Alpha: #FF242424
+@Deprecated('Use makeColor instead')
 Color toColor(String colorToken) {
   var colorString =
       DigiaUIClient.getConfigResolver().getColorValue(colorToken) ?? colorToken;
