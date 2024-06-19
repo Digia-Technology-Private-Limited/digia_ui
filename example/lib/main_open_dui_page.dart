@@ -6,6 +6,7 @@ const String baseUrl = 'https://app.digia.tech/api/v1';
 
 void main() async {
   await DigiaUIClient.initializeFromData(
+    baseUrl: baseUrl,
       accessKey: "",
       data: const {
         'theme': <String, dynamic>{

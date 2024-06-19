@@ -10,7 +10,7 @@ class DUIApp extends StatelessWidget {
   final String digiaAccessKey;
   final GlobalKey<NavigatorState>? navigatorKey;
   final ThemeData? theme;
-  final String? baseUrl;
+  final String baseUrl;
   final Environment environment;
   final int version;
   final Object? data;
@@ -27,7 +27,7 @@ class DUIApp extends StatelessWidget {
       required this.environment,
       this.navigatorKey,
       this.theme,
-      this.baseUrl,
+      required this.baseUrl,
       required this.version,
       required this.networkConfiguration,
       this.developerConfig,
@@ -39,6 +39,7 @@ class DUIApp extends StatelessWidget {
       return DigiaUIClient.initializeFromData(
           accessKey: digiaAccessKey,
           data: data,
+          baseUrl: baseUrl,
           networkConfiguration: networkConfiguration,
           developerConfig: developerConfig);
     }
