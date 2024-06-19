@@ -11,6 +11,7 @@ import '../../Utils/basic_shared_utils/lodash.dart';
 import '../../Utils/basic_shared_utils/num_decoder.dart';
 import '../../Utils/expr.dart';
 import '../../Utils/extensions.dart';
+import '../../Utils/util_functions.dart';
 import '../../components/dui_widget_scope.dart';
 import '../../types.dart';
 import '../analytics_handler.dart';
@@ -216,6 +217,9 @@ Map<String, ActionHandlerFn> _actionsMap = {
         Map<String, dynamic>.fromEntries);
 
     final evaluatedArgs = evalDynamic(filteredArgs, context, enclosing);
+    final barrierDismissible =
+        NumDecoder.toBool(action.data['barrierDismissible']);
+    final barrierColor = makeColor(action.data['barrierColor']);
 
     final widgetScope = DUIWidgetScope.maybeOf(context);
 
@@ -230,6 +234,8 @@ Map<String, ActionHandlerFn> _actionsMap = {
       iconDataProvider: widgetScope?.iconDataProvider,
       imageProviderFn: widgetScope?.imageProviderFn,
       textStyleBuilder: widgetScope?.textStyleBuilder,
+      barrierDismissible: barrierDismissible,
+      barrierColor: barrierColor,
     );
 
     if (waitForResult && context.mounted) {

@@ -154,11 +154,15 @@ Future<T?> openDialog<T>({
   DUIIconDataProvider? iconDataProvider,
   DUIImageProviderFn? imageProviderFn,
   DUITextStyleBuilder? textStyleBuilder,
+  bool? barrierDismissible,
+  Color? barrierColor,
 }) {
   return showDialog(
       context: context,
       useSafeArea: true,
       useRootNavigator: false,
+      barrierDismissible: barrierDismissible ?? true,
+      barrierColor: barrierColor,
       builder: (context) {
         return Dialog(
           child: DUIPage(
