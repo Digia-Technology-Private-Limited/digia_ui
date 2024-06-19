@@ -9,7 +9,6 @@ import '../DUIText/dui_text_style.dart';
 import '../dui_base_stateful_widget.dart';
 
 class DUICalendar extends BaseStatefulWidget {
-  final String? name;
   // final String? firstDay;
   // final String? lastDay;
   final String? focusedDay;
@@ -25,14 +24,14 @@ class DUICalendar extends BaseStatefulWidget {
   final bool? weekNumbersVisible;
   final String? rangeStartDay;
   final String? rangeEndDay;
-  final String? selectionMode;
+  final Map<String, dynamic>? selectionMode;
   final Map<String, dynamic>? headerStyle;
   final Map<String, dynamic>? daysOfWeekStyle;
   final Map<String, dynamic>? calendarStyle;
 
   const DUICalendar({
     super.key,
-    this.name,
+    super.varName,
     // this.firstDay,
     // this.lastDay,
     this.focusedDay,
@@ -64,7 +63,7 @@ class _DUICalendarState extends DUIWidgetState<DUICalendar> {
   String _selectedDateISO = '';
   DateTime kFirstDay = DateTime(1970, 1, 1);
   DateTime kLastDay = DateTime(2100, 1, 1);
-  DateTime _focusedDay = DateTime.now();
+  late DateTime _focusedDay;
   DateTime? _selectedDay;
   DateTime? _rangeStart;
   DateTime? _rangeEnd;
@@ -109,7 +108,7 @@ class _DUICalendarState extends DUIWidgetState<DUICalendar> {
           : widget.calendarFormat == '2 Weeks'
               ? CalendarFormat.twoWeeks
               : CalendarFormat.month,
-      rangeSelectionMode: widget.selectionMode == 'Range'
+      rangeSelectionMode: widget.selectionMode?['value'] == 'Range'
           ? RangeSelectionMode.enforced
           : RangeSelectionMode.disabled,
       headerVisible: widget.headersVisible ?? true,
@@ -138,16 +137,17 @@ class _DUICalendarState extends DUIWidgetState<DUICalendar> {
         }
       },
       onRangeSelected: (start, end, focusedDay) {
+        print('Range selected: $start - $end');
         setState(() {
-          _selectedDay = focusedDay;
+          _selectedDay = null;
           _focusedDay = focusedDay;
           _rangeStart = start;
           _rangeEnd = end;
-          _selectedRangeISO = (
-            startIso: start!.toIso8601String(),
-            endIso: end!.toIso8601String()
-          );
         });
+        _selectedRangeISO = (
+          startIso: start!.toIso8601String(),
+          endIso: end!.toIso8601String()
+        );
       },
       onPageChanged: (focusedDay) {
         _focusedDay = focusedDay;
@@ -311,7 +311,4 @@ class _DUICalendarState extends DUIWidgetState<DUICalendar> {
           },
     };
   }
-
-  @override
-  String? get name => widget.name;
 }

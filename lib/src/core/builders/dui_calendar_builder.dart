@@ -13,7 +13,7 @@ class DUICalendarBuilder extends DUIWidgetBuilder {
   @override
   Widget build(BuildContext context) {
     return DUICalendar(
-      name: data.varName,
+      varName: data.varName,
       // firstDay: data.props['firstDay'],
       // lastDay: data.props['lastDay'],
       focusedDay: data.props['focusedDay'],
@@ -29,7 +29,7 @@ class DUICalendarBuilder extends DUIWidgetBuilder {
       weekNumbersVisible: data.props['weekNumbersVisible'],
       rangeStartDay: data.props['rangeStartDay'],
       rangeEndDay: data.props['rangeEndDay'],
-      selectionMode: data.props['selectionMode']['value'],
+      selectionMode: data.props['selectionMode'],
       headerStyle: data.props['headerStyle'],
       daysOfWeekStyle: data.props['daysOfWeekStyle'],
       calendarStyle: data.props['calendarStyle'],
