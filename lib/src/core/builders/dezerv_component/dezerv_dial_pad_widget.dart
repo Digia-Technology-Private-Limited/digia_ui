@@ -98,7 +98,7 @@ class _DezervDialPadState extends State<DezervDialPad> {
                 ? Text(
                     _isMaximum ? _maxAmountErrorText : _minAmountErrorText,
                     style: GoogleFonts.inter(
-                      color: const Color.fromARGB(255, 255, 40, 25),
+                      color: Color(int.parse('0xFFFF5757')),
                       fontWeight: FontWeight.w400,
                       fontSize: 16,
                     ),

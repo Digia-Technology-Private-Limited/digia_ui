@@ -21,11 +21,26 @@ class DUITextBuilder extends DUIWidgetBuilder {
 
   @override
   Widget build(BuildContext context) {
-    final text = eval<String>(data.props['text'], context: context);
-    final style = toTextStyle(DUITextStyle.fromJson(data.props['textStyle']));
-    final maxLines = eval<int>(data.props['maxLines'], context: context);
-    final overflow = DUIDecoder.toTextOverflow(data.props['overflow']);
-    final textAlign = DUIDecoder.toTextAlign(data.props['alignment']);
+    return _DUIText(props: data.props);
+  }
+}
+
+class _DUIText extends StatelessWidget {
+  final Map<String, dynamic> props;
+
+  const _DUIText({
+    Key? key,
+    required this.props,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final text = eval<String>(props['text'], context: context);
+    final style =
+        toTextStyle(DUITextStyle.fromJson(props['textStyle']), context);
+    final maxLines = eval<int>(props['maxLines'], context: context);
+    final overflow = DUIDecoder.toTextOverflow(props['overflow']);
+    final textAlign = DUIDecoder.toTextAlign(props['alignment']);
 
     return Text(text.toString(),
         style: style,

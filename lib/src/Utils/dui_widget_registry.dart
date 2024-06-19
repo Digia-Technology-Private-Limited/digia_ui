@@ -12,6 +12,7 @@ import '../core/builders/dui_checkbox_builder.dart';
 import '../core/builders/dui_circular_progress_indicator_builder.dart';
 import '../core/builders/dui_container2_builder.dart';
 import '../core/builders/dui_custom_widget_builder.dart';
+import '../core/builders/dui_drawer_builder.dart';
 import '../core/builders/dui_expandable_builder.dart';
 import '../core/builders/dui_flex_builder.dart';
 import '../core/builders/dui_future_builder.dart';
@@ -28,10 +29,11 @@ import '../core/builders/dui_scaffold_builder.dart';
 import '../core/builders/dui_sized_box_builder.dart';
 import '../core/builders/dui_spacer_builder.dart';
 import '../core/builders/dui_stack_builder.dart';
+import '../core/builders/dui_switch_builder.dart';
 import '../core/builders/dui_tab_view_builder.dart';
 import '../core/builders/dui_tab_view_item_builder.dart';
 import '../core/builders/dui_text_builder.dart';
-import '../core/builders/dui_text_field_builder.dart';
+import '../core/builders/dui_text_form_field_builder.dart';
 import '../core/builders/dui_vertical_divider_builder.dart';
 import '../core/builders/dui_video_player_builder.dart';
 import '../core/builders/dui_webview_builder.dart';
@@ -78,8 +80,6 @@ class DUIWidgetRegistry {
         registry: DUIWidgetRegistry.shared, direction: Axis.vertical),
     'digia/row': (data, {registry}) => DUIFlexBuilder.create(data,
         registry: DUIWidgetRegistry.shared, direction: Axis.horizontal),
-    // 'digia/expansionTile': (data, {registry}) =>
-    //     DUIExpansionBuilder.create(data, registry: DUIWidgetRegistry.shared),
     'digia/expandable': (data, {registry}) =>
         DUIExpandableBuilder.create(data, registry: DUIWidgetRegistry.shared),
     'digia/wrap': (data, {registry}) => DUIWrapBuilder.create(data),
@@ -87,6 +87,8 @@ class DUIWidgetRegistry {
     'fw/sized_box': withoutRegistry(DUISizedBoxBuilder.create),
     'fw/spacer': withoutRegistry(DUISpacerBuilder.create),
     'fw/appBar': withoutRegistry(DUIAppBarBuilder.create),
+    'digia/drawer': (data, {registry}) =>
+        DUIDrawerBuilder.create(data, registry: DUIWidgetRegistry.shared),
     'fw/scaffold': withoutRegistry(DUIScaffoldBuilder.create),
     'digia/lottie': (data, {registry}) => DUILottieBuilder.create(data),
     'digia/youtubePlayer': (data, {registry}) =>
@@ -105,7 +107,8 @@ class DUIWidgetRegistry {
         DUICustomWidgetBuilder.create(data),
     'digia/navigationBarItem': (data, {registry}) =>
         DUIBottomNavigationBarItemBuilder.create(data, registry: registry),
-    'digia/textField': (data, {registry}) => DUITextFieldBuilder.create(data),
+    'digia/textFormField': (data, {registry}) =>
+        DUITextFormFieldBuilder.create(data),
     'digia/stepper': (data, {registry}) =>
         DezervStepperBuilder.create(data, registry: DUIWidgetRegistry.shared),
     'digia/dezerv/dialPad': (data, {registry}) =>
@@ -114,6 +117,7 @@ class DUIWidgetRegistry {
     'digia/circularProgressBar': (data, {registry}) =>
         DUICircularProgressBarBuilder(data: data),
     'digia/checkbox': withoutRegistry(DUICheckboxBuilder.create),
+    'digia/switch': withoutRegistry(DUISwitchBuilder.create),
     'digia/animatedButton': withoutRegistry(DUIAnimatedButtonBuilder.create),
   };
 

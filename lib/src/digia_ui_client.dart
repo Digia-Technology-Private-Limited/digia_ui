@@ -3,10 +3,11 @@ import 'dart:io';
 
 import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:uuid/uuid.dart';
 
 import '../digia_ui.dart';
+import 'Utils/file_operations.dart';
 import 'core/functions/js_functions.dart';
 import 'core/pref/dui_preferences.dart';
 import 'digia_ui_service.dart';
@@ -14,6 +15,7 @@ import 'models/dui_app_state.dart';
 import 'network/api_response/base_response.dart';
 import 'network/core/types.dart';
 import 'network/network_client.dart';
+import 'version.dart';
 
 const defaultUIConfigAssetPath = 'assets/json/dui_config.json';
 const defaultBaseUrl = 'https://app.digia.tech/api/v1';
@@ -35,6 +37,7 @@ class DigiaUIClient {
   late Environment environment;
   late JSFunctions jsFunctions;
   late DUIAnalytics? duiAnalytics;
+  static const appConfigFileName = 'appConfig.json';
 
   bool _isInitialized = false;
 
@@ -44,30 +47,6 @@ class DigiaUIClient {
 
   static NetworkClient getNetworkClient() {
     return _instance.networkClient;
-  }
-
-  static initialize(
-      {required String accessKey,
-      String? assetPath,
-      String? baseUrl,
-      required NetworkConfiguration networkConfiguration}) async {
-    _instance.accessKey = accessKey;
-    _instance.baseUrl = baseUrl ?? defaultBaseUrl;
-    Map<String, dynamic> headers = {'digia_projectId': accessKey};
-    _instance.networkClient =
-        NetworkClient(_instance.baseUrl, headers, networkConfiguration, null);
-    final string =
-        await rootBundle.loadString(assetPath ?? defaultUIConfigAssetPath);
-    final data = jsonDecode(string);
-
-    _instance.config = DUIConfig(data);
-
-    await DUIPreferences.initialize();
-    setUuid();
-
-    _instance.appState = DUIAppState.fromJson(_instance.config.appState ?? {});
-
-    _instance._isInitialized = true;
   }
 
   static bool isInitialized() {
@@ -106,7 +85,6 @@ class DigiaUIClient {
   static initializeFromNetwork(
       {required String accessKey,
       required Environment environment,
-      String? projectId,
       required int version,
       String? baseUrl,
       required NetworkConfiguration networkConfiguration,
@@ -116,60 +94,83 @@ class DigiaUIClient {
     setUuid();
     BaseResponse resp;
     _instance.environment = environment;
-    _instance.version = version;
+    // _instance.version = version;
     _instance.accessKey = accessKey;
     _instance.baseUrl = baseUrl ?? defaultBaseUrl;
     _instance.duiAnalytics = duiAnalytics;
 
-    Map<String, dynamic> apiParams = {
-      'digia_projectId': accessKey,
-      'projectId': accessKey,
-      'version': version,
-      'platform': instance._getPlatform(),
-      'deviceId': DUIApp.uuid
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    var packageName = packageInfo.packageName;
+    var appVersion = packageInfo.version;
+    var appbuildNumber = packageInfo.buildNumber;
+
+    Map<String, dynamic> headers = {
+      'x-digia-version': packageVersion,
+      'x-digia-project-id': accessKey,
+      'x-digia-platform': instance._getPlatform(),
+      'x-digia-device-id': DUIApp.uuid,
+      'x-app-package-name': packageName,
+      'x-app-version': appVersion,
+      'x-app-build-number': appbuildNumber
     };
-    _instance.networkClient = NetworkClient(
-        _instance.baseUrl, apiParams, networkConfiguration, developerConfig);
 
     String requestPath;
-    dynamic requestData;
+    Map<String, dynamic>? storedAppConfig;
     switch (environment) {
       case Environment.staging:
         requestPath = '/config/getAppConfig';
-        requestData = jsonEncode(apiParams);
         break;
       case Environment.production:
         requestPath = '/config/getAppConfigProduction';
-        requestData = jsonEncode(apiParams);
+        var appConfigdata = await readFileString(appConfigFileName);
+        if (appConfigdata != null) {
+          try {
+            storedAppConfig =
+                json.decode(appConfigdata) as Map<String, dynamic>?;
+            var version = storedAppConfig?['response']['version'];
+            headers['x-digia-project-version'] = version;
+          } catch (e) {
+            //do nothing
+          }
+        }
         break;
       case Environment.version:
         requestPath = '/config/getAppConfigForVersion';
-        requestData = jsonEncode(apiParams);
+        headers['x-digia-project-version'] = version;
         break;
       default:
         requestPath = '/config/getAppConfig';
-        requestData = jsonEncode(apiParams);
     }
+
+    _instance.networkClient = NetworkClient(
+        _instance.baseUrl, headers, networkConfiguration, developerConfig);
 
     resp = await _instance.networkClient.requestInternal(
       HttpMethod.post,
       requestPath,
-      headers: apiParams,
       (json) => json as dynamic,
-      data: requestData,
     );
 
     final data = resp.data['response'] as Map<String, dynamic>?;
-    if (data == null || data.isEmpty) {
-      throw Exception(
-        'Something went wrong while getting data from cloud, please check provided projectId',
-      );
+
+    if (storedAppConfig != null &&
+        (data == null || data.isEmpty || data['versionUpdated'] == false)) {
+      _instance.config = DUIConfig(storedAppConfig['response']);
+    } else {
+      if (data == null || data.isEmpty) {
+        throw Exception(
+          'Something went wrong while getting data from cloud, please check provided projectId',
+        );
+      }
+      await writeStringToFile(json.encode(resp.data), appConfigFileName);
+      _instance.config = DUIConfig(data);
     }
 
-    _instance.config = DUIConfig(data);
-
-    _instance.jsFunctions = JSFunctions();
-    await _instance.jsFunctions.fetchJsFile(_instance.config.functionsFilePath);
+    if (_instance.config.functionsFilePath != null) {
+      _instance.jsFunctions = JSFunctions();
+      await _instance.jsFunctions
+          .fetchJsFile(_instance.config.functionsFilePath!);
+    }
 
     // _instance.jsFunctions.callJs('test3', {'number': 27});
 

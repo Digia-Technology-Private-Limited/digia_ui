@@ -3,9 +3,8 @@ import 'package:flutter/material.dart';
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
 import '../../Utils/basic_shared_utils/lodash.dart';
 import '../../Utils/util_functions.dart';
+import '../../core/builders/dui_image_builder.dart';
 import '../DUIText/dui_text.dart';
-import '../image/image.dart';
-import '../image/image.props.dart';
 import '../utils/DUICornerRadius/dui_corner_radius.dart';
 import 'avatar_props.dart';
 
@@ -56,8 +55,10 @@ class _DUIAvatarState extends State<DUIAvatar> {
 
   Widget? _getAvatarChildWidget() {
     if (widget.props.imageSrc != null) {
-      return DUIImage(DUIImageProps(
-          imageSrc: widget.props.imageSrc!, fit: widget.props.imageFit));
+      return DUIImageBuilder.fromProps(props: {
+        'imageSrc': widget.props.imageSrc!,
+        'fit': widget.props.imageFit
+      }).build(context);
     }
 
     return widget.props.text.let((p0) => Align(
