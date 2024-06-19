@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
@@ -176,7 +177,7 @@ class DUIDecoder {
     return null;
   }
 
-  static BoxFit toBoxFit(String? fitValue) => switch (fitValue) {
+  static BoxFit toBoxFit(dynamic fitValue) => switch (fitValue) {
         'fill' => BoxFit.fill,
         'contain' => BoxFit.contain,
         'cover' => BoxFit.cover,
@@ -530,7 +531,7 @@ class DUIDecoder {
     };
   }
 
-  static Clip toClip(String? value, {Clip defaultValue = Clip.none}) {
+  static Clip toClip(dynamic value, {Clip defaultValue = Clip.none}) {
     if (value == null) return defaultValue;
 
     return switch (value) {
@@ -570,5 +571,29 @@ class DUIDecoder {
     }
 
     return double.tryParse(s);
+  }
+
+  static TextInputType? toKeyBoardType(dynamic value) {
+    if (value is! String) return null;
+
+    return switch (value) {
+      'text' => TextInputType.text,
+      'multiline' => TextInputType.multiline,
+      'number' => TextInputType.number,
+      'phone' => TextInputType.phone,
+      'datetime' => TextInputType.datetime,
+      'emailAddress' => TextInputType.emailAddress,
+      'url' => TextInputType.url,
+      'visiblePassword' => TextInputType.visiblePassword,
+      'name' => TextInputType.name,
+      'streetAddress' => TextInputType.streetAddress,
+      'none' => TextInputType.none,
+      _ => null
+    };
+  }
+
+  static TextInputAction? toTextInputAction(dynamic value) {
+    return TextInputAction.values
+        .firstWhereOrNull((p0) => p0.name.split('.').last == value);
   }
 }

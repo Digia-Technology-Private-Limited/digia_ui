@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:uuid/uuid.dart';
 
@@ -169,7 +168,8 @@ class DigiaUIClient {
 
     if (_instance.config.functionsFilePath != null) {
       _instance.jsFunctions = JSFunctions();
-      await _instance.jsFunctions.fetchJsFile(_instance.config.functionsFilePath!);
+      await _instance.jsFunctions
+          .fetchJsFile(_instance.config.functionsFilePath!);
     }
 
     // _instance.jsFunctions.callJs('test3', {'number': 27});

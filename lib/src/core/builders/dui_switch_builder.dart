@@ -16,7 +16,7 @@ class DUISwitchBuilder extends DUIWidgetBuilder {
   @override
   Widget build(BuildContext context) {
     return DUISwitch(
-        name: data.varName,
+        varName: data.varName,
         enabled: true,
         value: eval<bool>(data.props['value'], context: context) ?? false,
         activeColor: makeColor(data.props['activeColor']),

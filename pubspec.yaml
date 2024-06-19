@@ -89,6 +89,7 @@ dependencies:
   intl: ^0.18.1
   package_info_plus: ^8.0.0
   table_calendar: ^3.0.9
+  collection: ^1.17.1
 
 dev_dependencies:
   flutter_test:

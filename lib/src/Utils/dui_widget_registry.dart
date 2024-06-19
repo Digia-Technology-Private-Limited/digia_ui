@@ -34,7 +34,7 @@ import '../core/builders/dui_switch_builder.dart';
 import '../core/builders/dui_tab_view_builder.dart';
 import '../core/builders/dui_tab_view_item_builder.dart';
 import '../core/builders/dui_text_builder.dart';
-import '../core/builders/dui_text_field_builder.dart';
+import '../core/builders/dui_text_form_field_builder.dart';
 import '../core/builders/dui_vertical_divider_builder.dart';
 import '../core/builders/dui_video_player_builder.dart';
 import '../core/builders/dui_webview_builder.dart';
@@ -108,7 +108,8 @@ class DUIWidgetRegistry {
         DUICustomWidgetBuilder.create(data),
     'digia/navigationBarItem': (data, {registry}) =>
         DUIBottomNavigationBarItemBuilder.create(data, registry: registry),
-    'digia/textField': (data, {registry}) => DUITextFieldBuilder.create(data),
+    'digia/textFormField': (data, {registry}) =>
+        DUITextFormFieldBuilder.create(data),
     'digia/stepper': (data, {registry}) =>
         DezervStepperBuilder.create(data, registry: DUIWidgetRegistry.shared),
     'digia/dezerv/dialPad': (data, {registry}) =>
