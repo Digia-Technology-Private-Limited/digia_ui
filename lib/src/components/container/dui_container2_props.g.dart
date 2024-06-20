@@ -10,21 +10,22 @@ DUIContainer2Props _$DUIContainer2PropsFromJson(Map<String, dynamic> json) =>
     DUIContainer2Props(
       json['width'] as String?,
       json['height'] as String?,
-      json['margin'] == null ? null : DUIInsets.fromJson(json['margin']),
-      json['padding'] == null ? null : DUIInsets.fromJson(json['padding']),
-      json['color'] as String?,
       json['maxHeight'] as String?,
       json['minHeight'] as String?,
       json['maxWidth'] as String?,
       json['minWidth'] as String?,
-      json['shape'] as String?,
       json['childAlignment'] as String?,
+      json['margin'] == null ? null : DUIInsets.fromJson(json['margin']),
+      json['padding'] == null ? null : DUIInsets.fromJson(json['padding']),
+      json['color'] as String?,
       json['border'] == null ? null : DUIBorder.fromJson(json['border']),
       json['decorationImage'] == null
           ? null
           : DUIDecorationImage.fromJson(
               json['decorationImage'] as Map<String, dynamic>),
+      json['shape'] as String?,
       json['boxFit'] as String?,
+      json['gradiant'] as Map<String, dynamic>,
     );
 
 Map<String, dynamic> _$DUIContainer2PropsToJson(DUIContainer2Props instance) =>
@@ -43,4 +44,5 @@ Map<String, dynamic> _$DUIContainer2PropsToJson(DUIContainer2Props instance) =>
       'decorationImage': instance.decorationImage,
       'shape': instance.shape,
       'boxFit': instance.boxFit,
+      'gradiant': instance.gradiant,
     };

@@ -1,7 +1,9 @@
 import 'package:json_annotation/json_annotation.dart';
+
 import '../utils/DUIBorder/dui_border.dart';
 import '../utils/DUIInsets/dui_insets.dart';
 import 'dui_decoration_image.dart';
+
 part 'dui_container2_props.g.dart';
 
 @JsonSerializable()
@@ -20,22 +22,24 @@ class DUIContainer2Props {
   final DUIDecorationImage? decorationImage;
   final String? shape;
   final String? boxFit;
+  final Map<String, dynamic> gradiant;
 
   DUIContainer2Props(
     this.width,
     this.height,
-    this.margin,
-    this.padding,
-    this.color,
     this.maxHeight,
     this.minHeight,
     this.maxWidth,
     this.minWidth,
-    this.shape,
     this.childAlignment,
+    this.margin,
+    this.padding,
+    this.color,
     this.border,
     this.decorationImage,
+    this.shape,
     this.boxFit,
+    this.gradiant,
   );
 
   factory DUIContainer2Props.fromJson(Map<String, dynamic> json) =>
