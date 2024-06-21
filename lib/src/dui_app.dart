@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../digia_ui.dart';
 import 'core/app_state_provider.dart';
+import 'core/utils.dart';
 
 enum Environment { staging, production, version }
 
@@ -18,6 +19,7 @@ class DUIApp extends StatelessWidget {
   final NetworkConfiguration networkConfiguration;
   final DeveloperConfig? developerConfig;
   final DUIAnalytics? analytics;
+  final bool? skipRootNavigator = false;
 
   // final Map<String, dynamic> initProperties;
 
@@ -66,55 +68,64 @@ class DUIApp extends StatelessWidget {
             brightness: Brightness.light,
           ),
       title: 'Digia App',
-      home: FutureBuilder(
-        future: _makeFuture(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState != ConnectionState.done) {
-            return const Scaffold(
-              body: SafeArea(
-                child: Align(
-                  alignment: Alignment.center,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text('Intializing from Cloud...'),
-                      LinearProgressIndicator()
-                    ],
+      builder: (context, child) {
+        return FutureBuilder(
+          future: _makeFuture(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState != ConnectionState.done) {
+              return const Scaffold(
+                body: SafeArea(
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text('Intializing from Cloud...'),
+                        LinearProgressIndicator()
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            );
-          }
+              );
+            }
 
-          if (snapshot.hasError) {
-            return Scaffold(
-              body: SafeArea(
-                child: Align(
-                  alignment: Alignment.center,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Could not fetch Config. ${snapshot.error?.toString()}',
-                        style: const TextStyle(color: Colors.red, fontSize: 24),
-                      ),
-                    ],
+            if (snapshot.hasError) {
+              return Scaffold(
+                body: SafeArea(
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Could not fetch Config. ${snapshot.error?.toString()}',
+                          style:
+                              const TextStyle(color: Colors.red, fontSize: 24),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            );
-          }
+              );
+            }
 
-          final initialRouteData =
-              DigiaUIClient.getConfigResolver().getfirstPageData();
+            final initialRouteData =
+                DigiaUIClient.getConfigResolver().getfirstPageData();
 
-          return AppStateProvider(
+            return AppStateProvider(
               state: DigiaUIClient.instance.appState.variables,
-              child: DUIPage(pageUid: initialRouteData.uid));
-        },
-      ),
+              child: Navigator(
+                onGenerateRoute: (settings) {
+                  return DUIPageRoute(
+                      pageUid: initialRouteData.uid, context: context);
+                },
+              ),
+            );
+          },
+        );
+      },
     );
   }
 }
