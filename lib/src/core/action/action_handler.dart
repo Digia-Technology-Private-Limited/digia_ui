@@ -21,6 +21,7 @@ import '../page/dui_page_bloc.dart';
 import '../page/dui_page_event.dart';
 import '../utils.dart';
 import 'action_prop.dart';
+import 'api_handler.dart';
 
 typedef ActionHandlerFn = Future<dynamic>? Function({
   required BuildContext context,
@@ -248,6 +249,71 @@ Map<String, ActionHandlerFn> _actionsMap = {
             'result': result,
           }, enclosing: enclosing));
     }
+    return result;
+  },
+  'Action.callRestApi': ({required action, required context, enclosing}) async {
+    final dataSourceId = action.data['dataSourceId'];
+    Map<String, dynamic>? apiDataSourceArgs = action.data['args'];
+    final apiModel = (context.tryRead<DUIPageBloc>()?.config)
+        ?.getApiDataSource(dataSourceId);
+
+    final args = apiDataSourceArgs?.map((key, value) {
+      final evalue = eval(value, context: context);
+      final dvalue = apiModel?.variables?[key]?.defaultValue;
+      return MapEntry(key, evalue ?? dvalue);
+    });
+
+    final result = await ApiHandler.instance
+        .execute(apiModel: apiModel!, args: args)
+        .then((value) {
+      final successAction = ActionFlow.fromJson(action.data['onSuccess']);
+      final response = {
+        'body': value,
+        'statusCode': 200,
+        'headers': apiModel.headers,
+        'variables': apiModel.variables,
+        'success': true,
+        'error': null,
+      };
+      final successCondition = action.data['successCondition'];
+      final successConditionValue = eval(successCondition,
+          context: context,
+          enclosing: ExprContext(
+              variables: {'response': response}, enclosing: enclosing));
+      if (successConditionValue == true || successCondition == null) {
+        return ActionHandler.instance.execute(
+            context: context,
+            actionFlow: successAction,
+            enclosing: ExprContext(
+                variables: {'response': response}, enclosing: enclosing));
+      } else {
+        final errorAction = ActionFlow.fromJson(action.data['onError']);
+        return ActionHandler.instance.execute(
+            context: context,
+            actionFlow: errorAction,
+            enclosing: ExprContext(
+                variables: {'response': response}, enclosing: enclosing));
+      }
+    }, onError: (e) async {
+      final errorAction = ActionFlow.fromJson(action.data['onError']);
+      final responseBody = e.response;
+      final errorMessage = e.message;
+
+      final response = {
+        'body': responseBody,
+        'statusCode': -1,
+        'headers': apiModel.headers,
+        'variables': apiModel.variables,
+        'success': false,
+        'error': errorMessage,
+      };
+      return ActionHandler.instance.execute(
+          context: context,
+          actionFlow: errorAction,
+          enclosing: ExprContext(
+              variables: {'error': response}, enclosing: enclosing));
+    });
+
     return result;
   },
   'Action.handleDigiaMessage': (
