@@ -28,10 +28,10 @@ class DUICircularProgressBarBuilder extends DUIWidgetBuilder {
         eval<double>(data.props['stokeAlign'], context: context);
 
     final progressValue =
-        eval<double>(data.props['progressValue'] / 100, context: context);
+        eval<double>(data.props['progressValue'], context: context);
 
     return CircularProgressIndicator(
-      value: progressValue,
+      value: progressValue == null ? null : progressValue / 100,
       backgroundColor: bgColor,
       color: indicatorColor,
       strokeWidth: strokeWidth ?? 4.0,
