@@ -265,22 +265,25 @@ Map<String, ActionHandlerFn> _actionsMap = {
 
     final result = await ApiHandler.instance
         .execute(apiModel: apiModel!, args: args)
-        .then((value) {
-      final successAction = ActionFlow.fromJson(action.data['onSuccess']);
+        .then((resp) {
       final response = {
-        'body': value,
-        'statusCode': 200,
-        'headers': apiModel.headers,
-        'variables': apiModel.variables,
-        'success': true,
+        'body': resp.data,
+        'statusCode': resp.statusCode,
+        'headers': resp.headers,
+        'requestObj': requestObjToMap(resp.requestOptions),
         'error': null,
       };
-      final successCondition = action.data['successCondition'];
-      final successConditionValue = eval(successCondition,
-          context: context,
-          enclosing: ExprContext(
-              variables: {'response': response}, enclosing: enclosing));
-      if (successConditionValue == true || successCondition == null) {
+
+      final successCondition = action.data['successCondition'] as String?;
+      final evaluatedSuccessCond = successCondition.let((p0) => eval<bool>(
+              successCondition,
+              context: context,
+              enclosing: ExprContext(
+                  variables: {'response': response}, enclosing: enclosing))) ??
+          successCondition == null || successCondition.isEmpty;
+
+      if (evaluatedSuccessCond) {
+        final successAction = ActionFlow.fromJson(action.data['onSuccess']);
         return ActionHandler.instance.execute(
             context: context,
             actionFlow: successAction,
@@ -296,22 +299,20 @@ Map<String, ActionHandlerFn> _actionsMap = {
       }
     }, onError: (e) async {
       final errorAction = ActionFlow.fromJson(action.data['onError']);
-      final responseBody = e.response;
-      final errorMessage = e.message;
 
       final response = {
-        'body': responseBody,
-        'statusCode': -1,
-        'headers': apiModel.headers,
-        'variables': apiModel.variables,
-        'success': false,
-        'error': errorMessage,
+        'body': e.response.data,
+        'statusCode': e.response.statusCode,
+        'headers': e.response.headers,
+        'requestObj': requestObjToMap(e.requestOptions),
+        'error': e.message,
       };
+
       return ActionHandler.instance.execute(
           context: context,
           actionFlow: errorAction,
           enclosing: ExprContext(
-              variables: {'error': response}, enclosing: enclosing));
+              variables: {'response': response}, enclosing: enclosing));
     });
 
     return result;
@@ -447,4 +448,14 @@ abstract class NavigatorHelper {
     return Navigator.pushAndRemoveUntil<T>(
         context, newRoute, removeRoutesUntilPredicate);
   }
+}
+
+requestObjToMap(dynamic request) {
+  return {
+    'url': request.path,
+    'method': request.method,
+    'headers': request.headers,
+    'data': request.data,
+    'queryParameters': request.queryParameters,
+  };
 }
