@@ -1,6 +1,9 @@
-import 'package:flutter/material.dart';
+import 'dart:math' as math;
 
+import 'package:flutter/material.dart';
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
+import '../../Utils/basic_shared_utils/lodash.dart';
+import '../../Utils/basic_shared_utils/num_decoder.dart';
 import '../../Utils/util_functions.dart';
 import '../evaluator.dart';
 import '../json_widget_builder.dart';
@@ -30,8 +33,11 @@ class DUICircularProgressBarBuilder extends DUIWidgetBuilder {
     final progressValue =
         eval<double>(data.props['progressValue'], context: context);
 
+    final rotationInRadians = NumDecoder.toDouble(data.props['angle'])
+        .let((p0) => p0 / 180.0 * math.pi);
+
     return Transform.rotate(
-      angle: 3.14,
+      angle: rotationInRadians ?? 0.0,
       child: CircularProgressIndicator(
         value: progressValue == null ? null : progressValue / 100,
         backgroundColor: bgColor,
