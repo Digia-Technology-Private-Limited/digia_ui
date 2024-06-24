@@ -14,25 +14,7 @@ class DUICalendarBuilder extends DUIWidgetBuilder {
   Widget build(BuildContext context) {
     return DUICalendar(
       varName: data.varName,
-      // firstDay: data.props['firstDay'],
-      // lastDay: data.props['lastDay'],
-      focusedDay: data.props['focusedDay'],
-      calendarFormat: data.props['calendarFormat'],
-      currentDay: data.props['currentDay'],
-      headersVisible: data.props['headersVisible'],
-      daysOfWeekVisible: data.props['daysOfWeekVisible'],
-      rowHeight: data.props['rowHeight'],
-      daysOfWeekHeight: data.props['daysOfWeekHeight'],
-      startingDayOfWeek: data.props['startingDayOfWeek'],
-      pageJumpingEnabled: data.props['pageJumpingEnabled'],
-      // shouldFillViewport: data.props['shouldFillViewport'],
-      weekNumbersVisible: data.props['weekNumbersVisible'],
-      rangeStartDay: data.props['rangeStartDay'],
-      rangeEndDay: data.props['rangeEndDay'],
-      selectionMode: data.props['selectionMode'],
-      headerStyle: data.props['headerStyle'],
-      daysOfWeekStyle: data.props['daysOfWeekStyle'],
-      calendarStyle: data.props['calendarStyle'],
+      props: data.props,
     );
   }
 }

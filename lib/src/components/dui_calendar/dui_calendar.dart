@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 
+import '../../Utils/basic_shared_utils/date_decoder.dart';
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
+import '../../Utils/basic_shared_utils/lodash.dart';
 import '../../Utils/basic_shared_utils/num_decoder.dart';
 import '../../Utils/util_functions.dart';
 import '../../core/builders/dui_icon_builder.dart';
@@ -9,48 +11,12 @@ import '../DUIText/dui_text_style.dart';
 import '../dui_base_stateful_widget.dart';
 
 class DUICalendar extends BaseStatefulWidget {
-  // final String? firstDay;
-  // final String? lastDay;
-  final String? focusedDay;
-  final String? currentDay;
-  final String? calendarFormat;
-  final bool? headersVisible;
-  final bool? daysOfWeekVisible;
-  final double? rowHeight;
-  final double? daysOfWeekHeight;
-  final String? startingDayOfWeek;
-  final bool? pageJumpingEnabled;
-  // final bool? shouldFillViewport;
-  final bool? weekNumbersVisible;
-  final String? rangeStartDay;
-  final String? rangeEndDay;
-  final Map<String, dynamic>? selectionMode;
-  final Map<String, dynamic>? headerStyle;
-  final Map<String, dynamic>? daysOfWeekStyle;
-  final Map<String, dynamic>? calendarStyle;
+  final Map<String, dynamic> props;
 
   const DUICalendar({
     super.key,
-    super.varName,
-    // this.firstDay,
-    // this.lastDay,
-    this.focusedDay,
-    this.calendarFormat,
-    this.currentDay,
-    this.headersVisible,
-    this.daysOfWeekVisible,
-    this.rowHeight,
-    this.daysOfWeekHeight,
-    this.startingDayOfWeek,
-    this.pageJumpingEnabled,
-    // this.shouldFillViewport,
-    this.weekNumbersVisible,
-    this.rangeStartDay,
-    this.rangeEndDay,
-    this.selectionMode,
-    this.headerStyle,
-    this.daysOfWeekStyle,
-    this.calendarStyle,
+    required super.varName,
+    required this.props,
   });
 
   @override
@@ -58,95 +24,124 @@ class DUICalendar extends BaseStatefulWidget {
 }
 
 class _DUICalendarState extends DUIWidgetState<DUICalendar> {
-  ({String endIso, String startIso}) _selectedRangeISO =
-      (startIso: '', endIso: '');
-  String _selectedDateISO = '';
-  DateTime kFirstDay = DateTime(1970, 1, 1);
-  DateTime kLastDay = DateTime(2100, 1, 1);
+  DateTime _firstDay = DateTime(1970, 1, 1);
+  DateTime _lastDay = DateTime(2100, 1, 1);
+  DateTime? _currentDay;
+
+  CalendarFormat calendarFormat = CalendarFormat.month;
+  bool headersVisible = true;
+  bool daysOfWeekVisible = true;
+  double rowHeight = 52.0;
+  double daysOfWeekHeight = 16.0;
+  StartingDayOfWeek startingDayOfWeek = StartingDayOfWeek.sunday;
+  bool pageJumpingEnabled = false;
+  bool shouldFillViewport = false;
+  bool weekNumbersVisible = false;
+
+  RangeSelectionMode rangeSelectionMode = RangeSelectionMode.disabled;
+  DateTime? rangeStartDayInitialValue;
+  DateTime? rangeEndDayInitialValue;
+
+  Map<String, dynamic>? headerStyle;
+  Map<String, dynamic>? daysOfWeekStyle;
+  Map<String, dynamic>? calendarStyle;
+
+  ({DateTime end, DateTime start})? _selectedRange;
+  DateTime? _selectedDate;
   DateTime _focusedDay = DateTime.now();
-  DateTime? _selectedDay;
-  DateTime? _rangeStart;
-  DateTime? _rangeEnd;
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   _focusedDay = widget.focusedDay != null
-  //       ? DateTime.parse(widget.focusedDay!)
-  //       : DateTime.now();
-  //   _selectedDateISO = widget.currentDay ?? DateTime.now().toIso8601String();
-  //   _selectedRangeISO = (
-  //     startIso: widget.rangeStartDay ?? DateTime.now().toIso8601String(),
-  //     endIso: widget.rangeEndDay ??
-  //         DateTime.now().add(const Duration(days: 7)).toIso8601String()
-  //   );
-  // }
+  @override
+  void initState() {
+    _firstDay = DateDecoder.toDate(widget.props['firstDay']) ?? _firstDay;
+    _lastDay = DateDecoder.toDate(widget.props['lastDay']) ?? _lastDay;
+    _currentDay = DateDecoder.toDate(widget.props['currentDay']);
+    calendarFormat =
+        _toCalendarFormat(widget.props['calendarFormat']) ?? calendarFormat;
+    headersVisible =
+        NumDecoder.toBool(widget.props['headersVisible']) ?? headersVisible;
+    daysOfWeekVisible = NumDecoder.toBool(widget.props['daysOfWeekVisible']) ??
+        daysOfWeekVisible;
+    rowHeight = NumDecoder.toDouble(widget.props['rowHeight']) ?? rowHeight;
+    daysOfWeekHeight = NumDecoder.toDouble(widget.props['daysOfWeekHeight']) ??
+        daysOfWeekHeight;
+    startingDayOfWeek =
+        _toStartingDayOfWeek(widget.props['startingDayOfWeek']) ??
+            startingDayOfWeek;
+    pageJumpingEnabled =
+        NumDecoder.toBool(widget.props['pageJumpingEnabled']) ??
+            pageJumpingEnabled;
+    shouldFillViewport =
+        NumDecoder.toBool(widget.props['shouldFillViewport']) ??
+            shouldFillViewport;
+    weekNumbersVisible =
+        NumDecoder.toBool(widget.props['weekNumbersVisible']) ??
+            weekNumbersVisible;
+    rangeStartDayInitialValue = DateDecoder.toDate(
+            widget.props['rangeSelectionMode']?['rangeStartDayInitialValue']) ??
+        rangeStartDayInitialValue;
+    rangeEndDayInitialValue = DateDecoder.toDate(
+            widget.props['rangeSelectionMode']?['rangeEndDayInitialValue']) ??
+        rangeEndDayInitialValue;
+    rangeSelectionMode =
+        _toRangeSelectionMode(widget.props['rangeSelectionMode']) ??
+            rangeSelectionMode;
+    headerStyle = widget.props['headerStyle'];
+    daysOfWeekStyle = widget.props['daysOfWeekStyle'];
+    calendarStyle = widget.props['calendarStyle'];
+    super.initState();
+  }
 
-  // @override
-  // void dispose() {
-  //   super.dispose();
-  //   _focusedDay = DateTime.now();
-  //   _selectedDateISO = '';
-  //   _selectedRangeISO = (startIso: '', endIso: '');
-  // }
+  @override
+  void didChangeDependencies() {
+    _selectedDate = DateDecoder.toDate(widget.props['selectedDate']);
+    _selectedRange = ifNotNull2(
+        DateDecoder.toDate(widget.props['rangeStartDayInitialValue']),
+        DateDecoder.toDate(widget.props['rangeEndDayInitialValue']),
+        (p0, p1) => (end: p0, start: p1));
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
     return TableCalendar(
-      focusedDay: widget.focusedDay != null
-          ? DateTime.parse(widget.focusedDay!)
-          : _focusedDay,
-      firstDay: kFirstDay,
-      lastDay: kLastDay,
-      // currentDay: widget.currentDay != null
-      //     ? DateTime.parse(widget.currentDay!)
-      //     : DateTime.now(),
-      rangeStartDay: _rangeStart,
-      rangeEndDay: _rangeEnd,
-      calendarFormat: widget.calendarFormat == 'Week'
-          ? CalendarFormat.week
-          : widget.calendarFormat == '2 Weeks'
-              ? CalendarFormat.twoWeeks
-              : CalendarFormat.month,
-      rangeSelectionMode: widget.selectionMode?['value'] == 'Range'
-          ? RangeSelectionMode.enforced
-          : RangeSelectionMode.disabled,
-      headerVisible: widget.headersVisible ?? true,
-      daysOfWeekVisible: widget.daysOfWeekVisible ?? true,
-      rowHeight: widget.rowHeight ?? 52,
-      daysOfWeekHeight: widget.daysOfWeekHeight ?? 16,
-      startingDayOfWeek: widget.startingDayOfWeek == 'monday'
-          ? StartingDayOfWeek.monday
-          : StartingDayOfWeek.sunday,
-      pageJumpingEnabled: widget.pageJumpingEnabled ?? false,
-      // shouldFillViewport: widget.shouldFillViewport ?? false,
-      weekNumbersVisible: widget.weekNumbersVisible ?? false,
-      headerStyle: headerStyleFromJson(context),
-      daysOfWeekStyle: daysOfWeekStyleFromJson(context),
-      calendarStyle: calendarStyleFromJson(context),
-      selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+      focusedDay: _focusedDay,
+      firstDay: _firstDay,
+      lastDay: _lastDay,
+      currentDay: _currentDay,
+      rangeStartDay: rangeStartDayInitialValue,
+      rangeEndDay: rangeEndDayInitialValue,
+      calendarFormat: calendarFormat,
+      rangeSelectionMode: rangeSelectionMode,
+      headerVisible: headersVisible,
+      daysOfWeekVisible: daysOfWeekVisible,
+      rowHeight: rowHeight,
+      daysOfWeekHeight: daysOfWeekHeight,
+      startingDayOfWeek: startingDayOfWeek,
+      pageJumpingEnabled: pageJumpingEnabled,
+      shouldFillViewport: shouldFillViewport,
+      weekNumbersVisible: weekNumbersVisible,
+      headerStyle: _toHeaderStyle(context),
+      daysOfWeekStyle: _toDaysOfWeekStyleFromJson(context),
+      calendarStyle: _toCalendarStyleFromJson(context),
+      selectedDayPredicate: (day) => isSameDay(_selectedDate, day),
       onDaySelected: (selectedDay, focusedDay) {
-        if (!isSameDay(_selectedDay, selectedDay)) {
+        if (!isSameDay(_selectedDate, selectedDay)) {
           setState(() {
-            _selectedDay = selectedDay;
+            _selectedDate = selectedDay;
             _focusedDay = focusedDay;
-            _rangeStart = null;
-            _rangeEnd = null;
-            _selectedDateISO = selectedDay.toIso8601String();
+            rangeStartDayInitialValue = null;
+            rangeEndDayInitialValue = null;
           });
         }
       },
       onRangeSelected: (start, end, focusedDay) {
         setState(() {
-          _selectedDay = null;
+          _selectedDate = null;
           _focusedDay = focusedDay;
-          _rangeStart = start;
-          _rangeEnd = end;
+          rangeStartDayInitialValue = start;
+          rangeEndDayInitialValue = end;
         });
-        _selectedRangeISO = (
-          startIso: start!.toIso8601String(),
-          endIso: end!.toIso8601String()
-        );
+        _selectedRange = (end: end!, start: start!);
       },
       onPageChanged: (focusedDay) {
         _focusedDay = focusedDay;
@@ -155,54 +150,65 @@ class _DUICalendarState extends DUIWidgetState<DUICalendar> {
   }
 
   // Header Props
-  HeaderStyle headerStyleFromJson(BuildContext context) {
-    final headerStyle = widget.headerStyle;
-    late BoxShape shape;
-    headerStyle?['shape'] == 'circle'
-        ? shape = BoxShape.circle
-        : shape = BoxShape.rectangle;
-    final titleTextStyle = toTextStyle(
-        DUITextStyle.fromJson(headerStyle?['titleTextStyle']), context);
-    final headerPadding =
+  HeaderStyle _toHeaderStyle(BuildContext context) {
+    if (headerStyle == null ||
+        headerStyle?['leftChevronIcon']['iconData'] == null) {
+      return const HeaderStyle(
+        formatButtonVisible: false,
+        titleCentered: false,
+        titleTextStyle: TextStyle(fontSize: 17.0),
+        headerPadding: EdgeInsets.symmetric(vertical: 8.0),
+        leftChevronIcon: Icon(Icons.chevron_left),
+        leftChevronPadding: EdgeInsets.all(12.0),
+        rightChevronIcon: Icon(Icons.chevron_right),
+        rightChevronPadding: EdgeInsets.all(12.0),
+        decoration: BoxDecoration(),
+      );
+    }
+
+    bool titleCentered =
+        NumDecoder.toBool(headerStyle?['titleCentered']) ?? false;
+    BoxShape? shape = _toBoxShape(headerStyle?['shape']);
+    TextStyle titleTextStyle = toTextStyle(
+            DUITextStyle.fromJson(headerStyle?['titleTextStyle']), context) ??
+        const TextStyle(fontSize: 17.0);
+    EdgeInsets? headerPadding =
         DUIDecoder.toEdgeInsets(headerStyle?['headerPadding']);
-    final leftChevronIcon =
+    Widget? leftChevronIcon =
         DUIIconBuilder.fromProps(props: headerStyle?['leftChevronIcon'])
-            .build(context);
-    final leftChevronPadding =
+                ?.build(context) ??
+            DUIIconBuilder.emptyIconWidget();
+    EdgeInsets? leftChevronPadding =
         DUIDecoder.toEdgeInsets(headerStyle?['leftChevronPadding']);
-    final rightChevronIcon =
+    Widget? rightChevronIcon =
         DUIIconBuilder.fromProps(props: headerStyle?['rightChevronIcon'])
-            .build(context);
-    final rightChevronPadding =
+                ?.build(context) ??
+            DUIIconBuilder.emptyIconWidget();
+    EdgeInsets? rightChevronPadding =
         DUIDecoder.toEdgeInsets(headerStyle?['rightChevronPadding']);
-    final headerColor = makeColor(headerStyle?['shape']['color']);
-    final headerBorderColor = makeColor(headerStyle?['shape']['borderColor']);
-    final headerBorderWidth = headerStyle?['shape']?['borderWidth'];
-    final headerBorderRadius =
+    Color? headerColor = makeColor(headerStyle?['shape']['color']);
+    Color headerBorderColor = makeColor(headerStyle?['shape']['borderColor']) ??
+        const Color(0xFF000000);
+    double headerBorderWidth =
+        NumDecoder.toDouble(headerStyle?['shape']['borderWidth']) ?? 1.0;
+    BorderRadius? headerBorderRadius =
         DUIDecoder.toBorderRadius(headerStyle?['shape']?['borderRadius']);
 
     return HeaderStyle(
       formatButtonVisible: false,
-      titleCentered: headerStyle?['titleCentered'] ?? true,
-      titleTextStyle: titleTextStyle ?? const TextStyle(fontSize: 17.0),
+      titleCentered: titleCentered,
+      titleTextStyle: titleTextStyle,
       headerPadding: headerPadding,
-      leftChevronIcon: leftChevronIcon is SizedBox
-          ? const Icon(Icons.chevron_left)
-          : leftChevronIcon,
+      leftChevronIcon: leftChevronIcon,
       leftChevronPadding: leftChevronPadding,
-      rightChevronIcon: rightChevronIcon is SizedBox
-          ? const Icon(Icons.chevron_right)
-          : rightChevronIcon,
+      rightChevronIcon: rightChevronIcon,
       rightChevronPadding: rightChevronPadding,
       decoration: BoxDecoration(
         color: headerColor,
-        border: headerBorderColor != null
-            ? Border.all(
-                color: headerBorderColor,
-                width: NumDecoder.toDoubleOrDefault(headerBorderWidth,
-                    defaultValue: 1.0),
-              )
-            : null,
+        border: Border.all(
+          color: headerBorderColor,
+          width: headerBorderWidth,
+        ),
         borderRadius: shape == BoxShape.circle ? null : headerBorderRadius,
         shape: shape,
       ),
@@ -210,36 +216,40 @@ class _DUICalendarState extends DUIWidgetState<DUICalendar> {
   }
 
   // Days of the Week Props
-  DaysOfWeekStyle daysOfWeekStyleFromJson(BuildContext context) {
-    final daysOfWeekStyle = widget.daysOfWeekStyle;
+  DaysOfWeekStyle _toDaysOfWeekStyleFromJson(BuildContext context) {
+    if (daysOfWeekStyle == null) {
+      return const DaysOfWeekStyle(
+        weekdayStyle: TextStyle(color: Color(0xFF4F4F4F)),
+        weekendStyle: TextStyle(color: Color(0xFF6A6A6A)),
+        decoration: BoxDecoration(),
+      );
+    }
 
-    late BoxShape shape;
-    daysOfWeekStyle?['shape'] == 'circle'
-        ? shape = BoxShape.circle
-        : shape = BoxShape.rectangle;
-
-    final weekdayStyle = toTextStyle(
-        DUITextStyle.fromJson(daysOfWeekStyle?['weekdayStyle']), context);
-    final weekendStyle = toTextStyle(
-        DUITextStyle.fromJson(daysOfWeekStyle?['weekendStyle']), context);
-    final daysOfWeekColor = makeColor(daysOfWeekStyle?['color']);
-    final daysOfWeekBorderColor = makeColor(daysOfWeekStyle?['borderColor']);
-    final daysOfWeekBorderWidth = daysOfWeekStyle?['borderWidth'];
-    final daysOfWeekBorderRadius =
-        DUIDecoder.toBorderRadius(daysOfWeekStyle?['borderRadius']);
+    BoxShape? shape = _toBoxShape(daysOfWeekStyle?['shape']);
+    TextStyle weekdayStyle = toTextStyle(
+            DUITextStyle.fromJson(daysOfWeekStyle?['weekdayStyle']), context) ??
+        const TextStyle(color: Color(0xFF4F4F4F));
+    TextStyle weekendStyle = toTextStyle(
+            DUITextStyle.fromJson(daysOfWeekStyle?['weekendStyle']), context) ??
+        const TextStyle(color: Color(0xFF6A6A6A));
+    Color? daysOfWeekColor = makeColor(daysOfWeekStyle?['shape']['color']);
+    Color daysOfWeekBorderColor =
+        makeColor(daysOfWeekStyle?['shape']['borderColor']) ??
+            const Color(0xFF000000);
+    double daysOfWeekBorderWidth =
+        NumDecoder.toDouble(daysOfWeekStyle?['shape']['borderWidth']) ?? 1.0;
+    BorderRadius? daysOfWeekBorderRadius =
+        DUIDecoder.toBorderRadius(daysOfWeekStyle?['shape']['borderRadius']);
 
     return DaysOfWeekStyle(
-      weekdayStyle: weekdayStyle ?? const TextStyle(color: Color(0xFF4F4F4F)),
-      weekendStyle: weekendStyle ?? const TextStyle(color: Color(0xFF6A6A6A)),
+      weekdayStyle: weekdayStyle,
+      weekendStyle: weekendStyle,
       decoration: BoxDecoration(
         color: daysOfWeekColor,
-        border: daysOfWeekBorderColor != null
-            ? Border.all(
-                color: daysOfWeekBorderColor,
-                width: NumDecoder.toDoubleOrDefault(daysOfWeekBorderWidth,
-                    defaultValue: 1.0),
-              )
-            : null,
+        border: Border.all(
+          color: daysOfWeekBorderColor,
+          width: daysOfWeekBorderWidth,
+        ),
         borderRadius: shape == BoxShape.circle ? null : daysOfWeekBorderRadius,
         shape: shape,
       ),
@@ -247,51 +257,45 @@ class _DUICalendarState extends DUIWidgetState<DUICalendar> {
   }
 
   // Calendar Style Props
-  CalendarStyle calendarStyleFromJson(BuildContext context) {
-    final calendarStyle = widget.calendarStyle;
-    // final cellPadding = DUIDecoder.toEdgeInsets(calendarStyle?['cellPadding']);
-    // final cellAlignment =
-    //     DUIDecoder.toAlignment(calendarStyle?['cellAlignment'] ?? 'center');
-    final rangeHighlightScale = calendarStyle?['rangeHighlightScale'] ?? 1.0;
-    final rangeHighlightColor =
+  CalendarStyle _toCalendarStyleFromJson(BuildContext context) {
+    if (calendarStyle == null) {
+      return const CalendarStyle(
+        rangeHighlightScale: 1.0,
+        rangeHighlightColor: Color(0xFFBBDDFF),
+        outsideDaysVisible: true,
+        isTodayHighlighted: true,
+        tableBorder: TableBorder(),
+        tablePadding: EdgeInsets.all(0),
+      );
+    }
+
+    double? rangeHighlightScale =
+        NumDecoder.toDouble(calendarStyle?['rangeHighlightScale']);
+    Color? rangeHighlightColor =
         makeColor(calendarStyle?['rangeHighlightColor']);
-    final outsideDaysVisible = calendarStyle?['outsideDaysVisible'];
-    final isTodayHighlighted = calendarStyle?['isTodayHighlighted'];
-    final tableBorderColor =
+    bool? outsideDaysVisible =
+        NumDecoder.toBool(calendarStyle?['outsideDaysVisible']);
+    bool? isTodayHighlighted =
+        NumDecoder.toBool(calendarStyle?['isTodayHighlighted']);
+    Color? tableBorderColor =
         makeColor(calendarStyle?['tableBorderColor']) ?? Colors.black;
-    final tableBorderWidth = calendarStyle?['tableBorderWidth'];
-    final tableBorder = tableBorderWidth != null
-        ? TableBorder(
-            top: BorderSide(
-              color: tableBorderColor,
-              width: NumDecoder.toDoubleOrDefault(tableBorderWidth,
-                  defaultValue: 1.0),
-            ),
-            bottom: BorderSide(
-              color: tableBorderColor,
-              width: NumDecoder.toDoubleOrDefault(tableBorderWidth,
-                  defaultValue: 1.0),
-            ),
-            left: BorderSide(
-              color: tableBorderColor,
-              width: NumDecoder.toDoubleOrDefault(tableBorderWidth,
-                  defaultValue: 1.0),
-            ),
-            right: BorderSide(
-              color: tableBorderColor,
-              width: NumDecoder.toDoubleOrDefault(tableBorderWidth,
-                  defaultValue: 1.0),
-            ),
-          )
-        : null;
-    final tablePadding =
+    double? tableBorderWidth =
+        NumDecoder.toDouble(calendarStyle?['tableBorderWidth']);
+    BorderStyle? tableBorderStyle =
+        _toBorderStyle(calendarStyle?['tableBorderStyle']);
+    BorderRadius? tableBorderRadius =
+        DUIDecoder.toBorderRadius(calendarStyle?['tableBorderRadius']);
+    TableBorder? tableBorder = _toTableBorder({
+      'color': tableBorderColor,
+      'width': tableBorderWidth,
+      'style': tableBorderStyle,
+      'borderRadius': tableBorderRadius,
+    });
+    EdgeInsets? tablePadding =
         DUIDecoder.toEdgeInsets(calendarStyle?['tablePadding']);
 
     return CalendarStyle(
-      // cellPadding: cellPadding,
-      // cellAlignment:
-      //     cellAlignment?.resolve(TextDirection.ltr) ?? Alignment.center,
-      rangeHighlightScale: rangeHighlightScale,
+      rangeHighlightScale: rangeHighlightScale ?? 1.0,
       rangeHighlightColor: rangeHighlightColor ?? const Color(0xFFBBDDFF),
       outsideDaysVisible: outsideDaysVisible ?? true,
       isTodayHighlighted: isTodayHighlighted ?? true,
@@ -300,14 +304,63 @@ class _DUICalendarState extends DUIWidgetState<DUICalendar> {
     );
   }
 
+  // Utils
+  CalendarFormat? _toCalendarFormat(dynamic value) => switch (value) {
+        'week' => CalendarFormat.week,
+        'twoWeeks' => CalendarFormat.twoWeeks,
+        'month' => CalendarFormat.month,
+        _ => null
+      };
+
+  StartingDayOfWeek? _toStartingDayOfWeek(dynamic value) => switch (value) {
+        'monday' => StartingDayOfWeek.monday,
+        'sunday' => StartingDayOfWeek.sunday,
+        _ => null
+      };
+
+  RangeSelectionMode? _toRangeSelectionMode(dynamic value) {
+    if (value?['value'] == 'singleDate') {
+      return RangeSelectionMode.disabled;
+    } else if (value?['value'] == 'range') {
+      return RangeSelectionMode.enforced;
+    } else {
+      return RangeSelectionMode.disabled;
+    }
+  }
+
+  BoxShape _toBoxShape(dynamic value) => switch (value) {
+        'circle' => BoxShape.circle,
+        'rectangle' => BoxShape.rectangle,
+        _ => BoxShape.rectangle
+      };
+
+  TableBorder? _toTableBorder(dynamic value) {
+    if (value == null) return null;
+    return TableBorder.all(
+      color: makeColor(value['color']) ?? Colors.transparent,
+      width: NumDecoder.toDouble(value['width']) ?? 1.0,
+      style: _toBorderStyle(value['style']),
+      borderRadius: DUIDecoder.toBorderRadius(value['borderRadius']),
+    );
+  }
+
+  BorderStyle _toBorderStyle(dynamic value) => switch (value) {
+        'none' => BorderStyle.none,
+        'solid' => BorderStyle.solid,
+        _ => BorderStyle.solid
+      };
+
+  // State Management
   @override
   Map<String, Function> getVariables() {
     return {
-      'selectedDate': () => _selectedDateISO,
-      'selectedRange': () => {
-            'start': _selectedRangeISO.startIso,
-            'end': _selectedRangeISO.endIso,
-          },
+      'selectedDate': () => _selectedDate?.toIso8601String(),
+      'selectedRange': () => ifNotNull(
+          _selectedRange,
+          (p0) => {
+                'start': p0.start.toIso8601String(),
+                'end': p0.end.toIso8601String(),
+              })
     };
   }
 }
