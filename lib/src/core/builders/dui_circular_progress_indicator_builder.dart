@@ -30,13 +30,16 @@ class DUICircularProgressBarBuilder extends DUIWidgetBuilder {
     final progressValue =
         eval<double>(data.props['progressValue'], context: context);
 
-    return CircularProgressIndicator(
-      value: progressValue == null ? null : progressValue / 100,
-      backgroundColor: bgColor,
-      color: indicatorColor,
-      strokeWidth: strokeWidth ?? 4.0,
-      strokeAlign: strokeAlign ?? CircularProgressIndicator.strokeAlignCenter,
-      strokeCap: DUIDecoder.toStrokeCap(data.props['strokeCap']),
+    return Transform.rotate(
+      angle: 3.14,
+      child: CircularProgressIndicator(
+        value: progressValue == null ? null : progressValue / 100,
+        backgroundColor: bgColor,
+        color: indicatorColor,
+        strokeWidth: strokeWidth ?? 4.0,
+        strokeAlign: strokeAlign ?? CircularProgressIndicator.strokeAlignCenter,
+        strokeCap: DUIDecoder.toStrokeCap(data.props['strokeCap']),
+      ),
     );
   }
 }
