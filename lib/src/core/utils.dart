@@ -121,7 +121,7 @@ Future<T?> openDUIPageInBottomSheet<T>({
                                 color: Colors.white.withOpacity(0.1)),
                             child:
                                 DUIIconBuilder.fromProps(props: style['icon'])
-                                    .build(context),
+                                    ?.build(context),
                           ),
                         ),
                       ),
@@ -146,3 +146,32 @@ Future<T?> openDUIPageInBottomSheet<T>({
 //         child:
 
 //       );
+
+Future<T?> openDialog<T>({
+  required String pageUid,
+  required BuildContext context,
+  Map<String, dynamic>? pageArgs,
+  DUIIconDataProvider? iconDataProvider,
+  DUIImageProviderFn? imageProviderFn,
+  DUITextStyleBuilder? textStyleBuilder,
+  bool? barrierDismissible,
+  Color? barrierColor,
+}) {
+  return showDialog(
+      context: context,
+      useSafeArea: true,
+      useRootNavigator: false,
+      barrierDismissible: barrierDismissible ?? true,
+      barrierColor: barrierColor,
+      builder: (context) {
+        return Dialog(
+          child: DUIPage(
+            pageUid: pageUid,
+            pageArgs: pageArgs,
+            iconDataProvider: iconDataProvider,
+            imageProviderFn: imageProviderFn,
+            textStyleBuilder: textStyleBuilder,
+          ),
+        );
+      });
+}

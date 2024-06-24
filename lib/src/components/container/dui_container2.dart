@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
@@ -6,6 +8,7 @@ import '../../Utils/basic_shared_utils/lodash.dart';
 import '../../Utils/basic_shared_utils/num_decoder.dart';
 import '../../Utils/extensions.dart';
 import '../../Utils/util_functions.dart';
+import '../../core/evaluator.dart';
 import '../../core/page/props/dui_widget_json_data.dart';
 import '../dui_widget.dart';
 import 'dui_container2_props.dart';
@@ -18,7 +21,6 @@ class DUIContainer2 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    late BoxShape? shape;
     ImageProvider? imageProvider = props.decorationImage?.source.let((source) {
       if (source.contains('http')) {
         return CachedNetworkImageProvider(source);
@@ -26,11 +28,6 @@ class DUIContainer2 extends StatelessWidget {
 
       return AssetImage(source);
     });
-    if (props.shape == 'circle') {
-      shape = BoxShape.circle;
-    } else {
-      shape = BoxShape.rectangle;
-    }
 
     final width = props.width?.toWidth(context);
     final height = props.height?.toHeight(context);
@@ -38,12 +35,16 @@ class DUIContainer2 extends StatelessWidget {
     final alignment = DUIDecoder.toAlignment(props.childAlignment);
     final margin = DUIDecoder.toEdgeInsets(props.margin?.toJson());
     final padding = DUIDecoder.toEdgeInsets(props.padding?.toJson());
-    final color = props.color.letIfTrue(toColor);
-    final borderColor = props.border?.borderColor.letIfTrue(toColor);
+    final color = makeColor(eval<String>(props.color, context: context));
+    final borderColor =
+        makeColor(eval<String>(props.border?.borderColor, context: context));
     final imageAlignment =
         DUIDecoder.toAlignment(props.decorationImage?.alignment);
-    final imageOpacity = NumDecoder.toDouble(props.decorationImage?.opacity);
-
+    final imageOpacity =
+        eval<double>(props.decorationImage?.opacity, context: context);
+    BoxShape shape =
+        props.shape == 'circle' ? BoxShape.circle : BoxShape.rectangle;
+    final gradiant = _toGradiant(props.gradiant, context);
     return Container(
       width: width,
       height: height,
@@ -51,7 +52,8 @@ class DUIContainer2 extends StatelessWidget {
       margin: margin,
       padding: padding,
       decoration: BoxDecoration(
-          color: color,
+          gradient: gradiant,
+          color: gradiant == null ? color : null,
           border: (props.border?.borderWidth).let((p0) => Border.all(
                 color: borderColor ?? Colors.black,
                 width: NumDecoder.toDoubleOrDefault(p0, defaultValue: 1),
@@ -79,5 +81,41 @@ class DUIContainer2 extends StatelessWidget {
           minWidth: props.minWidth?.toWidth(context) ?? 0),
       child: child.let((p0) => DUIWidget(data: p0)),
     );
+  }
+
+  Gradient? _toGradiant(Map<String, dynamic> data, BuildContext context) {
+    final type = data['type'] as String?;
+
+    switch (type) {
+      case 'linear':
+        final colors = (data['colorList'] as List?)
+            ?.map((e) => makeColor(
+                eval<String>(e['color'] as String?, context: context)))
+            .nonNulls
+            .toList();
+
+        if (colors == null) return null;
+
+        final stops = (data['colorList'] as List?)
+            ?.map((e) => e['stop'] as double?)
+            .nonNulls
+            .toList();
+
+        // final begin = DUIDecoder.toAlignment(data['beginAlignment']) ??
+        //     Alignment.centerLeft;
+        // final end = DUIDecoder.toAlignment(data['endAlignment']) ??
+        //     Alignment.centerRight;
+
+        final rotationInRadians = NumDecoder.toInt(data['angle'])
+            .let((p0) => GradientRotation(p0 / 180.0 * math.pi));
+
+        return LinearGradient(
+            colors: colors,
+            stops: stops?.length == colors.length ? stops! : null,
+            transform: rotationInRadians);
+
+      default:
+        return null;
+    }
   }
 }

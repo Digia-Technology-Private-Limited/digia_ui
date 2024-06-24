@@ -95,20 +95,16 @@ class DUIButtonBuilder extends DUIWidgetBuilder {
       leadingIconProps?['iconColor'] = disabledIconColor;
     }
 
-    if (leadingIconProps?['iconData'] != null) {
-      leadingIcon =
-          DUIIconBuilder.fromProps(props: leadingIconProps).build(context);
-    }
+    leadingIcon =
+        DUIIconBuilder.fromProps(props: leadingIconProps)?.build(context);
 
     final trailingIconProps =
         data.props['trailingIcon'] as Map<String, dynamic>?;
     if (overrideColor) {
       trailingIconProps?['iconColor'] = disabledIconColor;
     }
-    if (trailingIconProps?['iconData'] != null) {
-      trailingIcon =
-          DUIIconBuilder.fromProps(props: trailingIconProps).build(context);
-    }
+    trailingIcon =
+        DUIIconBuilder.fromProps(props: trailingIconProps)?.build(context);
 
     if (leadingIcon == null && trailingIcon == null) {
       return text;

@@ -126,12 +126,12 @@ class _DUITextFieldState extends DUIWidgetState<DUITextFormField> {
 
     BorderSide borderSide = toBorderSide(DUIBorder.fromJson(border));
     switch (border['borderType']) {
-      case 'outline':
+      case 'outlineInputBorder':
         return OutlineInputBorder(
           borderSide: borderSide,
           borderRadius: borderRadius,
         );
-      case 'underline':
+      case 'underlineInputBorder':
         return UnderlineInputBorder(
           borderSide: borderSide,
           borderRadius: borderRadius,
