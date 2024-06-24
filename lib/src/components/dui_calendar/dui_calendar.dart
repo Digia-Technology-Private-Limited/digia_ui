@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
+import '../../Utils/basic_shared_utils/lodash.dart';
 import '../../Utils/basic_shared_utils/num_decoder.dart';
 import '../../Utils/util_functions.dart';
 import '../../core/builders/dui_icon_builder.dart';
@@ -58,29 +59,26 @@ class DUICalendar extends BaseStatefulWidget {
 }
 
 class _DUICalendarState extends DUIWidgetState<DUICalendar> {
-  ({String endIso, String startIso}) _selectedRangeISO =
-      (startIso: '', endIso: '');
-  String _selectedDateISO = '';
-  DateTime kFirstDay = DateTime(1970, 1, 1);
-  DateTime kLastDay = DateTime(2100, 1, 1);
+  ({String endIso, String startIso})? _selectedRangeISO;
+  String? _selectedDateISO;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
   DateTime? _rangeStart;
   DateTime? _rangeEnd;
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   _focusedDay = widget.focusedDay != null
-  //       ? DateTime.parse(widget.focusedDay!)
-  //       : DateTime.now();
-  //   _selectedDateISO = widget.currentDay ?? DateTime.now().toIso8601String();
-  //   _selectedRangeISO = (
-  //     startIso: widget.rangeStartDay ?? DateTime.now().toIso8601String(),
-  //     endIso: widget.rangeEndDay ??
-  //         DateTime.now().add(const Duration(days: 7)).toIso8601String()
-  //   );
-  // }
+  @override
+  void initState() {
+    super.initState();
+    _focusedDay = widget.focusedDay != null
+        ? DateTime.parse(widget.focusedDay!)
+        : DateTime.now();
+    _selectedDateISO = widget.currentDay;
+
+    _selectedRangeISO = ifNotNull2(widget.rangeStartDay, widget.rangeEndDay,
+        (p0, p1) => (startIso: p0, endIso: p1));
+    _rangeStart = _selectedRangeISO?.startIso.let((p0) => DateTime.parse(p0));
+    _rangeEnd = _selectedRangeISO?.endIso.let((p0) => DateTime.parse(p0));
+  }
 
   // @override
   // void dispose() {
@@ -96,18 +94,15 @@ class _DUICalendarState extends DUIWidgetState<DUICalendar> {
       focusedDay: widget.focusedDay != null
           ? DateTime.parse(widget.focusedDay!)
           : _focusedDay,
-      firstDay: kFirstDay,
-      lastDay: kLastDay,
+      firstDay: DateTime(1970, 1, 1),
+      lastDay: DateTime(2100, 1, 1),
       // currentDay: widget.currentDay != null
       //     ? DateTime.parse(widget.currentDay!)
       //     : DateTime.now(),
       rangeStartDay: _rangeStart,
       rangeEndDay: _rangeEnd,
-      calendarFormat: widget.calendarFormat == 'Week'
-          ? CalendarFormat.week
-          : widget.calendarFormat == '2 Weeks'
-              ? CalendarFormat.twoWeeks
-              : CalendarFormat.month,
+      calendarFormat:
+          _toCalendarFormat(widget.calendarFormat) ?? CalendarFormat.month,
       rangeSelectionMode: widget.selectionMode?['value'] == 'Range'
           ? RangeSelectionMode.enforced
           : RangeSelectionMode.disabled,
@@ -121,7 +116,7 @@ class _DUICalendarState extends DUIWidgetState<DUICalendar> {
       pageJumpingEnabled: widget.pageJumpingEnabled ?? false,
       // shouldFillViewport: widget.shouldFillViewport ?? false,
       weekNumbersVisible: widget.weekNumbersVisible ?? false,
-      headerStyle: headerStyleFromJson(context),
+      headerStyle: _toHeaderStyle(context),
       daysOfWeekStyle: daysOfWeekStyleFromJson(context),
       calendarStyle: calendarStyleFromJson(context),
       selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
@@ -155,9 +150,9 @@ class _DUICalendarState extends DUIWidgetState<DUICalendar> {
   }
 
   // Header Props
-  HeaderStyle headerStyleFromJson(BuildContext context) {
+  HeaderStyle _toHeaderStyle(BuildContext context) {
     final headerStyle = widget.headerStyle;
-    late BoxShape shape;
+    late BoxShape shape; // toBoxShape
     headerStyle?['shape'] == 'circle'
         ? shape = BoxShape.circle
         : shape = BoxShape.rectangle;
@@ -304,10 +299,19 @@ class _DUICalendarState extends DUIWidgetState<DUICalendar> {
   Map<String, Function> getVariables() {
     return {
       'selectedDate': () => _selectedDateISO,
-      'selectedRange': () => {
-            'start': _selectedRangeISO.startIso,
-            'end': _selectedRangeISO.endIso,
-          },
+      'selectedRange': () => ifNotNull(
+          _selectedRangeISO,
+          (p0) => {
+                'start': p0.startIso,
+                'end': p0.endIso,
+              })
     };
   }
 }
+
+CalendarFormat? _toCalendarFormat(dynamic value) => switch (value) {
+      'week' => CalendarFormat.week,
+      'twoWeeks' => CalendarFormat.twoWeeks,
+      'month' => CalendarFormat.month,
+      _ => null
+    };
