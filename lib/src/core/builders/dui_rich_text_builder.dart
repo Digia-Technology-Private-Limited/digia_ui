@@ -78,11 +78,9 @@ class DUIRichTextBuilder extends DUIWidgetBuilder {
               style: style,
               recognizer: TapGestureRecognizer()
                 ..onTap = () async {
-                  print('_____--------clicked-------_______');
                   final onClick = ActionFlow.fromJson(span['onClick']);
                   await ActionHandler.instance
                       .execute(context: context, actionFlow: onClick);
-                  print('_____--------done-------_______');
                 });
         })
         .nonNulls
