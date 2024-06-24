@@ -37,17 +37,11 @@ class DUIAppBarBuilder extends DUIWidgetBuilder {
       leading: () {
         if (leadingIcon != null) return leadingIcon;
 
-        if (data.props['leadingIcon']?['iconData'] != null) {
-          final actionFlow =
-              ActionFlow.fromJson(data.props['onTapLeadingIcon']);
-          return DUIGestureDetector(
-              context: context,
-              actionFlow: actionFlow,
-              child: DUIIconBuilder.fromProps(props: data.props['leadingIcon'])
-                  .build(context));
-        }
-
-        return null;
+        return DUIIconBuilder.fromProps(props: data.props['leadingIcon']).let(
+            (iconBuilder) => DUIGestureDetector(
+                context: context,
+                actionFlow: ActionFlow.fromJson(data.props['onTapLeadingIcon']),
+                child: iconBuilder.build(context)));
       }(),
       actions: trailingIcon.let((p0) => [p0]),
     );
