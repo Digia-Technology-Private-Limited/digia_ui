@@ -82,7 +82,7 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
         final response =
             await ApiHandler.instance.execute(apiModel: apiModel, args: args);
 
-        emit(state.copyWith(isLoading: false, dataSource: response));
+        emit(state.copyWith(isLoading: false, dataSource: response.data));
         return null;
 
       default:
