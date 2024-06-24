@@ -17,16 +17,17 @@ class DUIBottomNavBarItem extends StatefulWidget {
 class _DUIBottomNavBarItemState extends State<DUIBottomNavBarItem> {
   @override
   Widget build(BuildContext context) {
-    final icon = DUIIconBuilder.fromProps(props: widget.itemProps.icon ?? {});
-    final selectedIcon = DUIIconBuilder.fromProps(
-        props: widget.itemProps.selectedIcon?['iconData'] == null
-            ? widget.itemProps.icon
-            : widget.itemProps.selectedIcon);
+    final icon = DUIIconBuilder.fromProps(props: widget.itemProps.icon)
+            ?.build(context) ??
+        DUIIconBuilder.emptyIconWidget();
+    final selectedIcon =
+        DUIIconBuilder.fromProps(props: widget.itemProps.selectedIcon)
+            ?.build(context);
 
     return NavigationDestination(
-      icon: icon.buildWithContainerProps(context),
+      icon: icon,
       label: widget.itemProps.label ?? 'Label',
-      selectedIcon: selectedIcon.buildWithContainerProps(context),
+      selectedIcon: selectedIcon ?? icon,
     );
   }
 }

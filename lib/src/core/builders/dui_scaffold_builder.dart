@@ -38,51 +38,37 @@ class DUIScaffoldBuilder extends DUIWidgetBuilder {
 
           // leading and trailing
           Widget? leadingIcon() {
-            return (data.children['drawer']?.firstOrNull?.props['drawerIcon']
-                    as Map<String, dynamic>?)
-                .let(
-              (p0) {
-                if (p0['iconData'] == null) return null;
-
-                return Builder(builder: (context) {
-                  final icon =
-                      DUIIconBuilder.fromProps(props: p0).build(context);
-                  return DUIGestureDetector(
-                      context: context,
-                      actionFlow: ActionFlow(actions: [
-                        ActionProp.fromJson({
-                          'type': 'Action.controlDrawer',
-                          'data': {'choice': 'openDrawer'}
-                        })
-                      ]),
-                      child: icon);
-                });
-              },
-            );
+            final iconBuilder = DUIIconBuilder.fromProps(
+                props:
+                    data.children['drawer']?.firstOrNull?.props['drawerIcon']);
+            return ifNotNull(
+                iconBuilder,
+                (p0) => DUIGestureDetector(
+                    context: context,
+                    actionFlow: ActionFlow(actions: [
+                      ActionProp.fromJson({
+                        'type': 'Action.controlDrawer',
+                        'data': {'choice': 'openDrawer'}
+                      })
+                    ]),
+                    child: p0.build(context)));
           }
 
           Widget? trailingIcon() {
-            return (data.children['endDrawer']?.firstOrNull?.props['drawerIcon']
-                    as Map<String, dynamic>?)
-                .let(
-              (p0) {
-                if (p0['iconData'] == null) return null;
-
-                return Builder(builder: (context) {
-                  final icon =
-                      DUIIconBuilder.fromProps(props: p0).build(context);
-                  return DUIGestureDetector(
-                      context: context,
-                      actionFlow: ActionFlow(actions: [
-                        ActionProp.fromJson({
-                          'type': 'Action.controlDrawer',
-                          'data': {'choice': 'openEndDrawer'}
-                        })
-                      ]),
-                      child: icon);
-                });
-              },
-            );
+            final iconBuilder = DUIIconBuilder.fromProps(
+                props: data
+                    .children['endDrawer']?.firstOrNull?.props['drawerIcon']);
+            return ifNotNull(
+                iconBuilder,
+                (p0) => DUIGestureDetector(
+                    context: context,
+                    actionFlow: ActionFlow(actions: [
+                      ActionProp.fromJson({
+                        'type': 'Action.controlDrawer',
+                        'data': {'choice': 'openEndDrawer'}
+                      })
+                    ]),
+                    child: p0.build(context)));
           }
 
           return DUIAppBarBuilder.create(root,

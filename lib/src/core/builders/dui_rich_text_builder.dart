@@ -25,7 +25,7 @@ class DUIRichTextBuilder extends DUIWidgetBuilder {
 
     final maxLines = eval<int>(data.props['maxLines'], context: context);
     final overflow = DUIDecoder.toTextOverflow(data.props['overflow']);
-    final textAlign = DUIDecoder.toTextAlign(data.props['textAlign']);
+    final textAlign = DUIDecoder.toTextAlign(data.props['alignment']);
     final styleJson = (data.props['textStyle'] ?? data.props['style'])
         as Map<String, dynamic>?;
 

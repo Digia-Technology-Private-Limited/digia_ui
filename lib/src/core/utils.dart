@@ -121,7 +121,7 @@ Future<T?> openDUIPageInBottomSheet<T>({
                                 color: Colors.white.withOpacity(0.1)),
                             child:
                                 DUIIconBuilder.fromProps(props: style['icon'])
-                                    .build(context),
+                                    ?.build(context),
                           ),
                         ),
                       ),
