@@ -1,9 +1,12 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
 import '../../Utils/basic_shared_utils/lodash.dart';
 import '../../Utils/util_functions.dart';
 import '../../components/DUIText/dui_text_style.dart';
+import '../action/action_handler.dart';
+import '../action/action_prop.dart';
 import '../evaluator.dart';
 import '../json_widget_builder.dart';
 import '../page/props/dui_widget_json_data.dart';
@@ -70,7 +73,17 @@ class DUIRichTextBuilder extends DUIWidgetBuilder {
 
           if (text == null) return null;
 
-          return TextSpan(text: text, style: style);
+          return TextSpan(
+              text: text,
+              style: style,
+              recognizer: TapGestureRecognizer()
+                ..onTap = () async {
+                  print('_____--------clicked-------_______');
+                  final onClick = ActionFlow.fromJson(span['onClick']);
+                  await ActionHandler.instance
+                      .execute(context: context, actionFlow: onClick);
+                  print('_____--------done-------_______');
+                });
         })
         .nonNulls
         .toList();
