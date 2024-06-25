@@ -88,7 +88,7 @@ Future<T?> openDUIPageInBottomSheet<T>({
               child: Container(
                 decoration: BoxDecoration(
                   color: bgColor,
-                  border: toBorder(DUIBorder.fromJson(style)),
+                  border: toBorder(DUIBorder.fromJson(style), context),
                   borderRadius:
                       DUIDecoder.toBorderRadius(style['borderRadius']),
                 ),
