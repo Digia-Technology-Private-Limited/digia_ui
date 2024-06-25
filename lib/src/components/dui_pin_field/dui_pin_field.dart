@@ -50,9 +50,9 @@ class _DUIPinFieldState extends DUIWidgetState<DUIPinField> {
   late final SmsRetrieverImpl smsRetrieverImpl;
   late TextEditingController _controller;
   int length = 4;
-  bool closeKeyboardWhenCompleted = true;
   bool autoFocus = false;
   bool enabled = true;
+  bool obscureText = false;
 
   Map<String, dynamic>? defaultPinTheme;
 
@@ -60,14 +60,11 @@ class _DUIPinFieldState extends DUIWidgetState<DUIPinField> {
   void initState() {
     _controller = TextEditingController();
     length = eval<int>(widget.props['length'], context: context) ?? 4;
-    closeKeyboardWhenCompleted = eval<bool>(
-            widget.props['closeKeyboardWhenCompleted'],
-            context: context) ??
-        true;
-    autoFocus =
-        eval<bool>(widget.props['autoFocus'], context: context) ?? false;
+    eval<bool>(widget.props['autoFocus'], context: context) ?? false;
     enabled = eval<bool>(widget.props['enabled'], context: context) ?? true;
     defaultPinTheme = widget.props['defaultPinTheme'];
+    obscureText =
+        eval<bool>(widget.props['obscureText'], context: context) ?? false;
     smsRetrieverImpl = SmsRetrieverImpl(SmartAuth());
     super.initState();
   }
@@ -84,17 +81,17 @@ class _DUIPinFieldState extends DUIWidgetState<DUIPinField> {
     return Pinput(
       controller: _controller,
       length: length,
-      closeKeyboardWhenCompleted: closeKeyboardWhenCompleted,
       autofocus: autoFocus,
       enabled: enabled,
       defaultPinTheme: _toDefaultPinTheme(context),
       smsRetriever: smsRetrieverImpl,
-      onCompleted: (value) async {
+      onSubmitted: (value) async {
         final actionFlow = ActionFlow.fromJson(widget.props['onCompleted']);
         await ActionHandler.instance
             .execute(context: context, actionFlow: actionFlow);
       },
       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+      obscureText: obscureText,
     );
   }
 
@@ -106,7 +103,7 @@ class _DUIPinFieldState extends DUIWidgetState<DUIPinField> {
   }
 
   PinTheme _toDefaultPinTheme(BuildContext context) {
-    if (defaultPinTheme == null || defaultPinTheme?['fillColor'] == null) {
+    if (defaultPinTheme == null) {
       return PinTheme(
         width: 56,
         height: 60,
