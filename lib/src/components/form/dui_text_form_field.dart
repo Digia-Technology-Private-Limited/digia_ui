@@ -58,6 +58,11 @@ class _DUITextFieldState extends DUIWidgetState<DUITextFormField> {
   void initState() {
     _controller = TextEditingController(
         text: eval(widget.props['initialValue'], context: context));
+    _controller.addListener(() async {
+      final onClick = ActionFlow.fromJson(widget.props['onChanged']);
+      await ActionHandler.instance
+          .execute(context: context, actionFlow: onClick);
+    });
     _enabled = NumDecoder.toBool(widget.props['enabled']);
     _keyboardType = DUIDecoder.toKeyBoardType(widget.props['keyboardType']);
     _textInputAction =
@@ -89,11 +94,6 @@ class _DUITextFieldState extends DUIWidgetState<DUITextFormField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      onChanged: (value) async {
-        final onClick = ActionFlow.fromJson(widget.props['onChanged']);
-        await ActionHandler.instance
-            .execute(context: context, actionFlow: onClick);
-      },
       controller: _controller,
       enabled: _enabled,
       keyboardType: _keyboardType,
