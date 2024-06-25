@@ -21,7 +21,7 @@ Widget wrapInContainer(
   final padding = DUIDecoder.toEdgeInsets(styleClass.padding);
   final margin = DUIDecoder.toEdgeInsets(styleClass.margin);
   final bgColor = eval<String>(styleClass.bgColor, context: context);
-  final border = toBorder(styleClass.border);
+  final border = toBorder(styleClass.border, context);
   final borderRadius =
       DUIDecoder.toBorderRadius(styleClass.border?.borderRadius?.toJson());
   final height = styleClass.height?.toHeight(context);
