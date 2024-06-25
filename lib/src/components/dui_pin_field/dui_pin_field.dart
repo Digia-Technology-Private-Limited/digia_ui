@@ -90,6 +90,11 @@ class _DUIPinFieldState extends DUIWidgetState<DUIPinField> {
         await ActionHandler.instance
             .execute(context: context, actionFlow: actionFlow);
       },
+      onChanged: (value) async {
+        final actionFlow = ActionFlow.fromJson(widget.props['onChanged']);
+        await ActionHandler.instance
+            .execute(context: context, actionFlow: actionFlow);
+      },
       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
       obscureText: obscureText,
     );

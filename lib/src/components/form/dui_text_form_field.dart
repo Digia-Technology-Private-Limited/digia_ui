@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
 import '../../Utils/basic_shared_utils/num_decoder.dart';
 import '../../Utils/util_functions.dart';
+import '../../core/action/action_handler.dart';
+import '../../core/action/action_prop.dart';
 import '../../core/evaluator.dart';
 import '../DUIText/dui_text_style.dart';
 import '../dui_base_stateful_widget.dart';
@@ -56,6 +58,11 @@ class _DUITextFieldState extends DUIWidgetState<DUITextFormField> {
   void initState() {
     _controller = TextEditingController(
         text: eval(widget.props['initialValue'], context: context));
+    _controller.addListener(() async {
+      final onClick = ActionFlow.fromJson(widget.props['onChanged']);
+      await ActionHandler.instance
+          .execute(context: context, actionFlow: onClick);
+    });
     _enabled = NumDecoder.toBool(widget.props['enabled']);
     _keyboardType = DUIDecoder.toKeyBoardType(widget.props['keyboardType']);
     _textInputAction =
