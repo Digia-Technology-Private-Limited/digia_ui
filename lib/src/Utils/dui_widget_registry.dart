@@ -25,6 +25,7 @@ import '../core/builders/dui_icon_button_builder.dart';
 import '../core/builders/dui_image_builder.dart';
 import '../core/builders/dui_listview_builder.dart';
 import '../core/builders/dui_lottie_builder.dart';
+import '../core/builders/dui_pin_field_builder.dart';
 import '../core/builders/dui_rich_text_builder.dart';
 import '../core/builders/dui_scaffold_builder.dart';
 import '../core/builders/dui_sized_box_builder.dart';
@@ -120,6 +121,7 @@ class DUIWidgetRegistry {
     'digia/checkbox': withoutRegistry(DUICheckboxBuilder.create),
     'digia/switch': withoutRegistry(DUISwitchBuilder.create),
     'digia/animatedButton': withoutRegistry(DUIAnimatedButtonBuilder.create),
+    'digia/pinField': withoutRegistry(DUIPinFieldBuilder.create),
     'digia/calendar': withoutRegistry(DUICalendarBuilder.create),
   };
 

@@ -21,6 +21,7 @@ import '../page/dui_page_bloc.dart';
 import '../page/dui_page_event.dart';
 import '../utils.dart';
 import 'action_prop.dart';
+import 'api_handler.dart';
 
 typedef ActionHandlerFn = Future<dynamic>? Function({
   required BuildContext context,
@@ -250,6 +251,72 @@ Map<String, ActionHandlerFn> _actionsMap = {
     }
     return result;
   },
+  'Action.callRestApi': ({required action, required context, enclosing}) async {
+    final dataSourceId = action.data['dataSourceId'];
+    Map<String, dynamic>? apiDataSourceArgs = action.data['args'];
+    final apiModel = (context.tryRead<DUIPageBloc>()?.config)
+        ?.getApiDataSource(dataSourceId);
+
+    final args = apiDataSourceArgs?.map((key, value) {
+      final evalue = eval(value, context: context);
+      final dvalue = apiModel?.variables?[key]?.defaultValue;
+      return MapEntry(key, evalue ?? dvalue);
+    });
+
+    final result = await ApiHandler.instance
+        .execute(apiModel: apiModel!, args: args)
+        .then((resp) {
+      final response = {
+        'body': resp.data,
+        'statusCode': resp.statusCode,
+        'headers': resp.headers,
+        'requestObj': requestObjToMap(resp.requestOptions),
+        'error': null,
+      };
+
+      final successCondition = action.data['successCondition'] as String?;
+      final evaluatedSuccessCond = successCondition.let((p0) => eval<bool>(
+              successCondition,
+              context: context,
+              enclosing: ExprContext(
+                  variables: {'response': response}, enclosing: enclosing))) ??
+          successCondition == null || successCondition.isEmpty;
+
+      if (evaluatedSuccessCond) {
+        final successAction = ActionFlow.fromJson(action.data['onSuccess']);
+        return ActionHandler.instance.execute(
+            context: context,
+            actionFlow: successAction,
+            enclosing: ExprContext(
+                variables: {'response': response}, enclosing: enclosing));
+      } else {
+        final errorAction = ActionFlow.fromJson(action.data['onError']);
+        return ActionHandler.instance.execute(
+            context: context,
+            actionFlow: errorAction,
+            enclosing: ExprContext(
+                variables: {'response': response}, enclosing: enclosing));
+      }
+    }, onError: (e) async {
+      final errorAction = ActionFlow.fromJson(action.data['onError']);
+
+      final response = {
+        'body': e.response.data,
+        'statusCode': e.response.statusCode,
+        'headers': e.response.headers,
+        'requestObj': requestObjToMap(e.requestOptions),
+        'error': e.message,
+      };
+
+      return ActionHandler.instance.execute(
+          context: context,
+          actionFlow: errorAction,
+          enclosing: ExprContext(
+              variables: {'response': response}, enclosing: enclosing));
+    });
+
+    return result;
+  },
   'Action.handleDigiaMessage': (
       {required action, required context, enclosing}) {
     final handler = DUIWidgetScope.maybeOf(context)?.onMessageReceived;
@@ -381,4 +448,14 @@ abstract class NavigatorHelper {
     return Navigator.pushAndRemoveUntil<T>(
         context, newRoute, removeRoutesUntilPredicate);
   }
+}
+
+requestObjToMap(dynamic request) {
+  return {
+    'url': request.path,
+    'method': request.method,
+    'headers': request.headers,
+    'data': request.data,
+    'queryParameters': request.queryParameters,
+  };
 }
