@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pinput/pinput.dart';
 import 'package:smart_auth/smart_auth.dart';
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
@@ -93,6 +94,7 @@ class _DUIPinFieldState extends DUIWidgetState<DUIPinField> {
         await ActionHandler.instance
             .execute(context: context, actionFlow: actionFlow);
       },
+      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
     );
   }
 
@@ -120,8 +122,10 @@ class _DUIPinFieldState extends DUIWidgetState<DUIPinField> {
       );
     }
 
-    double? width = eval<double>(defaultPinTheme?['width'], context: context);
-    double? height = eval<double>(defaultPinTheme?['height'], context: context);
+    double width =
+        eval<double>(defaultPinTheme?['width'], context: context) ?? 56;
+    double height =
+        eval<double>(defaultPinTheme?['height'], context: context) ?? 60;
     EdgeInsets? margin = DUIDecoder.toEdgeInsets(defaultPinTheme?['margin']);
     EdgeInsets? padding = DUIDecoder.toEdgeInsets(defaultPinTheme?['padding']);
     TextStyle? textStyle = toTextStyle(
@@ -138,8 +142,8 @@ class _DUIPinFieldState extends DUIWidgetState<DUIPinField> {
     return PinTheme(
       width: width,
       height: height,
-      margin: margin.resolve(TextDirection.ltr),
-      padding: padding.resolve(TextDirection.ltr),
+      margin: margin,
+      padding: padding,
       textStyle: textStyle,
       decoration: decoration ??
           BoxDecoration(
