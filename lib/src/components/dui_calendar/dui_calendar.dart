@@ -5,8 +5,10 @@ import '../../Utils/basic_shared_utils/date_decoder.dart';
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
 import '../../Utils/basic_shared_utils/lodash.dart';
 import '../../Utils/basic_shared_utils/num_decoder.dart';
+import '../../Utils/extensions.dart';
 import '../../Utils/util_functions.dart';
 import '../../core/builders/dui_icon_builder.dart';
+import '../../core/evaluator.dart';
 import '../DUIText/dui_text_style.dart';
 import '../dui_base_stateful_widget.dart';
 
@@ -38,17 +40,16 @@ class _DUICalendarState extends DUIWidgetState<DUICalendar> {
   bool shouldFillViewport = false;
   bool weekNumbersVisible = false;
 
-  RangeSelectionMode rangeSelectionMode = RangeSelectionMode.disabled;
-  DateTime? rangeStartDayInitialValue;
-  DateTime? rangeEndDayInitialValue;
-
   Map<String, dynamic>? headerStyle;
   Map<String, dynamic>? daysOfWeekStyle;
   Map<String, dynamic>? calendarStyle;
 
-  ({DateTime end, DateTime start})? _selectedRange;
+  RangeSelectionMode rangeSelectionMode = RangeSelectionMode.disabled;
+  DateTime? _selectedRangeStart;
+  DateTime? _selectedRangeEnd;
   DateTime? _selectedDate;
-  DateTime _focusedDay = DateTime.now();
+
+  late DateTime _focusedDay;
 
   @override
   void initState() {
@@ -76,48 +77,51 @@ class _DUICalendarState extends DUIWidgetState<DUICalendar> {
     weekNumbersVisible =
         NumDecoder.toBool(widget.props['weekNumbersVisible']) ??
             weekNumbersVisible;
-    rangeStartDayInitialValue =
-        DateDecoder.toDate(widget.props['rangeStartDay']) ??
-            rangeStartDayInitialValue;
-    rangeEndDayInitialValue = DateDecoder.toDate(widget.props['rangeEndDay']) ??
-        rangeEndDayInitialValue;
-    rangeSelectionMode =
-        _toRangeSelectionMode(widget.props['rangeSelectionMode']) ??
-            rangeSelectionMode;
+
     headerStyle = widget.props['headerStyle'];
     daysOfWeekStyle = widget.props['daysOfWeekStyle'];
     calendarStyle = widget.props['calendarStyle'];
+
+    rangeSelectionMode =
+        _toRangeSelectionMode(widget.props['rangeSelectionMode']) ??
+            rangeSelectionMode;
+    if (rangeSelectionMode == RangeSelectionMode.enforced) {
+      final selectedRange = ifNotNull2(
+          DateDecoder.toDate(eval<String>(
+              widget.props.valueFor(
+                  keyPath: 'rangeSelectionMode.rangeStartDateInitialValue'),
+              context: context)),
+          DateDecoder.toDate(eval<String>(
+              widget.props.valueFor(
+                  keyPath: 'rangeSelectionMode.rangeEndDateInitialValue'),
+              context: context)),
+          (p0, p1) => (start: p0, end: p1));
+
+      _selectedRangeStart = selectedRange?.start;
+      _selectedRangeEnd = selectedRange?.end;
+
+      _focusedDay = _selectedRangeStart ?? DateTime.now();
+    }
+    if (rangeSelectionMode == RangeSelectionMode.disabled) {
+      _selectedDate = ifNotNull(
+          DateDecoder.toDate(eval<String>(
+              widget.props.valueFor(keyPath: 'rangeSelectionMode.selectedDate'),
+              context: context)),
+          (p0) => p0);
+
+      _focusedDay = _selectedDate ?? DateTime.now();
+    }
     super.initState();
   }
 
   // @override
-  // void didChangeDependencies() {
-  //   _selectedDate =
-  //       DateDecoder.toDate(widget.props['selectedDate']) ?? _selectedDate;
-  //   _selectedRange = ifNotNull2(
-  //       DateDecoder.toDate(widget.props['rangeStartDayInitialValue']),
-  //       DateDecoder.toDate(widget.props['rangeEndDayInitialValue']),
-  //       (p0, p1) => (end: p0, start: p1));
-  //   super.didChangeDependencies();
+  // void didUpdateWidget(covariant DUICalendar oldWidget) {
+  //   if (_selectedDate != _focusedDay) {
+  //     _focusedDay = _selectedDate ?? _focusedDay;
+  //     _selectedDate = DateDecoder.toDate(widget.props['selectedDate']);
+  //   }
+  //   super.didUpdateWidget(oldWidget);
   // }
-
-  @override
-  void didUpdateWidget(covariant DUICalendar oldWidget) {
-    if (_selectedDate != _focusedDay) {
-      _focusedDay = _selectedDate ?? _focusedDay;
-      _selectedDate = DateDecoder.toDate(widget.props['selectedDate']);
-    }
-    if (_selectedRange != null) {
-      rangeStartDayInitialValue = _selectedRange!.start;
-      rangeEndDayInitialValue = _selectedRange!.end;
-    } else {
-      rangeStartDayInitialValue =
-          DateDecoder.toDate(widget.props['rangeStartDayInitialValue']);
-      rangeEndDayInitialValue =
-          DateDecoder.toDate(widget.props['rangeEndDayInitialValue']);
-    }
-    super.didUpdateWidget(oldWidget);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -126,8 +130,8 @@ class _DUICalendarState extends DUIWidgetState<DUICalendar> {
       firstDay: _firstDay,
       lastDay: _lastDay,
       currentDay: _currentDay,
-      rangeStartDay: rangeStartDayInitialValue,
-      rangeEndDay: rangeEndDayInitialValue,
+      rangeStartDay: _selectedRangeStart,
+      rangeEndDay: _selectedRangeEnd,
       calendarFormat: calendarFormat,
       rangeSelectionMode: rangeSelectionMode,
       headerVisible: headersVisible,
@@ -147,19 +151,18 @@ class _DUICalendarState extends DUIWidgetState<DUICalendar> {
           setState(() {
             _selectedDate = selectedDay;
             _focusedDay = focusedDay;
-            rangeStartDayInitialValue = null;
-            rangeEndDayInitialValue = null;
+            _selectedRangeStart = null;
+            _selectedRangeEnd = null;
           });
         }
       },
       onRangeSelected: (start, end, focusedDay) {
         setState(() {
+          _selectedRangeStart = start;
+          _selectedRangeEnd = end;
           _selectedDate = null;
           _focusedDay = focusedDay;
-          rangeStartDayInitialValue = start;
-          rangeEndDayInitialValue = end;
         });
-        _selectedRange = (end: end!, start: start!);
       },
       onPageChanged: (focusedDay) {
         _focusedDay = focusedDay;
@@ -336,14 +339,14 @@ class _DUICalendarState extends DUIWidgetState<DUICalendar> {
         _ => null
       };
 
-  RangeSelectionMode? _toRangeSelectionMode(dynamic value) {
-    if (value?['value'] == 'singleDate') {
+  RangeSelectionMode? _toRangeSelectionMode(dynamic mode) {
+    if (mode['value'] == 'singleDate') {
       return RangeSelectionMode.disabled;
-    } else if (value?['value'] == 'range') {
+    } else if (mode['value'] == 'range') {
       return RangeSelectionMode.enforced;
-    } else {
-      return RangeSelectionMode.disabled;
     }
+
+    return RangeSelectionMode.disabled;
   }
 
   BoxShape _toBoxShape(dynamic value) => switch (value) {
@@ -373,11 +376,12 @@ class _DUICalendarState extends DUIWidgetState<DUICalendar> {
   Map<String, Function> getVariables() {
     return {
       'selectedDate': () => _selectedDate?.toIso8601String(),
-      'selectedRange': () => ifNotNull(
-          _selectedRange,
-          (p0) => {
-                'start': p0.start.toIso8601String(),
-                'end': p0.end.toIso8601String(),
+      'selectedRange': () => ifNotNull2(
+          _selectedRangeStart,
+          _selectedRangeEnd,
+          (p0, p1) => {
+                'start': p0.toIso8601String(),
+                'end': p1.toIso8601String(),
               })
     };
   }
