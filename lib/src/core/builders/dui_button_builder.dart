@@ -100,7 +100,7 @@ class DUIButtonBuilder extends DUIWidgetBuilder {
       props['text']?['textStyle']?['textColor'] = disabledTextColor;
     } else {
       props['text']?['textStyle']?['textColor'] =
-          data.props['text']?['textStyle']?['textColor'];
+          data.props.valueFor(keyPath: 'text.textStyle.textColor');
     }
 
     final textBuilder =

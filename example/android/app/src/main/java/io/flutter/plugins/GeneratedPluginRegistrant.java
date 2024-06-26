@@ -16,11 +16,6 @@ public final class GeneratedPluginRegistrant {
   private static final String TAG = "GeneratedPluginRegistrant";
   public static void registerWith(@NonNull FlutterEngine flutterEngine) {
     try {
-      flutterEngine.getPlugins().add(new me.arsam.sms_retriever.SmsRetrieverPlugin());
-    } catch (Exception e) {
-      Log.e(TAG, "Error registering plugin android_sms_retriever, me.arsam.sms_retriever.SmsRetrieverPlugin", e);
-    }
-    try {
       flutterEngine.getPlugins().add(new io.abner.flutter_js.FlutterJsPlugin());
     } catch (Exception e) {
       Log.e(TAG, "Error registering plugin flutter_js, io.abner.flutter_js.FlutterJsPlugin", e);
