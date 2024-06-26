@@ -76,11 +76,10 @@ class _DUICalendarState extends DUIWidgetState<DUICalendar> {
     weekNumbersVisible =
         NumDecoder.toBool(widget.props['weekNumbersVisible']) ??
             weekNumbersVisible;
-    rangeStartDayInitialValue = DateDecoder.toDate(
-            widget.props['rangeSelectionMode']?['rangeStartDayInitialValue']) ??
-        rangeStartDayInitialValue;
-    rangeEndDayInitialValue = DateDecoder.toDate(
-            widget.props['rangeSelectionMode']?['rangeEndDayInitialValue']) ??
+    rangeStartDayInitialValue =
+        DateDecoder.toDate(widget.props['rangeStartDay']) ??
+            rangeStartDayInitialValue;
+    rangeEndDayInitialValue = DateDecoder.toDate(widget.props['rangeEndDay']) ??
         rangeEndDayInitialValue;
     rangeSelectionMode =
         _toRangeSelectionMode(widget.props['rangeSelectionMode']) ??
@@ -91,14 +90,33 @@ class _DUICalendarState extends DUIWidgetState<DUICalendar> {
     super.initState();
   }
 
+  // @override
+  // void didChangeDependencies() {
+  //   _selectedDate =
+  //       DateDecoder.toDate(widget.props['selectedDate']) ?? _selectedDate;
+  //   _selectedRange = ifNotNull2(
+  //       DateDecoder.toDate(widget.props['rangeStartDayInitialValue']),
+  //       DateDecoder.toDate(widget.props['rangeEndDayInitialValue']),
+  //       (p0, p1) => (end: p0, start: p1));
+  //   super.didChangeDependencies();
+  // }
+
   @override
-  void didChangeDependencies() {
-    _selectedDate = DateDecoder.toDate(widget.props['selectedDate']);
-    _selectedRange = ifNotNull2(
-        DateDecoder.toDate(widget.props['rangeStartDayInitialValue']),
-        DateDecoder.toDate(widget.props['rangeEndDayInitialValue']),
-        (p0, p1) => (end: p0, start: p1));
-    super.didChangeDependencies();
+  void didUpdateWidget(covariant DUICalendar oldWidget) {
+    if (_selectedDate != _focusedDay) {
+      _focusedDay = _selectedDate ?? _focusedDay;
+      _selectedDate = DateDecoder.toDate(widget.props['selectedDate']);
+    }
+    if (_selectedRange != null) {
+      rangeStartDayInitialValue = _selectedRange!.start;
+      rangeEndDayInitialValue = _selectedRange!.end;
+    } else {
+      rangeStartDayInitialValue =
+          DateDecoder.toDate(widget.props['rangeStartDayInitialValue']);
+      rangeEndDayInitialValue =
+          DateDecoder.toDate(widget.props['rangeEndDayInitialValue']);
+    }
+    super.didUpdateWidget(oldWidget);
   }
 
   @override
