@@ -18,6 +18,8 @@ class DUIListViewBuilder extends DUIWidgetBuilder {
     return DUIListViewBuilder(data, registry);
   }
 
+  final ScrollController _scrollController = ScrollController();
+
   @override
   Widget build(BuildContext context) {
     if (registry == null) {
@@ -29,37 +31,60 @@ class DUIListViewBuilder extends DUIWidgetBuilder {
     final generateChildrenDynamically =
         data.dataRef.isNotEmpty && data.dataRef['kind'] != null;
 
+    final bool enableEndScroll =
+        eval<bool>(data.props['enableEndScroll'], context: context) ?? false;
+    final bool isReverse =
+        eval<bool>(data.props['reverse'], context: context) ?? false;
+
+    if (enableEndScroll) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _scrollToEnd();
+      });
+    }
+
     if (generateChildrenDynamically) {
       if (children.isEmpty) return const SizedBox.shrink();
 
       return ListView.builder(
-          scrollDirection: DUIDecoder.toAxis(data.props['scrollDirection'],
-              defaultValue: Axis.vertical),
-          physics: DUIDecoder.toScrollPhysics(data.props['allowScroll']),
-          shrinkWrap: NumDecoder.toBoolOrDefault(data.props['shrinkWrap'],
-              defaultValue: false),
-          itemCount: items.length,
-          itemBuilder: (context, index) {
-            final childToRepeat = children.first;
-            return IndexedItemWidgetBuilder(
-                index: index,
-                currentItem: items[index],
-                builder: DUIJsonWidgetBuilder(
-                    data: childToRepeat, registry: registry!));
-          });
+        reverse: isReverse,
+        controller: _scrollController,
+        scrollDirection: DUIDecoder.toAxis(data.props['scrollDirection'],
+            defaultValue: Axis.vertical),
+        physics: DUIDecoder.toScrollPhysics(data.props['allowScroll']),
+        shrinkWrap: NumDecoder.toBoolOrDefault(data.props['shrinkWrap'],
+            defaultValue: false),
+        itemCount: items.length,
+        itemBuilder: (context, index) {
+          final childToRepeat = children.first;
+          return IndexedItemWidgetBuilder(
+              index: index,
+              currentItem: items[index],
+              builder: DUIJsonWidgetBuilder(
+                  data: childToRepeat, registry: registry!));
+        },
+      );
     } else {
       return ListView.builder(
-          scrollDirection: DUIDecoder.toAxis(data.props['scrollDirection'],
-              defaultValue: Axis.vertical),
-          physics: DUIDecoder.toScrollPhysics(data.props['allowScroll']),
-          shrinkWrap: NumDecoder.toBoolOrDefault(data.props['shrinkWrap'],
-              defaultValue: false),
-          itemCount: children.length,
-          itemBuilder: (context, index) {
-            return DUIJsonWidgetBuilder(
-                    data: children[index], registry: registry!)
-                .build(context);
-          });
+        reverse: isReverse,
+        controller: _scrollController,
+        scrollDirection: DUIDecoder.toAxis(data.props['scrollDirection'],
+            defaultValue: Axis.vertical),
+        physics: DUIDecoder.toScrollPhysics(data.props['allowScroll']),
+        shrinkWrap: NumDecoder.toBoolOrDefault(data.props['shrinkWrap'],
+            defaultValue: false),
+        itemCount: children.length,
+        itemBuilder: (context, index) {
+          return DUIJsonWidgetBuilder(
+                  data: children[index], registry: registry!)
+              .build(context);
+        },
+      );
+    }
+  }
+
+  void _scrollToEnd() {
+    if (_scrollController.hasClients) {
+      _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
     }
   }
 
