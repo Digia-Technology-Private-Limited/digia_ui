@@ -31,6 +31,7 @@ import '../core/builders/dui_scaffold_builder.dart';
 import '../core/builders/dui_sized_box_builder.dart';
 import '../core/builders/dui_spacer_builder.dart';
 import '../core/builders/dui_stack_builder.dart';
+import '../core/builders/dui_stream_builder.dart';
 import '../core/builders/dui_switch_builder.dart';
 import '../core/builders/dui_tab_view_builder.dart';
 import '../core/builders/dui_tab_view_item_builder.dart';
@@ -123,6 +124,7 @@ class DUIWidgetRegistry {
     'digia/animatedButton': withoutRegistry(DUIAnimatedButtonBuilder.create),
     'digia/pinField': withoutRegistry(DUIPinFieldBuilder.create),
     'digia/calendar': withoutRegistry(DUICalendarBuilder.create),
+    'digia/streamBuilder': (data, {registry}) => DUIStreamBuilder(data: data),
   };
 
   static const DUIWidgetRegistry shared = DUIWidgetRegistry();
