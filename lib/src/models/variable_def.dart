@@ -5,17 +5,29 @@ class VariableDef {
   final String name;
   final Object? _defaultValue;
   Object? _value;
+  final Map<String, dynamic>? _initializer;
 
   Object? get value => _value;
 
   Object? get defaultValue => _defaultValue;
 
-  VariableDef({required this.type, required this.name, Object? defaultValue})
+  Map<String, dynamic>? get initializer => _initializer;
+
+  VariableDef(
+      {required this.type,
+      required this.name,
+      Object? defaultValue,
+      Map<String, dynamic>? initializer})
       : _value = defaultValue,
-        _defaultValue = defaultValue;
+        _defaultValue = defaultValue,
+        _initializer = initializer;
 
   void set(Object? value) {
     _value = value;
+  }
+
+  void setInitializer(Map<String, dynamic> initializer) {
+    _initializer?.addAll(initializer);
   }
 
   Map<String, dynamic> toJson() {
@@ -34,7 +46,8 @@ class VariablesJsonConverter
       result[curr.key] = VariableDef(
           type: curr.value['type'] as String,
           name: curr.key,
-          defaultValue: curr.value['default']);
+          defaultValue: curr.value['default'],
+          initializer: curr.value['initializer']);
       return result;
     });
   }

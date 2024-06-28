@@ -18,9 +18,13 @@ class SingleSetStateEvent {
   final String variableName;
   final BuildContext context;
   final Object? value;
+  final Map<String, dynamic>? initializer;
 
   SingleSetStateEvent(
-      {required this.variableName, required this.context, required this.value});
+      {required this.variableName,
+      required this.context,
+      required this.value,
+      this.initializer});
 }
 
 class SetStateEvent extends DUIPageEvent {

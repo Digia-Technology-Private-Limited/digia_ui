@@ -1,15 +1,17 @@
 import 'dart:async';
+import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/material.dart';
-// import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../Utils/basic_shared_utils/lodash.dart';
+import '../../Utils/basic_shared_utils/num_decoder.dart';
 import '../../Utils/dui_widget_registry.dart';
-// import '../../Utils/extensions.dart';
+import '../../Utils/extensions.dart';
 import '../../components/dui_widget.dart';
 import '../action/action_handler.dart';
 import '../action/action_prop.dart';
 import '../json_widget_builder.dart';
-// import '../page/dui_page_bloc.dart';
+import '../page/dui_page_bloc.dart';
 
 class DUIStreamBuilder extends DUIWidgetBuilder {
   DUIStreamBuilder(
@@ -47,11 +49,10 @@ class DUIStreamBuilder extends DUIWidgetBuilder {
             await ActionHandler.instance
                 .execute(context: context, actionFlow: actionFlow);
           });
-          // return data
-          //         .getChild('successWidget')
-          //         .let((p0) => DUIWidget(data: p0)) ??
-          //     const SizedBox.shrink();
-          return Text('Success: ${snapshot.data}');
+          return data
+                  .getChild('successWidget')
+                  .let((p0) => DUIWidget(data: p0)) ??
+              const SizedBox.shrink();
         });
   }
 }
@@ -60,37 +61,55 @@ Stream<Object?> _makeStream(Map<String, dynamic> stream, BuildContext context) {
   final type = stream['streamType'];
   if (type == null) return Stream.error('Type not selected');
 
-  return Stream.periodic(const Duration(seconds: 1), (i) => 20 - i)
-      .takeWhile((value) => value >= 0);
+  final onDataAction =
+      ActionFlow.fromJson(stream.valueFor(keyPath: 'onSuccess'));
+  final onErrorAction =
+      ActionFlow.fromJson(stream.valueFor(keyPath: 'onError'));
 
-  // switch (type) {
-  //   case 'timer':
+  switch (type) {
+    case 'timer':
+      Map<String, dynamic>? timer = context
+          .read<DUIPageBloc>()
+          .state
+          .props
+          .variables?['stream']
+          ?.initializer;
+      final countType = timer?.valueFor(keyPath: 'countType');
+      final updatePageInterval = Duration(
+          milliseconds: NumDecoder.toIntOrDefault(
+              timer?.valueFor(keyPath: 'updatePageInterval'),
+              defaultValue: 1000));
 
-  //     Map<String, dynamic>? timer = context
-  //         .read<DUIPageBloc>()
-  //         .state
-  //         .props
-  //         .variables
-  //         ?.map((k, v) => MapEntry(k, v.value));
-  //     final countType = timer?.valueFor(keyPath: 'countType');
-  //     // if (countType == null) {
-  //     //   return Stream.error('Count Down/Up not specified');
-  //     // }
-  //     final updatePageInterval = Duration(
-  //         milliseconds: timer?.valueFor(keyPath: 'updatePageInterval') ?? 1000);
+      switch (countType) {
+        case 'countDown':
+          final countDownTime = NumDecoder.toIntOrDefault(
+              timer?.valueFor(keyPath: 'countDownTime'),
+              defaultValue: 20);
+          Stream<int> s;
+          s = Stream.periodic(updatePageInterval, (i) => countDownTime - i)
+              .takeWhile((value) => value >= 0);
 
-  //     switch (countType) {
-  //       case 'countDown':
-  //         final countDownTime = timer?.valueFor(keyPath: 'countDownTime');
-  //         if (countDownTime == null) {
-  //           return Stream.error('Count Down Time not specified');
-  //         }
-  //       // return Stream.periodic(updatePageInterval, (i) => countDownTime - i)
-  //       //     .takeWhile((value) => value >= 0);
-  //       case 'countUp':
-  //         return Stream.periodic(updatePageInterval, (i) => i);
-  //     }
-  // }
+          return s.transform(StreamTransformer<int, Object?>.fromHandlers(
+            handleData: (data, sink) {
+              ActionHandler.instance.execute(
+                  context: context,
+                  actionFlow: onDataAction,
+                  enclosing: ExprContext(variables: {'response': data}));
+              sink.add(data);
+            },
+            handleError: (error, stackTrace, sink) {
+              ActionHandler.instance.execute(
+                  context: context,
+                  actionFlow: onErrorAction,
+                  enclosing: ExprContext(variables: {'error': error}));
+              sink.addError(error, stackTrace);
+            },
+          ));
 
-  // return Stream.error('No stream type selected');
+        case 'countUp':
+          return Stream.periodic(updatePageInterval, (i) => i);
+      }
+  }
+
+  return Stream.error('No stream type selected');
 }
