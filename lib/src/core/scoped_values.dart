@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../digia_ui.dart';
 import '../Utils/basic_shared_utils/lodash.dart';
 import 'app_state_provider.dart';
+import 'async_data_provider.dart';
 import 'indexed_item_provider.dart';
 import 'page/dui_page_bloc.dart';
 
@@ -44,7 +45,30 @@ ExprContext createScope(BuildContext context, ExprContext? localScope) {
       }) ??
       pageScope;
 
+  // Async scope for StreamBuilders/FutureBuilders
+  // final asyncScope = ifNotNull(AsyncDataProvider.maybeOf(context), (p0) {
+  //       return ExprContext(
+  //           name: 'async',
+  //           variables: {p0.key.toString(): p0.data},
+  //           enclosing: pageScope);
+  //     }) ??
+  //     pageScope;
+
   // Wrap the scope chain from above over localSCope
-  return ifNotNull(localScope, ((p0) => p0..appendEnclosing(indexScope))) ??
+  return ifNotNull(
+          localScope,
+          ((p0) => p0
+            ..appendEnclosing(
+              indexScope,
+            ))) ??
       indexScope;
+
+  // Wrap the scope chain from above over asyncScope
+  // return ifNotNull(
+  //         localScope,
+  //         ((p0) => p0
+  //           ..appendEnclosing(
+  //             asyncScope,
+  //           ))) ??
+  //     asyncScope;
 }

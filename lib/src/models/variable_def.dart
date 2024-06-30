@@ -3,31 +3,22 @@ import 'package:json_annotation/json_annotation.dart';
 class VariableDef {
   final String type;
   final String name;
-  final Object? _defaultValue;
+  final dynamic _defaultValue;
   Object? _value;
-  final Map<String, dynamic>? _initializer;
 
   Object? get value => _value;
 
-  Object? get defaultValue => _defaultValue;
+  dynamic get defaultValue => _defaultValue;
 
-  Map<String, dynamic>? get initializer => _initializer;
-
-  VariableDef(
-      {required this.type,
-      required this.name,
-      Object? defaultValue,
-      Map<String, dynamic>? initializer})
-      : _value = defaultValue,
-        _defaultValue = defaultValue,
-        _initializer = initializer;
+  VariableDef({
+    required this.type,
+    required this.name,
+    dynamic defaultValue,
+  })  : _value = defaultValue,
+        _defaultValue = defaultValue;
 
   void set(Object? value) {
     _value = value;
-  }
-
-  void setInitializer(Map<String, dynamic> initializer) {
-    _initializer?.addAll(initializer);
   }
 
   Map<String, dynamic> toJson() {
@@ -46,8 +37,7 @@ class VariablesJsonConverter
       result[curr.key] = VariableDef(
           type: curr.value['type'] as String,
           name: curr.key,
-          defaultValue: curr.value['default'],
-          initializer: curr.value['initializer']);
+          defaultValue: curr.value['default']);
       return result;
     });
   }

@@ -60,8 +60,6 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
   ) {
     for (final element in event.events) {
       state.props.variables?[element.variableName]?.set(element.value);
-      state.props.variables?[element.variableName]
-          ?.setInitializer(element.initializer ?? {});
     }
 
     if (event.rebuildPage) {
