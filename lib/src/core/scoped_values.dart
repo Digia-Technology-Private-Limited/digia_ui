@@ -36,7 +36,7 @@ ExprContext createScope(BuildContext context, ExprContext? localScope) {
       },
       enclosing: globalScope);
 
-  // Index scope for ListViews/GridViews
+// Index scope for ListViews/GridViews
   final indexScope = ifNotNull(IndexedItemWidgetBuilder.maybeOf(context), (p0) {
         return ExprContext(
             name: 'indexed',
@@ -46,29 +46,25 @@ ExprContext createScope(BuildContext context, ExprContext? localScope) {
       pageScope;
 
   // Async scope for StreamBuilders/FutureBuilders
-  // final asyncScope = ifNotNull(AsyncDataProvider.maybeOf(context), (p0) {
-  //       return ExprContext(
-  //           name: 'async',
-  //           variables: {p0.key.toString(): p0.data},
-  //           enclosing: pageScope);
-  //     }) ??
-  //     pageScope;
+  final asyncScope = ifNotNull(AsyncDataProvider.maybeOf(context), (p0) {
+        return ExprContext(
+            name: 'async',
+            variables: {p0.key.toString(): p0.data},
+            enclosing: pageScope);
+      }) ??
+      pageScope;
 
-  // Wrap the scope chain from above over localSCope
+// Combine asyncScope and indexScope
+  ExprContext combinedScope = ExprContext(
+      variables: {...asyncScope.variables, ...indexScope.variables},
+      enclosing: pageScope);
+
+// Wrap the scope chain from above over localSCope
   return ifNotNull(
           localScope,
           ((p0) => p0
             ..appendEnclosing(
-              indexScope,
+              combinedScope,
             ))) ??
-      indexScope;
-
-  // Wrap the scope chain from above over asyncScope
-  // return ifNotNull(
-  //         localScope,
-  //         ((p0) => p0
-  //           ..appendEnclosing(
-  //             asyncScope,
-  //           ))) ??
-  //     asyncScope;
+      combinedScope;
 }
