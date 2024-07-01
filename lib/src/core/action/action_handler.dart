@@ -1,9 +1,11 @@
 import 'dart:developer';
 
 import 'package:digia_expr/digia_expr.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:json_schema2/json_schema2.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
@@ -383,6 +385,41 @@ Map<String, ActionHandlerFn> _actionsMap = {
       return;
     }
     return null;
+  },
+  'Action.share': ({required action, required context, enclosing}) {
+    final message = eval<String>(action.data['message'],
+        context: context, enclosing: enclosing);
+    final subject = eval<String>(action.data['subject'],
+        context: context, enclosing: enclosing);
+
+    if (message != null && message.isNotEmpty) {
+      if (kIsWeb) {
+        showDialog(
+          context: context,
+          useRootNavigator: false,
+          builder: (cntxt) {
+            return AlertDialog(
+              title: const Text('Notice'),
+              content: Text(
+                  'This feature works only in mobile devices.\n\nMessage: "$message" '),
+              actions: [
+                TextButton(
+                  child: const Text('Ok'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      } else {
+        Share.share(message, subject: subject);
+      }
+      return;
+    } else {
+      return null;
+    }
   },
 };
 
