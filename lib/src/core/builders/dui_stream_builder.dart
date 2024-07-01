@@ -19,6 +19,9 @@ class DUIStreamBuilder extends DUIWidgetBuilder {
   DUIStreamBuilder(
       {required super.data, super.registry = DUIWidgetRegistry.shared});
 
+  late StreamController<dynamic> _streamController;
+  Timer? _timer;
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
@@ -28,7 +31,7 @@ class DUIStreamBuilder extends DUIWidgetBuilder {
             return data
                     .getChild('loadingWidget')
                     .let((p0) => DUIWidget(data: p0)) ??
-                const Center(child: CircularProgressIndicator());
+                const Center(child: CircularProgressIndicator.adaptive());
           }
 
           if (snapshot.hasError) {
@@ -74,71 +77,160 @@ class DUIStreamBuilder extends DUIWidgetBuilder {
           return const SizedBox.shrink();
         });
   }
-}
 
-Stream<Object?> _makeStream(Map<String, dynamic> stream, BuildContext context) {
-  final type = stream['streamType'];
-  if (type == null) return Stream.error('Type not selected');
-
-  final onSuccessAction =
-      ActionFlow.fromJson(stream.valueFor(keyPath: 'onSuccess'));
-  final onErrorAction =
-      ActionFlow.fromJson(stream.valueFor(keyPath: 'onError'));
-
-  // final config = stream['streamVar'];
-  // final timerType = config?.valueFor(keyPath: 'timerType');
-  // final pageUpdateInterval = Duration(
-  //     seconds: NumDecoder.toIntOrDefault(
-  //         config?.valueFor(keyPath: 'pageUpdateInterval'),
-  //         defaultValue: 1000));
-  // final countDownValue = NumDecoder.toIntOrDefault(
-  //     config?.valueFor(keyPath: 'countDownValue'),
-  //     defaultValue: 20);
-
-  switch (type) {
-    case 'timer':
-      final pageStates = context.read<DUIPageBloc>().state.props.variables;
-      final timer =
-          pageStates?.values.firstWhere((element) => element.type == 'timer');
-      final timerConfig = timer?.defaultValue as Map<String, dynamic>?;
-
-      final timerType = timerConfig?.valueFor(keyPath: 'timerType');
-
-      final pageUpdateInterval = Duration(
-          seconds: NumDecoder.toIntOrDefault(
-              timerConfig?.valueFor(keyPath: 'pageUpdateInterval'),
-              defaultValue: 1000));
-
-      switch (timerType) {
-        case 'countDown':
-          final countDownValue = NumDecoder.toIntOrDefault(
-              timerConfig?.valueFor(keyPath: 'countDownValue'),
-              defaultValue: 20);
-          Stream<int> s;
-          s = Stream.periodic(pageUpdateInterval, (i) => countDownValue - i)
-              .takeWhile((value) => value >= 0);
-
-          return s.transform(StreamTransformer<int, Object?>.fromHandlers(
-            handleData: (data, sink) {
-              ActionHandler.instance.execute(
-                  context: context,
-                  actionFlow: onSuccessAction,
-                  enclosing: ExprContext(variables: {'response': data}));
-              sink.add(data);
-            },
-            handleError: (error, stackTrace, sink) {
-              ActionHandler.instance.execute(
-                  context: context,
-                  actionFlow: onErrorAction,
-                  enclosing: ExprContext(variables: {'error': error}));
-              sink.addError(error, stackTrace);
-            },
-          ));
-
-        case 'countUp':
-          return Stream.periodic(pageUpdateInterval, (i) => i);
+  void _startTimer(BuildContext context, Duration interval, int startValue,
+      bool countDown, ActionFlow onSuccessAction) {
+    int currentValue = startValue;
+    _timer = Timer.periodic(interval, (timer) {
+      if (countDown && currentValue < 0) {
+        _timer?.cancel();
+        _streamController.close();
+        return;
       }
+
+      _streamController.add(currentValue);
+
+      ActionHandler.instance.execute(
+        context: context,
+        actionFlow: onSuccessAction,
+        enclosing: ExprContext(variables: {'response': currentValue}),
+      );
+
+      currentValue += countDown ? -1 : 1;
+    });
   }
 
-  return Stream.error('No stream type selected');
+  void pauseTimer() {
+    _timer?.cancel();
+  }
+
+  void resumeTimer(BuildContext context, ActionFlow onSuccessAction) {
+    if (_timer != null && !_timer!.isActive) {
+      _startTimer(
+        context,
+        _timer!.tick as Duration,
+        _streamController.stream.last as int,
+        _streamController.stream.last as int > 0,
+        onSuccessAction,
+      );
+    }
+  }
+
+  void stopTimer() {
+    _timer?.cancel();
+    _streamController.close();
+  }
+
+  // void dispose() {
+  //   _timer?.cancel();
+  //   _streamController.close();
+  // }
+
+  Stream<Object?> _makeStream(
+      Map<String, dynamic> stream, BuildContext context) {
+    final type = stream['streamType'];
+    if (type == null) return Stream.error('Type not selected');
+
+    final onSuccessAction =
+        ActionFlow.fromJson(stream.valueFor(keyPath: 'onSuccess'));
+    final onErrorAction =
+        ActionFlow.fromJson(stream.valueFor(keyPath: 'onError'));
+
+    // final config = stream['streamVar'];
+    // final timerType = config?.valueFor(keyPath: 'timerType');
+    // final pageUpdateInterval = Duration(
+    //     seconds: NumDecoder.toIntOrDefault(
+    //         config?.valueFor(keyPath: 'pageUpdateInterval'),
+    //         defaultValue: 1000));
+    // final countDownValue = NumDecoder.toIntOrDefault(
+    //     config?.valueFor(keyPath: 'countDownValue'),
+    //     defaultValue: 20);
+
+    switch (type) {
+      case 'timer':
+        _streamController = StreamController<int>();
+        final pageStates = context.read<DUIPageBloc>().state.props.variables;
+        final timer =
+            pageStates?.values.firstWhere((element) => element.type == 'timer');
+        final timerConfig = timer?.defaultValue as Map<String, dynamic>?;
+
+        final timerType = timerConfig?.valueFor(keyPath: 'timerType');
+
+        final pageUpdateInterval = Duration(
+            seconds: NumDecoder.toIntOrDefault(
+                timerConfig?.valueFor(keyPath: 'pageUpdateInterval'),
+                defaultValue: 1000));
+
+        switch (timerType) {
+          case 'countDown':
+            final countDownValue = NumDecoder.toIntOrDefault(
+              timerConfig?.valueFor(keyPath: 'countDownValue'),
+              defaultValue: 20,
+            );
+            _startTimer(context, pageUpdateInterval, countDownValue, true,
+                onSuccessAction);
+            _streamController.stream.transform(
+              StreamTransformer<int, Object?>.fromHandlers(
+                handleData: (data, sink) {
+                  ActionHandler.instance.execute(
+                    context: context,
+                    actionFlow: onSuccessAction,
+                    enclosing: ExprContext(variables: {'response': data}),
+                  );
+                  sink.add(data);
+                },
+                handleError: (error, stackTrace, sink) {
+                  ActionHandler.instance.execute(
+                    context: context,
+                    actionFlow: onErrorAction,
+                    enclosing: ExprContext(variables: {'error': error}),
+                  );
+                  sink.addError(error, stackTrace);
+                },
+              ),
+            );
+            break;
+
+          case 'countUp':
+            _startTimer(context, pageUpdateInterval, 0, false, onSuccessAction);
+            break;
+        }
+        break;
+    }
+    return _streamController.stream;
+  }
 }
+
+// switch (timerType) {
+//         case 'countDown':
+//           final countDownValue = NumDecoder.toIntOrDefault(
+//               timerConfig?.valueFor(keyPath: 'countDownValue'),
+//               defaultValue: 20);
+//           Stream<int> s;
+//           s = Stream.periodic(pageUpdateInterval, (i) => countDownValue - i)
+//               .takeWhile((value) => value >= 0);
+
+//           return s.transform(StreamTransformer<int, Object?>.fromHandlers(
+//             handleData: (data, sink) {
+//               ActionHandler.instance.execute(
+//                   context: context,
+//                   actionFlow: onSuccessAction,
+//                   enclosing: ExprContext(variables: {'response': data}));
+//               sink.add(data);
+//             },
+//             handleError: (error, stackTrace, sink) {
+//               ActionHandler.instance.execute(
+//                   context: context,
+//                   actionFlow: onErrorAction,
+//                   enclosing: ExprContext(variables: {'error': error}));
+//               sink.addError(error, stackTrace);
+//             },
+//           ));
+
+//         case 'countUp':
+//           return Stream.periodic(pageUpdateInterval, (i) => i);
+//       }
+//   }
+
+//   return Stream.error('No stream type selected');
+// }

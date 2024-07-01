@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:digia_expr/digia_expr.dart';
@@ -16,6 +17,7 @@ import '../../components/dui_widget_scope.dart';
 import '../../types.dart';
 import '../analytics_handler.dart';
 import '../app_state_provider.dart';
+import '../async_data_provider.dart';
 import '../evaluator.dart';
 import '../page/dui_page_bloc.dart';
 import '../page/dui_page_event.dart';
@@ -316,6 +318,51 @@ Map<String, ActionHandlerFn> _actionsMap = {
     });
 
     return result;
+  },
+  'Action.controlTimer': ({required action, required context, enclosing}) {
+    final choice = eval<String>(action.data['method'],
+        context: context, enclosing: enclosing);
+    final timer = eval<String>(action.data['timer'],
+        context: context, enclosing: enclosing);
+
+    final bloc = context.tryRead<DUIPageBloc>();
+    if (bloc == null) {
+      throw 'Action.controlTimer called on a widget which is not wrapped in DUIPageBloc';
+    }
+    // final streamBuilder =
+    //     bloc.state.props.layout?.root.getChild('streamBuilder');
+
+    final asyncData = AsyncDataProvider.maybeOf(context);
+
+    final streamBuilder =
+        context.dependOnInheritedWidgetOfExactType<AsyncDataProvider>();
+    final controller = streamBuilder?.data as StreamController<dynamic>;
+
+    controller.onResume = () {
+      log('Timer resumed');
+    };
+
+    switch (choice) {
+      case 'start':
+        bloc.state.props.variables?.entries
+            .where((element) => element.value.type == 'timer')
+            .forEach((element) {
+          final timer = element.value.value;
+          Timer.run(() {});
+        });
+      case 'pause':
+        bloc.state.props.variables?.entries
+            .where((element) => element.value.type == 'timer')
+            .forEach((element) {
+          Timer.periodic(Duration.zero, (timer) {}).cancel();
+        });
+      case 'resume':
+        controller.onResume = () {};
+      case 'cancel':
+        controller.onCancel = () {};
+    }
+
+    return;
   },
   'Action.handleDigiaMessage': (
       {required action, required context, enclosing}) {
