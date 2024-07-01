@@ -31,12 +31,12 @@ class DUIListViewBuilder extends DUIWidgetBuilder {
     final generateChildrenDynamically =
         data.dataRef.isNotEmpty && data.dataRef['kind'] != null;
 
-    final bool enableEndScroll =
-        eval<bool>(data.props['enableEndScroll'], context: context) ?? false;
+    final initialScrollPosition =
+        eval<String>(data.props['initialScrollPosition'], context: context);
     final bool isReverse =
         eval<bool>(data.props['reverse'], context: context) ?? false;
 
-    if (enableEndScroll) {
+    if (initialScrollPosition == 'end') {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _scrollToEnd();
       });
