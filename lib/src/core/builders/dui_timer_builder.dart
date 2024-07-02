@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import '../../Utils/basic_shared_utils/lodash.dart';
 import '../../components/dui_timer/dui_timer.dart';
+import '../../components/dui_widget.dart';
 import '../json_widget_builder.dart';
 import '../page/props/dui_widget_json_data.dart';
 
@@ -15,6 +17,6 @@ class DUITimerBuilder extends DUIWidgetBuilder {
     return DUITimer(
         varName: data.varName,
         props: data.props,
-        child: data.children['child']?.firstOrNull);
+        child: data.getChild('child')?.let((p0) => DUIWidget(data: p0)));
   }
 }
