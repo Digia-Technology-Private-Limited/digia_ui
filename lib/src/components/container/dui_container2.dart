@@ -99,7 +99,7 @@ class DUIContainer2 extends StatelessWidget {
         if (colors == null || colors.isEmpty) return null;
 
         final stops = (data['colorList'] as List?)
-            ?.map((e) => e['stop'] as double?)
+            ?.map((e) => NumDecoder.toDouble(e['stop']))
             .nonNulls
             .toList();
 
