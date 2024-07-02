@@ -2,18 +2,15 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import '../../Utils/dui_widget_registry.dart';
 import '../../core/action/action_handler.dart';
 import '../../core/action/action_prop.dart';
 import '../../core/bracket_scope_provider.dart';
-import '../../core/builders/dui_json_widget_builder.dart';
 import '../../core/evaluator.dart';
-import '../../core/page/props/dui_widget_json_data.dart';
 import '../dui_base_stateful_widget.dart';
 
 class DUITimer extends BaseStatefulWidget {
   final Map<String, dynamic> props;
-  final DUIWidgetJsonData? child;
+  final Widget? child;
 
   const DUITimer({
     super.key,
@@ -49,7 +46,7 @@ class _DUITimerState extends DUIWidgetState<DUITimer> {
   @override
   Widget build(BuildContext context) {
     if (widget.child == null) {
-      return fallbackWidget();
+      return const SizedBox.shrink();
     }
 
     return StreamBuilder(
@@ -60,21 +57,21 @@ class _DUITimerState extends DUIWidgetState<DUITimer> {
         ),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return fallbackWidget();
+            return const SizedBox.shrink();
           }
 
           if (snapshot.connectionState == ConnectionState.done) {
             Future.delayed(const Duration(seconds: 0), () async {
-              ActionHandler.instance
-                  .execute(context: context, actionFlow: onTimerEnd!);
+              await ActionHandler.instance.execute(
+                  context: context,
+                  actionFlow: onTimerEnd ?? ActionFlow(actions: []));
             });
           }
 
           if (snapshot.hasData) {
             return BracketScope(
               variables: [('tickValue', snapshot.data)],
-              builder: DUIJsonWidgetBuilder(
-                  data: widget.child!, registry: DUIWidgetRegistry.shared),
+              builder: widget.child!,
             );
           }
 
@@ -85,9 +82,5 @@ class _DUITimerState extends DUIWidgetState<DUITimer> {
   @override
   Map<String, Function> getVariables() {
     return {};
-  }
-
-  Widget fallbackWidget() {
-    return const Text('Timer widget not properly configured.');
   }
 }
