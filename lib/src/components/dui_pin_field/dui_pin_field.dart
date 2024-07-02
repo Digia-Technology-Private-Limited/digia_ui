@@ -60,7 +60,8 @@ class _DUIPinFieldState extends DUIWidgetState<DUIPinField> {
   void initState() {
     _controller = TextEditingController();
     length = eval<int>(widget.props['length'], context: context) ?? 4;
-    eval<bool>(widget.props['autoFocus'], context: context) ?? false;
+    autoFocus =
+        eval<bool>(widget.props['autoFocus'], context: context) ?? false;
     enabled = eval<bool>(widget.props['enabled'], context: context) ?? true;
     defaultPinTheme = widget.props['defaultPinTheme'];
     obscureText =
