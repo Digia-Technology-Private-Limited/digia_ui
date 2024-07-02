@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
@@ -82,7 +84,7 @@ class DUIButtonBuilder extends DUIWidgetBuilder {
     Widget? leadingIcon;
     Widget? trailingIcon;
 
-    final props = {...data.props};
+    final props = jsonDecode(jsonEncode(data.props));
 
     if (overrideColor) {
       props['text']?['textStyle']?['textColor'] = disabledTextColor;
