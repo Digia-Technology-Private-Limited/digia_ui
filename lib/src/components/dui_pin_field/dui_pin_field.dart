@@ -85,6 +85,7 @@ class _DUIPinFieldState extends DUIWidgetState<DUIPinField> {
       enabled: enabled,
       defaultPinTheme: _toDefaultPinTheme(context),
       smsRetriever: smsRetrieverImpl,
+      onTapOutside: (event) => FocusScope.of(context).unfocus(),
       onCompleted: (value) async {
         final actionFlow = ActionFlow.fromJson(widget.props['onCompleted']);
         await ActionHandler.instance
