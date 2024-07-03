@@ -321,16 +321,17 @@ Map<String, ActionHandlerFn> _actionsMap = {
   },
   'Action.handleDigiaMessage': (
       {required action, required context, enclosing}) {
+    final name = action.data['name'];
+    final body = action.data['body'];
+    final payload = evalDynamic(body, context, enclosing);
+
+    print('Message Handled: $name');
+    print('Message Body: $payload');
+
     final handler = DUIWidgetScope.maybeOf(context)?.onMessageReceived;
     if (handler == null) return;
 
-    final name = action.data['name'];
-    final body = action.data['body'];
-
-    handler(MessagePayload(
-        context: context,
-        name: name,
-        body: evalDynamic(body, context, enclosing)));
+    handler(MessagePayload(context: context, name: name, body: payload));
 
     return;
   },
