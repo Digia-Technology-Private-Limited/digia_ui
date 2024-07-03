@@ -38,6 +38,16 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
     // Assumption is that onPageLoadAction will not be null.
     // It will either be Action.loadPage or Action.buildPage
 
+    final pageStates = state.props.variables;
+    if (pageStates != null) {
+      for (final element in pageStates.entries) {
+        final pageStateDefaultValue = element.value.value;
+        final evaluatedValue =
+            eval(pageStateDefaultValue, context: blocEvent.context);
+        state.props.variables?[element.key]?.set(evaluatedValue);
+      }
+    }
+
     final onPageLoadAction = state.props.actions['onPageLoad'];
 
     AnalyticsHandler.instance.execute(
