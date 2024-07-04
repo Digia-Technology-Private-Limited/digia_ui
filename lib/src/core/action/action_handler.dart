@@ -130,8 +130,7 @@ Map<String, ActionHandlerFn> _actionsMap = {
             context: context, enclosing: enclosing) ??
         false;
 
-    final result =
-        eval(action.data['result'], context: context, enclosing: enclosing);
+    final result = evalDynamic(action.data['result'], context, enclosing);
 
     if (maybe) {
       return Navigator.of(context).maybePop(result);
