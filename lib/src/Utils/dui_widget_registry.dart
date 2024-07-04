@@ -11,6 +11,7 @@ import '../core/builders/dui_calendar_builder.dart';
 import '../core/builders/dui_carousel_builder.dart';
 import '../core/builders/dui_checkbox_builder.dart';
 import '../core/builders/dui_circular_progress_indicator_builder.dart';
+import '../core/builders/dui_conditional_builder_builder.dart';
 import '../core/builders/dui_container2_builder.dart';
 import '../core/builders/dui_custom_widget_builder.dart';
 import '../core/builders/dui_drawer_builder.dart';
@@ -125,6 +126,9 @@ class DUIWidgetRegistry {
     'digia/pinField': withoutRegistry(DUIPinFieldBuilder.create),
     'digia/calendar': withoutRegistry(DUICalendarBuilder.create),
     'digia/timer': withoutRegistry(DUITimerBuilder.create),
+    'digia/conditionalBuilder': (data, {registry}) =>
+        DUIConditionalBuilderBuilder.create(data,
+            registry: DUIWidgetRegistry.shared)
   };
 
   static const DUIWidgetRegistry shared = DUIWidgetRegistry();
