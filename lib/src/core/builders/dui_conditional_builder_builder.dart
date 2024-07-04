@@ -1,12 +1,14 @@
 import 'package:flutter/widgets.dart';
 
 import '../../../digia_ui.dart';
+import '../../Utils/basic_shared_utils/lodash.dart';
 import '../../Utils/dui_widget_registry.dart';
 import '../evaluator.dart';
 import '../json_widget_builder.dart';
 
 class DUIConditionalBuilderBuilder extends DUIWidgetBuilder {
-  DUIConditionalBuilderBuilder(DUIWidgetJsonData data, DUIWidgetRegistry? registry)
+  DUIConditionalBuilderBuilder(
+      DUIWidgetJsonData data, DUIWidgetRegistry? registry)
       : super(data: data, registry: registry);
 
   static DUIConditionalBuilderBuilder create(DUIWidgetJsonData data,
@@ -21,7 +23,6 @@ class DUIConditionalBuilderBuilder extends DUIWidgetBuilder {
     if (children == null || children.isEmpty) return const SizedBox.shrink();
 
     for (final child in children) {
-
       if (child.type != 'digia/conditionalItem') {
         continue;
       }
@@ -30,7 +31,8 @@ class DUIConditionalBuilderBuilder extends DUIWidgetBuilder {
           eval<bool>(child.props['condition'], context: context) ?? false;
 
       if (condition) {
-        return DUIWidget( data:  child.children['child']!.first);
+        return child.getChild('child').let((p0) => DUIWidget(data: p0)) ??
+            const SizedBox.shrink();
       }
     }
 
