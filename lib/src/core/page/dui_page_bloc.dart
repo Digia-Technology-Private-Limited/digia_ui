@@ -1,7 +1,9 @@
+import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../digia_ui.dart';
+import '../../Utils/expr.dart';
 import '../action/action_prop.dart';
 import '../action/api_handler.dart';
 import '../analytics_handler.dart';
@@ -42,8 +44,8 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
     if (pageStates != null) {
       for (final element in pageStates.entries) {
         final pageStateDefaultValue = element.value.value;
-        final evaluatedValue =
-            eval(pageStateDefaultValue, context: blocEvent.context);
+        final evaluatedValue = evalDynamic(pageStateDefaultValue,
+            blocEvent.context, ExprContext(variables: {}));
         state.props.variables?[element.key]?.set(evaluatedValue);
       }
     }
