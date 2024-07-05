@@ -10,25 +10,28 @@ import '../../Utils/dui_widget_registry.dart';
 import '../../Utils/extensions.dart';
 import '../../components/dui_base_stateful_widget.dart';
 import '../action/action_handler.dart';
-import '../action/action_prop.dart';
 import '../action/api_handler.dart';
 import '../evaluator.dart';
 import '../indexed_item_provider.dart';
 import '../json_widget_builder.dart';
 import '../page/dui_page_bloc.dart';
+import 'common.dart';
 import 'dui_json_widget_builder.dart';
 
 class DUIPaginatedListViewBuilder extends DUIWidgetBuilder {
-  DUIPaginatedListViewBuilder({required super.data, this.registry});
-  final DUIWidgetRegistry? registry;
+  DUIPaginatedListViewBuilder(
+      {required super.data, super.registry = DUIWidgetRegistry.shared});
 
-  static DUIPaginatedListViewBuilder? create(DUIWidgetJsonData data,
-      {DUIWidgetRegistry? registry}) {
-    return DUIPaginatedListViewBuilder(data: data, registry: registry);
+  static DUIPaginatedListViewBuilder? create(DUIWidgetJsonData data) {
+    return DUIPaginatedListViewBuilder(data: data);
   }
 
   @override
   Widget build(BuildContext context) {
+    final children = data.children['children']!;
+
+    if (children.isEmpty) return const SizedBox.shrink();
+
     return DUIPaginatedListView(
       varName: data.varName,
       data: data,
@@ -50,45 +53,70 @@ class DUIPaginatedListView extends BaseStatefulWidget {
 
 class _DUIPaginatedListViewState extends DUIWidgetState<DUIPaginatedListView> {
   final ScrollController _scrollController = ScrollController();
-  final PagingController<int, Map<String, dynamic>> _pagingController =
+  final PagingController<int, Object> _pagingController =
       PagingController(firstPageKey: 1);
-  late int pageSize;
-  late Map<String, dynamic> dataSource;
 
   @override
   void initState() {
     super.initState();
-    pageSize = widget.data.props['pageSize'];
-    dataSource = widget.data.props['dataSource'];
     _pagingController.addPageRequestListener((pageKey) {
-      final onClick = ActionFlow.fromJson(widget.data.props['onListEnded']);
-                ActionHandler.instance
-                    .execute(context: context, actionFlow: onClick);
-      // _fetchPage(pageKey, pageSize, context);
+      final apiDataSourceId =
+          widget.data.props.valueFor(keyPath: 'dataSource.id');
+      Map<String, dynamic>? apiDataSourceArgs =
+          widget.data.props.valueFor(keyPath: 'dataSource.args');
+
+      final apiModel = (context.tryRead<DUIPageBloc>()?.config ??
+              DigiaUIClient.getConfigResolver())
+          .getApiDataSource(apiDataSourceId);
+
+      final args = apiDataSourceArgs?.map((key, value) {
+        final evalue = eval(value,
+            context: context,
+            enclosing: ExprContext(variables: {'offset': pageKey}));
+        final dvalue = apiModel.variables?[key]?.defaultValue;
+        return MapEntry(key, evalue ?? dvalue);
+      });
+
+      ApiHandler.instance.execute(apiModel: apiModel, args: args).then((resp) {
+        final response = {
+          'body': resp.data,
+          'statusCode': resp.statusCode,
+          'headers': resp.headers,
+          'requestObj': requestObjToMap(resp.requestOptions),
+          'error': null,
+        };
+
+        final newItems =
+            ifNotNull(widget.data.props['newItemsTransformation'], (p0) {
+                  return eval<List>(p0,
+                      context: context,
+                      enclosing:
+                          ExprContext(variables: {'response': response}));
+                }) ??
+                response['body'] as List?;
+
+        if (newItems != null) {
+          _pagingController.appendPage(newItems.cast<Object>(), pageKey++);
+        } else {
+          _pagingController.appendLastPage([]);
+        }
+      });
     });
   }
 
-  _fetchPage(int pageKey, int pageSize, BuildContext context) async {
-    final List<Map<String, dynamic>> newItems = await _makeFuture(
-            dataSource: dataSource,
-            pageKey: pageKey,
-            pageSize: pageSize,
-            context: context) ??
-        [];
-    final isLastPage = newItems.length < pageSize;
-    if (isLastPage) {
-      _pagingController.appendLastPage(newItems);
-    } else {
-      final nextPageKey = pageKey + 1;
-      _pagingController.appendPage(newItems, nextPageKey);
-    }
+  @override
+  void didChangeDependencies() {
+    final items =
+        createDataItemsForDynamicChildren(data: widget.data, context: context);
+    _pagingController.value = PagingState(nextPageKey: 2, itemList: items);
+
+    super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
     final children = widget.data.children['children']!;
 
-    List items = _createDataItems(widget.data.dataRef, context);
     final generateChildrenDynamically =
         widget.data.dataRef.isNotEmpty && widget.data.dataRef['kind'] != null;
 
@@ -105,8 +133,6 @@ class _DUIPaginatedListViewState extends DUIWidgetState<DUIPaginatedListView> {
     }
 
     if (generateChildrenDynamically) {
-      if (children.isEmpty) return const SizedBox.shrink();
-
       return PagedListView(
         reverse: isReverse,
         pagingController: _pagingController,
@@ -120,22 +146,24 @@ class _DUIPaginatedListViewState extends DUIWidgetState<DUIPaginatedListView> {
             final childToRepeat = children.first;
             return IndexedItemWidgetBuilder(
                 index: index,
-                currentItem: items[index],
+                currentItem: item,
                 builder: DUIJsonWidgetBuilder(
                     data: childToRepeat, registry: widget.registry!));
           },
-          firstPageProgressIndicatorBuilder: (context) =>widget.data
+          firstPageProgressIndicatorBuilder: (context) =>
+              widget.data
                   .getChild('firstPageLoadingWidget')
-                  ?.let((p0) => DUIWidget(data: p0))??
+                  ?.let((p0) => DUIWidget(data: p0)) ??
               const Center(child: CircularProgressIndicator()),
-          newPageProgressIndicatorBuilder: (context) =>widget.data
+          newPageProgressIndicatorBuilder: (context) =>
+              widget.data
                   .getChild('newPageLoadingWidget')
-                  ?.let((p0) => DUIWidget(data: p0))??
+                  ?.let((p0) => DUIWidget(data: p0)) ??
               const Center(child: CircularProgressIndicator()),
           firstPageErrorIndicatorBuilder: (context) =>
-          widget.data
+              widget.data
                   .getChild('pageErrorWidget')
-                  ?.let((p0) => DUIWidget(data: p0))??
+                  ?.let((p0) => DUIWidget(data: p0)) ??
               const Center(child: Text('first page error')),
         ),
       );
@@ -164,47 +192,15 @@ class _DUIPaginatedListViewState extends DUIWidgetState<DUIPaginatedListView> {
     }
   }
 
-  List<Object> _createDataItems(
-      Map<String, dynamic> dataRef, BuildContext context) {
-    if (dataRef.isEmpty) return [];
-    if (widget.data.dataRef['kind'] == 'json') {
-      return (widget.data.dataRef['datum'] as List<dynamic>?)?.cast<Object>() ??
-          [];
-    } else {
-      return eval<List>(
-            widget.data.dataRef['datum'],
-            context: context,
-            decoder: (p0) => p0 as List?,
-          )?.cast<Object>() ??
-          [];
-    }
-  }
-
-  Future<List<Map<String, dynamic>>>? _makeFuture(
-      {required Map<String, dynamic> dataSource,
-      int? pageKey,
-      int? pageSize,
-      required BuildContext context}) async {
-    final apiDataSourceId = dataSource['id'];
-    Map<String, dynamic>? apiDataSourceArgs = dataSource['args'];
-
-    final apiModel = (context.tryRead<DUIPageBloc>()?.config ??
-            DigiaUIClient.getConfigResolver())
-        .getApiDataSource(apiDataSourceId);
-
-    final args = apiDataSourceArgs?.map((key, value) {
-      final evalue = eval(value, context: context);
-      final dvalue = apiModel.variables?[key]?.defaultValue;
-      return MapEntry(key, evalue ?? dvalue);
-    });
-
-    return ApiHandler.instance
-        .execute(apiModel: apiModel, args: args)
-        .then((value) => value.data as List<Map<String, dynamic>>);
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    _pagingController.dispose();
+    super.dispose();
   }
 
   @override
   Map<String, Function> getVariables() {
-    return {'': () => print('this is get variables function')};
+    return {'': () => {}};
   }
 }
