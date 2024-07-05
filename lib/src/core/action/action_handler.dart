@@ -1,9 +1,6 @@
 import 'dart:developer';
-import 'dart:io';
-import 'dart:typed_data';
-import 'package:flutter/foundation.dart';
+
 import 'package:digia_expr/digia_expr.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:json_schema2/json_schema2.dart';
@@ -265,111 +262,6 @@ Map<String, ActionHandlerFn> _actionsMap = {
 
       return;
     }
-    return null;
-  },
-  'Action.filePicker': ({required action, required context, enclosing}) async {
-    final bloc = context.tryRead<DUIPageBloc>();
-    if (bloc == null) {
-      throw 'Action.filePicker called on a widget which is not wrapped in DUIPageBloc';
-    }
-
-    final events = action.data['events'];
-    final bool rebuildPage =
-        NumDecoder.toBool(action.data['rebuildPage']) ?? true;
-
-    final type = eval<String>(action.data['selectionType'],
-        context: context, enclosing: enclosing);
-    final sizeLimit = eval<double>(action.data['sizeLimit'],
-        context: context, enclosing: enclosing);
-    final isMultiSelect = eval<bool>(action.data['isMultiSelected'],
-        context: context, enclosing: enclosing);
-    // final variable = eval<String>(action.data['variable'],
-    // context: context, enclosing: enclosing);
-    // final variableDefs = bloc.state.props.variables;
-
-    FileType fileType;
-    switch (type!.toLowerCase()) {
-      case 'image':
-        fileType = FileType.image;
-        break;
-      case 'video':
-        fileType = FileType.video;
-        break;
-      case 'pdf':
-        fileType = FileType.custom;
-        break;
-      default:
-        fileType = FileType.any;
-    }
-    List<PlatformFile>? platformfiles;
-    try {
-      FilePickerResult? result = await FilePicker.platform.pickFiles(
-        type: fileType,
-        allowMultiple: isMultiSelect ?? false,
-      );
-
-      if (result != null) {
-        if (sizeLimit != null) {
-          platformfiles = result.files
-              .where((file) => file.size <= sizeLimit * 1024)
-              .toList();
-        } else {
-          platformfiles = result.files;
-        }
-      } else {
-        // User canceled the picker
-        return;
-      }
-    } catch (e) {
-      print('Error picking file: $e');
-      return;
-    }
-    if (platformfiles != null && platformfiles.isNotEmpty) {
-      try {
-        List<Uint8List> finalBytes =
-            await Future.wait(platformfiles.map((platformfile) async {
-          if (kIsWeb) {
-            return platformfile.bytes ?? Uint8List(0); // Handle null bytes
-          } else {
-            if (platformfile.path == null) {
-              print('Error: Null path for file');
-              return Uint8List(0);
-            }
-
-            try {
-              return await File(platformfile.path!).readAsBytes();
-            } catch (e) {
-              print('Error reading file at ${platformfile.path}: $e');
-              return Uint8List(0); // Returning an empty byte list on error
-            }
-          }
-        }).toList());
-
-        // Debugging output
-        for (var bytes in finalBytes) {
-          print('Read ${bytes.length} bytes');
-        }
-
-        if (events is List) {
-          final variableDefs = bloc.state.props.variables;
-
-          bloc.add(SetStateEvent(
-              events: events
-                  .where((e) => variableDefs?[e['variableName']] != null)
-                  .map((e) => SingleSetStateEvent(
-                        variableName: e['variableName'],
-                        context: context,
-                        value: {'files': finalBytes[0]},
-                      ))
-                  .toList(),
-              rebuildPage: true));
-          print(variableDefs.toString());
-        }
-      } catch (e) {
-        print('Error: $e');
-      }
-    }
-
     return null;
   },
 };

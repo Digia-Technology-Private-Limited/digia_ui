@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blurhash/flutter_blurhash.dart';
@@ -24,25 +22,11 @@ class DUIImageBuilder extends DUIWidgetBuilder {
         data: DUIWidgetJsonData(type: 'digia/image', props: props));
   }
 
-  Uint8List? _convertStringToUint8List(String str) {
-    if (str.isEmpty) {
-      return null;
-    }
-    final List<int> codeUnits = str.codeUnits;
-    final Uint8List unit8List = Uint8List.fromList(codeUnits);
-
-    return unit8List;
-  }
-
   ImageProvider _createImageProvider(BuildContext context) {
     final imageSource =
         eval<String>(data.props['imageSrc'], context: context) ?? '';
-    final imagebytes = _convertStringToUint8List(imageSource);
     // Network Image
-    if (imagebytes != null) {
-      // Bytes Image
-      return MemoryImage(imagebytes);
-    } else if (imageSource.startsWith('http')) {
+    if (imageSource.startsWith('http')) {
       return CachedNetworkImageProvider(imageSource);
     } else {
       return DUIWidgetScope.maybeOf(context)
