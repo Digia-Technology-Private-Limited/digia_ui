@@ -25,7 +25,7 @@ DUIContainer2Props _$DUIContainer2PropsFromJson(Map<String, dynamic> json) =>
               json['decorationImage'] as Map<String, dynamic>),
       json['shape'] as String?,
       json['boxFit'] as String?,
-      json['gradiant'] as Map<String, dynamic>,
+      json['gradiant'] as Map<String, dynamic>?,
     );
 
 Map<String, dynamic> _$DUIContainer2PropsToJson(DUIContainer2Props instance) =>

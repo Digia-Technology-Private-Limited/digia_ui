@@ -106,6 +106,12 @@ class _DUITextFieldState extends DUIWidgetState<DUITextFormField> {
       minLines: _minLines,
       maxLength: _maxLength,
       cursorColor: _cursorColor,
+      buildCounter: (context,
+              {required currentLength,
+              required isFocused,
+              required maxLength}) =>
+          null,
+      onTapOutside: (event) => FocusScope.of(context).unfocus(),
       decoration: InputDecoration(
         fillColor: _fillColor,
         filled: _fillColor != null,

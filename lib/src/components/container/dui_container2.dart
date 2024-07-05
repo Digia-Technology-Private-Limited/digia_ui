@@ -83,7 +83,9 @@ class DUIContainer2 extends StatelessWidget {
     );
   }
 
-  Gradient? _toGradiant(Map<String, dynamic> data, BuildContext context) {
+  Gradient? _toGradiant(Map<String, dynamic>? data, BuildContext context) {
+    if (data == null) return null;
+
     final type = data['type'] as String?;
 
     switch (type) {
@@ -94,17 +96,12 @@ class DUIContainer2 extends StatelessWidget {
             .nonNulls
             .toList();
 
-        if (colors == null) return null;
+        if (colors == null || colors.isEmpty) return null;
 
         final stops = (data['colorList'] as List?)
-            ?.map((e) => e['stop'] as double?)
+            ?.map((e) => NumDecoder.toDouble(e['stop']))
             .nonNulls
             .toList();
-
-        // final begin = DUIDecoder.toAlignment(data['beginAlignment']) ??
-        //     Alignment.centerLeft;
-        // final end = DUIDecoder.toAlignment(data['endAlignment']) ??
-        //     Alignment.centerRight;
 
         final rotationInRadians = NumDecoder.toInt(data['angle'])
             .let((p0) => GradientRotation(p0 / 180.0 * math.pi));
