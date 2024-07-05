@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 
 import '../../../digia_ui.dart';
@@ -8,8 +6,8 @@ import '../../Utils/dui_widget_registry.dart';
 import '../../Utils/extensions.dart';
 import '../../components/dui_widget_creator_fn.dart';
 import '../bracket_scope_provider.dart';
-import '../evaluator.dart';
 import '../json_widget_builder.dart';
+import 'common.dart';
 import 'dui_json_widget_builder.dart';
 
 class DUIFlexBuilder extends DUIWidgetBuilder {
@@ -33,7 +31,8 @@ class DUIFlexBuilder extends DUIWidgetBuilder {
 
     if (children.isEmpty) return _emptyChildWidget();
 
-    List items = _createDataItems(data.dataRef, context);
+    List items =
+        createDataItemsForDynamicChildren(data: data, context: context);
     final generateChildrenDynamically =
         data.dataRef.isNotEmpty && data.dataRef['kind'] != null;
 
@@ -79,35 +78,6 @@ class DUIFlexBuilder extends DUIWidgetBuilder {
     }
 
     return widget;
-  }
-
-  List<Object> _createDataItems(
-      Map<String, dynamic> dataRef, BuildContext context) {
-    if (dataRef.isEmpty) return [];
-    if (data.dataRef['kind'] == 'json') {
-      return _toList(data.dataRef['datum'])?.cast<Object>() ?? [];
-    } else {
-      return eval<List>(
-            data.dataRef['datum'],
-            context: context,
-            decoder: (p0) => p0 as List?,
-          )?.cast<Object>() ??
-          [];
-    }
-  }
-
-  List? _toList(dynamic data) {
-    if (data is String) {
-      try {
-        final list = jsonDecode(data);
-        if (list is! List) return null;
-        return list;
-      } catch (e) {
-        return null;
-      }
-    }
-
-    return data as List?;
   }
 
   Flex _buildFlex(List<Widget> Function() childrenBuilder) {
