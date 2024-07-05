@@ -15,10 +15,18 @@ class DUIIconBuilder extends DUIWidgetBuilder {
     return DUIIconBuilder(data: data);
   }
 
-  factory DUIIconBuilder.fromProps({required Map<String, dynamic>? props}) {
+  static DUIIconBuilder? fromProps({required dynamic props}) {
+    if (props == null) return null;
+
+    if (props is! Map<String, dynamic>) return null;
+
+    if (props['iconData'] == null) return null;
+
     return DUIIconBuilder(
         data: DUIWidgetJsonData(type: 'digia/icon', props: props));
   }
+
+  static Widget emptyIconWidget() => const SizedBox.shrink();
 
   @override
   Widget build(BuildContext context) {

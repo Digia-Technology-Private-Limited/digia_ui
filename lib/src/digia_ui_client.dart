@@ -18,8 +18,6 @@ import 'network/network_client.dart';
 import 'version.dart';
 
 const defaultUIConfigAssetPath = 'assets/json/dui_config.json';
-const defaultBaseUrl = 'https://app.digia.tech/api/v1';
-// const defaultBaseUrl = 'http://localhost:3000/api/v1';
 
 class DigiaUIClient {
   static final DigiaUIClient _instance = DigiaUIClient._();
@@ -63,12 +61,12 @@ class DigiaUIClient {
 
   static initializeFromData(
       {required String accessKey,
-      String? baseUrl,
+      required String baseUrl,
       required dynamic data,
       required NetworkConfiguration networkConfiguration,
       DeveloperConfig? developerConfig}) async {
     _instance.accessKey = accessKey;
-    _instance.baseUrl = baseUrl ?? defaultBaseUrl;
+    _instance.baseUrl = baseUrl;
     Map<String, dynamic> headers = {'digia_projectId': accessKey};
     _instance.networkClient = NetworkClient(
         _instance.baseUrl, headers, networkConfiguration, developerConfig);
@@ -86,7 +84,7 @@ class DigiaUIClient {
       {required String accessKey,
       required Environment environment,
       required int version,
-      String? baseUrl,
+      required String baseUrl,
       required NetworkConfiguration networkConfiguration,
       DeveloperConfig? developerConfig,
       DUIAnalytics? duiAnalytics}) async {
@@ -96,7 +94,7 @@ class DigiaUIClient {
     _instance.environment = environment;
     // _instance.version = version;
     _instance.accessKey = accessKey;
-    _instance.baseUrl = baseUrl ?? defaultBaseUrl;
+    _instance.baseUrl = baseUrl;
     _instance.duiAnalytics = duiAnalytics;
 
     PackageInfo packageInfo = await PackageInfo.fromPlatform();

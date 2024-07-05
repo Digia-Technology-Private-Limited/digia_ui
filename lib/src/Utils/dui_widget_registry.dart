@@ -7,9 +7,11 @@ import '../core/builders/dui_animated_button_builder.dart';
 import '../core/builders/dui_app_bar_builder.dart';
 import '../core/builders/dui_avatar_builder.dart';
 import '../core/builders/dui_button_builder.dart';
+import '../core/builders/dui_calendar_builder.dart';
 import '../core/builders/dui_carousel_builder.dart';
 import '../core/builders/dui_checkbox_builder.dart';
 import '../core/builders/dui_circular_progress_indicator_builder.dart';
+import '../core/builders/dui_conditional_builder_builder.dart';
 import '../core/builders/dui_container2_builder.dart';
 import '../core/builders/dui_custom_widget_builder.dart';
 import '../core/builders/dui_drawer_builder.dart';
@@ -24,6 +26,7 @@ import '../core/builders/dui_icon_button_builder.dart';
 import '../core/builders/dui_image_builder.dart';
 import '../core/builders/dui_listview_builder.dart';
 import '../core/builders/dui_lottie_builder.dart';
+import '../core/builders/dui_pin_field_builder.dart';
 import '../core/builders/dui_rich_text_builder.dart';
 import '../core/builders/dui_scaffold_builder.dart';
 import '../core/builders/dui_sized_box_builder.dart';
@@ -34,6 +37,7 @@ import '../core/builders/dui_tab_view_builder.dart';
 import '../core/builders/dui_tab_view_item_builder.dart';
 import '../core/builders/dui_text_builder.dart';
 import '../core/builders/dui_text_form_field_builder.dart';
+import '../core/builders/dui_timer_builder.dart';
 import '../core/builders/dui_vertical_divider_builder.dart';
 import '../core/builders/dui_video_player_builder.dart';
 import '../core/builders/dui_webview_builder.dart';
@@ -119,6 +123,12 @@ class DUIWidgetRegistry {
     'digia/checkbox': withoutRegistry(DUICheckboxBuilder.create),
     'digia/switch': withoutRegistry(DUISwitchBuilder.create),
     'digia/animatedButton': withoutRegistry(DUIAnimatedButtonBuilder.create),
+    'digia/pinField': withoutRegistry(DUIPinFieldBuilder.create),
+    'digia/calendar': withoutRegistry(DUICalendarBuilder.create),
+    'digia/timer': withoutRegistry(DUITimerBuilder.create),
+    'digia/conditionalBuilder': (data, {registry}) =>
+        DUIConditionalBuilderBuilder.create(data,
+            registry: DUIWidgetRegistry.shared)
   };
 
   static const DUIWidgetRegistry shared = DUIWidgetRegistry();

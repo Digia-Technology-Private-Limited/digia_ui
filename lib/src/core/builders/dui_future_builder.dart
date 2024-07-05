@@ -88,7 +88,7 @@ Future<Object?> _makeFuture(
         return ActionHandler.instance.execute(
             context: context,
             actionFlow: successAction,
-            enclosing: ExprContext(variables: {'response': value}));
+            enclosing: ExprContext(variables: {'response': value.data}));
       }, onError: (e) async {
         final errorAction =
             ActionFlow.fromJson(future.valueFor(keyPath: 'onError'));

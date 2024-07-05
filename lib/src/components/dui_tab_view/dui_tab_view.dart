@@ -53,9 +53,11 @@ class _DUITabViewState extends State<DUITabView> {
                   dividerHeight: widget.tabViewProps.dividerHeight,
                   tabs: List.generate(widget.children.length, (index) {
                     final icon = DUIIconBuilder.fromProps(
-                        props: widget.children[index].props['icon']);
+                                props: widget.children[index].props['icon'])
+                            ?.build(context) ??
+                        DUIIconBuilder.emptyIconWidget();
                     return Column(children: [
-                      icon.buildWithContainerProps(context),
+                      icon,
                       Text(widget.children[index].props['title'] ?? ''),
                     ]);
                   }),
@@ -97,9 +99,11 @@ class _DUITabViewState extends State<DUITabView> {
                       : null,
                   tabs: List.generate(widget.children.length, (index) {
                     final icon = DUIIconBuilder.fromProps(
-                        props: widget.children[index].props['icon']);
+                                props: widget.children[index].props['icon'])
+                            ?.build(context) ??
+                        DUIIconBuilder.emptyIconWidget();
                     return Column(children: [
-                      icon.buildWithContainerProps(context),
+                      icon,
                       Text(widget.children[index].props['title'] ?? ''),
                     ]);
                   }),
