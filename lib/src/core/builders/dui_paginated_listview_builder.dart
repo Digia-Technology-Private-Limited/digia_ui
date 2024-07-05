@@ -4,6 +4,7 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import '../../../digia_ui.dart';
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
+import '../../Utils/basic_shared_utils/lodash.dart';
 import '../../Utils/basic_shared_utils/num_decoder.dart';
 import '../../Utils/dui_widget_registry.dart';
 import '../../Utils/extensions.dart';
@@ -60,7 +61,10 @@ class _DUIPaginatedListViewState extends DUIWidgetState<DUIPaginatedListView> {
     pageSize = widget.data.props['pageSize'];
     dataSource = widget.data.props['dataSource'];
     _pagingController.addPageRequestListener((pageKey) {
-      _fetchPage(pageKey, pageSize, context);
+      final onClick = ActionFlow.fromJson(widget.data.props['onListEnded']);
+                ActionHandler.instance
+                    .execute(context: context, actionFlow: onClick);
+      // _fetchPage(pageKey, pageSize, context);
     });
   }
 
@@ -120,11 +124,18 @@ class _DUIPaginatedListViewState extends DUIWidgetState<DUIPaginatedListView> {
                 builder: DUIJsonWidgetBuilder(
                     data: childToRepeat, registry: widget.registry!));
           },
-          firstPageProgressIndicatorBuilder: (context) =>
-              const Center(child: Text('first page indicator')),
-          newPageProgressIndicatorBuilder: (context) =>
-              const Center(child: Text('new page indicator')),
+          firstPageProgressIndicatorBuilder: (context) =>widget.data
+                  .getChild('firstPageLoadingWidget')
+                  ?.let((p0) => DUIWidget(data: p0))??
+              const Center(child: CircularProgressIndicator()),
+          newPageProgressIndicatorBuilder: (context) =>widget.data
+                  .getChild('newPageLoadingWidget')
+                  ?.let((p0) => DUIWidget(data: p0))??
+              const Center(child: CircularProgressIndicator()),
           firstPageErrorIndicatorBuilder: (context) =>
+          widget.data
+                  .getChild('pageErrorWidget')
+                  ?.let((p0) => DUIWidget(data: p0))??
               const Center(child: Text('first page error')),
         ),
       );
