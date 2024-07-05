@@ -74,19 +74,11 @@ class DUIStreamBuilder extends DUIWidgetBuilder {
 
   Stream<Object?> _makeStream(
       Map<String, dynamic> stream, BuildContext context) {
-    final streamType = stream['type'];
-    if (streamType == null) return Stream.error('Stream type not found');
-
     final streamName = stream['name'];
 
     final pageArgsMap = context.tryRead<DUIPageBloc>()?.state.pageArgs;
-    final pageParaMap = context.tryRead<DUIPageBloc>()?.state.props.inputArgs;
 
-    if (pageArgsMap?[streamName] != pageParaMap?[streamName]) {
-      return Stream.error('Stream not found');
-    }
-
-    final streamSource = pageArgsMap?[streamName] ?? pageParaMap?[streamName];
+    final streamSource = pageArgsMap?[streamName];
     if (streamSource != null) return streamSource as Stream<Object?>;
 
     return Stream.error('Stream not found');
