@@ -93,12 +93,12 @@ class _DUIPaginatedListViewState extends DUIWidgetState<DUIPaginatedListView> {
                       enclosing:
                           ExprContext(variables: {'response': response}));
                 }) ??
-                response['body'] as List?;
+                response['body'];
 
-        if (newItems != null) {
-          _pagingController.appendPage(newItems.cast<Object>(), pageKey++);
-        } else {
+        if (newItems == null || newItems is! List || newItems.isEmpty) {
           _pagingController.appendLastPage([]);
+        } else {
+          _pagingController.appendPage(newItems.cast<Object>(), pageKey++);
         }
       });
     });
