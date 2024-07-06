@@ -98,7 +98,7 @@ class _DUIPaginatedListViewState extends DUIWidgetState<DUIPaginatedListView> {
         if (newItems == null || newItems is! List || newItems.isEmpty) {
           _pagingController.appendLastPage([]);
         } else {
-          _pagingController.appendPage(newItems.cast<Object>(), pageKey++);
+          _pagingController.appendPage(newItems.cast<Object>(), pageKey + 1);
         }
       });
     });
