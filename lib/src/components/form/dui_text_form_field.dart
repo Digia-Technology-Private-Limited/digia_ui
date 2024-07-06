@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
 import '../../Utils/basic_shared_utils/num_decoder.dart';
@@ -123,7 +122,9 @@ class _DUITextFieldState extends DUIWidgetState<DUITextFormField> {
         labelStyle: _labelStyle,
         hintText: _hintText,
         hintStyle: _hintStyle,
-        contentPadding: _minLines != null ? (_minLines! > 1 ? const EdgeInsets.all(12) : _contentPadding) : _contentPadding,
+        contentPadding: _minLines != null
+            ? (_minLines! > 1 ? const EdgeInsets.all(12) : _contentPadding)
+            : _contentPadding,
         focusColor: _focusColor,
         prefixIcon: widget.prefixIcon,
         suffixIcon: widget.suffixIcon,
