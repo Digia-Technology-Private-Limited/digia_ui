@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../../../digia_ui.dart';
@@ -39,33 +40,39 @@ class DUIFlexBuilder extends DUIWidgetBuilder {
     Widget widget;
     if (generateChildrenDynamically) {
       widget = _buildFlex(() {
-        List<Widget> flexChildren = [];
+        return items
+            .mapIndexed((index, element) {
+              return children.map((child) {
+                final flexValue = child.containerProps
+                    .valueFor(keyPath: 'expansion.flexValue');
+                final expansionType =
+                    child.containerProps.valueFor(keyPath: 'expansion.type');
 
-        for (var i = 0; i < items.length; i++) {
-          for (var child in children) {
-            final element = items[i];
-            final flexValue =
-                child.containerProps.valueFor(keyPath: 'expansion.flexValue');
-            final expansionType =
-                child.containerProps.valueFor(keyPath: 'expansion.type');
-
-            flexChildren.add(DUIFlexFit(
-                flex: flexValue,
-                expansionType: expansionType,
-                child: BracketScope(
-                    variables: [('index', i), ('currentItem', element)],
-                    builder: DUIJsonWidgetBuilder(
-                        data: child, registry: registry!))));
-          }
-        }
-
-        return flexChildren;
+                return DUIFlexFit(
+                    flex: flexValue,
+                    expansionType: expansionType,
+                    child: BracketScope(
+                        variables: [('index', index), ('currentItem', element)],
+                        builder: DUIJsonWidgetBuilder(
+                            data: child, registry: registry!)));
+              });
+            })
+            .expand((e) => e)
+            .toList();
       });
     } else {
       widget = _buildFlex(() {
-        return children.map((e) {
-          final builder = DUIJsonWidgetBuilder(data: e, registry: registry!);
-          return builder.build(context);
+        return children.map((child) {
+          final flexValue =
+              child.containerProps.valueFor(keyPath: 'expansion.flexValue');
+          final expansionType =
+              child.containerProps.valueFor(keyPath: 'expansion.type');
+          final builder =
+              DUIJsonWidgetBuilder(data: child, registry: registry!);
+          return DUIFlexFit(
+              flex: flexValue,
+              expansionType: expansionType,
+              child: builder.build(context));
         }).toList();
       });
     }
