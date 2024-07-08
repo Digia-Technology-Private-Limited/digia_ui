@@ -19,7 +19,9 @@ class DUIIconButtonBuilder extends DUIWidgetBuilder {
 
   @override
   Widget build(BuildContext context) {
-    final icon = DUIIconBuilder.fromProps(props: data.props['icon']);
+    final icon =
+        DUIIconBuilder.fromProps(props: data.props['icon'])?.build(context) ??
+            DUIIconBuilder.emptyIconWidget();
 
     final defaultStyleJson =
         data.props['defaultStyle'] as Map<String, dynamic>? ?? {};
@@ -58,7 +60,7 @@ class DUIIconButtonBuilder extends DUIWidgetBuilder {
                   ActionHandler.instance
                       .execute(context: context, actionFlow: onClick);
                 },
-          icon: icon.buildWithContainerProps(context),
+          icon: icon,
           style: style,
         ));
   }

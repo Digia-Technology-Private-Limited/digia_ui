@@ -2,6 +2,23 @@
 
 Digia Ui Sdk.
 
+## [0.0.6-beta.24] - 2024-07-08
+
+- Support for Action onBackPressed
+
+## [0.0.6-beta.23] - 2023-07-03
+
+- Bug fixes
+
+## [0.0.6-beta.22] - 2023-06-26
+
+- New Components
+- Bug fixes
+
+## [0.0.6-beta.21] - 2023-06-14
+
+- Bug fixes
+
 ## [0.0.6-beta.20] - 2023-06-14
 
 - Support for Dynamic Text Color

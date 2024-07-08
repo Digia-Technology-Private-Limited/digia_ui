@@ -1,9 +1,11 @@
 import 'dart:developer';
 
 import 'package:digia_expr/digia_expr.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:json_schema2/json_schema2.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
@@ -11,6 +13,7 @@ import '../../Utils/basic_shared_utils/lodash.dart';
 import '../../Utils/basic_shared_utils/num_decoder.dart';
 import '../../Utils/expr.dart';
 import '../../Utils/extensions.dart';
+import '../../Utils/util_functions.dart';
 import '../../components/dui_widget_scope.dart';
 import '../../types.dart';
 import '../analytics_handler.dart';
@@ -20,6 +23,7 @@ import '../page/dui_page_bloc.dart';
 import '../page/dui_page_event.dart';
 import '../utils.dart';
 import 'action_prop.dart';
+import 'api_handler.dart';
 
 typedef ActionHandlerFn = Future<dynamic>? Function({
   required BuildContext context,
@@ -126,8 +130,7 @@ Map<String, ActionHandlerFn> _actionsMap = {
             context: context, enclosing: enclosing) ??
         false;
 
-    final result =
-        eval(action.data['result'], context: context, enclosing: enclosing);
+    final result = evalDynamic(action.data['result'], context, enclosing);
 
     if (maybe) {
       return Navigator.of(context).maybePop(result);
@@ -197,18 +200,137 @@ Map<String, ActionHandlerFn> _actionsMap = {
     );
     return;
   },
+  'Action.openDialog': ({required action, required context, enclosing}) async {
+    final String? pageUId = action.data['pageUid'] ?? action.data['pageId'];
+
+    if (pageUId == null) {
+      throw ArgumentError('Null value', 'pageId');
+    }
+
+    Map<String, dynamic>? pageArgs =
+        action.data['pageArgs'] ?? action.data['args'];
+
+    final pageProps =
+        context.tryRead<DUIPageBloc>()?.config.getPageData(pageUId);
+    final filteredArgs = ifNotNull(
+        pageArgs?.entries
+            .where((e) => pageProps?.inputArgs?[e.key] != null)
+            .cast<MapEntry<String, dynamic>>(),
+        Map<String, dynamic>.fromEntries);
+
+    final evaluatedArgs = evalDynamic(filteredArgs, context, enclosing);
+    final barrierDismissible =
+        eval<bool>(action.data['barrierDismissible'], context: context);
+    final barrierColor = eval<String>(action.data['barrierColor'],
+        context: context, enclosing: enclosing);
+
+    final widgetScope = DUIWidgetScope.maybeOf(context);
+
+    final waitForResult =
+        NumDecoder.toBool(action.data['waitForResult']) ?? false;
+
+    Object? result;
+    result = await openDialog(
+      pageUid: pageUId,
+      context: context,
+      pageArgs: evaluatedArgs,
+      iconDataProvider: widgetScope?.iconDataProvider,
+      imageProviderFn: widgetScope?.imageProviderFn,
+      textStyleBuilder: widgetScope?.textStyleBuilder,
+      barrierDismissible: barrierDismissible,
+      barrierColor: makeColor(barrierColor),
+    );
+
+    if (waitForResult && context.mounted) {
+      final onResultActionflow = ActionFlow.fromJson(action.data['onResult']);
+      await ActionHandler.instance.execute(
+          context: context,
+          actionFlow: onResultActionflow,
+          enclosing: ExprContext(variables: {
+            'result': result,
+          }, enclosing: enclosing));
+    }
+    return result;
+  },
+  'Action.callRestApi': ({required action, required context, enclosing}) async {
+    final dataSourceId = action.data['dataSourceId'];
+    Map<String, dynamic>? apiDataSourceArgs = action.data['args'];
+    final apiModel = (context.tryRead<DUIPageBloc>()?.config)
+        ?.getApiDataSource(dataSourceId);
+
+    final args = apiDataSourceArgs?.map((key, value) {
+      final evalue = eval(value, context: context);
+      final dvalue = apiModel?.variables?[key]?.defaultValue;
+      return MapEntry(key, evalue ?? dvalue);
+    });
+
+    final result = await ApiHandler.instance
+        .execute(apiModel: apiModel!, args: args)
+        .then((resp) {
+      final response = {
+        'body': resp.data,
+        'statusCode': resp.statusCode,
+        'headers': resp.headers,
+        'requestObj': requestObjToMap(resp.requestOptions),
+        'error': null,
+      };
+
+      final successCondition = action.data['successCondition'] as String?;
+      final evaluatedSuccessCond = successCondition.let((p0) => eval<bool>(
+              successCondition,
+              context: context,
+              enclosing: ExprContext(
+                  variables: {'response': response}, enclosing: enclosing))) ??
+          successCondition == null || successCondition.isEmpty;
+
+      if (evaluatedSuccessCond) {
+        final successAction = ActionFlow.fromJson(action.data['onSuccess']);
+        return ActionHandler.instance.execute(
+            context: context,
+            actionFlow: successAction,
+            enclosing: ExprContext(
+                variables: {'response': response}, enclosing: enclosing));
+      } else {
+        final errorAction = ActionFlow.fromJson(action.data['onError']);
+        return ActionHandler.instance.execute(
+            context: context,
+            actionFlow: errorAction,
+            enclosing: ExprContext(
+                variables: {'response': response}, enclosing: enclosing));
+      }
+    }, onError: (e) async {
+      final errorAction = ActionFlow.fromJson(action.data['onError']);
+
+      final response = {
+        'body': e.response.data,
+        'statusCode': e.response.statusCode,
+        'headers': e.response.headers,
+        'requestObj': requestObjToMap(e.requestOptions),
+        'error': e.message,
+      };
+
+      return ActionHandler.instance.execute(
+          context: context,
+          actionFlow: errorAction,
+          enclosing: ExprContext(
+              variables: {'response': response}, enclosing: enclosing));
+    });
+
+    return result;
+  },
   'Action.handleDigiaMessage': (
       {required action, required context, enclosing}) {
+    final name = action.data['name'];
+    final body = action.data['body'];
+    final payload = evalDynamic(body, context, enclosing);
+
+    print('Message Handled: $name');
+    print('Message Body: $payload');
+
     final handler = DUIWidgetScope.maybeOf(context)?.onMessageReceived;
     if (handler == null) return;
 
-    final name = action.data['name'];
-    final body = action.data['body'];
-
-    handler(MessagePayload(
-        context: context,
-        name: name,
-        body: evalDynamic(body, context, enclosing)));
+    handler(MessagePayload(context: context, name: name, body: payload));
 
     return;
   },
@@ -263,6 +385,41 @@ Map<String, ActionHandlerFn> _actionsMap = {
       return;
     }
     return null;
+  },
+  'Action.share': ({required action, required context, enclosing}) {
+    final message = eval<String>(action.data['message'],
+        context: context, enclosing: enclosing);
+    final subject = eval<String>(action.data['subject'],
+        context: context, enclosing: enclosing);
+
+    if (message != null && message.isNotEmpty) {
+      if (kIsWeb) {
+        showDialog(
+          context: context,
+          useRootNavigator: false,
+          builder: (cntxt) {
+            return AlertDialog(
+              title: const Text('Notice'),
+              content: Text(
+                  'This feature works only in mobile devices.\n\nMessage: "$message" '),
+              actions: [
+                TextButton(
+                  child: const Text('Ok'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      } else {
+        Share.share(message, subject: subject);
+      }
+      return;
+    } else {
+      return null;
+    }
   },
 };
 
@@ -328,4 +485,14 @@ abstract class NavigatorHelper {
     return Navigator.pushAndRemoveUntil<T>(
         context, newRoute, removeRoutesUntilPredicate);
   }
+}
+
+requestObjToMap(dynamic request) {
+  return {
+    'url': request.path,
+    'method': request.method,
+    'headers': request.headers,
+    'data': request.data,
+    'queryParameters': request.queryParameters,
+  };
 }

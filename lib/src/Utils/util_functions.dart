@@ -143,16 +143,17 @@ OutlinedBorder? toButtonShape(dynamic value) {
   };
 }
 
-Border? toBorder(DUIBorder? border) {
+Border? toBorder(DUIBorder? border, BuildContext context) {
   if (border == null || border.borderStyle != 'solid') {
     return null;
   }
 
   return Border.all(
-      style: BorderStyle.solid,
-      width: border.borderWidth ?? 1.0,
-      color: toColor(
-          border.borderColor ?? DUIConfigConstants.fallbackBorderColorHexCode));
+    style: BorderStyle.solid,
+    width: border.borderWidth ?? 1.0,
+    color: makeColor(eval<String>(border.borderColor, context: context)) ??
+        toColor(DUIConfigConstants.fallbackBorderColorHexCode),
+  );
 }
 
 BorderSide toBorderSide(DUIBorder? borderSide) {
@@ -182,6 +183,7 @@ OutlineInputBorder? toOutlineInputBorder(DUIBorder? border) {
 
 // Possible Values for colorToken:
 // token: primary, hexCode: #242424, hexCode with Alpha: #FF242424
+@Deprecated('Use makeColor instead')
 Color toColor(String colorToken) {
   var colorString =
       DigiaUIClient.getConfigResolver().getColorValue(colorToken) ?? colorToken;
