@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../digia_ui.dart';
+import '../../Utils/basic_shared_utils/lodash.dart';
 import '../../Utils/expr.dart';
+import '../action/action_handler.dart';
 import '../action/action_prop.dart';
 import '../action/api_handler.dart';
 import '../analytics_handler.dart';
@@ -91,10 +93,77 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
 
         final args = apiDataSourceArgs
             ?.map((key, value) => MapEntry(key, eval(value, context: context)));
-        final response =
-            await ApiHandler.instance.execute(apiModel: apiModel, args: args);
+        final response = await ApiHandler.instance
+            .execute(apiModel: apiModel, args: args)
+            .then((resp) async {
+          final res = {
+            'body': resp.data,
+            'statusCode': resp.statusCode,
+            'headers': resp.headers,
+            'requestObj': requestObjToMap(resp.requestOptions),
+            'error': null,
+          };
 
-        emit(state.copyWith(isLoading: false, dataSource: response.data));
+          final successCondition = action.data['successCondition'] as String?;
+          final evaluatedSuccessCond =
+              successCondition?.let((p0) => eval<bool>(successCondition,
+                      context: context,
+                      enclosing: ExprContext(
+                        variables: {'response': res},
+                      ))) ??
+                  successCondition == null || successCondition.isEmpty;
+
+          if (evaluatedSuccessCond) {
+            final successAction = ActionFlow.fromJson(action.data['onSuccess']);
+            await ActionHandler.instance.execute(
+                context: context,
+                actionFlow: successAction,
+                enclosing: ExprContext(variables: {'response': res}));
+
+            final postSuccessAction =
+                ActionFlow.fromJson(action.data['postSuccess']);
+            return ActionHandler.instance.execute(
+                context: context,
+                actionFlow: postSuccessAction,
+                enclosing: ExprContext(variables: {'response': res}));
+          } else {
+            final errorAction = ActionFlow.fromJson(action.data['onError']);
+            await ActionHandler.instance.execute(
+                context: context,
+                actionFlow: errorAction,
+                enclosing: ExprContext(variables: {'response': res}));
+
+            final postErrorAction =
+                ActionFlow.fromJson(action.data['postError']);
+            return ActionHandler.instance.execute(
+                context: context,
+                actionFlow: postErrorAction,
+                enclosing: ExprContext(variables: {'response': res}));
+          }
+        }, onError: (e) async {
+          final errorAction = ActionFlow.fromJson(action.data['onError']);
+
+          final res = {
+            'body': e.response.data,
+            'statusCode': e.response.statusCode,
+            'headers': e.response.headers,
+            'requestObj': requestObjToMap(e.requestOptions),
+            'error': e.message,
+          };
+
+          await ActionHandler.instance.execute(
+              context: context,
+              actionFlow: errorAction,
+              enclosing: ExprContext(variables: {'response': res}));
+
+          final postErrorAction = ActionFlow.fromJson(action.data['postError']);
+          return ActionHandler.instance.execute(
+              context: context,
+              actionFlow: postErrorAction,
+              enclosing: ExprContext(variables: {'response': res}));
+        });
+
+        emit(state.copyWith(isLoading: false, dataSource: response));
         return null;
 
       default:
