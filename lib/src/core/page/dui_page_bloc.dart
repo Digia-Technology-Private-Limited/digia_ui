@@ -119,25 +119,11 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
                 context: context,
                 actionFlow: successAction,
                 enclosing: ExprContext(variables: {'response': res}));
-
-            final postSuccessAction =
-                ActionFlow.fromJson(action.data['postSuccess']);
-            return ActionHandler.instance.execute(
-                context: context,
-                actionFlow: postSuccessAction,
-                enclosing: ExprContext(variables: {'response': res}));
           } else {
             final errorAction = ActionFlow.fromJson(action.data['onError']);
             await ActionHandler.instance.execute(
                 context: context,
                 actionFlow: errorAction,
-                enclosing: ExprContext(variables: {'response': res}));
-
-            final postErrorAction =
-                ActionFlow.fromJson(action.data['postError']);
-            return ActionHandler.instance.execute(
-                context: context,
-                actionFlow: postErrorAction,
                 enclosing: ExprContext(variables: {'response': res}));
           }
         }, onError: (e) async {
@@ -162,6 +148,17 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
               actionFlow: postErrorAction,
               enclosing: ExprContext(variables: {'response': res}));
         });
+
+        final postSuccessAction =
+            ActionFlow.fromJson(action.data['postSuccess']);
+        await ActionHandler.instance
+            .execute(context: context, actionFlow: postSuccessAction);
+
+        if (response == null) {
+          final postErrorAction = ActionFlow.fromJson(action.data['postError']);
+          await ActionHandler.instance
+              .execute(context: context, actionFlow: postErrorAction);
+        }
 
         emit(state.copyWith(isLoading: false, dataSource: response));
         return null;
