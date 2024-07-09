@@ -88,7 +88,7 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
     }
   }
 
-  Future<Object?> _executeDataSource(BuildContext context, ActionProp action,
+  Future<void> _executeDataSource(BuildContext context, ActionProp action,
       Emitter<DUIPageState> emit) async {
     emit(state.copyWith(isLoading: true));
     final apiDataSourceId = action.data['dataSourceId'];
@@ -98,10 +98,12 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
 
     final args = apiDataSourceArgs
         ?.map((key, value) => MapEntry(key, eval(value, context: context)));
-    final response = await ApiHandler.instance
-        .execute(apiModel: apiModel, args: args)
-        .then((resp) async {
-      final res = {
+
+    try {
+      final resp =
+          await ApiHandler.instance.execute(apiModel: apiModel, args: args);
+
+      final respObj = {
         'body': resp.data,
         'statusCode': resp.statusCode,
         'headers': resp.headers,
@@ -109,46 +111,53 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
         'error': null,
       };
 
-      final successCondition = action.data['successCondition'] as String?;
-      final evaluatedSuccessCond =
-          successCondition?.let((p0) => eval<bool>(successCondition,
-                  context: context,
-                  enclosing: ExprContext(
-                    variables: {'response': res},
-                  ))) ??
-              successCondition == null || successCondition.isEmpty;
+      if (!context.mounted) {
+        emit(state.copyWith(isLoading: false, dataSource: resp.data));
+        return;
+      }
 
-      if (evaluatedSuccessCond) {
+      if (_isSuccess(
+          context, action.data['successCondition'] as String?, respObj)) {
         final successAction = ActionFlow.fromJson(action.data['onSuccess']);
         await ActionHandler.instance.execute(
             context: context,
             actionFlow: successAction,
-            enclosing: ExprContext(variables: {'response': res}));
+            enclosing: ExprContext(variables: {'response': respObj}));
       } else {
         final errorAction = ActionFlow.fromJson(action.data['onError']);
         await ActionHandler.instance.execute(
             context: context,
             actionFlow: errorAction,
-            enclosing: ExprContext(variables: {'response': res}));
+            enclosing: ExprContext(variables: {'response': respObj}));
       }
-    }, onError: (error) async {
+
+      emit(state.copyWith(isLoading: false, dataSource: resp.data));
+    } catch (e) {
       final res = {
-        'body': error.response.data,
-        'statusCode': error.response.statusCode,
-        'headers': error.response.headers,
-        'requestObj': requestObjToMap(error.requestOptions),
-        'error': error.message,
+        'error': e,
       };
+
+      if (!context.mounted) {
+        emit(state.copyWith(isLoading: false, dataSource: null));
+        return;
+      }
 
       final errorAction = ActionFlow.fromJson(action.data['onError']);
       await ActionHandler.instance.execute(
           context: context,
           actionFlow: errorAction,
           enclosing: ExprContext(variables: {'response': res}));
-    });
+    }
+  }
 
-    emit(state.copyWith(isLoading: false, dataSource: response));
-    return null;
+  bool _isSuccess(
+      BuildContext context, String? successCondition, Object response) {
+    return successCondition?.let((p0) => eval<bool>(successCondition,
+            context: context,
+            enclosing: ExprContext(
+              variables: {'response': response},
+            ))) ??
+        successCondition == null || successCondition.isEmpty;
   }
 
   FutureOr<void> _pageLoaded(
