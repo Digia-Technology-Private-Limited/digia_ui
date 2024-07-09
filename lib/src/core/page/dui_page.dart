@@ -7,6 +7,7 @@ import '../../Utils/basic_shared_utils/lodash.dart';
 import '../../components/dui_widget_scope.dart';
 import '../../types.dart';
 import '../action/action_handler.dart';
+import '../analytics_handler.dart';
 import 'dui_page_bloc.dart';
 import 'dui_page_event.dart';
 import 'dui_page_state.dart';
@@ -72,6 +73,8 @@ class _DUIScreenState extends State<_DUIScreen> {
     SchedulerBinding.instance.addPostFrameCallback((_) {
       final onPageLoadAction =
           context.read<DUIPageBloc>().state.props.onPageLoad;
+      AnalyticsHandler.instance
+          .execute(context: context, events: onPageLoadAction?.analyticsData);
       if (onPageLoadAction != null) {
         ActionHandler.instance
             .execute(context: context, actionFlow: onPageLoadAction);
@@ -85,6 +88,8 @@ class _DUIScreenState extends State<_DUIScreen> {
     return BlocBuilder<DUIPageBloc, DUIPageState>(builder: (context, state) {
       return PopScope(onPopInvoked: (didPop) {
         final actionFlow = state.props.onBackPress;
+        AnalyticsHandler.instance
+            .execute(context: context, events: actionFlow?.analyticsData);
         if (actionFlow != null) {
           ActionHandler.instance
               .execute(context: context, actionFlow: actionFlow);
