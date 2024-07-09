@@ -39,9 +39,6 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
     InitPageEvent blocEvent,
     Emitter<DUIPageState> emit,
   ) async {
-    // Assumption is that onPageLoadAction will not be null.
-    // It will either be Action.loadPage or Action.buildPage
-
     final pageStates = state.props.variables;
     if (pageStates != null) {
       for (final element in pageStates.entries) {
@@ -52,14 +49,20 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
       }
     }
 
-    final onPageLoadAction = state.props.actions['onPageLoad'];
-
+    // Assumption is that executeDataSourceAction will not be null.
+    // It will either be Action.loadPage or Action.buildPage
+    final executeDataSourceAction = state.props.executeDataSource;
     AnalyticsHandler.instance.execute(
-        context: blocEvent.context, events: onPageLoadAction?.analyticsData);
+        context: blocEvent.context,
+        events: executeDataSourceAction?.analyticsData);
 
-    final action = onPageLoadAction?.actions.first;
+    final action = executeDataSourceAction?.actions.firstOrNull;
 
-    await _handleAction(blocEvent.context, action!, emit);
+    if (action != null && action.type == 'Action.loadPage') {
+      await _executeDataSource(blocEvent.context, action, emit);
+    } else {
+      emit(state.copyWith(isLoading: false));
+    }
 
     return;
   }
@@ -81,91 +84,66 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
     }
   }
 
-  Future<Object?> _handleAction(BuildContext context, ActionProp action,
+  Future<Object?> _executeDataSource(BuildContext context, ActionProp action,
       Emitter<DUIPageState> emit) async {
-    switch (action.type) {
-      case 'Action.loadPage':
-        emit(state.copyWith(isLoading: true));
-        final apiDataSourceId = action.data['dataSourceId'];
-        Map<String, dynamic>? apiDataSourceArgs = action.data['args'];
+    emit(state.copyWith(isLoading: true));
+    final apiDataSourceId = action.data['dataSourceId'];
+    Map<String, dynamic>? apiDataSourceArgs = action.data['args'];
 
-        final apiModel = config.getApiDataSource(apiDataSourceId);
+    final apiModel = config.getApiDataSource(apiDataSourceId);
 
-        final args = apiDataSourceArgs
-            ?.map((key, value) => MapEntry(key, eval(value, context: context)));
-        final response = await ApiHandler.instance
-            .execute(apiModel: apiModel, args: args)
-            .then((resp) async {
-          final res = {
-            'body': resp.data,
-            'statusCode': resp.statusCode,
-            'headers': resp.headers,
-            'requestObj': requestObjToMap(resp.requestOptions),
-            'error': null,
-          };
+    final args = apiDataSourceArgs
+        ?.map((key, value) => MapEntry(key, eval(value, context: context)));
+    final response = await ApiHandler.instance
+        .execute(apiModel: apiModel, args: args)
+        .then((resp) async {
+      final res = {
+        'body': resp.data,
+        'statusCode': resp.statusCode,
+        'headers': resp.headers,
+        'requestObj': requestObjToMap(resp.requestOptions),
+        'error': null,
+      };
 
-          final successCondition = action.data['successCondition'] as String?;
-          final evaluatedSuccessCond =
-              successCondition?.let((p0) => eval<bool>(successCondition,
-                      context: context,
-                      enclosing: ExprContext(
-                        variables: {'response': res},
-                      ))) ??
-                  successCondition == null || successCondition.isEmpty;
+      final successCondition = action.data['successCondition'] as String?;
+      final evaluatedSuccessCond =
+          successCondition?.let((p0) => eval<bool>(successCondition,
+                  context: context,
+                  enclosing: ExprContext(
+                    variables: {'response': res},
+                  ))) ??
+              successCondition == null || successCondition.isEmpty;
 
-          if (evaluatedSuccessCond) {
-            final successAction = ActionFlow.fromJson(action.data['onSuccess']);
-            await ActionHandler.instance.execute(
-                context: context,
-                actionFlow: successAction,
-                enclosing: ExprContext(variables: {'response': res}));
-          } else {
-            final errorAction = ActionFlow.fromJson(action.data['onError']);
-            await ActionHandler.instance.execute(
-                context: context,
-                actionFlow: errorAction,
-                enclosing: ExprContext(variables: {'response': res}));
-          }
-        }, onError: (e) async {
-          final errorAction = ActionFlow.fromJson(action.data['onError']);
+      if (evaluatedSuccessCond) {
+        final successAction = ActionFlow.fromJson(action.data['onSuccess']);
+        await ActionHandler.instance.execute(
+            context: context,
+            actionFlow: successAction,
+            enclosing: ExprContext(variables: {'response': res}));
+      } else {
+        final errorAction = ActionFlow.fromJson(action.data['onError']);
+        await ActionHandler.instance.execute(
+            context: context,
+            actionFlow: errorAction,
+            enclosing: ExprContext(variables: {'response': res}));
+      }
+    }, onError: (error) async {
+      final res = {
+        'body': error.response.data,
+        'statusCode': error.response.statusCode,
+        'headers': error.response.headers,
+        'requestObj': requestObjToMap(error.requestOptions),
+        'error': error.message,
+      };
 
-          final res = {
-            'body': e.response.data,
-            'statusCode': e.response.statusCode,
-            'headers': e.response.headers,
-            'requestObj': requestObjToMap(e.requestOptions),
-            'error': e.message,
-          };
+      final errorAction = ActionFlow.fromJson(action.data['onError']);
+      await ActionHandler.instance.execute(
+          context: context,
+          actionFlow: errorAction,
+          enclosing: ExprContext(variables: {'response': res}));
+    });
 
-          await ActionHandler.instance.execute(
-              context: context,
-              actionFlow: errorAction,
-              enclosing: ExprContext(variables: {'response': res}));
-
-          final postErrorAction = ActionFlow.fromJson(action.data['postError']);
-          return ActionHandler.instance.execute(
-              context: context,
-              actionFlow: postErrorAction,
-              enclosing: ExprContext(variables: {'response': res}));
-        });
-
-        final postSuccessAction =
-            ActionFlow.fromJson(action.data['postSuccess']);
-        await ActionHandler.instance
-            .execute(context: context, actionFlow: postSuccessAction);
-
-        if (response == null) {
-          final postErrorAction = ActionFlow.fromJson(action.data['postError']);
-          await ActionHandler.instance
-              .execute(context: context, actionFlow: postErrorAction);
-        }
-
-        emit(state.copyWith(isLoading: false, dataSource: response));
-        return null;
-
-      default:
-        emit(state.copyWith(isLoading: false));
-        return null;
-    }
+    emit(state.copyWith(isLoading: false, dataSource: response));
+    return null;
   }
 }

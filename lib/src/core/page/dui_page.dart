@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../digia_ui.dart';
@@ -68,6 +69,14 @@ class _DUIScreenState extends State<_DUIScreen> {
   @override
   void initState() {
     super.initState();
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      final onPageLoadAction =
+          context.read<DUIPageBloc>().state.props.onPageLoad;
+      if (onPageLoadAction != null) {
+        ActionHandler.instance
+            .execute(context: context, actionFlow: onPageLoadAction);
+      }
+    });
     context.read<DUIPageBloc>().add(InitPageEvent(context));
   }
 
@@ -75,7 +84,7 @@ class _DUIScreenState extends State<_DUIScreen> {
   Widget build(BuildContext context) {
     return BlocBuilder<DUIPageBloc, DUIPageState>(builder: (context, state) {
       return PopScope(onPopInvoked: (didPop) {
-        final actionFlow = state.props.actions['onBackPress'];
+        final actionFlow = state.props.onBackPress;
         if (actionFlow != null) {
           ActionHandler.instance
               .execute(context: context, actionFlow: actionFlow);
