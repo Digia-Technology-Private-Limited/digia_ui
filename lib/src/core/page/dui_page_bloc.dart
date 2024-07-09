@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -29,6 +31,8 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
     on<InitPageEvent>(_init);
     on<SetStateEvent>(_setState);
     on<RebuildPageEvent>(_rebuildPage);
+    on<PageLoadedEvent>(_pageLoaded);
+    on<BackPressEvent>(_backPressed);
   }
 
   void register(String widgetName, Map<String, Function> getters) {
@@ -145,5 +149,23 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
 
     emit(state.copyWith(isLoading: false, dataSource: response));
     return null;
+  }
+
+  FutureOr<void> _pageLoaded(
+      PageLoadedEvent event, Emitter<DUIPageState> emit) {
+    final pageLoadActionFlow = state.props.onPageLoad;
+    if (pageLoadActionFlow != null) {
+      ActionHandler.instance
+          .execute(context: event.context, actionFlow: pageLoadActionFlow);
+    }
+  }
+
+  FutureOr<void> _backPressed(
+      BackPressEvent event, Emitter<DUIPageState> emit) {
+    final actionFlow = state.props.onBackPress;
+    if (actionFlow != null) {
+      ActionHandler.instance
+          .execute(context: event.context, actionFlow: actionFlow);
+    }
   }
 }

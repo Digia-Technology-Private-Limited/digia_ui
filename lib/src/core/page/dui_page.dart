@@ -4,10 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../digia_ui.dart';
 import '../../Utils/basic_shared_utils/lodash.dart';
+import '../../Utils/extensions.dart';
 import '../../components/dui_widget_scope.dart';
 import '../../types.dart';
-import '../action/action_handler.dart';
-import '../analytics_handler.dart';
 import 'dui_page_bloc.dart';
 import 'dui_page_event.dart';
 import 'dui_page_state.dart';
@@ -70,52 +69,41 @@ class _DUIScreenState extends State<_DUIScreen> {
   @override
   void initState() {
     super.initState();
-    SchedulerBinding.instance.addPostFrameCallback((_) {
-      final onPageLoadAction =
-          context.read<DUIPageBloc>().state.props.onPageLoad;
-      AnalyticsHandler.instance
-          .execute(context: context, events: onPageLoadAction?.analyticsData);
-      if (onPageLoadAction != null) {
-        ActionHandler.instance
-            .execute(context: context, actionFlow: onPageLoadAction);
-      }
-    });
     context.read<DUIPageBloc>().add(InitPageEvent(context));
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      context.tryRead<DUIPageBloc>()?.add(PageLoadedEvent(context));
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<DUIPageBloc, DUIPageState>(builder: (context, state) {
-      return PopScope(onPopInvoked: (didPop) {
-        final actionFlow = state.props.onBackPress;
-        AnalyticsHandler.instance
-            .execute(context: context, events: actionFlow?.analyticsData);
-        if (actionFlow != null) {
-          ActionHandler.instance
-              .execute(context: context, actionFlow: actionFlow);
-        }
-      }, child: () {
-        if (state.isLoading) {
-          return const Scaffold(
-              body: SafeArea(
-                  child: Center(
-            child: SizedBox(
-              // TODO -> Resolve Loader from Config
-              child: CircularProgressIndicator(color: Colors.blue),
-            ),
-          )));
-        }
+      return PopScope(
+          onPopInvoked: (didPop) =>
+              context.read<DUIPageBloc>().add(BackPressEvent(context, didPop)),
+          child: () {
+            if (state.isLoading) {
+              return const Scaffold(
+                  body: SafeArea(
+                      child: Center(
+                child: SizedBox(
+                  // TODO -> Resolve Loader from Config
+                  child: CircularProgressIndicator(color: Colors.blue),
+                ),
+              )));
+            }
 
-        return state.props.layout?.root.let((p0) {
-              return DUIWidgetScope(
-                  iconDataProvider: widget.iconDataProvider,
-                  imageProviderFn: widget.imageProviderFn,
-                  textStyleBuilder: widget.textStyleBuilder,
-                  onMessageReceived: widget.onMessageReceived,
-                  child: DUIWidget(data: p0));
-            }) ??
-            Center(child: Text('Props not found for page: ${state.pageUid}'));
-      }());
+            return state.props.layout?.root.let((p0) {
+                  return DUIWidgetScope(
+                      iconDataProvider: widget.iconDataProvider,
+                      imageProviderFn: widget.imageProviderFn,
+                      textStyleBuilder: widget.textStyleBuilder,
+                      onMessageReceived: widget.onMessageReceived,
+                      child: DUIWidget(data: p0));
+                }) ??
+                Center(
+                    child: Text('Props not found for page: ${state.pageUid}'));
+          }());
     });
   }
 }
