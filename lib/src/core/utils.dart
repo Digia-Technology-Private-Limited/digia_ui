@@ -72,66 +72,95 @@ Future<T?> openDUIPageInBottomSheet<T>({
   final barrierColor = eval<String>(style['barrierColor'], context: context)
           .letIfTrue(toColor) ??
       ColorDecoder.fromHexString('#2e2e2e').withOpacity(0.6);
+  final isDismissible =
+      eval<bool>(style['isDismissible'], context: context) ?? true;
+  final useSafeArea =
+      eval<bool>(style['useSafeArea'], context: context) ?? false;
+  final maxHeightRatio =
+      eval<double>(style['maxHeightRatio'], context: context) ?? 1;
+  final showDragHandle =
+      eval<bool>(style['showDragHandle'], context: context) ?? false;
+  final handleBarHeight =
+      eval<double>(style['handleBarHeight'], context: context) ?? 4;
+  final handleBarWidth =
+      eval<double>(style['handleBarWidth'], context: context) ?? 32;
+  final dragHandleColor =
+      eval<String>(style['dragHandleColor'], context: context)
+          .letIfTrue(toColor);
+  final enableDrag = eval<bool>(style['enableDrag'], context: context) ?? true;
+
   return showModalBottomSheet<T>(
+    isDismissible: isDismissible,
+    useSafeArea: useSafeArea,
     backgroundColor: bgColor,
-    scrollControlDisabledMaxHeightRatio: 1,
+    enableDrag: enableDrag,
+    scrollControlDisabledMaxHeightRatio: maxHeightRatio,
     barrierColor: barrierColor,
     context: context,
     builder: (ctx) {
-      return BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Flexible(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: bgColor,
-                  border: toBorder(DUIBorder.fromJson(style), context),
-                  borderRadius:
-                      DUIDecoder.toBorderRadius(style['borderRadius']),
-                ),
-                clipBehavior: Clip.hardEdge,
-                // elevation: 2,
-                child: SafeArea(
-                  child: Stack(children: [
-                    DUIPage(
-                      pageUid: pageUid,
-                      pageArgs: pageArgs,
-                      onMessageReceived: onMessageReceived,
-                      iconDataProvider: iconDataProvider,
-                      imageProviderFn: imageProviderFn,
-                      textStyleBuilder: textStyleBuilder,
-                    ),
-                    if (style.valueFor(keyPath: 'icon.iconData') != null)
-                      Positioned(
-                        top: 24,
-                        right: 20,
-                        child: InkWell(
-                          onTap: () {
-                            Navigator.maybePop(context);
-                          },
-                          borderRadius: BorderRadius.circular(12),
-                          child: Container(
-                            height: 24,
-                            width: 24,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12),
-                                color: Colors.white.withOpacity(0.1)),
-                            child:
-                                DUIIconBuilder.fromProps(props: style['icon'])
-                                    ?.build(context),
-                          ),
+      final child = Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Flexible(
+            child: Container(
+              decoration: BoxDecoration(
+                color: bgColor,
+                border: toBorder(DUIBorder.fromJson(style), context),
+                borderRadius: DUIDecoder.toBorderRadius(style['borderRadius']),
+              ),
+              clipBehavior: Clip.hardEdge,
+              // elevation: 2,
+              child: SafeArea(
+                child: Stack(children: [
+                  DUIPage(
+                    pageUid: pageUid,
+                    pageArgs: pageArgs,
+                    onMessageReceived: onMessageReceived,
+                    iconDataProvider: iconDataProvider,
+                    imageProviderFn: imageProviderFn,
+                    textStyleBuilder: textStyleBuilder,
+                  ),
+                  if (style.valueFor(keyPath: 'icon.iconData') != null)
+                    Positioned(
+                      top: 24,
+                      right: 20,
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.maybePop(context);
+                        },
+                        borderRadius: BorderRadius.circular(12),
+                        child: Container(
+                          height: 24,
+                          width: 24,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
+                              color: Colors.white.withOpacity(0.1)),
+                          child: DUIIconBuilder.fromProps(props: style['icon'])
+                              ?.build(context),
                         ),
                       ),
-                  ]),
-                ),
+                    ),
+                ]),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       );
+      return showDragHandle
+          ? BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+              child: BottomSheet(
+                // enableDrag should not be 'true' as it interfares with showModelBottomSheet's enableDrag
+                  enableDrag: false,
+                  backgroundColor: bgColor,
+                  showDragHandle: showDragHandle,
+                  dragHandleColor: dragHandleColor,
+                  dragHandleSize: Size(handleBarWidth, handleBarHeight),
+                  onClosing: () {},
+                  builder: (context) => child))
+          : BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20), child: child);
     },
   );
 }
