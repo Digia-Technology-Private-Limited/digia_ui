@@ -24,7 +24,20 @@ class DUITabView extends StatefulWidget {
   State<DUITabView> createState() => _DUITabViewState();
 }
 
+late TabBarIndicatorSize indicatorSize;
+
 class _DUITabViewState extends State<DUITabView> {
+
+  @override
+  void initState() {
+  indicatorSize = {
+  'tab': TabBarIndicatorSize.tab,
+  'label': TabBarIndicatorSize.label
+}[widget.tabViewProps.indicatorSize] ?? TabBarIndicatorSize.tab;
+    super.initState();
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -35,7 +48,8 @@ class _DUITabViewState extends State<DUITabView> {
             if (widget.tabViewProps.tabBarPosition == 'top')
               Visibility(
                 visible: widget.tabViewProps.hasTabs ?? false,
-                child: TabBar(
+                child: TabBar(indicatorSize: indicatorSize,
+                labelPadding: DUIDecoder.toEdgeInsets(widget.tabViewProps.labelPadding),
                   padding: DUIDecoder.toEdgeInsets(
                       widget.tabViewProps.tabBarPadding),
                   unselectedLabelColor: widget.tabViewProps.unselectedLabelColor
@@ -79,6 +93,8 @@ class _DUITabViewState extends State<DUITabView> {
               Visibility(
                 visible: widget.tabViewProps.hasTabs ?? false,
                 child: TabBar(
+                 indicatorSize: indicatorSize,
+                labelPadding: DUIDecoder.toEdgeInsets(widget.tabViewProps.labelPadding),
                   padding: DUIDecoder.toEdgeInsets(
                       widget.tabViewProps.tabBarPadding),
                   unselectedLabelColor: widget.tabViewProps.unselectedLabelColor
@@ -92,11 +108,7 @@ class _DUITabViewState extends State<DUITabView> {
                   labelColor:
                       widget.tabViewProps.selectedLabelColor.letIfTrue(toColor),
                   dividerHeight: widget.tabViewProps.dividerHeight,
-                  indicator: widget.tabViewProps.indicatorColor != null
-                      ? BoxDecoration(
-                          color: widget.tabViewProps.indicatorColor
-                              .letIfTrue(toColor))
-                      : null,
+                  indicatorColor: widget.tabViewProps.indicatorColor.letIfTrue(toColor),
                   tabs: List.generate(widget.children.length, (index) {
                     final icon = DUIIconBuilder.fromProps(
                                 props: widget.children[index].props['icon'])
