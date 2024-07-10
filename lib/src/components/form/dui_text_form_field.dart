@@ -43,6 +43,7 @@ class _DUITextFieldState extends DUIWidgetState<DUITextFormField> {
   Color? _fillColor;
   String? _labelText;
   TextStyle? _labelStyle;
+  TextStyle? _hintStyle;
   String? _hintText;
   EdgeInsets? _contentPadding;
   Color? _focusColor;
@@ -80,6 +81,8 @@ class _DUITextFieldState extends DUIWidgetState<DUITextFormField> {
     _labelStyle =
         toTextStyle(DUITextStyle.fromJson(widget.props['labelStyle']), context);
     _hintText = widget.props['hintText'] as String?;
+    _hintStyle =
+        toTextStyle(DUITextStyle.fromJson(widget.props['hintStyle']), context);
     _contentPadding = DUIDecoder.toEdgeInsets(widget.props['contentPadding']);
     _focusColor = makeColor(widget.props['focusColor']);
     _cursorColor = makeColor(widget.props['cursorColor']);
@@ -118,7 +121,10 @@ class _DUITextFieldState extends DUIWidgetState<DUITextFormField> {
         labelText: _labelText,
         labelStyle: _labelStyle,
         hintText: _hintText,
-        contentPadding: _contentPadding,
+        hintStyle: _hintStyle,
+        contentPadding: _minLines != null
+            ? (_minLines! > 1 ? const EdgeInsets.all(12) : _contentPadding)
+            : _contentPadding,
         focusColor: _focusColor,
         prefixIcon: widget.prefixIcon,
         suffixIcon: widget.suffixIcon,

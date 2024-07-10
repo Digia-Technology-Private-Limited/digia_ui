@@ -8,7 +8,7 @@ const String baseUrl = 'https://dev.digia.tech/api/v1';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(DUIApp(
-      digiaAccessKey: "664833da4cd307dedf6955a1",
+      digiaAccessKey: "66444872c15d1a24707d58c8",
       baseUrl: baseUrl,
       environment: Environment.staging,
       version: 1,

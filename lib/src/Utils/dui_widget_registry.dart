@@ -26,12 +26,14 @@ import '../core/builders/dui_icon_button_builder.dart';
 import '../core/builders/dui_image_builder.dart';
 import '../core/builders/dui_listview_builder.dart';
 import '../core/builders/dui_lottie_builder.dart';
+import '../core/builders/dui_paginated_listview_builder.dart';
 import '../core/builders/dui_pin_field_builder.dart';
 import '../core/builders/dui_rich_text_builder.dart';
 import '../core/builders/dui_scaffold_builder.dart';
 import '../core/builders/dui_sized_box_builder.dart';
 import '../core/builders/dui_spacer_builder.dart';
 import '../core/builders/dui_stack_builder.dart';
+import '../core/builders/dui_stream_builder.dart';
 import '../core/builders/dui_switch_builder.dart';
 import '../core/builders/dui_tab_view_builder.dart';
 import '../core/builders/dui_tab_view_item_builder.dart';
@@ -125,10 +127,13 @@ class DUIWidgetRegistry {
     'digia/animatedButton': withoutRegistry(DUIAnimatedButtonBuilder.create),
     'digia/pinField': withoutRegistry(DUIPinFieldBuilder.create),
     'digia/calendar': withoutRegistry(DUICalendarBuilder.create),
+    'digia/paginatedListView': (data, {registry}) =>
+        DUIPaginatedListViewBuilder.create(data),
     'digia/timer': withoutRegistry(DUITimerBuilder.create),
     'digia/conditionalBuilder': (data, {registry}) =>
         DUIConditionalBuilderBuilder.create(data,
-            registry: DUIWidgetRegistry.shared)
+            registry: DUIWidgetRegistry.shared),
+    'digia/streamBuilder': (data, {registry}) => DUIStreamBuilder(data: data)
   };
 
   static const DUIWidgetRegistry shared = DUIWidgetRegistry();

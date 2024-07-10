@@ -2,6 +2,10 @@
 
 Digia Ui Sdk.
 
+## [0.0.6-beta.24] - 2024-07-08
+
+- Support for Action onBackPressed
+
 ## [0.0.6-beta.23] - 2023-07-03
 
 - Bug fixes
