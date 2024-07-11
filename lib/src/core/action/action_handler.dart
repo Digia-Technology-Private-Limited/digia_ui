@@ -15,6 +15,7 @@ import '../../Utils/basic_shared_utils/num_decoder.dart';
 import '../../Utils/expr.dart';
 import '../../Utils/extensions.dart';
 import '../../Utils/util_functions.dart';
+import '../../components/DUIText/dui_text_style.dart';
 import '../../components/dui_widget_scope.dart';
 import '../../types.dart';
 import '../analytics_handler.dart';
@@ -182,18 +183,24 @@ Map<String, ActionHandlerFn> _actionsMap = {
         context: context, enclosing: enclosing);
     final duration = eval<int>(action.data['duration'],
         context: context, enclosing: enclosing);
+    final Map<String, dynamic>? style = action.data['style'] ?? {};
+    final Color? bgColor = makeColor(style?['bgColor']);
+    final borderRadius =
+        DUIDecoder.toBorderRadius(style?['borderRadius'] ?? '12, 12, 12, 12');
+    final TextStyle? textStyle =
+        toTextStyle(DUITextStyle.fromJson(style?['textStyle']), context);
 
     final toast = FToast().init(context);
     toast.showToast(
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(25.0),
-          color: Colors.black,
+          color: bgColor ?? Colors.black,
+          borderRadius: borderRadius,
         ),
+        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
         child: Text(
           message ?? '',
-          style: const TextStyle(color: Colors.white),
+          style: textStyle ?? const TextStyle(color: Colors.white),
         ),
       ),
       gravity: ToastGravity.BOTTOM,
