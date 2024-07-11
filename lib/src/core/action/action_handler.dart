@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:json_schema2/json_schema2.dart';
 import 'package:share_plus/share_plus.dart';
@@ -415,6 +416,55 @@ Map<String, ActionHandlerFn> _actionsMap = {
         );
       } else {
         Share.share(message, subject: subject);
+      }
+      return;
+    } else {
+      return null;
+    }
+  },
+  'Action.copyToClipBoard': (
+      {required action, required context, enclosing}) async {
+    final message = eval<String>(action.data['message'],
+        context: context, enclosing: enclosing);
+
+    final toast = FToast().init(context);
+
+    if (message != null && message.isNotEmpty) {
+      try {
+        await Clipboard.setData(ClipboardData(text: message));
+        toast.showToast(
+          child: Container(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(25.0),
+              color: Colors.black,
+            ),
+            child: const Text(
+              'Copied to Clipboard!',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+          gravity: ToastGravity.BOTTOM,
+          toastDuration: const Duration(seconds: 2),
+        );
+      } catch (e) {
+        toast.showToast(
+          child: Container(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(25.0),
+              color: Colors.black,
+            ),
+            child: const Text(
+              'Failed to copy to clipboard.',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+          gravity: ToastGravity.BOTTOM,
+          toastDuration: const Duration(seconds: 2),
+        );
       }
       return;
     } else {
