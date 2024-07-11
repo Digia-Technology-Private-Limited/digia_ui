@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
@@ -9,6 +11,7 @@ import '../../core/evaluator.dart';
 import '../DUIText/dui_text_style.dart';
 import '../dui_base_stateful_widget.dart';
 import '../utils/DUIBorder/dui_border.dart';
+import '../utils/dottedInputBorder.dart';
 
 class DUITextFormField extends BaseStatefulWidget {
   final Map<String, dynamic> props;
@@ -44,10 +47,14 @@ class _DUITextFieldState extends DUIWidgetState<DUITextFormField> {
   String? _labelText;
   TextStyle? _labelStyle;
   TextStyle? _hintStyle;
+  TextStyle? _errorStyle;
   String? _hintText;
   EdgeInsets? _contentPadding;
   Color? _focusColor;
   Color? _cursorColor;
+  String? _regex;
+  String? _errorText;
+  String? _setErrorText = null;
 
   InputBorder? _enabledBorder;
   InputBorder? _disabledBorder;
@@ -86,6 +93,10 @@ class _DUITextFieldState extends DUIWidgetState<DUITextFormField> {
     _contentPadding = DUIDecoder.toEdgeInsets(widget.props['contentPadding']);
     _focusColor = makeColor(widget.props['focusColor']);
     _cursorColor = makeColor(widget.props['cursorColor']);
+    _regex = widget.props['regex'] as String?;
+    _errorText = widget.props['errorText'] as String?;
+    _errorStyle =
+        toTextStyle(DUITextStyle.fromJson(widget.props['errorStyle']), context);
     _enabledBorder = _toInputBorder(widget.props['enabledBorder']);
     _disabledBorder = _toInputBorder(widget.props['disabledBorder']);
     _focusedBorder = _toInputBorder(widget.props['focusedBorder']);
@@ -120,6 +131,7 @@ class _DUITextFieldState extends DUIWidgetState<DUITextFormField> {
         filled: _fillColor != null,
         labelText: _labelText,
         labelStyle: _labelStyle,
+        errorStyle: _errorStyle,
         hintText: _hintText,
         hintStyle: _hintStyle,
         contentPadding: _minLines != null
@@ -133,8 +145,41 @@ class _DUITextFieldState extends DUIWidgetState<DUITextFormField> {
         focusedBorder: _focusedBorder,
         focusedErrorBorder: _focusedErrorBorder,
         errorBorder: _errorBorder,
+        errorText: _setErrorText,
       ),
+      onChanged: (value) {
+        _validateInput(value);
+      },
     );
+  }
+
+  String _convertRawStringToRegexPattern(String rawString) {
+    if (rawString.startsWith("r'") && rawString.endsWith("'")) {
+      return rawString.substring(2, rawString.length - 1);
+    }
+    return rawString;
+  }
+
+  void _validateInput(String value) {
+    if (value.isEmpty) {
+      setState(() {
+        _setErrorText = null;
+      });
+      return;
+    }
+    if (_regex != null && _regex!.isNotEmpty) {
+      String regexSource = _convertRawStringToRegexPattern(_regex!);
+      RegExp regex = RegExp(regexSource);
+      if (!regex.hasMatch(value)) {
+        setState(() {
+          _setErrorText = _errorText;
+        });
+      } else {
+        setState(() {
+          _setErrorText = null;
+        });
+      }
+    }
   }
 
   InputBorder? _toInputBorder(dynamic border) {
@@ -152,6 +197,20 @@ class _DUITextFieldState extends DUIWidgetState<DUITextFormField> {
         );
       case 'underlineInputBorder':
         return UnderlineInputBorder(
+          borderSide: borderSide,
+          borderRadius: borderRadius,
+        );
+      case 'outlineDottedInputBorder':
+        return DottedInputBorder(
+          inputBorderType: InputBorderType.outline,
+          borderType: BorderType.dotted,
+          borderSide: borderSide,
+          borderRadius: borderRadius,
+        );
+      case 'underlineDottedInputBorder':
+        return DottedInputBorder(
+          inputBorderType: InputBorderType.underline,
+          borderType: BorderType.dotted,
           borderSide: borderSide,
           borderRadius: borderRadius,
         );
