@@ -189,15 +189,25 @@ Map<String, ActionHandlerFn> _actionsMap = {
         DUIDecoder.toBorderRadius(style?['borderRadius'] ?? '12, 12, 12, 12');
     final TextStyle? textStyle =
         toTextStyle(DUITextStyle.fromJson(style?['textStyle']), context);
+    final height = eval<double>(style?['height'], context: context);
+    final width = eval<double>(style?['width'], context: context);
+    final padding =
+        DUIDecoder.toEdgeInsets(style?['padding'] ?? '24, 12, 24, 12');
+    final margin = DUIDecoder.toEdgeInsets(style?['margin']);
+    final alignment = DUIDecoder.toAlignment(style?['alignment']);
 
     final toast = FToast().init(context);
     toast.showToast(
       child: Container(
+        alignment: alignment,
+        height: height,
+        width: width,
         decoration: BoxDecoration(
           color: bgColor ?? Colors.black,
           borderRadius: borderRadius,
         ),
-        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+        padding: padding,
+        margin: margin,
         child: Text(
           message ?? '',
           style: textStyle ?? const TextStyle(color: Colors.white),
