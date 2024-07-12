@@ -153,13 +153,6 @@ class _DUITextFieldState extends DUIWidgetState<DUITextFormField> {
     );
   }
 
-  String _convertRawStringToRegexPattern(String rawString) {
-    if (rawString.startsWith("r'") && rawString.endsWith("'")) {
-      return rawString.substring(2, rawString.length - 1);
-    }
-    return rawString;
-  }
-
   void _validateInput(String value) {
     if (value.isEmpty) {
       setState(() {
@@ -168,8 +161,7 @@ class _DUITextFieldState extends DUIWidgetState<DUITextFormField> {
       return;
     }
     if (_regex != null && _regex!.isNotEmpty) {
-      String regexSource = _convertRawStringToRegexPattern(_regex!);
-      RegExp regex = RegExp(regexSource);
+      RegExp regex = RegExp(_regex!);
       if (!regex.hasMatch(value)) {
         setState(() {
           _setErrorText = _errorText;
