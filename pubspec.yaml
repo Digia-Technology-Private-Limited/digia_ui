@@ -93,6 +93,7 @@ dependencies:
   pinput: ^5.0.0
   smart_auth: ^2.0.0
   share_plus: ^9.0.0
+  fl_chart: ^0.68.0
 
 dev_dependencies:
   flutter_test:
