@@ -39,27 +39,18 @@ class DUIPage extends StatelessWidget {
         return DUIPageBloc(
             pageUid: pageUid, config: _config, pageArgs: _pageArgs);
       },
-      child: _DUIScreen(
+      child: DUIWidgetScope(
           iconDataProvider: iconDataProvider,
           imageProviderFn: imageProviderFn,
           textStyleBuilder: textStyleBuilder,
-          onMessageReceived: onMessageReceived),
+          onMessageReceived: onMessageReceived,
+          child: const _DUIScreen()),
     );
   }
 }
 
 class _DUIScreen extends StatefulWidget {
-  final DUIIconDataProvider? iconDataProvider;
-  final DUIImageProviderFn? imageProviderFn;
-  final DUITextStyleBuilder? textStyleBuilder;
-  final DUIMessageHandler? onMessageReceived;
-
-  const _DUIScreen({
-    this.iconDataProvider,
-    this.imageProviderFn,
-    this.textStyleBuilder,
-    this.onMessageReceived,
-  });
+  const _DUIScreen();
 
   @override
   State<_DUIScreen> createState() => _DUIScreenState();
@@ -93,14 +84,7 @@ class _DUIScreenState extends State<_DUIScreen> {
               )));
             }
 
-            return state.props.layout?.root.let((p0) {
-                  return DUIWidgetScope(
-                      iconDataProvider: widget.iconDataProvider,
-                      imageProviderFn: widget.imageProviderFn,
-                      textStyleBuilder: widget.textStyleBuilder,
-                      onMessageReceived: widget.onMessageReceived,
-                      child: DUIWidget(data: p0));
-                }) ??
+            return state.props.layout?.root.let((p0) => DUIWidget(data: p0)) ??
                 Center(
                     child: Text('Props not found for page: ${state.pageUid}'));
           }());
