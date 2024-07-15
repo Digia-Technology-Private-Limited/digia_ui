@@ -110,8 +110,8 @@ class DUIContainer2 extends StatelessWidget {
         final end = DUIDecoder.toAlignment(data['end']);
 
         return LinearGradient(
-            begin: begin ?? Alignment.topLeft,
-            end: end ?? Alignment.bottomRight,
+            begin: begin ?? Alignment.centerLeft,
+            end: end ?? Alignment.centerRight,
             colors: colors,
             stops: stops?.length == colors.length ? stops! : null,
             transform: rotationInRadians);
