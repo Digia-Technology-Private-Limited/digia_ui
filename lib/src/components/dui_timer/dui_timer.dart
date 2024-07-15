@@ -33,8 +33,8 @@ class _DUITimerState extends DUIWidgetState<DUITimer> {
   ActionFlow? onTimerEnd;
 
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     duration = eval<int>(widget.props['duration'], context: context) ?? 60;
     updateInterval = Duration(
         seconds:
