@@ -348,7 +348,17 @@ Map<String, ActionHandlerFn> _actionsMap = {
     final handler = DUIWidgetScope.maybeOf(context)?.onMessageReceived;
     if (handler == null) return;
 
-    handler(MessagePayload(context: context, name: name, body: payload));
+    handler(MessagePayload(
+      context: context,
+      name: name,
+      body: payload,
+      dispatchAction: (p0) async {
+        final actionFlow =
+            ActionFlow(actions: [ActionProp(type: p0.type, data: p0.data)]);
+        return ActionHandler.instance.execute(
+            context: context, actionFlow: actionFlow, enclosing: enclosing);
+      },
+    ));
 
     return;
   },
