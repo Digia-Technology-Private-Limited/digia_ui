@@ -2,6 +2,10 @@
 
 Digia Ui Sdk.
 
+## [0.0.6-beta.26] - 2024-07-15
+
+- Timer (Bug fix)
+
 ## [0.0.6-beta.25] - 2024-07-13
 
 - Paginated ListView
