@@ -28,6 +28,7 @@ import '../core/builders/dui_listview_builder.dart';
 import '../core/builders/dui_lottie_builder.dart';
 import '../core/builders/dui_paginated_listview_builder.dart';
 import '../core/builders/dui_pin_field_builder.dart';
+import '../core/builders/dui_refresh_indicator_builder.dart';
 import '../core/builders/dui_rich_text_builder.dart';
 import '../core/builders/dui_scaffold_builder.dart';
 import '../core/builders/dui_sized_box_builder.dart';
@@ -133,7 +134,9 @@ class DUIWidgetRegistry {
     'digia/conditionalBuilder': (data, {registry}) =>
         DUIConditionalBuilderBuilder.create(data,
             registry: DUIWidgetRegistry.shared),
-    'digia/streamBuilder': (data, {registry}) => DUIStreamBuilder(data: data)
+    'digia/streamBuilder': (data, {registry}) => DUIStreamBuilder(data: data),
+        'digia/refreshIndicator': (data, {registry}) => DUIRefreshIndicator(data: data)
+
   };
 
   static const DUIWidgetRegistry shared = DUIWidgetRegistry();
