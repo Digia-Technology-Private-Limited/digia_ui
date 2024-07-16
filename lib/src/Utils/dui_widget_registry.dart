@@ -135,8 +135,8 @@ class DUIWidgetRegistry {
         DUIConditionalBuilderBuilder.create(data,
             registry: DUIWidgetRegistry.shared),
     'digia/streamBuilder': (data, {registry}) => DUIStreamBuilder(data: data),
-        'digia/refreshIndicator': (data, {registry}) => DUIRefreshIndicator(data: data)
-
+    'digia/refreshIndicator': (data, {registry}) =>
+        DUIRefreshIndicator(data: data)
   };
 
   static const DUIWidgetRegistry shared = DUIWidgetRegistry();
