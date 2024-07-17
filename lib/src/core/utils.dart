@@ -74,7 +74,8 @@ Future<T?> openDUIPageInBottomSheet<T>({
       ColorDecoder.fromHexString('#2e2e2e').withOpacity(0.6);
   return showModalBottomSheet<T>(
     backgroundColor: bgColor,
-    scrollControlDisabledMaxHeightRatio: 1,
+    scrollControlDisabledMaxHeightRatio:
+        eval<double>(style['maxHeight'], context: context) ?? 1,
     barrierColor: barrierColor,
     context: context,
     builder: (ctx) {
@@ -88,7 +89,7 @@ Future<T?> openDUIPageInBottomSheet<T>({
               child: Container(
                 decoration: BoxDecoration(
                   color: bgColor,
-                  border: toBorder(DUIBorder.fromJson(style)),
+                  border: toBorder(DUIBorder.fromJson(style), context),
                   borderRadius:
                       DUIDecoder.toBorderRadius(style['borderRadius']),
                 ),
@@ -121,7 +122,7 @@ Future<T?> openDUIPageInBottomSheet<T>({
                                 color: Colors.white.withOpacity(0.1)),
                             child:
                                 DUIIconBuilder.fromProps(props: style['icon'])
-                                    .build(context),
+                                    ?.build(context),
                           ),
                         ),
                       ),
@@ -146,3 +147,32 @@ Future<T?> openDUIPageInBottomSheet<T>({
 //         child:
 
 //       );
+
+Future<T?> openDialog<T>({
+  required String pageUid,
+  required BuildContext context,
+  Map<String, dynamic>? pageArgs,
+  DUIIconDataProvider? iconDataProvider,
+  DUIImageProviderFn? imageProviderFn,
+  DUITextStyleBuilder? textStyleBuilder,
+  bool? barrierDismissible,
+  Color? barrierColor,
+}) {
+  return showDialog(
+      context: context,
+      useSafeArea: true,
+      useRootNavigator: false,
+      barrierDismissible: barrierDismissible ?? true,
+      barrierColor: barrierColor,
+      builder: (context) {
+        return Dialog(
+          child: DUIPage(
+            pageUid: pageUid,
+            pageArgs: pageArgs,
+            iconDataProvider: iconDataProvider,
+            imageProviderFn: imageProviderFn,
+            textStyleBuilder: textStyleBuilder,
+          ),
+        );
+      });
+}

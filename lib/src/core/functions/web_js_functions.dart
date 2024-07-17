@@ -17,7 +17,7 @@ class WebJsFunctions implements JSFunctions {
   @override
   fetchJsFile(String path) {
     ScriptElement script = ScriptElement()
-      ..src = path
+      ..src = '$path?t=${DateTime.now().millisecondsSinceEpoch}'
       ..type = 'text/javascript';
     document.head?.append(script);
   }

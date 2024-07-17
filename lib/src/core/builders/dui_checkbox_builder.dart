@@ -46,8 +46,8 @@ class DUICheckboxBuilder extends DUIWidgetBuilder {
 
     final activeIcon =
         DUIIconBuilder.fromProps(props: data.props['activeIcon']);
-    final inactiveIcon = (data.props['inactiveIcon'] as Map<String, dynamic>?)
-        .let((p0) => DUIIconBuilder.fromProps(props: p0));
+    final inactiveIcon =
+        DUIIconBuilder.fromProps(props: data.props['inactiveIcon']);
 
     return Center(
       child: Container(
@@ -63,8 +63,9 @@ class DUICheckboxBuilder extends DUIWidgetBuilder {
                       borderWidth == 0.0 ? BorderStyle.none : BorderStyle.solid,
                   color: (value ? activeBorderColor : inactiveBorderColor) ??
                       Colors.grey)),
-          child:
-              value ? activeIcon.build(context) : inactiveIcon?.build(context)),
+          child: value
+              ? activeIcon?.build(context)
+              : inactiveIcon?.build(context)),
     );
   }
 }

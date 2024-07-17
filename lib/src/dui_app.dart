@@ -8,9 +8,10 @@ enum Environment { staging, production, version }
 
 class DUIApp extends StatelessWidget {
   final String digiaAccessKey;
+  final ScrollBehavior? scrollBehavior;
   final GlobalKey<NavigatorState>? navigatorKey;
   final ThemeData? theme;
-  final String? baseUrl;
+  final String baseUrl;
   final Environment environment;
   final int version;
   final Object? data;
@@ -25,9 +26,10 @@ class DUIApp extends StatelessWidget {
       {super.key,
       required this.digiaAccessKey,
       required this.environment,
+      this.scrollBehavior,
       this.navigatorKey,
       this.theme,
-      this.baseUrl,
+      required this.baseUrl,
       required this.version,
       required this.networkConfiguration,
       this.developerConfig,
@@ -39,6 +41,7 @@ class DUIApp extends StatelessWidget {
       return DigiaUIClient.initializeFromData(
           accessKey: digiaAccessKey,
           data: data,
+          baseUrl: baseUrl,
           networkConfiguration: networkConfiguration,
           developerConfig: developerConfig);
     }
@@ -56,6 +59,7 @@ class DUIApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      scrollBehavior: scrollBehavior,
       // key: key,
       debugShowCheckedModeBanner: false,
       // navigatorObservers: [ChuckerFlutter.navigatorObserver],

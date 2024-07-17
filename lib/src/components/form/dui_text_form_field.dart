@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
 import '../../Utils/basic_shared_utils/num_decoder.dart';
 import '../../Utils/util_functions.dart';
+import '../../core/action/action_handler.dart';
+import '../../core/action/action_prop.dart';
 import '../../core/evaluator.dart';
 import '../DUIText/dui_text_style.dart';
 import '../dui_base_stateful_widget.dart';
@@ -41,6 +43,7 @@ class _DUITextFieldState extends DUIWidgetState<DUITextFormField> {
   Color? _fillColor;
   String? _labelText;
   TextStyle? _labelStyle;
+  TextStyle? _hintStyle;
   String? _hintText;
   EdgeInsets? _contentPadding;
   Color? _focusColor;
@@ -56,6 +59,11 @@ class _DUITextFieldState extends DUIWidgetState<DUITextFormField> {
   void initState() {
     _controller = TextEditingController(
         text: eval(widget.props['initialValue'], context: context));
+    _controller.addListener(() async {
+      final onClick = ActionFlow.fromJson(widget.props['onChanged']);
+      await ActionHandler.instance
+          .execute(context: context, actionFlow: onClick);
+    });
     _enabled = NumDecoder.toBool(widget.props['enabled']);
     _keyboardType = DUIDecoder.toKeyBoardType(widget.props['keyboardType']);
     _textInputAction =
@@ -73,6 +81,8 @@ class _DUITextFieldState extends DUIWidgetState<DUITextFormField> {
     _labelStyle =
         toTextStyle(DUITextStyle.fromJson(widget.props['labelStyle']), context);
     _hintText = widget.props['hintText'] as String?;
+    _hintStyle =
+        toTextStyle(DUITextStyle.fromJson(widget.props['hintStyle']), context);
     _contentPadding = DUIDecoder.toEdgeInsets(widget.props['contentPadding']);
     _focusColor = makeColor(widget.props['focusColor']);
     _cursorColor = makeColor(widget.props['cursorColor']);
@@ -99,13 +109,22 @@ class _DUITextFieldState extends DUIWidgetState<DUITextFormField> {
       minLines: _minLines,
       maxLength: _maxLength,
       cursorColor: _cursorColor,
+      buildCounter: (context,
+              {required currentLength,
+              required isFocused,
+              required maxLength}) =>
+          null,
+      onTapOutside: (event) => FocusScope.of(context).unfocus(),
       decoration: InputDecoration(
         fillColor: _fillColor,
         filled: _fillColor != null,
         labelText: _labelText,
         labelStyle: _labelStyle,
         hintText: _hintText,
-        contentPadding: _contentPadding,
+        hintStyle: _hintStyle,
+        contentPadding: _minLines != null
+            ? (_minLines! > 1 ? const EdgeInsets.all(12) : _contentPadding)
+            : _contentPadding,
         focusColor: _focusColor,
         prefixIcon: widget.prefixIcon,
         suffixIcon: widget.suffixIcon,
@@ -126,12 +145,12 @@ class _DUITextFieldState extends DUIWidgetState<DUITextFormField> {
 
     BorderSide borderSide = toBorderSide(DUIBorder.fromJson(border));
     switch (border['borderType']) {
-      case 'outline':
+      case 'outlineInputBorder':
         return OutlineInputBorder(
           borderSide: borderSide,
           borderRadius: borderRadius,
         );
-      case 'underline':
+      case 'underlineInputBorder':
         return UnderlineInputBorder(
           borderSide: borderSide,
           borderRadius: borderRadius,

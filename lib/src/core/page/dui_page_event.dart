@@ -8,6 +8,19 @@ class InitPageEvent extends DUIPageEvent {
   InitPageEvent(this.context);
 }
 
+class PageLoadedEvent extends DUIPageEvent {
+  final BuildContext context;
+
+  PageLoadedEvent(this.context);
+}
+
+class BackPressEvent extends DUIPageEvent {
+  final BuildContext context;
+  final bool didPop;
+
+  BackPressEvent(this.context, this.didPop);
+}
+
 class RebuildPageEvent extends DUIPageEvent {
   final BuildContext context;
 
