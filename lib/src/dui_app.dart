@@ -8,6 +8,7 @@ enum Environment { staging, production, version }
 
 class DUIApp extends StatelessWidget {
   final String digiaAccessKey;
+  final ScrollBehavior? scrollBehavior;
   final GlobalKey<NavigatorState>? navigatorKey;
   final ThemeData? theme;
   final String baseUrl;
@@ -25,6 +26,7 @@ class DUIApp extends StatelessWidget {
       {super.key,
       required this.digiaAccessKey,
       required this.environment,
+      this.scrollBehavior,
       this.navigatorKey,
       this.theme,
       required this.baseUrl,
@@ -57,6 +59,7 @@ class DUIApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      scrollBehavior: scrollBehavior,
       // key: key,
       debugShowCheckedModeBanner: false,
       // navigatorObservers: [ChuckerFlutter.navigatorObserver],
