@@ -106,7 +106,12 @@ class DUIContainer2 extends StatelessWidget {
         final rotationInRadians = NumDecoder.toInt(data['angle'])
             .let((p0) => GradientRotation(p0 / 180.0 * math.pi));
 
+        final begin = DUIDecoder.toAlignment([data['begin']]);
+        final end = DUIDecoder.toAlignment(data['end']);
+
         return LinearGradient(
+            begin: begin ?? Alignment.centerLeft,
+            end: end ?? Alignment.centerRight,
             colors: colors,
             stops: stops?.length == colors.length ? stops! : null,
             transform: rotationInRadians);

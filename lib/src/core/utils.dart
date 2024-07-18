@@ -74,7 +74,8 @@ Future<T?> openDUIPageInBottomSheet<T>({
       ColorDecoder.fromHexString('#2e2e2e').withOpacity(0.6);
   return showModalBottomSheet<T>(
     backgroundColor: bgColor,
-    scrollControlDisabledMaxHeightRatio: 1,
+    scrollControlDisabledMaxHeightRatio:
+        eval<double>(style['maxHeight'], context: context) ?? 1,
     barrierColor: barrierColor,
     context: context,
     builder: (ctx) {

@@ -15,6 +15,7 @@ import '../../Utils/basic_shared_utils/num_decoder.dart';
 import '../../Utils/expr.dart';
 import '../../Utils/extensions.dart';
 import '../../Utils/util_functions.dart';
+import '../../components/DUIText/dui_text_style.dart';
 import '../../components/dui_widget_scope.dart';
 import '../../types.dart';
 import '../analytics_handler.dart';
@@ -182,18 +183,34 @@ Map<String, ActionHandlerFn> _actionsMap = {
         context: context, enclosing: enclosing);
     final duration = eval<int>(action.data['duration'],
         context: context, enclosing: enclosing);
+    final Map<String, dynamic>? style = action.data['style'] ?? {};
+    final Color? bgColor = makeColor(style?['bgColor']);
+    final borderRadius =
+        DUIDecoder.toBorderRadius(style?['borderRadius'] ?? '12, 12, 12, 12');
+    final TextStyle? textStyle =
+        toTextStyle(DUITextStyle.fromJson(style?['textStyle']), context);
+    final height = eval<double>(style?['height'], context: context);
+    final width = eval<double>(style?['width'], context: context);
+    final padding =
+        DUIDecoder.toEdgeInsets(style?['padding'] ?? '24, 12, 24, 12');
+    final margin = DUIDecoder.toEdgeInsets(style?['margin']);
+    final alignment = DUIDecoder.toAlignment(style?['alignment']);
 
     final toast = FToast().init(context);
     toast.showToast(
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+        alignment: alignment,
+        height: height,
+        width: width,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(25.0),
-          color: Colors.black,
+          color: bgColor ?? Colors.black,
+          borderRadius: borderRadius,
         ),
+        padding: padding,
+        margin: margin,
         child: Text(
           message ?? '',
-          style: const TextStyle(color: Colors.white),
+          style: textStyle ?? const TextStyle(color: Colors.white),
         ),
       ),
       gravity: ToastGravity.BOTTOM,
@@ -331,7 +348,17 @@ Map<String, ActionHandlerFn> _actionsMap = {
     final handler = DUIWidgetScope.maybeOf(context)?.onMessageReceived;
     if (handler == null) return;
 
-    handler(MessagePayload(context: context, name: name, body: payload));
+    handler(MessagePayload(
+      context: context,
+      name: name,
+      body: payload,
+      dispatchAction: (p0) async {
+        final actionFlow =
+            ActionFlow(actions: [ActionProp(type: p0.type, data: p0.data)]);
+        return ActionHandler.instance.execute(
+            context: context, actionFlow: actionFlow, enclosing: enclosing);
+      },
+    ));
 
     return;
   },
