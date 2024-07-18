@@ -52,7 +52,6 @@ dependencies:
   copy_with_extension_gen: ^5.0.4
   cupertino_icons: ^1.0.2
   derry: ^1.5.0
-  digia_expr: ^0.0.7
   dio: ^5.3.3
   dio_intercept_to_curl: ^0.1.1
   expandable: ^5.0.1
@@ -62,13 +61,7 @@ dependencies:
   flutter_blurhash: ^0.8.2
   flutter_cache_manager: ^3.3.0
   flutter_html: ^3.0.0-beta.2
-  webview_flutter: ^4.7.0
   digia_expr: ^0.0.11
-  chewie: ^1.8.1
-  video_player: ^2.8.6
-  derry: ^1.5.0
-  fluttertoast: ^8.2.5
-  uuid: ^4.4.0
   flutter_js: ^0.8.0
   flutter_lints: ^2.0.0
   fluttertoast: ^8.2.5
@@ -91,7 +84,6 @@ dependencies:
   webview_flutter: ^4.7.0
   youtube_player_iframe: ^5.1.1
   table_calendar: ^3.0.9
-  collection: ^1.17.1
   pinput: ^5.0.0
   smart_auth: ^2.0.0
   infinite_scroll_pagination: ^4.0.0

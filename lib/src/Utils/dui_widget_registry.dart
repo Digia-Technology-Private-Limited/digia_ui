@@ -119,8 +119,7 @@ class DUIWidgetRegistry {
         DUITextFormFieldBuilder.create(data),
     'digia/stepper': (data, {registry}) =>
         DezervStepperBuilder.create(data, registry: DUIWidgetRegistry.shared),
-    'digia/flutterStepper': (data, {registry}) =>
-        DUIStepperBuilder.create(data, registry: DUIWidgetRegistry.shared),
+    'digia/flutterStepper': withoutRegistry(DUIStepperBuilder.create),
     'digia/dezerv/dialPad': (data, {registry}) =>
         DUIDezervDialPadBuilder.create(data),
     'digia/futureBuilder': (data, {registry}) => DUIFutureBuilder(data: data),
