@@ -8,6 +8,7 @@ import '../../components/dui_widget_creator_fn.dart';
 import '../../components/floating_action_button/floating_action_button.dart';
 import '../../components/floating_action_button/floating_action_button_props.dart';
 import '../action/action_prop.dart';
+import '../evaluator.dart';
 import '../json_widget_builder.dart';
 import 'dui_app_bar_builder.dart';
 import 'dui_drawer_builder.dart';
@@ -119,6 +120,7 @@ class DUIScaffoldBuilder extends DUIWidgetBuilder {
             scaffoldBackgroundColor:
                 (data.props['scaffoldBackgroundColor'] as String?)
                     .let(toColor));
+        final enableSafeArea = eval<bool>(data.props['enableSafeArea'], context: context);
         return Theme(
             data: themeData,
             child: bottomNavigationBar == null
@@ -127,7 +129,10 @@ class DUIScaffoldBuilder extends DUIWidgetBuilder {
                     drawer: drawer?.build(context),
                     endDrawer: endDrawer?.build(context),
                     body: data.children['body']?.firstOrNull.let((p0) {
-                      return SafeArea(child: DUIWidget(data: p0));
+                      if (enableSafeArea == null || enableSafeArea == true ){return SafeArea(child: DUIWidget(data: p0));}
+                      else{
+                       return DUIWidget(data: p0);
+                      }
                     }),
                     persistentFooterButtons: persistentFooterButtons,
                     floatingActionButton: floatingActionButton,
@@ -140,7 +145,7 @@ class DUIScaffoldBuilder extends DUIWidgetBuilder {
                     drawer: drawer?.build(context),
                     endDrawer: endDrawer?.build(context),
                     bottomNavigationBar: bottomNavigationBar,
-                    body: SafeArea(
+                    body: (enableSafeArea == null || enableSafeArea == true ) ? SafeArea(
                       child: DUIPage(
                         key: pageKey,
                         pageUid: List.generate(
@@ -151,7 +156,16 @@ class DUIScaffoldBuilder extends DUIWidgetBuilder {
                                 .children['children']![index]
                                 .props['pageId'])[bottomNavBarIndex],
                       ),
-                    ),
+                    ) : DUIPage(
+                        key: pageKey,
+                        pageUid: List.generate(
+                            data.children['bottomNavigationBar']![0]
+                                .children['children']!.length,
+                            (index) => data
+                                .children['bottomNavigationBar']![0]
+                                .children['children']![index]
+                                .props['pageId'])[bottomNavBarIndex],
+                      ),
                     persistentFooterButtons: persistentFooterButtons,
                     floatingActionButton: floatingActionButton,
                     floatingActionButtonLocation:
