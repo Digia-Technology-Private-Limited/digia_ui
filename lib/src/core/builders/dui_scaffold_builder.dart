@@ -8,6 +8,7 @@ import '../../components/dui_widget_creator_fn.dart';
 import '../../components/floating_action_button/floating_action_button.dart';
 import '../../components/floating_action_button/floating_action_button_props.dart';
 import '../action/action_prop.dart';
+import '../evaluator.dart';
 import '../json_widget_builder.dart';
 import 'dui_app_bar_builder.dart';
 import 'dui_drawer_builder.dart';
@@ -117,8 +118,9 @@ class DUIScaffoldBuilder extends DUIWidgetBuilder {
         final themeData = Theme.of(context).copyWith(
             dividerTheme: const DividerThemeData(color: Colors.transparent),
             scaffoldBackgroundColor:
-                (data.props['scaffoldBackgroundColor'] as String?)
-                    .let(toColor));
+                makeColor(data.props['scaffoldBackgroundColor']));
+        final enableSafeArea =
+            eval<bool>(data.props['enableSafeArea'], context: context);
         return Theme(
             data: themeData,
             child: bottomNavigationBar == null
@@ -127,7 +129,11 @@ class DUIScaffoldBuilder extends DUIWidgetBuilder {
                     drawer: drawer?.build(context),
                     endDrawer: endDrawer?.build(context),
                     body: data.children['body']?.firstOrNull.let((p0) {
-                      return SafeArea(child: DUIWidget(data: p0));
+                      final child = DUIWidget(data: p0);
+                      // Explicit check on false for backward compatibility
+                      if (enableSafeArea == false) return child;
+
+                      return SafeArea(child: child);
                     }),
                     persistentFooterButtons: persistentFooterButtons,
                     floatingActionButton: floatingActionButton,
@@ -140,8 +146,8 @@ class DUIScaffoldBuilder extends DUIWidgetBuilder {
                     drawer: drawer?.build(context),
                     endDrawer: endDrawer?.build(context),
                     bottomNavigationBar: bottomNavigationBar,
-                    body: SafeArea(
-                      child: DUIPage(
+                    body: () {
+                      final widget = DUIPage(
                         key: pageKey,
                         pageUid: List.generate(
                             data.children['bottomNavigationBar']![0]
@@ -150,8 +156,11 @@ class DUIScaffoldBuilder extends DUIWidgetBuilder {
                                 .children['bottomNavigationBar']![0]
                                 .children['children']![index]
                                 .props['pageId'])[bottomNavBarIndex],
-                      ),
-                    ),
+                      );
+                      if (enableSafeArea == false) return widget;
+
+                      return SafeArea(child: widget);
+                    }(),
                     persistentFooterButtons: persistentFooterButtons,
                     floatingActionButton: floatingActionButton,
                     floatingActionButtonLocation:
