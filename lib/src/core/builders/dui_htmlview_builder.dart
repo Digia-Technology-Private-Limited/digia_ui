@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
+import '../../Utils/basic_shared_utils/lodash.dart';
 import '../../Utils/util_functions.dart';
 import '../evaluator.dart';
 import '../json_widget_builder.dart';
@@ -15,28 +17,8 @@ class DUIHtmlViewBuilder extends DUIWidgetBuilder {
 
   @override
   Widget build(BuildContext context) {
-    final backgroundColor = makeColor(
-        eval<String>(data.props['backgroundColor'], context: context));
-    final color =
-        makeColor(eval<String>(data.props['color'], context: context));
-    final fontFamily = eval<String>(data.props['fontFamily'], context: context);
-    final fontSize = eval<double>(data.props['fontSize'], context: context);
-    final fontStyle = eval<String>(data.props['fontStyle'], context: context);
-    final fontWeight = DUIDecoder.toFontWeight(
-        eval<String>(data.props['fontWeight'], context: context));
     final height = eval<double>(data.props['height'], context: context);
     final width = eval<double>(data.props['width'], context: context);
-    final lineHeight = eval<double>(data.props['lineHeight'], context: context);
-    final textAlign = DUIDecoder.toTextAlign(
-        eval<String>(data.props['textAlign'], context: context));
-    final textDecoration = DUIDecoder.toTextDecoration(
-        eval<String>(data.props['textDecoration'], context: context));
-    final textDecorationColor = makeColor(
-        eval<String>(data.props['textDecorationColor'], context: context));
-    final textDecorationStyle = DUIDecoder.toTextDecorationStyle(
-        eval<String>(data.props['textDecorationStyle'], context: context));
-    final textDecorationThickness =
-        eval<double>(data.props['textDecorationThickness'], context: context);
     final verticalAlign = toVerticalAlign(
         eval<String>(data.props['verticalAlign'], context: context));
     final alignment = DUIDecoder.toAlignment(
@@ -45,27 +27,40 @@ class DUIHtmlViewBuilder extends DUIWidgetBuilder {
     final textOverflow = DUIDecoder.toTextOverflow(
         eval<String>(data.props['textOverflow'], context: context));
 
+    final googleFont = (data.props['fontFamily'] as String?)?.let(
+      (p0) => GoogleFonts.getFont(p0,
+          fontSize: eval<double>(data.props['fontSize'], context: context),
+          fontStyle: DUIDecoder.toFontStyle(
+              eval<String>(data.props['fontStyle'], context: context)),
+          fontWeight: DUIDecoder.toFontWeight(
+              eval<String>(data.props['fontWeight'], context: context)),
+          height: eval<double>(data.props['lineHeight'], context: context),
+          backgroundColor: makeColor(
+              eval<String>(data.props['backgroundColor'], context: context)),
+          color: makeColor(eval<String>(data.props['color'], context: context)),
+          decoration: DUIDecoder.toTextDecoration(
+              eval<String>(data.props['textDecoration'], context: context)),
+          decorationColor: makeColor(eval<String>(
+              data.props['textDecorationColor'],
+              context: context)),
+          decorationStyle: DUIDecoder.toTextDecorationStyle(eval<String>(
+              data.props['textDecorationStyle'],
+              context: context)),
+          decorationThickness: eval<double>(data.props['textDecorationThickness'], context: context)),
+    );
+
     Style makeStyle() {
-      return Style(
-        backgroundColor: backgroundColor,
-        color: color,
-        fontFamily: fontFamily,
-        fontSize: fontSize != null ? FontSize(fontSize) : FontSize.medium,
-        fontStyle: fontStyle == 'italic' ? FontStyle.italic : FontStyle.normal,
-        fontWeight: fontWeight,
-        height: height != null ? Height(height) : null,
-        width: width != null ? Width(width) : null,
-        lineHeight: LineHeight(lineHeight),
-        textAlign: textAlign,
-        textDecoration: textDecoration,
-        textDecorationColor: textDecorationColor,
-        textDecorationStyle: textDecorationStyle,
-        textDecorationThickness: textDecorationThickness,
-        verticalAlign: verticalAlign,
-        alignment: alignment,
-        maxLines: maxLines,
-        textOverflow: textOverflow,
-      );
+      final style = Style(
+          height: height != null ? Height(height) : null,
+          width: width != null ? Width(width) : null,
+          verticalAlign: verticalAlign,
+          alignment: alignment,
+          maxLines: maxLines,
+          textOverflow: textOverflow);
+
+      if (googleFont == null) return style;
+
+      return style.merge(Style.fromTextStyle(googleFont));
     }
 
     return Html(
