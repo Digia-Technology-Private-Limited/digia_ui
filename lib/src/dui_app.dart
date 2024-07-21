@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 import '../digia_ui.dart';
 import 'core/app_state_provider.dart';
-import 'environment.dart';
 
 class DUIApp extends StatelessWidget {
   final String digiaAccessKey;
@@ -22,14 +21,9 @@ class DUIApp extends StatelessWidget {
   const DUIApp(
       {super.key,
       required this.digiaAccessKey,
-<<<<<<< Updated upstream
-      required this.environment,
       this.scrollBehavior,
       this.navigatorKey,
-=======
       required this.environmentInfo,
-      required this.navigatorKey,
->>>>>>> Stashed changes
       this.theme,
       required this.baseUrl,
       required this.networkConfiguration,
