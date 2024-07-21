@@ -5,5 +5,18 @@ import 'js_functions_stub.dart'
 abstract class JSFunctions {
   factory JSFunctions() => getJSFunction();
   dynamic callJs(String fnName, dynamic data);
-  fetchJsFile(String path);
+  Future<bool> initFunctions(FunctionInitStrategy strategy);
+}
+
+sealed class FunctionInitStrategy {}
+
+class PreferRemote extends FunctionInitStrategy {
+  final String remotePath;
+  final int? version;
+  PreferRemote(this.remotePath, this.version);
+}
+
+class PreferLocal extends FunctionInitStrategy {
+  final String localPath;
+  PreferLocal(this.localPath);
 }

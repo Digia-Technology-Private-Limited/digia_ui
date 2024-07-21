@@ -8,12 +8,12 @@ const String baseUrl = 'https://dev.digia.tech/api/v1';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(DUIApp(
-      digiaAccessKey: "66444872c15d1a24707d58c8",
+      digiaAccessKey: "667301a6b6c3bd6fb255ec0d",
       baseUrl: baseUrl,
-      environment: Environment.staging,
-      version: 1,
-      // developerConfig:
-      //     DeveloperConfig(enableChucker: false, proxyUrl: "192.168.1.86:9090"),
+      environmentInfo: Production(PrioritizeCache(), 'assets/prodAppConfig.json','assets/functions.js'),
+      navigatorKey: null,
+      developerConfig:
+          DeveloperConfig(enableChucker: false, proxyUrl: "192.168.1.86:9090"),
       networkConfiguration:
           NetworkConfiguration(defaultHeaders: {}, timeout: 30),
       analytics: MyAnalytics()));
