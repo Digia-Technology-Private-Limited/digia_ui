@@ -15,8 +15,7 @@ class MobileJsFunctions implements JSFunctions {
     try {
       switch (strategy) {
         case PreferRemote(remotePath: String remotePath, version: int? version):
-          var fileName =
-              version == null ? 'functions.js' : 'functions_v$version.js';
+          var fileName = JSFunctions.getFunctionsFileName(version);
           final fileExists =
               version == null ? false : await doesFileExist(fileName);
           if (!fileExists) {
@@ -33,10 +32,6 @@ class MobileJsFunctions implements JSFunctions {
       print('file not found');
       return false;
     }
-  }
-
-  static getFunctionsFileName(int? version) {
-    return version == null ? 'functions.js' : 'functions_v$version.js';
   }
 
   @override

@@ -6,6 +6,9 @@ abstract class JSFunctions {
   factory JSFunctions() => getJSFunction();
   dynamic callJs(String fnName, dynamic data);
   Future<bool> initFunctions(FunctionInitStrategy strategy);
+  static getFunctionsFileName(int? version) {
+    return version == null ? 'functions.js' : 'functions_v$version.js';
+  }
 }
 
 sealed class FunctionInitStrategy {}

@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
@@ -8,7 +7,6 @@ import 'Utils/dui_font.dart';
 import 'Utils/file_operations.dart';
 import 'core/functions/download.dart';
 import 'core/functions/js_functions.dart';
-import 'core/functions/mobile_js_functions.dart';
 import 'core/page/props/dui_page_props.dart';
 import 'network/api_request/api_request.dart';
 import 'network/core/types.dart';
@@ -71,7 +69,7 @@ class AppConfigResolver {
         await _getAppConfigFromNetworkAndWriteToFile('/config/getAppConfigProduction'));
     if (config.functionsFilePath != null) {
       downloadFunctionsFile(config.functionsFilePath!,
-          MobileJsFunctions.getFunctionsFileName(config.version));
+          JSFunctions.getFunctionsFileName(config.version));
     }
   }
 
