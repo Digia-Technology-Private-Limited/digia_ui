@@ -2,6 +2,11 @@
 
 Digia Ui Sdk.
 
+## [0.0.6-beta.27] - 2024-07-22
+
+- New and safe way to initialize Digia SDK.
+- Refresh Indicator Component.
+
 ## [0.0.6-beta.26] - 2024-07-15
 
 - Timer (Bug fix)
