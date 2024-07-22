@@ -95,6 +95,9 @@ dependencies:
   infinite_scroll_pagination: ^4.0.0
   share_plus: ^9.0.0
   widget_marquee: ^0.0.8
+  mime_type: ^1.0.0
+  http_parser: ^4.0.2
+  file_picker: ^8.0.5
 
 dev_dependencies:
   flutter_test:

@@ -22,6 +22,7 @@ class ApiHandler {
     final headers = apiModel.headers?.map((key, value) =>
         MapEntry(_hydrateTemplate(key, args), _hydrateTemplate(value, args)));
     final body = _hydrateTemplateInDynamic(apiModel.body, args);
+    final bodyType = apiModel.bodyType;
 
     final networkClient = DigiaUIClient.getNetworkClient();
 
@@ -31,7 +32,8 @@ class ApiHandler {
           url: url,
           method: apiModel.method,
           additionalHeaders: headers,
-          data: body);
+          data: body,
+          bodyType: bodyType);
       stopwatch.stop();
       stopwatch.reset();
       DigiaUIClient.instance.duiAnalytics?.onDataSourceSuccess(
@@ -39,6 +41,7 @@ class ApiHandler {
           url,
           {'body': apiModel.body},
           {'responseTime': stopwatch.elapsedMilliseconds});
+      print('response: $response');
       return response;
     } on DioException catch (e) {
       DigiaUIClient.instance.duiAnalytics?.onDataSourceError(

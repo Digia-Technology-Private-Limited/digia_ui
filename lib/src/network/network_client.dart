@@ -4,6 +4,9 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
+import 'package:http_parser/http_parser.dart';
+import 'package:mime_type/mime_type.dart';
 
 import '../../digia_ui.dart';
 import 'api_response/base_response.dart';
@@ -82,15 +85,14 @@ class NetworkClient {
     //   ]);
     // }
   }
-
   Future<Response<Object?>> requestProject({
     required String url,
     required HttpMethod method,
-    //these headers get appended to baseHeaders, a default Dio behavior
     Map<String, dynamic>? additionalHeaders,
     Object? data,
-  }) {
-    //Remove headers already passed in baseHeaders
+    BodyType? bodyType,
+  }) async {
+    // Remove headers already passed in baseHeaders
     if (additionalHeaders != null) {
       Set<String> commonKeys = projectDioInstance.options.headers.keys
           .toSet()
@@ -98,6 +100,45 @@ class NetworkClient {
       for (var key in commonKeys) {
         additionalHeaders.remove(key);
       }
+    }
+
+    // Set Content-Type for multipart/form-data
+    if (bodyType == BodyType.multipart) {
+      Map<String, dynamic> formDataMap = {};
+      // if (data is Map) {
+      //   for (var entry in data.entries) {
+      //     if (entry.value is File) {
+
+      //       String fileName = data[entry.key];
+      //       String? mimeType = mime(fileName);
+      //       String? mimee = mimeType?.split('/')[0];
+      //       String? type = mimeType?.split('/')[1];
+
+      //       formDataMap[entry.key] = await MultipartFile.fromFile(
+      //           entry.value.path,
+      //           filename: fileName,
+      //           contentType: MediaType(mimee!, type!));
+      //     } else {
+      //       formDataMap[entry.key] = entry.value;
+      //     }
+      //   }
+      // }
+      var bytes = (await rootBundle.load('parrot_hd.gif')).buffer.asUint8List();
+      formDataMap['image'] = MultipartFile.fromBytes(
+        bytes,
+        filename: 'parrot_hd.gif',
+        contentType: MediaType('image', 'gif'),
+      );
+
+      formDataMap['key'] = '9da114dcdeed72cf9160eee011e7fed8';
+
+      print('formDataMap: $formDataMap');
+      additionalHeaders?['Referer'] = 'http://103.48.109.107';
+
+      return projectDioInstance.request(url,
+          data: FormData.fromMap(formDataMap),
+          options:
+              Options(method: method.stringValue, headers: additionalHeaders));
     }
 
     return projectDioInstance.request(url,
