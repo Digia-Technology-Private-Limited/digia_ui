@@ -1,7 +1,12 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
+import 'package:http_parser/http_parser.dart';
+import 'package:mime_type/mime_type.dart';
 
 import '../../../digia_ui.dart';
 import '../../network/api_request/api_request.dart';
+import '../../network/core/types.dart';
 
 const Map<String, String> defaultHeaders = {
   'Accept': 'application/json',
@@ -28,12 +33,12 @@ class ApiHandler {
 
     stopwatch.start();
     try {
+      final preparedData = await _prepareRequestData(body, bodyType);
       final response = await networkClient.requestProject(
           url: url,
           method: apiModel.method,
           additionalHeaders: headers,
-          data: body,
-          bodyType: bodyType);
+          data: preparedData);
       stopwatch.stop();
       stopwatch.reset();
       DigiaUIClient.instance.duiAnalytics?.onDataSourceSuccess(
@@ -55,6 +60,57 @@ class ApiHandler {
           'api', url, ApiServerInfo(null, null, -1, e, null));
       rethrow;
     }
+  }
+
+  Future<dynamic> _prepareRequestData(dynamic body, BodyType? bodyType) async {
+    if (bodyType == BodyType.multipart) {
+      if (body is! Map<String, dynamic>) {
+        throw Exception('Multipart body must be a Map<String, dynamic>');
+      }
+      return await _createFormData(body);
+    }
+    return body;
+  }
+
+  Future<FormData> _createFormData(Map<String, dynamic> data) async {
+    Map<String, dynamic> formDataMap = {};
+
+    for (var entry in data.entries) {
+      if (entry.value is File) {
+        File file = entry.value;
+        String fileName = file.path.split('/').last;
+        String? mimeType = mime(fileName);
+
+        formDataMap[entry.key] = await MultipartFile.fromFile(
+          file.path,
+          filename: fileName,
+          contentType: _getMediaType(mimeType),
+        );
+      } else if (entry.value is List<int>) {
+        List<int> bytes = entry.value;
+        String fileName = entry.key; // Use the key as filename if not provided
+        String? mimeType = mime(fileName);
+
+        formDataMap[entry.key] = MultipartFile.fromBytes(
+          bytes,
+          filename: fileName,
+          contentType: _getMediaType(mimeType),
+        );
+      } else {
+        formDataMap[entry.key] = entry.value;
+      }
+    }
+
+    return FormData.fromMap(formDataMap);
+  }
+
+  MediaType? _getMediaType(String? mimeType) {
+    if (mimeType == null) return null;
+    final parts = mimeType.split('/');
+    if (parts.length == 2) {
+      return MediaType(parts[0], parts[1]);
+    }
+    return null;
   }
 
   String _hydrateTemplate(String template, Map<String, dynamic>? values) {

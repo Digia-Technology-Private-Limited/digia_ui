@@ -422,35 +422,35 @@ Map<String, ActionHandlerFn> _actionsMap = {
       throw 'Action.filePicker called on a widget which is not wrapped in DUIPageBloc';
     }
 
-    final events = action.data['events'];
-    final bool rebuildPage =
-        NumDecoder.toBool(action.data['rebuildPage']) ?? true;
-
-    final type = eval<String>(action.data['selectionType'],
+    final fileType = eval<String>(action.data['fileType'],
         context: context, enclosing: enclosing);
     final sizeLimit = eval<double>(action.data['sizeLimit'],
         context: context, enclosing: enclosing);
     final isMultiSelect = eval<bool>(action.data['isMultiSelected'],
         context: context, enclosing: enclosing);
+        var selectedPageState = action.data['selectedPageState'];
 
-    FileType fileType;
-    switch (type!.toLowerCase()) {
+    FileType type;
+    switch (fileType!.toLowerCase()) {
       case 'image':
-        fileType = FileType.image;
+        type = FileType.image;
         break;
       case 'video':
-        fileType = FileType.video;
+        type = FileType.video;
+        break;
+      case 'audio':
+        type = FileType.audio;
         break;
       case 'pdf':
-        fileType = FileType.custom;
+        type = FileType.custom;
         break;
       default:
-        fileType = FileType.any;
+        type = FileType.any;
     }
     List<PlatformFile>? platformfiles;
     try {
       FilePickerResult? result = await FilePicker.platform.pickFiles(
-        type: fileType,
+        type: type,
         allowMultiple: isMultiSelect ?? false,
       );
 
@@ -470,7 +470,7 @@ Map<String, ActionHandlerFn> _actionsMap = {
       print('Error picking file: $e');
       return;
     }
-    if (platformfiles != null && platformfiles.isNotEmpty) {
+    if (platformfiles.isNotEmpty) {
       try {
         List<Uint8List> finalBytes =
             await Future.wait(platformfiles.map((platformfile) async {
@@ -479,7 +479,7 @@ Map<String, ActionHandlerFn> _actionsMap = {
           } else {
             if (platformfile.path == null) {
               print('Error: Null path for file');
-              return Uint8List(0);
+               return Uint8List(0);
             }
 
             try {
@@ -496,21 +496,15 @@ Map<String, ActionHandlerFn> _actionsMap = {
           print('Read ${bytes.length} bytes');
         }
 
-        if (events is List) {
-          final variableDefs = bloc.state.props.variables;
+        // Assign the file to selectedPageState
+        // selectedPageState = finalBytes.first;
 
-          bloc.add(SetStateEvent(
-              events: events
-                  .where((e) => variableDefs?[e['variableName']] != null)
-                  .map((e) => SingleSetStateEvent(
-                        variableName: e['variableName'],
-                        context: context,
-                        value: {'files': finalBytes[0]},
-                      ))
-                  .toList(),
-              rebuildPage: true));
-          print(variableDefs.toString());
-        }
+        final variables = bloc.state.props.variables;
+      variables?.entries
+          .firstWhere((element) => element.key == selectedPageState)
+          .value
+          .set(finalBytes.first);
+          bloc?.add(RebuildPageEvent(context));
       } catch (e) {
         print('Error: $e');
       }
