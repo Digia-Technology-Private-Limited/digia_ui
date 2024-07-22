@@ -25,7 +25,8 @@ class AppConfigResolver {
     return data;
   }
 
-  Future<Map<String, dynamic>?> _getAppConfigFromNetworkAndWriteToFile(String path) async {
+  Future<Map<String, dynamic>?> _getAppConfigFromNetworkAndWriteToFile(
+      String path) async {
     try {
       final data = await _getAppConfigFromNetwork(path);
       if (data != null && data.isNotEmpty && data['versionUpdated'] == true) {
@@ -65,8 +66,8 @@ class AppConfigResolver {
   }
 
   void _fetchAndCacheProductionAppConfigAndFunctions() async {
-    var config = DUIConfig(
-        await _getAppConfigFromNetworkAndWriteToFile('/config/getAppConfigProduction'));
+    var config = DUIConfig(await _getAppConfigFromNetworkAndWriteToFile(
+        '/config/getAppConfigProduction'));
     if (config.functionsFilePath != null) {
       downloadFunctionsFile(config.functionsFilePath!,
           JSFunctions.getFunctionsFileName(config.version));
@@ -75,12 +76,13 @@ class AppConfigResolver {
 
   Future<DUIConfig> getConfig() async {
     DUIConfig appConfig;
+    DUIConfig? cachedAppConfig, burnedAppConfig;
+    int? version;
     switch (_environment) {
       case Staging():
         try {
           appConfig =
               DUIConfig(await _getAppConfigFromNetwork('/config/getAppConfig'));
-          appConfig.getfirstPageData();
         } catch (e) {
           throw _buildInitException('Invalid AppConfig or fetch failed');
         }
@@ -96,7 +98,6 @@ class AppConfigResolver {
           try {
             appConfig = DUIConfig(await _getAppConfigFromNetwork(
                 '/config/getAppConfigProduction'));
-            appConfig.getfirstPageData();
           } catch (e) {
             throw _buildInitException('Invalid AppConfig or fetch failed');
           }
@@ -105,12 +106,26 @@ class AppConfigResolver {
               version: appConfig.version);
           return appConfig;
         }
-        String? cachedAppConfigJson = await readFileString('appConfig.json');
-        String burnedAppConfigJson;
         try {
-          burnedAppConfigJson = await rootBundle.loadString(appConfigPath);
+          var cachedAppConfigJson = await readFileString('appConfig.json');
+          cachedAppConfig = DUIConfig(
+              (json.decode(cachedAppConfigJson!) as Map<String, dynamic>));
+          version = cachedAppConfig.version;
+        } catch (e) {
+          //do nothing
+        }
+
+        try {
+          var burnedAppConfigJson = await rootBundle.loadString(appConfigPath);
+          burnedAppConfig = DUIConfig((json.decode(burnedAppConfigJson)
+              as Map<String, dynamic>)['data']['response']);
+          version ??= burnedAppConfig.version;
         } catch (e) {
           throw _buildInitException('Burned appConfig not found');
+        }
+
+        if (version != null) {
+          DigiaUIClient.instance.networkClient.addVersionHeader(version);
         }
 
         switch (initPriority) {
@@ -119,7 +134,8 @@ class AppConfigResolver {
             try {
               var result = await Future.any([
                 Future.delayed(Duration(seconds: timeout)),
-                _getAppConfigFromNetworkAndWriteToFile('/config/getAppConfigProduction')
+                _getAppConfigFromNetworkAndWriteToFile(
+                    '/config/getAppConfigProduction')
               ]);
               if (result == null) {
                 throw _buildInitException('Invalid AppConfig or fetch failed');
@@ -133,13 +149,14 @@ class AppConfigResolver {
             } catch (e) {
               //If network fails build appconfig from cache
               try {
-                print('AppConfig network fetch failed. Fallback to cached');
-                return await _getCachedAppConfig(cachedAppConfigJson!);
+                print('AppConfig network fetch failed or no new version released. Fallback to cached');
+                return await _initCachedAppConfig(cachedAppConfig!);
               } catch (e) {
                 //If cache fails build appconfig from burned assets
                 try {
                   print('AppConfig cache failed. Fallback to burned');
-                  return await _getBurnedAppConfig(burnedAppConfigJson, functionsPath);
+                  return await _initBurnedAppConfig(
+                      burnedAppConfig, functionsPath);
                 } catch (e) {
                   print('Appconfig all fallback failed');
                   throw _buildInitException(
@@ -150,11 +167,12 @@ class AppConfigResolver {
           case PrioritizeCache():
             _fetchAndCacheProductionAppConfigAndFunctions();
             try {
-              return await _getCachedAppConfig(cachedAppConfigJson!);
+              return await _initCachedAppConfig(cachedAppConfig!);
             } catch (e) {
               try {
                 print('AppConfig cache failed. Fallback to burned');
-                return await _getBurnedAppConfig(burnedAppConfigJson, functionsPath);
+                return await _initBurnedAppConfig(
+                    burnedAppConfig, functionsPath);
               } catch (e) {
                 print('Appconfig all fallback failed');
                 throw _buildInitException('Invalid AppConfig or fetch failed');
@@ -162,7 +180,7 @@ class AppConfigResolver {
             }
           case PrioritizeLocal():
             try {
-              return await _getBurnedAppConfig(burnedAppConfigJson, functionsPath);
+              return await _initBurnedAppConfig(burnedAppConfig, functionsPath);
             } catch (e) {
               throw _buildInitException('Invalid AppConfig or fetch failed');
             }
@@ -181,20 +199,17 @@ class AppConfigResolver {
     }
   }
 
-  Future<DUIConfig> _getCachedAppConfig(String cachedJson) async {
-    var appConfig = DUIConfig(
-                  (json.decode(cachedJson) as Map<String, dynamic>));
+  Future<DUIConfig> _initCachedAppConfig(DUIConfig cachedAppConfig) async {
     await _initFunctions(
-        remotePath: appConfig.functionsFilePath,
-        version: appConfig.version);
-    return appConfig;
+        remotePath: cachedAppConfig.functionsFilePath,
+        version: cachedAppConfig.version);
+    return cachedAppConfig;
   }
 
-  Future<DUIConfig> _getBurnedAppConfig(String burnedJson, String functionsPath) async {
-    var appConfig = DUIConfig((json.decode(burnedJson)
-                  as Map<String, dynamic>)['data']['response']);
+  Future<DUIConfig> _initBurnedAppConfig(
+      DUIConfig burnedAppConfig, String functionsPath) async {
     await _initFunctions(localPath: functionsPath);
-    return appConfig;
+    return burnedAppConfig;
   }
 }
 

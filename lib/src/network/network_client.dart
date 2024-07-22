@@ -135,29 +135,27 @@ class NetworkClient {
     projectDioInstance.options.headers = headers;
   }
 
-  void replaceInternalHeaders(Map<String, String> headers) {
-    digiaDioInstance.options.headers = headers;
+  void addVersionHeader(int version) {
+    digiaDioInstance.options.headers
+        .addAll({'x-digia-project-version': version});
   }
 
   static Map<String, dynamic> getDefaultDigiaHeaders(
-    String packageVersion,
-    String accessKey,
-    String platform,
-    String? uuid,
-    String packageName,
-    String appVersion,
-    String appBuildNumber,
-    int? projectVersion
-  ) {
-    return  {
+      String packageVersion,
+      String accessKey,
+      String platform,
+      String? uuid,
+      String packageName,
+      String appVersion,
+      String appBuildNumber) {
+    return {
       'x-digia-version': packageVersion,
       'x-digia-project-id': accessKey,
       'x-digia-platform': platform,
       'x-digia-device-id': uuid,
       'x-app-package-name': packageName,
       'x-app-version': appVersion,
-      'x-app-build-number': appBuildNumber,
-      'x-digia-project-version': projectVersion
+      'x-app-build-number': appBuildNumber
     };
   }
 }

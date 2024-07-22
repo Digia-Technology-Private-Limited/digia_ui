@@ -106,8 +106,7 @@ class DigiaUIClient {
         instance.uuid,
         packageName,
         appVersion,
-        appbuildNumber,
-        null);
+        appbuildNumber);
 
     _instance.networkClient = NetworkClient(
         _instance.baseUrl, headers, networkConfiguration, developerConfig);
