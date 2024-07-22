@@ -10,10 +10,14 @@ void main() async {
   runApp(DUIApp(
       digiaAccessKey: "667301a6b6c3bd6fb255ec0d",
       baseUrl: baseUrl,
-      environmentInfo: Production(PrioritizeNetwork(5), 'assets/prodAppConfig.json','assets/functions.js'),
+      // environmentInfo: Staging(),
+      // environmentInfo: Versioned(19),
+      // environmentInfo: Production(PrioritizeNetwork(5), 'assets/prodAppConfig.json','assets/functions.js'),
+      environmentInfo: Production(PrioritizeCache(), 'assets/prodAppConfig.json','assets/functions.js'),
+      // environmentInfo: Production(PrioritizeLocal(), 'assets/prodAppConfig.json','assets/functions.js'),
       navigatorKey: null,
       // developerConfig:
-      //     DeveloperConfig(enableChucker: false, proxyUrl: "10.5.49.13:9090"),
+      //     DeveloperConfig(enableChucker: false, proxyUrl: "192.168.119.217:9090"),
       networkConfiguration:
           NetworkConfiguration(defaultHeaders: {}, timeout: 30),
       analytics: MyAnalytics()));

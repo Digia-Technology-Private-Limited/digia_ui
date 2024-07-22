@@ -66,11 +66,15 @@ class AppConfigResolver {
   }
 
   void _fetchAndCacheProductionAppConfigAndFunctions() async {
-    var config = DUIConfig(await _getAppConfigFromNetworkAndWriteToFile(
-        '/config/getAppConfigProduction'));
-    if (config.functionsFilePath != null) {
-      downloadFunctionsFile(config.functionsFilePath!,
-          JSFunctions.getFunctionsFileName(config.version));
+    try {
+      var config = DUIConfig(await _getAppConfigFromNetworkAndWriteToFile(
+          '/config/getAppConfigProduction'));
+      if (config.functionsFilePath != null) {
+        downloadFunctionsFile(config.functionsFilePath!,
+            JSFunctions.getFunctionsFileName(config.version));
+    }
+    } catch (e) {
+      print('_fetchAndCacheProductionAppConfigAndFunctions : AppConfig network fetch failed or no new version released');
     }
   }
 
@@ -185,8 +189,9 @@ class AppConfigResolver {
               throw _buildInitException('Invalid AppConfig or fetch failed');
             }
         }
-      case Versioned():
+      case Versioned(version: int version):
         try {
+          DigiaUIClient.instance.networkClient.addVersionHeader(version);
           appConfig = DUIConfig(
               await _getAppConfigFromNetwork('/config/getAppConfigForVersion'));
         } catch (e) {
