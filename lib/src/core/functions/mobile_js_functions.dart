@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/services.dart';
 import 'package:flutter_js/flutter_js.dart';
 import '../../Utils/file_operations.dart';
 import '../functions/download.dart';
@@ -10,12 +11,26 @@ class MobileJsFunctions implements JSFunctions {
   late String jsFile;
 
   @override
-  Future fetchJsFile(String path) async {
+  Future<bool> initFunctions(FunctionInitStrategy strategy) async {
     try {
-      await downloadFunctionsFile(path);
-      jsFile = await readFileString('functions.js') ?? '';
+      switch (strategy) {
+        case PreferRemote(remotePath: String remotePath, version: int? version):
+          var fileName = JSFunctions.getFunctionsFileName(version);
+          final fileExists =
+              version == null ? false : await doesFileExist(fileName);
+          if (!fileExists) {
+            var res = await downloadFunctionsFile(remotePath, fileName);
+            if (!res) return false;
+          }
+          jsFile = await readFileString(fileName) ?? '';
+          return true;
+        case PreferLocal(localPath: String localPath):
+          jsFile = await rootBundle.loadString(localPath);
+          return true;
+      }
     } catch (e) {
       print('file not found');
+      return false;
     }
   }
 
