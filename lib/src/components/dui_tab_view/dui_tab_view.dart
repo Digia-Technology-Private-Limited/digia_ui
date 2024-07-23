@@ -6,6 +6,7 @@ import '../../Utils/dui_widget_registry.dart';
 import '../../Utils/util_functions.dart';
 import '../../core/builders/dui_icon_builder.dart';
 import '../../core/builders/dui_json_widget_builder.dart';
+import '../../core/evaluator.dart';
 import 'dui_tab_view_props.dart';
 
 class DUITabView extends StatefulWidget {
@@ -42,7 +43,7 @@ class _DUITabViewState extends State<DUITabView> {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: DefaultTabController(
+      child: DefaultTabController(initialIndex: eval<int>(widget.tabViewProps.initialIndex, context: context) ?? 0,
         length: widget.children.length,
         child: Column(
           children: [
