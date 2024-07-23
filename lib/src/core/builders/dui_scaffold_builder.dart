@@ -7,6 +7,7 @@ import '../../components/bottom_nav_bar/bottom_nav_bar_props.dart';
 import '../../components/dui_widget_creator_fn.dart';
 import '../../components/floating_action_button/floating_action_button.dart';
 import '../../components/floating_action_button/floating_action_button_props.dart';
+import '../action/action_handler.dart';
 import '../action/action_prop.dart';
 import '../evaluator.dart';
 import '../json_widget_builder.dart';
@@ -27,6 +28,10 @@ class DUIScaffoldBuilder extends DUIWidgetBuilder {
     return StatefulBuilder(
       builder: (cntxt, setState) {
         void onDestinationSelected(int index) {
+          final actionValue = data.children['bottomNavigationBar']?.first
+              .children['children']?[index].props['onPageSelected'];
+          final onClick = ActionFlow.fromJson(actionValue);
+          ActionHandler.instance.execute(context: context, actionFlow: onClick);
           setState(() {
             bottomNavBarIndex = index;
           });
@@ -117,8 +122,9 @@ class DUIScaffoldBuilder extends DUIWidgetBuilder {
         final pageKey = UniqueKey();
         final themeData = Theme.of(context).copyWith(
             dividerTheme: const DividerThemeData(color: Colors.transparent),
-            scaffoldBackgroundColor:
-                makeColor(data.props['scaffoldBackgroundColor']));
+            scaffoldBackgroundColor: makeColor(eval<String>(
+                data.props['scaffoldBackgroundColor'],
+                context: context)));
         final enableSafeArea =
             eval<bool>(data.props['enableSafeArea'], context: context);
         return Theme(
