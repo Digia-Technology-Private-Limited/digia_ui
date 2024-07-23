@@ -19,7 +19,7 @@ class DUITabViewProps {
   final double? viewportFraction;
   final DUIInsets? tabBarPadding;
   final DUIInsets? labelPadding;
-  final double? initialIndex;
+  final Object? initialIndex;
   @JsonKey(
       fromJson: DUITextStyle.fromJson,
       includeToJson: false,

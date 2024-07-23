@@ -10,7 +10,7 @@ DUITabViewProps _$DUITabViewPropsFromJson(Map<String, dynamic> json) =>
     DUITabViewProps(
       hasTabs: json['hasTabs'] as bool?,
       indicatorSize: json['indicatorSize'] as String?,
-      initialIndex: (json['initialIndex'] as num?)?.toDouble(),
+      initialIndex: json['initialIndex'],
       labelPadding: json['labelPadding'] == null
           ? null
           : DUIInsets.fromJson(json['labelPadding']),

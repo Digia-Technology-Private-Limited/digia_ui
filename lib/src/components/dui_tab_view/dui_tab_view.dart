@@ -43,7 +43,9 @@ class _DUITabViewState extends State<DUITabView> {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: DefaultTabController(initialIndex: eval<int>(widget.tabViewProps.initialIndex, context: context) ?? 0,
+      child: DefaultTabController(
+        initialIndex:
+            eval<int>(widget.tabViewProps.initialIndex, context: context) ?? 0,
         length: widget.children.length,
         child: Column(
           children: [
