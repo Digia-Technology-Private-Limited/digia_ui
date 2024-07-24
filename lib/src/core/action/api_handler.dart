@@ -64,15 +64,12 @@ class ApiHandler {
 
   Future<dynamic> _prepareRequestData(dynamic body, BodyType? bodyType) async {
     if (bodyType == BodyType.multipart) {
-      if (body is! Map<String, dynamic>) {
-        throw Exception('Multipart body must be a Map<String, dynamic>');
-      }
       return await _createFormData(body);
     }
     return body;
   }
 
-  Future<FormData> _createFormData(Map<String, dynamic> data) async {
+  Future<FormData> _createFormData(dynamic data) async {
     Map<String, dynamic> formDataMap = {};
 
     for (var entry in data.entries) {
@@ -88,7 +85,7 @@ class ApiHandler {
         );
       } else if (entry.value is List<int>) {
         List<int> bytes = entry.value;
-        String fileName = entry.key; // Use the key as filename if not provided
+        String fileName = entry.key;
         String? mimeType = mime(fileName);
 
         formDataMap[entry.key] = MultipartFile.fromBytes(
@@ -144,11 +141,10 @@ class ApiHandler {
     final match = regex.firstMatch(json);
     if (match != null) {
       final variableName = match.group(1);
-
       return values?[variableName];
     }
 
-    // Checking for case of String intperpolation
+    // Checking for case of String interpolation
     final innerVarRegex = RegExp(r'\{\{(\w+)\}\}');
     final innerVarMatch = innerVarRegex.firstMatch(json);
     if (innerVarMatch == null) return json;

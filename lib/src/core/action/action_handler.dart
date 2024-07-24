@@ -428,7 +428,7 @@ Map<String, ActionHandlerFn> _actionsMap = {
         context: context, enclosing: enclosing);
     final isMultiSelect = eval<bool>(action.data['isMultiSelected'],
         context: context, enclosing: enclosing);
-        var selectedPageState = action.data['selectedPageState'];
+    final selectedPageState = action.data['selectedPageState'];
 
     FileType type;
     switch (fileType!.toLowerCase()) {
@@ -479,7 +479,7 @@ Map<String, ActionHandlerFn> _actionsMap = {
           } else {
             if (platformfile.path == null) {
               print('Error: Null path for file');
-               return Uint8List(0);
+              return Uint8List(0);
             }
 
             try {
@@ -500,11 +500,11 @@ Map<String, ActionHandlerFn> _actionsMap = {
         // selectedPageState = finalBytes.first;
 
         final variables = bloc.state.props.variables;
-      variables?.entries
-          .firstWhere((element) => element.key == selectedPageState)
-          .value
-          .set(finalBytes.first);
-          bloc?.add(RebuildPageEvent(context));
+        variables?.entries
+            .firstWhere((element) => element.key == selectedPageState)
+            .value
+            .set(finalBytes.first);
+        bloc.add(RebuildPageEvent(context));
       } catch (e) {
         print('Error: $e');
       }
