@@ -452,13 +452,35 @@ Map<String, ActionHandlerFn> _actionsMap = {
       FilePickerResult? result = await FilePicker.platform.pickFiles(
         type: type,
         allowMultiple: isMultiSelect ?? false,
+        allowedExtensions: type == FileType.custom ? ['pdf'] : null,
       );
+
+      final toast = FToast().init(context);
 
       if (result != null) {
         if (sizeLimit != null) {
-          platformfiles = result.files
-              .where((file) => file.size <= sizeLimit * 1024)
-              .toList();
+          platformfiles = result.files.where((file) {
+            if (file.size > sizeLimit * 1024) {
+              toast.showToast(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 24.0, vertical: 12.0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(25.0),
+                    color: Colors.black,
+                  ),
+                  child: Text(
+                    'File ${file.name} exceeds the size limit of ${sizeLimit}KB',
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                ),
+                gravity: ToastGravity.BOTTOM,
+                toastDuration: const Duration(seconds: 2),
+              );
+              return false;
+            }
+            return true;
+          }).toList();
         } else {
           platformfiles = result.files;
         }
@@ -491,16 +513,20 @@ Map<String, ActionHandlerFn> _actionsMap = {
           }
         }).toList());
 
-        for (var bytes in finalBytes) {
-          print('Read ${bytes.length} bytes');
-        }
-
         final variables = bloc.state.props.variables;
-        variables?.entries
-            .firstWhere((element) => element.key == selectedPageState)
-            .value
-            .set(finalBytes.first);
-        bloc.add(RebuildPageEvent(context));
+        if (finalBytes.length == 1) {
+          // Single file selected
+          variables?.entries
+              .firstWhere((element) => element.key == selectedPageState)
+              .value
+              .set(finalBytes.first);
+        } else {
+          // Multiple files selected
+          variables?.entries
+              .firstWhere((element) => element.key == selectedPageState)
+              .value
+              .set(finalBytes);
+        }
       } catch (e) {
         print('Error: $e');
       }

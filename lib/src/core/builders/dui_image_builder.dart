@@ -38,12 +38,11 @@ class DUIImageBuilder extends DUIWidgetBuilder {
     final imageSource =
         eval<String>(data.props['imageSrc'], context: context) ?? '';
     final imagebytes = _convertStringToUint8List(imageSource);
-    // Network Image
     if (imagebytes != null && imagebytes.isNotEmpty) {
       // Bytes Image
       return MemoryImage(imagebytes);
-      // return Image.memory(imagebytes).image;
     } else if (imageSource.startsWith('http')) {
+      // Network Image
       return CachedNetworkImageProvider(imageSource);
     } else {
       return DUIWidgetScope.maybeOf(context)

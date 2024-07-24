@@ -44,9 +44,8 @@ class ApiHandler {
       DigiaUIClient.instance.duiAnalytics?.onDataSourceSuccess(
           'api',
           url,
-          {'body': apiModel.body},
+          {'body': preparedData},
           {'responseTime': stopwatch.elapsedMilliseconds});
-      print('response: $response');
       return response;
     } on DioException catch (e) {
       DigiaUIClient.instance.duiAnalytics?.onDataSourceError(
@@ -75,30 +74,47 @@ class ApiHandler {
     for (var entry in data.entries) {
       if (entry.value is File) {
         File file = entry.value;
-        String fileName = file.path.split('/').last;
-        String? mimeType = mime(fileName);
-
-        formDataMap[entry.key] = await MultipartFile.fromFile(
-          file.path,
-          filename: fileName,
-          contentType: _getMediaType(mimeType),
-        );
+        formDataMap[entry.key] = await _createMultipartFile(file);
+      } else if (entry.value is List) {
+        List values = entry.value;
+        if (values.isNotEmpty && values.first is File) {
+          formDataMap[entry.key] = await Future.wait(
+              values.map((file) => _createMultipartFile(file)));
+        } else if (values.isNotEmpty && values.first is List<int>) {
+          formDataMap[entry.key] = values
+              .map((bytes) => _createMultipartFileFromBytes(bytes, entry.key))
+              .toList();
+        } else {
+          formDataMap[entry.key] = values;
+        }
       } else if (entry.value is List<int>) {
-        List<int> bytes = entry.value;
-        String fileName = entry.key;
-        String? mimeType = mime(fileName);
-
-        formDataMap[entry.key] = MultipartFile.fromBytes(
-          bytes,
-          filename: fileName,
-          contentType: _getMediaType(mimeType),
-        );
+        formDataMap[entry.key] =
+            _createMultipartFileFromBytes(entry.value, entry.key);
       } else {
         formDataMap[entry.key] = entry.value;
       }
     }
 
     return FormData.fromMap(formDataMap);
+  }
+
+  Future<MultipartFile> _createMultipartFile(File file) async {
+    String fileName = file.path.split('/').last;
+    String? mimeType = mime(fileName);
+    return await MultipartFile.fromFile(
+      file.path,
+      filename: fileName,
+      contentType: _getMediaType(mimeType),
+    );
+  }
+
+  MultipartFile _createMultipartFileFromBytes(List<int> bytes, String key) {
+    String? mimeType = mime(key);
+    return MultipartFile.fromBytes(
+      bytes,
+      filename: key,
+      contentType: _getMediaType(mimeType),
+    );
   }
 
   MediaType? _getMediaType(String? mimeType) {
