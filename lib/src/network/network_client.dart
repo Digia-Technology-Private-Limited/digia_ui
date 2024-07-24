@@ -86,10 +86,11 @@ class NetworkClient {
   Future<Response<Object?>> requestProject({
     required String url,
     required HttpMethod method,
+    //these headers get appended to baseHeaders, a default Dio behavior
     Map<String, dynamic>? additionalHeaders,
     Object? data,
-  }) async {
-    // Remove headers already passed in baseHeaders
+  }) {
+    //Remove headers already passed in baseHeaders
     if (additionalHeaders != null) {
       Set<String> commonKeys = projectDioInstance.options.headers.keys
           .toSet()

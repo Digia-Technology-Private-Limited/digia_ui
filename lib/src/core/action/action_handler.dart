@@ -475,7 +475,7 @@ Map<String, ActionHandlerFn> _actionsMap = {
         List<Uint8List> finalBytes =
             await Future.wait(platformfiles.map((platformfile) async {
           if (kIsWeb) {
-            return platformfile.bytes ?? Uint8List(0); // Handle null bytes
+            return platformfile.bytes ?? Uint8List(0);
           } else {
             if (platformfile.path == null) {
               print('Error: Null path for file');
@@ -486,18 +486,14 @@ Map<String, ActionHandlerFn> _actionsMap = {
               return await File(platformfile.path!).readAsBytes();
             } catch (e) {
               print('Error reading file at ${platformfile.path}: $e');
-              return Uint8List(0); // Returning an empty byte list on error
+              return Uint8List(0);
             }
           }
         }).toList());
 
-        // Debugging output
         for (var bytes in finalBytes) {
           print('Read ${bytes.length} bytes');
         }
-
-        // Assign the file to selectedPageState
-        // selectedPageState = finalBytes.first;
 
         final variables = bloc.state.props.variables;
         variables?.entries
