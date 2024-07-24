@@ -72,9 +72,10 @@ class AppConfigResolver {
       if (config.functionsFilePath != null) {
         downloadFunctionsFile(config.functionsFilePath!,
             JSFunctions.getFunctionsFileName(config.version));
-    }
+      }
     } catch (e) {
-      print('_fetchAndCacheProductionAppConfigAndFunctions : AppConfig network fetch failed or no new version released');
+      print(
+          '_fetchAndCacheProductionAppConfigAndFunctions : AppConfig network fetch failed or no new version released');
     }
   }
 
@@ -153,7 +154,8 @@ class AppConfigResolver {
             } catch (e) {
               //If network fails build appconfig from cache
               try {
-                print('AppConfig network fetch failed or no new version released. Fallback to cached');
+                print(
+                    'AppConfig network fetch failed or no new version released. Fallback to cached');
                 return await _initCachedAppConfig(cachedAppConfig!);
               } catch (e) {
                 //If cache fails build appconfig from burned assets

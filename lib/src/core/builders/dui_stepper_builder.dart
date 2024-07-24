@@ -16,6 +16,6 @@ class DUIStepperBuilder extends DUIWidgetBuilder {
     return DUIStepper(
         varName: data.varName,
         props: data.props,
-        children: data.children['children'] ?? null);
+        children: data.children['children']);
   }
 }
