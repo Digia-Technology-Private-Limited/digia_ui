@@ -89,6 +89,10 @@ dependencies:
   infinite_scroll_pagination: ^4.0.0
   share_plus: ^9.0.0
   widget_marquee: ^0.0.8
+  talker: ^4.3.4
+  talker_flutter: ^4.3.4
+  talker_dio_logger: ^4.3.4
+  talker_bloc_logger: ^4.3.4
 
 dev_dependencies:
   build_runner: ^2.4.4

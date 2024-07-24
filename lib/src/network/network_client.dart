@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'package:flutter/foundation.dart';
+import 'package:talker_dio_logger/talker_dio_logger.dart';
 
 import '../../digia_ui.dart';
 import 'api_response/base_response.dart';
@@ -24,6 +25,31 @@ void configureDeveloperOptions(Dio dio, DeveloperConfig? developerConfig) {
   }
   if (developerConfig.enableChucker) {
     // dio.interceptors.add(ChuckerDioInterceptor());
+    dio.interceptors.add(
+      TalkerDioLogger(
+        talker: developerConfig.talker,
+        addonId: 'digia',
+        settings: TalkerDioLoggerSettings(
+          printRequestHeaders: true,
+          printRequestData: true,
+          printResponseHeaders: true,
+          printResponseData: true,
+          printResponseMessage: true,
+          printErrorData: true,
+          printErrorHeaders: true,
+          printErrorMessage: true,
+          requestFilter: (RequestOptions requestOptions) {
+            return true;
+          },
+          responseFilter: (Response response) {
+            return true;
+          },
+          errorFilter: (DioException error) {
+            return true;
+          },
+        ),
+      ),
+    );
   }
 }
 
