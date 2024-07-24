@@ -11,6 +11,8 @@ class DUIBottomNavigationBarProps {
   final String? indicatorColor;
   final String? shadowColor;
   final String? borderShape;
+  final String? surfaceTintColor;
+  final String? overlayColor;
   final bool? showLabels;
 
   DUIBottomNavigationBarProps(
@@ -21,7 +23,9 @@ class DUIBottomNavigationBarProps {
       this.borderShape,
       this.showLabels,
       this.shadowColor,
-      this.backgroundColor});
+      this.backgroundColor,
+      this.surfaceTintColor,
+      this.overlayColor});
 
   factory DUIBottomNavigationBarProps.fromJson(Map<String, dynamic> json) =>
       _$DUIBottomNavigationBarPropsFromJson(json);
