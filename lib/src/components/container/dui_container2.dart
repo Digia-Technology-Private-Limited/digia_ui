@@ -44,7 +44,7 @@ class DUIContainer2 extends StatelessWidget {
         eval<double>(props.decorationImage?.opacity, context: context);
     BoxShape shape =
         props.shape == 'circle' ? BoxShape.circle : BoxShape.rectangle;
-    final gradiant = _toGradiant(props.gradiant, context);
+    final gradiant = _toGradiant(props.gradient, context);
     return Container(
       width: width,
       height: height,

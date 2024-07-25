@@ -22,7 +22,7 @@ class DUIContainer2Props {
   final DUIDecorationImage? decorationImage;
   final String? shape;
   final String? boxFit;
-  final Map<String, dynamic>? gradiant;
+  final Map<String, dynamic>? gradient;
 
   DUIContainer2Props(
     this.width,
@@ -39,7 +39,7 @@ class DUIContainer2Props {
     this.decorationImage,
     this.shape,
     this.boxFit,
-    this.gradiant,
+    this.gradient,
   );
 
   factory DUIContainer2Props.fromJson(Map<String, dynamic> json) =>
