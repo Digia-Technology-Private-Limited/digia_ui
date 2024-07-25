@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:widget_marquee/widget_marquee.dart';
 
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
 import '../../Utils/util_functions.dart';
@@ -21,12 +22,36 @@ class DUITextBuilder extends DUIWidgetBuilder {
 
   @override
   Widget build(BuildContext context) {
-    final text = eval<String>(data.props['text'], context: context);
-    final style = toTextStyle(DUITextStyle.fromJson(data.props['textStyle']));
-    final maxLines = eval<int>(data.props['maxLines'], context: context);
-    final overflow = DUIDecoder.toTextOverflow(data.props['overflow']);
-    final textAlign = DUIDecoder.toTextAlign(data.props['alignment']);
+    return _DUIText(props: data.props);
+  }
+}
 
+class _DUIText extends StatelessWidget {
+  final Map<String, dynamic> props;
+
+  const _DUIText({
+    Key? key,
+    required this.props,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final text = eval<String>(props['text'], context: context);
+    final style =
+        toTextStyle(DUITextStyle.fromJson(props['textStyle']), context);
+    final maxLines = eval<int>(props['maxLines'], context: context);
+    final textAlign = DUIDecoder.toTextAlign(props['alignment']);
+    if (props['overflow'] == 'marquee') {
+      return Marquee(
+        pause: Duration.zero,
+        delay: Duration.zero,
+        duration: const Duration(seconds: 11),
+        gap: 100,
+        child: Text(text.toString(),
+            style: style, maxLines: maxLines, textAlign: textAlign),
+      );
+    }
+    final overflow = DUIDecoder.toTextOverflow(props['overflow']);
     return Text(text.toString(),
         style: style,
         maxLines: maxLines,

@@ -1,24 +1,19 @@
-import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 
+import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:uuid/uuid.dart';
 
 import '../digia_ui.dart';
 import 'core/functions/js_functions.dart';
-import 'core/functions/download.dart';
 import 'core/pref/dui_preferences.dart';
 import 'digia_ui_service.dart';
 import 'models/dui_app_state.dart';
-import 'network/api_response/base_response.dart';
-import 'network/core/types.dart';
 import 'network/network_client.dart';
+import 'version.dart';
 
 const defaultUIConfigAssetPath = 'assets/json/dui_config.json';
-const defaultBaseUrl = 'https://app.digia.tech/api/v1';
-// const defaultBaseUrl = 'http://localhost:3000/api/v1';
 
 class DigiaUIClient {
   static final DigiaUIClient _instance = DigiaUIClient._();
@@ -36,6 +31,8 @@ class DigiaUIClient {
   late Environment environment;
   late JSFunctions jsFunctions;
   late DUIAnalytics? duiAnalytics;
+  late String? uuid;
+  static const appConfigFileName = 'appConfig.json';
 
   bool _isInitialized = false;
 
@@ -47,50 +44,27 @@ class DigiaUIClient {
     return _instance.networkClient;
   }
 
-  static initialize(
-      {required String accessKey,
-      String? assetPath,
-      String? baseUrl,
-      required NetworkConfiguration networkConfiguration}) async {
-    _instance.accessKey = accessKey;
-    _instance.baseUrl = baseUrl ?? defaultBaseUrl;
-    Map<String, dynamic> headers = {'digia_projectId': accessKey};
-    _instance.networkClient =
-        NetworkClient(_instance.baseUrl, headers, networkConfiguration, null);
-    final string =
-        await rootBundle.loadString(assetPath ?? defaultUIConfigAssetPath);
-    final data = jsonDecode(string);
-
-    _instance.config = DUIConfig(data);
-
-    await DUIPreferences.initialize();
-    setUuid();
-
-    _instance.appState = DUIAppState.fromJson(_instance.config.appState ?? {});
-
-    _instance._isInitialized = true;
-  }
-
   static bool isInitialized() {
     return _instance._isInitialized;
   }
 
   static void setUuid() {
-    DUIApp.uuid = DUIPreferences.instance.getString('uuid');
-    if (DUIApp.uuid == null) {
-      DUIApp.uuid = const Uuid().v4();
-      DUIPreferences.instance.setString('uuid', DUIApp.uuid!);
+    var uuid = DUIPreferences.instance.getString('uuid');
+    if (uuid == null) {
+      uuid = const Uuid().v4();
+      DUIPreferences.instance.setString('uuid', uuid!);
     }
+    DigiaUIClient.instance.uuid = uuid;
   }
 
   static initializeFromData(
       {required String accessKey,
-      String? baseUrl,
+      required String baseUrl,
       required dynamic data,
       required NetworkConfiguration networkConfiguration,
       DeveloperConfig? developerConfig}) async {
     _instance.accessKey = accessKey;
-    _instance.baseUrl = baseUrl ?? defaultBaseUrl;
+    _instance.baseUrl = baseUrl;
     Map<String, dynamic> headers = {'digia_projectId': accessKey};
     _instance.networkClient = NetworkClient(
         _instance.baseUrl, headers, networkConfiguration, developerConfig);
@@ -104,74 +78,40 @@ class DigiaUIClient {
     _instance._isInitialized = true;
   }
 
-  static initializeFromNetwork(
+  static init(
       {required String accessKey,
-      required Environment environment,
-      String? projectId,
-      required int version,
-      String? baseUrl,
+      required EnvironmentInfo environmentInfo,
+      required String baseUrl,
       required NetworkConfiguration networkConfiguration,
       DeveloperConfig? developerConfig,
       DUIAnalytics? duiAnalytics}) async {
     await DUIPreferences.initialize();
     setUuid();
-    BaseResponse resp;
-    _instance.environment = environment;
-    _instance.version = version;
+    _instance.environment = environmentInfo.environment;
     _instance.accessKey = accessKey;
-    _instance.baseUrl = baseUrl ?? defaultBaseUrl;
+    _instance.baseUrl = baseUrl;
     _instance.duiAnalytics = duiAnalytics;
 
-    Map<String, dynamic> apiParams = {
-      'digia_projectId': accessKey,
-      'projectId': accessKey,
-      'version': version,
-      'platform': instance._getPlatform(),
-      'deviceId': DUIApp.uuid
-    };
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    var packageName = packageInfo.packageName;
+    var appVersion = packageInfo.version;
+    var appbuildNumber = packageInfo.buildNumber;
+
+    AppConfigResolver appConfigResolver = AppConfigResolver(environmentInfo);
+
+    Map<String, dynamic> headers = NetworkClient.getDefaultDigiaHeaders(
+        packageVersion,
+        accessKey,
+        instance._getPlatform(),
+        instance.uuid,
+        packageName,
+        appVersion,
+        appbuildNumber);
+
     _instance.networkClient = NetworkClient(
-        _instance.baseUrl, apiParams, networkConfiguration, developerConfig);
+        _instance.baseUrl, headers, networkConfiguration, developerConfig);
 
-    String requestPath;
-    dynamic requestData;
-    switch (environment) {
-      case Environment.staging:
-        requestPath = '/config/getAppConfig';
-        requestData = jsonEncode(apiParams);
-        break;
-      case Environment.production:
-        requestPath = '/config/getAppConfigProduction';
-        requestData = jsonEncode(apiParams);
-        break;
-      case Environment.version:
-        requestPath = '/config/getAppConfigForVersion';
-        requestData = jsonEncode(apiParams);
-        break;
-      default:
-        requestPath = '/config/getAppConfig';
-        requestData = jsonEncode(apiParams);
-    }
-
-    resp = await _instance.networkClient.requestInternal(
-      HttpMethod.post,
-      requestPath,
-      headers: apiParams,
-      (json) => json as dynamic,
-      data: requestData,
-    );
-
-    final data = resp.data['response'] as Map<String, dynamic>?;
-    if (data == null || data.isEmpty) {
-      throw Exception(
-        'Something went wrong while getting data from cloud, please check provided projectId',
-      );
-    }
-
-    _instance.config = DUIConfig(data);
-
-    _instance.jsFunctions = JSFunctions();
-    await _instance.jsFunctions.fetchJsFile(_instance.config.functionsFilePath);
-    // _instance.jsFunctions.callJs('test3', {'number': 27});
+    _instance.config = await appConfigResolver.getConfig();
 
     _instance.appState = DUIAppState.fromJson(_instance.config.appState ?? {});
 
@@ -183,6 +123,31 @@ class DigiaUIClient {
         baseUrl: _instance.baseUrl,
         httpClient: _instance.networkClient,
         config: _instance.config);
+  }
+
+  Map<String, Object?> get jsVars => {
+        'js': ExprClassInstance(
+            klass: ExprClass(name: 'js', fields: {}, methods: {
+          'eval': ExprCallableImpl(
+              fn: (evaluator, arguments) {
+                return _instance.jsFunctions.callJs(
+                    _toValue<String>(evaluator, arguments[0])!,
+                    arguments
+                        .skip(1)
+                        .map((e) => _toValue(evaluator, e))
+                        .toList());
+              },
+              arity: 2)
+        }))
+      };
+
+  T? _toValue<T>(evaluator, Object obj) {
+    if (obj is ASTNode) {
+      final result = evaluator.eval(obj);
+      return result as T?;
+    }
+
+    return obj as T?;
   }
 
   String _getPlatform() {

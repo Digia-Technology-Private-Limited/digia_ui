@@ -9,21 +9,23 @@ class WebJsFunctions implements JSFunctions {
   callJs(String fnName, dynamic v1) {
     var obj = js.JsObject.jsify(v1);
     var res = js.context.callMethod(fnName, [obj]);
-    var finalRes = jsonDecode(
-       js.context['JSON'].callMethod(
-           'stringify',
-           [res]
-       )
-    );
+    var finalRes =
+        jsonDecode(js.context['JSON'].callMethod('stringify', [res]));
     return finalRes;
   }
 
   @override
-  fetchJsFile(String path) {
-    ScriptElement script = ScriptElement()
-      ..src = path
-      ..type = 'text/javascript';
-    document.head?.append(script);
+  Future<bool> initFunctions(FunctionInitStrategy strategy) {
+    switch (strategy) {
+      case PreferRemote(remotePath: String remotePath):
+        ScriptElement script = ScriptElement()
+          ..src = '$remotePath?t=${DateTime.now().millisecondsSinceEpoch}'
+          ..type = 'text/javascript';
+        document.head?.append(script);
+        return Future.value(true);
+      case PreferLocal():
+        throw Exception('Local strategy not available for web');
+    }
   }
 }
 

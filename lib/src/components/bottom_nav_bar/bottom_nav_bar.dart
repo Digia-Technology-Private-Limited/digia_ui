@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+
 import '../../../digia_ui.dart';
-import '../../Utils/basic_shared_utils/lodash.dart';
 import '../../Utils/dui_widget_registry.dart';
 import '../../Utils/extensions.dart';
 import '../../Utils/util_functions.dart';
+import '../../core/evaluator.dart';
 import 'bottom_nav_bar_props.dart';
 
 class DUIBottomNavigationBar extends StatefulWidget {
@@ -38,23 +39,40 @@ class _DUIBottomNavigationBarState extends State<DUIBottomNavigationBar> {
   @override
   Widget build(BuildContext context) {
     return NavigationBar(
+      surfaceTintColor: makeColor(
+        eval<String>(
+          widget.barProps.surfaceTintColor,
+          context: context,
+        ),
+      ),
       animationDuration: Duration(
           milliseconds:
               int.tryParse(widget.barProps.duration?.toString() ?? '0') ?? 0),
-      shadowColor: widget.barProps.shadowColor?.letIfTrue(toColor),
+      shadowColor: makeColor(
+          eval<String>(widget.barProps.shadowColor, context: context)),
       elevation: widget.barProps.elevation,
       height: widget.barProps.height,
-      indicatorColor: widget.barProps.indicatorColor?.letIfTrue(toColor),
+      indicatorColor: makeColor(
+          eval<String>(widget.barProps.indicatorColor, context: context)),
       indicatorShape: widget.barProps.borderShape == null
           ? null
           : toButtonShape(widget.barProps.borderShape),
       labelBehavior: widget.barProps.showLabels.isNullEmptyOrFalse
           ? NavigationDestinationLabelBehavior.alwaysHide
           : NavigationDestinationLabelBehavior.alwaysShow,
-      backgroundColor: widget.barProps.backgroundColor?.letIfTrue(toColor),
+      backgroundColor: makeColor(
+          eval<String>(widget.barProps.backgroundColor, context: context)),
       selectedIndex: _selectedIndex,
       destinations: widget.children.map((e) => DUIWidget(data: e)).toList(),
       onDestinationSelected: _handleDestinationSelected,
+      overlayColor: MaterialStateProperty.all(
+        makeColor(
+          eval<String>(
+            widget.barProps.overlayColor,
+            context: context,
+          ),
+        ),
+      ),
     );
   }
 }

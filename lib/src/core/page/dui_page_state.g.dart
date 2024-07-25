@@ -17,6 +17,8 @@ abstract class _$DUIPageStateCWProxy {
 
   DUIPageState dataSource(Object? dataSource);
 
+  DUIPageState widgetVars(Map<String, Map<String, Function>> widgetVars);
+
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `DUIPageState(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
   /// Usage
@@ -29,6 +31,7 @@ abstract class _$DUIPageStateCWProxy {
     Map<String, dynamic>? pageArgs,
     bool? isLoading,
     Object? dataSource,
+    Map<String, Map<String, Function>>? widgetVars,
   });
 }
 
@@ -55,6 +58,10 @@ class _$DUIPageStateCWProxyImpl implements _$DUIPageStateCWProxy {
   DUIPageState dataSource(Object? dataSource) => this(dataSource: dataSource);
 
   @override
+  DUIPageState widgetVars(Map<String, Map<String, Function>> widgetVars) =>
+      this(widgetVars: widgetVars);
+
+  @override
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `DUIPageState(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
@@ -68,6 +75,7 @@ class _$DUIPageStateCWProxyImpl implements _$DUIPageStateCWProxy {
     Object? pageArgs = const $CopyWithPlaceholder(),
     Object? isLoading = const $CopyWithPlaceholder(),
     Object? dataSource = const $CopyWithPlaceholder(),
+    Object? widgetVars = const $CopyWithPlaceholder(),
   }) {
     return DUIPageState(
       pageUid: pageUid == const $CopyWithPlaceholder() || pageUid == null
@@ -89,7 +97,12 @@ class _$DUIPageStateCWProxyImpl implements _$DUIPageStateCWProxy {
       dataSource: dataSource == const $CopyWithPlaceholder()
           ? _value.dataSource
           // ignore: cast_nullable_to_non_nullable
-          : dataSource,
+          : dataSource as Object?,
+      widgetVars:
+          widgetVars == const $CopyWithPlaceholder() || widgetVars == null
+              ? _value.widgetVars
+              // ignore: cast_nullable_to_non_nullable
+              : widgetVars as Map<String, Map<String, Function>>,
     );
   }
 }

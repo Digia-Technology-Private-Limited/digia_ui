@@ -1,41 +1,60 @@
 import 'package:flutter/material.dart';
 
-import '../../Utils/basic_shared_utils/lodash.dart';
-import '../../Utils/util_functions.dart';
-import 'dui_switch_props.dart';
+import '../dui_base_stateful_widget.dart';
 
-class DUISwitch extends StatefulWidget {
-  final DUISwitchProps props;
-  const DUISwitch(this.props, {super.key});
+class DUISwitch extends BaseStatefulWidget {
+  final bool enabled;
+  final bool? value;
+  final Color? activeColor;
+  final Color? inactiveThumbColor;
+  final Color? activeTrackColor;
+  final Color? inactiveTrackColor;
+
+  const DUISwitch(
+      {super.key,
+      super.varName,
+      required this.enabled,
+      this.value,
+      this.activeColor,
+      this.inactiveThumbColor,
+      this.activeTrackColor,
+      this.inactiveTrackColor});
 
   @override
   State<DUISwitch> createState() => _DUISwitchState();
 }
 
-class _DUISwitchState extends State<DUISwitch> {
+class _DUISwitchState extends DUIWidgetState<DUISwitch> {
   bool _value = false;
 
   @override
   void initState() {
-    _value = widget.props.value;
+    _value = widget.value ?? false;
     super.initState();
+  }
+
+  _setState(bool value) {
+    setState(() {
+      _value = value;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final onChange = widget.props.enabled.letIfTrue((p0) => (value) {
-          setState(() {
-            _value = value;
-          });
-        });
+    final onChange = widget.enabled ? _setState : null;
 
     return Switch.adaptive(
       value: _value,
       onChanged: onChange,
-      activeColor: widget.props.activeColor.let(toColor),
-      inactiveThumbColor: widget.props.inactiveThumbColor.let(toColor),
-      activeTrackColor: widget.props.activeTrackColor.let(toColor),
-      inactiveTrackColor: widget.props.inactiveTrackColor.let(toColor),
+      activeColor: widget.activeColor,
+      inactiveThumbColor: widget.inactiveThumbColor,
+      activeTrackColor: widget.activeTrackColor,
+      inactiveTrackColor: widget.inactiveTrackColor,
     );
+  }
+
+  @override
+  Map<String, Function> getVariables() {
+    return {'value': () => _value, 'enabled': () => widget.enabled};
   }
 }

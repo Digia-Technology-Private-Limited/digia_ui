@@ -5,9 +5,11 @@ import '../../digia_ui.dart';
 import '../components/DUIText/DUI_text_span/dui_text_span.dart';
 import '../components/DUIText/dui_text_style.dart';
 import '../components/utils/DUIBorder/dui_border.dart';
+import '../core/evaluator.dart';
 import 'basic_shared_utils/color_decoder.dart';
 import 'basic_shared_utils/dui_decoder.dart';
 import 'basic_shared_utils/lodash.dart';
+import 'basic_shared_utils/num_decoder.dart';
 
 class DUIConfigConstants {
   static const double fallbackSize = 14;
@@ -19,7 +21,7 @@ class DUIConfigConstants {
   static const Color fallbackBgColor = Colors.black;
 }
 
-TextStyle? toTextStyle(DUITextStyle? textStyle) {
+TextStyle? toTextStyle(DUITextStyle? textStyle, BuildContext context) {
   if (textStyle == null) return null;
 
   FontWeight fontWeight = FontWeight.normal;
@@ -39,7 +41,8 @@ TextStyle? toTextStyle(DUITextStyle? textStyle) {
     fontHeight = font.height ?? DUIConfigConstants.fallbackLineHeightFactor;
   }
 
-  Color? textColor = textStyle.textColor.letIfTrue(toColor);
+  Color? textColor =
+      eval<String>(textStyle.textColor, context: context).letIfTrue(toColor);
 
   Color? textBgColor = textStyle.textBgColor.letIfTrue(toColor);
 
@@ -61,10 +64,10 @@ TextStyle? toTextStyle(DUITextStyle? textStyle) {
       decorationStyle: decorationStyle);
 }
 
-TextSpan toTextSpan(DUITextSpan textSpan) {
+TextSpan toTextSpan(DUITextSpan textSpan, BuildContext context) {
   return TextSpan(
     text: textSpan.text.toString(),
-    style: toTextStyle(textSpan.spanStyle),
+    style: toTextStyle(textSpan.spanStyle, context),
     // recognizer: TapGestureRecognizer()
     //   ..onTap = () async {
     //     //todo change onTap functionality according to backend latter
@@ -121,7 +124,8 @@ OutlinedBorder? toButtonShape(dynamic value) {
   final shape = value['value'] as String?;
   final borderColor = (value['borderColor'] as String?).letIfTrue(toColor) ??
       Colors.transparent;
-  final borderWidth = (value['borderWidth'] as double?) ?? 1.0;
+  final borderWidth =
+      NumDecoder.toDoubleOrDefault(value['borderWidth'], defaultValue: 1.0);
   final borderStyle =
       (value['borderStyle'] == 'solid') ? BorderStyle.solid : BorderStyle.none;
   final side =
@@ -130,23 +134,26 @@ OutlinedBorder? toButtonShape(dynamic value) {
   return switch (shape) {
     'stadium' => StadiumBorder(side: side),
     'circle' => CircleBorder(
-        eccentricity: value['eccentricity'] as double? ?? 0.0, side: side),
+        eccentricity: NumDecoder.toDoubleOrDefault(value['eccentricity'],
+            defaultValue: 0.0),
+        side: side),
     'roundedRect' || _ => RoundedRectangleBorder(
         borderRadius: DUIDecoder.toBorderRadius(value['borderRadius']),
         side: side)
   };
 }
 
-Border? toBorder(DUIBorder? border) {
+Border? toBorder(DUIBorder? border, BuildContext context) {
   if (border == null || border.borderStyle != 'solid') {
     return null;
   }
 
   return Border.all(
-      style: BorderStyle.solid,
-      width: border.borderWidth ?? 1.0,
-      color: toColor(
-          border.borderColor ?? DUIConfigConstants.fallbackBorderColorHexCode));
+    style: BorderStyle.solid,
+    width: border.borderWidth ?? 1.0,
+    color: makeColor(eval<String>(border.borderColor, context: context)) ??
+        toColor(DUIConfigConstants.fallbackBorderColorHexCode),
+  );
 }
 
 BorderSide toBorderSide(DUIBorder? borderSide) {
@@ -176,6 +183,7 @@ OutlineInputBorder? toOutlineInputBorder(DUIBorder? border) {
 
 // Possible Values for colorToken:
 // token: primary, hexCode: #242424, hexCode with Alpha: #FF242424
+@Deprecated('Use makeColor instead')
 Color toColor(String colorToken) {
   var colorString =
       DigiaUIClient.getConfigResolver().getColorValue(colorToken) ?? colorToken;
@@ -186,4 +194,14 @@ Color toColor(String colorToken) {
   }
 
   return color;
+}
+
+Color? makeColor(dynamic color) {
+  if (color == null) return null;
+
+  if (color is Color) return color;
+
+  if (color is! String) return null;
+
+  return ColorDecoder.fromString(color);
 }

@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 
 import '../../../digia_ui.dart';
-import '../../Utils/basic_shared_utils/lodash.dart';
+// import '../../Utils/basic_shared_utils/lodash.dart';
 import '../../Utils/dui_widget_registry.dart';
-import '../../Utils/util_functions.dart';
+// import '../../Utils/util_functions.dart';
+import '../../core/builders/dui_text_builder.dart';
 import '../../core/evaluator.dart';
 import '../DUIText/dui_text.dart';
-import '../dui_icons/icon_helpers/icon_data_serialization.dart';
+// import '../dui_icons/icon_helpers/icon_data_serialization.dart';
 import 'dezerv_stepper_props.dart';
 import 'dz_step.dart';
 
-const double _V_TEXT_LEFT_PADDING = 32;
+const double _V_TEXT_LEFT_PADDING = 40;
 const double _V_TEXT_BOTTOM_PADDING = 32;
 const double _V_TEXT_IN_BETWEEN_PADDING = 4;
 const double _MAX_PROGRESS_LENGTH = 300;
@@ -61,7 +62,7 @@ class _DZStepperState extends State<DZStepper> {
 
   int get _stepsLength => steps.length;
   int get _stepIndex => currentIndex.toInt() /* ?? widget.completedIndex */;
-  late int _stepCircleIndex = _stepIndex;
+  late final int _stepCircleIndex = _stepIndex;
   late final double _stepDimension = iconRadius * 2;
 
   @override
@@ -88,7 +89,8 @@ class _DZStepperState extends State<DZStepper> {
         );
       }
 
-      buildTitles.add(DUIText(widget.props.steps![index].title!));
+      buildTitles.add(DUITextBuilder.fromProps(
+          props: {'text': widget.props.steps![index].title!}).build(context));
     }
 
     return Column(
@@ -158,7 +160,7 @@ class _DZStepperState extends State<DZStepper> {
             _buildStepIcon(index),
             if (index < (_stepsLength - 1))
               Padding(
-                padding: const EdgeInsets.only(left: 4),
+                padding: const EdgeInsets.only(left: 0),
                 child: _buildProgressBar(index, itemLength),
               ),
           ],
@@ -172,42 +174,49 @@ class _DZStepperState extends State<DZStepper> {
     final bool isCompleted =
         showActiveState ? index < _stepIndex : index <= _stepCircleIndex;
 
-    Icon? dzStepIcon = Icon(
-        getIconData(
-            icondataMap: widget.props.steps?[index].stepIcon?['iconData']),
-        size: eval<double>(widget.props.steps![index].stepIcon?['iconSize'],
-            context: context),
-        color: eval<String>(widget.props.steps?[index].stepIcon?['iconColor'],
-                context: context)
-            .letIfTrue(toColor));
+    Widget? dzStep = Stack(
+      children: [
+        Container(
+          width: 20,
+          height: 20,
+          decoration: const BoxDecoration(
+            shape: BoxShape.circle,
+            color: Color(0x14FFFFFF),
+          ),
+        ),
+        Positioned(
+          left: 6,
+          top: 6,
+          child: Container(
+            width: 8,
+            height: 8,
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              color: Color(0xFF969593),
+            ),
+          ),
+        ),
+      ],
+    );
+
+    Widget? dzIncompleteStep = Container(
+      width: 20,
+      height: 20,
+      decoration: const BoxDecoration(
+        shape: BoxShape.circle,
+        color: Color(0x14FFFFFF),
+      ),
+    );
 
     Widget? stepIcon;
 
     if (showActiveState && index == currentIndex && isActive) {
-      stepIcon = dzStepIcon ??
-          DZActiveStepIcon(
-            circleColor: direction == Axis.horizontal
-                ? widget.props.circleColor.letIfTrue(toColor) ?? Colors.red
-                : widget.props.circleColor.letIfTrue(toColor) ?? Colors.red,
-          );
+      stepIcon = dzStep;
     } else {
-      // Inactive state
       if (showActiveState && !isCompleted) {
-        stepIcon = dzStepIcon ??
-            Container(
-              height: iconRadius,
-              width: iconRadius,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color:
-                      widget.props.circleColor.letIfTrue(toColor) ?? Colors.red,
-                  width: 2,
-                ),
-              ),
-            );
+        stepIcon = dzIncompleteStep;
       } else if (isCompleted) {
-        stepIcon = dzStepIcon;
+        stepIcon = dzStep;
       } else {
         stepIcon = const Icon(Icons.run_circle_outlined);
       }
@@ -216,36 +225,40 @@ class _DZStepperState extends State<DZStepper> {
     return SizedBox(
       width: direction == Axis.vertical ? _stepDimension : null,
       height: direction == Axis.horizontal ? _stepDimension : null,
-      child: stepIcon ??
-          CircleAvatar(
-            radius: iconRadius,
-            backgroundColor: isCompleted
-                ? Colors.white.withOpacity(0.16)
-                : Colors.green.withOpacity(0.18),
-            child: isCompleted
-                ? const Icon(
-                    Icons.circle,
-                    color: Colors.white,
-                    size: 8,
-                  )
-                : null,
-          ),
+      child: stepIcon,
     );
   }
 
   Widget _buildProgressBar(int index, double itemLength) {
-    return ProgressBar(
-      progressValue: index < currentIndex ? itemLength : 0,
-      barLength: itemLength,
-      direction: direction,
-      barColor: widget.props.circleColor,
-      onComplete: () {
-        setState(() {
-          _stepCircleIndex = currentIndex.toInt();
-        });
-      },
+    return Container(
+      height: direction == Axis.vertical ? itemLength : 2,
+      width: direction == Axis.horizontal ? itemLength : 2,
+      margin: EdgeInsets.symmetric(
+        horizontal: direction == Axis.horizontal ? 2 : 0,
+        vertical: direction == Axis.vertical ? 2 : 0,
+      ),
+      decoration: BoxDecoration(
+        color: index < currentIndex
+            ? const Color(0xFF969593)
+            : const Color(0x29FFFFFF),
+        borderRadius: BorderRadius.circular(2),
+      ),
     );
   }
+
+  // Widget _buildProgressBar(int index, double itemLength) {
+  //   return ProgressBar(
+  //     progressValue: index < currentIndex ? itemLength : 0,
+  //     barLength: itemLength,
+  //     direction: direction,
+  //     barColor: widget.props.circleColor,
+  //     onComplete: () {
+  //       setState(() {
+  //         _stepCircleIndex = currentIndex.toInt();
+  //       });
+  //     },
+  //   );
+  // }
 
 // Gets first and last title height to adjust and center title in horizontal stepper
   EdgeInsets _getHorizontalPadding() {
@@ -336,184 +349,184 @@ class _DZStepperState extends State<DZStepper> {
   }
 }
 
-class ProgressBar extends StatefulWidget {
-  final double progressValue;
-  final double barLength;
-  final Axis direction;
-  final VoidCallback? onComplete;
-  final String? barColor;
+// class ProgressBar extends StatefulWidget {
+//   final double progressValue;
+//   final double barLength;
+//   final Axis direction;
+//   final VoidCallback? onComplete;
+//   final String? barColor;
 
-  const ProgressBar(
-      {super.key,
-      required this.progressValue,
-      required this.barLength,
-      this.direction = Axis.horizontal,
-      this.onComplete,
-      this.barColor});
+//   const ProgressBar(
+//       {super.key,
+//       required this.progressValue,
+//       required this.barLength,
+//       this.direction = Axis.horizontal,
+//       this.onComplete,
+//       this.barColor});
 
-  @override
-  State<ProgressBar> createState() => _ProgressBarState();
-}
+//   @override
+//   State<ProgressBar> createState() => _ProgressBarState();
+// }
 
-class _ProgressBarState extends State<ProgressBar>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _progressAnimationController =
-      AnimationController(
-    vsync: this,
-    duration: const Duration(milliseconds: 500),
-  );
+// class _ProgressBarState extends State<ProgressBar>
+//     with SingleTickerProviderStateMixin {
+//   late final AnimationController _progressAnimationController =
+//       AnimationController(
+//     vsync: this,
+//     duration: const Duration(milliseconds: 500),
+//   );
 
-  late final Animation<double> _lengthAnimation =
-      Tween<double>(begin: 0, end: widget.barLength)
-          .animate(_progressAnimationController);
+//   late final Animation<double> _lengthAnimation =
+//       Tween<double>(begin: 0, end: widget.barLength)
+//           .animate(_progressAnimationController);
 
-  @override
-  void initState() {
-    super.initState();
-    if (widget.progressValue == widget.barLength) {
-      _progressAnimationController.forward(from: widget.progressValue);
-    }
-    _progressAnimationController.addListener(() {
-      setState(() {});
-    });
-    animator();
-  }
+//   @override
+//   void initState() {
+//     super.initState();
+//     if (widget.progressValue == widget.barLength) {
+//       _progressAnimationController.forward(from: widget.progressValue);
+//     }
+//     _progressAnimationController.addListener(() {
+//       setState(() {});
+//     });
+//     animator();
+//   }
 
-  @override
-  void didUpdateWidget(covariant ProgressBar oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget.progressValue > oldWidget.progressValue) {
-      _forwardAnimation();
-    } else if (widget.progressValue < oldWidget.progressValue) {
-      _reverseAnimation();
-    }
-  }
+//   @override
+//   void didUpdateWidget(covariant ProgressBar oldWidget) {
+//     super.didUpdateWidget(oldWidget);
+//     if (widget.progressValue > oldWidget.progressValue) {
+//       _forwardAnimation();
+//     } else if (widget.progressValue < oldWidget.progressValue) {
+//       _reverseAnimation();
+//     }
+//   }
 
-  void animator() async {
-    await Future.delayed(const Duration(milliseconds: 200));
-    setState(() {
-      animate = true;
-    });
-  }
+//   void animator() async {
+//     await Future.delayed(const Duration(milliseconds: 200));
+//     setState(() {
+//       animate = true;
+//     });
+//   }
 
-  bool animate = false;
+//   bool animate = false;
 
-  @override
-  Widget build(BuildContext context) {
-    final bool isHorizontal = widget.direction == Axis.horizontal;
+//   @override
+//   Widget build(BuildContext context) {
+//     final bool isHorizontal = widget.direction == Axis.horizontal;
 
-    return AnimatedContainer(
-      duration: const Duration(seconds: 1),
-      // this needs to be fixed in case of horizontal bar
-      height: animate ? widget.barLength : 0,
-      width: isHorizontal ? widget.barLength : 2,
-      margin: EdgeInsets.symmetric(
-        horizontal: isHorizontal ? 2 : 0,
-        vertical: isHorizontal ? 0 : 2,
-      ),
-      decoration: BoxDecoration(
-        color: widget.barColor.letIfTrue(toColor) ?? Colors.grey,
-        borderRadius: BorderRadius.circular(2),
-      ),
-      child: Align(
-        alignment: isHorizontal ? Alignment.centerLeft : Alignment.topLeft,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 300),
-          alignment: Alignment.topCenter,
-          height: isHorizontal ? null : _lengthAnimation.value,
-          width: isHorizontal ? _lengthAnimation.value : null,
-          decoration: BoxDecoration(
-            color: widget.barColor.letIfTrue(toColor) ?? Colors.grey,
-            borderRadius: BorderRadius.circular(2),
-          ),
-        ),
-      ),
-    );
-  }
+//     return AnimatedContainer(
+//       duration: const Duration(seconds: 1),
+//       // this needs to be fixed in case of horizontal bar
+//       height: animate ? widget.barLength : 0,
+//       width: isHorizontal ? widget.barLength : 2,
+//       margin: EdgeInsets.symmetric(
+//         horizontal: isHorizontal ? 2 : 0,
+//         vertical: isHorizontal ? 0 : 2,
+//       ),
+//       decoration: BoxDecoration(
+//         color: widget.barColor.letIfTrue(toColor) ?? Colors.grey,
+//         borderRadius: BorderRadius.circular(2),
+//       ),
+//       child: Align(
+//         alignment: isHorizontal ? Alignment.centerLeft : Alignment.topLeft,
+//         child: AnimatedContainer(
+//           duration: const Duration(milliseconds: 300),
+//           alignment: Alignment.topCenter,
+//           height: isHorizontal ? null : _lengthAnimation.value,
+//           width: isHorizontal ? _lengthAnimation.value : null,
+//           decoration: BoxDecoration(
+//             color: widget.barColor.letIfTrue(toColor) ?? Colors.grey,
+//             borderRadius: BorderRadius.circular(2),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
 
-  void _forwardAnimation() {
-    _progressAnimationController.forward().then(
-          (_) => widget.onComplete?.call(),
-        );
-  }
+//   void _forwardAnimation() {
+//     _progressAnimationController.forward().then(
+//           (_) => widget.onComplete?.call(),
+//         );
+//   }
 
-  void _reverseAnimation() {
-    _progressAnimationController.reverse().then(
-          (_) => widget.onComplete?.call(),
-        );
-  }
+//   void _reverseAnimation() {
+//     _progressAnimationController.reverse().then(
+//           (_) => widget.onComplete?.call(),
+//         );
+//   }
 
-  @override
-  void dispose() {
-    _progressAnimationController.dispose();
-    super.dispose();
-  }
-}
+//   @override
+//   void dispose() {
+//     _progressAnimationController.dispose();
+//     super.dispose();
+//   }
+// }
 
-class DZActiveStepIcon extends StatefulWidget {
-  const DZActiveStepIcon({
-    super.key,
-    this.circleColor = Colors.grey,
-  });
+// class DZActiveStepIcon extends StatefulWidget {
+//   const DZActiveStepIcon({
+//     super.key,
+//     this.circleColor = Colors.grey,
+//   });
 
-  final Color circleColor;
+//   final Color circleColor;
 
-  @override
-  State<DZActiveStepIcon> createState() => _DZActiveStepIconState();
-}
+//   @override
+//   State<DZActiveStepIcon> createState() => _DZActiveStepIconState();
+// }
 
-class _DZActiveStepIconState extends State<DZActiveStepIcon>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _animationController = AnimationController(
-    vsync: this,
-    duration: const Duration(milliseconds: 1500),
-  );
+// class _DZActiveStepIconState extends State<DZActiveStepIcon>
+//     with SingleTickerProviderStateMixin {
+//   late final AnimationController _animationController = AnimationController(
+//     vsync: this,
+//     duration: const Duration(milliseconds: 1500),
+//   );
 
-  static const double _MAX_RADIUS = 35;
+//   static const double _MAX_RADIUS = 35;
 
-  late final Animation<double> _animation =
-      Tween<double>(begin: 0, end: _MAX_RADIUS).animate(_animationController);
+//   late final Animation<double> _animation =
+//       Tween<double>(begin: 0, end: _MAX_RADIUS).animate(_animationController);
 
-  @override
-  void initState() {
-    super.initState();
-    _animationController
-      ..forward()
-      ..repeat();
-    _animationController.addListener(() {
-      setState(() {});
-    });
-  }
+//   @override
+//   void initState() {
+//     super.initState();
+//     _animationController
+//       ..forward()
+//       ..repeat();
+//     _animationController.addListener(() {
+//       setState(() {});
+//     });
+//   }
 
-  @override
-  Widget build(BuildContext context) {
-    return CircleAvatar(
-      radius: 5,
-      backgroundColor: widget.circleColor,
-      child: OverflowBox(
-        maxHeight: _MAX_RADIUS,
-        maxWidth: _MAX_RADIUS,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 100),
-          curve: Curves.fastLinearToSlowEaseIn,
-          height: _animation.value,
-          width: _animation.value,
-          decoration: BoxDecoration(
-            color: widget.circleColor
-                .withOpacity(1 - (_animation.value / _MAX_RADIUS)),
-            shape: BoxShape.circle,
-          ),
-        ),
-      ),
-    );
-  }
+//   @override
+//   Widget build(BuildContext context) {
+//     return CircleAvatar(
+//       radius: 5,
+//       backgroundColor: widget.circleColor,
+//       child: OverflowBox(
+//         maxHeight: _MAX_RADIUS,
+//         maxWidth: _MAX_RADIUS,
+//         child: AnimatedContainer(
+//           duration: const Duration(milliseconds: 100),
+//           curve: Curves.fastLinearToSlowEaseIn,
+//           height: _animation.value,
+//           width: _animation.value,
+//           decoration: BoxDecoration(
+//             color: widget.circleColor
+//                 .withOpacity(1 - (_animation.value / _MAX_RADIUS)),
+//             shape: BoxShape.circle,
+//           ),
+//         ),
+//       ),
+//     );
+//   }
 
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
-  }
-}
+//   @override
+//   void dispose() {
+//     _animationController.dispose();
+//     super.dispose();
+//   }
+// }
 
 // class DZStepIcon {
 //   final Widget? activeIcon;

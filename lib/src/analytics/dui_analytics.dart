@@ -1,8 +1,24 @@
+class AnalyticEvent {
+  final String name;
+  final Map<String, dynamic>? payload;
+  const AnalyticEvent({
+    required this.name,
+    required this.payload,
+  });
+
+  factory AnalyticEvent.fromJson(Map<String, dynamic> json) {
+    return AnalyticEvent(
+        name: json['name'] as String,
+        payload: json['payload'] as Map<String, dynamic>?);
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'name': name, 'paylaod': payload};
+  }
+}
+
 abstract class DUIAnalytics {
-  void onClick(String widgetName, String pageName, dynamic metaData);
-  void onPageLoad(String pageName, dynamic metaData, dynamic perfData);
-  // void onWidgetLoad(
-  //     String widgetName, String pageName, dynamic metaData, dynamic perfData);
+  void onEvent(List<AnalyticEvent> events);
   void onDataSourceSuccess(
       String dataSourceType, String source, dynamic metaData, dynamic perfData);
   void onDataSourceError(

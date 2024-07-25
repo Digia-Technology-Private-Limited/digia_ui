@@ -8,12 +8,24 @@ class InitPageEvent extends DUIPageEvent {
   InitPageEvent(this.context);
 }
 
-// class PostActionEvent extends DUIPageEvent {
-//   final ActionProp action;
-//   final BuildContext context;
+class PageLoadedEvent extends DUIPageEvent {
+  final BuildContext context;
 
-//   PostActionEvent({required this.action, required this.context});
-// }
+  PageLoadedEvent(this.context);
+}
+
+class BackPressEvent extends DUIPageEvent {
+  final BuildContext context;
+  final bool didPop;
+
+  BackPressEvent(this.context, this.didPop);
+}
+
+class RebuildPageEvent extends DUIPageEvent {
+  final BuildContext context;
+
+  RebuildPageEvent(this.context);
+}
 
 class SingleSetStateEvent {
   final String variableName;

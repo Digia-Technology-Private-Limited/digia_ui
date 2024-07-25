@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../Utils/basic_shared_utils/lodash.dart';
 import '../../Utils/util_functions.dart';
 import '../../components/dui_icons/icon_helpers/icon_data_serialization.dart';
 import '../../components/dui_widget_scope.dart';
@@ -15,10 +14,18 @@ class DUIIconBuilder extends DUIWidgetBuilder {
     return DUIIconBuilder(data: data);
   }
 
-  factory DUIIconBuilder.fromProps({required Map<String, dynamic>? props}) {
+  static DUIIconBuilder? fromProps({required dynamic props}) {
+    if (props == null) return null;
+
+    if (props is! Map<String, dynamic>) return null;
+
+    if (props['iconData'] == null) return null;
+
     return DUIIconBuilder(
         data: DUIWidgetJsonData(type: 'digia/icon', props: props));
   }
+
+  static Widget emptyIconWidget() => const SizedBox.shrink();
 
   @override
   Widget build(BuildContext context) {
@@ -33,9 +40,12 @@ class DUIIconBuilder extends DUIWidgetBuilder {
 
     iconData ??= getIconData(icondataMap: props['iconData']);
 
-    return Icon(iconData,
-        size: eval<double>(props['iconSize'], context: context),
-        color: eval<String>(props['iconColor'], context: context)
-            .letIfTrue(toColor));
+    return Icon(
+      iconData,
+      size: eval<double>(props['iconSize'], context: context),
+      color: makeColor(
+        eval<String>(props['iconColor'], context: context),
+      ),
+    );
   }
 }

@@ -9,6 +9,11 @@ part of 'dui_tab_view_props.dart';
 DUITabViewProps _$DUITabViewPropsFromJson(Map<String, dynamic> json) =>
     DUITabViewProps(
       hasTabs: json['hasTabs'] as bool?,
+      indicatorSize: json['indicatorSize'] as String?,
+      initialIndex: json['initialIndex'],
+      labelPadding: json['labelPadding'] == null
+          ? null
+          : DUIInsets.fromJson(json['labelPadding']),
       selectedLabelColor: json['selectedLabelColor'] as String?,
       selectedLabelStyle: DUITextStyle.fromJson(json['selectedLabelStyle']),
       unselectedLabelColor: json['unselectedLabelColor'] as String?,
@@ -44,8 +49,10 @@ Map<String, dynamic> _$DUITabViewPropsToJson(DUITabViewProps instance) =>
       'dividerHeight': instance.dividerHeight,
       'isScrollable': instance.isScrollable,
       'indicatorColor': instance.indicatorColor,
+      'indicatorSize': instance.indicatorSize,
       'viewportFraction': instance.viewportFraction,
       'tabBarPadding': instance.tabBarPadding,
+
       'tabPadding': instance.tabPadding,
       'selectedBgColor': instance.selectedBgColor,
       'nonSelectedBgColor': instance.nonSelectedBgColor,
@@ -54,4 +61,8 @@ Map<String, dynamic> _$DUITabViewPropsToJson(DUITabViewProps instance) =>
       'isIconAtLeft': instance.isIconAtLeft,
       'borderRadius': instance.borderRadius,
       'tabAlignment': instance.tabAlignment,
+
+      'labelPadding': instance.labelPadding,
+      'initialIndex': instance.initialIndex,
+
     };

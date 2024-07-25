@@ -7,6 +7,7 @@ import '../evaluator.dart';
 import '../indexed_item_provider.dart';
 import '../json_widget_builder.dart';
 import '../page/props/dui_widget_json_data.dart';
+import 'common.dart';
 import 'dui_json_widget_builder.dart';
 
 class DUIListViewBuilder extends DUIWidgetBuilder {
@@ -18,6 +19,8 @@ class DUIListViewBuilder extends DUIWidgetBuilder {
     return DUIListViewBuilder(data, registry);
   }
 
+  final ScrollController _scrollController = ScrollController();
+
   @override
   Widget build(BuildContext context) {
     if (registry == null) {
@@ -25,51 +28,65 @@ class DUIListViewBuilder extends DUIWidgetBuilder {
     }
     final children = data.children['children']!;
 
-    List items = _createDataItems(data.dataRef, context);
-    final generateChildrenDynamically = items.isNotEmpty;
+    List items =
+        createDataItemsForDynamicChildren(data: data, context: context);
+    final generateChildrenDynamically =
+        data.dataRef.isNotEmpty && data.dataRef['kind'] != null;
+
+    final initialScrollPosition =
+        eval<String>(data.props['initialScrollPosition'], context: context);
+    final bool isReverse =
+        eval<bool>(data.props['reverse'], context: context) ?? false;
+
+    if (initialScrollPosition == 'end') {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _scrollToEnd();
+      });
+    }
 
     if (generateChildrenDynamically) {
       if (children.isEmpty) return const SizedBox.shrink();
 
       return ListView.builder(
-          physics: DUIDecoder.toScrollPhysics(data.props['allowScroll']),
-          shrinkWrap: NumDecoder.toBoolOrDefault(data.props['shrinkWrap'],
-              defaultValue: false),
-          itemCount: items.length,
-          itemBuilder: (context, index) {
-            final childToRepeat = children.first;
-            return IndexedItemWidgetBuilder(
-                index: index,
-                currentItem: items[index],
-                builder: DUIJsonWidgetBuilder(
-                    data: childToRepeat, registry: registry!));
-          });
+        reverse: isReverse,
+        controller: _scrollController,
+        scrollDirection: DUIDecoder.toAxis(data.props['scrollDirection'],
+            defaultValue: Axis.vertical),
+        physics: DUIDecoder.toScrollPhysics(data.props['allowScroll']),
+        shrinkWrap: NumDecoder.toBoolOrDefault(data.props['shrinkWrap'],
+            defaultValue: false),
+        itemCount: items.length,
+        itemBuilder: (context, index) {
+          final childToRepeat = children.first;
+          return IndexedItemWidgetBuilder(
+              index: index,
+              currentItem: items[index],
+              builder: DUIJsonWidgetBuilder(
+                  data: childToRepeat, registry: registry!));
+        },
+      );
     } else {
       return ListView.builder(
-          physics: DUIDecoder.toScrollPhysics(data.props['allowScroll']),
-          shrinkWrap: NumDecoder.toBoolOrDefault(data.props['shrinkWrap'],
-              defaultValue: false),
-          itemCount: children.length,
-          itemBuilder: (context, index) {
-            return DUIJsonWidgetBuilder(
-                    data: children[index], registry: registry!)
-                .build(context);
-          });
+        reverse: isReverse,
+        controller: _scrollController,
+        scrollDirection: DUIDecoder.toAxis(data.props['scrollDirection'],
+            defaultValue: Axis.vertical),
+        physics: DUIDecoder.toScrollPhysics(data.props['allowScroll']),
+        shrinkWrap: NumDecoder.toBoolOrDefault(data.props['shrinkWrap'],
+            defaultValue: false),
+        itemCount: children.length,
+        itemBuilder: (context, index) {
+          return DUIJsonWidgetBuilder(
+                  data: children[index], registry: registry!)
+              .build(context);
+        },
+      );
     }
   }
 
-  List<Object> _createDataItems(
-      Map<String, dynamic> dataRef, BuildContext context) {
-    if (dataRef.isEmpty) return [];
-    if (data.dataRef['kind'] == 'json') {
-      return (data.dataRef['datum'] as List<dynamic>?)?.cast<Object>() ?? [];
-    } else {
-      return eval<List>(
-            data.dataRef['datum'],
-            context: context,
-            decoder: (p0) => p0 as List?,
-          )?.cast<Object>() ??
-          [];
+  void _scrollToEnd() {
+    if (_scrollController.hasClients) {
+      _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
     }
   }
 

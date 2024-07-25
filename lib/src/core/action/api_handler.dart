@@ -15,7 +15,7 @@ class ApiHandler {
 
   static ApiHandler get instance => _instance;
 
-  Future<Object?> execute(
+  Future<Response<Object?>> execute(
       {required APIModel apiModel, required Map<String, dynamic>? args}) async {
     final stopwatch = Stopwatch();
     final url = _hydrateTemplate(apiModel.url, args);
@@ -39,7 +39,7 @@ class ApiHandler {
           url,
           {'body': apiModel.body},
           {'responseTime': stopwatch.elapsedMilliseconds});
-      return response.data;
+      return response;
     } on DioException catch (e) {
       DigiaUIClient.instance.duiAnalytics?.onDataSourceError(
           'api',
@@ -76,7 +76,7 @@ class ApiHandler {
     }
 
     if (json is List) {
-      return json.map((e) => _hydrateTemplateInDynamic(json, values)).toList();
+      return json.map((e) => _hydrateTemplateInDynamic(e, values)).toList();
     }
 
     if (json is! String) return json;

@@ -10,10 +10,10 @@ class AppStateProvider extends InheritedWidget {
 
   void setState(String name, Object? value) => state?[name]?.set(value);
 
-  ExprContext get exprContext => ExprContext(variables: {
+  Map<String, Object>? get variables => {
         'appState':
             AppStateClass(fields: state?.map((k, v) => MapEntry(k, v.value)))
-      });
+      };
 
   static AppStateProvider? maybeOf(BuildContext context) =>
       context.dependOnInheritedWidgetOfExactType<AppStateProvider>();

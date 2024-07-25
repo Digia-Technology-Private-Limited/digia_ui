@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
 import '../../Utils/basic_shared_utils/lodash.dart';
 import '../../Utils/basic_shared_utils/num_decoder.dart';
+import '../../Utils/extensions.dart';
 import '../../Utils/util_functions.dart';
 import '../action/action_handler.dart';
 import '../action/action_prop.dart';
@@ -17,6 +20,12 @@ class DUIButtonBuilder extends DUIWidgetBuilder {
 
   static DUIButtonBuilder create(DUIWidgetJsonData data) {
     return DUIButtonBuilder(data: data);
+  }
+
+  factory DUIButtonBuilder.fromProps(Map<String, dynamic> props) {
+    return DUIButtonBuilder(
+      data: DUIWidgetJsonData(type: 'digia/button', props: props),
+    );
   }
 
   @override
@@ -75,34 +84,41 @@ class DUIButtonBuilder extends DUIWidgetBuilder {
     Widget? leadingIcon;
     Widget? trailingIcon;
 
+    final props = jsonDecode(jsonEncode(data.props));
+
     if (overrideColor) {
-      data.props['text']?['textStyle']?['textColor'] = disabledTextColor;
+      props['text']?['textStyle']?['textColor'] = disabledTextColor;
+    } else {
+      props['text']?['textStyle']?['textColor'] =
+          data.props.valueFor(keyPath: 'text.textStyle.textColor');
     }
 
-    final textBuilder = DUITextBuilder.fromProps(
-        props: data.props['text'] as Map<String, dynamic>?);
+    final textBuilder =
+        DUITextBuilder.fromProps(props: props['text'] as Map<String, dynamic>?);
 
     text = textBuilder.build(context);
 
-    final leadingIconProps = data.props['leadingIcon'] as Map<String, dynamic>?;
+    final leadingIconProps = props['leadingIcon'] as Map<String, dynamic>?;
     if (overrideColor) {
       leadingIconProps?['iconColor'] = disabledIconColor;
+    } else {
+      leadingIconProps?['iconColor'] =
+          data.props.valueFor(keyPath: 'leadingIcon.iconColor');
     }
 
-    if (leadingIconProps?['iconData'] != null) {
-      leadingIcon =
-          DUIIconBuilder.fromProps(props: leadingIconProps).build(context);
-    }
+    leadingIcon =
+        DUIIconBuilder.fromProps(props: leadingIconProps)?.build(context);
 
-    final trailingIconProps =
-        data.props['trailingIcon'] as Map<String, dynamic>?;
+    final trailingIconProps = props['trailingIcon'] as Map<String, dynamic>?;
     if (overrideColor) {
       trailingIconProps?['iconColor'] = disabledIconColor;
+    } else {
+      trailingIconProps?['iconColor'] =
+          data.props.valueFor(keyPath: 'trailingIcon.iconColor');
     }
-    if (trailingIconProps?['iconData'] != null) {
-      trailingIcon =
-          DUIIconBuilder.fromProps(props: trailingIconProps).build(context);
-    }
+
+    trailingIcon =
+        DUIIconBuilder.fromProps(props: trailingIconProps)?.build(context);
 
     if (leadingIcon == null && trailingIcon == null) {
       return text;

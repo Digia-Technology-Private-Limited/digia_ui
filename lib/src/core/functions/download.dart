@@ -1,37 +1,41 @@
-import 'dart:io';
 import 'package:dio/dio.dart';
-import 'package:path_provider/path_provider.dart';
-
+import '../../Utils/file_operations.dart';
 import '../../network/core/types.dart';
 
-// ···
-Future<String> get localPath async {
-  final directory = await getApplicationDocumentsDirectory();
-
-  return directory.path;
-}
-
-Future<void> downloadFunctionsFile(String url) async {
+Future<bool> downloadFunctionsFile(String url, String fileName,
+    {int retry = 0}) async {
   try {
     // Write the file
     // Send a GET request to the provided URL
     final response = await Dio().request(url,
         options: Options(
+            sendTimeout: const Duration(seconds: 5),
             method: HttpMethod.get.stringValue,
             responseType: ResponseType.bytes));
 
     if (response.statusCode == 200) {
       // Write the response body to a file
-      var path = await localPath;
-      final file = File(path + "/functions.js");
-      await file.writeAsBytes(response.data);
-      print('File downloaded successfully to $path');
+      var status = await writeBytesToFile(response.data, fileName);
+      if (status != 0) {
+        print('Failed to write file: functions.js');
+        return await retryDownload(url, fileName, retry);
+      }
+      return true;
     } else {
       print('Failed to download file: ${response.statusCode}');
+      return await retryDownload(url, fileName, retry);
     }
   } catch (e) {
     print('An error occurred: $e');
+    return await retryDownload(url, fileName, retry);
   }
 }
 
-void main() async {}
+Future<bool> retryDownload(String url, String fileName, int retry) async {
+  if (retry < 2) {
+    return await downloadFunctionsFile(url, fileName, retry: retry + 1);
+  } else {
+    print('3 retries done.. Function fetch failed');
+    return false;
+  }
+}

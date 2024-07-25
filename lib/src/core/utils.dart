@@ -1,85 +1,178 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import '../Utils/basic_shared_utils/color_decoder.dart';
 import '../Utils/basic_shared_utils/dui_decoder.dart';
 import '../Utils/basic_shared_utils/lodash.dart';
+import '../Utils/extensions.dart';
 import '../Utils/util_functions.dart';
-import '../components/dui_icons/icon_helpers/icon_data_serialization.dart';
+import '../components/utils/DUIBorder/dui_border.dart';
+import '../types.dart';
+import 'builders/dui_icon_builder.dart';
 import 'evaluator.dart';
 import 'page/dui_page.dart';
 
-Future<Object?> openDUIPage(
-    {required String pageUid,
+class DUIPageRoute<T> extends MaterialPageRoute<T> {
+  DUIPageRoute({
+    required String pageUid,
     required BuildContext context,
-    Map<String, dynamic>? pageArgs}) {
-  return Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (ctx) {
-        return DUIPage(
-          pageUid: pageUid,
-          pageArgs: pageArgs,
-        );
-      },
-    ),
-  );
+    Map<String, dynamic>? pageArgs,
+    DUIMessageHandler? onMessageReceived,
+    DUIIconDataProvider? iconDataProvider,
+    DUIImageProviderFn? imageProviderFn,
+    DUITextStyleBuilder? textStyleBuilder,
+  }) : super(
+            settings: RouteSettings(name: '/duiPageRoute-$pageUid'),
+            builder: (context) {
+              return DUIPage(
+                pageUid: pageUid,
+                pageArgs: pageArgs,
+                iconDataProvider: iconDataProvider,
+                imageProviderFn: imageProviderFn,
+                textStyleBuilder: textStyleBuilder,
+                onMessageReceived: onMessageReceived,
+              );
+            });
 }
 
-Future<Widget?> openDUIPageInBottomSheet({
+Future<Object?> openDUIPage({
+  required String pageUid,
+  required BuildContext context,
+  Map<String, dynamic>? pageArgs,
+  DUIMessageHandler? onMessageReceived,
+  DUIIconDataProvider? iconDataProvider,
+  DUIImageProviderFn? imageProviderFn,
+  DUITextStyleBuilder? textStyleBuilder,
+}) {
+  return Navigator.push(
+      context,
+      DUIPageRoute(
+          pageUid: pageUid,
+          context: context,
+          onMessageReceived: onMessageReceived,
+          iconDataProvider: iconDataProvider,
+          imageProviderFn: imageProviderFn,
+          textStyleBuilder: textStyleBuilder,
+          pageArgs: pageArgs));
+}
+
+// TODO: Needs to be redesigned from scratch;
+Future<T?> openDUIPageInBottomSheet<T>({
   required String pageUid,
   required BuildContext context,
   required Map<String, dynamic> style,
   Map<String, dynamic>? pageArgs,
+  DUIMessageHandler? onMessageReceived,
+  DUIIconDataProvider? iconDataProvider,
+  DUIImageProviderFn? imageProviderFn,
+  DUITextStyleBuilder? textStyleBuilder,
 }) {
-  return showModalBottomSheet(
+  final bgColor =
+      eval<String>(style['bgColor'], context: context).letIfTrue(toColor);
+  final barrierColor = eval<String>(style['barrierColor'], context: context)
+          .letIfTrue(toColor) ??
+      ColorDecoder.fromHexString('#2e2e2e').withOpacity(0.6);
+  return showModalBottomSheet<T>(
+    backgroundColor: bgColor,
     scrollControlDisabledMaxHeightRatio:
-        eval<double>(style['maxHeightRatio'], context: context) ?? 0.7,
-    barrierColor:
-        eval<String>(style['bgColor'], context: context).letIfTrue(toColor) ??
-            Colors.black.withOpacity(0.4),
+        eval<double>(style['maxHeight'], context: context) ?? 1,
+    barrierColor: barrierColor,
     context: context,
     builder: (ctx) {
-      return Container(
-        color: eval<String>(style['bgColor'], context: context)
-                .letIfTrue(toColor) ??
-            Colors.black.withOpacity(0.4),
-        child: ClipRRect(
-          borderRadius: DUIDecoder.toBorderRadius(style['borderRadius']),
-          child: Stack(
-            children: [
-              DUIPage(
-                pageUid: pageUid,
-                pageArgs: pageArgs,
-              ),
-              Align(
-                alignment: Alignment.topRight,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 20, right: 20, left: 20),
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.maybePop(context);
-                    },
-                    child: Container(
-                      height: 24,
-                      width: 24,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        color:
-                            eval<String>(style['iconBgColor'], context: context)
-                                    .letIfTrue(toColor) ??
-                                Colors.black.withOpacity(0.3),
-                      ),
-                      child: Icon(
-                        getIconData(icondataMap: style['icon']['iconData']),
-                        color: Colors.white.withOpacity(0.5),
-                        size: 16,
-                      ),
+      return BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Flexible(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: bgColor,
+                  border: toBorder(DUIBorder.fromJson(style), context),
+                  borderRadius:
+                      DUIDecoder.toBorderRadius(style['borderRadius']),
+                ),
+                clipBehavior: Clip.hardEdge,
+                // elevation: 2,
+                child: SafeArea(
+                  child: Stack(children: [
+                    DUIPage(
+                      pageUid: pageUid,
+                      pageArgs: pageArgs,
+                      onMessageReceived: onMessageReceived,
+                      iconDataProvider: iconDataProvider,
+                      imageProviderFn: imageProviderFn,
+                      textStyleBuilder: textStyleBuilder,
                     ),
-                  ),
+                    if (style.valueFor(keyPath: 'icon.iconData') != null)
+                      Positioned(
+                        top: 24,
+                        right: 20,
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.maybePop(context);
+                          },
+                          borderRadius: BorderRadius.circular(12),
+                          child: Container(
+                            height: 24,
+                            width: 24,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12),
+                                color: Colors.white.withOpacity(0.1)),
+                            child:
+                                DUIIconBuilder.fromProps(props: style['icon'])
+                                    ?.build(context),
+                          ),
+                        ),
+                      ),
+                  ]),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       );
     },
   );
+}
+
+// Container(
+//         clipBehavior: Clip.hardEdge,
+//         decoration: BoxDecoration(
+//           color: bgColor,
+//           border: toBorder(DUIBorder.fromJson(style)),
+//           borderRadius: DUIDecoder.toBorderRadius(style['borderRadius']),
+//         ),
+//         child:
+
+//       );
+
+Future<T?> openDialog<T>({
+  required String pageUid,
+  required BuildContext context,
+  Map<String, dynamic>? pageArgs,
+  DUIIconDataProvider? iconDataProvider,
+  DUIImageProviderFn? imageProviderFn,
+  DUITextStyleBuilder? textStyleBuilder,
+  bool? barrierDismissible,
+  Color? barrierColor,
+}) {
+  return showDialog(
+      context: context,
+      useSafeArea: true,
+      useRootNavigator: false,
+      barrierDismissible: barrierDismissible ?? true,
+      barrierColor: barrierColor,
+      builder: (context) {
+        return Dialog(
+          child: DUIPage(
+            pageUid: pageUid,
+            pageArgs: pageArgs,
+            iconDataProvider: iconDataProvider,
+            imageProviderFn: imageProviderFn,
+            textStyleBuilder: textStyleBuilder,
+          ),
+        );
+      });
 }

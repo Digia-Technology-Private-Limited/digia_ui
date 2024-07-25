@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:chucker_flutter/chucker_flutter.dart';
+// import 'package:chucker_flutter/chucker_flutter.dart';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'package:flutter/foundation.dart';
@@ -23,7 +23,7 @@ void configureDeveloperOptions(Dio dio, DeveloperConfig? developerConfig) {
     );
   }
   if (developerConfig.enableChucker) {
-    dio.interceptors.add(ChuckerDioInterceptor());
+    // dio.interceptors.add(ChuckerDioInterceptor());
   }
 }
 
@@ -133,5 +133,29 @@ class NetworkClient {
 
   void replaceProjectHeaders(Map<String, String> headers) {
     projectDioInstance.options.headers = headers;
+  }
+
+  void addVersionHeader(int version) {
+    digiaDioInstance.options.headers
+        .addAll({'x-digia-project-version': version});
+  }
+
+  static Map<String, dynamic> getDefaultDigiaHeaders(
+      String packageVersion,
+      String accessKey,
+      String platform,
+      String? uuid,
+      String packageName,
+      String appVersion,
+      String appBuildNumber) {
+    return {
+      'x-digia-version': packageVersion,
+      'x-digia-project-id': accessKey,
+      'x-digia-platform': platform,
+      'x-digia-device-id': uuid,
+      'x-app-package-name': packageName,
+      'x-app-version': appVersion,
+      'x-app-build-number': appBuildNumber
+    };
   }
 }

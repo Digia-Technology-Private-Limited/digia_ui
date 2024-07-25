@@ -1,5 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import '../../models/variable_def.dart';
 import '../core/types.dart';
 
 part 'api_request.g.dart';
@@ -11,7 +12,8 @@ class APIModel {
   final HttpMethod method;
   final Map<String, dynamic>? headers;
   final Map<String, dynamic>? body;
-  // final Map<String, dynamic>? variables;
+  @VariablesJsonConverter()
+  Map<String, VariableDef>? variables;
 
   APIModel({
     required this.id,
@@ -19,7 +21,7 @@ class APIModel {
     required this.method,
     required this.headers,
     required this.body,
-    // required this.variables,
+    this.variables,
   });
 
   factory APIModel.fromJson(Map<String, dynamic> json) =>
