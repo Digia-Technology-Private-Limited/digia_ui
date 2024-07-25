@@ -28,7 +28,7 @@ class _DUITabViewState extends State<DUITabView> with TickerProviderStateMixin {
   late TabController _tabController;
   bool isTabScrollable = false;
   TabAlignment tabAlignment = TabAlignment.fill;
-   late TabBarIndicatorSize _indicatorSize;
+  late TabBarIndicatorSize _indicatorSize;
   TabBarIndicatorSize? _toTabBarIndicatorSize(dynamic value) => switch (value) {
         'tab' => TabBarIndicatorSize.tab,
         'label' => TabBarIndicatorSize.label,
@@ -38,7 +38,7 @@ class _DUITabViewState extends State<DUITabView> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-       _indicatorSize =
+    _indicatorSize =
         _toTabBarIndicatorSize(widget.tabViewProps.indicatorSize) ??
             TabBarIndicatorSize.tab;
     _initializeTabController();
@@ -112,7 +112,6 @@ class _DUITabViewState extends State<DUITabView> with TickerProviderStateMixin {
                   indicatorSize: _indicatorSize,
                   labelPadding:
                       DUIDecoder.toEdgeInsets(widget.tabViewProps.labelPadding),
-
                   padding: DUIDecoder.toEdgeInsets(
                       widget.tabViewProps.tabBarPadding),
                   unselectedLabelColor:
@@ -133,7 +132,6 @@ class _DUITabViewState extends State<DUITabView> with TickerProviderStateMixin {
                     final isSelected = _tabController.index == index;
                     return tabData(
                         index: index, isSelected: isSelected, icon: icon);
-
                   }),
                 ),
               ),
@@ -155,7 +153,6 @@ class _DUITabViewState extends State<DUITabView> with TickerProviderStateMixin {
                 visible: widget.tabViewProps.hasTabs ?? false,
                 child: TabBar(
                   controller: _tabController,
-
                   indicatorSize: _indicatorSize,
                   labelPadding:
                       DUIDecoder.toEdgeInsets(widget.tabViewProps.labelPadding),
@@ -172,8 +169,7 @@ class _DUITabViewState extends State<DUITabView> with TickerProviderStateMixin {
                   dividerHeight: widget.tabViewProps.dividerHeight,
                   indicator: widget.tabViewProps.indicatorColor != null
                       ? BoxDecoration(
-                          color: widget.tabViewProps.indicatorColor
-                              .letIfTrue(toColor))
+                          color: makeColor(widget.tabViewProps.indicatorColor))
                       : null,
                   isScrollable: isTabScrollable,
                   tabAlignment: tabAlignment,
@@ -183,7 +179,6 @@ class _DUITabViewState extends State<DUITabView> with TickerProviderStateMixin {
                     final isSelected = _tabController.index == index;
                     return tabData(
                         index: index, isSelected: isSelected, icon: icon);
-
                   }),
                 ),
               ),
@@ -196,18 +191,18 @@ class _DUITabViewState extends State<DUITabView> with TickerProviderStateMixin {
   Widget tabData(
       {required int index,
       required bool isSelected,
-      required DUIIconBuilder icon}) {
+      required DUIIconBuilder? icon}) {
     return Container(
       padding: DUIDecoder.toEdgeInsets(widget.tabViewProps.tabPadding),
       decoration: BoxDecoration(
         color: isSelected
-            ? widget.tabViewProps.selectedBgColor?.letIfTrue(toColor)
-            : widget.tabViewProps.nonSelectedBgColor?.letIfTrue(toColor),
+            ? makeColor(widget.tabViewProps.selectedBgColor)
+            : makeColor(widget.tabViewProps.nonSelectedBgColor),
         borderRadius:
             DUIDecoder.toBorderRadius(widget.tabViewProps.borderRadius),
         border: Border.all(
-          color: widget.tabViewProps.borderColor?.letIfTrue(toColor) ??
-              Colors.transparent,
+          color:
+              makeColor(widget.tabViewProps.borderColor) ?? Colors.transparent,
           width: widget.tabViewProps.borderWidth ?? 1.0,
         ),
       ),
@@ -216,13 +211,12 @@ class _DUITabViewState extends State<DUITabView> with TickerProviderStateMixin {
               ColorFiltered(
                 colorFilter: ColorFilter.mode(
                     (isSelected
-                            ? widget.tabViewProps.selectedLabelColor
-                                .letIfTrue(toColor)
-                            : widget.tabViewProps.unselectedLabelColor
-                                .letIfTrue(toColor)) ??
+                            ? makeColor(widget.tabViewProps.selectedLabelColor)
+                            : makeColor(
+                                widget.tabViewProps.unselectedLabelColor)) ??
                         Colors.black,
                     BlendMode.srcIn),
-                child: icon.buildWithContainerProps(context),
+                child: icon?.build(context) ?? DUIIconBuilder.emptyIconWidget(),
               ),
               Text(widget.children[index].props['title'] ?? ''),
             ])
@@ -230,13 +224,12 @@ class _DUITabViewState extends State<DUITabView> with TickerProviderStateMixin {
               ColorFiltered(
                 colorFilter: ColorFilter.mode(
                     (isSelected
-                            ? widget.tabViewProps.selectedLabelColor
-                                .letIfTrue(toColor)
-                            : widget.tabViewProps.unselectedLabelColor
-                                .letIfTrue(toColor)) ??
+                            ? makeColor(widget.tabViewProps.selectedLabelColor)
+                            : makeColor(
+                                widget.tabViewProps.unselectedLabelColor)) ??
                         Colors.black,
                     BlendMode.srcIn),
-                child: icon.buildWithContainerProps(context),
+                child: icon?.build(context) ?? DUIIconBuilder.emptyIconWidget(),
               ),
               Text(widget.children[index].props['title'] ?? ''),
             ]),
