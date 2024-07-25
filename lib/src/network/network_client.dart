@@ -23,33 +23,8 @@ void configureDeveloperOptions(Dio dio, DeveloperConfig? developerConfig) {
       },
     );
   }
-  if (developerConfig.enableChucker) {
+  if (developerConfig.enableTalker) {
     // dio.interceptors.add(ChuckerDioInterceptor());
-    dio.interceptors.add(
-      TalkerDioLogger(
-        talker: developerConfig.talker,
-        addonId: 'digia',
-        settings: TalkerDioLoggerSettings(
-          printRequestHeaders: true,
-          printRequestData: true,
-          printResponseHeaders: true,
-          printResponseData: true,
-          printResponseMessage: true,
-          printErrorData: true,
-          printErrorHeaders: true,
-          printErrorMessage: true,
-          requestFilter: (RequestOptions requestOptions) {
-            return true;
-          },
-          responseFilter: (Response response) {
-            return true;
-          },
-          errorFilter: (DioException error) {
-            return true;
-          },
-        ),
-      ),
-    );
   }
 }
 
@@ -107,6 +82,31 @@ class NetworkClient {
     //     DioInterceptToCurl(),
     //   ]);
     // }
+
+    final talkerDioLogger = TalkerDioLogger(
+      talker: developerConfig?.talker,
+      addonId: 'digia',
+      settings: TalkerDioLoggerSettings(
+        printRequestHeaders: true,
+        printRequestData: true,
+        printResponseHeaders: false,
+        printResponseData: true,
+        printResponseMessage: true,
+        printErrorData: true,
+        printErrorHeaders: false,
+        printErrorMessage: true,
+        requestFilter: (RequestOptions requestOptions) {
+          return true;
+        },
+        responseFilter: (Response response) {
+          return true;
+        },
+        errorFilter: (DioException error) {
+          return true;
+        },
+      ),
+    );
+    projectDioInstance.interceptors.add(talkerDioLogger);
   }
 
   Future<Response<Object?>> requestProject({

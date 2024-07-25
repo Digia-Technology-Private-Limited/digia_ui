@@ -1,14 +1,14 @@
-import 'package:talker/talker.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 
 class DeveloperConfig {
   //for android/ios
   final String? proxyUrl;
-  bool enableChucker;
-  Talker? talker = Talker();
+  bool enableTalker;
+  Talker? talker;
 
   DeveloperConfig({
     this.proxyUrl,
-    this.enableChucker = false,
+    this.enableTalker = false,
     this.talker,
   });
 }

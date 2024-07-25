@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:talker/talker.dart';
+import 'package:talker_bloc_logger/talker_bloc_logger.dart';
 
 import '../../../digia_ui.dart';
 import '../../Utils/basic_shared_utils/lodash.dart';
@@ -18,6 +20,7 @@ class DUIPage extends StatelessWidget {
   final DUITextStyleBuilder? textStyleBuilder;
   final DUIMessageHandler? onMessageReceived;
   final DUIConfig _config;
+  final Talker? talker;
 
   DUIPage(
       {super.key,
@@ -27,12 +30,40 @@ class DUIPage extends StatelessWidget {
       this.imageProviderFn,
       this.textStyleBuilder,
       this.onMessageReceived,
-      DUIConfig? config})
+      DUIConfig? config,
+      this.talker})
       : _pageArgs = pageArgs,
         _config = config ?? DigiaUIClient.instance.config;
 
   @override
   Widget build(BuildContext context) {
+    Bloc.observer = TalkerBlocObserver(
+      talker: talker,
+      settings: TalkerBlocLoggerSettings(
+        enabled: true,
+        printEvents: true,
+        printChanges: true,
+        printTransitions: true,
+        printCreations: true,
+        printClosings: true,
+        printEventFullData: true,
+        printStateFullData: true,
+        transitionFilter: (bloc, transition) {
+          final currState = transition.currentState;
+          final event = transition.event;
+          final nextState = transition.nextState;
+          if (event is SetStateEvent) {
+            talker?.log(event.events[0].value);
+          }
+          if (event is InitPageEvent) {
+            talker?.log(event);
+          }
+          return true;
+        },
+        eventFilter: (bloc, event) =>
+            bloc.runtimeType.toString() == 'DUIPageBloc',
+      ),
+    );
     return BlocProvider(
       create: (context) {
         return DUIPageBloc(
