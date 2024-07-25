@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
 import '../Utils/basic_shared_utils/color_decoder.dart';
@@ -9,6 +11,7 @@ import '../core/action/action_handler.dart';
 import '../core/action/action_prop.dart';
 import '../core/evaluator.dart';
 import 'utils/DUIStyleClass/dui_style_class.dart';
+import 'utils/dottedBorderWrapper.dart';
 
 // ignore: non_constant_identifier_names
 Widget wrapInContainer(
@@ -25,6 +28,10 @@ Widget wrapInContainer(
       DUIDecoder.toBorderRadius(styleClass.border?.borderRadius?.toJson());
   final height = styleClass.height?.toHeight(context);
   final width = styleClass.width?.toWidth(context);
+  final borderWidth = styleClass.border?.borderWidth;
+  final borderColor = styleClass.border?.borderColor ?? '#000000';
+  final borderType = styleClass.border?.borderStyle;
+
   final alignment = DUIDecoder.toAlignment(styleClass.alignment);
   // final clipBehavior = DUIDecoder.toClip(styleClass.clipBehavior);
 
@@ -41,16 +48,27 @@ Widget wrapInContainer(
     return child;
   }
 
-  return Container(
-    width: width,
-    height: height,
-    alignment: alignment,
-    padding: padding,
-    margin: margin,
-    decoration: BoxDecoration(
-        color: makeColor(bgColor), border: border, borderRadius: borderRadius),
-    clipBehavior: !borderRadius.isZero() ? Clip.hardEdge : Clip.none,
-    child: child,
+  return Padding(
+    padding: margin,
+    child: DottedBorderWrapper(
+      borderRadius: borderRadius,
+      borderWidth: borderWidth,
+      color: makeColor(borderColor),
+      borderType: borderType ?? '',
+      child: Container(
+        width: width,
+        height: height,
+        padding: padding,
+        alignment: alignment,
+        decoration: BoxDecoration(
+          color: makeColor(bgColor),
+          // border: border,
+          borderRadius: borderRadius,
+        ),
+        clipBehavior: !borderRadius.isZero() ? Clip.hardEdge : Clip.none,
+        child: child,
+      ),
+    ),
   );
 }
 
