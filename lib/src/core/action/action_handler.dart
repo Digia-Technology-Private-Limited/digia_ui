@@ -85,6 +85,7 @@ Map<String, ActionHandlerFn> _actionsMap = {
         result = await openDUIPageInBottomSheet(
           pageUid: pageUId,
           context: context,
+          navigatorKey: widgetScope?.navigatorKey,
           style: bottomSheetStyling,
           pageArgs: evaluatedArgs,
           iconDataProvider: widgetScope?.iconDataProvider,
@@ -103,15 +104,16 @@ Map<String, ActionHandlerFn> _actionsMap = {
 
         result = await NavigatorHelper.push(
             context,
+            widgetScope?.navigatorKey,
             DUIPageRoute(
-              pageUid: pageUId,
-              context: context,
-              pageArgs: evaluatedArgs,
-              iconDataProvider: widgetScope?.iconDataProvider,
-              imageProviderFn: widgetScope?.imageProviderFn,
-              textStyleBuilder: widgetScope?.textStyleBuilder,
-              onMessageReceived: widgetScope?.onMessageReceived,
-            ),
+                pageUid: pageUId,
+                context: context,
+                pageArgs: evaluatedArgs,
+                iconDataProvider: widgetScope?.iconDataProvider,
+                imageProviderFn: widgetScope?.imageProviderFn,
+                textStyleBuilder: widgetScope?.textStyleBuilder,
+                onMessageReceived: widgetScope?.onMessageReceived,
+                navigatorKey: widgetScope?.navigatorKey),
             removeRoutesUntilPredicate: routeNametoRemoveUntil.letIf(
                 (_) => removePreviousScreensInStack,
                 (p0) => ModalRoute.withName(p0)));
@@ -552,15 +554,18 @@ const Map<String, String> defaultHeaders = {
 };
 
 abstract class NavigatorHelper {
-  static Future<T?> push<T extends Object?>(
-      BuildContext context, Route<T> newRoute,
+  static Future<T?> push<T extends Object?>(BuildContext context,
+      GlobalKey<NavigatorState>? navigatorKey, Route<T> newRoute,
       {RoutePredicate? removeRoutesUntilPredicate}) {
     if (removeRoutesUntilPredicate == null) {
-      return Navigator.push<T>(context, newRoute);
+      final push =
+          navigatorKey?.currentState?.push ?? Navigator.of(context).push;
+      return push(newRoute);
     }
 
-    return Navigator.pushAndRemoveUntil<T>(
-        context, newRoute, removeRoutesUntilPredicate);
+    final pushAndRemoveUntil = navigatorKey?.currentState?.pushAndRemoveUntil ??
+        Navigator.of(context).pushAndRemoveUntil;
+    return pushAndRemoveUntil(newRoute, removeRoutesUntilPredicate);
   }
 }
 
