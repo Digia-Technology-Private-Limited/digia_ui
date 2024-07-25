@@ -213,6 +213,14 @@ class _DUITextFieldState extends DUIWidgetState<DUITextFormField> {
 
   @override
   Map<String, Function> getVariables() {
-    return {'text': () => _controller.text};
+    return {
+      'text': () => _controller.text,
+      'isValid': () {
+        if (_setErrorText == null) {
+          return true;
+        }
+        return false;
+      }
+    };
   }
 }
