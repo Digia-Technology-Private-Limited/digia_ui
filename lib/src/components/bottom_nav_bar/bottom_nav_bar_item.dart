@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../Utils/dui_widget_registry.dart';
+import '../../Utils/util_functions.dart';
 import '../../core/builders/dui_icon_builder.dart';
+import '../../core/evaluator.dart';
+import '../DUIText/dui_text_style.dart';
 import 'bottom_nav_bar_item_props.dart';
 
 class DUIBottomNavBarItem extends StatefulWidget {
@@ -24,10 +27,20 @@ class _DUIBottomNavBarItemState extends State<DUIBottomNavBarItem> {
         DUIIconBuilder.fromProps(props: widget.itemProps.selectedIcon)
             ?.build(context);
 
-    return NavigationDestination(
-      icon: icon,
-      label: widget.itemProps.label ?? 'Label',
-      selectedIcon: selectedIcon ?? icon,
+    return Theme(
+      data: ThemeData(
+          navigationBarTheme: NavigationBarThemeData(
+              labelTextStyle: MaterialStateProperty.all(toTextStyle(
+                  DUITextStyle.fromJson(
+                      widget.itemProps.labelText?['textStyle']),
+                  context)))),
+      child: NavigationDestination(
+        icon: icon,
+        label: eval<String>(widget.itemProps.labelText?['text'],
+                context: context) ??
+            'Label',
+        selectedIcon: selectedIcon ?? icon,
+      ),
     );
   }
 }

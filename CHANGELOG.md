@@ -2,6 +2,17 @@
 
 Digia Ui Sdk.
 
+## [0.0.6-beta.28] - 2024-07-23
+
+- Bug fixes in Config fetch
+- Added alignment in Container (Default Props)
+- Separate styles for body,span & para in HTML View.
+
+## [0.0.6-beta.27] - 2024-07-22
+
+- New and safe way to initialize Digia SDK.
+- Refresh Indicator Component.
+
 ## [0.0.6-beta.26] - 2024-07-15
 
 - Timer (Bug fix)

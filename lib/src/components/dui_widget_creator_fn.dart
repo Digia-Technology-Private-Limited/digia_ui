@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 
 import '../Utils/basic_shared_utils/color_decoder.dart';
 import '../Utils/basic_shared_utils/dui_decoder.dart';
-import '../Utils/basic_shared_utils/lodash.dart';
 import '../Utils/basic_shared_utils/num_decoder.dart';
 import '../Utils/extensions.dart';
 import '../Utils/util_functions.dart';
@@ -32,6 +31,8 @@ Widget wrapInContainer(
   final borderWidth = styleClass.border?.borderWidth;
   final borderColor = styleClass.border?.borderColor ?? '#000000';
   final borderType = styleClass.border?.borderStyle;
+
+  final alignment = DUIDecoder.toAlignment(styleClass.alignment);
   // final clipBehavior = DUIDecoder.toClip(styleClass.clipBehavior);
 
   // Probably unnecessary Optimisation:
@@ -42,7 +43,8 @@ Widget wrapInContainer(
       border == null &&
       borderRadius.isZero() &&
       height == null &&
-      width == null) {
+      width == null &&
+      alignment == null) {
     return child;
   }
 
@@ -57,8 +59,9 @@ Widget wrapInContainer(
         width: width,
         height: height,
         padding: padding,
+        alignment:alignment,
         decoration: BoxDecoration(
-          color: bgColor.letIfTrue(toColor),
+          color: makeColor(bgColor),
           // border: border,
           borderRadius: borderRadius,
         ),

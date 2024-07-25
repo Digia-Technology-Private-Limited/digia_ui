@@ -30,10 +30,12 @@ import '../core/builders/dui_paginated_listview_builder.dart';
 import '../core/builders/dui_pin_field_builder.dart';
 import '../core/builders/dui_refresh_indicator_builder.dart';
 import '../core/builders/dui_rich_text_builder.dart';
+import '../core/builders/dui_safearea_builder.dart';
 import '../core/builders/dui_scaffold_builder.dart';
 import '../core/builders/dui_sized_box_builder.dart';
 import '../core/builders/dui_spacer_builder.dart';
 import '../core/builders/dui_stack_builder.dart';
+import '../core/builders/dui_stepper_builder.dart';
 import '../core/builders/dui_stream_builder.dart';
 import '../core/builders/dui_switch_builder.dart';
 import '../core/builders/dui_tab_view_builder.dart';
@@ -118,6 +120,7 @@ class DUIWidgetRegistry {
         DUITextFormFieldBuilder.create(data),
     'digia/stepper': (data, {registry}) =>
         DezervStepperBuilder.create(data, registry: DUIWidgetRegistry.shared),
+    'digia/flutterStepper': withoutRegistry(DUIStepperBuilder.create),
     'digia/dezerv/dialPad': (data, {registry}) =>
         DUIDezervDialPadBuilder.create(data),
     'digia/futureBuilder': (data, {registry}) => DUIFutureBuilder(data: data),
@@ -136,7 +139,8 @@ class DUIWidgetRegistry {
             registry: DUIWidgetRegistry.shared),
     'digia/streamBuilder': (data, {registry}) => DUIStreamBuilder(data: data),
     'digia/refreshIndicator': (data, {registry}) =>
-        DUIRefreshIndicator(data: data)
+        DUIRefreshIndicator(data: data),
+    'digia/safeArea': (data, {registry}) => DUISafeAreaBuilder(data: data)
   };
 
   static const DUIWidgetRegistry shared = DUIWidgetRegistry();
