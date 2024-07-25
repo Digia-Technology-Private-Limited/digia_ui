@@ -53,13 +53,13 @@ Widget wrapInContainer(
     child: DottedBorderWrapper(
       borderRadius: borderRadius,
       borderWidth: borderWidth,
-      color: borderColor.letIfTrue(toColor),
+      color: makeColor(borderColor),
       borderType: borderType ?? '',
       child: Container(
         width: width,
         height: height,
         padding: padding,
-        alignment:alignment,
+        alignment: alignment,
         decoration: BoxDecoration(
           color: makeColor(bgColor),
           // border: border,
