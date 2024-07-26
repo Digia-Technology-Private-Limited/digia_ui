@@ -53,7 +53,7 @@ class _DUITextFieldState extends DUIWidgetState<DUITextFormField> {
   Color? _cursorColor;
   String? _regex;
   String? _errorText;
-  String? _setErrorText = null;
+  String? _setErrorText;
 
   InputBorder? _enabledBorder;
   InputBorder? _disabledBorder;
@@ -102,16 +102,16 @@ class _DUITextFieldState extends DUIWidgetState<DUITextFormField> {
     _focusedBorder = _toInputBorder(widget.props['focusedBorder']);
     _focusedErrorBorder = _toInputBorder(widget.props['focusedErrorBorder']);
     _errorBorder = _toInputBorder(widget.props['errorBorder']);
-    _inputFormatters = widget.props['inputFormatter'] != null ? _toInputFormatters(widget.props['inputFormatter']) : null;
+    _inputFormatters = widget.props['inputFormatter'] != null
+        ? _toInputFormatters(widget.props['inputFormatter'])
+        : null;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      inputFormatters: 
-       _inputFormatters
-      ,
+      inputFormatters: _inputFormatters,
       controller: _controller,
       enabled: _enabled,
       keyboardType: _keyboardType,
@@ -229,34 +229,38 @@ class _DUITextFieldState extends DUIWidgetState<DUITextFormField> {
   }
 
   List<TextInputFormatter>? _toInputFormatters(String value) {
-   switch (value) {
+    switch (value) {
       case 'none':
         return null;
       case 'digitsOnly':
         return [FilteringTextInputFormatter.digitsOnly];
       case 'lowerCase':
-        return [TextInputFormatter.withFunction(
-          (oldValue, newValue) {
-            return newValue.copyWith(
-              text: newValue.text.toLowerCase(),
-              selection: newValue.selection,
-            );
-          },
-        )];
-        case 'upperCase':
-        return [TextInputFormatter.withFunction(
-          (oldValue, newValue) {
-            return newValue.copyWith(
-              text: newValue.text.toUpperCase(),
-              selection: newValue.selection,
-            );
-          },
-        )];
-        case 'noSpaces':
+        return [
+          TextInputFormatter.withFunction(
+            (oldValue, newValue) {
+              return newValue.copyWith(
+                text: newValue.text.toLowerCase(),
+                selection: newValue.selection,
+              );
+            },
+          )
+        ];
+      case 'upperCase':
+        return [
+          TextInputFormatter.withFunction(
+            (oldValue, newValue) {
+              return newValue.copyWith(
+                text: newValue.text.toUpperCase(),
+                selection: newValue.selection,
+              );
+            },
+          )
+        ];
+      case 'noSpaces':
         return [FilteringTextInputFormatter.deny(RegExp(r'\s'))];
-        default:
+      default:
         null;
-
     }
+    return null;
   }
 }
