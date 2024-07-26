@@ -13,7 +13,7 @@ DUITextStyle? _$DUITextStyleFromJson(dynamic json) {
   } else {
     fontToken = DUIFontToken()
       ..value = fontTokenJson['value']
-      ..font = DUIFont.fromJson(json['font'] ?? json);
+      ..font = DUIFont.fromJson(fontTokenJson['font'] ?? json);
   }
 
   return DUITextStyle(
