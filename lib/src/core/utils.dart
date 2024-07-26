@@ -16,6 +16,7 @@ class DUIPageRoute<T> extends MaterialPageRoute<T> {
   DUIPageRoute({
     required String pageUid,
     required BuildContext context,
+    GlobalKey<NavigatorState>? navigatorKey,
     Map<String, dynamic>? pageArgs,
     DUIMessageHandler? onMessageReceived,
     DUIIconDataProvider? iconDataProvider,
@@ -25,6 +26,7 @@ class DUIPageRoute<T> extends MaterialPageRoute<T> {
             settings: RouteSettings(name: '/duiPageRoute-$pageUid'),
             builder: (context) {
               return DUIPage(
+                navigatorKey: navigatorKey,
                 pageUid: pageUid,
                 pageArgs: pageArgs,
                 iconDataProvider: iconDataProvider,
@@ -38,22 +40,23 @@ class DUIPageRoute<T> extends MaterialPageRoute<T> {
 Future<Object?> openDUIPage({
   required String pageUid,
   required BuildContext context,
+  GlobalKey<NavigatorState>? navigatorKey,
   Map<String, dynamic>? pageArgs,
   DUIMessageHandler? onMessageReceived,
   DUIIconDataProvider? iconDataProvider,
   DUIImageProviderFn? imageProviderFn,
   DUITextStyleBuilder? textStyleBuilder,
 }) {
-  return Navigator.push(
-      context,
-      DUIPageRoute(
-          pageUid: pageUid,
-          context: context,
-          onMessageReceived: onMessageReceived,
-          iconDataProvider: iconDataProvider,
-          imageProviderFn: imageProviderFn,
-          textStyleBuilder: textStyleBuilder,
-          pageArgs: pageArgs));
+  final push = navigatorKey?.currentState?.push ?? Navigator.of(context).push;
+
+  return push(DUIPageRoute(
+      pageUid: pageUid,
+      context: context,
+      onMessageReceived: onMessageReceived,
+      iconDataProvider: iconDataProvider,
+      imageProviderFn: imageProviderFn,
+      textStyleBuilder: textStyleBuilder,
+      pageArgs: pageArgs));
 }
 
 // TODO: Needs to be redesigned from scratch;
@@ -61,6 +64,7 @@ Future<T?> openDUIPageInBottomSheet<T>({
   required String pageUid,
   required BuildContext context,
   required Map<String, dynamic> style,
+  GlobalKey<NavigatorState>? navigatorKey,
   Map<String, dynamic>? pageArgs,
   DUIMessageHandler? onMessageReceived,
   DUIIconDataProvider? iconDataProvider,
@@ -77,7 +81,7 @@ Future<T?> openDUIPageInBottomSheet<T>({
     scrollControlDisabledMaxHeightRatio:
         eval<double>(style['maxHeight'], context: context) ?? 1,
     barrierColor: barrierColor,
-    context: context,
+    context: navigatorKey?.currentContext ?? context,
     builder: (ctx) {
       return BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),

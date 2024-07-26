@@ -7,6 +7,7 @@ class DUIWidgetScope extends InheritedWidget {
   final DUIImageProviderFn? imageProviderFn;
   final DUITextStyleBuilder? textStyleBuilder;
   final DUIMessageHandler? onMessageReceived;
+  final GlobalKey<NavigatorState>? navigatorKey;
 
   const DUIWidgetScope({
     super.key,
@@ -14,6 +15,7 @@ class DUIWidgetScope extends InheritedWidget {
     this.imageProviderFn,
     this.textStyleBuilder,
     this.onMessageReceived,
+    this.navigatorKey,
     required super.child,
   });
 

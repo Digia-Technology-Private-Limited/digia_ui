@@ -20,6 +20,7 @@ class DUIPage extends StatelessWidget {
   final DUITextStyleBuilder? textStyleBuilder;
   final DUIMessageHandler? onMessageReceived;
   final DUIConfig _config;
+  final GlobalKey<NavigatorState>? navigatorKey;
   final Talker? talker;
 
   DUIPage(
@@ -30,6 +31,7 @@ class DUIPage extends StatelessWidget {
       this.imageProviderFn,
       this.textStyleBuilder,
       this.onMessageReceived,
+      this.navigatorKey,
       DUIConfig? config,
       this.talker})
       : _pageArgs = pageArgs,
@@ -74,6 +76,7 @@ class DUIPage extends StatelessWidget {
           imageProviderFn: imageProviderFn,
           textStyleBuilder: textStyleBuilder,
           onMessageReceived: onMessageReceived,
+          navigatorKey: navigatorKey,
           child: const _DUIScreen()),
     );
   }
