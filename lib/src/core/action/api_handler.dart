@@ -69,33 +69,49 @@ class ApiHandler {
   }
 
   Future<FormData> _createFormData(dynamic data) async {
-    Map<String, dynamic> formDataMap = {};
+    FormData formData = FormData();
 
     for (var entry in data.entries) {
       if (entry.value is File) {
-        File file = entry.value;
-        formDataMap[entry.key] = await _createMultipartFile(file);
-      } else if (entry.value is List) {
-        List values = entry.value;
-        if (values.isNotEmpty && values.first is File) {
-          formDataMap[entry.key] = await Future.wait(
-              values.map((file) => _createMultipartFile(file)));
-        } else if (values.isNotEmpty && values.first is List<int>) {
-          formDataMap[entry.key] = values
-              .map((bytes) => _createMultipartFileFromBytes(bytes, entry.key))
-              .toList();
-        } else {
-          formDataMap[entry.key] = values;
-        }
+        formData.files.add(MapEntry(
+          entry.key,
+          await _createMultipartFile(entry.value),
+        ));
       } else if (entry.value is List<int>) {
-        formDataMap[entry.key] =
-            _createMultipartFileFromBytes(entry.value, entry.key);
+        formData.files.add(MapEntry(
+          entry.key,
+          await _createMultipartFileFromBytes(entry.value, entry.key),
+        ));
+      } else if (entry.value is List) {
+        await _handleListValue(formData, entry.key, entry.value);
       } else {
-        formDataMap[entry.key] = entry.value;
+        formData.fields.add(MapEntry(entry.key, entry.value.toString()));
       }
     }
 
-    return FormData.fromMap(formDataMap);
+    return formData;
+  }
+
+  Future<void> _handleListValue(
+      FormData formData, String key, List values) async {
+    if (values.isEmpty) {
+      formData.fields.add(MapEntry(key, '[]'));
+      return;
+    }
+
+    if (values.first is File) {
+      formData.files.addAll(await Future.wait(
+        values.map(
+            (file) async => MapEntry(key, await _createMultipartFile(file))),
+      ));
+    } else if (values.first is List<int>) {
+      formData.files.addAll(await Future.wait(
+        values.map((bytes) async =>
+            MapEntry(key, await _createMultipartFileFromBytes(bytes, key))),
+      ));
+    } else {
+      formData.fields.add(MapEntry(key, values.toString()));
+    }
   }
 
   Future<MultipartFile> _createMultipartFile(File file) async {
@@ -108,7 +124,8 @@ class ApiHandler {
     );
   }
 
-  MultipartFile _createMultipartFileFromBytes(List<int> bytes, String key) {
+  Future<MultipartFile> _createMultipartFileFromBytes(
+      List<int> bytes, String key) async {
     String? mimeType = mime(key);
     return MultipartFile.fromBytes(
       bytes,
