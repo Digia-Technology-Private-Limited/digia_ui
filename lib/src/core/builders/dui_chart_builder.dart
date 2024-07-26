@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import '../../../digia_ui.dart';
 import '../../Utils/basic_shared_utils/lodash.dart';
 import '../../Utils/basic_shared_utils/num_decoder.dart';
-import '../../Utils/expr.dart';
 import '../../Utils/util_functions.dart';
 import '../../core/page/props/dui_widget_json_data.dart';
 import '../evaluator.dart';
@@ -66,14 +65,14 @@ class DUIChartBuilder extends DUIWidgetBuilder {
                   isStepLineChart: false,
                   spots: eval<List>(e['spots'], context: context)?.map((e) {
                     //todo uppercase p in y point
-                        return FlSpot(e['xPoint'].toDouble(), e['ypoint'].toDouble());
+                        return FlSpot(e['xPoint'].toDouble(), e['yPoint'].toDouble());
                       }).toList() ??
                       [],
                   isCurved:
                       eval<bool>(e['isCurved'], context: context) ?? false,
                   barWidth:  eval<double>(e['barWidth'], context: context) ?? 2,
-                  color: makeColor(
-                      eval<String>(e['lineColor'], context: context)),
+                  // color: makeColor(
+                  //     eval<String>(e['lineColor'], context: context)),
                   belowBarData: BarAreaData(
                       show: true,
                       color: makeColor(eval<String>(
@@ -105,7 +104,7 @@ class DUIChartBuilder extends DUIWidgetBuilder {
       case 'linear':
         final colors = (data['colorList'] as List?)
             ?.map((e) => makeColor(
-                eval<String>(e['color'] as String?, context: context)))
+                eval<String>(e['color'] as String?, context: context)) ?? Colors.transparent)
             .nonNulls
             .toList();
 
