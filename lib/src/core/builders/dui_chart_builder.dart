@@ -27,7 +27,8 @@ class DUIChartBuilder extends DUIWidgetBuilder {
   @override
   Widget build(BuildContext context) {
     return AspectRatio(
-      aspectRatio: eval<double>(data.props['aspectRatio'], context: context) ?? 1,
+      aspectRatio:
+          eval<double>(data.props['aspectRatio'], context: context) ?? 1,
       child: LineChart(
         LineChartData(
           extraLinesData: ExtraLinesData(
@@ -37,46 +38,52 @@ class DUIChartBuilder extends DUIWidgetBuilder {
                       ?.map((e) {
                     return HorizontalLine(
                       y: eval<double>(e['linePoint'], context: context) ?? 0,
-                      color: makeColor(
-                          eval<String>(e['color'], context: context)),
+                      color:
+                          makeColor(eval<String>(e['color'], context: context)),
                       strokeWidth:
-                          eval<double>(e['strokeWidth'], context: context) ??
-                              2,
-                      dashArray: (eval<int>(e['dashArray']['gap'],
-                                      context: context) !=
-                                  null &&
-                              eval<int>(e['dashArray']['length'],
-                                      context: context) !=
-                                  null)
-                          ? [
-                              eval<int>(e['dashArray']['gap'],
-                                  context: context)!,
-                              eval<int>(e['dashArray']['length'],
-                                  context: context)!
-                            ]
-                          : null,
-                    ); 
+                          eval<double>(e['strokeWidth'], context: context) ?? 2,
+                      dashArray:
+                          (eval<int>(e['dashArray']['gap'], context: context) !=
+                                      null &&
+                                  eval<int>(e['dashArray']['length'],
+                                          context: context) !=
+                                      null)
+                              ? [
+                                  eval<int>(e['dashArray']['gap'],
+                                      context: context)!,
+                                  eval<int>(e['dashArray']['length'],
+                                      context: context)!
+                                ]
+                              : null,
+                    );
                   }).toList() ??
-                  [] as List <HorizontalLine>),
+                  [] as List<HorizontalLine>),
           titlesData: const FlTitlesData(show: false),
           lineBarsData: eval<List>(data.props['lines'], context: context)
                   ?.map((e) {
                 return LineChartBarData(
                   isStepLineChart: false,
                   spots: eval<List>(e['spots'], context: context)?.map((e) {
-                    //todo uppercase p in y point
-                        return FlSpot(e['xPoint'].toDouble(), e['yPoint'].toDouble());
+                        //todo uppercase p in y point
+                        return FlSpot(
+                            e['xPoint'].toDouble(), e['yPoint'].toDouble());
                       }).toList() ??
                       [],
                   isCurved:
                       eval<bool>(e['isCurved'], context: context) ?? false,
-                  barWidth:  eval<double>(e['barWidth'], context: context) ?? 2,
-                  // color: makeColor(
-                  //     eval<String>(e['lineColor'], context: context)),
+                  barWidth: eval<double>(e['barWidth'], context: context) ?? 2,
+                  color: (_toGradiant(
+                          eval<Map<String, dynamic>>(
+                              e['belowBarData']['gradiant'],
+                              context: context),
+                          context) !=
+                          null)
+                      ? null
+                      : makeColor(
+                          eval<String>(e['lineColor'], context: context)),
                   belowBarData: BarAreaData(
                       show: true,
-                      color: makeColor(eval<String>(
-                          e['belowBarData']['color'],
+                      color: makeColor(eval<String>(e['belowBarData']['color'],
                           context: context)),
                       gradient: _toGradiant(
                           eval<Map<String, dynamic>>(
@@ -103,8 +110,10 @@ class DUIChartBuilder extends DUIWidgetBuilder {
     switch (type) {
       case 'linear':
         final colors = (data['colorList'] as List?)
-            ?.map((e) => makeColor(
-                eval<String>(e['color'] as String?, context: context)) ?? Colors.transparent)
+            ?.map((e) =>
+                makeColor(
+                    eval<String>(e['color'] as String?, context: context)) ??
+                Colors.transparent)
             .nonNulls
             .toList();
 
