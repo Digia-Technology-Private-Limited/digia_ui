@@ -1,6 +1,5 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
 import '../../Utils/basic_shared_utils/num_decoder.dart';
@@ -61,6 +60,7 @@ class _DUITextFieldState extends DUIWidgetState<DUITextFormField> {
   InputBorder? _focusedBorder;
   InputBorder? _focusedErrorBorder;
   InputBorder? _errorBorder;
+  late List<TextInputFormatter>? _inputFormatters;
 
   @override
   void initState() {
@@ -102,12 +102,16 @@ class _DUITextFieldState extends DUIWidgetState<DUITextFormField> {
     _focusedBorder = _toInputBorder(widget.props['focusedBorder']);
     _focusedErrorBorder = _toInputBorder(widget.props['focusedErrorBorder']);
     _errorBorder = _toInputBorder(widget.props['errorBorder']);
+    _inputFormatters = widget.props['inputFormatter'] != null ? _toInputFormatters(widget.props['inputFormatter']) : null;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      inputFormatters: 
+       _inputFormatters
+      ,
       controller: _controller,
       enabled: _enabled,
       keyboardType: _keyboardType,
@@ -222,5 +226,37 @@ class _DUITextFieldState extends DUIWidgetState<DUITextFormField> {
         return false;
       }
     };
+  }
+
+  List<TextInputFormatter>? _toInputFormatters(String value) {
+   switch (value) {
+      case 'none':
+        return null;
+      case 'digitsOnly':
+        return [FilteringTextInputFormatter.digitsOnly];
+      case 'lowerCase':
+        return [TextInputFormatter.withFunction(
+          (oldValue, newValue) {
+            return newValue.copyWith(
+              text: newValue.text.toLowerCase(),
+              selection: newValue.selection,
+            );
+          },
+        )];
+        case 'upperCase':
+        return [TextInputFormatter.withFunction(
+          (oldValue, newValue) {
+            return newValue.copyWith(
+              text: newValue.text.toUpperCase(),
+              selection: newValue.selection,
+            );
+          },
+        )];
+        case 'noSpaces':
+        return [FilteringTextInputFormatter.deny(RegExp(r'\s'))];
+        default:
+        null;
+
+    }
   }
 }
