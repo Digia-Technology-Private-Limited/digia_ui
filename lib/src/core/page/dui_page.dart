@@ -18,6 +18,7 @@ class DUIPage extends StatelessWidget {
   final DUITextStyleBuilder? textStyleBuilder;
   final DUIMessageHandler? onMessageReceived;
   final DUIConfig _config;
+  final GlobalKey<NavigatorState>? navigatorKey;
 
   DUIPage(
       {super.key,
@@ -27,6 +28,7 @@ class DUIPage extends StatelessWidget {
       this.imageProviderFn,
       this.textStyleBuilder,
       this.onMessageReceived,
+      this.navigatorKey,
       DUIConfig? config})
       : _pageArgs = pageArgs,
         _config = config ?? DigiaUIClient.instance.config;
@@ -43,6 +45,7 @@ class DUIPage extends StatelessWidget {
           imageProviderFn: imageProviderFn,
           textStyleBuilder: textStyleBuilder,
           onMessageReceived: onMessageReceived,
+          navigatorKey: navigatorKey,
           child: const _DUIScreen()),
     );
   }
