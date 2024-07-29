@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../digia_ui.dart';
 import '../../Utils/dui_widget_registry.dart';
 import '../../components/dui_tab_view/dui_tab_view_item.dart';
+import '../evaluator.dart';
 import '../json_widget_builder.dart';
 
 class DUITabViewItemBuilder extends DUIWidgetBuilder {
@@ -20,7 +21,9 @@ class DUITabViewItemBuilder extends DUIWidgetBuilder {
       return fallbackWidget();
     }
     final tabViewItemWidget = DUITabViewItem(
-      children: data.children['children']!,
+      visibleChildren: data.children['children']!
+          .where((child) => eval<bool>(child.props['visibility'], context: context) ?? true)
+          .toList(),
       registry: registry!,
     );
     return tabViewItemWidget;

@@ -10,11 +10,11 @@ import '../../core/evaluator.dart';
 import 'dui_tab_view_props.dart';
 
 class DUITabView extends StatefulWidget {
-  final List<DUIWidgetJsonData> children;
+  final List<DUIWidgetJsonData> visibleChildren;
   final DUIWidgetRegistry? registry;
   final DUITabViewProps tabViewProps;
   const DUITabView(
-      {required this.children,
+      {required this.visibleChildren,
       required this.tabViewProps,
       this.registry,
       Key? key})
@@ -46,7 +46,7 @@ class _DUITabViewState extends State<DUITabView> with TickerProviderStateMixin {
   }
 
   void _initializeTabController() {
-    _tabController = TabController(length: widget.children.length, vsync: this);
+    _tabController = TabController(length: widget.visibleChildren.length, vsync: this);
     _tabController.addListener(_handleTabSelection);
   }
 
@@ -60,7 +60,7 @@ class _DUITabViewState extends State<DUITabView> with TickerProviderStateMixin {
   @override
   void didUpdateWidget(covariant DUITabView oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.children.length != oldWidget.children.length) {
+    if (widget.visibleChildren.length != oldWidget.visibleChildren.length) {
       _tabController.removeListener(_handleTabSelection);
       _tabController.dispose();
       _initializeTabController();
@@ -101,7 +101,7 @@ class _DUITabViewState extends State<DUITabView> with TickerProviderStateMixin {
       child: DefaultTabController(
         initialIndex:
             eval<int>(widget.tabViewProps.initialIndex, context: context) ?? 0,
-        length: widget.children.length,
+        length: widget.visibleChildren.length,
         child: Column(
           children: [
             if (widget.tabViewProps.tabBarPosition == 'top')
@@ -126,9 +126,9 @@ class _DUITabViewState extends State<DUITabView> with TickerProviderStateMixin {
                   dividerHeight: widget.tabViewProps.dividerHeight,
                   isScrollable: isTabScrollable,
                   tabAlignment: tabAlignment,
-                  tabs: List.generate(widget.children.length, (index) {
+                  tabs: List.generate(widget.visibleChildren.length, (index) {
                     final icon = DUIIconBuilder.fromProps(
-                        props: widget.children[index].props['icon']);
+                        props: widget.visibleChildren[index].props['icon']);
                     final isSelected = _tabController.index == index;
                     return tabData(
                         index: index, isSelected: isSelected, icon: icon);
@@ -143,7 +143,7 @@ class _DUITabViewState extends State<DUITabView> with TickerProviderStateMixin {
                     physics: widget.tabViewProps.isScrollable ?? false
                         ? const AlwaysScrollableScrollPhysics()
                         : const NeverScrollableScrollPhysics(),
-                    children: widget.children.map((e) {
+                    children: widget.visibleChildren.map((e) {
                       final builder = DUIJsonWidgetBuilder(
                           data: e, registry: widget.registry!);
                       return builder.build(context);
@@ -173,9 +173,9 @@ class _DUITabViewState extends State<DUITabView> with TickerProviderStateMixin {
                       : null,
                   isScrollable: isTabScrollable,
                   tabAlignment: tabAlignment,
-                  tabs: List.generate(widget.children.length, (index) {
+                  tabs: List.generate(widget.visibleChildren.length, (index) {
                     final icon = DUIIconBuilder.fromProps(
-                        props: widget.children[index].props['icon']);
+                        props: widget.visibleChildren[index].props['icon']);
                     final isSelected = _tabController.index == index;
                     return tabData(
                         index: index, isSelected: isSelected, icon: icon);
@@ -218,7 +218,7 @@ class _DUITabViewState extends State<DUITabView> with TickerProviderStateMixin {
                     BlendMode.srcIn),
                 child: icon?.build(context) ?? DUIIconBuilder.emptyIconWidget(),
               ),
-              Text(widget.children[index].props['title'] ?? ''),
+              Text(widget.visibleChildren[index].props['title'] ?? ''),
             ])
           : Column(children: [
               ColorFiltered(
@@ -231,7 +231,7 @@ class _DUITabViewState extends State<DUITabView> with TickerProviderStateMixin {
                     BlendMode.srcIn),
                 child: icon?.build(context) ?? DUIIconBuilder.emptyIconWidget(),
               ),
-              Text(widget.children[index].props['title'] ?? ''),
+              Text(widget.visibleChildren[index].props['title'] ?? ''),
             ]),
     );
   }

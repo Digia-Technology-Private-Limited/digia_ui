@@ -4,6 +4,7 @@ import '../../../digia_ui.dart';
 import '../../Utils/dui_widget_registry.dart';
 import '../../components/dui_tab_view/dui_tab_view.dart';
 import '../../components/dui_tab_view/dui_tab_view_props.dart';
+import '../evaluator.dart';
 import '../json_widget_builder.dart';
 
 class DUITabViewBuilder extends DUIWidgetBuilder {
@@ -21,7 +22,9 @@ class DUITabViewBuilder extends DUIWidgetBuilder {
       return fallbackWidget();
     }
     final tabViewWidget = DUITabView(
-      children: data.children['children']!,
+      visibleChildren: data.children['children']!
+          .where((child) => eval<bool>(child.props['visibility'], context: context) ?? true)
+          .toList(),
       registry: registry,
       tabViewProps: DUITabViewProps.fromJson(data.props),
     );
