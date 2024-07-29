@@ -10,6 +10,7 @@ import 'basic_shared_utils/color_decoder.dart';
 import 'basic_shared_utils/dui_decoder.dart';
 import 'basic_shared_utils/lodash.dart';
 import 'basic_shared_utils/num_decoder.dart';
+import 'dui_font.dart';
 
 class DUIConfigConstants {
   static const double fallbackSize = 14;
@@ -19,6 +20,20 @@ class DUIConfigConstants {
   static const String fallbackBgColorHexCode = '#FFFFFF';
   static const String fallbackBorderColorHexCode = '#FF000000';
   static const Color fallbackBgColor = Colors.black;
+}
+
+DUIFont _mergeFontValues(
+    DUIFont font, Map<String, dynamic>? fontAttributes, BuildContext context) {
+  return DUIFont(
+      weight: eval<String>(fontAttributes?['weight'], context: context) ??
+          font.weight,
+      size:
+          eval<double>(fontAttributes?['size'], context: context) ?? font.size,
+      height: eval<double>(fontAttributes?['height'], context: context) ??
+          font.height,
+      style: eval<String>(fontAttributes?['style'], context: context) ??
+          font.style,
+      fontFamily: fontAttributes?['fontFamily'] ?? font.fontFamily);
 }
 
 TextStyle? toTextStyle(DUITextStyle? textStyle, BuildContext context) {
@@ -31,9 +46,11 @@ TextStyle? toTextStyle(DUITextStyle? textStyle, BuildContext context) {
   String fontFamily = 'Poppins';
 
   if (textStyle.fontToken?.value != null) {
-    final font = DigiaUIClient.getConfigResolver()
-        .getFont(textStyle.fontToken!.value!)
-        .merge(textStyle.fontToken?.font);
+    final font = _mergeFontValues(
+        DigiaUIClient.getConfigResolver().getFont(textStyle.fontToken!.value!),
+        textStyle.fontToken!.font,
+        context);
+
     fontWeight = DUIDecoder.toFontWeight(font.weight);
     fontFamily = font.fontFamily!;
     fontStyle = DUIDecoder.toFontStyle(font.style);
