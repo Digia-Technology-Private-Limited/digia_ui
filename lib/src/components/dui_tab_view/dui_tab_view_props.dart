@@ -15,8 +15,11 @@ class DUITabViewProps {
   final double? dividerHeight;
   final bool? isScrollable;
   final String? indicatorColor;
+  final String? indicatorSize;
   final double? viewportFraction;
   final DUIInsets? tabBarPadding;
+  final DUIInsets? labelPadding;
+  final Object? initialIndex;
   @JsonKey(
       fromJson: DUITextStyle.fromJson,
       includeToJson: false,
@@ -30,6 +33,9 @@ class DUITabViewProps {
 
   DUITabViewProps(
       {this.hasTabs,
+      this.indicatorSize,
+      this.initialIndex,
+      this.labelPadding,
       this.selectedLabelColor,
       this.selectedLabelStyle,
       this.unselectedLabelColor,

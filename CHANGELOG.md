@@ -2,6 +2,36 @@
 
 Digia Ui Sdk.
 
+## [0.0.6-beta.29] - 2024-07-26
+
+- Support for Custom Navigator
+- Bug Fixes
+
+## [0.0.6-beta.28] - 2024-07-23
+
+- Bug fixes in Config fetch
+- Added alignment in Container (Default Props)
+- Separate styles for body,span & para in HTML View.
+
+## [0.0.6-beta.27] - 2024-07-22
+
+- New and safe way to initialize Digia SDK.
+- Refresh Indicator Component.
+
+## [0.0.6-beta.26] - 2024-07-15
+
+- Timer (Bug fix)
+
+## [0.0.6-beta.25] - 2024-07-13
+
+- Paginated ListView
+- Timer
+- Bug fixes
+
+## [0.0.6-beta.24] - 2024-07-08
+
+- Support for Action onBackPressed
+
 ## [0.0.6-beta.23] - 2023-07-03
 
 - Bug fixes

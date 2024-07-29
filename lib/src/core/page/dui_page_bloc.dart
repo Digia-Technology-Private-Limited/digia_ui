@@ -1,7 +1,13 @@
+import 'dart:async';
+
+import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../digia_ui.dart';
+import '../../Utils/basic_shared_utils/lodash.dart';
+import '../../Utils/expr.dart';
+import '../action/action_handler.dart';
 import '../action/action_prop.dart';
 import '../action/api_handler.dart';
 import '../analytics_handler.dart';
@@ -25,6 +31,8 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
     on<InitPageEvent>(_init);
     on<SetStateEvent>(_setState);
     on<RebuildPageEvent>(_rebuildPage);
+    on<PageLoadedEvent>(_pageLoaded);
+    on<BackPressEvent>(_backPressed);
   }
 
   void register(String widgetName, Map<String, Function> getters) {
@@ -35,17 +43,30 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
     InitPageEvent blocEvent,
     Emitter<DUIPageState> emit,
   ) async {
-    // Assumption is that onPageLoadAction will not be null.
+    final pageStates = state.props.variables;
+    if (pageStates != null) {
+      for (final element in pageStates.entries) {
+        final pageStateDefaultValue = element.value.value;
+        final evaluatedValue = evalDynamic(pageStateDefaultValue,
+            blocEvent.context, ExprContext(variables: {}));
+        state.props.variables?[element.key]?.set(evaluatedValue);
+      }
+    }
+
+    // Assumption is that executeDataSourceAction will not be null.
     // It will either be Action.loadPage or Action.buildPage
-
-    final onPageLoadAction = state.props.actions['onPageLoad'];
-
+    final executeDataSourceAction = state.props.executeDataSource;
     AnalyticsHandler.instance.execute(
-        context: blocEvent.context, events: onPageLoadAction?.analyticsData);
+        context: blocEvent.context,
+        events: executeDataSourceAction?.analyticsData);
 
-    final action = onPageLoadAction?.actions.first;
+    final action = executeDataSourceAction?.actions.firstOrNull;
 
-    await _handleAction(blocEvent.context, action!, emit);
+    if (action != null && action.type == 'Action.loadPage') {
+      await _executeDataSource(blocEvent.context, action, emit);
+    } else {
+      emit(state.copyWith(isLoading: false));
+    }
 
     return;
   }
@@ -67,27 +88,93 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
     }
   }
 
-  Future<Object?> _handleAction(BuildContext context, ActionProp action,
+  Future<void> _executeDataSource(BuildContext context, ActionProp action,
       Emitter<DUIPageState> emit) async {
-    switch (action.type) {
-      case 'Action.loadPage':
-        emit(state.copyWith(isLoading: true));
-        final apiDataSourceId = action.data['dataSourceId'];
-        Map<String, dynamic>? apiDataSourceArgs = action.data['args'];
+    emit(state.copyWith(isLoading: true));
+    final apiDataSourceId = action.data['dataSourceId'];
+    Map<String, dynamic>? apiDataSourceArgs = action.data['args'];
 
-        final apiModel = config.getApiDataSource(apiDataSourceId);
+    final apiModel = config.getApiDataSource(apiDataSourceId);
 
-        final args = apiDataSourceArgs
-            ?.map((key, value) => MapEntry(key, eval(value, context: context)));
-        final response =
-            await ApiHandler.instance.execute(apiModel: apiModel, args: args);
+    final args = apiDataSourceArgs
+        ?.map((key, value) => MapEntry(key, eval(value, context: context)));
 
-        emit(state.copyWith(isLoading: false, dataSource: response.data));
-        return null;
+    try {
+      final resp =
+          await ApiHandler.instance.execute(apiModel: apiModel, args: args);
 
-      default:
-        emit(state.copyWith(isLoading: false));
-        return null;
+      final respObj = {
+        'body': resp.data,
+        'statusCode': resp.statusCode,
+        'headers': resp.headers,
+        'requestObj': requestObjToMap(resp.requestOptions),
+        'error': null,
+      };
+
+      if (!context.mounted) {
+        emit(state.copyWith(isLoading: false, dataSource: resp.data));
+        return;
+      }
+
+      if (_isSuccess(
+          context, action.data['successCondition'] as String?, respObj)) {
+        final successAction = ActionFlow.fromJson(action.data['onSuccess']);
+        await ActionHandler.instance.execute(
+            context: context,
+            actionFlow: successAction,
+            enclosing: ExprContext(variables: {'response': respObj}));
+      } else {
+        final errorAction = ActionFlow.fromJson(action.data['onError']);
+        await ActionHandler.instance.execute(
+            context: context,
+            actionFlow: errorAction,
+            enclosing: ExprContext(variables: {'response': respObj}));
+      }
+
+      emit(state.copyWith(isLoading: false, dataSource: resp.data));
+    } catch (e) {
+      final res = {
+        'error': e,
+      };
+
+      if (!context.mounted) {
+        emit(state.copyWith(isLoading: false, dataSource: null));
+        return;
+      }
+
+      final errorAction = ActionFlow.fromJson(action.data['onError']);
+      await ActionHandler.instance.execute(
+          context: context,
+          actionFlow: errorAction,
+          enclosing: ExprContext(variables: {'response': res}));
+    }
+  }
+
+  bool _isSuccess(
+      BuildContext context, String? successCondition, Object response) {
+    return successCondition?.let((p0) => eval<bool>(successCondition,
+            context: context,
+            enclosing: ExprContext(
+              variables: {'response': response},
+            ))) ??
+        successCondition == null || successCondition.isEmpty;
+  }
+
+  FutureOr<void> _pageLoaded(
+      PageLoadedEvent event, Emitter<DUIPageState> emit) {
+    final pageLoadActionFlow = state.props.onPageLoad;
+    if (pageLoadActionFlow != null) {
+      ActionHandler.instance
+          .execute(context: event.context, actionFlow: pageLoadActionFlow);
+    }
+  }
+
+  FutureOr<void> _backPressed(
+      BackPressEvent event, Emitter<DUIPageState> emit) {
+    final actionFlow = state.props.onBackPress;
+    if (actionFlow != null) {
+      ActionHandler.instance
+          .execute(context: event.context, actionFlow: actionFlow);
     }
   }
 }

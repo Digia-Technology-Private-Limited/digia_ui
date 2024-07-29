@@ -4,17 +4,14 @@ import 'package:flutter/material.dart';
 import '../digia_ui.dart';
 import 'core/app_state_provider.dart';
 
-enum Environment { staging, production, version }
-
 class DUIApp extends StatelessWidget {
   final String digiaAccessKey;
+  final ScrollBehavior? scrollBehavior;
   final GlobalKey<NavigatorState>? navigatorKey;
   final ThemeData? theme;
   final String baseUrl;
-  final Environment environment;
-  final int version;
+  final EnvironmentInfo environmentInfo;
   final Object? data;
-  static String? uuid;
   final NetworkConfiguration networkConfiguration;
   final DeveloperConfig? developerConfig;
   final DUIAnalytics? analytics;
@@ -24,11 +21,11 @@ class DUIApp extends StatelessWidget {
   const DUIApp(
       {super.key,
       required this.digiaAccessKey,
-      required this.environment,
+      this.scrollBehavior,
       this.navigatorKey,
+      required this.environmentInfo,
       this.theme,
       required this.baseUrl,
-      required this.version,
       required this.networkConfiguration,
       this.developerConfig,
       this.analytics,
@@ -44,10 +41,9 @@ class DUIApp extends StatelessWidget {
           developerConfig: developerConfig);
     }
 
-    return DigiaUIClient.initializeFromNetwork(
+    return DigiaUIClient.init(
         accessKey: digiaAccessKey,
-        environment: environment,
-        version: version,
+        environmentInfo: environmentInfo,
         baseUrl: baseUrl,
         networkConfiguration: networkConfiguration,
         developerConfig: developerConfig,
@@ -57,6 +53,7 @@ class DUIApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      scrollBehavior: scrollBehavior,
       // key: key,
       debugShowCheckedModeBanner: false,
       // navigatorObservers: [ChuckerFlutter.navigatorObserver],

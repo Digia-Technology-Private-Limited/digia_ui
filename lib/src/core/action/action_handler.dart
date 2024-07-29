@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:json_schema2/json_schema2.dart';
 import 'package:share_plus/share_plus.dart';
@@ -14,6 +15,7 @@ import '../../Utils/basic_shared_utils/num_decoder.dart';
 import '../../Utils/expr.dart';
 import '../../Utils/extensions.dart';
 import '../../Utils/util_functions.dart';
+import '../../components/DUIText/dui_text_style.dart';
 import '../../components/dui_widget_scope.dart';
 import '../../types.dart';
 import '../analytics_handler.dart';
@@ -83,6 +85,7 @@ Map<String, ActionHandlerFn> _actionsMap = {
         result = await openDUIPageInBottomSheet(
           pageUid: pageUId,
           context: context,
+          navigatorKey: widgetScope?.navigatorKey,
           style: bottomSheetStyling,
           pageArgs: evaluatedArgs,
           iconDataProvider: widgetScope?.iconDataProvider,
@@ -101,15 +104,16 @@ Map<String, ActionHandlerFn> _actionsMap = {
 
         result = await NavigatorHelper.push(
             context,
+            widgetScope?.navigatorKey,
             DUIPageRoute(
-              pageUid: pageUId,
-              context: context,
-              pageArgs: evaluatedArgs,
-              iconDataProvider: widgetScope?.iconDataProvider,
-              imageProviderFn: widgetScope?.imageProviderFn,
-              textStyleBuilder: widgetScope?.textStyleBuilder,
-              onMessageReceived: widgetScope?.onMessageReceived,
-            ),
+                pageUid: pageUId,
+                context: context,
+                pageArgs: evaluatedArgs,
+                iconDataProvider: widgetScope?.iconDataProvider,
+                imageProviderFn: widgetScope?.imageProviderFn,
+                textStyleBuilder: widgetScope?.textStyleBuilder,
+                onMessageReceived: widgetScope?.onMessageReceived,
+                navigatorKey: widgetScope?.navigatorKey),
             removeRoutesUntilPredicate: routeNametoRemoveUntil.letIf(
                 (_) => removePreviousScreensInStack,
                 (p0) => ModalRoute.withName(p0)));
@@ -181,18 +185,34 @@ Map<String, ActionHandlerFn> _actionsMap = {
         context: context, enclosing: enclosing);
     final duration = eval<int>(action.data['duration'],
         context: context, enclosing: enclosing);
+    final Map<String, dynamic>? style = action.data['style'] ?? {};
+    final Color? bgColor = makeColor(style?['bgColor']);
+    final borderRadius =
+        DUIDecoder.toBorderRadius(style?['borderRadius'] ?? '12, 12, 12, 12');
+    final TextStyle? textStyle =
+        toTextStyle(DUITextStyle.fromJson(style?['textStyle']), context);
+    final height = eval<double>(style?['height'], context: context);
+    final width = eval<double>(style?['width'], context: context);
+    final padding =
+        DUIDecoder.toEdgeInsets(style?['padding'] ?? '24, 12, 24, 12');
+    final margin = DUIDecoder.toEdgeInsets(style?['margin']);
+    final alignment = DUIDecoder.toAlignment(style?['alignment']);
 
     final toast = FToast().init(context);
     toast.showToast(
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+        alignment: alignment,
+        height: height,
+        width: width,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(25.0),
-          color: Colors.black,
+          color: bgColor ?? Colors.black,
+          borderRadius: borderRadius,
         ),
+        padding: padding,
+        margin: margin,
         child: Text(
           message ?? '',
-          style: const TextStyle(color: Colors.white),
+          style: textStyle ?? const TextStyle(color: Colors.white),
         ),
       ),
       gravity: ToastGravity.BOTTOM,
@@ -330,7 +350,17 @@ Map<String, ActionHandlerFn> _actionsMap = {
     final handler = DUIWidgetScope.maybeOf(context)?.onMessageReceived;
     if (handler == null) return;
 
-    handler(MessagePayload(context: context, name: name, body: payload));
+    handler(MessagePayload(
+      context: context,
+      name: name,
+      body: payload,
+      dispatchAction: (p0) async {
+        final actionFlow =
+            ActionFlow(actions: [ActionProp(type: p0.type, data: p0.data)]);
+        return ActionHandler.instance.execute(
+            context: context, actionFlow: actionFlow, enclosing: enclosing);
+      },
+    ));
 
     return;
   },
@@ -421,6 +451,55 @@ Map<String, ActionHandlerFn> _actionsMap = {
       return null;
     }
   },
+  'Action.copyToClipBoard': (
+      {required action, required context, enclosing}) async {
+    final message = eval<String>(action.data['message'],
+        context: context, enclosing: enclosing);
+
+    final toast = FToast().init(context);
+
+    if (message != null && message.isNotEmpty) {
+      try {
+        await Clipboard.setData(ClipboardData(text: message));
+        toast.showToast(
+          child: Container(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(25.0),
+              color: Colors.black,
+            ),
+            child: const Text(
+              'Copied to Clipboard!',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+          gravity: ToastGravity.BOTTOM,
+          toastDuration: const Duration(seconds: 2),
+        );
+      } catch (e) {
+        toast.showToast(
+          child: Container(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(25.0),
+              color: Colors.black,
+            ),
+            child: const Text(
+              'Failed to copy to clipboard.',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+          gravity: ToastGravity.BOTTOM,
+          toastDuration: const Duration(seconds: 2),
+        );
+      }
+      return;
+    } else {
+      return null;
+    }
+  },
 };
 
 class ActionHandler {
@@ -475,15 +554,18 @@ const Map<String, String> defaultHeaders = {
 };
 
 abstract class NavigatorHelper {
-  static Future<T?> push<T extends Object?>(
-      BuildContext context, Route<T> newRoute,
+  static Future<T?> push<T extends Object?>(BuildContext context,
+      GlobalKey<NavigatorState>? navigatorKey, Route<T> newRoute,
       {RoutePredicate? removeRoutesUntilPredicate}) {
     if (removeRoutesUntilPredicate == null) {
-      return Navigator.push<T>(context, newRoute);
+      final push =
+          navigatorKey?.currentState?.push ?? Navigator.of(context).push;
+      return push(newRoute);
     }
 
-    return Navigator.pushAndRemoveUntil<T>(
-        context, newRoute, removeRoutesUntilPredicate);
+    final pushAndRemoveUntil = navigatorKey?.currentState?.pushAndRemoveUntil ??
+        Navigator.of(context).pushAndRemoveUntil;
+    return pushAndRemoveUntil(newRoute, removeRoutesUntilPredicate);
   }
 }
 

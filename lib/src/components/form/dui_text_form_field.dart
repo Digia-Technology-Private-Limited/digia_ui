@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
@@ -9,6 +11,7 @@ import '../../core/evaluator.dart';
 import '../DUIText/dui_text_style.dart';
 import '../dui_base_stateful_widget.dart';
 import '../utils/DUIBorder/dui_border.dart';
+import '../utils/dottedInputBorder.dart';
 
 class DUITextFormField extends BaseStatefulWidget {
   final Map<String, dynamic> props;
@@ -43,10 +46,15 @@ class _DUITextFieldState extends DUIWidgetState<DUITextFormField> {
   Color? _fillColor;
   String? _labelText;
   TextStyle? _labelStyle;
+  TextStyle? _hintStyle;
+  TextStyle? _errorStyle;
   String? _hintText;
   EdgeInsets? _contentPadding;
   Color? _focusColor;
   Color? _cursorColor;
+  String? _regex;
+  String? _errorText;
+  String? _setErrorText = null;
 
   InputBorder? _enabledBorder;
   InputBorder? _disabledBorder;
@@ -80,9 +88,15 @@ class _DUITextFieldState extends DUIWidgetState<DUITextFormField> {
     _labelStyle =
         toTextStyle(DUITextStyle.fromJson(widget.props['labelStyle']), context);
     _hintText = widget.props['hintText'] as String?;
+    _hintStyle =
+        toTextStyle(DUITextStyle.fromJson(widget.props['hintStyle']), context);
     _contentPadding = DUIDecoder.toEdgeInsets(widget.props['contentPadding']);
     _focusColor = makeColor(widget.props['focusColor']);
     _cursorColor = makeColor(widget.props['cursorColor']);
+    _regex = widget.props['regex'] as String?;
+    _errorText = widget.props['errorText'] as String?;
+    _errorStyle =
+        toTextStyle(DUITextStyle.fromJson(widget.props['errorStyle']), context);
     _enabledBorder = _toInputBorder(widget.props['enabledBorder']);
     _disabledBorder = _toInputBorder(widget.props['disabledBorder']);
     _focusedBorder = _toInputBorder(widget.props['focusedBorder']);
@@ -117,8 +131,12 @@ class _DUITextFieldState extends DUIWidgetState<DUITextFormField> {
         filled: _fillColor != null,
         labelText: _labelText,
         labelStyle: _labelStyle,
+        errorStyle: _errorStyle,
         hintText: _hintText,
-        contentPadding: _contentPadding,
+        hintStyle: _hintStyle,
+        contentPadding: _minLines != null
+            ? (_minLines! > 1 ? const EdgeInsets.all(12) : _contentPadding)
+            : _contentPadding,
         focusColor: _focusColor,
         prefixIcon: widget.prefixIcon,
         suffixIcon: widget.suffixIcon,
@@ -127,8 +145,33 @@ class _DUITextFieldState extends DUIWidgetState<DUITextFormField> {
         focusedBorder: _focusedBorder,
         focusedErrorBorder: _focusedErrorBorder,
         errorBorder: _errorBorder,
+        errorText: _setErrorText,
       ),
+      onChanged: (value) {
+        _validateInput(value);
+      },
     );
+  }
+
+  void _validateInput(String value) {
+    if (value.isEmpty) {
+      setState(() {
+        _setErrorText = null;
+      });
+      return;
+    }
+    if (_regex != null && _regex!.isNotEmpty) {
+      RegExp regex = RegExp(_regex!);
+      if (!regex.hasMatch(value)) {
+        setState(() {
+          _setErrorText = _errorText;
+        });
+      } else {
+        setState(() {
+          _setErrorText = null;
+        });
+      }
+    }
   }
 
   InputBorder? _toInputBorder(dynamic border) {
@@ -149,6 +192,20 @@ class _DUITextFieldState extends DUIWidgetState<DUITextFormField> {
           borderSide: borderSide,
           borderRadius: borderRadius,
         );
+      case 'outlineDottedInputBorder':
+        return DottedInputBorder(
+          inputBorderType: InputBorderType.outline,
+          borderType: BorderType.dotted,
+          borderSide: borderSide,
+          borderRadius: borderRadius,
+        );
+      case 'underlineDottedInputBorder':
+        return DottedInputBorder(
+          inputBorderType: InputBorderType.underline,
+          borderType: BorderType.dotted,
+          borderSide: borderSide,
+          borderRadius: borderRadius,
+        );
       default:
         return InputBorder.none;
     }
@@ -156,6 +213,14 @@ class _DUITextFieldState extends DUIWidgetState<DUITextFormField> {
 
   @override
   Map<String, Function> getVariables() {
-    return {'text': () => _controller.text};
+    return {
+      'text': () => _controller.text,
+      'isValid': () {
+        if (_setErrorText == null) {
+          return true;
+        }
+        return false;
+      }
+    };
   }
 }

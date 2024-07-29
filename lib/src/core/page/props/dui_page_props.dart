@@ -30,6 +30,10 @@ class DUIPageProps {
       _$DUIPagePropsFromJson(json);
 
   Map<String, dynamic> toJson() => _$DUIPagePropsToJson(this);
+
+  ActionFlow? get onPageLoad => actions['onPageLoadAction'];
+  ActionFlow? get executeDataSource => actions['onPageLoad'];
+  ActionFlow? get onBackPress => actions['onBackPress'];
 }
 
 class PageLayoutProps {
