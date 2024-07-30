@@ -279,8 +279,14 @@ class _DZStepperState extends State<DZStepper> {
       context: context,
       text: title.props.textSpans![0].text,
       textStyle: TextStyle(
-          fontSize: title.props.textStyle?.fontToken?.font?.size ?? 16,
-          height: title.props.textStyle?.fontToken?.font?.height ?? 1),
+          fontSize: eval<double>(
+                  title.props.textStyle?.fontToken?.font?['size'],
+                  context: context) ??
+              16,
+          height: eval<double>(
+                  title.props.textStyle?.fontToken?.font?['height'],
+                  context: context) ??
+              1),
       widthToRemove: sidePadding + _V_TEXT_LEFT_PADDING,
     );
 
@@ -291,8 +297,14 @@ class _DZStepperState extends State<DZStepper> {
         context: context,
         text: removeAllHtmlTags(subTitle.props.textSpans![0].text),
         textStyle: TextStyle(
-            fontSize: title.props.textStyle?.fontToken?.font?.size ?? 14,
-            height: title.props.textStyle?.fontToken?.font?.height ?? 1),
+            fontSize: eval<double>(
+                    title.props.textStyle?.fontToken?.font?['size'],
+                    context: context) ??
+                14,
+            height: eval<double>(
+                    title.props.textStyle?.fontToken?.font?['height'],
+                    context: context) ??
+                1),
         widthToRemove: sidePadding + _V_TEXT_LEFT_PADDING,
       );
     } else {
