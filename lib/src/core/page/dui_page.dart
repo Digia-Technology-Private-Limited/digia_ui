@@ -54,12 +54,13 @@ class DUIPage extends StatelessWidget {
           final currState = transition.currentState;
           final event = transition.event;
           final nextState = transition.nextState;
-          if (event is SetStateEvent) {
-            talker?.log(event.events[0].value);
-          }
-          if (event is InitPageEvent) {
-            talker?.log(event);
-          }
+          final variables = currState.props.variables;
+
+          variables.forEach((key, variable) {
+            talker
+                ?.log('${variable.name}: ${variable.value} | ${variable.type}');
+          });
+
           return true;
         },
         eventFilter: (bloc, event) =>
