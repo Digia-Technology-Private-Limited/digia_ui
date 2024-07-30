@@ -9,11 +9,10 @@ DUITextStyle? _$DUITextStyleFromJson(dynamic json) {
   if (fontTokenJson == null) {
     fontToken = null;
   } else if (fontTokenJson is String) {
-    fontToken = DUIFontToken()..value = fontTokenJson;
+    fontToken = DUIFontToken(value: fontTokenJson);
   } else {
-    fontToken = DUIFontToken()
-      ..value = fontTokenJson['value']
-      ..font = DUIFont.fromJson(json['font'] ?? json);
+    fontToken = DUIFontToken(
+        value: fontTokenJson['value'], font: fontTokenJson['font']);
   }
 
   return DUITextStyle(
