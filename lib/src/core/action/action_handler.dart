@@ -466,7 +466,7 @@ Map<String, ActionHandlerFn> _actionsMap = {
                   color: Colors.black,
                 ),
                 child: Text(
-                  'File ${file.name} of size ${file.size}kB selected exceeds the size limit of ${sizeLimit}kB.',
+                  'File ${file.name} of size ${(file.size / 1000).toStringAsFixed(2)}kB selected exceeds the size limit of ${sizeLimit}kB.',
                   style: const TextStyle(color: Colors.white),
                 ),
               ),
