@@ -428,67 +428,59 @@ Map<String, ActionHandlerFn> _actionsMap = {
         context: context, enclosing: enclosing);
     final sizeLimit = eval<double>(action.data['sizeLimit'],
         context: context, enclosing: enclosing);
+    final showToast = eval<bool>(action.data['showToast'],
+            context: context, enclosing: enclosing) ??
+        true;
     final isMultiSelect = eval<bool>(action.data['isMultiSelected'],
-        context: context, enclosing: enclosing);
+            context: context, enclosing: enclosing) ??
+        false;
     final selectedPageState = action.data['selectedPageState'];
 
-    FileType type;
-    switch (fileType!.toLowerCase()) {
-      case 'image':
-        type = FileType.image;
-        break;
-      case 'video':
-        type = FileType.video;
-        break;
-      case 'audio':
-        type = FileType.audio;
-        break;
-      case 'pdf':
-        type = FileType.custom;
-        break;
-      default:
-        type = FileType.any;
-    }
+    final type = toFileType(fileType);
+
     List<PlatformFile>? platformfiles;
+    bool isSinglePick;
     try {
-      FilePickerResult? result = await FilePicker.platform.pickFiles(
+      FilePickerResult? pickedFile = await FilePicker.platform.pickFiles(
         type: type,
-        allowMultiple: isMultiSelect ?? false,
+        allowMultiple: isMultiSelect,
         allowedExtensions: type == FileType.custom ? ['pdf'] : null,
       );
 
-      final toast = FToast().init(context);
+      isSinglePick = pickedFile?.isSinglePick ?? true;
 
-      if (result != null) {
-        if (sizeLimit != null) {
-          platformfiles = result.files.where((file) {
-            if (file.size > sizeLimit * 1024) {
-              toast.showToast(
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 24.0, vertical: 12.0),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(25.0),
-                    color: Colors.black,
-                  ),
-                  child: Text(
-                    'File ${file.name} exceeds the size limit of ${sizeLimit}KB',
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                ),
-                gravity: ToastGravity.BOTTOM,
-                toastDuration: const Duration(seconds: 2),
-              );
-              return false;
-            }
-            return true;
-          }).toList();
-        } else {
-          platformfiles = result.files;
-        }
-      } else {
+      if (pickedFile == null) {
         // User canceled the picker
         return;
+      }
+
+      final toast = FToast().init(context);
+
+      if (sizeLimit != null && showToast) {
+        platformfiles = pickedFile.files.where((file) {
+          if (file.size > sizeLimit * 1024) {
+            toast.showToast(
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 24.0, vertical: 12.0),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(25.0),
+                  color: Colors.black,
+                ),
+                child: Text(
+                  'File ${file.name} exceeds the size limit of ${sizeLimit}KB',
+                  style: const TextStyle(color: Colors.white),
+                ),
+              ),
+              gravity: ToastGravity.BOTTOM,
+              toastDuration: const Duration(seconds: 2),
+            );
+            return false;
+          }
+          return true;
+        }).toList();
+      } else {
+        platformfiles = pickedFile.files;
       }
     } catch (e) {
       print('Error picking file: $e');
@@ -496,10 +488,10 @@ Map<String, ActionHandlerFn> _actionsMap = {
     }
     if (platformfiles.isNotEmpty) {
       try {
-        List<Uint8List> finalBytes =
+        List finalFiles =
             await Future.wait(platformfiles.map((platformfile) async {
           if (kIsWeb) {
-            return platformfile.bytes ?? Uint8List(0);
+            return platformfile.bytes;
           } else {
             if (platformfile.path == null) {
               print('Error: Null path for file');
@@ -507,7 +499,8 @@ Map<String, ActionHandlerFn> _actionsMap = {
             }
 
             try {
-              return await File(platformfile.path!).readAsBytes();
+              // return await File(platformfile.path!).readAsBytes();
+              return File(platformfile.path!);
             } catch (e) {
               print('Error reading file at ${platformfile.path}: $e');
               return Uint8List(0);
@@ -516,18 +509,18 @@ Map<String, ActionHandlerFn> _actionsMap = {
         }).toList());
 
         final variables = bloc.state.props.variables;
-        if (finalBytes.length == 1) {
+        if (isSinglePick) {
           // Single file selected
           variables?.entries
               .firstWhere((element) => element.key == selectedPageState)
               .value
-              .set(finalBytes.first);
+              .set(finalFiles.first);
         } else {
           // Multiple files selected
           variables?.entries
               .firstWhere((element) => element.key == selectedPageState)
               .value
-              .set(finalBytes);
+              .set(finalFiles);
         }
       } catch (e) {
         print('Error: $e');
@@ -535,6 +528,72 @@ Map<String, ActionHandlerFn> _actionsMap = {
     }
 
     return null;
+  },
+  'Action.upload': ({required action, required context, enclosing}) async {
+    final dataSourceId = action.data['dataSourceId'];
+    Map<String, dynamic>? apiDataSourceArgs = action.data['args'];
+    final apiModel = (context.tryRead<DUIPageBloc>()?.config)
+        ?.getApiDataSource(dataSourceId);
+
+    final args = apiDataSourceArgs?.map((key, value) {
+      final evalue = eval(value, context: context);
+      final dvalue = apiModel?.variables?[key]?.defaultValue;
+      return MapEntry(key, evalue ?? dvalue);
+    });
+
+    final result = await ApiHandler.instance
+        .execute(apiModel: apiModel!, args: args)
+        .then((resp) {
+      final response = {
+        'body': resp.data,
+        'statusCode': resp.statusCode,
+        'headers': resp.headers,
+        'requestObj': requestObjToMap(resp.requestOptions),
+        'error': null,
+      };
+
+      final successCondition = action.data['successCondition'] as String?;
+      final evaluatedSuccessCond = successCondition.let((p0) => eval<bool>(
+              successCondition,
+              context: context,
+              enclosing: ExprContext(
+                  variables: {'response': response}, enclosing: enclosing))) ??
+          successCondition == null || successCondition.isEmpty;
+
+      if (evaluatedSuccessCond) {
+        final successAction = ActionFlow.fromJson(action.data['onSuccess']);
+        return ActionHandler.instance.execute(
+            context: context,
+            actionFlow: successAction,
+            enclosing: ExprContext(
+                variables: {'response': response}, enclosing: enclosing));
+      } else {
+        final errorAction = ActionFlow.fromJson(action.data['onError']);
+        return ActionHandler.instance.execute(
+            context: context,
+            actionFlow: errorAction,
+            enclosing: ExprContext(
+                variables: {'response': response}, enclosing: enclosing));
+      }
+    }, onError: (e) async {
+      final errorAction = ActionFlow.fromJson(action.data['onError']);
+
+      final response = {
+        'body': e.response.data,
+        'statusCode': e.response.statusCode,
+        'headers': e.response.headers,
+        'requestObj': requestObjToMap(e.requestOptions),
+        'error': e.message,
+      };
+
+      return ActionHandler.instance.execute(
+          context: context,
+          actionFlow: errorAction,
+          enclosing: ExprContext(
+              variables: {'response': response}, enclosing: enclosing));
+    });
+
+    return result;
   },
   'Action.share': ({required action, required context, enclosing}) {
     final message = eval<String>(action.data['message'],
@@ -697,4 +756,19 @@ requestObjToMap(dynamic request) {
     'data': request.data,
     'queryParameters': request.queryParameters,
   };
+}
+
+toFileType(String? fileType) {
+  switch (fileType!.toLowerCase()) {
+    case 'image':
+      return FileType.image;
+    case 'video':
+      return FileType.video;
+    case 'audio':
+      return FileType.audio;
+    case 'pdf':
+      return FileType.custom;
+    default:
+      return FileType.any;
+  }
 }
