@@ -428,13 +428,11 @@ Map<String, ActionHandlerFn> _actionsMap = {
         context: context, enclosing: enclosing);
     final sizeLimit = eval<double>(action.data['sizeLimit'],
         context: context, enclosing: enclosing);
-    final showToast = eval<bool>(action.data['showToast'],
-            context: context, enclosing: enclosing) ??
-        true;
-    final isMultiSelect = eval<bool>(action.data['isMultiSelected'],
-            context: context, enclosing: enclosing) ??
-        false;
+    final showToast = NumDecoder.toBool(action.data['showToast']) ?? true;
+    final isMultiSelect =
+        NumDecoder.toBool(action.data['isMultiSelected']) ?? false;
     final selectedPageState = action.data['selectedPageState'];
+    final rebuildPage = NumDecoder.toBool(action.data['rebuildPage']) ?? false;
 
     final type = toFileType(fileType);
 
@@ -468,7 +466,7 @@ Map<String, ActionHandlerFn> _actionsMap = {
                   color: Colors.black,
                 ),
                 child: Text(
-                  'File ${file.name} exceeds the size limit of ${sizeLimit}KB',
+                  'File ${file.name} of size ${file.size}kB selected exceeds the size limit of ${sizeLimit}kB.',
                   style: const TextStyle(color: Colors.white),
                 ),
               ),
@@ -509,25 +507,30 @@ Map<String, ActionHandlerFn> _actionsMap = {
         }).toList());
 
         final variables = bloc.state.props.variables;
-        if (isSinglePick) {
-          // Single file selected
-          variables?.entries
-              .firstWhere((element) => element.key == selectedPageState)
-              .value
-              .set(finalFiles.first);
-        } else {
-          // Multiple files selected
-          variables?.entries
-              .firstWhere((element) => element.key == selectedPageState)
-              .value
-              .set(finalFiles);
-        }
+        final events = [
+          {
+            'variableName': selectedPageState,
+            'value': isSinglePick ? finalFiles.first : finalFiles,
+          }
+        ];
+
+        bloc.add(SetStateEvent(
+          events: events
+              .where((e) => variables?[e['variableName']] != null)
+              .map((e) => SingleSetStateEvent(
+                    variableName: e['variableName'],
+                    context: context,
+                    value: e['value'],
+                  ))
+              .toList(),
+          rebuildPage: rebuildPage,
+        ));
       } catch (e) {
         print('Error: $e');
       }
     }
 
-    return null;
+    return;
   },
   'Action.upload': ({required action, required context, enclosing}) async {
     final dataSourceId = action.data['dataSourceId'];
