@@ -33,9 +33,9 @@ extension HttpMethodProperties on HttpMethod {
 
 @JsonEnum()
 enum BodyType {
-  @JsonValue('json')
+  @JsonValue('JSON')
   json,
-  @JsonValue('multipart')
+  @JsonValue('MULTIPART')
   multipart
 }
 
