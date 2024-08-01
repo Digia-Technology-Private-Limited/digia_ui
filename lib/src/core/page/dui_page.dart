@@ -39,33 +39,28 @@ class DUIPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final Talker? talker = DeveloperConfig.instance.talker;
     Bloc.observer = TalkerBlocObserver(
-      talker: DeveloperConfig.instance.talker,
+      talker: talker,
       settings: TalkerBlocLoggerSettings(
         enabled: true,
-        printEvents: false,
-        printChanges: false,
-        printTransitions: false,
-        printCreations: false,
-        printClosings: false,
-        printEventFullData: false,
-        printStateFullData: false,
+        printEvents: true,
+        printChanges: true,
+        printTransitions: true,
+        printCreations: true,
+        printClosings: true,
+        printEventFullData: true,
+        printStateFullData: true,
         transitionFilter: (bloc, transition) {
           final currState = transition.currentState;
-
-          final pageStates = currState.props.variables;
-          if (pageStates != null || transition.event is SetStateEvent) {
-            pageStates.forEach((key, variable) {
+          if (currState is DUIPageState) {
+            currState.props.variables?.forEach((key, variable) {
               talker?.logTyped(PageStateLog(
                 variable.name,
                 variable.value,
                 variable.type,
               ));
             });
-          }
 
-          final pageParams = currState.props.inputArgs;
-          if (pageParams != null) {
-            pageParams.forEach((key, variable) {
+            currState.props.inputArgs?.forEach((key, variable) {
               talker?.logTyped(PageParamLog(
                 variable.name,
                 variable.value,

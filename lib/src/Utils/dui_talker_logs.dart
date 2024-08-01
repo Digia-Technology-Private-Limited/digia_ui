@@ -20,7 +20,7 @@ class PageParamLog extends TalkerLog {
   final String paramType;
 
   PageParamLog(this.paramName, this.paramValue, this.paramType)
-      : super('$paramName: $paramValue | $paramType');
+      : super('PageParam $paramName: $paramValue | $paramType');
 
   @override
   String get title => 'PAGE_PARAM';

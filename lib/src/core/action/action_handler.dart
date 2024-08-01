@@ -605,7 +605,8 @@ void _logActionDetails(Talker? talker, ActionProp action, BuildContext context,
       logData['pageId'] = action.data['pageUid'] ?? action.data['pageId'];
       logData['openAs'] =
           action.data['openAs'] ?? action.data['pageType'] ?? 'fullPage';
-      logData['pageArgs'] = action.data['pageArgs'] ?? action.data['args'];
+      logData['pageArgs'] = evalDynamic(
+          action.data['pageArgs'] ?? action.data['args'], context, enclosing);
       logData['waitForResult'] =
           NumDecoder.toBool(action.data['waitForResult']) ?? false;
       logData['style'] = action.data['style'];
@@ -653,7 +654,8 @@ void _logActionDetails(Talker? talker, ActionProp action, BuildContext context,
 
     case 'Action.openDialog':
       logData['dialogPageId'] = action.data['pageUid'] ?? action.data['pageId'];
-      logData['pageArgs'] = action.data['pageArgs'] ?? action.data['args'];
+      logData['pageArgs'] = evalDynamic(
+          action.data['pageArgs'] ?? action.data['args'], context, enclosing);
       logData['barrierDismissible'] =
           eval<bool>(action.data['barrierDismissible'], context: context);
       logData['barrierColor'] = eval<String>(action.data['barrierColor'],
@@ -681,7 +683,6 @@ void _logActionDetails(Talker? talker, ActionProp action, BuildContext context,
           final value = evalDynamic(event['value'], context, enclosing);
 
           if (variableName != null) {
-            // eventLog[variableName] = value;
             logData[variableName] = value;
           }
         }
