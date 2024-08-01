@@ -110,9 +110,7 @@ class DUIApp extends StatelessWidget {
 
           return AppStateProvider(
               state: DigiaUIClient.instance.appState.variables,
-              child: DUIPage(
-                  pageUid: initialRouteData.uid,
-                  talker: developerConfig?.talker));
+              child: DUIPage(pageUid: initialRouteData.uid));
         },
       ),
     );

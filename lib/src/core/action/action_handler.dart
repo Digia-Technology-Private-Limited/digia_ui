@@ -7,11 +7,14 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:json_schema2/json_schema2.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:talker/talker.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../digia_ui.dart';
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
 import '../../Utils/basic_shared_utils/lodash.dart';
 import '../../Utils/basic_shared_utils/num_decoder.dart';
+import '../../Utils/dui_talker_logs.dart';
 import '../../Utils/expr.dart';
 import '../../Utils/extensions.dart';
 import '../../Utils/util_functions.dart';
@@ -519,6 +522,10 @@ class ActionHandler {
         enclosing: enclosing);
 
     for (final action in actionFlow.actions) {
+      final Talker? talker = DeveloperConfig.instance.talker;
+
+      _logActionDetails(talker, action, context, enclosing);
+
       final executable = _actionsMap[action.type];
 
       if (!context.mounted) continue;
@@ -577,4 +584,131 @@ requestObjToMap(dynamic request) {
     'data': request.data,
     'queryParameters': request.queryParameters,
   };
+}
+
+void _logActionDetails(Talker? talker, ActionProp action, BuildContext context,
+    ExprContext? enclosing) {
+  Map<String, dynamic> logData = {
+    'type': action.type,
+  };
+
+  switch (action.type) {
+    case 'Action.rebuildPage':
+      break;
+
+    case 'Action.delay':
+      logData['durationInMs'] = eval<double>(action.data['durationInMs'],
+          context: context, enclosing: enclosing);
+      break;
+
+    case 'Action.navigateToPage':
+      logData['pageId'] = action.data['pageUid'] ?? action.data['pageId'];
+      logData['openAs'] =
+          action.data['openAs'] ?? action.data['pageType'] ?? 'fullPage';
+      logData['pageArgs'] = action.data['pageArgs'] ?? action.data['args'];
+      logData['waitForResult'] =
+          NumDecoder.toBool(action.data['waitForResult']) ?? false;
+      logData['style'] = action.data['style'];
+      logData['routeNametoRemoveUntil'] = eval<String>(
+          action.data['routeNametoRemoveUntil'],
+          context: context,
+          enclosing: enclosing);
+      break;
+
+    case 'Action.pop':
+      logData['maybe'] = eval<bool>(action.data['maybe'],
+              context: context, enclosing: enclosing) ??
+          false;
+      logData['result'] =
+          evalDynamic(action.data['result'], context, enclosing);
+      break;
+
+    case 'Action.popUntil':
+      logData['routeNameToPopUntil'] = eval<String>(
+          action.data['routeNameToPopUntil'],
+          context: context,
+          enclosing: enclosing);
+      break;
+
+    case 'Action.openUrl':
+      logData['url'] = eval<String>(action.data['url'],
+          context: context, enclosing: enclosing);
+      logData['launchMode'] =
+          DUIDecoder.toUriLaunchMode(action.data['launchMode']);
+      break;
+
+    case 'Action.controlDrawer':
+      logData['choice'] = eval<String>(action.data['choice'],
+          context: context, enclosing: enclosing);
+      break;
+
+    case 'Action.showToast':
+      logData['message'] = eval<String>(action.data['message'],
+          context: context, enclosing: enclosing);
+      logData['duration'] = eval<int>(action.data['duration'],
+              context: context, enclosing: enclosing) ??
+          2;
+      logData['style'] = action.data['style'];
+      break;
+
+    case 'Action.openDialog':
+      logData['dialogPageId'] = action.data['pageUid'] ?? action.data['pageId'];
+      logData['pageArgs'] = action.data['pageArgs'] ?? action.data['args'];
+      logData['barrierDismissible'] =
+          eval<bool>(action.data['barrierDismissible'], context: context);
+      logData['barrierColor'] = eval<String>(action.data['barrierColor'],
+          context: context, enclosing: enclosing);
+      break;
+
+    case 'Action.callRestApi':
+      logData['dataSourceId'] = action.data['dataSourceId'];
+      logData['args'] = action.data['args'];
+      logData['successCondition'] = action.data['successCondition'];
+      break;
+
+    case 'Action.handleDigiaMessage':
+      logData['name'] = action.data['name'];
+      logData['body'] = action.data['body'];
+      final payload = evalDynamic(action.data['body'], context, enclosing);
+      logData['payload'] = payload;
+      break;
+
+    case 'Action.setPageState':
+      final events = action.data['events'] as List?;
+      if (events != null) {
+        for (var event in events) {
+          final variableName = event['variableName'];
+          final value = evalDynamic(event['value'], context, enclosing);
+
+          if (variableName != null) {
+            // eventLog[variableName] = value;
+            logData[variableName] = value;
+          }
+        }
+      }
+      logData['rebuildPage'] =
+          NumDecoder.toBool(action.data['rebuildPage']) ?? true;
+      break;
+
+    case 'Action.setAppState':
+      logData['appStateChanges'] = (action.data['events'] as List).length;
+      break;
+
+    case 'Action.share':
+      logData['shareMessage'] = eval<String>(action.data['message'],
+          context: context, enclosing: enclosing);
+      logData['subject'] = eval<String>(action.data['subject'],
+          context: context, enclosing: enclosing);
+      break;
+
+    case 'Action.copyToClipBoard':
+      logData['clipboardMessage'] = eval<String>(action.data['message'],
+          context: context, enclosing: enclosing);
+      break;
+
+    default:
+      logData['additionalData'] = action.data;
+  }
+
+  talker?.logTyped(ActionLog(action.type, logData));
 }

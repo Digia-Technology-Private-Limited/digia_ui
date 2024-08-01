@@ -1,7 +1,9 @@
 import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/material.dart';
+import 'package:talker/talker.dart';
 
 import '../../digia_ui.dart';
+import '../Utils/dui_talker_logs.dart';
 import '../Utils/expr.dart';
 
 class AnalyticsHandler {
@@ -16,6 +18,9 @@ class AnalyticsHandler {
       required List<Map<String, dynamic>>? events,
       ExprContext? enclosing}) async {
     if (events == null) return;
+    final Talker? talker = DeveloperConfig.instance.talker;
+
+    _logAnalytics(talker, events, context, enclosing);
 
     final data = evalDynamic(events, context, enclosing);
 
@@ -29,5 +34,16 @@ class AnalyticsHandler {
     if (analyticEvents.isNotEmpty) {
       DigiaUIClient.instance.duiAnalytics?.onEvent(analyticEvents);
     }
+  }
+}
+
+void _logAnalytics(Talker? talker, List<Map<String, dynamic>>? events,
+    BuildContext context, ExprContext? enclosing) {
+  if (talker == null || events == null) return;
+
+  for (var event in events) {
+    String eventName = event['name'] ?? 'Unknown Event';
+    Map<String, dynamic> eventPayload = event['payload'] ?? {};
+    talker.logTyped(EventLog(eventName, eventPayload));
   }
 }
