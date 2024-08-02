@@ -43,7 +43,8 @@ void _logAnalytics(Talker? talker, List<Map<String, dynamic>>? events,
 
   for (var event in events) {
     String eventName = event['name'] ?? 'Unknown Event';
-    Map<String, dynamic> eventPayload = event['payload'] ?? {};
+    Map<String, dynamic> eventPayload =
+        evalDynamic(event['payload'] ?? {}, context, enclosing);
     talker.logTyped(EventLog(eventName, eventPayload));
   }
 }
