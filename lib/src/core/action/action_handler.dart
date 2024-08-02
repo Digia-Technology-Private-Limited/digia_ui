@@ -10,7 +10,6 @@ import 'package:share_plus/share_plus.dart';
 import 'package:talker/talker.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../../digia_ui.dart';
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
 import '../../Utils/basic_shared_utils/lodash.dart';
 import '../../Utils/basic_shared_utils/num_decoder.dart';
@@ -20,6 +19,7 @@ import '../../Utils/extensions.dart';
 import '../../Utils/util_functions.dart';
 import '../../components/DUIText/dui_text_style.dart';
 import '../../components/dui_widget_scope.dart';
+import '../../dui_dev_config.dart';
 import '../../types.dart';
 import '../analytics_handler.dart';
 import '../app_state_provider.dart';
