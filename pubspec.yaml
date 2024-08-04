@@ -29,7 +29,7 @@ scripts:
     build:
       - flutter clean
       - rm -rf pubspec.lock
-      - flutter pub get
+      - flutter pub get --no-example
       - $build
   format: dart format .
   fix: dart fix --apply
@@ -63,7 +63,6 @@ dependencies:
   flutter_html: ^3.0.0-beta.2
   digia_expr: ^0.0.12
   flutter_js: ^0.8.0
-  flutter_lints: ^2.0.0
   fluttertoast: ^8.2.5
   font_awesome_flutter: ^10.6.0
   getwidget: ^4.0.0
@@ -95,6 +94,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   json_serializable: ^6.7.0
+  flutter_lints: ^4.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
