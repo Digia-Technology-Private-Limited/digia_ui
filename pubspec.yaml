@@ -61,16 +61,15 @@ dependencies:
   flutter_blurhash: ^0.8.2
   flutter_cache_manager: ^3.3.0
   flutter_html: ^3.0.0-beta.2
-  digia_expr: ^0.0.11
+  digia_expr: ^0.0.12
   flutter_js: ^0.8.0
   flutter_lints: ^2.0.0
   fluttertoast: ^8.2.5
   font_awesome_flutter: ^10.6.0
   getwidget: ^4.0.0
   google_fonts: ^6.1.0
-  intl: ^0.18.1
+  intl: ^0.19.0
   json_annotation: ^4.9.0
-  json_schema2: ^2.0.4+8
   lottie: ^3.0.0
   octo_image: ^2.0.0
   package_info_plus: ^8.0.0

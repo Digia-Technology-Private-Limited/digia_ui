@@ -52,7 +52,6 @@ Map<String, dynamic> _$DUITabViewPropsToJson(DUITabViewProps instance) =>
       'indicatorSize': instance.indicatorSize,
       'viewportFraction': instance.viewportFraction,
       'tabBarPadding': instance.tabBarPadding,
-
       'tabPadding': instance.tabPadding,
       'selectedBgColor': instance.selectedBgColor,
       'nonSelectedBgColor': instance.nonSelectedBgColor,
@@ -61,8 +60,6 @@ Map<String, dynamic> _$DUITabViewPropsToJson(DUITabViewProps instance) =>
       'isIconAtLeft': instance.isIconAtLeft,
       'borderRadius': instance.borderRadius,
       'tabAlignment': instance.tabAlignment,
-
       'labelPadding': instance.labelPadding,
       'initialIndex': instance.initialIndex,
-
     };
