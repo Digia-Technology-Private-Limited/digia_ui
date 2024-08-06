@@ -18,7 +18,7 @@ class AnalyticsHandler {
       required List<Map<String, dynamic>>? events,
       ExprContext? enclosing}) async {
     if (events == null) return;
-    final Talker? talker = DeveloperConfig.instance.talker;
+    final Talker? talker = DeveloperConfig.instance.logger?.talker;
 
     _logAnalytics(talker, events, context, enclosing);
 

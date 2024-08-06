@@ -37,7 +37,7 @@ class DUIPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Talker? talker = DeveloperConfig.instance.talker;
+    final Talker? talker = DeveloperConfig.instance.logger?.talker;
     Bloc.observer = TalkerBlocObserver(
       talker: talker,
       settings: TalkerBlocLoggerSettings(
@@ -51,6 +51,7 @@ class DUIPage extends StatelessWidget {
         printStateFullData: true,
         transitionFilter: (bloc, transition) {
           final currState = transition.currentState;
+          talker?.logTyped(NavigationLog(currState.pageUid));
           if (currState is DUIPageState) {
             currState.props.variables?.forEach((key, variable) {
               talker?.logTyped(PageStateLog(

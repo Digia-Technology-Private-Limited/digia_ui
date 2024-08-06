@@ -1,4 +1,6 @@
-import 'package:talker_flutter/talker_flutter.dart';
+import 'package:talker/talker.dart';
+
+import 'dui_logger.dart';
 
 // class DeveloperConfig {
 //   //for android/ios
@@ -21,12 +23,12 @@ class DeveloperConfig {
   DeveloperConfig._internal({
     this.proxyUrl,
     this.enableTalker = false,
-    this.talker,
+    this.logger,
   });
 
   String? proxyUrl;
   bool enableTalker;
-  Talker? talker;
+  DUILogger? logger;
 
   static DeveloperConfig get instance => _instance;
 
@@ -37,6 +39,6 @@ class DeveloperConfig {
   }) {
     _instance.proxyUrl = proxyUrl;
     _instance.enableTalker = enableTalker;
-    _instance.talker = talker;
+    _instance.logger = DUILogger(talker);
   }
 }

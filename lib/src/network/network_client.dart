@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:talker_dio_logger/talker_dio_logger.dart';
 
 import '../../digia_ui.dart';
+import '../Utils/dui_talker_logs.dart';
 import 'api_response/base_response.dart';
 import 'core/types.dart';
 
@@ -84,7 +85,7 @@ class NetworkClient {
     // }
 
     final talkerDioLogger = TalkerDioLogger(
-      talker: developerConfig?.talker,
+      talker: developerConfig?.logger?.talker,
       addonId: 'digia',
       settings: TalkerDioLoggerSettings(
         printRequestHeaders: true,
@@ -99,6 +100,22 @@ class NetworkClient {
           return true;
         },
         responseFilter: (Response response) {
+          final requestOptions = response.requestOptions;
+          final statusCode = response.statusCode;
+          final headers = requestOptions.headers;
+          final queryParameters = requestOptions.uri.queryParameters;
+          final contentType = requestOptions.contentType ?? 'application/json';
+          final body = response.data;
+
+          developerConfig?.logger?.talker?.logTyped(NetworkLog(
+            url: requestOptions.path,
+            method: requestOptions.method,
+            statusCode: statusCode,
+            headers: headers as Map<String, dynamic>?,
+            queryParameters: queryParameters as Map<String, dynamic>?,
+            contentType: contentType,
+            body: body as Map<String, dynamic>?,
+          ));
           return true;
         },
         errorFilter: (DioException error) {
