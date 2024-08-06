@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -10,6 +12,7 @@ import 'basic_shared_utils/color_decoder.dart';
 import 'basic_shared_utils/dui_decoder.dart';
 import 'basic_shared_utils/lodash.dart';
 import 'basic_shared_utils/num_decoder.dart';
+
 
 class DUIConfigConstants {
   static const double fallbackSize = 14;
@@ -195,6 +198,42 @@ Color toColor(String colorToken) {
 
   return color;
 }
+
+
+  Gradient? toGradiant(Map<String, dynamic>? data, BuildContext context) {
+    if (data == null) return null;
+
+    final type = data['type'] as String?;
+
+    switch (type) {
+      case 'linear':
+        final colors = (data['colorList'] as List?)
+            ?.map((e) =>
+                makeColor(
+                    eval<String>(e['color'] as String?, context: context)) ??
+                Colors.transparent)
+            .nonNulls
+            .toList();
+
+        if (colors == null || colors.isEmpty) return null;
+
+        final stops = (data['colorList'] as List?)
+            ?.map((e) => NumDecoder.toDouble(e['stop']))
+            .nonNulls
+            .toList();
+
+        final rotationInRadians = NumDecoder.toInt(data['angle'])
+            .let((p0) => GradientRotation(p0 / 180.0 * math.pi));
+
+        return LinearGradient(
+            colors: colors,
+            stops: stops?.length == colors.length ? stops! : null,
+            transform: rotationInRadians);
+
+      default:
+        return null;
+    }
+  }
 
 Color? makeColor(dynamic color) {
   if (color == null) return null;
