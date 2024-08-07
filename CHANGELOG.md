@@ -2,6 +2,10 @@
 
 Digia Ui Sdk.
 
+## [0.0.6-beta.30] - 2024-08-07
+
+- Bug Fixes
+
 ## [0.0.6-beta.29] - 2024-07-26
 
 - Support for Custom Navigator
