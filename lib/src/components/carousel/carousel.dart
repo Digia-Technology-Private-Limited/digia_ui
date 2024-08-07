@@ -32,7 +32,7 @@ class DUICarousel extends StatelessWidget {
     final generateChildrenDynamically =
         data.dataRef.isNotEmpty && data.dataRef['kind'] != null;
 
-    List<Widget>? widgets;
+    List<Widget> widgets;
     if (generateChildrenDynamically) {
       widgets = items
           .mapIndexed((index, element) {
@@ -63,8 +63,11 @@ class DUICarousel extends StatelessWidget {
     return SizedBox(
       height: height,
       width: width,
-      child: CarouselSlider(
-        items: widgets,
+      child: CarouselSlider.builder(
+        itemCount: widgets.length,
+        itemBuilder: (context, index, realIndex) {
+          return widgets[index];
+        },
         options: CarouselOptions(
           scrollDirection: DUIDecoder.toAxis(props.direction),
           aspectRatio: double.tryParse(props.aspectRatio ?? '1.78') ?? 1.78,
