@@ -32,63 +32,84 @@ class DUICarousel extends StatelessWidget {
     final generateChildrenDynamically =
         data.dataRef.isNotEmpty && data.dataRef['kind'] != null;
 
-    List<Widget> widgets;
     if (generateChildrenDynamically) {
-      widgets = items
-          .mapIndexed((index, element) {
-            return children.map((child) {
-              return Container(
-                  height: props.childHeight?.toHeight(context),
-                  width: props.childWidth?.toWidth(context),
-                  padding: EdgeInsets.symmetric(horizontal: padding),
-                  child: BracketScope(
-                      variables: [('index', index), ('currentItem', element)],
-                      builder: DUIJsonWidgetBuilder(
-                          data: child, registry: registry!)));
-            });
-          })
-          .expand((e) => e)
-          .toList();
-    } else {
-      widgets = children.map((e) {
-        final builder = DUIJsonWidgetBuilder(data: e, registry: registry!);
-        return Container(
-            height: props.childHeight?.toHeight(context),
-            width: props.childWidth?.toWidth(context),
-            padding: EdgeInsets.symmetric(horizontal: padding),
-            child: builder.build(context));
-      }).toList();
-    }
-
-    return SizedBox(
-      height: height,
-      width: width,
-      child: CarouselSlider.builder(
-        itemCount: widgets.length,
-        itemBuilder: (context, index, realIndex) {
-          return widgets[index];
-        },
-        options: CarouselOptions(
-          scrollDirection: DUIDecoder.toAxis(props.direction),
-          aspectRatio: double.tryParse(props.aspectRatio ?? '1.78') ?? 1.78,
-          autoPlay: props.autoPlay ?? false,
-          autoPlayAnimationDuration: Duration(
-              milliseconds:
-                  int.tryParse(props.animationDuration ?? '800') ?? 800),
-          autoPlayCurve: Curves.linear,
-          autoPlayInterval: Duration(
-              milliseconds:
-                  int.tryParse(props.autoPlayInterval ?? '1600') ?? 1600),
-          enableInfiniteScroll: props.infiniteScroll ?? false,
-          initialPage: int.tryParse(props.initialPage ?? '1') ?? 1,
-          viewportFraction:
-              double.tryParse(props.viewportFraction ?? '0.8') ?? 0.8,
-          enlargeFactor: double.tryParse(props.enlargeFactor ?? '0.3') ?? 0.3,
-          enlargeCenterPage: props.enlargeCenterPage,
-          reverse: props.reverseScroll ?? false,
+      return SizedBox(
+        height: height,
+        width: width,
+        child: CarouselSlider.builder(
+          itemCount: items.length,
+          itemBuilder: (context, index, realIndex) {
+            final childToRepeat = children.first;
+            return Container(
+                height: props.childHeight?.toHeight(context),
+                width: props.childWidth?.toWidth(context),
+                padding: EdgeInsets.symmetric(horizontal: padding),
+                child: BracketScope(
+                    variables: [
+                      ('index', index),
+                      ('currentItem', items[index])
+                    ],
+                    builder: DUIJsonWidgetBuilder(
+                        data: childToRepeat, registry: registry!)));
+          },
+          options: CarouselOptions(
+            scrollDirection: DUIDecoder.toAxis(props.direction),
+            aspectRatio: double.tryParse(props.aspectRatio ?? '1.78') ?? 1.78,
+            autoPlay: props.autoPlay ?? false,
+            autoPlayAnimationDuration: Duration(
+                milliseconds:
+                    int.tryParse(props.animationDuration ?? '800') ?? 800),
+            autoPlayCurve: Curves.linear,
+            autoPlayInterval: Duration(
+                milliseconds:
+                    int.tryParse(props.autoPlayInterval ?? '1600') ?? 1600),
+            enableInfiniteScroll: props.infiniteScroll ?? false,
+            initialPage: int.tryParse(props.initialPage ?? '1') ?? 1,
+            viewportFraction:
+                double.tryParse(props.viewportFraction ?? '0.8') ?? 0.8,
+            enlargeFactor: double.tryParse(props.enlargeFactor ?? '0.3') ?? 0.3,
+            enlargeCenterPage: props.enlargeCenterPage,
+            reverse: props.reverseScroll ?? false,
+          ),
         ),
-      ),
-    );
+      );
+    } else {
+      return SizedBox(
+        height: height,
+        width: width,
+        child: CarouselSlider.builder(
+          itemCount: children.length,
+          itemBuilder: (context, index, realIndex) {
+            final builder = DUIJsonWidgetBuilder(
+                data: children[index], registry: registry!);
+            return Container(
+                height: props.childHeight?.toHeight(context),
+                width: props.childWidth?.toWidth(context),
+                padding: EdgeInsets.symmetric(horizontal: padding),
+                child: builder.build(context));
+          },
+          options: CarouselOptions(
+            scrollDirection: DUIDecoder.toAxis(props.direction),
+            aspectRatio: double.tryParse(props.aspectRatio ?? '1.78') ?? 1.78,
+            autoPlay: props.autoPlay ?? false,
+            autoPlayAnimationDuration: Duration(
+                milliseconds:
+                    int.tryParse(props.animationDuration ?? '800') ?? 800),
+            autoPlayCurve: Curves.linear,
+            autoPlayInterval: Duration(
+                milliseconds:
+                    int.tryParse(props.autoPlayInterval ?? '1600') ?? 1600),
+            enableInfiniteScroll: props.infiniteScroll ?? false,
+            initialPage: int.tryParse(props.initialPage ?? '1') ?? 1,
+            viewportFraction:
+                double.tryParse(props.viewportFraction ?? '0.8') ?? 0.8,
+            enlargeFactor: double.tryParse(props.enlargeFactor ?? '0.3') ?? 0.3,
+            enlargeCenterPage: props.enlargeCenterPage,
+            reverse: props.reverseScroll ?? false,
+          ),
+        ),
+      );
+    }
   }
 
   Widget _emptyChildWidget() {
