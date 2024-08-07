@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 import '../../../digia_ui.dart';
 // import '../../Utils/basic_shared_utils/lodash.dart';
@@ -137,35 +139,45 @@ class _DZStepperState extends State<DZStepper> {
       itemLength -= _stepDimension;
     }
 
-    return Stack(
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(left: _V_TEXT_LEFT_PADDING),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    return IntrinsicHeight(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Column(
             children: [
-              DUIText(dzStep.title!),
-              if (dzStep.subtitle != null) ...{
-                const SizedBox(height: _V_TEXT_IN_BETWEEN_PADDING),
-                DUIText(dzStep.subtitle!),
-              },
-              // if (index < _stepsLength - 1)
-              //   const SizedBox(height: _V_TEXT_BOTTOM_PADDING)
+            _buildStepIcon(index),
+              if (index < (_stepsLength - 1))
+                Expanded( 
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 0),
+                    child: _buildProgressBar(index, itemLength),
+                  ),
+                ),
             ],
           ),
-        ),
-        Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            _buildStepIcon(index),
-            if (index < (_stepsLength - 1))
-              Padding(
-                padding: const EdgeInsets.only(left: 0),
-                child: _buildProgressBar(index, itemLength),
+          const SizedBox(
+            width: 4,
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                   DUIText(dzStep.title!),
+                  if (dzStep.subtitle != null) ...{
+                    const SizedBox(height: _V_TEXT_IN_BETWEEN_PADDING),
+                    DUIText(dzStep.subtitle!),
+                  },
+                  if (index < _stepsLength - 1)
+                    const SizedBox(height: _V_TEXT_BOTTOM_PADDING)
+                ],
               ),
-          ],
-        ),
-      ],
+            ),
+          ),
+          
+        ],
+      ),
     );
   }
 
@@ -231,7 +243,7 @@ class _DZStepperState extends State<DZStepper> {
 
   Widget _buildProgressBar(int index, double itemLength) {
     return Container(
-      height: direction == Axis.vertical ? itemLength : 2,
+      // height: direction == Axis.vertical ? itemLength : 2,
       width: direction == Axis.horizontal ? itemLength : 2,
       margin: EdgeInsets.symmetric(
         horizontal: direction == Axis.horizontal ? 2 : 0,
@@ -333,7 +345,7 @@ class _DZStepperState extends State<DZStepper> {
     final textPainter =
         TextPainter(text: span, textDirection: TextDirection.ltr);
     textPainter.layout(
-        maxWidth: MediaQuery.of(context).size.width - widthToRemove);
+        maxWidth: MediaQuery.of(context).size.width - 132);
     final int numLines = textPainter.computeLineMetrics().length;
     return numLines;
   }
