@@ -149,8 +149,8 @@ class _DZStepperState extends State<DZStepper> {
                 const SizedBox(height: _V_TEXT_IN_BETWEEN_PADDING),
                 DUIText(dzStep.subtitle!),
               },
-              if (index < _stepsLength - 1)
-                const SizedBox(height: _V_TEXT_BOTTOM_PADDING)
+              // if (index < _stepsLength - 1)
+              //   const SizedBox(height: _V_TEXT_BOTTOM_PADDING)
             ],
           ),
         ),
