@@ -345,7 +345,7 @@ class _DZStepperState extends State<DZStepper> {
     final textPainter =
         TextPainter(text: span, textDirection: TextDirection.ltr);
     textPainter.layout(
-        maxWidth: MediaQuery.of(context).size.width - 132);
+        maxWidth: MediaQuery.of(context).size.width - widthToRemove);
     final int numLines = textPainter.computeLineMetrics().length;
     return numLines;
   }
