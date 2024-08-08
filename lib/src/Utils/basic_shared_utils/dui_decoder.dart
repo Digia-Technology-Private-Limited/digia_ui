@@ -77,8 +77,10 @@ class DUIDecoder {
     return FontWeight.normal;
   }
 
-  static FontStyle toFontStyle(dynamic style) =>
-      switch (style) { 'italic' => FontStyle.italic, _ => FontStyle.normal };
+  static FontStyle toFontStyle(dynamic style) => switch (style) {
+        'italic' || true => FontStyle.italic,
+        _ => FontStyle.normal
+      };
 
   static TextAlign toTextAlign(dynamic alignment) {
     switch (alignment) {

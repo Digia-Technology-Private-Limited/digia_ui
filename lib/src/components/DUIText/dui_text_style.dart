@@ -1,10 +1,10 @@
-import '../../Utils/dui_font.dart';
-
 part 'dui_text_style.json.dart';
 
 class DUIFontToken {
   String? value;
-  DUIFont? font;
+  Map<String, dynamic>? font;
+
+  DUIFontToken({this.value, this.font});
 }
 
 class DUITextStyle {
