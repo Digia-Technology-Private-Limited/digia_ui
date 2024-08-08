@@ -19,6 +19,7 @@ class DUICarouselProps {
   final String? enlargeFactor;
   final String? childPadding;
   final bool? reverseScroll;
+  final String? direction;
 
   DUICarouselProps(
     this.height,
@@ -36,6 +37,7 @@ class DUICarouselProps {
     this.enlargeFactor,
     this.childPadding,
     this.reverseScroll,
+    this.direction,
   );
 
   factory DUICarouselProps.fromJson(Map<String, dynamic> json) =>
