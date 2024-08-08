@@ -42,9 +42,9 @@ class DUIPage extends StatelessWidget {
       talker: talker,
       settings: TalkerBlocLoggerSettings(
         enabled: true,
-        printEvents: false,
+        printEvents: true,
         printChanges: false,
-        printTransitions: false,
+        printTransitions: true,
         printCreations: false,
         printClosings: false,
         printEventFullData: false,
@@ -54,7 +54,7 @@ class DUIPage extends StatelessWidget {
           if (currState is DUIPageState) {
             currState.props.variables?.forEach((key, variable) {
               talker?.logTyped(PageStateLog(
-                currState.pageUid,
+                bloc.state.pageUid,
                 variable.name,
                 variable.value,
                 variable.type,
@@ -63,7 +63,7 @@ class DUIPage extends StatelessWidget {
 
             currState.props.inputArgs?.forEach((key, variable) {
               talker?.logTyped(PageParamLog(
-                currState.pageUid,
+                bloc.state.pageUid,
                 variable.name,
                 variable.value,
                 variable.type,
@@ -72,8 +72,28 @@ class DUIPage extends StatelessWidget {
           }
           return true;
         },
-        eventFilter: (bloc, event) =>
-            bloc.runtimeType.toString() == 'DUIPageBloc',
+        eventFilter: (bloc, event) {
+          if (event is BackPressEvent) {
+            bloc.state.props.variables?.forEach((key, variable) {
+              talker?.logTyped(PageStateLog(
+                bloc.state.pageUid,
+                variable.name,
+                variable.value,
+                variable.type,
+              ));
+            });
+
+            bloc.state.props.inputArgs?.forEach((key, variable) {
+              talker?.logTyped(PageParamLog(
+                bloc.state.pageUid,
+                variable.name,
+                variable.value,
+                variable.type,
+              ));
+            });
+          }
+          return true;
+        },
       ),
     );
     return BlocProvider(
