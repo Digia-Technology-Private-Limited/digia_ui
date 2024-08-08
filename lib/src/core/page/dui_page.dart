@@ -42,19 +42,19 @@ class DUIPage extends StatelessWidget {
       talker: talker,
       settings: TalkerBlocLoggerSettings(
         enabled: true,
-        printEvents: true,
-        printChanges: true,
-        printTransitions: true,
-        printCreations: true,
-        printClosings: true,
-        printEventFullData: true,
-        printStateFullData: true,
+        printEvents: false,
+        printChanges: false,
+        printTransitions: false,
+        printCreations: false,
+        printClosings: false,
+        printEventFullData: false,
+        printStateFullData: false,
         transitionFilter: (bloc, transition) {
           final currState = transition.currentState;
-          talker?.logTyped(NavigationLog(currState.pageUid));
           if (currState is DUIPageState) {
             currState.props.variables?.forEach((key, variable) {
               talker?.logTyped(PageStateLog(
+                currState.pageUid,
                 variable.name,
                 variable.value,
                 variable.type,
@@ -63,6 +63,7 @@ class DUIPage extends StatelessWidget {
 
             currState.props.inputArgs?.forEach((key, variable) {
               talker?.logTyped(PageParamLog(
+                currState.pageUid,
                 variable.name,
                 variable.value,
                 variable.type,

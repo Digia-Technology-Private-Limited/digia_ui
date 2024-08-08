@@ -100,25 +100,30 @@ class NetworkClient {
           return true;
         },
         responseFilter: (Response response) {
-          final requestOptions = response.requestOptions;
-          final statusCode = response.statusCode;
-          final headers = requestOptions.headers;
-          final queryParameters = requestOptions.uri.queryParameters;
-          final contentType = requestOptions.contentType ?? 'application/json';
-          final body = response.data;
-
           developerConfig?.logger?.talker?.logTyped(NetworkLog(
-            url: requestOptions.path,
-            method: requestOptions.method,
-            statusCode: statusCode,
-            headers: headers as Map<String, dynamic>?,
-            queryParameters: queryParameters as Map<String, dynamic>?,
-            contentType: contentType,
-            body: body as Map<String, dynamic>?,
+            url: response.requestOptions.path,
+            method: response.requestOptions.method,
+            statusCode: response.statusCode,
+            requestHeaders: response.requestOptions.headers,
+            responseHeaders: response.headers.map,
+            queryParameters: response.requestOptions.queryParameters,
+            contentType: response.requestOptions.contentType ?? '',
+            requestBody: response.requestOptions.data,
+            responseBody: response.data,
           ));
           return true;
         },
         errorFilter: (DioException error) {
+          developerConfig?.logger?.talker?.logTyped(NetworkLog(
+              url: error.requestOptions.path,
+              method: error.requestOptions.method,
+              requestBody: error.requestOptions.data,
+              responseBody: error.response?.data,
+              requestHeaders: error.requestOptions.headers,
+              responseHeaders: error.response?.headers.map,
+              statusCode: error.response?.statusCode,
+              queryParameters: error.requestOptions.queryParameters,
+              contentType: error.requestOptions.contentType ?? ''));
           return true;
         },
       ),

@@ -41,7 +41,7 @@ Map<String, ActionHandlerFn> _actionsMap = {
       {required action, required context, enclosing, logger}) {
     final bloc = context.tryRead<DUIPageBloc>();
     bloc?.add(RebuildPageEvent(context));
-    logger?.talker?.logTyped(ActionLog('Action.rebuildPage', {}));
+    logger?.talker?.logTyped(ActionLog(context, 'Action.rebuildPage', {}));
     return null;
   },
   'Action.delay': (
@@ -55,7 +55,7 @@ Map<String, ActionHandlerFn> _actionsMap = {
       log('Wait Duration is null');
     }
 
-    logger?.talker?.logTyped(ActionLog('Action.delay', {
+    logger?.talker?.logTyped(ActionLog(context, 'Action.delay', {
       'durationInMs': durationInMs,
     }));
     return null;
@@ -139,7 +139,7 @@ Map<String, ActionHandlerFn> _actionsMap = {
           }, enclosing: enclosing));
     }
 
-    logger?.talker?.logTyped(ActionLog('Action.navigateToPage', {
+    logger?.talker?.logTyped(ActionLog(context, 'Action.navigateToPage', {
       'pageId': pageUId,
       'openAs': openAs,
       'pageArgs': evaluatedArgs,
@@ -166,7 +166,7 @@ Map<String, ActionHandlerFn> _actionsMap = {
 
     Navigator.of(context).pop(result);
 
-    logger?.talker?.logTyped(ActionLog('Action.pop', {
+    logger?.talker?.logTyped(ActionLog(context, 'Action.pop', {
       'maybe': maybe,
       'result': result,
     }));
@@ -183,7 +183,7 @@ Map<String, ActionHandlerFn> _actionsMap = {
 
     Navigator.popUntil(context, ModalRoute.withName(routeNametoPopUntil));
 
-    logger?.talker?.logTyped(ActionLog('Action.popUntil', {
+    logger?.talker?.logTyped(ActionLog(context, 'Action.popUntil', {
       'routeNameToPopUntil': routeNametoPopUntil,
     }));
 
@@ -195,7 +195,7 @@ Map<String, ActionHandlerFn> _actionsMap = {
         eval<String>(action.data['url'], context: context, enclosing: enclosing)
             .let(Uri.parse);
     final canOpenUrl = url != null && await canLaunchUrl(url);
-    logger?.talker?.logTyped(ActionLog('Action.openUrl', {
+    logger?.talker?.logTyped(ActionLog(context, 'Action.openUrl', {
       'url': action.data['url'],
       'launchMode': action.data['launchMode'],
     }));
@@ -219,7 +219,7 @@ Map<String, ActionHandlerFn> _actionsMap = {
       scaffold?.closeDrawer();
       scaffold?.closeEndDrawer();
     }
-    logger?.talker?.logTyped(ActionLog('Action.controlDrawer', {
+    logger?.talker?.logTyped(ActionLog(context, 'Action.controlDrawer', {
       'choice': choice,
     }));
     return;
@@ -263,6 +263,7 @@ Map<String, ActionHandlerFn> _actionsMap = {
       toastDuration: Duration(seconds: duration ?? 2),
     );
     logger?.talker?.logTyped(ActionLog(
+      context,
       'Action.showToast',
       {'message': message, 'duration': duration, 'style': style},
     ));
@@ -320,7 +321,7 @@ Map<String, ActionHandlerFn> _actionsMap = {
           }, enclosing: enclosing));
     }
 
-    logger?.talker?.logTyped(ActionLog('Action.openDialog', {
+    logger?.talker?.logTyped(ActionLog(context, 'Action.openDialog', {
       'pageId': pageUId,
       'pageArgs': evaluatedArgs,
       'barrierDismissible': barrierDismissible,
@@ -395,7 +396,7 @@ Map<String, ActionHandlerFn> _actionsMap = {
               variables: {'response': response}, enclosing: enclosing));
     });
 
-    logger?.talker?.logTyped(ActionLog('Action.callRestApi', {
+    logger?.talker?.logTyped(ActionLog(context, 'Action.callRestApi', {
       'dataSourceId': dataSourceId,
       'args': args,
       'successCondition': action.data['successCondition'],
@@ -411,6 +412,10 @@ Map<String, ActionHandlerFn> _actionsMap = {
 
     print('Message Handled: $name');
     print('Message Body: $payload');
+    logger?.talker?.logTyped(ActionLog(context, 'Action.handleDigiaMessage', {
+      'name': name,
+      'body': payload,
+    }));
 
     final handler = DUIWidgetScope.maybeOf(context)?.onMessageReceived;
     if (handler == null) return;
@@ -426,12 +431,6 @@ Map<String, ActionHandlerFn> _actionsMap = {
             context: context, actionFlow: actionFlow, enclosing: enclosing);
       },
     ));
-
-    logger?.talker?.logTyped(ActionLog('Action.handleDigiaMessage', {
-      'name': name,
-      'body': payload,
-    }));
-
     return;
   },
   'Action.setPageState': (
@@ -471,6 +470,7 @@ Map<String, ActionHandlerFn> _actionsMap = {
     }
 
     logger?.talker?.logTyped(ActionLog(
+      context,
       'Action.setPageState',
       {
         ...pageStateMap,
@@ -507,6 +507,7 @@ Map<String, ActionHandlerFn> _actionsMap = {
           ?.add(SetStateEvent(events: [], rebuildPage: true));
 
       logger?.talker?.logTyped(ActionLog(
+        context,
         'Action.setAppState',
         {
           ...appStateMap,
@@ -548,7 +549,7 @@ Map<String, ActionHandlerFn> _actionsMap = {
         Share.share(message, subject: subject);
       }
 
-      logger?.talker?.logTyped(ActionLog('Action.share', {
+      logger?.talker?.logTyped(ActionLog(context, 'Action.share', {
         'message': message,
         'subject': subject,
       }));
@@ -601,7 +602,7 @@ Map<String, ActionHandlerFn> _actionsMap = {
           toastDuration: const Duration(seconds: 2),
         );
       }
-      logger?.talker?.logTyped(ActionLog('Action.copyToClipBoard', {
+      logger?.talker?.logTyped(ActionLog(context, 'Action.copyToClipBoard', {
         'message': message,
       }));
       return;

@@ -1,6 +1,10 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:talker/talker.dart';
+
+import '../core/page/dui_page_bloc.dart';
+import 'extensions.dart';
 
 dynamic _encodeValue(dynamic val) {
   if (val == null) return null;
@@ -10,64 +14,88 @@ dynamic _encodeValue(dynamic val) {
 }
 
 class NetworkLog extends TalkerLog {
-  final String url;
-  final String method;
+  final String? url;
+  final String? method;
   final int? statusCode;
-  final Map<String, dynamic>? headers;
+  final Map<String, dynamic>? requestHeaders;
+  final Map<String, dynamic>? responseHeaders;
   final Map<String, dynamic>? queryParameters;
-  final String contentType;
-  final Map<String, dynamic>? body;
+  final String? contentType;
+  final dynamic requestBody;
+  final dynamic responseBody;
 
   NetworkLog({
-    required this.url,
-    required this.method,
+    this.url,
+    this.method,
     this.statusCode,
-    this.headers,
+    this.requestHeaders,
+    this.responseHeaders,
     this.queryParameters,
-    this.contentType = '',
-    this.body,
+    this.contentType,
+    this.requestBody,
+    this.responseBody,
   }) : super('''URL: $url | 
             Method: $method | 
             Status Code: ${statusCode ?? 'N/A'} | 
-            Headers: ${_encodeValue(headers)} | 
+            RequestHeaders: ${_encodeValue(requestHeaders)} |
+            ResponseHeaders: ${_encodeValue(responseHeaders)} | 
             Query Parameters: ${_encodeValue(queryParameters)} | 
             Content Type: $contentType | 
-            Body: ${_encodeValue(body)}''');
+            RequestBody: ${_encodeValue(requestBody)} |
+            ResponseBody: ${_encodeValue(responseBody)}''');
 
   @override
   String get title => 'NETWORK';
 }
 
 class PageStateLog extends TalkerLog {
+  final String pageName;
   final String stateName;
   final dynamic stateValue;
   final String stateType;
 
-  PageStateLog(this.stateName, this.stateValue, this.stateType)
-      : super('$stateName: ${_encodeValue(stateValue)} | $stateType');
+  PageStateLog(this.pageName, this.stateName, this.stateValue, this.stateType)
+      : super(
+            'Page: $pageName | PageState: $stateName | Value: ${_encodeValue(stateValue)} | Type: $stateType');
 
   @override
   String get title => 'PAGE_STATE';
 }
 
 class PageParamLog extends TalkerLog {
+  final String pageName;
   final String paramName;
   final dynamic paramValue;
   final String paramType;
 
-  PageParamLog(this.paramName, this.paramValue, this.paramType)
-      : super('PageParam $paramName: ${_encodeValue(paramValue)} | $paramType');
+  PageParamLog(this.pageName, this.paramName, this.paramValue, this.paramType)
+      : super(
+            'Page: $pageName | PageParameter: $paramName | Value: ${_encodeValue(paramValue)} | Type: $paramType');
 
   @override
   String get title => 'PAGE_PARAM';
 }
 
+class AppStateLog extends TalkerLog {
+  final String name;
+  final dynamic value;
+  final String type;
+
+  AppStateLog(this.name, this.value, this.type)
+      : super('AppState: $name | Value: ${_encodeValue(value)} | Type: $type');
+
+  @override
+  String get title => 'APP_STATE';
+}
+
 class ActionLog extends TalkerLog {
+  final BuildContext context;
   final String actionType;
   final Map<String, dynamic> actionData;
 
-  ActionLog(this.actionType, this.actionData)
-      : super('$actionType: ${jsonEncode(actionData)}');
+  ActionLog(this.context, this.actionType, this.actionData)
+      : super(
+            'Page: ${context.tryRead<DUIPageBloc>()?.state.pageUid} | Action: $actionType | Data: ${jsonEncode(actionData)}');
 
   @override
   String get title => 'ACTION';
@@ -82,13 +110,4 @@ class EventLog extends TalkerLog {
 
   @override
   String get title => 'EVENT';
-}
-
-class NavigationLog extends TalkerLog {
-  final String pageName;
-
-  NavigationLog(this.pageName) : super(pageName);
-
-  @override
-  String get title => 'NAVIGATION';
 }
