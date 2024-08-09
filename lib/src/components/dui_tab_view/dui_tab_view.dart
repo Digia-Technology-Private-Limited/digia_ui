@@ -75,7 +75,9 @@ class _DUITabViewState extends State<DUITabView> {
                         DUIIconBuilder.emptyIconWidget();
                     return Column(children: [
                       icon,
-                      Text(widget.children[index].props['title'] ?? ''),
+                      Text(eval<String>(widget.children[index].props['title'],
+                              context: context) ??
+                          ''),
                     ]);
                   }),
                 ),
@@ -118,7 +120,9 @@ class _DUITabViewState extends State<DUITabView> {
                         DUIIconBuilder.emptyIconWidget();
                     return Column(children: [
                       icon,
-                      Text(widget.children[index].props['title'] ?? ''),
+                      Text(eval<String>(widget.children[index].props['title'],
+                              context: context) ??
+                          ''),
                     ]);
                   }),
                 ),
