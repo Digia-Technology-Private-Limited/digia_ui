@@ -96,10 +96,8 @@ ExtraLinesData? _toExtraLinesData(
         eval<int>(dashArray['gap'], context: context)!, (p0, p1) => [p0, p1]);
   }
 
-  List<HorizontalLine>? horizontalLines = eval<List>(
-          props.valueFor(keyPath: 'extraLines.horizontalLines'),
-          context: context)
-      ?.map((e) {
+  List<HorizontalLine>? horizontalLines =
+      props['extraLines']['horizontalLine']?.map((e) {
     return HorizontalLine(
       y: eval<double>(e['linePoint'], context: context) ?? 0,
       color: makeColor(eval<String>(e['color'], context: context)),
@@ -108,10 +106,8 @@ ExtraLinesData? _toExtraLinesData(
     );
   }).toList();
 
-  List<VerticalLine>? verticalLines = eval<List>(
-          props.valueFor(keyPath: 'extraLines.verticalLines'),
-          context: context)
-      ?.map((e) {
+  List<VerticalLine>? verticalLines =
+      props['extraLines']['verticalLines']?.map((e) {
     return VerticalLine(
       x: eval<double>(e['linePoint'], context: context) ?? 0,
       color: makeColor(eval<String>(e['color'], context: context)),
