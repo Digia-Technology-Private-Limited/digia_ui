@@ -2,6 +2,10 @@
 
 Digia Ui Sdk.
 
+## [0.0.6-beta.32] - 2024-08-09
+
+- Bug Fixes (Stepper Alignment)
+
 ## [0.0.6-beta.31] - 2024-08-08
 
 - Bug Fixes (TabView reverted)
