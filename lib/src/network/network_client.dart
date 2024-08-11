@@ -7,7 +7,6 @@ import 'package:flutter/foundation.dart';
 import 'package:talker_dio_logger/talker_dio_logger.dart';
 
 import '../../digia_ui.dart';
-import '../Utils/dui_talker_logs.dart';
 import 'api_response/base_response.dart';
 import 'core/types.dart';
 
@@ -96,34 +95,22 @@ class NetworkClient {
         printErrorData: true,
         printErrorHeaders: false,
         printErrorMessage: true,
-        requestFilter: (RequestOptions requestOptions) {
-          return true;
-        },
         responseFilter: (Response response) {
-          developerConfig?.logger?.talker?.logTyped(NetworkLog(
+          developerConfig?.logger?.log(NetworkLog(
             url: response.requestOptions.path,
-            method: response.requestOptions.method,
-            statusCode: response.statusCode,
-            requestHeaders: response.requestOptions.headers,
-            responseHeaders: response.headers.map,
-            queryParameters: response.requestOptions.queryParameters,
-            contentType: response.requestOptions.contentType ?? '',
-            requestBody: response.requestOptions.data,
-            responseBody: response.data,
+            requestOptions: response.requestOptions,
+            response: response,
+            type: NetworkLogType.success,
           ));
           return true;
         },
         errorFilter: (DioException error) {
-          developerConfig?.logger?.talker?.logTyped(NetworkLog(
-              url: error.requestOptions.path,
-              method: error.requestOptions.method,
-              requestBody: error.requestOptions.data,
-              responseBody: error.response?.data,
-              requestHeaders: error.requestOptions.headers,
-              responseHeaders: error.response?.headers.map,
-              statusCode: error.response?.statusCode,
-              queryParameters: error.requestOptions.queryParameters,
-              contentType: error.requestOptions.contentType ?? ''));
+          developerConfig?.logger?.log(NetworkLog(
+            url: error.requestOptions.path,
+            requestOptions: error.requestOptions,
+            err: error,
+            type: NetworkLogType.error,
+          ));
           return true;
         },
       ),
