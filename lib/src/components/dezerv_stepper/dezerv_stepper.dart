@@ -145,9 +145,12 @@ class _DZStepperState extends State<DZStepper> {
         children: [
           Column(
             children: [
-            _buildStepIcon(index),
+              const SizedBox(
+                height: 3,
+              ),
+              _buildStepIcon(index),
               if (index < (_stepsLength - 1))
-                Expanded( 
+                Expanded(
                   child: Padding(
                     padding: const EdgeInsets.only(left: 0),
                     child: _buildProgressBar(index, itemLength),
@@ -160,11 +163,11 @@ class _DZStepperState extends State<DZStepper> {
           ),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.only(left: 0),
+              padding: const EdgeInsets.only(left: 12),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                   DUIText(dzStep.title!),
+                  DUIText(dzStep.title!),
                   if (dzStep.subtitle != null) ...{
                     const SizedBox(height: _V_TEXT_IN_BETWEEN_PADDING),
                     DUIText(dzStep.subtitle!),
@@ -175,7 +178,6 @@ class _DZStepperState extends State<DZStepper> {
               ),
             ),
           ),
-          
         ],
       ),
     );
