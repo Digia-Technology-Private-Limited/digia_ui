@@ -1,5 +1,3 @@
-import 'dart:math' as math;
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
@@ -44,7 +42,7 @@ class DUIContainer2 extends StatelessWidget {
         eval<double>(props.decorationImage?.opacity, context: context);
     BoxShape shape =
         props.shape == 'circle' ? BoxShape.circle : BoxShape.rectangle;
-    final gradiant = _toGradiant(props.gradiant, context);
+    final gradiant = toGradiant(props.gradiant, context);
     return Container(
       width: width,
       height: height,
@@ -81,43 +79,5 @@ class DUIContainer2 extends StatelessWidget {
           minWidth: props.minWidth?.toWidth(context) ?? 0),
       child: child.let((p0) => DUIWidget(data: p0)),
     );
-  }
-
-  Gradient? _toGradiant(Map<String, dynamic>? data, BuildContext context) {
-    if (data == null) return null;
-
-    final type = data['type'] as String?;
-
-    switch (type) {
-      case 'linear':
-        final colors = (data['colorList'] as List?)
-            ?.map((e) => makeColor(
-                eval<String>(e['color'] as String?, context: context)))
-            .nonNulls
-            .toList();
-
-        if (colors == null || colors.isEmpty) return null;
-
-        final stops = (data['colorList'] as List?)
-            ?.map((e) => NumDecoder.toDouble(e['stop']))
-            .nonNulls
-            .toList();
-
-        final rotationInRadians = NumDecoder.toInt(data['angle'])
-            .let((p0) => GradientRotation(p0 / 180.0 * math.pi));
-
-        final begin = DUIDecoder.toAlignment([data['begin']]);
-        final end = DUIDecoder.toAlignment(data['end']);
-
-        return LinearGradient(
-            begin: begin ?? Alignment.centerLeft,
-            end: end ?? Alignment.centerRight,
-            colors: colors,
-            stops: stops?.length == colors.length ? stops! : null,
-            transform: rotationInRadians);
-
-      default:
-        return null;
-    }
   }
 }
