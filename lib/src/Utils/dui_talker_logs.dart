@@ -26,8 +26,9 @@ class PageLog extends TalkerLog {
   List<(String, dynamic, String)> params;
   List<(String, dynamic, String)> states;
   String pageUid;
+  String eventName;
 
-  PageLog(this.params, this.states, this.pageUid) : super('');
+  PageLog(this.params, this.states, this.pageUid, this.eventName) : super('');
 
   @override
   String get title => 'PAGE_LOG';

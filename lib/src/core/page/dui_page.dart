@@ -48,16 +48,11 @@ class DUIPage extends StatelessWidget {
         printClosings: false,
         printEventFullData: false,
         printStateFullData: false,
-        transitionFilter: (bloc, transition) {
-          if (bloc is DUIPageBloc) {
-            _logPageState(bloc, transition.currentState, logger);
-          }
-          return true;
-        },
         eventFilter: (bloc, event) {
           if (bloc is DUIPageBloc) {
-            if (event is BackPressEvent || event is PageLoadedEvent) {
-              _logPageState(bloc, bloc.state, logger);
+            if (event is BackPressEvent || event is InitPageEvent) {
+              _logPageState(
+                  bloc, bloc.state, logger, event.runtimeType.toString());
             }
           }
           return true;
@@ -123,7 +118,8 @@ class _DUIScreenState extends State<_DUIScreen> {
   }
 }
 
-_logPageState(DUIPageBloc bloc, DUIPageState? state, DUILogger? logger) {
+_logPageState(DUIPageBloc bloc, DUIPageState? state, DUILogger? logger,
+    String eventName) {
   if (state == null) {
     return;
   }
@@ -138,7 +134,7 @@ _logPageState(DUIPageBloc bloc, DUIPageState? state, DUILogger? logger) {
   final params = _mapToList(inputArgs);
   final states = _mapToList(variables);
 
-  logger?.log(PageLog(params, states, state.pageUid));
+  logger?.log(PageLog(params, states, state.pageUid, eventName));
 }
 
 List<(String, dynamic, String)> _mapToList(Map<String, dynamic>? map) {
