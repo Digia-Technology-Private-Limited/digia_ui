@@ -26,6 +26,8 @@ class DUILineChartBuilder extends DUIWidgetBuilder {
   @override
   Widget build(BuildContext context) {
     final LineChartData chartData = LineChartData(
+      gridData: FlGridData(show: false),
+      borderData: FlBorderData(show: false),
       extraLinesData: _toExtraLinesData(
           context, tryCast<Map<String, dynamic>>(data.props['extraLines'])),
       titlesData: const FlTitlesData(show: false),
@@ -85,9 +87,8 @@ ExtraLinesData? _toExtraLinesData(
     BuildContext context, Map<String, dynamic>? props) {
   if (props == null || props.isEmpty) return null;
 
-  final showExtraLines = eval<bool>(props.valueFor(keyPath: 'extralines.show'),
-          context: context) ??
-      false;
+  final showExtraLines =
+      eval<bool>(props.valueFor(keyPath: 'show'), context: context) ?? false;
 
   if (!showExtraLines) return null;
 
@@ -96,8 +97,7 @@ ExtraLinesData? _toExtraLinesData(
         eval<int>(dashArray['gap'], context: context)!, (p0, p1) => [p0, p1]);
   }
 
-  List<HorizontalLine>? horizontalLines =
-      props['extraLines']['horizontalLine']?.map((e) {
+  List<HorizontalLine>? horizontalLines = props['horizontalLines']?.map((e) {
     return HorizontalLine(
       y: eval<double>(e['linePoint'], context: context) ?? 0,
       color: makeColor(eval<String>(e['color'], context: context)),
@@ -106,8 +106,7 @@ ExtraLinesData? _toExtraLinesData(
     );
   }).toList();
 
-  List<VerticalLine>? verticalLines =
-      props['extraLines']['verticalLines']?.map((e) {
+  List<VerticalLine>? verticalLines = props['verticalLines']?.map((e) {
     return VerticalLine(
       x: eval<double>(e['linePoint'], context: context) ?? 0,
       color: makeColor(eval<String>(e['color'], context: context)),
