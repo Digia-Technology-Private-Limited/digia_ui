@@ -7,7 +7,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:json_schema2/json_schema2.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -656,16 +655,6 @@ class ActionHandler {
 
     return null;
   }
-}
-
-bool validateSchema(Map<String, dynamic>? args, Map<String, dynamic> def) {
-  final schema = JsonSchema.createSchema(def);
-  final validationResult = schema.validate(args);
-  if (!validationResult) {
-    throw 'Validation Error';
-  }
-
-  return true;
 }
 
 const Map<String, String> defaultHeaders = {

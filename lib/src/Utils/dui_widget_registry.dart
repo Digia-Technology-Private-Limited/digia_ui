@@ -9,6 +9,7 @@ import '../core/builders/dui_avatar_builder.dart';
 import '../core/builders/dui_button_builder.dart';
 import '../core/builders/dui_calendar_builder.dart';
 import '../core/builders/dui_carousel_builder.dart';
+import '../core/builders/dui_line_chart_builder.dart';
 import '../core/builders/dui_checkbox_builder.dart';
 import '../core/builders/dui_circular_progress_indicator_builder.dart';
 import '../core/builders/dui_conditional_builder_builder.dart';
@@ -131,6 +132,7 @@ class DUIWidgetRegistry {
     'digia/animatedButton': withoutRegistry(DUIAnimatedButtonBuilder.create),
     'digia/pinField': withoutRegistry(DUIPinFieldBuilder.create),
     'digia/calendar': withoutRegistry(DUICalendarBuilder.create),
+    'digia/lineChart': withoutRegistry(DUILineChartBuilder.create),
     'digia/paginatedListView': (data, {registry}) =>
         DUIPaginatedListViewBuilder.create(data),
     'digia/timer': withoutRegistry(DUITimerBuilder.create),

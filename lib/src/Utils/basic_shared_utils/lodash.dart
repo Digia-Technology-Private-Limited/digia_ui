@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
 import '../extensions.dart';
@@ -111,4 +113,37 @@ extension LetDynamic on dynamic {
 
 extension Let2<T, R> on (T?, R?) {
   S? let<S>(S Function(T, R) f) => ifNotNull2(this.$1, this.$2, f);
+}
+
+T? tryCast<T>(dynamic x, {T? Function()? orElse}) {
+  try {
+    return cast<T>(x);
+  } catch (_) {
+    // ignore: avoid_print
+    print('CastError when trying to cast $x to $T!');
+    if (orElse != null) return orElse();
+
+    return null;
+  }
+}
+
+T cast<T>(dynamic x, {T Function()? orElse}) {
+  try {
+    return x as T;
+  } catch (_) {
+    if (orElse != null) return orElse();
+
+    rethrow;
+  }
+}
+
+dynamic tryJsonDecode(String source,
+    {Object? Function(Object? key, Object? value)? reviver}) {
+  try {
+    return jsonDecode(source, reviver: reviver);
+  } catch (e) {
+    // ignore: avoid_print
+    print(e);
+    return null;
+  }
 }
