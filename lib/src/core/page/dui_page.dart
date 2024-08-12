@@ -48,6 +48,13 @@ class DUIPage extends StatelessWidget {
         printClosings: false,
         printEventFullData: false,
         printStateFullData: false,
+        transitionFilter: (bloc, transition) {
+          if (bloc is DUIPageBloc) {
+            _logPageState(
+                bloc, transition.currentState, logger, 'SetStateEvent');
+          }
+          return true;
+        },
         eventFilter: (bloc, event) {
           if (bloc is DUIPageBloc) {
             if (event is BackPressEvent || event is InitPageEvent) {
