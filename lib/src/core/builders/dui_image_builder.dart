@@ -25,15 +25,23 @@ class DUIImageBuilder extends DUIWidgetBuilder {
         data: DUIWidgetJsonData(type: 'digia/image', props: props));
   }
 
-  Future<ImageProvider> _createImageProvider(BuildContext context) async {
-    final imageSource = eval(data.props['imageSrc'], context: context);
+  ImageProvider _createImageProvider(
+      BuildContext context, Object? imageSource) {
+    if (imageSource is List<DUIFile> && imageSource.isNotEmpty) {
+      final firstFile = imageSource.first;
+      if (firstFile.isWeb && firstFile.bytes != null) {
+        return MemoryImage(firstFile.bytes!);
+      } else if (firstFile.isMobile && firstFile.path != null) {
+        return FileImage(File(firstFile.path!));
+      } else {
+        throw Exception('Invalid DUIFile source in list');
+      }
+    }
 
     if (imageSource is DUIFile) {
       if (imageSource.isWeb && imageSource.bytes != null) {
-        // Use MemoryImage for web with bytes
         return MemoryImage(imageSource.bytes!);
       } else if (imageSource.isMobile && imageSource.path != null) {
-        // Use FileImage for mobile with path
         return FileImage(File(imageSource.path!));
       } else {
         throw Exception('Invalid DUIFile source');
@@ -83,57 +91,38 @@ class DUIImageBuilder extends DUIWidgetBuilder {
 
   @override
   Widget build(BuildContext context) {
+    final imageSource = eval(data.props['imageSrc'], context: context);
     final opacity =
         eval<double>(data.props['opacity'], context: context) ?? 1.0;
 
-    return FutureBuilder<ImageProvider>(
-      future: _createImageProvider(context),
-      builder: (BuildContext context, AsyncSnapshot<ImageProvider> snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        if (snapshot.hasError) {
-          return const Center(
-            child: Icon(
-              Icons.error_outline,
-              color: Colors.red,
-            ),
-          );
-        }
+    final imageProvider = _createImageProvider(context, imageSource);
 
-        final imageProvider = snapshot.data;
-
-        return Opacity(
-          opacity: opacity,
-          child: imageProvider != null
-              ? (imageProvider is MemoryImage || imageProvider is FileImage
-                  ? Image(image: imageProvider)
-                  : OctoImage(
-                      fadeInDuration: const Duration(microseconds: 0),
-                      fadeOutDuration: const Duration(microseconds: 0),
-                      image: imageProvider,
-                      fit: DUIDecoder.toBoxFit(data.props['fit']),
-                      gaplessPlayback: true,
-                      placeholderBuilder: _placeHolderBuilderCreater(),
-                      imageBuilder: (BuildContext context, Widget widget) {
-                        return _mayWrapInAspectRatio(widget);
-                      },
-                      errorBuilder: (context, error, stackTrace) {
-                        final errorImage = data.props['errorImage'];
-                        if (errorImage == null) {
-                          return const Center(
-                            child: Icon(
-                              Icons.error_outline,
-                              color: Colors.red,
-                            ),
-                          );
-                        }
-                        return Image.asset(errorImage);
-                      },
-                    ))
-              : const SizedBox.shrink(),
-        );
-      },
+    return Opacity(
+      opacity: opacity,
+      child: imageProvider is MemoryImage || imageProvider is FileImage
+          ? Image(image: imageProvider)
+          : OctoImage(
+              fadeInDuration: const Duration(microseconds: 0),
+              fadeOutDuration: const Duration(microseconds: 0),
+              image: imageProvider,
+              fit: DUIDecoder.toBoxFit(data.props['fit']),
+              gaplessPlayback: true,
+              placeholderBuilder: _placeHolderBuilderCreater(),
+              imageBuilder: (BuildContext context, Widget widget) {
+                return _mayWrapInAspectRatio(widget);
+              },
+              errorBuilder: (context, error, stackTrace) {
+                final errorImage = data.props['errorImage'];
+                if (errorImage == null) {
+                  return const Center(
+                    child: Icon(
+                      Icons.error_outline,
+                      color: Colors.red,
+                    ),
+                  );
+                }
+                return Image.asset(errorImage);
+              }),
     );
   }
 }
