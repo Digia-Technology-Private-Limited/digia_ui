@@ -1,5 +1,4 @@
 import 'dart:developer';
-import 'dart:io';
 
 import 'package:digia_expr/digia_expr.dart';
 import 'package:file_picker/file_picker.dart';
@@ -18,6 +17,7 @@ import '../../Utils/extensions.dart';
 import '../../Utils/util_functions.dart';
 import '../../components/DUIText/dui_text_style.dart';
 import '../../components/dui_widget_scope.dart';
+import '../../models/dui_file.dart';
 import '../../types.dart';
 import '../analytics_handler.dart';
 import '../app_state_provider.dart';
@@ -435,7 +435,7 @@ Map<String, ActionHandlerFn> _actionsMap = {
 
     final type = toFileType(fileType);
 
-    List<PlatformFile>? platformfiles;
+    List<PlatformFile>? platformFiles;
     bool isSinglePick;
     try {
       FilePickerResult? pickedFile = await FilePicker.platform.pickFiles(
@@ -454,7 +454,7 @@ Map<String, ActionHandlerFn> _actionsMap = {
       final toast = FToast().init(context);
 
       if (sizeLimit != null && showToast) {
-        platformfiles = pickedFile.files.where((file) {
+        platformFiles = pickedFile.files.where((file) {
           if (file.size > sizeLimit * 1024) {
             toast.showToast(
               child: Container(
@@ -477,32 +477,18 @@ Map<String, ActionHandlerFn> _actionsMap = {
           return true;
         }).toList();
       } else {
-        platformfiles = pickedFile.files;
+        platformFiles = pickedFile.files;
       }
     } catch (e) {
       print('Error picking file: $e');
       return;
     }
-    if (platformfiles.isNotEmpty) {
-      try {
-        List finalFiles =
-            await Future.wait(platformfiles.map((platformfile) async {
-          if (kIsWeb) {
-            return platformfile.bytes;
-          } else {
-            if (platformfile.path == null) {
-              print('Error: Null path for file');
-              return Uint8List(0);
-            }
 
-            try {
-              // return await File(platformfile.path!).readAsBytes();
-              return File(platformfile.path!);
-            } catch (e) {
-              print('Error reading file at ${platformfile.path}: $e');
-              return Uint8List(0);
-            }
-          }
+    if (platformFiles.isNotEmpty) {
+      try {
+        List<DUIFile> finalFiles =
+            await Future.wait(platformFiles.map((platformFile) async {
+          return DUIFile.fromPlatformFile(platformFile);
         }).toList());
 
         final variables = bloc.state.props.variables;
