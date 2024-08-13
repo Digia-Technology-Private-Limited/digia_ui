@@ -93,6 +93,9 @@ class _ProboCustomComponentState extends DUIWidgetState<ProboCustomComponent> {
     final textWidth = _calculateTextWidth(text,
         style ?? const TextStyle(fontSize: 8.0, fontWeight: FontWeight.w400));
 
+    final textHeight = _calculateTextHeight(text,
+        style ?? const TextStyle(fontSize: 8.0, fontWeight: FontWeight.w400));
+
     return Builder(builder: (context) {
       return GestureDetector(
         onTap: () {
@@ -101,8 +104,9 @@ class _ProboCustomComponentState extends DUIWidgetState<ProboCustomComponent> {
           });
         },
         child: AnimatedContainer(
+          padding: const EdgeInsets.symmetric(vertical: 1),
           duration: Duration(milliseconds: animationDuration ?? 300),
-          height: 14,
+          height: textHeight + 2,
           width: _isClicked ? 16 : ((textWidth) + 12 + 2 + 2 + 1 + 3),
           decoration: BoxDecoration(
               borderRadius: borderRadius, color: makeColor(bgColor)),
@@ -146,5 +150,13 @@ class _ProboCustomComponentState extends DUIWidgetState<ProboCustomComponent> {
         textDirection: TextDirection.ltr);
     textPainter.layout();
     return textPainter.size.width * 1.08;
+  }
+
+  double _calculateTextHeight(String? text, TextStyle style) {
+    final textPainter = TextPainter(
+        text: TextSpan(text: text, style: style),
+        textDirection: TextDirection.ltr);
+    textPainter.layout();
+    return textPainter.size.height;
   }
 }
