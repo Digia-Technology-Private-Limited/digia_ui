@@ -13,6 +13,7 @@ export 'package:digia_ui/src/digia_ui_client.dart';
 export 'package:digia_ui/src/digia_ui_provider.dart';
 export 'package:digia_ui/src/dui_app.dart';
 export 'package:digia_ui/src/dui_dev_config.dart';
+export 'package:digia_ui/src/dui_logger.dart';
 export 'package:digia_ui/src/environment.dart';
 export 'package:digia_ui/src/inspector/dui_inspector.dart';
 export 'package:digia_ui/src/network/netwok_config.dart';
