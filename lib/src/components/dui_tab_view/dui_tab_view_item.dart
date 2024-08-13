@@ -6,8 +6,7 @@ import '../../core/builders/dui_json_widget_builder.dart';
 
 class DUITabViewItem extends StatefulWidget {
   const DUITabViewItem(
-      {required this.registry, Key? key, required this.children})
-      : super(key: key);
+      {required this.registry, super.key, required this.children});
   final DUIWidgetRegistry registry;
   final List<DUIWidgetJsonData> children;
 

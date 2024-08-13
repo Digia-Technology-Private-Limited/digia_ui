@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 
 import '../../Utils/dui_widget_registry.dart';
 import '../json_widget_builder.dart';
-import '../page/props/dui_widget_json_data.dart';
 
 final class DUIJsonWidgetBuilder extends DUIWidgetBuilder {
   DUIJsonWidgetBuilder(
-      {required DUIWidgetJsonData data, required DUIWidgetRegistry registry})
-      : super(data: data, registry: registry);
+      {required super.data, required DUIWidgetRegistry super.registry});
 
   @override
   Widget build(BuildContext context) {

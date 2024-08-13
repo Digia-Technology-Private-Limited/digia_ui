@@ -65,7 +65,7 @@ class _DUIBottomNavigationBarState extends State<DUIBottomNavigationBar> {
       selectedIndex: _selectedIndex,
       destinations: widget.children.map((e) => DUIWidget(data: e)).toList(),
       onDestinationSelected: _handleDestinationSelected,
-      overlayColor: MaterialStateProperty.all(
+      overlayColor: WidgetStateProperty.all(
         makeColor(
           eval<String>(
             widget.barProps.overlayColor,
