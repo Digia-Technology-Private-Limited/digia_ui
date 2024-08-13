@@ -42,23 +42,23 @@ class ProboCustomComponent extends BaseStatefulWidget {
 }
 
 class _ProboCustomComponentState extends DUIWidgetState<ProboCustomComponent> {
-  late bool _isClicked;
+  late bool _hideButton;
   late Timer _timer1;
   late Timer _timer2;
   @override
   void initState() {
-    _isClicked = true;
+    _hideButton = true;
     _timer1 = Timer(const Duration(seconds: 1), () {
       if (mounted) {
         setState(() {
-          _isClicked = false;
+          _hideButton = false;
         });
       }
     });
     _timer2 = Timer(const Duration(seconds: 8), () {
       if (mounted) {
         setState(() {
-          _isClicked = true;
+          _hideButton = true;
         });
       }
     });
@@ -100,14 +100,22 @@ class _ProboCustomComponentState extends DUIWidgetState<ProboCustomComponent> {
       return GestureDetector(
         onTap: () {
           setState(() {
-            _isClicked = true;
+            _hideButton = false;
+            _timer2.cancel();
+            _timer2 = Timer(const Duration(seconds: 8), () {
+              if (mounted) {
+                setState(() {
+                  _hideButton = true;
+                });
+              }
+            });
           });
         },
         child: AnimatedContainer(
           padding: const EdgeInsets.symmetric(vertical: 1),
           duration: Duration(milliseconds: animationDuration ?? 300),
           height: textHeight + 2,
-          width: _isClicked ? 16 : ((textWidth) + 12 + 2 + 2 + 1 + 3),
+          width: _hideButton ? 16 : ((textWidth) + 12 + 2 + 2 + 1 + 3),
           decoration: BoxDecoration(
               borderRadius: borderRadius, color: makeColor(bgColor)),
           child: Center(
@@ -130,7 +138,7 @@ class _ProboCustomComponentState extends DUIWidgetState<ProboCustomComponent> {
               AnimatedContainer(
                   padding: const EdgeInsets.only(left: 1, right: 3),
                   duration: Duration(milliseconds: animationDuration ?? 300),
-                  width: _isClicked ? 0 : textWidth + 4,
+                  width: _hideButton ? 0 : textWidth + 4,
                   child: textWidget),
             ],
           )),
