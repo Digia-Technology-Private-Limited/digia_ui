@@ -25,6 +25,7 @@ import '../core/builders/dui_htmlview_builder.dart';
 import '../core/builders/dui_icon_builder.dart';
 import '../core/builders/dui_icon_button_builder.dart';
 import '../core/builders/dui_image_builder.dart';
+import '../core/builders/dui_linear_progress_indicator_builder.dart';
 import '../core/builders/dui_listview_builder.dart';
 import '../core/builders/dui_lottie_builder.dart';
 import '../core/builders/dui_paginated_listview_builder.dart';
@@ -127,6 +128,8 @@ class DUIWidgetRegistry {
     'digia/futureBuilder': (data, {registry}) => DUIFutureBuilder(data: data),
     'digia/circularProgressBar': (data, {registry}) =>
         DUICircularProgressBarBuilder(data: data),
+    'digia/linearProgressBar': (data, {registry}) =>
+        DUILinearProgressBarBuilder(data: data),
     'digia/checkbox': withoutRegistry(DUICheckboxBuilder.create),
     'digia/switch': withoutRegistry(DUISwitchBuilder.create),
     'digia/animatedButton': withoutRegistry(DUIAnimatedButtonBuilder.create),
