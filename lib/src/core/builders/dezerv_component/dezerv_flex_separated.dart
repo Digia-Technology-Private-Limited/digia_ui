@@ -10,7 +10,7 @@ class FlexSeparated extends StatelessWidget {
   final Widget? separator;
 
   const FlexSeparated({
-    Key? key,
+    super.key,
     this.direction = Axis.horizontal,
     this.children = const [],
     this.spacing = 8,
@@ -18,7 +18,7 @@ class FlexSeparated extends StatelessWidget {
     this.crossAxisAlignment = CrossAxisAlignment.center,
     this.separator,
     this.mainAxisSize = MainAxisSize.max,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

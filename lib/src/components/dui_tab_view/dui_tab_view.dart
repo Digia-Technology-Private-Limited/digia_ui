@@ -17,8 +17,7 @@ class DUITabView extends StatefulWidget {
       {required this.children,
       required this.tabViewProps,
       this.registry,
-      Key? key})
-      : super(key: key);
+      super.key});
 
   @override
   State<DUITabView> createState() => _DUITabViewState();

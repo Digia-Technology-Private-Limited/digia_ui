@@ -1,49 +1,4 @@
-import 'package:dio/dio.dart';
 import 'package:talker/talker.dart';
-
-enum NetworkLogType { success, error }
-
-class NetworkLog extends TalkerLog {
-  final String url;
-  final RequestOptions requestOptions;
-  final Response? response;
-  final DioException? err;
-  final NetworkLogType type;
-
-  NetworkLog({
-    required this.url,
-    required this.requestOptions,
-    this.response,
-    this.err,
-    required this.type,
-  }) : super('');
-
-  @override
-  String get title => 'NETWORK';
-}
-
-class PageLog extends TalkerLog {
-  List<(String, dynamic, String)> params;
-  List<(String, dynamic, String)> states;
-  String pageUid;
-  String eventName;
-
-  PageLog(this.params, this.states, this.pageUid, this.eventName) : super('');
-
-  @override
-  String get title => 'PAGE_LOG';
-}
-
-class AppStateLog extends TalkerLog {
-  final String name;
-  final dynamic value;
-  final String type;
-
-  AppStateLog(this.name, this.value, this.type) : super('');
-
-  @override
-  String get title => 'APP_STATE';
-}
 
 class ActionLog extends TalkerLog {
   final String pageName;

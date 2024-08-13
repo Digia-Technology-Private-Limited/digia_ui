@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'package:flutter/foundation.dart';
-import 'package:talker_dio_logger/talker_dio_logger.dart';
 
 import '../../digia_ui.dart';
 import 'api_response/base_response.dart';
@@ -22,9 +21,6 @@ void configureDeveloperOptions(Dio dio, DeveloperConfig? developerConfig) {
           ..badCertificateCallback = (cert, host, port) => true;
       },
     );
-  }
-  if (developerConfig.enableTalker) {
-    // dio.interceptors.add(ChuckerDioInterceptor());
   }
 }
 
@@ -83,39 +79,9 @@ class NetworkClient {
     //   ]);
     // }
 
-    final talkerDioLogger = TalkerDioLogger(
-      talker: developerConfig?.logger?.talker,
-      addonId: 'digia',
-      settings: TalkerDioLoggerSettings(
-        printRequestHeaders: true,
-        printRequestData: true,
-        printResponseHeaders: false,
-        printResponseData: true,
-        printResponseMessage: true,
-        printErrorData: true,
-        printErrorHeaders: false,
-        printErrorMessage: true,
-        responseFilter: (Response response) {
-          developerConfig?.logger?.log(NetworkLog(
-            url: response.requestOptions.path,
-            requestOptions: response.requestOptions,
-            response: response,
-            type: NetworkLogType.success,
-          ));
-          return true;
-        },
-        errorFilter: (DioException error) {
-          developerConfig?.logger?.log(NetworkLog(
-            url: error.requestOptions.path,
-            requestOptions: error.requestOptions,
-            err: error,
-            type: NetworkLogType.error,
-          ));
-          return true;
-        },
-      ),
-    );
-    projectDioInstance.interceptors.add(talkerDioLogger);
+    developerConfig?.inspector?.dioInterceptors?.forEach((interceptor) {
+      projectDioInstance.interceptors.add(interceptor);
+    });
   }
 
   Future<Response<Object?>> requestProject({

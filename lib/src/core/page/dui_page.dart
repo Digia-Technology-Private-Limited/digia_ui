@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:talker_bloc_logger/talker_bloc_logger.dart';
 
 import '../../../digia_ui.dart';
 import '../../Utils/basic_shared_utils/lodash.dart';
 import '../../Utils/extensions.dart';
 import '../../components/dui_widget_scope.dart';
-import '../../dui_logger.dart';
-import 'dui_page_bloc.dart';
 import 'dui_page_event.dart';
-import 'dui_page_state.dart';
 
 class DUIPage extends StatelessWidget {
   final String pageUid;
@@ -36,36 +32,6 @@ class DUIPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final DUILogger? logger = DeveloperConfig.instance.logger;
-    Bloc.observer = TalkerBlocObserver(
-      talker: logger?.talker,
-      settings: TalkerBlocLoggerSettings(
-        enabled: true,
-        printEvents: true,
-        printChanges: false,
-        printTransitions: true,
-        printCreations: false,
-        printClosings: false,
-        printEventFullData: false,
-        printStateFullData: false,
-        transitionFilter: (bloc, transition) {
-          if (bloc is DUIPageBloc) {
-            _logPageState(
-                bloc, transition.currentState, logger, 'SetStateEvent');
-          }
-          return true;
-        },
-        eventFilter: (bloc, event) {
-          if (bloc is DUIPageBloc) {
-            if (event is BackPressEvent || event is InitPageEvent) {
-              _logPageState(
-                  bloc, bloc.state, logger, event.runtimeType.toString());
-            }
-          }
-          return true;
-        },
-      ),
-    );
     return BlocProvider(
       create: (context) {
         return DUIPageBloc(
@@ -123,35 +89,4 @@ class _DUIScreenState extends State<_DUIScreen> {
           }());
     });
   }
-}
-
-_logPageState(DUIPageBloc bloc, DUIPageState? state, DUILogger? logger,
-    String eventName) {
-  if (state == null) {
-    return;
-  }
-
-  final inputArgs = state.props.inputArgs;
-  final variables = state.props.variables;
-
-  if (inputArgs is! Map || variables is! Map) {
-    return;
-  }
-
-  final params = _mapToList(inputArgs);
-  final states = _mapToList(variables);
-
-  logger?.log(PageLog(params, states, state.pageUid, eventName));
-}
-
-List<(String, dynamic, String)> _mapToList(Map<String, dynamic>? map) {
-  return map?.entries.map((entry) {
-        final variable = entry.value;
-        return (
-          variable.name.toString(),
-          variable.value,
-          variable.type.toString(),
-        );
-      }).toList() ??
-      [];
 }

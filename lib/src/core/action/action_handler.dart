@@ -8,24 +8,20 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../digia_ui.dart';
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
 import '../../Utils/basic_shared_utils/lodash.dart';
 import '../../Utils/basic_shared_utils/num_decoder.dart';
-import '../../Utils/dui_talker_logs.dart';
 import '../../Utils/expr.dart';
 import '../../Utils/extensions.dart';
 import '../../Utils/util_functions.dart';
 import '../../components/DUIText/dui_text_style.dart';
 import '../../components/dui_widget_scope.dart';
-import '../../dui_dev_config.dart';
 import '../../dui_logger.dart';
-import '../../types.dart';
 import '../analytics_handler.dart';
 import '../app_state_provider.dart';
 import '../evaluator.dart';
-import '../page/dui_page_bloc.dart';
 import '../page/dui_page_event.dart';
-import '../utils.dart';
 import 'action_prop.dart';
 import 'api_handler.dart';
 
@@ -199,6 +195,7 @@ Map<String, ActionHandlerFn> _actionsMap = {
     logger?.log(ActionLog(getPageName(context), 'Action.openUrl', {
       'url': action.data['url'],
       'launchMode': action.data['launchMode'],
+      'canOpenUrl': canOpenUrl
     }));
     if (canOpenUrl) {
       return launchUrl(url,
@@ -631,8 +628,7 @@ class ActionHandler {
         enclosing: enclosing);
 
     for (final action in actionFlow.actions) {
-      final DUILogger logger =
-          DUILogger(DeveloperConfig.instance.logger?.talker);
+      final DUILogger? logger = DigiaUIClient.instance.developerConfig?.logger;
       final executable = _actionsMap[action.type];
 
       if (!context.mounted) continue;

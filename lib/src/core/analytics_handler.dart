@@ -17,7 +17,7 @@ class AnalyticsHandler {
       required List<Map<String, dynamic>>? events,
       ExprContext? enclosing}) async {
     if (events == null) return;
-    final DUILogger? logger = DeveloperConfig.instance.logger;
+    final DUILogger? logger = DigiaUIClient.instance.developerConfig?.logger;
 
     _logAnalytics(logger, events, context, enclosing);
 

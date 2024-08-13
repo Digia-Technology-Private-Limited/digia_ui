@@ -1,27 +1,11 @@
-import 'package:talker/talker.dart';
-
 import 'dui_logger.dart';
+import 'inspector/dui_inspector.dart';
 
 class DeveloperConfig {
-  static final DeveloperConfig _instance = DeveloperConfig._internal();
+  //for android/ios
+  final String? proxyUrl;
+  DUIInspector? inspector;
+  DUILogger? logger;
 
-  factory DeveloperConfig() => _instance;
-
-  DeveloperConfig._internal();
-
-  String? proxyUrl;
-  bool enableTalker = false;
-  late DUILogger? logger;
-
-  static DeveloperConfig get instance => _instance;
-
-  static void initialize({
-    String? proxyUrl,
-    bool enableTalker = false,
-    Talker? talker,
-  }) {
-    _instance.proxyUrl = proxyUrl;
-    _instance.enableTalker = enableTalker;
-    _instance.logger = DUILogger(talker ?? Talker());
-  }
+  DeveloperConfig({this.proxyUrl, this.inspector, this.logger});
 }
