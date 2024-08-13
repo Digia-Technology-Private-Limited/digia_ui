@@ -9,6 +9,7 @@ enum InputBorderType { outline, underline }
 
 class DottedInputBorder extends InputBorder {
   final InputBorderType inputBorderType;
+  @override
   final BorderSide borderSide;
   final BorderRadius borderRadius;
   final BorderType borderType;

@@ -23,7 +23,7 @@ class DUICachedImage extends StatelessWidget {
   final int? fadeOutDuration;
 
   DUICachedImage({
-    Key? key,
+    super.key,
     this.cacheManager,
     required this.imageUrl,
     this.cacheKey,
@@ -40,15 +40,14 @@ class DUICachedImage extends StatelessWidget {
     this.fadeOutDuration,
     this.fadeInCurve,
     this.fadeOutCurve,
-  })  : _image = CachedNetworkImageProvider(
+  }) : _image = CachedNetworkImageProvider(
           imageUrl,
           headers: httpHeaders,
           cacheManager: cacheManager,
           cacheKey: cacheKey,
           maxWidth: maxWidthDiskCache,
           maxHeight: maxHeightDiskCache,
-        ),
-        super(key: key);
+        );
 
   static Future evictFromCache(
     String url, {

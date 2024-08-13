@@ -8,6 +8,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../digia_ui.dart';
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
 import '../../Utils/basic_shared_utils/lodash.dart';
 import '../../Utils/basic_shared_utils/num_decoder.dart';
@@ -16,13 +17,11 @@ import '../../Utils/extensions.dart';
 import '../../Utils/util_functions.dart';
 import '../../components/DUIText/dui_text_style.dart';
 import '../../components/dui_widget_scope.dart';
-import '../../types.dart';
+import '../../dui_logger.dart';
 import '../analytics_handler.dart';
 import '../app_state_provider.dart';
 import '../evaluator.dart';
-import '../page/dui_page_bloc.dart';
 import '../page/dui_page_event.dart';
-import '../utils.dart';
 import 'action_prop.dart';
 import 'api_handler.dart';
 
@@ -30,26 +29,36 @@ typedef ActionHandlerFn = Future<dynamic>? Function({
   required BuildContext context,
   required ActionProp action,
   ExprContext? enclosing,
+  DUILogger? logger,
 });
 
 Map<String, ActionHandlerFn> _actionsMap = {
-  'Action.rebuildPage': ({required action, required context, enclosing}) {
+  'Action.rebuildPage': (
+      {required action, required context, enclosing, logger}) {
     final bloc = context.tryRead<DUIPageBloc>();
     bloc?.add(RebuildPageEvent(context));
+    logger?.log(ActionLog(getPageName(context), 'Action.rebuildPage', {}));
     return null;
   },
-  'Action.delay': ({required action, required context, enclosing}) async {
+  'Action.delay': (
+      {required action, required context, enclosing, logger}) async {
     final durationInMs = eval<double>(action.data['durationInMs'],
         context: context, enclosing: enclosing);
+
+    logger?.log(ActionLog(getPageName(context), 'Action.delay', {
+      'durationInMs': durationInMs,
+    }));
 
     if (durationInMs != null) {
       await Future.delayed(Duration(milliseconds: durationInMs.toInt()));
     } else {
       log('Wait Duration is null');
     }
+
+    return null;
   },
   'Action.navigateToPage': (
-      {required action, required context, enclosing}) async {
+      {required action, required context, enclosing, logger}) async {
     final String? pageUId = action.data['pageUid'] ?? action.data['pageId'];
 
     if (pageUId == null) {
@@ -78,6 +87,18 @@ Map<String, ActionHandlerFn> _actionsMap = {
     final waitForResult =
         NumDecoder.toBool(action.data['waitForResult']) ?? false;
     Object? result;
+
+    logger?.log(ActionLog(getPageName(context), 'Action.navigateToPage', {
+      'pageId': pageUId,
+      'openAs': openAs,
+      'pageArgs': evaluatedArgs,
+      'waitForResult': waitForResult,
+      'style': bottomSheetStyling,
+      'routeNametoRemoveUntil': eval<String>(
+          action.data['routeNametoRemoveUntil'],
+          context: context,
+          enclosing: enclosing),
+    }));
 
     switch (openAs) {
       case 'bottomSheet':
@@ -126,9 +147,10 @@ Map<String, ActionHandlerFn> _actionsMap = {
             'result': result,
           }, enclosing: enclosing));
     }
+
     return result;
   },
-  'Action.pop': ({required action, required context, enclosing}) {
+  'Action.pop': ({required action, required context, enclosing, logger}) {
     final maybe = eval<bool>(action.data['maybe'],
             context: context, enclosing: enclosing) ??
         false;
@@ -140,9 +162,15 @@ Map<String, ActionHandlerFn> _actionsMap = {
     }
 
     Navigator.of(context).pop(result);
+
+    logger?.log(ActionLog(getPageName(context), 'Action.pop', {
+      'maybe': maybe,
+      'result': result,
+    }));
+
     return null;
   },
-  'Action.popUntil': ({required action, required context, enclosing}) {
+  'Action.popUntil': ({required action, required context, enclosing, logger}) {
     final routeNametoPopUntil = eval<String>(action.data['routeNameToPopUntil'],
         context: context, enclosing: enclosing);
     if (routeNametoPopUntil == null) {
@@ -151,13 +179,24 @@ Map<String, ActionHandlerFn> _actionsMap = {
     }
 
     Navigator.popUntil(context, ModalRoute.withName(routeNametoPopUntil));
+
+    logger?.log(ActionLog(getPageName(context), 'Action.popUntil', {
+      'routeNameToPopUntil': routeNametoPopUntil,
+    }));
+
     return;
   },
-  'Action.openUrl': ({required action, required context, enclosing}) async {
+  'Action.openUrl': (
+      {required action, required context, enclosing, logger}) async {
     final url =
         eval<String>(action.data['url'], context: context, enclosing: enclosing)
             .let(Uri.parse);
     final canOpenUrl = url != null && await canLaunchUrl(url);
+    logger?.log(ActionLog(getPageName(context), 'Action.openUrl', {
+      'url': action.data['url'],
+      'launchMode': action.data['launchMode'],
+      'canOpenUrl': canOpenUrl
+    }));
     if (canOpenUrl) {
       return launchUrl(url,
           mode: DUIDecoder.toUriLaunchMode(action.data['launchMode']));
@@ -165,7 +204,8 @@ Map<String, ActionHandlerFn> _actionsMap = {
       throw 'Not allowed to open url: $url';
     }
   },
-  'Action.controlDrawer': ({required action, required context, enclosing}) {
+  'Action.controlDrawer': (
+      {required action, required context, enclosing, logger}) {
     final choice = eval<String>(action.data['choice'],
         context: context, enclosing: enclosing);
     final scaffold = Scaffold.maybeOf(context);
@@ -177,9 +217,12 @@ Map<String, ActionHandlerFn> _actionsMap = {
       scaffold?.closeDrawer();
       scaffold?.closeEndDrawer();
     }
+    logger?.log(ActionLog(getPageName(context), 'Action.controlDrawer', {
+      'choice': choice,
+    }));
     return;
   },
-  'Action.showToast': ({required action, required context, enclosing}) {
+  'Action.showToast': ({required action, required context, enclosing, logger}) {
     final message = eval<String>(action.data['message'],
         context: context, enclosing: enclosing);
     final duration = eval<int>(action.data['duration'],
@@ -217,9 +260,15 @@ Map<String, ActionHandlerFn> _actionsMap = {
       gravity: ToastGravity.BOTTOM,
       toastDuration: Duration(seconds: duration ?? 2),
     );
+    logger?.log(ActionLog(
+      getPageName(context),
+      'Action.showToast',
+      {'message': message, 'duration': duration, 'style': style},
+    ));
     return;
   },
-  'Action.openDialog': ({required action, required context, enclosing}) async {
+  'Action.openDialog': (
+      {required action, required context, enclosing, logger}) async {
     final String? pageUId = action.data['pageUid'] ?? action.data['pageId'];
 
     if (pageUId == null) {
@@ -248,6 +297,14 @@ Map<String, ActionHandlerFn> _actionsMap = {
     final waitForResult =
         NumDecoder.toBool(action.data['waitForResult']) ?? false;
 
+    logger?.log(ActionLog(getPageName(context), 'Action.openDialog', {
+      'pageId': pageUId,
+      'pageArgs': evaluatedArgs,
+      'barrierDismissible': barrierDismissible,
+      'barrierColor': barrierColor,
+      'waitForResult': waitForResult,
+    }));
+
     Object? result;
     result = await openDialog(
       pageUid: pageUId,
@@ -269,9 +326,11 @@ Map<String, ActionHandlerFn> _actionsMap = {
             'result': result,
           }, enclosing: enclosing));
     }
+
     return result;
   },
-  'Action.callRestApi': ({required action, required context, enclosing}) async {
+  'Action.callRestApi': (
+      {required action, required context, enclosing, logger}) async {
     final dataSourceId = action.data['dataSourceId'];
     Map<String, dynamic>? apiDataSourceArgs = action.data['args'];
     final apiModel = (context.tryRead<DUIPageBloc>()?.config)
@@ -282,6 +341,12 @@ Map<String, ActionHandlerFn> _actionsMap = {
       final dvalue = apiModel?.variables?[key]?.defaultValue;
       return MapEntry(key, evalue ?? dvalue);
     });
+
+    logger?.log(ActionLog(getPageName(context), 'Action.callRestApi', {
+      'dataSourceId': dataSourceId,
+      'args': args,
+      'successCondition': action.data['successCondition'],
+    }));
 
     final result = await ApiHandler.instance
         .execute(apiModel: apiModel!, args: args)
@@ -321,9 +386,9 @@ Map<String, ActionHandlerFn> _actionsMap = {
       final errorAction = ActionFlow.fromJson(action.data['onError']);
 
       final response = {
-        'body': e.response.data,
-        'statusCode': e.response.statusCode,
-        'headers': e.response.headers,
+        'body': e.response?.data,
+        'statusCode': e.response?.statusCode,
+        'headers': e.response?.headers,
         'requestObj': requestObjToMap(e.requestOptions),
         'error': e.message,
       };
@@ -338,13 +403,17 @@ Map<String, ActionHandlerFn> _actionsMap = {
     return result;
   },
   'Action.handleDigiaMessage': (
-      {required action, required context, enclosing}) {
+      {required action, required context, enclosing, logger}) {
     final name = action.data['name'];
     final body = action.data['body'];
     final payload = evalDynamic(body, context, enclosing);
 
     print('Message Handled: $name');
     print('Message Body: $payload');
+    logger?.log(ActionLog(getPageName(context), 'Action.handleDigiaMessage', {
+      'name': name,
+      'body': payload,
+    }));
 
     final handler = DUIWidgetScope.maybeOf(context)?.onMessageReceived;
     if (handler == null) return;
@@ -360,10 +429,10 @@ Map<String, ActionHandlerFn> _actionsMap = {
             context: context, actionFlow: actionFlow, enclosing: enclosing);
       },
     ));
-
     return;
   },
-  'Action.setPageState': ({required action, required context, enclosing}) {
+  'Action.setPageState': (
+      {required action, required context, enclosing, logger}) {
     final bloc = context.tryRead<DUIPageBloc>();
     if (bloc == null) {
       throw 'Action.setPageState called on a widget which is not wrapped in DUIPageBloc';
@@ -372,6 +441,7 @@ Map<String, ActionHandlerFn> _actionsMap = {
     final events = action.data['events'];
     final bool rebuildPage =
         NumDecoder.toBool(action.data['rebuildPage']) ?? true;
+    final pageStateMap = {};
 
     if (events is List) {
       final variableDefs = bloc.state.props.variables;
@@ -379,25 +449,48 @@ Map<String, ActionHandlerFn> _actionsMap = {
       bloc.add(SetStateEvent(
           events: events
               .where((e) => variableDefs?[e['variableName']] != null)
-              .map((e) => SingleSetStateEvent(
-                  variableName: e['variableName'],
-                  context: context,
-                  value: evalDynamic(
-                    e['value'],
-                    context,
-                    enclosing,
-                  )))
-              .toList(),
+              .map((e) {
+            pageStateMap[e['variableName']] = evalDynamic(
+              e['value'],
+              context,
+              enclosing,
+            );
+            return SingleSetStateEvent(
+                variableName: e['variableName'],
+                context: context,
+                value: evalDynamic(
+                  e['value'],
+                  context,
+                  enclosing,
+                ));
+          }).toList(),
           rebuildPage: rebuildPage));
     }
 
+    logger?.log(ActionLog(
+      getPageName(context),
+      'Action.setPageState',
+      {
+        ...pageStateMap,
+        'rebuildPage': rebuildPage,
+      },
+    ));
+
     return;
   },
-  'Action.setAppState': ({required action, required context, enclosing}) {
+  'Action.setAppState': (
+      {required action, required context, enclosing, logger}) {
     final events = action.data['events'];
+    final appStateMap = {};
 
     if (events is List) {
       for (final e in events) {
+        appStateMap[e['vavariableNamer']] = eval(
+          e['value'],
+          context: context,
+          enclosing: enclosing,
+          decoder: (p0) => p0,
+        );
         final value = eval(
           e['value'],
           context: context,
@@ -411,11 +504,19 @@ Map<String, ActionHandlerFn> _actionsMap = {
           .tryRead<DUIPageBloc>()
           ?.add(SetStateEvent(events: [], rebuildPage: true));
 
+      logger?.log(ActionLog(
+        getPageName(context),
+        'Action.setAppState',
+        {
+          ...appStateMap,
+        },
+      ));
+
       return;
     }
     return null;
   },
-  'Action.share': ({required action, required context, enclosing}) {
+  'Action.share': ({required action, required context, enclosing, logger}) {
     final message = eval<String>(action.data['message'],
         context: context, enclosing: enclosing);
     final subject = eval<String>(action.data['subject'],
@@ -445,13 +546,18 @@ Map<String, ActionHandlerFn> _actionsMap = {
       } else {
         Share.share(message, subject: subject);
       }
+
+      logger?.log(ActionLog(getPageName(context), 'Action.share', {
+        'message': message,
+        'subject': subject,
+      }));
       return;
     } else {
       return null;
     }
   },
   'Action.copyToClipBoard': (
-      {required action, required context, enclosing}) async {
+      {required action, required context, enclosing, logger}) async {
     final message = eval<String>(action.data['message'],
         context: context, enclosing: enclosing);
 
@@ -494,6 +600,9 @@ Map<String, ActionHandlerFn> _actionsMap = {
           toastDuration: const Duration(seconds: 2),
         );
       }
+      logger?.log(ActionLog(getPageName(context), 'Action.copyToClipBoard', {
+        'message': message,
+      }));
       return;
     } else {
       return null;
@@ -511,13 +620,15 @@ class ActionHandler {
   Future<dynamic>? execute(
       {required BuildContext context,
       required ActionFlow actionFlow,
-      ExprContext? enclosing}) async {
+      ExprContext? enclosing,
+      DUILogger? logger}) async {
     AnalyticsHandler.instance.execute(
         context: context,
         events: actionFlow.analyticsData,
         enclosing: enclosing);
 
     for (final action in actionFlow.actions) {
+      final DUILogger? logger = DigiaUIClient.instance.developerConfig?.logger;
       final executable = _actionsMap[action.type];
 
       if (!context.mounted) continue;
@@ -530,7 +641,10 @@ class ActionHandler {
       }
 
       await executable.call(
-          context: context, action: action, enclosing: enclosing);
+          context: context,
+          action: action,
+          enclosing: enclosing,
+          logger: logger);
     }
 
     return null;
@@ -566,4 +680,9 @@ requestObjToMap(dynamic request) {
     'data': request.data,
     'queryParameters': request.queryParameters,
   };
+}
+
+String getPageName(BuildContext context) {
+  final bloc = context.tryRead<DUIPageBloc>();
+  return bloc?.state.pageUid ?? 'Unknown';
 }

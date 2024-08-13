@@ -13,7 +13,6 @@ import '../action/api_handler.dart';
 import '../analytics_handler.dart';
 import '../evaluator.dart';
 import 'dui_page_event.dart';
-import 'dui_page_state.dart';
 
 class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
   final DUIConfig config;

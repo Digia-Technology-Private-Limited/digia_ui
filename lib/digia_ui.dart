@@ -1,9 +1,12 @@
 library digia_ui;
 
+export 'package:digia_ui/src/Utils/dui_talker_logs.dart';
 export 'package:digia_ui/src/analytics/dui_analytics.dart';
 export 'package:digia_ui/src/components/dui_widget.dart';
 export 'package:digia_ui/src/config_resolver.dart';
 export 'package:digia_ui/src/core/page/dui_page.dart';
+export 'package:digia_ui/src/core/page/dui_page_bloc.dart';
+export 'package:digia_ui/src/core/page/dui_page_state.dart';
 export 'package:digia_ui/src/core/page/props/dui_widget_json_data.dart';
 export 'package:digia_ui/src/core/utils.dart';
 export 'package:digia_ui/src/digia_ui_client.dart';
@@ -11,5 +14,6 @@ export 'package:digia_ui/src/digia_ui_provider.dart';
 export 'package:digia_ui/src/dui_app.dart';
 export 'package:digia_ui/src/dui_dev_config.dart';
 export 'package:digia_ui/src/environment.dart';
+export 'package:digia_ui/src/inspector/dui_inspector.dart';
 export 'package:digia_ui/src/network/netwok_config.dart';
 export 'package:digia_ui/src/types.dart';

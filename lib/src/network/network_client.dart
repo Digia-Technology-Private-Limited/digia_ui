@@ -22,9 +22,6 @@ void configureDeveloperOptions(Dio dio, DeveloperConfig? developerConfig) {
       },
     );
   }
-  if (developerConfig.enableChucker) {
-    // dio.interceptors.add(ChuckerDioInterceptor());
-  }
 }
 
 Dio _createDigiaDio(String baseUrl, Map<String, dynamic> headers,
@@ -81,6 +78,10 @@ class NetworkClient {
     //     DioInterceptToCurl(),
     //   ]);
     // }
+
+    developerConfig?.inspector?.dioInterceptors?.forEach((interceptor) {
+      projectDioInstance.interceptors.add(interceptor);
+    });
   }
 
   Future<Response<Object?>> requestProject({

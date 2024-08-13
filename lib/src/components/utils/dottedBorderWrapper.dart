@@ -17,13 +17,13 @@ class DottedBorderWrapper extends StatelessWidget {
   final String borderType;
 
   const DottedBorderWrapper({
-    Key? key,
+    super.key,
     required this.child,
     this.borderWidth = 0,
     this.color = Colors.black,
     this.borderRadius = BorderRadius.zero,
     this.borderType = 'none',
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
