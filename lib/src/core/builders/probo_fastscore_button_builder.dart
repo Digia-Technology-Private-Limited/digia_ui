@@ -9,6 +9,7 @@ import '../../components/DUIText/dui_text_style.dart';
 import '../../components/dui_base_stateful_widget.dart';
 import '../evaluator.dart';
 import '../json_widget_builder.dart';
+import 'dui_image_builder.dart';
 import 'dui_text_builder.dart';
 
 class ProboCustomComponentBuilder extends DUIWidgetBuilder {
@@ -83,30 +84,52 @@ class _ProboCustomComponentState extends DUIWidgetState<ProboCustomComponent> {
     Widget textWidget = textBuilder.build(context);
     final animationDuration =
         eval<int>(widget.data.props['animationDuration'], context: context);
-    final height = eval<double>(widget.data.props['height'], context: context);
     final bgColor =
         eval<String>(widget.data.props['bgColor'], context: context);
     final borderRadius =
         DUIDecoder.toBorderRadius(widget.data.props['borderRadius']);
-    final textWidth = _calculateTextWidth(
-        text,
-        style ??
-            const TextStyle(fontSize: 14.0, fontWeight: FontWeight.normal));
+    final imageSrc =
+        eval<String>(widget.data.props['imageSrc'], context: context) ?? '';
+    final textWidth = _calculateTextWidth(text,
+        style ?? const TextStyle(fontSize: 8.0, fontWeight: FontWeight.w400));
 
     return Builder(builder: (context) {
       return GestureDetector(
         onTap: () {
           setState(() {
-            _isClicked = !_isClicked;
+            _isClicked = true;
           });
         },
         child: AnimatedContainer(
           duration: Duration(milliseconds: animationDuration ?? 300),
-          height: height,
-          width: _isClicked ? 0 : (textWidth + 4),
+          height: 14,
+          width: _isClicked ? 16 : ((textWidth) + 12 + 2 + 2 + 1 + 3),
           decoration: BoxDecoration(
               borderRadius: borderRadius, color: makeColor(bgColor)),
-          child: Center(child: textWidget),
+          child: Center(
+              child: Row(
+            children: [
+              const SizedBox(
+                width: 2,
+              ),
+              SizedBox(
+                height: 12,
+                width: 12,
+                child: DUIImageBuilder.fromProps(props: {
+                  'imageSrc': imageSrc,
+                  'fit': widget.data.props['imageFit']
+                }).build(context),
+              ),
+              const SizedBox(
+                width: 2,
+              ),
+              AnimatedContainer(
+                  padding: const EdgeInsets.only(left: 1, right: 3),
+                  duration: Duration(milliseconds: animationDuration ?? 300),
+                  width: _isClicked ? 0 : textWidth + 4,
+                  child: textWidget),
+            ],
+          )),
         ),
       );
     });
@@ -122,6 +145,6 @@ class _ProboCustomComponentState extends DUIWidgetState<ProboCustomComponent> {
         text: TextSpan(text: text, style: style),
         textDirection: TextDirection.ltr);
     textPainter.layout();
-    return textPainter.size.width;
+    return textPainter.size.width * 1.08;
   }
 }
