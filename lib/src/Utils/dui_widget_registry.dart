@@ -50,6 +50,7 @@ import '../core/builders/dui_video_player_builder.dart';
 import '../core/builders/dui_webview_builder.dart';
 import '../core/builders/dui_wrap_builder.dart';
 import '../core/builders/dui_youtube_player_builder.dart';
+import '../core/builders/probo_fastscore_button_builder.dart';
 import '../core/json_widget_builder.dart';
 import '../core/page/props/dui_widget_json_data.dart';
 
@@ -145,7 +146,9 @@ class DUIWidgetRegistry {
     'digia/streamBuilder': (data, {registry}) => DUIStreamBuilder(data: data),
     'digia/refreshIndicator': (data, {registry}) =>
         DUIRefreshIndicator(data: data),
-    'digia/safeArea': (data, {registry}) => DUISafeAreaBuilder(data: data)
+    'digia/safeArea': (data, {registry}) => DUISafeAreaBuilder(data: data),
+    'digia/probo/animated_fastscore': (data, {registry}) =>
+        ProboCustomComponentBuilder(data: data)
   };
 
   static const DUIWidgetRegistry shared = DUIWidgetRegistry();
