@@ -13,7 +13,8 @@ void main() async {
       // environmentInfo: Staging(),
       // environmentInfo: Versioned(19),
       // environmentInfo: Production(PrioritizeNetwork(5), 'assets/prodAppConfig.json','assets/functions.js'),
-      environmentInfo: Production(PrioritizeCache(), 'assets/prodAppConfig.json','assets/functions.js'),
+      environmentInfo: Production(PrioritizeCache(),
+          'assets/prodAppConfig.json', 'assets/functions.js'),
       // environmentInfo: Production(PrioritizeLocal(), 'assets/prodAppConfig.json','assets/functions.js'),
       navigatorKey: null,
       // developerConfig:

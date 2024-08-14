@@ -6,9 +6,7 @@ import '../../../digia_ui.dart';
 import '../../Utils/basic_shared_utils/lodash.dart';
 import '../../Utils/extensions.dart';
 import '../../components/dui_widget_scope.dart';
-import 'dui_page_bloc.dart';
 import 'dui_page_event.dart';
-import 'dui_page_state.dart';
 
 class DUIPage extends StatelessWidget {
   final String pageUid;
@@ -19,18 +17,17 @@ class DUIPage extends StatelessWidget {
   final DUIMessageHandler? onMessageReceived;
   final DUIConfig _config;
   final GlobalKey<NavigatorState>? navigatorKey;
-
-  DUIPage(
-      {super.key,
-      required this.pageUid,
-      Map<String, dynamic>? pageArgs,
-      this.iconDataProvider,
-      this.imageProviderFn,
-      this.textStyleBuilder,
-      this.onMessageReceived,
-      this.navigatorKey,
-      DUIConfig? config})
-      : _pageArgs = pageArgs,
+  DUIPage({
+    super.key,
+    required this.pageUid,
+    Map<String, dynamic>? pageArgs,
+    this.iconDataProvider,
+    this.imageProviderFn,
+    this.textStyleBuilder,
+    this.onMessageReceived,
+    this.navigatorKey,
+    DUIConfig? config,
+  })  : _pageArgs = pageArgs,
         _config = config ?? DigiaUIClient.instance.config;
 
   @override

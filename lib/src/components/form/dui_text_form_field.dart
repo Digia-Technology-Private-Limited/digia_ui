@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
@@ -54,7 +52,7 @@ class _DUITextFieldState extends DUIWidgetState<DUITextFormField> {
   Color? _cursorColor;
   String? _regex;
   String? _errorText;
-  String? _setErrorText = null;
+  String? _setErrorText;
 
   InputBorder? _enabledBorder;
   InputBorder? _disabledBorder;

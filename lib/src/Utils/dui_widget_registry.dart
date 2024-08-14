@@ -9,7 +9,6 @@ import '../core/builders/dui_avatar_builder.dart';
 import '../core/builders/dui_button_builder.dart';
 import '../core/builders/dui_calendar_builder.dart';
 import '../core/builders/dui_carousel_builder.dart';
-import '../core/builders/dui_line_chart_builder.dart';
 import '../core/builders/dui_checkbox_builder.dart';
 import '../core/builders/dui_circular_progress_indicator_builder.dart';
 import '../core/builders/dui_conditional_builder_builder.dart';
@@ -25,6 +24,7 @@ import '../core/builders/dui_htmlview_builder.dart';
 import '../core/builders/dui_icon_builder.dart';
 import '../core/builders/dui_icon_button_builder.dart';
 import '../core/builders/dui_image_builder.dart';
+import '../core/builders/dui_line_chart_builder.dart';
 import '../core/builders/dui_listview_builder.dart';
 import '../core/builders/dui_lottie_builder.dart';
 import '../core/builders/dui_paginated_listview_builder.dart';
@@ -49,6 +49,7 @@ import '../core/builders/dui_video_player_builder.dart';
 import '../core/builders/dui_webview_builder.dart';
 import '../core/builders/dui_wrap_builder.dart';
 import '../core/builders/dui_youtube_player_builder.dart';
+import '../core/builders/probo_fastscore_button_builder.dart';
 import '../core/json_widget_builder.dart';
 import '../core/page/props/dui_widget_json_data.dart';
 
@@ -142,7 +143,9 @@ class DUIWidgetRegistry {
     'digia/streamBuilder': (data, {registry}) => DUIStreamBuilder(data: data),
     'digia/refreshIndicator': (data, {registry}) =>
         DUIRefreshIndicator(data: data),
-    'digia/safeArea': (data, {registry}) => DUISafeAreaBuilder(data: data)
+    'digia/safeArea': (data, {registry}) => DUISafeAreaBuilder(data: data),
+    'digia/probo/animated_fastscore': (data, {registry}) =>
+        ProboCustomComponentBuilder(data: data)
   };
 
   static const DUIWidgetRegistry shared = DUIWidgetRegistry();

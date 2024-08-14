@@ -26,7 +26,7 @@ class DUILineChartBuilder extends DUIWidgetBuilder {
   @override
   Widget build(BuildContext context) {
     final LineChartData chartData = LineChartData(
-      gridData: FlGridData(show: false),
+      gridData: const FlGridData(show: false),
       borderData: FlBorderData(show: false),
       extraLinesData: _toExtraLinesData(
           context, tryCast<Map<String, dynamic>>(data.props['extraLines'])),

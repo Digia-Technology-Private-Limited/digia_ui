@@ -8,8 +8,7 @@ import 'bottom_nav_bar_item_props.dart';
 
 class DUIBottomNavBarItem extends StatefulWidget {
   const DUIBottomNavBarItem(
-      {required this.registry, Key? key, required this.itemProps})
-      : super(key: key);
+      {required this.registry, super.key, required this.itemProps});
   final DUIWidgetRegistry registry;
   final DUIBottomNavigationBarItemProps itemProps;
 
@@ -30,7 +29,7 @@ class _DUIBottomNavBarItemState extends State<DUIBottomNavBarItem> {
     return Theme(
       data: ThemeData(
           navigationBarTheme: NavigationBarThemeData(
-              labelTextStyle: MaterialStateProperty.all(toTextStyle(
+              labelTextStyle: WidgetStateProperty.all(toTextStyle(
                   DUITextStyle.fromJson(
                       widget.itemProps.labelText?['textStyle']),
                   context)))),

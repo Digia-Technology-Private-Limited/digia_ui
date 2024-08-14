@@ -91,6 +91,7 @@ dependencies:
   mime_type: ^1.0.0
   http_parser: ^4.0.2
   file_picker: ^8.0.5
+  talker: ^4.3.4
 
 dev_dependencies:
   build_runner: ^2.4.4

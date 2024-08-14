@@ -1,10 +1,11 @@
+import 'dui_logger.dart';
+import 'inspector/dui_inspector.dart';
+
 class DeveloperConfig {
   //for android/ios
   final String? proxyUrl;
-  bool enableChucker;
+  DUIInspector? inspector;
+  DUILogger? logger;
 
-  DeveloperConfig({
-    this.proxyUrl,
-    this.enableChucker = false,
-  });
+  DeveloperConfig({this.proxyUrl, this.inspector, this.logger});
 }

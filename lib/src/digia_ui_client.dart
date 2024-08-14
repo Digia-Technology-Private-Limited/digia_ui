@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:uuid/uuid.dart';
 
@@ -31,6 +32,7 @@ class DigiaUIClient {
   late Environment environment;
   late JSFunctions jsFunctions;
   late DUIAnalytics? duiAnalytics;
+  late DeveloperConfig? developerConfig;
   late String? uuid;
   static const appConfigFileName = 'appConfig.json';
 
@@ -52,7 +54,7 @@ class DigiaUIClient {
     var uuid = DUIPreferences.instance.getString('uuid');
     if (uuid == null) {
       uuid = const Uuid().v4();
-      DUIPreferences.instance.setString('uuid', uuid!);
+      DUIPreferences.instance.setString('uuid', uuid);
     }
     DigiaUIClient.instance.uuid = uuid;
   }
@@ -91,6 +93,7 @@ class DigiaUIClient {
     _instance.accessKey = accessKey;
     _instance.baseUrl = baseUrl;
     _instance.duiAnalytics = duiAnalytics;
+    _instance.developerConfig = developerConfig;
 
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     var packageName = packageInfo.packageName;
@@ -114,6 +117,10 @@ class DigiaUIClient {
     _instance.config = await appConfigResolver.getConfig();
 
     _instance.appState = DUIAppState.fromJson(_instance.config.appState ?? {});
+
+    if (developerConfig?.inspector?.blocObserver != null) {
+      Bloc.observer = developerConfig!.inspector!.blocObserver!;
+    }
 
     _instance._isInitialized = true;
   }

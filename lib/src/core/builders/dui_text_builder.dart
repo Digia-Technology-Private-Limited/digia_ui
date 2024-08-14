@@ -30,9 +30,8 @@ class _DUIText extends StatelessWidget {
   final Map<String, dynamic> props;
 
   const _DUIText({
-    Key? key,
     required this.props,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

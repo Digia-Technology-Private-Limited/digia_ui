@@ -13,7 +13,7 @@ class FlexGridView extends StatelessWidget {
   final double? verticalSpacing;
 
   const FlexGridView({
-    Key? key,
+    super.key,
     required this.itemCount,
     required this.rowCount,
     required this.itemBuilder,
@@ -21,7 +21,7 @@ class FlexGridView extends StatelessWidget {
     this.shouldFillEmptySpace = true,
     this.mainAxisAlignment = MainAxisAlignment.spaceBetween,
     this.verticalSpacing,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
