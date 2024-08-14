@@ -1,30 +1,28 @@
-import 'dart:async';
-import 'dart:io';
-
+import 'package:cross_file/cross_file.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 
 class DUIFile {
   final String? path;
-  final String name;
-  final int size;
+  final String? name;
+  final int? size;
   final Uint8List? bytes;
   final Stream<List<int>>? readStream;
   final String? identifier;
+  final XFile? xFile;
 
   DUIFile({
     this.path,
-    required this.name,
-    required this.size,
+    this.name,
+    this.size,
     this.bytes,
     this.readStream,
     this.identifier,
-  }) : assert(
-            (bytes != null || path != null) && !(bytes != null && path != null),
-            'Only one of bytes or path should be provided.');
+    this.xFile,
+  });
 
-  bool get isWeb => kIsWeb && bytes != null && path == null;
-  bool get isMobile => !kIsWeb && path != null && bytes == null;
+  bool get isWeb => kIsWeb;
+  bool get isMobile => !kIsWeb;
 
   // Factory constructor to create DUIFile from PlatformFile
   factory DUIFile.fromPlatformFile(PlatformFile platformFile) {
@@ -35,6 +33,7 @@ class DUIFile {
         bytes: platformFile.bytes,
         readStream: platformFile.readStream,
         identifier: platformFile.identifier,
+        xFile: platformFile.xFile,
       );
     } else {
       return DUIFile(
@@ -43,50 +42,17 @@ class DUIFile {
         size: platformFile.size,
         readStream: platformFile.readStream,
         identifier: platformFile.identifier,
+        xFile: platformFile.xFile,
       );
     }
   }
 
-  // Factory constructor to create DUIFile from bytes (for web)
-  factory DUIFile.fromBytes(String name, Uint8List bytes) {
+  // Factory constructor to create DUIFile from XFile
+  factory DUIFile.fromXFile(XFile xFile) {
     return DUIFile(
-      name: name,
-      size: bytes.length,
-      bytes: bytes,
+      name: xFile.name,
+      path: xFile.path,
+      xFile: xFile,
     );
-  }
-
-  // Factory constructor to create DUIFile from path (for mobile)
-  factory DUIFile.fromPath(String name, String path) {
-    return DUIFile(
-      path: path,
-      name: name,
-      size: 0,
-    );
-  }
-
-  // Method to get bytes from file, handling both web and mobile
-  Future<Uint8List?> getBytes() async {
-    if (isWeb) {
-      return bytes;
-    } else if (isMobile) {
-      if (path == null) return null;
-      try {
-        final file = File(path!);
-        return await file.readAsBytes();
-      } catch (e) {
-        print('Error reading file at $path: $e');
-        return null;
-      }
-    }
-    return null;
-  }
-
-  // Method to get file path (only valid for mobile)
-  String? getPath() {
-    if (isMobile) {
-      return path;
-    }
-    throw UnsupportedError('Path is not available on web');
   }
 }

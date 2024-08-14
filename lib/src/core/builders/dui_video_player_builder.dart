@@ -22,28 +22,23 @@ class DUIVideoPlayer extends DUIWidgetBuilder {
 
     if (videoSource is List<DUIFile> && videoSource.isNotEmpty) {
       final firstFile = videoSource.first;
-      if (firstFile.isMobile && firstFile.path != null) {
+      if (firstFile.isMobile) {
         return VideoPlayerController.file(File(firstFile.path!));
-      } else {
-        throw Exception('Invalid DUIFile source in list');
+      } else if (firstFile.isWeb) {
+        return VideoPlayerController.networkUrl(
+            Uri.parse(firstFile.xFile!.path));
       }
+      throw Exception('Invalid DUIFile source in list');
     }
 
     if (videoSource is DUIFile) {
-      if (videoSource.isMobile && videoSource.path != null) {
-        return VideoPlayerController.file(File(videoSource.path!));
-      } else {
-        throw Exception('Unsupported DUIFile source');
-      }
+      return VideoPlayerController.networkUrl(
+          Uri.parse(videoSource.xFile!.path));
     }
 
     if (videoSource is String) {
       if (videoSource.startsWith('http')) {
-        return VideoPlayerController.networkUrl(
-          Uri.parse(videoSource),
-        );
-      } else {
-        return VideoPlayerController.asset(videoSource);
+        return VideoPlayerController.networkUrl(Uri.parse(videoSource));
       }
     }
 

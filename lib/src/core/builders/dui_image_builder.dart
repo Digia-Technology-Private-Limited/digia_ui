@@ -33,19 +33,17 @@ class DUIImageBuilder extends DUIWidgetBuilder {
         return MemoryImage(firstFile.bytes!);
       } else if (firstFile.isMobile && firstFile.path != null) {
         return FileImage(File(firstFile.path!));
-      } else {
-        throw Exception('Invalid DUIFile source in list');
       }
+      throw Exception('Invalid DUIFile source in list');
     }
 
     if (imageSource is DUIFile) {
-      if (imageSource.isWeb && imageSource.bytes != null) {
+      if (imageSource.isWeb) {
         return MemoryImage(imageSource.bytes!);
-      } else if (imageSource.isMobile && imageSource.path != null) {
+      } else if (imageSource.isMobile) {
         return FileImage(File(imageSource.path!));
-      } else {
-        throw Exception('Invalid DUIFile source');
       }
+      throw Exception('Invalid DUIFile source');
     }
 
     if (imageSource is String) {
