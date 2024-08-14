@@ -19,13 +19,14 @@ class DUILinearProgressBarBuilder extends DUIWidgetBuilder {
         eval<double>(data.props['progressValue'], context: context);
     final isReverse =
         eval<bool>(data.props['isReverse'], context: context) ?? false;
+    final String? type = data.props['type'];
 
     return RotatedBox(
-        quarterTurns: isReverse ? 2 : 0, child: _getChild(progressValue));
+        quarterTurns: isReverse ? 2 : 0, child: _getChild(progressValue, type));
   }
 
-  Widget _getChild(double? progressValue) {
-    if (progressValue == null) {
+  Widget _getChild(double? progressValue, String? type) {
+    if (type == 'indeterminate') {
       return SizedBox(
         width: NumDecoder.toDouble(data.props['width']),
         child: LinearProgressIndicator(
@@ -45,7 +46,7 @@ class DUILinearProgressBarBuilder extends DUIWidgetBuilder {
         ),
         width: NumDecoder.toDouble(data.props['width']),
         lineHeight: NumDecoder.toDouble(data.props['thickness']) ?? 5.0,
-        percent: progressValue / 100.0,
+        percent: progressValue != null ? progressValue / 100.0 : 0,
         animation: true,
         backgroundColor: makeColor(data.props['bgColor']) ?? Colors.transparent,
         progressColor: makeColor(data.props['indicatorColor']) ?? Colors.blue,
