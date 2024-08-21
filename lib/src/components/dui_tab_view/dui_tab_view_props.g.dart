@@ -8,8 +8,11 @@ part of 'dui_tab_view_props.dart';
 
 DUITabViewProps _$DUITabViewPropsFromJson(Map<String, dynamic> json) =>
     DUITabViewProps(
+      iconPosition: json['iconPosition'] as String?,
+      tabBarScrollable: json['tabBarScrollable'] as Map<String, dynamic>?,
+      buttonProps: json['buttonProps'] as Map<String, dynamic>?,
+      indicatorProps: json['indicatorProps'] as Map<String, dynamic>?,
       hasTabs: json['hasTabs'] as bool?,
-      indicatorSize: json['indicatorSize'] as String?,
       initialIndex: json['initialIndex'],
       labelPadding: json['labelPadding'] == null
           ? null
@@ -18,9 +21,6 @@ DUITabViewProps _$DUITabViewPropsFromJson(Map<String, dynamic> json) =>
       selectedLabelStyle: DUITextStyle.fromJson(json['selectedLabelStyle']),
       unselectedLabelColor: json['unselectedLabelColor'] as String?,
       unselectedLabelStyle: DUITextStyle.fromJson(json['unselectedLabelStyle']),
-      dividerHeight: (json['dividerHeight'] as num?)?.toDouble(),
-      indicatorColor: json['indicatorColor'] as String?,
-      dividerColor: json['dividerColor'] as String?,
       tabBarPosition: json['tabBarPosition'] as String?,
       isScrollable: json['isScrollable'] as bool?,
       viewportFraction: (json['viewportFraction'] as num?)?.toDouble(),
@@ -32,16 +32,16 @@ DUITabViewProps _$DUITabViewPropsFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$DUITabViewPropsToJson(DUITabViewProps instance) =>
     <String, dynamic>{
       'hasTabs': instance.hasTabs,
-      'dividerColor': instance.dividerColor,
       'tabBarPosition': instance.tabBarPosition,
+      'iconPosition': instance.iconPosition,
       'selectedLabelColor': instance.selectedLabelColor,
       'unselectedLabelColor': instance.unselectedLabelColor,
-      'dividerHeight': instance.dividerHeight,
       'isScrollable': instance.isScrollable,
-      'indicatorColor': instance.indicatorColor,
-      'indicatorSize': instance.indicatorSize,
       'viewportFraction': instance.viewportFraction,
       'tabBarPadding': instance.tabBarPadding,
       'labelPadding': instance.labelPadding,
       'initialIndex': instance.initialIndex,
+      'tabBarScrollable': instance.tabBarScrollable,
+      'buttonProps': instance.buttonProps,
+      'indicatorProps': instance.indicatorProps,
     };
