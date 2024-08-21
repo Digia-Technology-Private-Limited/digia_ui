@@ -61,7 +61,8 @@ class _DUITabViewState extends State<DUITabView> with TickerProviderStateMixin {
             Visibility(
               visible: widget.tabViewProps.hasTabs ?? false,
               child: TabBarBuilder(
-                tabBarType: TabBarMode.indicator,
+                tabBarType: toTabBar(widget.tabViewProps.buttonProps
+                    ?.valueFor(keyPath: 'value')),
                 iconPosition: toIconPosition(widget.tabViewProps.iconPosition),
                 controller: _tabController,
                 isScrollable: widget.tabViewProps.tabBarScrollable
@@ -251,6 +252,14 @@ class _DUITabViewState extends State<DUITabView> with TickerProviderStateMixin {
         ],
       ),
     );
+  }
+
+  TabBarMode toTabBar(dynamic value) {
+    return switch (value) {
+      'indicator' => TabBarMode.indicator,
+      'button' => TabBarMode.button,
+      _ => TabBarMode.indicator
+    };
   }
 
   IconPosition toIconPosition(dynamic value) {
