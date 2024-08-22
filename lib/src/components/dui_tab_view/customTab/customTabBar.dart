@@ -125,6 +125,10 @@ class TabBarBuilder extends CustomTabBar {
           isScrollable: isScrollable ?? false,
           labelPadding: labelPadding ?? EdgeInsets.all(0),
           tabBarPadding: tabBarPadding ?? EdgeInsets.all(0),
+          labelColor: labelColor ?? Colors.blue,
+          unselectedLabelColor: unselectedLabelColor,
+          labelStyle: labelStyle,
+          unselectedLabelStyle: unselectedLabelStyle,
         );
 
       default:
