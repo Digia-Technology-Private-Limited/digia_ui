@@ -30,3 +30,22 @@ extension HttpMethodProperties on HttpMethod {
     }
   }
 }
+
+@JsonEnum()
+enum BodyType {
+  @JsonValue('JSON')
+  json,
+  @JsonValue('MULTIPART')
+  multipart
+}
+
+extension BodyTypeProperties on BodyType {
+  String get stringValue {
+    switch (this) {
+      case BodyType.json:
+        return 'JSON';
+      case BodyType.multipart:
+        return 'MULTIPART';
+    }
+  }
+}
