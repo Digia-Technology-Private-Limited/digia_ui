@@ -574,22 +574,7 @@ Map<String, ActionHandlerFn> _actionsMap = {
       if (sizeLimit != null && showToast) {
         platformFiles = pickedFile.files.where((file) {
           if (file.size > sizeLimit * 1024) {
-            toast.showToast(
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 24.0, vertical: 12.0),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(25.0),
-                  color: Colors.black,
-                ),
-                child: Text(
-                  'File ${file.name} of size ${(file.size / 1000).toStringAsFixed(2)}kB selected exceeds the size limit of ${sizeLimit}kB.',
-                  style: const TextStyle(color: Colors.white),
-                ),
-              ),
-              gravity: ToastGravity.BOTTOM,
-              toastDuration: const Duration(seconds: 2),
-            );
+            showExceedSizeLimitToast(toast, file, sizeLimit);
             return false;
           }
           return true;
@@ -604,10 +589,9 @@ Map<String, ActionHandlerFn> _actionsMap = {
 
     if (platformFiles.isNotEmpty) {
       try {
-        List<DUIFile> finalFiles =
-            await Future.wait(platformFiles.map((platformFile) async {
+        List<DUIFile> finalFiles = platformFiles.map((platformFile) {
           return DUIFile.fromPlatformFile(platformFile);
-        }).toList());
+        }).toList();
 
         final variables = bloc.state.props.variables;
         final events = [
@@ -892,4 +876,22 @@ toFileType(String? fileType) {
 String getPageName(BuildContext context) {
   final bloc = context.tryRead<DUIPageBloc>();
   return bloc?.state.pageUid ?? 'Unknown';
+}
+
+showExceedSizeLimitToast(FToast toast, PlatformFile file, double? sizeLimit) {
+  toast.showToast(
+    child: Container(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(25.0),
+        color: Colors.black,
+      ),
+      child: Text(
+        'File ${file.name} of size ${(file.size / 1000).toStringAsFixed(2)}kB selected exceeds the size limit of ${sizeLimit}kB.',
+        style: const TextStyle(color: Colors.white),
+      ),
+    ),
+    gravity: ToastGravity.BOTTOM,
+    toastDuration: const Duration(seconds: 2),
+  );
 }

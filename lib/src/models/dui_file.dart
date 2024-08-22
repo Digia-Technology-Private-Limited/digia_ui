@@ -26,25 +26,15 @@ class DUIFile {
 
   // Factory constructor to create DUIFile from PlatformFile
   factory DUIFile.fromPlatformFile(PlatformFile platformFile) {
-    if (kIsWeb) {
-      return DUIFile(
-        name: platformFile.name,
-        size: platformFile.size,
-        bytes: platformFile.bytes,
-        readStream: platformFile.readStream,
-        identifier: platformFile.identifier,
-        xFile: platformFile.xFile,
-      );
-    } else {
-      return DUIFile(
-        path: platformFile.path,
-        name: platformFile.name,
-        size: platformFile.size,
-        readStream: platformFile.readStream,
-        identifier: platformFile.identifier,
-        xFile: platformFile.xFile,
-      );
-    }
+    return DUIFile(
+      path: platformFile.path,
+      name: platformFile.name,
+      size: platformFile.size,
+      bytes: platformFile.bytes,
+      readStream: platformFile.readStream,
+      identifier: platformFile.identifier,
+      xFile: platformFile.xFile,
+    );
   }
 
   // Factory constructor to create DUIFile from XFile
