@@ -22,6 +22,7 @@ class DUIContainer2Props {
   final DUIDecorationImage? decorationImage;
   final String? shape;
   final String? boxFit;
+  final double? elevation;
   final Map<String, dynamic>? gradiant;
 
   DUIContainer2Props(
@@ -39,6 +40,7 @@ class DUIContainer2Props {
     this.decorationImage,
     this.shape,
     this.boxFit,
+    this.elevation,
     this.gradiant,
   );
 

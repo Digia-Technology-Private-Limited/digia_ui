@@ -43,11 +43,13 @@ class DUIContainer2 extends StatelessWidget {
     BoxShape shape =
         props.shape == 'circle' ? BoxShape.circle : BoxShape.rectangle;
     final gradiant = toGradiant(props.gradiant, context);
-    return Container(
+    final elevation = props.elevation ?? 0.0;
+
+    Widget container = Container(
       width: width,
       height: height,
       alignment: alignment,
-      margin: margin,
+      // margin: margin,
       padding: padding,
       decoration: BoxDecoration(
           gradient: gradiant,
@@ -78,6 +80,20 @@ class DUIContainer2 extends StatelessWidget {
           minHeight: props.minHeight?.toHeight(context) ?? 0,
           minWidth: props.minWidth?.toWidth(context) ?? 0),
       child: child.let((p0) => DUIWidget(data: p0)),
+    );
+
+    if (elevation > 0) {
+      container = Material(
+        elevation: elevation,
+        color: Colors.transparent,
+        borderRadius: borderRadius,
+        child: container,
+      );
+    }
+
+    return Padding(
+      padding: margin,
+      child: container,
     );
   }
 }
