@@ -544,11 +544,13 @@ Map<String, ActionHandlerFn> _actionsMap = {
     List<PlatformFile>? platformFiles;
     bool isSinglePick;
     try {
+      // Compression has to be set to 0, because of this issue:
+      // https://github.com/miguelpruivo/flutter_file_picker/issues/1534
       FilePickerResult? pickedFile = await FilePicker.platform.pickFiles(
-        type: type,
-        allowMultiple: isMultiSelect,
-        allowedExtensions: type == FileType.custom ? ['pdf'] : null,
-      );
+          type: type,
+          allowMultiple: isMultiSelect,
+          allowedExtensions: type == FileType.custom ? ['pdf'] : null,
+          compressionQuality: 0);
 
       isSinglePick = pickedFile?.isSinglePick ?? true;
 

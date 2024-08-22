@@ -27,7 +27,7 @@ class DUIFile {
   // Factory constructor to create DUIFile from PlatformFile
   factory DUIFile.fromPlatformFile(PlatformFile platformFile) {
     return DUIFile(
-      path: platformFile.path,
+      path: kIsWeb ? null : platformFile.path,
       name: platformFile.name,
       size: platformFile.size,
       bytes: platformFile.bytes,
