@@ -23,10 +23,9 @@ class DUIAvatarBuilder extends DUIWidgetBuilder {
 
   @override
   Widget build(BuildContext context) {
-    final shape =
-        eval<Map<String, dynamic>>(data.props['shape'], context: context);
+    final shape = data.props['shape'];
 
-    return switch (shape!['value']) {
+    return switch (shape['value']) {
       'circle' => _getCircleAvatar(shape, context),
       'square' => _getSquareAvatar(shape, context),
       _ => _getCircleAvatar(shape, context)
@@ -36,7 +35,7 @@ class DUIAvatarBuilder extends DUIWidgetBuilder {
   Widget _getCircleAvatar(Map<String, dynamic> shape, BuildContext context) {
     final bgColor = eval<String>(data.props['bgColor'], context: context);
     final radius = eval<double>(shape['radius'], context: context);
-
+    print(radius);
     return Container(
       height: (radius ?? 16) * 2,
       width: (radius ?? 16) * 2,
@@ -52,8 +51,7 @@ class DUIAvatarBuilder extends DUIWidgetBuilder {
   Widget _getSquareAvatar(Map<String, dynamic> shape, BuildContext context) {
     final String? bgColor =
         eval<String>(data.props['bgColor'], context: context);
-    final String? cornerRadius =
-        eval<String>(shape['cornerRadius'], context: context);
+    final String? cornerRadius = shape['cornerRadius'];
     final double? side = eval<double>(shape['side'], context: context);
 
     return Container(
@@ -78,8 +76,6 @@ class DUIAvatarBuilder extends DUIWidgetBuilder {
       return DUIImageBuilder.fromProps(
           props: {'imageSrc': imageSrc, 'fit': imageFit}).build(context);
     }
-    // final Map<String, dynamic>? text =
-    //     data.props['text'].tryCast<Map<String, dynamic>>();
     return Align(
         alignment: Alignment.center,
         child: DUITextBuilder.fromProps(
