@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../core/builders/bottom_navigation_bar_item_builder.dart';
+import '../core/builders/custom_shape_builder.dart';
 import '../core/builders/dezerv_component/dezerv_dial_pad_builder.dart';
 import '../core/builders/dezerv_stepper_builder.dart';
 import '../core/builders/dui_animated_button_builder.dart';
@@ -137,6 +138,7 @@ class DUIWidgetRegistry {
     'digia/pinField': withoutRegistry(DUIPinFieldBuilder.create),
     'digia/calendar': withoutRegistry(DUICalendarBuilder.create),
     'digia/lineChart': withoutRegistry(DUILineChartBuilder.create),
+    'digia/customShapeCard': withoutRegistry(CustomShapeBuilder.create),
     'digia/paginatedListView': (data, {registry}) =>
         DUIPaginatedListViewBuilder.create(data),
     'digia/timer': withoutRegistry(DUITimerBuilder.create),
