@@ -12,7 +12,7 @@ class APIModel {
   final HttpMethod method;
   final Map<String, dynamic>? headers;
   final Map<String, dynamic>? body;
-  final BodyType bodyType;
+  final BodyType? bodyType;
   @VariablesJsonConverter()
   Map<String, VariableDef>? variables;
 
