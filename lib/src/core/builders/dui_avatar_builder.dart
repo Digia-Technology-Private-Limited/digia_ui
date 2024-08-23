@@ -35,7 +35,7 @@ class DUIAvatarBuilder extends DUIWidgetBuilder {
 
   Widget _getCircleAvatar(Map<String, dynamic> shape, BuildContext context) {
     final bgColor = eval<String>(data.props['bgColor'], context: context);
-    final radius = eval<double>(shape[''], context: context);
+    final radius = eval<double>(shape['radius'], context: context);
 
     return Container(
       height: (radius ?? 16) * 2,
