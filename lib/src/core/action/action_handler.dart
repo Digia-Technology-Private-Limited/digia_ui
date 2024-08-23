@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:digia_expr/digia_expr.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,20 +9,25 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../../digia_ui.dart';
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
 import '../../Utils/basic_shared_utils/lodash.dart';
 import '../../Utils/basic_shared_utils/num_decoder.dart';
+import '../../Utils/dui_talker_logs.dart';
 import '../../Utils/expr.dart';
 import '../../Utils/extensions.dart';
 import '../../Utils/util_functions.dart';
 import '../../components/DUIText/dui_text_style.dart';
 import '../../components/dui_widget_scope.dart';
+import '../../digia_ui_client.dart';
 import '../../dui_logger.dart';
+import '../../models/dui_file.dart';
+import '../../types.dart';
 import '../analytics_handler.dart';
 import '../app_state_provider.dart';
 import '../evaluator.dart';
+import '../page/dui_page_bloc.dart';
 import '../page/dui_page_event.dart';
+import '../utils.dart';
 import 'action_prop.dart';
 import 'api_handler.dart';
 
@@ -516,6 +522,178 @@ Map<String, ActionHandlerFn> _actionsMap = {
     }
     return null;
   },
+  'Action.filePicker': (
+      {required action, required context, enclosing, logger}) async {
+    final bloc = context.tryRead<DUIPageBloc>();
+    if (bloc == null) {
+      throw 'Action.filePicker called on a widget which is not wrapped in DUIPageBloc';
+    }
+
+    final fileType = eval<String>(action.data['fileType'],
+        context: context, enclosing: enclosing);
+    final sizeLimit = eval<double>(action.data['sizeLimit'],
+        context: context, enclosing: enclosing);
+    final showToast = NumDecoder.toBool(action.data['showToast']) ?? true;
+    final isMultiSelect =
+        NumDecoder.toBool(action.data['isMultiSelected']) ?? false;
+    final selectedPageState = action.data['selectedPageState'];
+    final rebuildPage = NumDecoder.toBool(action.data['rebuildPage']) ?? false;
+
+    final type = toFileType(fileType);
+
+    List<PlatformFile>? platformFiles;
+    bool isSinglePick;
+    try {
+      // Compression has to be set to 0, because of this issue:
+      // https://github.com/miguelpruivo/flutter_file_picker/issues/1534
+      FilePickerResult? pickedFile = await FilePicker.platform.pickFiles(
+          type: type,
+          allowMultiple: isMultiSelect,
+          allowedExtensions: type == FileType.custom ? ['pdf'] : null,
+          compressionQuality: 0);
+
+      isSinglePick = pickedFile?.isSinglePick ?? true;
+
+      if (pickedFile == null) {
+        // User canceled the picker
+        return;
+      }
+
+      logger?.log(ActionLog(getPageName(context), 'Action.filePicker', {
+        'fileType': fileType,
+        'sizeLimit': sizeLimit,
+        'showToast': showToast,
+        'isMultiSelect': isMultiSelect,
+        'selectedPageState': selectedPageState,
+        'rebuildPage': rebuildPage,
+        'type': type,
+        'fileName': pickedFile.files.first.name,
+        'fileSize': pickedFile.files.first.size,
+      }));
+
+      final toast = FToast().init(context);
+
+      if (sizeLimit != null && showToast) {
+        platformFiles = pickedFile.files.where((file) {
+          if (file.size > sizeLimit * 1024) {
+            showExceedSizeLimitToast(toast, file, sizeLimit);
+            return false;
+          }
+          return true;
+        }).toList();
+      } else {
+        platformFiles = pickedFile.files;
+      }
+    } catch (e) {
+      print('Error picking file: $e');
+      return;
+    }
+
+    if (platformFiles.isNotEmpty) {
+      try {
+        List<DUIFile> finalFiles = platformFiles.map((platformFile) {
+          return DUIFile.fromPlatformFile(platformFile);
+        }).toList();
+
+        final variables = bloc.state.props.variables;
+        final events = [
+          {
+            'variableName': selectedPageState,
+            'value': isSinglePick ? finalFiles.first : finalFiles,
+          }
+        ];
+
+        bloc.add(SetStateEvent(
+          events: events
+              .where((e) => variables?[e['variableName']] != null)
+              .map((e) => SingleSetStateEvent(
+                    variableName: e['variableName'],
+                    context: context,
+                    value: e['value'],
+                  ))
+              .toList(),
+          rebuildPage: rebuildPage,
+        ));
+      } catch (e) {
+        print('Error: $e');
+      }
+    }
+
+    return;
+  },
+  'Action.upload': (
+      {required action, required context, enclosing, logger}) async {
+    final dataSourceId = action.data['dataSourceId'];
+    Map<String, dynamic>? apiDataSourceArgs = action.data['args'];
+    final apiModel = (context.tryRead<DUIPageBloc>()?.config)
+        ?.getApiDataSource(dataSourceId);
+
+    final args = apiDataSourceArgs?.map((key, value) {
+      final evalue = eval(value, context: context);
+      final dvalue = apiModel?.variables?[key]?.defaultValue;
+      return MapEntry(key, evalue ?? dvalue);
+    });
+
+    logger?.log(ActionLog(getPageName(context), 'Action.upload', {
+      'dataSourceId': dataSourceId,
+      'args': args,
+      'successCondition': action.data['successCondition'],
+    }));
+
+    final result = await ApiHandler.instance
+        .execute(apiModel: apiModel!, args: args)
+        .then((resp) {
+      final response = {
+        'body': resp.data,
+        'statusCode': resp.statusCode,
+        'headers': resp.headers,
+        'requestObj': requestObjToMap(resp.requestOptions),
+        'error': null,
+      };
+
+      final successCondition = action.data['successCondition'] as String?;
+      final evaluatedSuccessCond = successCondition.let((p0) => eval<bool>(
+              successCondition,
+              context: context,
+              enclosing: ExprContext(
+                  variables: {'response': response}, enclosing: enclosing))) ??
+          successCondition == null || successCondition.isEmpty;
+
+      if (evaluatedSuccessCond) {
+        final successAction = ActionFlow.fromJson(action.data['onSuccess']);
+        return ActionHandler.instance.execute(
+            context: context,
+            actionFlow: successAction,
+            enclosing: ExprContext(
+                variables: {'response': response}, enclosing: enclosing));
+      } else {
+        final errorAction = ActionFlow.fromJson(action.data['onError']);
+        return ActionHandler.instance.execute(
+            context: context,
+            actionFlow: errorAction,
+            enclosing: ExprContext(
+                variables: {'response': response}, enclosing: enclosing));
+      }
+    }, onError: (e) async {
+      final errorAction = ActionFlow.fromJson(action.data['onError']);
+
+      final response = {
+        'body': e.response?.data,
+        'statusCode': e.response?.statusCode,
+        'headers': e.response?.headers,
+        'requestObj': requestObjToMap(e.requestOptions),
+        'error': e.message,
+      };
+
+      return ActionHandler.instance.execute(
+          context: context,
+          actionFlow: errorAction,
+          enclosing: ExprContext(
+              variables: {'response': response}, enclosing: enclosing));
+    });
+
+    return result;
+  },
   'Action.share': ({required action, required context, enclosing, logger}) {
     final message = eval<String>(action.data['message'],
         context: context, enclosing: enclosing);
@@ -682,7 +860,40 @@ requestObjToMap(dynamic request) {
   };
 }
 
+toFileType(String? fileType) {
+  switch (fileType!.toLowerCase()) {
+    case 'image':
+      return FileType.image;
+    case 'video':
+      return FileType.video;
+    case 'audio':
+      return FileType.audio;
+    case 'pdf':
+      return FileType.custom;
+    default:
+      return FileType.any;
+  }
+}
+
 String getPageName(BuildContext context) {
   final bloc = context.tryRead<DUIPageBloc>();
   return bloc?.state.pageUid ?? 'Unknown';
+}
+
+showExceedSizeLimitToast(FToast toast, PlatformFile file, double? sizeLimit) {
+  toast.showToast(
+    child: Container(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(25.0),
+        color: Colors.black,
+      ),
+      child: Text(
+        'File ${file.name} of size ${(file.size / 1000).toStringAsFixed(2)}kB selected exceeds the size limit of ${sizeLimit}kB.',
+        style: const TextStyle(color: Colors.white),
+      ),
+    ),
+    gravity: ToastGravity.BOTTOM,
+    toastDuration: const Duration(seconds: 2),
+  );
 }
