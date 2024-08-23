@@ -18,7 +18,7 @@ DUIContainer2Props _$DUIContainer2PropsFromJson(Map<String, dynamic> json) =>
       json['margin'] == null ? null : DUIInsets.fromJson(json['margin']),
       json['padding'] == null ? null : DUIInsets.fromJson(json['padding']),
       json['color'] as String?,
-      json['border'] == null ? null : DUIBorder.fromJson(json['border']),
+      json['border'] as Map<String, dynamic>?,
       json['decorationImage'] == null
           ? null
           : DUIDecorationImage.fromJson(

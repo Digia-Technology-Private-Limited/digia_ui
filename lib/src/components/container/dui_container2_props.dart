@@ -18,7 +18,7 @@ class DUIContainer2Props {
   final DUIInsets? margin;
   final DUIInsets? padding;
   final String? color;
-  final DUIBorder? border;
+  final Map<String, dynamic>? border;
   final DUIDecorationImage? decorationImage;
   final String? shape;
   final String? boxFit;

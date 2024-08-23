@@ -11,6 +11,8 @@ import '../../core/page/props/dui_widget_json_data.dart';
 import '../dui_widget.dart';
 import 'dui_container2_props.dart';
 
+enum BorderType { only, all }
+
 class DUIContainer2 extends StatelessWidget {
   final DUIContainer2Props props;
   final DUIWidgetJsonData? child;
@@ -27,15 +29,19 @@ class DUIContainer2 extends StatelessWidget {
       return AssetImage(source);
     });
 
+    final bordertype = toBorderType(props.border?['borderType']['value']);
+
     final width = props.width?.toWidth(context);
     final height = props.height?.toHeight(context);
-    final borderRadius = DUIDecoder.toBorderRadius(props.border?.borderRadius);
+    final borderRadius =
+        DUIDecoder.toBorderRadius(props.border?['borderRadius']);
     final alignment = DUIDecoder.toAlignment(props.childAlignment);
     final margin = DUIDecoder.toEdgeInsets(props.margin?.toJson());
     final padding = DUIDecoder.toEdgeInsets(props.padding?.toJson());
     final color = makeColor(eval<String>(props.color, context: context));
-    final borderColor =
-        makeColor(eval<String>(props.border?.borderColor, context: context));
+    final borderColor = makeColor(
+            eval<String>(props.border?['borderColor'], context: context)) ??
+        Colors.black;
     final imageAlignment =
         DUIDecoder.toAlignment(props.decorationImage?.alignment);
     final imageOpacity =
@@ -44,6 +50,8 @@ class DUIContainer2 extends StatelessWidget {
         props.shape == 'circle' ? BoxShape.circle : BoxShape.rectangle;
     final gradiant = toGradiant(props.gradiant, context);
     final elevation = props.elevation ?? 0.0;
+    final onlyBorderWidth =
+        toBorderWidth(props.border?['borderType']['onlyBorderWidth']);
 
     Widget container = Container(
       width: width,
@@ -54,10 +62,44 @@ class DUIContainer2 extends StatelessWidget {
       decoration: BoxDecoration(
           gradient: gradiant,
           color: gradiant == null ? color : null,
-          border: (props.border?.borderWidth).let((p0) => Border.all(
-                color: borderColor ?? Colors.black,
-                width: NumDecoder.toDoubleOrDefault(p0, defaultValue: 1),
-              )),
+          border: (bordertype == BorderType.all)
+              ? (NumDecoder.toDoubleOrDefault(
+                          props.border?['borderType']['allBorderWidth'],
+                          defaultValue: 0) >
+                      0)
+                  ? Border.all(
+                      color: borderColor,
+                      width: NumDecoder.toDoubleOrDefault(
+                          props.border?['borderType']['allBorderWidth'],
+                          defaultValue: 0),
+                    )
+                  : null
+              : Border(
+                  top: onlyBorderWidth.top > 0
+                      ? BorderSide(
+                          color: borderColor,
+                          width: onlyBorderWidth.top,
+                        )
+                      : BorderSide.none,
+                  bottom: onlyBorderWidth.bottom > 0
+                      ? BorderSide(
+                          color: borderColor,
+                          width: onlyBorderWidth.bottom,
+                        )
+                      : BorderSide.none,
+                  left: onlyBorderWidth.left > 0
+                      ? BorderSide(
+                          color: borderColor,
+                          width: onlyBorderWidth.left,
+                        )
+                      : BorderSide.none,
+                  right: onlyBorderWidth.right > 0
+                      ? BorderSide(
+                          color: borderColor,
+                          width: onlyBorderWidth.right,
+                        )
+                      : BorderSide.none,
+                ),
           borderRadius: props.shape == 'circle'
               ? null
               : BorderRadius.only(
@@ -96,4 +138,59 @@ class DUIContainer2 extends StatelessWidget {
       child: container,
     );
   }
+
+  BorderWidth toBorderWidth(dynamic value) {
+    if (value == null) return BorderWidth();
+    List<double> data = [];
+    if (value is String) {
+      data = value
+          .split(',')
+          .map((e) => NumDecoder.toDoubleOrDefault(e, defaultValue: 0))
+          .nonNulls
+          .toList();
+    }
+    switch (data.length) {
+      case 1:
+        return BorderWidth(left: data[0]);
+      case 2:
+        return BorderWidth(left: data[0], top: data[1]);
+      case 3:
+        return BorderWidth(left: data[0], top: data[1], right: data[2]);
+      case 4:
+        return BorderWidth(
+            left: data[0], top: data[1], right: data[2], bottom: data[3]);
+      default:
+        return BorderWidth();
+    }
+  }
+
+  BorderType toBorderType(dynamic value) {
+    return switch (value) {
+      'all' => BorderType.all,
+      'only' => BorderType.only,
+      _ => BorderType.only
+    };
+  }
+}
+
+class BorderWidth {
+  final double _left;
+  final double _right;
+  final double _top;
+  final double _bottom;
+
+  double get left => _left;
+  double get right => _right;
+  double get top => _top;
+  double get bottom => _bottom;
+
+  BorderWidth({
+    double? left,
+    double? right,
+    double? top,
+    double? bottom,
+  })  : _left = left ?? 0.0,
+        _right = right ?? 0.0,
+        _top = top ?? 0.0,
+        _bottom = bottom ?? 0.0;
 }
