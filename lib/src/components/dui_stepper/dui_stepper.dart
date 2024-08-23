@@ -82,8 +82,10 @@ class _DUIStepperState extends DUIWidgetState<DUIStepper>
 
     if (children.isEmpty) return _emptyChildWidget();
 
-    final completedStepIndex =
-        (eval<int>(widget.props['completedIndex'], context: context) ?? 0);
+    final indicatorPosition =
+        (eval<double>(widget.props['indicatorPosition'], context: context) ??
+            0.5);
+
     final radius = eval<double>(widget.props['radius'], context: context) ?? 28;
     final thickness =
         eval<double>(widget.props['thickness'], context: context) ?? 5;
@@ -117,9 +119,11 @@ class _DUIStepperState extends DUIWidgetState<DUIStepper>
         shrinkWrap: true,
         theme: TimelineThemeData(
           nodePosition: 0,
+          indicatorPosition: indicatorPosition,
         ),
         builder: TimelineTileBuilder.connected(
           connectionDirection: ConnectionDirection.after,
+          // contentsAlign: ContentsAlign.alternating,
           itemCount: items.length,
           contentsBuilder: (context, index) {
             final childToRepeat = children.first;
@@ -185,6 +189,7 @@ class _DUIStepperState extends DUIWidgetState<DUIStepper>
         shrinkWrap: true,
         theme: TimelineThemeData(
           nodePosition: 0,
+          indicatorPosition: indicatorPosition,
         ),
         builder: TimelineTileBuilder.connected(
           connectionDirection: ConnectionDirection.after,
