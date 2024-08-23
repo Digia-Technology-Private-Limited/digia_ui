@@ -50,6 +50,7 @@ class DUILinearProgressBarBuilder extends DUIWidgetBuilder {
         animation: true,
         backgroundColor: makeColor(data.props['bgColor']) ?? Colors.transparent,
         progressColor: makeColor(data.props['indicatorColor']) ?? Colors.blue,
+        padding: EdgeInsets.zero,
       );
     }
   }
