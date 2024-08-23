@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import '../../Utils/basic_shared_utils/num_decoder.dart';
+import '../../Utils/extensions.dart';
 import '../../Utils/util_functions.dart';
 import '../evaluator.dart';
 import '../json_widget_builder.dart';
@@ -19,16 +21,18 @@ class DUILinearProgressBarBuilder extends DUIWidgetBuilder {
         eval<double>(data.props['progressValue'], context: context);
     final isReverse =
         eval<bool>(data.props['isReverse'], context: context) ?? false;
+    final width = data.props['width'].toString().toWidth(context);
     final String? type = data.props['type'] ?? 'indeterminate';
 
     return RotatedBox(
-        quarterTurns: isReverse ? 2 : 0, child: _getChild(progressValue, type));
+        quarterTurns: isReverse ? 2 : 0,
+        child: _getChild(progressValue, type, width));
   }
 
-  Widget _getChild(double? progressValue, String? type) {
+  Widget _getChild(double? progressValue, String? type, double? width) {
     if (type == 'indeterminate') {
       return SizedBox(
-        width: NumDecoder.toDouble(data.props['width']),
+        width: width,
         child: LinearProgressIndicator(
           color: makeColor(data.props['indicatorColor']) ?? Colors.blue,
           backgroundColor:
@@ -44,7 +48,7 @@ class DUILinearProgressBarBuilder extends DUIWidgetBuilder {
         barRadius: Radius.circular(
           NumDecoder.toDouble(data.props['borderRadius']) ?? 0.0,
         ),
-        width: NumDecoder.toDouble(data.props['width']),
+        width: width,
         lineHeight: NumDecoder.toDouble(data.props['thickness']) ?? 5.0,
         percent: progressValue != null ? progressValue / 100.0 : 0,
         animation: true,
