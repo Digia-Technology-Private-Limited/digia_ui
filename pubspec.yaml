@@ -45,7 +45,7 @@ scripts:
 # versions available, run `flutter pub outdated`.
 dependencies:
   cached_network_image: ^3.3.0
-  carousel_slider: ^4.2.1
+  carousel_slider: ^5.0.0
   chewie: ^1.8.1
   collection: ^1.17.1
   copy_with_extension: ^5.0.4
