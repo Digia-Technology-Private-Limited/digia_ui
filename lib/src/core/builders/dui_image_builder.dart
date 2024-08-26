@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blurhash/flutter_blurhash.dart';
@@ -29,21 +27,15 @@ class DUIImageBuilder extends DUIWidgetBuilder {
       BuildContext context, Object? imageSource) {
     if (imageSource is List<DUIFile> && imageSource.isNotEmpty) {
       final firstFile = imageSource.first;
-      if (firstFile.isWeb && firstFile.bytes != null) {
-        return MemoryImage(firstFile.bytes!);
-      } else if (firstFile.isMobile && firstFile.path != null) {
-        return FileImage(File(firstFile.path!));
+      if (firstFile.xFile?.path != null) {
+        return CachedNetworkImageProvider(firstFile.xFile!.path);
       }
-      throw Exception('Invalid DUIFile source in list');
     }
 
     if (imageSource is DUIFile) {
-      if (imageSource.isWeb) {
-        return MemoryImage(imageSource.bytes!);
-      } else if (imageSource.isMobile) {
-        return FileImage(File(imageSource.path!));
+      if (imageSource.xFile?.path != null) {
+        return CachedNetworkImageProvider(imageSource.xFile!.path);
       }
-      throw Exception('Invalid DUIFile source');
     }
 
     if (imageSource is String) {

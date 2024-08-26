@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -522,6 +523,156 @@ Map<String, ActionHandlerFn> _actionsMap = {
     }
     return null;
   },
+  'Action.imagePicker': (
+      {required action, required context, enclosing, logger}) async {
+    final bloc = context.tryRead<DUIPageBloc>();
+    if (bloc == null) {
+      throw 'Action.imagePicker called on a widget which is not wrapped in DUIPageBloc';
+    }
+
+    final mediaSource = action.data['mediaSource'];
+    final cameraDevice = action.data['cameraDevice'];
+    final allowPhoto = NumDecoder.toBool(action.data['allowPhoto']) ?? true;
+    final allowVideo = NumDecoder.toBool(action.data['allowVideo']) ?? false;
+    final maxDuration = action.data['maxDuration'];
+    final maxWidth = eval<double>(action.data['maxWidth'],
+        context: context, enclosing: enclosing);
+    final maxHeight = eval<double>(action.data['maxHeight'],
+        context: context, enclosing: enclosing);
+    final imageQuality = eval<int>(action.data['imageQuality'],
+        context: context, enclosing: enclosing);
+    final limit =
+        eval<int>(action.data['limit'], context: context, enclosing: enclosing);
+    final allowMultiple =
+        NumDecoder.toBool(action.data['allowMultiple']) ?? false;
+    final showToast = NumDecoder.toBool(action.data['showToast']) ?? true;
+    final selectedPageState = action.data['selectedPageState'];
+    final rebuildPage = NumDecoder.toBool(action.data['rebuildPage']) ?? false;
+
+    if (!allowPhoto && !allowVideo) {
+      throw 'At least one of allowPhoto or allowVideo must be true';
+    }
+
+    ImageSource source = toImageSource(mediaSource);
+    CameraDevice device = toCameraDevice(cameraDevice);
+
+    final imagePicker = ImagePicker();
+    List<XFile> pickedFiles = [];
+
+    try {
+      if (allowMultiple) {
+        if (allowPhoto && allowVideo) {
+          pickedFiles = await imagePicker.pickMultipleMedia(
+            maxWidth: maxWidth,
+            maxHeight: maxHeight,
+            imageQuality: imageQuality,
+            limit: limit,
+            requestFullMetadata: false,
+          );
+        } else if (allowPhoto) {
+          pickedFiles = await imagePicker.pickMultiImage(
+            maxWidth: maxWidth,
+            maxHeight: maxHeight,
+            imageQuality: imageQuality,
+            limit: limit,
+            requestFullMetadata: false,
+          );
+        } else if (allowVideo) {
+          pickedFiles = await imagePicker.pickMultipleMedia(
+            maxWidth: maxWidth,
+            maxHeight: maxHeight,
+            imageQuality: imageQuality,
+            limit: limit,
+            requestFullMetadata: false,
+          );
+        }
+      } else {
+        XFile? pickedFile;
+        if (allowPhoto && allowVideo) {
+          pickedFile = await imagePicker.pickMedia(
+            maxWidth: maxWidth,
+            maxHeight: maxHeight,
+            imageQuality: imageQuality,
+            requestFullMetadata: false,
+          );
+        } else if (allowPhoto) {
+          pickedFile = await imagePicker.pickImage(
+            source: source,
+            maxWidth: maxWidth,
+            maxHeight: maxHeight,
+            imageQuality: imageQuality,
+            preferredCameraDevice: device,
+            requestFullMetadata: false,
+          );
+        } else if (allowVideo) {
+          pickedFile = await imagePicker.pickVideo(
+            source: source,
+            preferredCameraDevice: device,
+            maxDuration: Duration(seconds: maxDuration),
+          );
+        }
+        if (pickedFile != null) pickedFiles = [pickedFile];
+      }
+
+      if (pickedFiles.isEmpty) {
+        // User canceled the picker
+        return;
+      }
+      logger?.log(ActionLog(getPageName(context), 'Action.imagePicker', {
+        'mediaSource': mediaSource,
+        'cameraDevice': cameraDevice,
+        'allowPhoto': allowPhoto,
+        'allowVideo': allowVideo,
+        'maxDuration': maxDuration,
+        'maxWidth': maxWidth,
+        'maxHeight': maxHeight,
+        'imageQuality': imageQuality,
+        'limit': limit,
+        'allowMultiple': allowMultiple,
+        'showToast': showToast,
+        'selectedPageState': selectedPageState,
+        'rebuildPage': rebuildPage,
+        'fileCount': pickedFiles.length,
+      }));
+    } catch (e) {
+      print('Error picking media: $e');
+      return;
+    }
+
+    if (pickedFiles.isNotEmpty) {
+      try {
+        List<DUIFile> finalFiles = pickedFiles.map((xFile) {
+          return DUIFile.fromXFile(xFile);
+        }).toList();
+
+        if (finalFiles.isNotEmpty) {
+          final variables = bloc.state.props.variables;
+          final events = [
+            {
+              'variableName': selectedPageState,
+              'value': allowMultiple ? finalFiles : finalFiles.first,
+            }
+          ];
+
+          bloc.add(SetStateEvent(
+            events: events
+                .where((e) => variables?[e['variableName']] != null)
+                .map((e) => SingleSetStateEvent(
+                      variableName: e['variableName'],
+                      context: context,
+                      value: e['value'],
+                    ))
+                .toList(),
+            rebuildPage: rebuildPage,
+          ));
+        }
+      } catch (e) {
+        print('Error processing picked media: $e');
+      }
+    }
+
+    return;
+  },
   'Action.filePicker': (
       {required action, required context, enclosing, logger}) async {
     final bloc = context.tryRead<DUIPageBloc>();
@@ -875,12 +1026,30 @@ toFileType(String? fileType) {
   }
 }
 
+toImageSource(String? mediaSource) {
+  switch (mediaSource?.toLowerCase()) {
+    case 'camera':
+      return ImageSource.camera;
+    case 'gallery':
+      return ImageSource.gallery;
+  }
+}
+
+toCameraDevice(String? cameraDevice) {
+  switch (cameraDevice?.toLowerCase()) {
+    case 'front':
+      return CameraDevice.front;
+    case 'rear':
+      return CameraDevice.rear;
+  }
+}
+
 String getPageName(BuildContext context) {
   final bloc = context.tryRead<DUIPageBloc>();
   return bloc?.state.pageUid ?? 'Unknown';
 }
 
-showExceedSizeLimitToast(FToast toast, PlatformFile file, double? sizeLimit) {
+showExceedSizeLimitToast(FToast toast, dynamic file, double? sizeLimit) {
   toast.showToast(
     child: Container(
       padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
