@@ -545,7 +545,6 @@ Map<String, ActionHandlerFn> _actionsMap = {
         eval<int>(action.data['limit'], context: context, enclosing: enclosing);
     final allowMultiple =
         NumDecoder.toBool(action.data['allowMultiple']) ?? false;
-    final showToast = NumDecoder.toBool(action.data['showToast']) ?? true;
     final selectedPageState = action.data['selectedPageState'];
     final rebuildPage = NumDecoder.toBool(action.data['rebuildPage']) ?? false;
 
@@ -629,7 +628,6 @@ Map<String, ActionHandlerFn> _actionsMap = {
         'imageQuality': imageQuality,
         'limit': limit,
         'allowMultiple': allowMultiple,
-        'showToast': showToast,
         'selectedPageState': selectedPageState,
         'rebuildPage': rebuildPage,
         'fileCount': pickedFiles.length,
