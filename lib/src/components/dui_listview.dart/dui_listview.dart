@@ -36,14 +36,14 @@ class DuiListviewState extends DUIWidgetState<DuiListview> {
   void initState() {
     super.initState();
 
+    _streamValueNotifier = ValueNotifier<double>(0.0);
+
     _scrollController = ScrollController(
       keepScrollOffset: true,
     );
     _scrollController.addListener(() {
       _streamValueNotifier.value = _scrollController.offset;
     });
-
-    _streamValueNotifier = ValueNotifier<dynamic>(0);
   }
 
   Stream<dynamic> getListStream(dynamic offSet) {

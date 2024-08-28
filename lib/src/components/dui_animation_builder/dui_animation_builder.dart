@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 
 import '../../Utils/basic_shared_utils/lodash.dart';
@@ -22,16 +20,16 @@ class DuiAnimationComponent extends BaseStatefulWidget {
 }
 
 class DuiAnimationComponentState extends State<DuiAnimationComponent> {
-  late ValueNotifier<dynamic>? _valueNotifier;
+  ValueNotifier<dynamic>? _valueNotifier;
 
   @override
-  void initState() {
-    super.initState();
-
-    _valueNotifier = eval(
-      widget.data.props['dataStream'],
-      context: context,
-    ) as ValueNotifier?;
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _valueNotifier =
+        eval(widget.data.props['opacity'], context: context) as ValueNotifier?;
+    _valueNotifier?.addListener(() {
+      setState(() {});
+    });
   }
 
   @override
@@ -53,7 +51,7 @@ class DuiAnimationComponentState extends State<DuiAnimationComponent> {
               return child ?? Container();
             })
         : Text(
-            'No Listnable found!!',
+            'No Listenable found!!',
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w500,
