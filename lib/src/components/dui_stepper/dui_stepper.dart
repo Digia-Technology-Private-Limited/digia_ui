@@ -11,6 +11,7 @@ import '../../core/builders/dui_icon_builder.dart';
 import '../../core/builders/dui_json_widget_builder.dart';
 import '../../core/evaluator.dart';
 import '../dui_base_stateful_widget.dart';
+import 'DashLineConnector.dart';
 
 class DUIStepper extends BaseStatefulWidget {
   final Map<String, dynamic> props;
@@ -58,22 +59,56 @@ class _DUIStepperState extends DUIWidgetState<DUIStepper>
   }
 
   Connector toConnectorType(dynamic value, Color color, double thickness) {
-    return switch (value) {
+    //for backward COmpatible
+    //need to remove ()
+    if (value is String) {
+      return switch (value) {
+        'solid' => Connector.solidLine(
+            color: color,
+            thickness: thickness,
+          ),
+        'dashed' => CustomDashedLineConnector(
+            color: color,
+            thickness: thickness,
+            dash: thickness * 3,
+            gap: thickness * 2,
+          ),
+        _ => Connector.solidLine(
+            color: color,
+            thickness: thickness,
+          )
+      };
+    }
+    final connectorType = value?['value'];
+    return switch (connectorType) {
       'solid' => Connector.solidLine(
           color: color,
           thickness: thickness,
         ),
-      'dashed' => Connector.dashedLine(
+      'dashed' => CustomDashedLineConnector(
           color: color,
           thickness: thickness,
-          dash: thickness * 3,
-          gap: thickness * 2,
+          dash: value?['dash'] ?? thickness * 3,
+          gap: value?['gap'] ?? thickness * 2,
+          strokeCap: toStrokeCap(value?['strokeCap']),
         ),
       _ => Connector.solidLine(
           color: color,
           thickness: thickness,
         )
     };
+  }
+
+  StrokeCap toStrokeCap(dynamic value) {
+    switch (value) {
+      case 'square':
+        return StrokeCap.square;
+      case 'round':
+        return StrokeCap.round;
+      case 'butt':
+      default:
+        return StrokeCap.butt;
+    }
   }
 
   @override
