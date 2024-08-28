@@ -27,6 +27,7 @@ DUIContainer2Props _$DUIContainer2PropsFromJson(Map<String, dynamic> json) =>
       json['boxFit'] as String?,
       (json['elevation'] as num?)?.toDouble(),
       json['gradiant'] as Map<String, dynamic>?,
+      json['advancedBorder'] as Map<String, dynamic>?,
     );
 
 Map<String, dynamic> _$DUIContainer2PropsToJson(DUIContainer2Props instance) =>
@@ -47,4 +48,5 @@ Map<String, dynamic> _$DUIContainer2PropsToJson(DUIContainer2Props instance) =>
       'boxFit': instance.boxFit,
       'elevation': instance.elevation,
       'gradiant': instance.gradiant,
+      'advancedBorder': instance.advancedBorder,
     };

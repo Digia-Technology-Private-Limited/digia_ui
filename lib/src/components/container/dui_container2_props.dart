@@ -24,6 +24,7 @@ class DUIContainer2Props {
   final String? boxFit;
   final double? elevation;
   final Map<String, dynamic>? gradiant;
+  final Map<String, dynamic>? advancedBorder;
 
   DUIContainer2Props(
     this.width,
@@ -42,6 +43,7 @@ class DUIContainer2Props {
     this.boxFit,
     this.elevation,
     this.gradiant,
+    this.advancedBorder,
   );
 
   factory DUIContainer2Props.fromJson(Map<String, dynamic> json) =>
