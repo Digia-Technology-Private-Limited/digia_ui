@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:collection/collection.dart';
-import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
@@ -13,6 +12,7 @@ import '../../Utils/util_functions.dart';
 import '../../core/evaluator.dart';
 import '../../core/page/props/dui_widget_json_data.dart';
 import '../dui_widget.dart';
+import 'custom_box_border.dart';
 import 'dui_container2_props.dart';
 
 class DUIContainer2 extends StatelessWidget {
@@ -50,63 +50,56 @@ class DUIContainer2 extends StatelessWidget {
     final elevation = props.elevation ?? 0.0;
 
     //Advanced Border
-    final borderGradiant =
-        toGradiant(props.advancedBorder?['borderGradiant'], context);
-    final borderType = toBorderType(props.advancedBorder?['borderType']);
+    final borderGradiant = toGradiant(props.border?.borderGradiant, context);
     final borderPattern =
-        toBorderPattern(props.advancedBorder?['borderPattern']['value']);
-    final strokeCap =
-        toStrokeCap(props.advancedBorder?['borderPattern']['strokeCap']);
-    final dashPattern = parseDashPattern(
-            props.advancedBorder?['borderPattern']['dashPattern']) ??
-        [3, 1];
+        props.border?.borderType?.borderPattern ?? BorderPattern.solid;
+    final strokeCap = props.border?.borderType?.strokeCap ?? StrokeCap.butt;
+    final strokeAlign = props.border?.strokeAlign ?? StrokeAlign.center;
+    final dashPattern =
+        parseDashPattern(props.border?.borderType?.dashPattern) ?? [3, 1];
     final borderWidth = NumDecoder.toDoubleOrDefault(props.border?.borderWidth,
         defaultValue: 1);
-    Widget container = DottedBorder(
-      borderType: borderType,
-      borderStyle: borderPattern,
-      gradient: borderGradiant,
-      color: borderColor ?? Colors.black,
-      strokeCap: strokeCap,
-      borderRadius: borderRadius,
-      strokeWidth: borderWidth,
-      dashPattern: dashPattern,
-      child: Container(
-        width: width,
-        height: height,
-        alignment: alignment,
-        // margin: margin,
-        padding: padding,
-        decoration: BoxDecoration(
-            gradient: gradiant,
-            color: gradiant == null ? color : null,
-            // border: (props.border?.borderWidth).let((p0) => Border.all(
-            //       color: borderColor ?? Colors.black,
-            //       width: NumDecoder.toDoubleOrDefault(p0, defaultValue: 1),
-            //     )),
-            borderRadius: props.shape == 'circle'
-                ? null
-                : BorderRadius.only(
-                    topLeft: borderRadius.topLeft,
-                    topRight: borderRadius.topRight,
-                    bottomLeft: borderRadius.bottomLeft,
-                    bottomRight: borderRadius.bottomRight,
-                  ),
-            image: imageProvider == null
-                ? null
-                : DecorationImage(
-                    opacity: imageOpacity ?? 1.0,
-                    image: imageProvider,
-                    alignment: imageAlignment ?? Alignment.center,
-                    fit: DUIDecoder.toBoxFit(props.decorationImage?.fit)),
-            shape: shape),
-        constraints: BoxConstraints(
-            maxHeight: props.maxHeight?.toHeight(context) ?? double.infinity,
-            maxWidth: props.maxWidth?.toWidth(context) ?? double.infinity,
-            minHeight: props.minHeight?.toHeight(context) ?? 0,
-            minWidth: props.minWidth?.toWidth(context) ?? 0),
-        child: child.let((p0) => DUIWidget(data: p0)),
-      ),
+    Widget container = Container(
+      width: width,
+      height: height,
+      alignment: alignment,
+      padding: padding,
+      decoration: BoxDecoration(
+          gradient: gradiant,
+          color: gradiant == null ? color : null,
+          border: (borderWidth > 0)
+              ? CustomBorder(
+                  strokeWidth: borderWidth,
+                  color: borderColor ?? Colors.black,
+                  dashPattern: dashPattern,
+                  strokeCap: strokeCap,
+                  gradient: borderGradiant,
+                  borderPattern: borderPattern,
+                  strokeAlign: strokeAlign,
+                )
+              : null,
+          borderRadius: props.shape == 'circle'
+              ? null
+              : BorderRadius.only(
+                  topLeft: borderRadius.topLeft,
+                  topRight: borderRadius.topRight,
+                  bottomLeft: borderRadius.bottomLeft,
+                  bottomRight: borderRadius.bottomRight,
+                ),
+          image: imageProvider == null
+              ? null
+              : DecorationImage(
+                  opacity: imageOpacity ?? 1.0,
+                  image: imageProvider,
+                  alignment: imageAlignment ?? Alignment.center,
+                  fit: DUIDecoder.toBoxFit(props.decorationImage?.fit)),
+          shape: shape),
+      constraints: BoxConstraints(
+          maxHeight: props.maxHeight?.toHeight(context) ?? double.infinity,
+          maxWidth: props.maxWidth?.toWidth(context) ?? double.infinity,
+          minHeight: props.minHeight?.toHeight(context) ?? 0,
+          minWidth: props.minWidth?.toWidth(context) ?? 0),
+      child: child.let((p0) => DUIWidget(data: p0)),
     );
 
     if (elevation > 0) {
@@ -124,7 +117,10 @@ class DUIContainer2 extends StatelessWidget {
     );
   }
 
-  List<double>? parseDashPattern(String jsonDashPattern) {
+  List<double>? parseDashPattern(dynamic jsonDashPattern) {
+    if (jsonDashPattern is! String) {
+      return null;
+    }
     List<double> data = [];
     try {
       List<dynamic> parsedList = jsonDecode(jsonDashPattern);
@@ -164,20 +160,6 @@ class DUIContainer2 extends StatelessWidget {
       case 'solid':
       default:
         return BorderPattern.solid;
-    }
-  }
-
-  BorderType toBorderType(dynamic value) {
-    switch (value) {
-      case 'Rect':
-        return BorderType.Rect;
-      case 'Circle':
-        return BorderType.Circle;
-      case 'Oval':
-        return BorderType.Oval;
-      case 'RRect':
-      default:
-        return BorderType.RRect;
     }
   }
 }

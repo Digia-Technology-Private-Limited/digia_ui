@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import '../utils/DUIBorder/dui_border.dart';
+import '../utils/DUIContainerBorder/dui_container_border.dart';
 import '../utils/DUIInsets/dui_insets.dart';
 import 'dui_decoration_image.dart';
 
@@ -18,13 +18,12 @@ class DUIContainer2Props {
   final DUIInsets? margin;
   final DUIInsets? padding;
   final String? color;
-  final DUIBorder? border;
+  final DUIContainerBorder? border;
   final DUIDecorationImage? decorationImage;
   final String? shape;
   final String? boxFit;
   final double? elevation;
   final Map<String, dynamic>? gradiant;
-  final Map<String, dynamic>? advancedBorder;
 
   DUIContainer2Props(
     this.width,
@@ -43,7 +42,6 @@ class DUIContainer2Props {
     this.boxFit,
     this.elevation,
     this.gradiant,
-    this.advancedBorder,
   );
 
   factory DUIContainer2Props.fromJson(Map<String, dynamic> json) =>

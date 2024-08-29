@@ -18,7 +18,9 @@ DUIContainer2Props _$DUIContainer2PropsFromJson(Map<String, dynamic> json) =>
       json['margin'] == null ? null : DUIInsets.fromJson(json['margin']),
       json['padding'] == null ? null : DUIInsets.fromJson(json['padding']),
       json['color'] as String?,
-      json['border'] == null ? null : DUIBorder.fromJson(json['border']),
+      json['border'] == null
+          ? null
+          : DUIContainerBorder.fromJson(json['border']),
       json['decorationImage'] == null
           ? null
           : DUIDecorationImage.fromJson(
@@ -27,7 +29,6 @@ DUIContainer2Props _$DUIContainer2PropsFromJson(Map<String, dynamic> json) =>
       json['boxFit'] as String?,
       (json['elevation'] as num?)?.toDouble(),
       json['gradiant'] as Map<String, dynamic>?,
-      json['advancedBorder'] as Map<String, dynamic>?,
     );
 
 Map<String, dynamic> _$DUIContainer2PropsToJson(DUIContainer2Props instance) =>
@@ -48,5 +49,4 @@ Map<String, dynamic> _$DUIContainer2PropsToJson(DUIContainer2Props instance) =>
       'boxFit': instance.boxFit,
       'elevation': instance.elevation,
       'gradiant': instance.gradiant,
-      'advancedBorder': instance.advancedBorder,
     };
