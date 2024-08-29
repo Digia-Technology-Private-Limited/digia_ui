@@ -12,10 +12,12 @@ class DUIBottomNavigationBar extends StatefulWidget {
   final DUIWidgetRegistry? registry;
   final DUIBottomNavigationBarProps barProps;
   final Function(int)? onDestinationSelected;
+  final TextStyle? labelStyle;
 
   const DUIBottomNavigationBar(
       {super.key,
       required this.children,
+      this.labelStyle,
       this.registry,
       required this.barProps,
       this.onDestinationSelected});
@@ -38,38 +40,58 @@ class _DUIBottomNavigationBarState extends State<DUIBottomNavigationBar> {
 
   @override
   Widget build(BuildContext context) {
-    return NavigationBar(
-      surfaceTintColor: makeColor(
-        eval<String>(
-          widget.barProps.surfaceTintColor,
-          context: context,
+    return Theme(
+      data: ThemeData(
+        navigationBarTheme: NavigationBarThemeData(
+          labelTextStyle: WidgetStateProperty.all(
+            widget.labelStyle,
+          ),
         ),
       ),
-      animationDuration: Duration(
-          milliseconds:
-              int.tryParse(widget.barProps.duration?.toString() ?? '0') ?? 0),
-      shadowColor: makeColor(
-          eval<String>(widget.barProps.shadowColor, context: context)),
-      elevation: widget.barProps.elevation,
-      height: widget.barProps.height,
-      indicatorColor: makeColor(
-          eval<String>(widget.barProps.indicatorColor, context: context)),
-      indicatorShape: widget.barProps.borderShape == null
-          ? null
-          : toButtonShape(widget.barProps.borderShape),
-      labelBehavior: widget.barProps.showLabels.isNullEmptyOrFalse
-          ? NavigationDestinationLabelBehavior.alwaysHide
-          : NavigationDestinationLabelBehavior.alwaysShow,
-      backgroundColor: makeColor(
-          eval<String>(widget.barProps.backgroundColor, context: context)),
-      selectedIndex: _selectedIndex,
-      destinations: widget.children.map((e) => DUIWidget(data: e)).toList(),
-      onDestinationSelected: _handleDestinationSelected,
-      overlayColor: WidgetStateProperty.all(
-        makeColor(
+      child: NavigationBar(
+        surfaceTintColor: makeColor(
           eval<String>(
-            widget.barProps.overlayColor,
+            widget.barProps.surfaceTintColor,
             context: context,
+          ),
+        ),
+        animationDuration: Duration(
+            milliseconds:
+                int.tryParse(widget.barProps.duration?.toString() ?? '0') ?? 0),
+        shadowColor: makeColor(
+            eval<String>(widget.barProps.shadowColor, context: context)),
+        elevation: widget.barProps.elevation,
+        height: widget.barProps.height,
+        indicatorColor: makeColor(
+            eval<String>(widget.barProps.indicatorColor, context: context)),
+        indicatorShape: widget.barProps.borderShape == null
+            ? null
+            : toButtonShape(widget.barProps.borderShape),
+        labelBehavior: widget.barProps.showLabels.isNullEmptyOrFalse
+            ? NavigationDestinationLabelBehavior.alwaysHide
+            : NavigationDestinationLabelBehavior.alwaysShow,
+        backgroundColor: makeColor(
+            eval<String>(widget.barProps.backgroundColor, context: context)),
+        selectedIndex: _selectedIndex,
+        destinations: widget.children
+            .map((e) => NavigationDestination(
+                  icon: DUIWidget(
+                    data: e.children['unSelectedWidget']!.first,
+                  ),
+                  label: e.props['labelText'],
+                  selectedIcon: DUIWidget(
+                    data: e.children['selectedWidget']!.first,
+                  ),
+                ))
+            .toList(),
+        // widget.children.map((e) => DUIWidget(data: e)).toList(),
+        onDestinationSelected: _handleDestinationSelected,
+        overlayColor: WidgetStateProperty.all(
+          makeColor(
+            eval<String>(
+              widget.barProps.overlayColor,
+              context: context,
+            ),
           ),
         ),
       ),

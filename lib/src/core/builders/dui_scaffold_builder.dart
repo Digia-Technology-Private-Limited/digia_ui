@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../digia_ui.dart';
 import '../../Utils/basic_shared_utils/lodash.dart';
 import '../../Utils/util_functions.dart';
+import '../../components/DUIText/dui_text_style.dart';
 import '../../components/bottom_nav_bar/bottom_nav_bar.dart';
 import '../../components/bottom_nav_bar/bottom_nav_bar_props.dart';
 import '../../components/dui_widget_creator_fn.dart';
@@ -112,6 +113,8 @@ class DUIScaffoldBuilder extends DUIWidgetBuilder {
           }
           return DUIBottomNavigationBar(
             children: root.children['children']!,
+            labelStyle: toTextStyle(
+                DUITextStyle.fromJson(root.props['labelStyle']), context),
             barProps: DUIBottomNavigationBarProps.fromJson(root.props),
             onDestinationSelected: (index) {
               onDestinationSelected(index);
