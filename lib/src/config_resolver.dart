@@ -86,8 +86,8 @@ class AppConfigResolver {
     switch (_environment) {
       case Staging():
         try {
-          appConfig =
-              DUIConfig(await _getAppConfigFromNetwork('/config/getAppConfig'));
+          appConfig = DUIConfig(
+              await _getAppConfigFromNetwork('/config/getAppConfigStaging'));
         } catch (e) {
           throw _buildInitException('Invalid AppConfig or fetch failed');
         }
