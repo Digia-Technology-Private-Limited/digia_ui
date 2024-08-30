@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:json_annotation/json_annotation.dart';
 
-import '../../container/custom_box_border.dart';
+import '../../border/box_border_with_pattern/border_with_pattern.dart';
 
 part 'border_pattern_class.g.dart';
 

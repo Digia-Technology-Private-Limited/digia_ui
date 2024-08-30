@@ -601,6 +601,9 @@ class DUIDecoder {
   }
 
   static List<double>? toDashPattern(dynamic jsonDashPattern) {
+    if (jsonDashPattern is! String) {
+      return null;
+    }
     final parsed = tryJsonDecode(jsonDashPattern) ?? jsonDashPattern;
 
     if (parsed == null) return null;
