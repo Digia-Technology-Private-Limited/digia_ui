@@ -50,16 +50,6 @@ class CustomBorder extends BoxBorder {
   @override
   bool get isUniform => true;
 
-  //   final double strokeAlign;
-  // static const double strokeAlignInside = -1.0;
-
-  // static const double strokeAlignCenter = 0.0;
-  // static const double strokeAlignOutside = 1.0;
-
-  //  double get strokeInset => strokeWidth * (1 - (1 + strokeAlign) / 2);
-  //  double get strokeOutset => strokeWidth * (1 + strokeAlign) / 2;
-  //  double get strokeOffset => strokeWidth * strokeAlign;
-
   @override
   BoxBorder? add(ShapeBorder other, {bool reversed = false}) {
     return null;
@@ -192,16 +182,6 @@ class CustomBorder extends BoxBorder {
             ? BorderStyle.solid
             : BorderStyle.none,
       );
-
-  // @override
-  // Path getInnerPath(Rect rect, {TextDirection? textDirection}) {
-  //   return super.getInnerPath(rect, textDirection: textDirection);
-  // }
-
-  // @override
-  // Path getOuterPath(Rect rect, {TextDirection? textDirection}) {
-  //   return super.getOuterPath(rect, textDirection: textDirection);
-  // }
 
   @override
   BorderSide get bottom => top;
