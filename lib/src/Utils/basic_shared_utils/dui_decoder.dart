@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
+import '../../components/border/box_border_with_pattern/border_with_pattern.dart';
 import 'lodash.dart';
 import 'num_decoder.dart';
 
@@ -597,5 +598,27 @@ class DUIDecoder {
   static TextInputAction? toTextInputAction(dynamic value) {
     return TextInputAction.values
         .firstWhereOrNull((p0) => p0.name.split('.').last == value);
+  }
+
+  static List<double>? toDashPattern(dynamic jsonDashPattern) {
+    final parsed = tryJsonDecode(jsonDashPattern) ?? jsonDashPattern;
+
+    if (parsed == null) return null;
+
+    if (parsed is! List) return null;
+
+    return parsed.map((e) => NumDecoder.toDouble(e)).nonNulls.toList();
+  }
+
+  static BorderPattern toBorderPattern(dynamic value) {
+    switch (value) {
+      case 'dotted':
+        return BorderPattern.dotted;
+      case 'dashed':
+        return BorderPattern.dashed;
+      case 'solid':
+      default:
+        return BorderPattern.solid;
+    }
   }
 }

@@ -1,7 +1,4 @@
-import 'dart:convert';
-
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
@@ -11,8 +8,8 @@ import '../../Utils/extensions.dart';
 import '../../Utils/util_functions.dart';
 import '../../core/evaluator.dart';
 import '../../core/page/props/dui_widget_json_data.dart';
+import '../border/box_border_with_pattern/border_with_pattern.dart';
 import '../dui_widget.dart';
-import 'border_with_pattern.dart';
 import 'dui_container2_props.dart';
 
 class DUIContainer2 extends StatelessWidget {
@@ -56,7 +53,8 @@ class DUIContainer2 extends StatelessWidget {
     final strokeCap = props.border?.borderType?.strokeCap ?? StrokeCap.butt;
     final strokeAlign = props.border?.strokeAlign ?? StrokeAlign.center;
     final dashPattern =
-        parseDashPattern(props.border?.borderType?.dashPattern) ?? [3, 1];
+        DUIDecoder.toDashPattern(props.border?.borderType?.dashPattern) ??
+            const [3, 1];
     final borderWidth = NumDecoder.toDoubleOrDefault(props.border?.borderWidth,
         defaultValue: 1);
     Widget container = Container(
@@ -115,51 +113,5 @@ class DUIContainer2 extends StatelessWidget {
       padding: margin,
       child: container,
     );
-  }
-
-  List<double>? parseDashPattern(dynamic jsonDashPattern) {
-    if (jsonDashPattern is! String) {
-      return null;
-    }
-    List<double> data = [];
-    try {
-      List<dynamic> parsedList = jsonDecode(jsonDashPattern);
-
-      List<double> dashPattern =
-          parsedList.map((e) => NumDecoder.toDouble(e)).whereNotNull().toList();
-
-      data = dashPattern;
-    } catch (e) {
-      return null;
-    }
-
-    if (data.isEmpty) {
-      return null;
-    }
-    return data;
-  }
-
-  StrokeCap toStrokeCap(dynamic value) {
-    switch (value) {
-      case 'square':
-        return StrokeCap.square;
-      case 'round':
-        return StrokeCap.round;
-      case 'butt':
-      default:
-        return StrokeCap.butt;
-    }
-  }
-
-  BorderPattern toBorderPattern(dynamic value) {
-    switch (value) {
-      case 'dotted':
-        return BorderPattern.dotted;
-      case 'dashed':
-        return BorderPattern.dashed;
-      case 'solid':
-      default:
-        return BorderPattern.solid;
-    }
   }
 }

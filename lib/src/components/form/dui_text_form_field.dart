@@ -1,8 +1,3 @@
-import 'dart:convert';
-
-import 'package:collection/collection.dart';
-import 'package:dotted_border/dotted_outline_inputborder.dart';
-import 'package:dotted_border/dotted_underline_inputborder.dart';
 import 'package:flutter/material.dart';
 
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
@@ -12,6 +7,8 @@ import '../../core/action/action_handler.dart';
 import '../../core/action/action_prop.dart';
 import '../../core/evaluator.dart';
 import '../DUIText/dui_text_style.dart';
+import '../border/dashed_input_border/dashed_outline_input_border.dart';
+import '../border/dashed_input_border/dashed_underline_input_border.dart';
 import '../dui_base_stateful_widget.dart';
 import '../utils/DUIBorder/dui_border.dart';
 
@@ -189,10 +186,7 @@ class _DUITextFieldState extends DUIWidgetState<DUITextFormField> {
       'borderRadius': border['borderRadius'],
     }));
 
-    //for Backward Compatible
-    final borderType = (border['borderType'] is String)
-        ? border['borderType']
-        : border['borderType']['value'];
+    final borderType = border['borderType']['value'];
 
     switch (borderType) {
       case 'outlineInputBorder':
@@ -206,65 +200,29 @@ class _DUITextFieldState extends DUIWidgetState<DUITextFormField> {
           borderRadius: borderRadius,
         );
       case 'outlineDottedInputBorder':
-        return DottedOutlineInputBorder(
+        return DashedOutlineInputBorder(
           borderSide: borderSide,
           borderRadius: borderRadius,
-          strokeCap: (border['borderType'] is String)
-              ? StrokeCap.butt
-              : toStrokeCap(border['borderType']['strokeCap']),
-          dashPattern: (border['borderType'] is String)
-              ? const [3, 3]
-              : parseDashPattern(border['borderType']['dashPattern']) ??
+          strokeCap:
+              DUIDecoder.toStrokeCap(border['borderType']['strokeCap']) ??
+                  StrokeCap.butt,
+          dashPattern:
+              DUIDecoder.toDashPattern(border['borderType']['dashPattern']) ??
                   const [3, 3],
         );
       case 'underlineDottedInputBorder':
-        return DottedUnderlineInputBorder(
+        return DashedUnderlineInputBorder(
           borderSide: borderSide,
           borderRadius: borderRadius,
-          strokeCap: (border['borderType'] is String)
-              ? StrokeCap.butt
-              : toStrokeCap(border['borderType']['strokeCap']),
-          dashPattern: (border['borderType'] is String)
-              ? const [3, 3]
-              : parseDashPattern(border['borderType']['dashPattern']) ??
+          strokeCap:
+              DUIDecoder.toStrokeCap(border['borderType']['strokeCap']) ??
+                  StrokeCap.butt,
+          dashPattern:
+              DUIDecoder.toDashPattern(border['borderType']['dashPattern']) ??
                   const [3, 3],
         );
       default:
         return InputBorder.none;
-    }
-  }
-
-  List<double>? parseDashPattern(dynamic jsonDashPattern) {
-    if (jsonDashPattern is! String) {
-      return null;
-    }
-    List<double> data = [];
-    try {
-      List<dynamic> parsedList = jsonDecode(jsonDashPattern);
-
-      List<double> dashPattern =
-          parsedList.map((e) => NumDecoder.toDouble(e)).whereNotNull().toList();
-
-      data = dashPattern;
-    } catch (e) {
-      return null;
-    }
-
-    if (data.isEmpty) {
-      return null;
-    }
-    return data;
-  }
-
-  StrokeCap toStrokeCap(dynamic value) {
-    switch (value) {
-      case 'square':
-        return StrokeCap.square;
-      case 'round':
-        return StrokeCap.round;
-      case 'butt':
-      default:
-        return StrokeCap.butt;
     }
   }
 

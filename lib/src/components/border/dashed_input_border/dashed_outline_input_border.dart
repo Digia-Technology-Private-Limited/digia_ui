@@ -1,18 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:path_drawing/path_drawing.dart';
 
-// enum BorderType { none, dotted, solid }
-
-// enum InputBorderType { outline, underline }
-
-class DottedOutlineInputBorder extends InputBorder {
+class DashedOutlineInputBorder extends InputBorder {
   @override
   final BorderSide borderSide;
   final BorderRadius borderRadius;
   final List<double> dashPattern;
   final StrokeCap strokeCap;
 
-  const DottedOutlineInputBorder({
+  const DashedOutlineInputBorder({
     required this.borderSide,
     this.dashPattern = const <double>[3, 3],
     this.strokeCap = StrokeCap.butt,
@@ -66,7 +62,7 @@ class DottedOutlineInputBorder extends InputBorder {
       BorderRadius? borderRadius,
       StrokeCap? strokeCap,
       List<double>? dashPattern}) {
-    return DottedOutlineInputBorder(
+    return DashedOutlineInputBorder(
       borderSide: borderSide ?? this.borderSide,
       borderRadius: borderRadius ?? this.borderRadius,
       strokeCap: strokeCap ?? this.strokeCap,
@@ -79,7 +75,7 @@ class DottedOutlineInputBorder extends InputBorder {
 
   @override
   InputBorder scale(double t) {
-    return DottedOutlineInputBorder(
+    return DashedOutlineInputBorder(
       borderSide: borderSide.scale(t),
       strokeCap: strokeCap,
       dashPattern: dashPattern,

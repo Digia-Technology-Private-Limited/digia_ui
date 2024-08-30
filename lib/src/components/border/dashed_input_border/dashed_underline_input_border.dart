@@ -1,20 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:path_drawing/path_drawing.dart';
 
-// enum BorderType { none, dotted, solid }
-
-// enum InputBorderType { outline, underline }
-
-class DottedOutlineInputBorder extends InputBorder {
+class DashedUnderlineInputBorder extends InputBorder {
   @override
   final BorderSide borderSide;
   final BorderRadius borderRadius;
   final List<double> dashPattern;
   final StrokeCap strokeCap;
 
-  const DottedOutlineInputBorder({
+  const DashedUnderlineInputBorder({
     required this.borderSide,
-    this.dashPattern = const <double>[3, 3],
+    this.dashPattern = const <double>[3, 1],
     this.strokeCap = StrokeCap.butt,
     required this.borderRadius,
   });
@@ -35,15 +31,13 @@ class DottedOutlineInputBorder extends InputBorder {
   Path _createDottedPath(Rect rect) {
     final Path path = Path();
 
-    path.addRRect(RRect.fromRectAndCorners(
-      rect,
-      topLeft: borderRadius.topLeft,
-      topRight: borderRadius.topRight,
-      bottomLeft: borderRadius.bottomLeft,
-      bottomRight: borderRadius.bottomRight,
-    ));
+    final double bottom = rect.bottom - borderSide.width / 2.0;
+    final double left = rect.left;
+    final double right = rect.right;
     return dashPath(
-      path,
+      path
+        ..moveTo(left, bottom)
+        ..lineTo(right, bottom),
       dashArray: CircularIntervalList<double>(dashPattern),
     );
   }
@@ -66,7 +60,7 @@ class DottedOutlineInputBorder extends InputBorder {
       BorderRadius? borderRadius,
       StrokeCap? strokeCap,
       List<double>? dashPattern}) {
-    return DottedOutlineInputBorder(
+    return DashedUnderlineInputBorder(
       borderSide: borderSide ?? this.borderSide,
       borderRadius: borderRadius ?? this.borderRadius,
       strokeCap: strokeCap ?? this.strokeCap,
@@ -75,11 +69,11 @@ class DottedOutlineInputBorder extends InputBorder {
   }
 
   @override
-  bool get isOutline => true;
+  bool get isOutline => false;
 
   @override
   InputBorder scale(double t) {
-    return DottedOutlineInputBorder(
+    return DashedUnderlineInputBorder(
       borderSide: borderSide.scale(t),
       strokeCap: strokeCap,
       dashPattern: dashPattern,
