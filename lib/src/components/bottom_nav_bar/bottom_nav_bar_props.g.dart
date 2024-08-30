@@ -14,7 +14,7 @@ DUIBottomNavigationBarProps _$DUIBottomNavigationBarPropsFromJson(
       height: (json['height'] as num?)?.toDouble(),
       indicatorColor: json['indicatorColor'] as String?,
       borderShape: json['borderShape'] as String?,
-      showLabels: json['showLabels'] as bool?,
+      useDefaults: json['useDefaults'] as bool?,
       shadowColor: json['shadowColor'] as String?,
       backgroundColor: json['backgroundColor'] as String?,
       surfaceTintColor: json['surfaceTintColor'] as String?,
@@ -33,5 +33,5 @@ Map<String, dynamic> _$DUIBottomNavigationBarPropsToJson(
       'borderShape': instance.borderShape,
       'surfaceTintColor': instance.surfaceTintColor,
       'overlayColor': instance.overlayColor,
-      'showLabels': instance.showLabels,
+      'useDefaults': instance.useDefaults,
     };

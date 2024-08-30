@@ -13,7 +13,7 @@ class DUIBottomNavigationBarProps {
   final String? borderShape;
   final String? surfaceTintColor;
   final String? overlayColor;
-  final bool? showLabels;
+  final bool? useDefaults;
 
   DUIBottomNavigationBarProps(
       {this.duration,
@@ -21,7 +21,7 @@ class DUIBottomNavigationBarProps {
       this.height,
       this.indicatorColor,
       this.borderShape,
-      this.showLabels,
+      this.useDefaults,
       this.shadowColor,
       this.backgroundColor,
       this.surfaceTintColor,
