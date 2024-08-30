@@ -12,7 +12,7 @@ import '../../Utils/util_functions.dart';
 import '../../core/evaluator.dart';
 import '../../core/page/props/dui_widget_json_data.dart';
 import '../dui_widget.dart';
-import 'custom_box_border.dart';
+import 'border_with_pattern.dart';
 import 'dui_container2_props.dart';
 
 class DUIContainer2 extends StatelessWidget {
@@ -68,7 +68,7 @@ class DUIContainer2 extends StatelessWidget {
           gradient: gradiant,
           color: gradiant == null ? color : null,
           border: (borderWidth > 0)
-              ? CustomBorder(
+              ? BorderWithPattern(
                   strokeWidth: borderWidth,
                   color: borderColor ?? Colors.black,
                   dashPattern: dashPattern,
