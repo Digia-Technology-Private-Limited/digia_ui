@@ -199,7 +199,7 @@ class _DUITextFieldState extends DUIWidgetState<DUITextFormField> {
           borderSide: borderSide,
           borderRadius: borderRadius,
         );
-      case 'outlineDottedInputBorder':
+      case 'outlineDashedInputBorder':
         return DashedOutlineInputBorder(
           borderSide: borderSide,
           borderRadius: borderRadius,
@@ -210,7 +210,7 @@ class _DUITextFieldState extends DUIWidgetState<DUITextFormField> {
               DUIDecoder.toDashPattern(border['borderType']['dashPattern']) ??
                   const [3, 3],
         );
-      case 'underlineDottedInputBorder':
+      case 'underlineDashedInputBorder':
         return DashedUnderlineInputBorder(
           borderSide: borderSide,
           borderRadius: borderRadius,
