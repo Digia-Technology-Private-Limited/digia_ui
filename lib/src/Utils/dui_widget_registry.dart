@@ -25,10 +25,11 @@ import '../core/builders/dui_htmlview_builder.dart';
 import '../core/builders/dui_icon_builder.dart';
 import '../core/builders/dui_icon_button_builder.dart';
 import '../core/builders/dui_image_builder.dart';
-import '../core/builders/dui_linear_progress_indicator_builder.dart';
 import '../core/builders/dui_line_chart_builder.dart';
+import '../core/builders/dui_linear_progress_indicator_builder.dart';
 import '../core/builders/dui_listview_builder.dart';
 import '../core/builders/dui_lottie_builder.dart';
+import '../core/builders/dui_nested_scroll_view_builder.dart';
 import '../core/builders/dui_paginated_listview_builder.dart';
 import '../core/builders/dui_pin_field_builder.dart';
 import '../core/builders/dui_refresh_indicator_builder.dart';
@@ -36,6 +37,8 @@ import '../core/builders/dui_rich_text_builder.dart';
 import '../core/builders/dui_safearea_builder.dart';
 import '../core/builders/dui_scaffold_builder.dart';
 import '../core/builders/dui_sized_box_builder.dart';
+import '../core/builders/dui_sliver_app_bar_builder.dart';
+import '../core/builders/dui_sliver_list_builder.dart';
 import '../core/builders/dui_spacer_builder.dart';
 import '../core/builders/dui_stack_builder.dart';
 import '../core/builders/dui_stepper_builder.dart';
@@ -150,7 +153,13 @@ class DUIWidgetRegistry {
         DUIRefreshIndicator(data: data),
     'digia/safeArea': (data, {registry}) => DUISafeAreaBuilder(data: data),
     'digia/probo/animated_fastscore': (data, {registry}) =>
-        ProboCustomComponentBuilder(data: data)
+        ProboCustomComponentBuilder(data: data),
+    'digia/nestedScrollView': (data, {registry}) =>
+        DUINestedScrollView(data: data),
+    'digia/sliverAppBar': (data, {registry}) =>
+        DUISliverAppBarBuilder(data: data),
+    'digia/sliverList': (data, {registry}) =>
+        DUISliverListBuilder.create(data, registry: DUIWidgetRegistry.shared),
   };
 
   static const DUIWidgetRegistry shared = DUIWidgetRegistry();
