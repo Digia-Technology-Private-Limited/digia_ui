@@ -552,8 +552,8 @@ Map<String, ActionHandlerFn> _actionsMap = {
       throw 'At least one of allowPhoto or allowVideo must be true';
     }
 
-    ImageSource source = toImageSource(mediaSource);
-    CameraDevice device = toCameraDevice(cameraDevice);
+    ImageSource source = _toImageSource(mediaSource) ?? ImageSource.gallery;
+    CameraDevice device = _toCameraDevice(cameraDevice) ?? CameraDevice.rear;
 
     final imagePicker = ImagePicker();
     List<XFile> pickedFiles = [];
@@ -639,9 +639,8 @@ Map<String, ActionHandlerFn> _actionsMap = {
 
     if (pickedFiles.isNotEmpty) {
       try {
-        List<DUIFile> finalFiles = pickedFiles.map((xFile) {
-          return DUIFile.fromXFile(xFile);
-        }).toList();
+        List<DUIFile> finalFiles =
+            pickedFiles.map((xFile) => DUIFile.fromXFile(xFile)).toList();
 
         if (finalFiles.isNotEmpty) {
           final variables = bloc.state.props.variables;
@@ -1024,23 +1023,19 @@ toFileType(String? fileType) {
   }
 }
 
-toImageSource(String? mediaSource) {
-  switch (mediaSource?.toLowerCase()) {
-    case 'camera':
-      return ImageSource.camera;
-    case 'gallery':
-      return ImageSource.gallery;
-  }
-}
+ImageSource? _toImageSource(dynamic mediaSource) =>
+    switch (mediaSource?.toLowerCase()) {
+      'camera' => ImageSource.camera,
+      'gallery' => ImageSource.gallery,
+      _ => null,
+    };
 
-toCameraDevice(String? cameraDevice) {
-  switch (cameraDevice?.toLowerCase()) {
-    case 'front':
-      return CameraDevice.front;
-    case 'rear':
-      return CameraDevice.rear;
-  }
-}
+CameraDevice? _toCameraDevice(dynamic cameraDevice) =>
+    switch (cameraDevice?.toLowerCase()) {
+      'front' => CameraDevice.front,
+      'rear' => CameraDevice.rear,
+      _ => null,
+    };
 
 String getPageName(BuildContext context) {
   final bloc = context.tryRead<DUIPageBloc>();
