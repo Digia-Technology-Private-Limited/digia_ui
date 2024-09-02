@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:digia_expr/digia_expr.dart';
@@ -350,7 +351,6 @@ Map<String, ActionHandlerFn> _actionsMap = {
 
     logger?.log(ActionLog(getPageName(context), 'Action.callRestApi', {
       'dataSourceId': dataSourceId,
-      'args': args,
       'successCondition': action.data['successCondition'],
     }));
 
@@ -627,6 +627,7 @@ Map<String, ActionHandlerFn> _actionsMap = {
     Map<String, dynamic>? apiDataSourceArgs = action.data['args'];
     final apiModel = (context.tryRead<DUIPageBloc>()?.config)
         ?.getApiDataSource(dataSourceId);
+    final selectedStreamVariable = action.data['selectedStreamVariable'];
 
     final args = apiDataSourceArgs?.map((key, value) {
       final evalue = eval(value, context: context);
@@ -634,14 +635,39 @@ Map<String, ActionHandlerFn> _actionsMap = {
       return MapEntry(key, evalue ?? dvalue);
     });
 
+    final StreamController progressStreamController = StreamController();
+    final Stream progressStream = progressStreamController.stream;
+
+    final bloc = context.tryRead<DUIPageBloc>();
+    final variables = bloc?.state.props.variables;
+    final events = [
+      {
+        'variableName': selectedStreamVariable,
+        'value': progressStream,
+      }
+    ];
+    bloc?.add(SetStateEvent(
+      events: events
+          .where((e) => variables?[e['variableName']] != null)
+          .map((e) => SingleSetStateEvent(
+                variableName: e['variableName'],
+                context: context,
+                value: e['value'],
+              ))
+          .toList(),
+      rebuildPage: true,
+    ));
+
     logger?.log(ActionLog(getPageName(context), 'Action.upload', {
       'dataSourceId': dataSourceId,
-      'args': args,
       'successCondition': action.data['successCondition'],
     }));
 
     final result = await ApiHandler.instance
-        .execute(apiModel: apiModel!, args: args)
+        .execute(
+            apiModel: apiModel!,
+            args: args,
+            progressStreamController: progressStreamController)
         .then((resp) {
       final response = {
         'body': resp.data,
@@ -650,7 +676,7 @@ Map<String, ActionHandlerFn> _actionsMap = {
         'requestObj': requestObjToMap(resp.requestOptions),
         'error': null,
       };
-
+      progressStreamController.close();
       final successCondition = action.data['successCondition'] as String?;
       final evaluatedSuccessCond = successCondition.let((p0) => eval<bool>(
               successCondition,

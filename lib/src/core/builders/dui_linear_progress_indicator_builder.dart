@@ -47,7 +47,9 @@ class DUILinearProgressBarBuilder extends DUIWidgetBuilder {
         width: NumDecoder.toDouble(data.props['width']),
         lineHeight: NumDecoder.toDouble(data.props['thickness']) ?? 5.0,
         percent: progressValue != null ? progressValue / 100.0 : 0,
-        animation: true,
+        animation: NumDecoder.toBool(data.props['animation']) ?? false,
+        animateFromLastPercent:
+            NumDecoder.toBool(data.props['animateFromLastPercent']) ?? false,
         backgroundColor: makeColor(data.props['bgColor']) ?? Colors.transparent,
         progressColor: makeColor(data.props['indicatorColor']) ?? Colors.blue,
         padding: EdgeInsets.zero,
