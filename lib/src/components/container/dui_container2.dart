@@ -8,6 +8,7 @@ import '../../Utils/extensions.dart';
 import '../../Utils/util_functions.dart';
 import '../../core/evaluator.dart';
 import '../../core/page/props/dui_widget_json_data.dart';
+import '../border/box_border_with_pattern/border_with_pattern.dart';
 import '../dui_widget.dart';
 import 'dui_container2_props.dart';
 
@@ -45,19 +46,36 @@ class DUIContainer2 extends StatelessWidget {
     final gradiant = toGradiant(props.gradiant, context);
     final elevation = props.elevation ?? 0.0;
 
+    //Advanced Border
+    final borderGradiant = toGradiant(props.border?.borderGradiant, context);
+    final borderPattern =
+        props.border?.borderType?.borderPattern ?? BorderPattern.solid;
+    final strokeCap = props.border?.borderType?.strokeCap ?? StrokeCap.butt;
+    final strokeAlign = props.border?.strokeAlign ?? StrokeAlign.center;
+    final dashPattern =
+        DUIDecoder.toDashPattern(props.border?.borderType?.dashPattern) ??
+            const [3, 1];
+    final borderWidth = NumDecoder.toDoubleOrDefault(props.border?.borderWidth,
+        defaultValue: 1);
     Widget container = Container(
       width: width,
       height: height,
       alignment: alignment,
-      // margin: margin,
       padding: padding,
       decoration: BoxDecoration(
           gradient: gradiant,
           color: gradiant == null ? color : null,
-          border: (props.border?.borderWidth).let((p0) => Border.all(
-                color: borderColor ?? Colors.black,
-                width: NumDecoder.toDoubleOrDefault(p0, defaultValue: 1),
-              )),
+          border: (borderWidth > 0)
+              ? BorderWithPattern(
+                  strokeWidth: borderWidth,
+                  color: borderColor ?? Colors.black,
+                  dashPattern: dashPattern,
+                  strokeCap: strokeCap,
+                  gradient: borderGradiant,
+                  borderPattern: borderPattern,
+                  strokeAlign: strokeAlign,
+                )
+              : null,
           borderRadius: props.shape == 'circle'
               ? null
               : BorderRadius.only(
