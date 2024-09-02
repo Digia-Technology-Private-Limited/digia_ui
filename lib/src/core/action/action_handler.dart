@@ -534,7 +534,7 @@ Map<String, ActionHandlerFn> _actionsMap = {
     final cameraDevice = action.data['cameraDevice'];
     final allowPhoto = NumDecoder.toBool(action.data['allowPhoto']) ?? true;
     final allowVideo = NumDecoder.toBool(action.data['allowVideo']) ?? false;
-    final maxDuration = action.data['maxDuration'];
+    final maxDuration = eval<int>(action.data['maxDuration'], context: context);
     final maxWidth = eval<double>(action.data['maxWidth'],
         context: context, enclosing: enclosing);
     final maxHeight = eval<double>(action.data['maxHeight'],
@@ -605,10 +605,9 @@ Map<String, ActionHandlerFn> _actionsMap = {
           );
         } else if (allowVideo) {
           pickedFile = await imagePicker.pickVideo(
-            source: source,
-            preferredCameraDevice: device,
-            maxDuration: Duration(seconds: maxDuration),
-          );
+              source: source,
+              preferredCameraDevice: device,
+              maxDuration: maxDuration.let((p0) => Duration(seconds: p0)));
         }
         if (pickedFile != null) pickedFiles = [pickedFile];
       }
