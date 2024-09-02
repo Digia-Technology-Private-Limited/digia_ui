@@ -94,6 +94,7 @@ dependencies:
   talker: ^4.3.4
   percent_indicator: ^4.2.3
   cross_file: ^0.3.4+2
+  image_picker: ^1.1.2
 
 dev_dependencies:
   build_runner: ^2.4.4
