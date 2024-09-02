@@ -15,7 +15,7 @@ enum StrokeAlign {
   center,
 }
 
-class BorderWithPattern extends BoxBorder implements ShapeBorder {
+class BorderWithPattern extends BoxBorder {
   final double strokeWidth;
   final Gradient? gradient;
   final StrokeCap strokeCap;
