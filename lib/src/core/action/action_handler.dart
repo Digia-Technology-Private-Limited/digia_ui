@@ -566,7 +566,6 @@ Map<String, ActionHandlerFn> _actionsMap = {
         'isMultiSelect': isMultiSelect,
         'selectedPageState': selectedPageState,
         'rebuildPage': rebuildPage,
-        'type': type,
         'fileName': pickedFile.files.first.name,
         'fileSize': pickedFile.files.first.size,
       }));
@@ -636,7 +635,8 @@ Map<String, ActionHandlerFn> _actionsMap = {
     });
 
     final StreamController progressStreamController = StreamController();
-    final Stream progressStream = progressStreamController.stream;
+    final Stream progressStream =
+        progressStreamController.stream.asBroadcastStream();
 
     final bloc = context.tryRead<DUIPageBloc>();
     final variables = bloc?.state.props.variables;

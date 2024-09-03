@@ -68,6 +68,7 @@ class ApiHandler {
           url,
           {'body': preparedData},
           {'responseTime': stopwatch.elapsedMilliseconds});
+      progressStreamController?.close();
       return response;
     } on DioException catch (e) {
       DigiaUIClient.instance.duiAnalytics?.onDataSourceError(

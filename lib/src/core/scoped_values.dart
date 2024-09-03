@@ -31,7 +31,8 @@ ExprContext createScope(BuildContext context, ExprContext? localScope) {
         ...widgetVariables,
         'pageParams': pageState.props.inputArgs?.map((key, value) =>
             MapEntry(key, pageState.pageArgs?[key] ?? value.value)),
-        'dataSource': pageState.dataSource
+        'dataSource': pageState.dataSource,
+        'file': pageState.props.fileVars,
       },
       enclosing: globalScope);
 
