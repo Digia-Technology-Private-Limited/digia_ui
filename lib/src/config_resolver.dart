@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import '../digia_ui.dart';
 import 'Utils/dui_font.dart';
 import 'Utils/file_operations.dart';
+import 'core/component/dui_component_props.dart';
 import 'core/functions/download.dart';
 import 'core/functions/js_functions.dart';
 import 'core/page/props/dui_page_props.dart';
@@ -223,6 +224,7 @@ class AppConfigResolver {
 class DUIConfig {
   final Map<String, dynamic> _themeConfig;
   final Map<String, dynamic> _pages;
+  final Map<String, dynamic>? _components;
   final Map<String, dynamic> _restConfig;
   final String _initialRoute;
   final String? functionsFilePath;
@@ -233,6 +235,7 @@ class DUIConfig {
   DUIConfig(dynamic data)
       : _themeConfig = data['theme'],
         _pages = data['pages'],
+        _components = data['components'],
         _restConfig = data['rest'],
         _initialRoute = data['appSettings']['initialRoute'],
         appState = data['appState'],
@@ -263,6 +266,14 @@ class DUIConfig {
       throw 'Config for Page: $pageUid not found';
     }
     return DUIPageProps.fromJson(pageConfig);
+  }
+
+  DUIComponentProps getComponentData(String componentUid) {
+    final componentConfig = _components?[componentUid];
+    if (componentConfig == null) {
+      throw 'Config for Component: $componentUid not found';
+    }
+    return DUIComponentProps.fromJson(componentConfig);
   }
 
   DUIPageProps getfirstPageData() {
