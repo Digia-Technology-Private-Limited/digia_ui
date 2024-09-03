@@ -22,6 +22,8 @@ class DUISliverAppBarBuilder extends DUIWidgetBuilder {
     final backgroundColor = props['backgroundColor'] as String?;
 
     return SliverAppBar(
+      leading: getLeadingWidget(),
+      flexibleSpace: getFlexibleSpace(),
       backgroundColor: makeColor(backgroundColor),
       snap: props['snap'] ?? false,
       pinned: props['pinned'] ?? false,
@@ -36,6 +38,16 @@ class DUISliverAppBarBuilder extends DUIWidgetBuilder {
     );
   }
 
+  Widget getLeadingWidget() {
+    final trailingWidgetData = data.children['trailing']?.firstOrNull;
+    if (trailingWidgetData == null) {
+      return const SizedBox.shrink();
+    }
+
+    final trailingWidget = DUIWidget(data: trailingWidgetData);
+    return trailingWidget;
+  }
+
   Widget getTitleWidget() {
     final titleWidgetData = data.children['title']?.firstOrNull;
     if (titleWidgetData == null) {
@@ -44,6 +56,17 @@ class DUISliverAppBarBuilder extends DUIWidgetBuilder {
 
     final titleWidget = DUIWidget(data: titleWidgetData);
     return titleWidget;
+  }
+
+  Widget getFlexibleSpace() {
+    final flexibleSpaceWidgetData = data.children['flexibleSpace']?.firstOrNull;
+    if (flexibleSpaceWidgetData == null) {
+      return const SizedBox.shrink();
+    }
+
+    final flexibleSpaceWidget =
+        FlexibleSpaceBar(background: DUIWidget(data: flexibleSpaceWidgetData));
+    return flexibleSpaceWidget;
   }
 
   Widget getBottomWidget() {

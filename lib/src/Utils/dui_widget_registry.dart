@@ -14,6 +14,7 @@ import '../core/builders/dui_checkbox_builder.dart';
 import '../core/builders/dui_circular_progress_indicator_builder.dart';
 import '../core/builders/dui_conditional_builder_builder.dart';
 import '../core/builders/dui_container2_builder.dart';
+import '../core/builders/dui_custom_scroll_veiw_builder.dart';
 import '../core/builders/dui_custom_widget_builder.dart';
 import '../core/builders/dui_drawer_builder.dart';
 import '../core/builders/dui_expandable_builder.dart';
@@ -155,11 +156,14 @@ class DUIWidgetRegistry {
     'digia/probo/animated_fastscore': (data, {registry}) =>
         ProboCustomComponentBuilder(data: data),
     'digia/nestedScrollView': (data, {registry}) =>
-        DUINestedScrollView(data: data),
+        DUINestedScrollViewBuilder(data: data),
     'digia/sliverAppBar': (data, {registry}) =>
         DUISliverAppBarBuilder(data: data),
     'digia/sliverList': (data, {registry}) =>
         DUISliverListBuilder.create(data, registry: DUIWidgetRegistry.shared),
+    'digia/customScrollView': (data, {registry}) =>
+        DUICustomScrollViewBuilder.create(data,
+            registry: DUIWidgetRegistry.shared),
   };
 
   static const DUIWidgetRegistry shared = DUIWidgetRegistry();
