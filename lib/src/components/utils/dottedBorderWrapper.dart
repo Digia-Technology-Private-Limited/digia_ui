@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:getwidget/components/border/gf_dashed_border.dart';
+import 'package:path_drawing/path_drawing.dart';
 
 enum BorderType {
   dotted,

@@ -43,6 +43,9 @@ import '../core/builders/dui_stream_builder.dart';
 import '../core/builders/dui_switch_builder.dart';
 import '../core/builders/dui_tab_view_builder.dart';
 import '../core/builders/dui_tab_view_item_builder.dart';
+import '../core/builders/dui_tabview_builder.dart';
+import '../core/builders/dui_tabview_controller_builder.dart';
+import '../core/builders/dui_tabview_item_builder.dart';
 import '../core/builders/dui_text_builder.dart';
 import '../core/builders/dui_text_form_field_builder.dart';
 import '../core/builders/dui_timer_builder.dart';
@@ -150,7 +153,13 @@ class DUIWidgetRegistry {
         DUIRefreshIndicator(data: data),
     'digia/safeArea': (data, {registry}) => DUISafeAreaBuilder(data: data),
     'digia/probo/animated_fastscore': (data, {registry}) =>
-        ProboCustomComponentBuilder(data: data)
+        ProboCustomComponentBuilder(data: data),
+    'digia/tabViewController':
+        withoutRegistry(DUITabViewControllerBuilder.create),
+    'digia/tabView1': (data, {registry}) =>
+        DUITabView1Builder.create(data, registry: DUIWidgetRegistry.shared),
+    'digia/tabViewItem1': (data, {registry}) =>
+        DUITabViewItem1Builder.create(data, registry: DUIWidgetRegistry.shared),
   };
 
   static const DUIWidgetRegistry shared = DUIWidgetRegistry();
