@@ -7,9 +7,10 @@ import '../../core/action/action_handler.dart';
 import '../../core/action/action_prop.dart';
 import '../../core/evaluator.dart';
 import '../DUIText/dui_text_style.dart';
+import '../border/dashed_input_border/dashed_outline_input_border.dart';
+import '../border/dashed_input_border/dashed_underline_input_border.dart';
 import '../dui_base_stateful_widget.dart';
 import '../utils/DUIBorder/dui_border.dart';
-import '../utils/dottedInputBorder.dart';
 
 class DUITextFormField extends BaseStatefulWidget {
   final Map<String, dynamic> props;
@@ -178,8 +179,16 @@ class _DUITextFieldState extends DUIWidgetState<DUITextFormField> {
     BorderRadius borderRadius =
         DUIDecoder.toBorderRadius(border['borderRadius']);
 
-    BorderSide borderSide = toBorderSide(DUIBorder.fromJson(border));
-    switch (border['borderType']) {
+    BorderSide borderSide = toBorderSide(DUIBorder.fromJson({
+      'borderStyle': border['borderStyle'],
+      'borderWidth': border['borderWidth'],
+      'borderColor': border['borderColor'],
+      'borderRadius': border['borderRadius'],
+    }));
+
+    final borderType = border['borderType']['value'];
+
+    switch (borderType) {
       case 'outlineInputBorder':
         return OutlineInputBorder(
           borderSide: borderSide,
@@ -190,19 +199,27 @@ class _DUITextFieldState extends DUIWidgetState<DUITextFormField> {
           borderSide: borderSide,
           borderRadius: borderRadius,
         );
-      case 'outlineDottedInputBorder':
-        return DottedInputBorder(
-          inputBorderType: InputBorderType.outline,
-          borderType: BorderType.dotted,
+      case 'outlineDashedInputBorder':
+        return DashedOutlineInputBorder(
           borderSide: borderSide,
           borderRadius: borderRadius,
+          strokeCap:
+              DUIDecoder.toStrokeCap(border['borderType']['strokeCap']) ??
+                  StrokeCap.butt,
+          dashPattern:
+              DUIDecoder.toDashPattern(border['borderType']['dashPattern']) ??
+                  const [3, 3],
         );
-      case 'underlineDottedInputBorder':
-        return DottedInputBorder(
-          inputBorderType: InputBorderType.underline,
-          borderType: BorderType.dotted,
+      case 'underlineDashedInputBorder':
+        return DashedUnderlineInputBorder(
           borderSide: borderSide,
           borderRadius: borderRadius,
+          strokeCap:
+              DUIDecoder.toStrokeCap(border['borderType']['strokeCap']) ??
+                  StrokeCap.butt,
+          dashPattern:
+              DUIDecoder.toDashPattern(border['borderType']['dashPattern']) ??
+                  const [3, 3],
         );
       default:
         return InputBorder.none;
