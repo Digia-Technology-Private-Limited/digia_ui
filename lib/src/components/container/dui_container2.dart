@@ -56,7 +56,7 @@ class DUIContainer2 extends StatelessWidget {
         DUIDecoder.toDashPattern(props.border?.borderType?.dashPattern) ??
             const [3, 1];
     final borderWidth = NumDecoder.toDoubleOrDefault(props.border?.borderWidth,
-        defaultValue: 1);
+        defaultValue: 0);
     Widget container = Container(
       width: width,
       height: height,
