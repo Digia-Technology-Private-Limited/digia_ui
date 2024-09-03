@@ -46,6 +46,7 @@ class DUIComponentBloc extends Bloc<DUIComponentEvent, DUIComponentState> {
         state.props.variables?[element.key]?.set(evaluatedValue);
       }
     }
+    emit(state.copyWith(isLoading: false));
     return;
   }
 
