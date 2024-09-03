@@ -1,25 +1,29 @@
-enum Environment { staging, production, version }
-
-sealed class EnvironmentInfo {
-  Environment environment;
-  EnvironmentInfo(this.environment);
+enum Environment { local, development, production }
+enum Flavor { debug, staging, release, version}
+sealed class FlavorInfo {
+  Flavor flavor;
+  FlavorInfo(this.flavor);
 }
 
-class Staging extends EnvironmentInfo {
-  Staging() : super(Environment.staging);
+class Staging extends FlavorInfo {
+  Staging() : super(Flavor.staging);
 }
 
-class Production extends EnvironmentInfo {
+class Debug extends FlavorInfo {
+  Debug() : super(Flavor.debug);
+}
+
+class Release extends FlavorInfo {
   InitPriority initPriority;
   String appConfigPath;
   String functionsPath;
-  Production(this.initPriority, this.appConfigPath, this.functionsPath)
-      : super(Environment.production);
+  Release(this.initPriority, this.appConfigPath, this.functionsPath)
+      : super(Flavor.release);
 }
 
-class Versioned extends EnvironmentInfo {
+class Versioned extends FlavorInfo {
   int version;
-  Versioned(this.version) : super(Environment.version);
+  Versioned(this.version) : super(Flavor.version);
 }
 
 sealed class InitPriority {}
