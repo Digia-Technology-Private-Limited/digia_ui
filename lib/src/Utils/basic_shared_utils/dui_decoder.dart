@@ -598,4 +598,17 @@ class DUIDecoder {
     return TextInputAction.values
         .firstWhereOrNull((p0) => p0.name.split('.').last == value);
   }
+
+  static List<double>? toDashPattern(dynamic jsonDashPattern) {
+    if (jsonDashPattern is! String) {
+      return null;
+    }
+    final parsed = tryJsonDecode(jsonDashPattern) ?? jsonDashPattern;
+
+    if (parsed == null) return null;
+
+    if (parsed is! List) return null;
+
+    return parsed.map((e) => NumDecoder.toDouble(e)).nonNulls.toList();
+  }
 }

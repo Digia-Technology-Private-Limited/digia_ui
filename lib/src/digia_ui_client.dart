@@ -30,6 +30,7 @@ class DigiaUIClient {
   late DUIAppState appState;
   late int version;
   late Environment environment;
+  late Flavor flavor;
   late JSFunctions jsFunctions;
   late DUIAnalytics? duiAnalytics;
   late DeveloperConfig? developerConfig;
@@ -82,14 +83,15 @@ class DigiaUIClient {
 
   static init(
       {required String accessKey,
-      required EnvironmentInfo environmentInfo,
+      required FlavorInfo flavorInfo,
+      required String environment,
       required String baseUrl,
       required NetworkConfiguration networkConfiguration,
       DeveloperConfig? developerConfig,
       DUIAnalytics? duiAnalytics}) async {
     await DUIPreferences.initialize();
     setUuid();
-    _instance.environment = environmentInfo.environment;
+    _instance.flavor = flavorInfo.flavor;
     _instance.accessKey = accessKey;
     _instance.baseUrl = baseUrl;
     _instance.duiAnalytics = duiAnalytics;
@@ -100,7 +102,7 @@ class DigiaUIClient {
     var appVersion = packageInfo.version;
     var appbuildNumber = packageInfo.buildNumber;
 
-    AppConfigResolver appConfigResolver = AppConfigResolver(environmentInfo);
+    AppConfigResolver appConfigResolver = AppConfigResolver(flavorInfo);
 
     Map<String, dynamic> headers = NetworkClient.getDefaultDigiaHeaders(
         packageVersion,
@@ -109,7 +111,8 @@ class DigiaUIClient {
         instance.uuid,
         packageName,
         appVersion,
-        appbuildNumber);
+        appbuildNumber,
+        environment);
 
     _instance.networkClient = NetworkClient(
         _instance.baseUrl, headers, networkConfiguration, developerConfig);

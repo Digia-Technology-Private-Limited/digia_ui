@@ -12,8 +12,9 @@ import 'network/api_request/api_request.dart';
 import 'network/core/types.dart';
 
 class AppConfigResolver {
-  final EnvironmentInfo _environment;
-  AppConfigResolver(this._environment);
+  final FlavorInfo _flavorInfo;
+  
+  AppConfigResolver(this._flavorInfo);
 
   Future<Map<String, dynamic>?> _getAppConfigFromNetwork(path) async {
     var resp = await DigiaUIClient.instance.networkClient.requestInternal(
@@ -83,8 +84,8 @@ class AppConfigResolver {
     DUIConfig appConfig;
     DUIConfig? cachedAppConfig, burnedAppConfig;
     int? version;
-    switch (_environment) {
-      case Staging():
+    switch (_flavorInfo) {
+      case Debug():
         try {
           appConfig = DUIConfig(
               await _getAppConfigFromNetwork('/config/getAppConfigStaging'));
@@ -93,7 +94,18 @@ class AppConfigResolver {
         }
         await _initFunctions(remotePath: appConfig.functionsFilePath);
         return appConfig;
-      case Production(
+      case Staging():
+        try {
+          appConfig =
+              DUIConfig(await _getAppConfigFromNetwork('/config/getAppConfigStaging'));
+        } catch (e) {
+          throw _buildInitException('Invalid AppConfig or fetch failed');
+        }
+        await _initFunctions(
+            remotePath: appConfig.functionsFilePath,
+            version: appConfig.version);
+        return appConfig;
+      case Release(
           initPriority: InitPriority initPriority,
           appConfigPath: String appConfigPath,
           functionsPath: String functionsPath
