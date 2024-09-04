@@ -1,8 +1,6 @@
-import 'package:digia_expr/digia_expr.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import '../../../Utils/basic_shared_utils/lodash.dart';
-import '../../../models/dui_file.dart';
 import '../../../models/variable_def.dart';
 import '../../action/action_prop.dart';
 import 'dui_widget_json_data.dart';
@@ -36,22 +34,6 @@ class DUIPageProps {
   ActionFlow? get onPageLoad => actions['onPageLoadAction'];
   ActionFlow? get executeDataSource => actions['onPageLoad'];
   ActionFlow? get onBackPress => actions['onBackPress'];
-
-  Map<String, Object?> get fileVars => {
-        'file': ExprClassInstance(
-            klass: ExprClass(name: 'file', fields: {}, methods: {
-          'name': ExprCallableImpl(
-              fn: (evaluator, arguments) {
-                return (variables?.entries
-                        .where((e) => e.value.type == 'file')
-                        .firstOrNull
-                        ?.value
-                        .value as DUIFile)
-                    .name;
-              },
-              arity: 1),
-        }))
-      };
 }
 
 class PageLayoutProps {

@@ -32,7 +32,6 @@ ExprContext createScope(BuildContext context, ExprContext? localScope) {
         'pageParams': pageState.props.inputArgs?.map((key, value) =>
             MapEntry(key, pageState.pageArgs?[key] ?? value.value)),
         'dataSource': pageState.dataSource,
-        'file': pageState.props.fileVars,
       },
       enclosing: globalScope);
 

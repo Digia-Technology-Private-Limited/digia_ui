@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:http_parser/http_parser.dart';
@@ -97,11 +98,19 @@ class ApiHandler {
     for (var entry in data.entries) {
       if (entry.value is DUIFile) {
         final duiFile = entry.value as DUIFile;
-        if (duiFile.isWeb && duiFile.bytes != null) {
-          formData.files.add(MapEntry(
-            entry.key,
-            await _createMultipartFileFromBytes(duiFile.bytes!, entry.key),
-          ));
+        if (duiFile.isWeb) {
+          if (duiFile.bytes != null) {
+            formData.files.add(MapEntry(
+              entry.key,
+              await _createMultipartFileFromBytes(duiFile.bytes!, entry.key),
+            ));
+          } else {
+            final Uint8List duiFileAsBytes = await duiFile.xFile!.readAsBytes();
+            formData.files.add(MapEntry(
+              entry.key,
+              await _createMultipartFileFromBytes(duiFileAsBytes, entry.key),
+            ));
+          }
         } else if (duiFile.isMobile && duiFile.path != null) {
           formData.files.add(MapEntry(
             entry.key,

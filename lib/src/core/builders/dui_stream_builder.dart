@@ -2,13 +2,13 @@ import 'dart:async';
 import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/material.dart';
 
-import '../../../digia_ui.dart';
 import '../../Utils/basic_shared_utils/lodash.dart';
 import '../../Utils/dui_widget_registry.dart';
-import '../../Utils/extensions.dart';
+import '../../components/dui_widget.dart';
 import '../action/action_handler.dart';
 import '../action/action_prop.dart';
 import '../bracket_scope_provider.dart';
+import '../evaluator.dart';
 import '../json_widget_builder.dart';
 import 'dui_json_widget_builder.dart';
 
@@ -19,7 +19,11 @@ class DUIStreamBuilder extends DUIWidgetBuilder {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-        stream: _makeStream(data.props['streamVariable'], context),
+        stream: eval<Stream>(
+          data.props['streamVariable']['name'],
+          context: context,
+          decoder: (p0) => p0 as Stream<Object?>,
+        ),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return data
@@ -68,24 +72,5 @@ class DUIStreamBuilder extends DUIWidgetBuilder {
 
           return const SizedBox.shrink();
         });
-  }
-
-  Stream<Object?> _makeStream(
-      Map<String, dynamic> stream, BuildContext context) {
-    final streamName = stream['name'];
-
-    final pageBloc = context.tryRead<DUIPageBloc>();
-    final pageArgsMap = pageBloc?.state.pageArgs;
-    final pageStatesMap = pageBloc?.state.props.variables;
-
-    final streamSource = pageArgsMap?[streamName];
-    if (streamSource != null) return streamSource as Stream<Object?>;
-
-    final streamSourceFromState = pageStatesMap?[streamName];
-    if (streamSourceFromState?.value != null) {
-      return streamSourceFromState?.value as Stream<Object?>;
-    }
-
-    return Stream.error('Stream not found');
   }
 }
