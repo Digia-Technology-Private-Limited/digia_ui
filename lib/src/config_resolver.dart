@@ -8,6 +8,7 @@ import 'Utils/file_operations.dart';
 import 'core/functions/download.dart';
 import 'core/functions/js_functions.dart';
 import 'core/page/props/dui_page_props.dart';
+import 'models/variable_def.dart';
 import 'network/api_request/api_request.dart';
 import 'network/core/types.dart';
 
@@ -241,6 +242,7 @@ class DUIConfig {
   final Map<String, dynamic>? appState;
   final bool? versionUpdated;
   final int? version;
+  final  Map<String, dynamic> _environment;
 
   DUIConfig(dynamic data)
       : _themeConfig = data['theme'],
@@ -250,7 +252,8 @@ class DUIConfig {
         appState = data['appState'],
         version = data['version'],
         versionUpdated = data['versionUpdated'],
-        functionsFilePath = data['functionsFilePath'];
+        functionsFilePath = data['functionsFilePath'],
+        _environment = data['environment'];
 
   // TODO: @tushar - Add support for light / dark theme
   Map<String, dynamic> get _colors => _themeConfig['colors']['light'];
@@ -288,6 +291,10 @@ class DUIConfig {
 
   Map<String, dynamic>? getDefaultHeaders() {
     return _restConfig['defaultHeaders'];
+  }
+
+   Map<String, VariableDef> getEnvironmentVariables() {
+    return const VariablesJsonConverter().fromJson(_environment['variables']);
   }
 
   APIModel getApiDataSource(String id) {
