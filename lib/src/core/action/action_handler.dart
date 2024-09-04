@@ -823,7 +823,6 @@ Map<String, ActionHandlerFn> _actionsMap = {
         'requestObj': requestObjToMap(resp.requestOptions),
         'error': null,
       };
-      progressStreamController.close();
       final successCondition = action.data['successCondition'] as String?;
       final evaluatedSuccessCond = successCondition.let((p0) => eval<bool>(
               successCondition,
