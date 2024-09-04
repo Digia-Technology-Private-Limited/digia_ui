@@ -18,18 +18,18 @@ enum StrokeAlign {
 class BorderWithPattern extends BoxBorder {
   final double strokeWidth;
   final Gradient? gradient;
-  final StrokeCap strokeCap;
-  final List<double>? dashPattern;
   final Color color;
+  final List<double>? dashPattern;
+  final StrokeCap strokeCap;
   final BorderPattern borderPattern;
   final StrokeAlign strokeAlign;
 
   const BorderWithPattern({
-    required this.strokeWidth,
-    required this.color,
+    this.strokeWidth = 0.0,
+    this.color = const Color(0x00000000),
+    this.gradient,
     this.dashPattern,
     this.strokeCap = StrokeCap.butt,
-    this.gradient,
     this.borderPattern = BorderPattern.solid,
     this.strokeAlign = StrokeAlign.outside,
   });
