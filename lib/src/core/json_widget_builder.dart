@@ -26,29 +26,28 @@ abstract class DUIWidgetBuilder {
 
     if (!isVisible) return const SizedBox.shrink();
 
-    var output = build(context);
-    if (data.containerProps.isEmpty) return output;
+    var current = build(context);
+    if (data.containerProps.isEmpty) return current;
 
     // Styling
     final styleClass = DUIStyleClass.fromJson(data.containerProps['style']);
+
+    current = wrapInContainer(
+        context: context, styleClass: styleClass, child: current);
+
+    // Align
+    current = DUIAlign(alignment: data.containerProps['align'], child: current);
 
     final onTapProp = ifNotNull(
         data.containerProps['onClick'] as Map<String, dynamic>?,
         (p0) => ActionFlow.fromJson(p0));
 
-    output = DUIGestureDetector(
+    current = DUIGestureDetector(
         context: context,
         actionFlow: onTapProp,
-        child: output,
+        child: current,
         borderRadius:
             DUIDecoder.toBorderRadius(styleClass?.border?.borderRadius));
-
-    output = wrapInContainer(
-        context: context, styleClass: styleClass, child: output);
-
-    // Align
-    output = DUIAlign(alignment: data.containerProps['align'], child: output);
-
-    return output;
+    return current;
   }
 }

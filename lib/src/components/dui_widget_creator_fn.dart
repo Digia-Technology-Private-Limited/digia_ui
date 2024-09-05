@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../Utils/basic_shared_utils/color_decoder.dart';
 import '../Utils/basic_shared_utils/dui_decoder.dart';
 import '../Utils/basic_shared_utils/num_decoder.dart';
 import '../Utils/extensions.dart';
@@ -17,45 +16,37 @@ Widget wrapInContainer(
     required Widget child}) {
   if (styleClass == null) return child;
 
+  Widget current = child;
+
   final padding = DUIDecoder.toEdgeInsets(styleClass.padding);
-  final margin = DUIDecoder.toEdgeInsets(styleClass.margin);
-  final bgColor = eval<String>(styleClass.bgColor, context: context);
-  final border = toBorder(styleClass.border, context);
-  final borderRadius =
-      DUIDecoder.toBorderRadius(styleClass.border?.borderRadius?.toJson());
-  final height = styleClass.height?.toHeight(context);
-  final width = styleClass.width?.toWidth(context);
-
-  final alignment = DUIDecoder.toAlignment(styleClass.alignment);
-  // final clipBehavior = DUIDecoder.toClip(styleClass.clipBehavior);
-
-  // Probably unnecessary Optimisation:
-  // Remove Container if all values are null or empty.
-  if (padding.isZero() &&
-      margin.isZero() &&
-      (bgColor == null || !ColorDecoder.isValidColorHex(bgColor)) &&
-      border == null &&
-      borderRadius.isZero() &&
-      height == null &&
-      width == null &&
-      alignment == null) {
-    return child;
+  if (!padding.isZero()) {
+    current = Padding(padding: padding, child: current);
   }
 
-  return Container(
-    width: width,
-    height: height,
-    padding: padding,
-    margin: margin,
-    alignment: alignment,
-    decoration: BoxDecoration(
-      color: makeColor(bgColor),
-      border: border,
-      borderRadius: borderRadius,
-    ),
-    clipBehavior: !borderRadius.isZero() ? Clip.hardEdge : Clip.none,
-    child: child,
-  );
+  final bgColor = makeColor(eval<String>(styleClass.bgColor, context: context));
+  final borderRadius =
+      DUIDecoder.toBorderRadius(styleClass.border?.borderRadius?.toJson());
+  final border = toBorder(styleClass.border, context);
+  if (!(bgColor == null && borderRadius.isZero() && border == null)) {
+    current = DecoratedBox(
+      decoration: BoxDecoration(
+          color: bgColor, border: border, borderRadius: borderRadius),
+      child: current,
+    );
+  }
+
+  final height = styleClass.height?.toHeight(context);
+  final width = styleClass.width?.toWidth(context);
+  if (!(width == null && height == null)) {
+    current = SizedBox(width: width, height: height, child: current);
+  }
+
+  final margin = DUIDecoder.toEdgeInsets(styleClass.margin);
+  if (!margin.isZero()) {
+    current = Padding(padding: margin, child: current);
+  }
+
+  return current;
 }
 
 // ignore: non_constant_identifier_names
