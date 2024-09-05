@@ -40,6 +40,8 @@ import '../core/builders/dui_spacer_builder.dart';
 import '../core/builders/dui_stack_builder.dart';
 import '../core/builders/dui_stepper_builder.dart';
 import '../core/builders/dui_stream_builder.dart';
+import '../core/builders/dui_styled_horizontal_divider_builder.dart';
+import '../core/builders/dui_styled_vertical_divider_builder.dart';
 import '../core/builders/dui_switch_builder.dart';
 import '../core/builders/dui_tab_view_builder.dart';
 import '../core/builders/dui_tab_view_item_builder.dart';
@@ -116,6 +118,10 @@ class DUIWidgetRegistry {
         DUIHorizontalDividerBuilder.create(data),
     'digia/verticalDivider': (data, {registry}) =>
         DUIVerticalDividerBuilder.create(data),
+    'digia/styledHorizontalDivider': (data, {registry}) =>
+        DUIStyledHorizontalDividerBuilder.create(data),
+    'digia/styledVerticalDivider': (data, {registry}) =>
+        DUIStyledVerticalDividerBuilder.create(data),
     'digia/customDezervComponent': (data, {registry}) =>
         DUICustomWidgetBuilder.create(data),
     'digia/navigationBarItem': (data, {registry}) =>
