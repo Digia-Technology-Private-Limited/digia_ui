@@ -148,7 +148,8 @@ class NetworkClient {
       String? uuid,
       String packageName,
       String appVersion,
-      String appBuildNumber) {
+      String appBuildNumber,
+      String environment) {
     return {
       'x-digia-version': packageVersion,
       'x-digia-project-id': accessKey,
@@ -156,7 +157,8 @@ class NetworkClient {
       'x-digia-device-id': uuid,
       'x-app-package-name': packageName,
       'x-app-version': appVersion,
-      'x-app-build-number': appBuildNumber
+      'x-app-build-number': appBuildNumber,
+      'x-digia-environment':environment
     };
   }
 }

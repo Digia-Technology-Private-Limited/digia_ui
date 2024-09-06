@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blurhash/flutter_blurhash.dart';
@@ -6,6 +8,7 @@ import 'package:octo_image/octo_image.dart';
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
 import '../../components/dui_widget_creator_fn.dart';
 import '../../components/dui_widget_scope.dart';
+import '../../models/dui_file.dart';
 import '../evaluator.dart';
 import '../json_widget_builder.dart';
 import '../page/props/dui_widget_json_data.dart';
@@ -22,18 +25,44 @@ class DUIImageBuilder extends DUIWidgetBuilder {
         data: DUIWidgetJsonData(type: 'digia/image', props: props));
   }
 
-  ImageProvider _createImageProvider(BuildContext context) {
-    final imageSource =
-        eval<String>(data.props['imageSrc'], context: context) ?? '';
-    // Network Image
-    if (imageSource.startsWith('http')) {
-      return CachedNetworkImageProvider(imageSource);
-    } else {
-      return DUIWidgetScope.maybeOf(context)
-              ?.imageProviderFn
-              ?.call(imageSource) ??
-          AssetImage(imageSource);
+  ImageProvider _createImageProvider(
+      BuildContext context, Object? imageSource) {
+    if (imageSource is List<DUIFile> && imageSource.isNotEmpty) {
+      final firstFile = imageSource.first;
+      if (firstFile.isWeb) {
+        if (firstFile.xFile?.path != null) {
+          return CachedNetworkImageProvider(firstFile.xFile!.path);
+        }
+      } else if (firstFile.isMobile && firstFile.path != null) {
+        return FileImage(File(firstFile.path!));
+      }
+      throw Exception('Invalid DUIFile source in list');
     }
+
+    if (imageSource is DUIFile) {
+      if (imageSource.isWeb) {
+        if (imageSource.xFile?.path != null) {
+          return CachedNetworkImageProvider(imageSource.xFile!.path);
+        }
+      } else if (imageSource.isMobile) {
+        return FileImage(File(imageSource.path!));
+      }
+      throw Exception('Invalid DUIFile source');
+    }
+
+    if (imageSource is String) {
+      if (imageSource.startsWith('http')) {
+        // Network Image
+        return CachedNetworkImageProvider(imageSource);
+      } else {
+        return DUIWidgetScope.maybeOf(context)
+                ?.imageProviderFn
+                ?.call(imageSource) ??
+            AssetImage(imageSource);
+      }
+    }
+
+    throw Exception('Unsupported image source type');
   }
 
   OctoPlaceholderBuilder? _placeHolderBuilderCreater() {
@@ -64,33 +93,38 @@ class DUIImageBuilder extends DUIWidgetBuilder {
 
   @override
   Widget build(BuildContext context) {
+    final imageSource = eval(data.props['imageSrc'], context: context);
     final opacity =
         eval<double>(data.props['opacity'], context: context) ?? 1.0;
 
+    final imageProvider = _createImageProvider(context, imageSource);
+
     return Opacity(
       opacity: opacity,
-      child: OctoImage(
-          fadeInDuration: const Duration(microseconds: 0),
-          fadeOutDuration: const Duration(microseconds: 0),
-          image: _createImageProvider(context),
-          fit: DUIDecoder.toBoxFit(data.props['fit']),
-          gaplessPlayback: true,
-          placeholderBuilder: _placeHolderBuilderCreater(),
-          imageBuilder: (BuildContext context, Widget widget) {
-            return _mayWrapInAspectRatio(widget);
-          },
-          errorBuilder: (context, error, stackTrace) {
-            final errorImage = data.props['errorImage'];
-            if (errorImage == null) {
-              return const Center(
-                child: Icon(
-                  Icons.error_outline,
-                  color: Colors.red,
-                ),
-              );
-            }
-            return Image.asset(errorImage);
-          }),
+      child: imageProvider is MemoryImage || imageProvider is FileImage
+          ? Image(image: imageProvider)
+          : OctoImage(
+              fadeInDuration: const Duration(microseconds: 0),
+              fadeOutDuration: const Duration(microseconds: 0),
+              image: imageProvider,
+              fit: DUIDecoder.toBoxFit(data.props['fit']),
+              gaplessPlayback: true,
+              placeholderBuilder: _placeHolderBuilderCreater(),
+              imageBuilder: (BuildContext context, Widget widget) {
+                return _mayWrapInAspectRatio(widget);
+              },
+              errorBuilder: (context, error, stackTrace) {
+                final errorImage = data.props['errorImage'];
+                if (errorImage == null) {
+                  return const Center(
+                    child: Icon(
+                      Icons.error_outline,
+                      color: Colors.red,
+                    ),
+                  );
+                }
+                return Image.asset(errorImage);
+              }),
     );
   }
 }

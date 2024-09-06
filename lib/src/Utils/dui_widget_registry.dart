@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../core/builders/bottom_navigation_bar_item_builder.dart';
+import '../core/builders/custom_shape_builder.dart';
 import '../core/builders/dezerv_component/dezerv_dial_pad_builder.dart';
 import '../core/builders/dezerv_stepper_builder.dart';
 import '../core/builders/dui_animated_button_builder.dart';
@@ -25,6 +26,7 @@ import '../core/builders/dui_icon_builder.dart';
 import '../core/builders/dui_icon_button_builder.dart';
 import '../core/builders/dui_image_builder.dart';
 import '../core/builders/dui_line_chart_builder.dart';
+import '../core/builders/dui_linear_progress_indicator_builder.dart';
 import '../core/builders/dui_listview_builder.dart';
 import '../core/builders/dui_lottie_builder.dart';
 import '../core/builders/dui_paginated_listview_builder.dart';
@@ -49,6 +51,7 @@ import '../core/builders/dui_video_player_builder.dart';
 import '../core/builders/dui_webview_builder.dart';
 import '../core/builders/dui_wrap_builder.dart';
 import '../core/builders/dui_youtube_player_builder.dart';
+import '../core/builders/probo_fastscore_button_builder.dart';
 import '../core/json_widget_builder.dart';
 import '../core/page/props/dui_widget_json_data.dart';
 
@@ -127,12 +130,15 @@ class DUIWidgetRegistry {
     'digia/futureBuilder': (data, {registry}) => DUIFutureBuilder(data: data),
     'digia/circularProgressBar': (data, {registry}) =>
         DUICircularProgressBarBuilder(data: data),
+    'digia/linearProgressBar': (data, {registry}) =>
+        DUILinearProgressBarBuilder(data: data),
     'digia/checkbox': withoutRegistry(DUICheckboxBuilder.create),
     'digia/switch': withoutRegistry(DUISwitchBuilder.create),
     'digia/animatedButton': withoutRegistry(DUIAnimatedButtonBuilder.create),
     'digia/pinField': withoutRegistry(DUIPinFieldBuilder.create),
     'digia/calendar': withoutRegistry(DUICalendarBuilder.create),
     'digia/lineChart': withoutRegistry(DUILineChartBuilder.create),
+    'digia/customShapeCard': withoutRegistry(CustomShapeBuilder.create),
     'digia/paginatedListView': (data, {registry}) =>
         DUIPaginatedListViewBuilder.create(data),
     'digia/timer': withoutRegistry(DUITimerBuilder.create),
@@ -142,7 +148,9 @@ class DUIWidgetRegistry {
     'digia/streamBuilder': (data, {registry}) => DUIStreamBuilder(data: data),
     'digia/refreshIndicator': (data, {registry}) =>
         DUIRefreshIndicator(data: data),
-    'digia/safeArea': (data, {registry}) => DUISafeAreaBuilder(data: data)
+    'digia/safeArea': (data, {registry}) => DUISafeAreaBuilder(data: data),
+    'digia/probo/animated_fastscore': (data, {registry}) =>
+        ProboCustomComponentBuilder(data: data)
   };
 
   static const DUIWidgetRegistry shared = DUIWidgetRegistry();

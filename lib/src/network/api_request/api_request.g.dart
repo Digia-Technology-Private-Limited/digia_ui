@@ -12,6 +12,7 @@ APIModel _$APIModelFromJson(Map<String, dynamic> json) => APIModel(
       method: $enumDecode(_$HttpMethodEnumMap, json['method']),
       headers: json['headers'] as Map<String, dynamic>?,
       body: json['body'] as Map<String, dynamic>?,
+      bodyType: $enumDecodeNullable(_$BodyTypeEnumMap, json['bodyType']),
       variables: _$JsonConverterFromJson<Map<String, dynamic>,
               Map<String, VariableDef>>(
           json['variables'], const VariablesJsonConverter().fromJson),
@@ -23,6 +24,7 @@ Map<String, dynamic> _$APIModelToJson(APIModel instance) => <String, dynamic>{
       'method': _$HttpMethodEnumMap[instance.method]!,
       'headers': instance.headers,
       'body': instance.body,
+      'bodyType': _$BodyTypeEnumMap[instance.bodyType],
       'variables':
           _$JsonConverterToJson<Map<String, dynamic>, Map<String, VariableDef>>(
               instance.variables, const VariablesJsonConverter().toJson),
@@ -34,6 +36,11 @@ const _$HttpMethodEnumMap = {
   HttpMethod.put: 'PUT',
   HttpMethod.delete: 'DELETE',
   HttpMethod.patch: 'PATCH',
+};
+
+const _$BodyTypeEnumMap = {
+  BodyType.json: 'JSON',
+  BodyType.multipart: 'MULTIPART',
 };
 
 Value? _$JsonConverterFromJson<Json, Value>(

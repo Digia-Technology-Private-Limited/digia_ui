@@ -13,7 +13,6 @@ class DUIStyleClass {
   DUIInsets? margin;
   String? bgColor;
   DUIBorder? border;
-  String? alignment;
   String? height;
   String? width;
   String? clipBehavior;
@@ -23,7 +22,6 @@ class DUIStyleClass {
       this.margin,
       this.bgColor,
       this.border,
-      this.alignment,
       this.height,
       this.width,
       this.clipBehavior});
@@ -45,7 +43,6 @@ class DUIStyleClass {
         margin: margin ?? this.margin,
         bgColor: bgColor ?? this.bgColor,
         border: border ?? this.border,
-        alignment: alignment ?? this.alignment,
         height: height ?? this.height,
         width: width ?? this.width,
         clipBehavior: clipBehavior ?? this.clipBehavior);

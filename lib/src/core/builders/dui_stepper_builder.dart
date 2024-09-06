@@ -13,9 +13,6 @@ class DUIStepperBuilder extends DUIWidgetBuilder {
 
   @override
   Widget build(BuildContext context) {
-    return DUIStepper(
-        varName: data.varName,
-        props: data.props,
-        children: data.children['children']);
+    return DUIStepper(varName: data.varName, props: data.props, data: data);
   }
 }
