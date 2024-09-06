@@ -9,7 +9,7 @@ part 'dui_tab_view_props.g.dart';
 class DUITabViewProps {
   final bool? hasTabs;
   // final String? dividerColor;
-  final String? tabBarPosition;
+  // final String? tabBarPosition;
   final String? iconPosition;
   final String? selectedLabelColor;
   final String? unselectedLabelColor;
@@ -21,9 +21,9 @@ class DUITabViewProps {
   final DUIInsets? tabBarPadding;
   final DUIInsets? labelPadding;
   final Object? initialIndex;
-  final  Map<String,dynamic>? tabBarScrollable;
-  final  Map<String,dynamic>? buttonProps;
-  final Map<String,dynamic>? indicatorProps;
+  final Map<String, dynamic>? tabBarScrollable;
+  final Map<String, dynamic>? buttonProps;
+  final Map<String, dynamic>? indicatorProps;
   @JsonKey(
       fromJson: DUITextStyle.fromJson,
       includeToJson: false,
@@ -51,7 +51,7 @@ class DUITabViewProps {
       // this.dividerHeight,
       // this.indicatorColor,
       // this.dividerColor,
-      this.tabBarPosition,
+      // this.tabBarPosition,
       required this.isScrollable,
       this.viewportFraction,
       this.tabBarPadding});

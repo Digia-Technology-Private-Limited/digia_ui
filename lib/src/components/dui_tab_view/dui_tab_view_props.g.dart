@@ -21,7 +21,6 @@ DUITabViewProps _$DUITabViewPropsFromJson(Map<String, dynamic> json) =>
       selectedLabelStyle: DUITextStyle.fromJson(json['selectedLabelStyle']),
       unselectedLabelColor: json['unselectedLabelColor'] as String?,
       unselectedLabelStyle: DUITextStyle.fromJson(json['unselectedLabelStyle']),
-      tabBarPosition: json['tabBarPosition'] as String?,
       isScrollable: json['isScrollable'] as bool?,
       viewportFraction: (json['viewportFraction'] as num?)?.toDouble(),
       tabBarPadding: json['tabBarPadding'] == null
@@ -32,7 +31,6 @@ DUITabViewProps _$DUITabViewPropsFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$DUITabViewPropsToJson(DUITabViewProps instance) =>
     <String, dynamic>{
       'hasTabs': instance.hasTabs,
-      'tabBarPosition': instance.tabBarPosition,
       'iconPosition': instance.iconPosition,
       'selectedLabelColor': instance.selectedLabelColor,
       'unselectedLabelColor': instance.unselectedLabelColor,
