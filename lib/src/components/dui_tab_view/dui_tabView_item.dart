@@ -44,38 +44,28 @@ class _DUITabViewItem1State extends State<DUITabViewItem1> {
     final generateChildrenDynamically =
         widget.data.dataRef.isNotEmpty && widget.data.dataRef['kind'] != null;
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Expanded(
-          child: TabBarView(
-            // controller: _controller,
-            physics: widget.duiTabView1Props.isScrollable ?? false
-                ? const AlwaysScrollableScrollPhysics()
-                : const NeverScrollableScrollPhysics(),
-            children: generateChildrenDynamically
-                ? List.generate(items.length, (index) {
-                    final childToRepeat = children.first;
-                    return BracketScope(
-                      variables: [
-                        ('index', index),
-                        ('currentItem', items[index])
-                      ],
-                      builder: DUIJsonWidgetBuilder(
-                        data: childToRepeat,
-                        registry: widget.registry ?? DUIWidgetRegistry.shared,
-                      ),
-                    );
-                  })
-                : children.map((e) {
-                    return DUIJsonWidgetBuilder(
-                      data: e,
-                      registry: widget.registry ?? DUIWidgetRegistry.shared,
-                    ).build(context);
-                  }).toList(),
-          ),
-        ),
-      ],
+    return TabBarView(
+      // controller: _controller,
+      physics: widget.duiTabView1Props.isScrollable ?? false
+          ? const AlwaysScrollableScrollPhysics()
+          : const NeverScrollableScrollPhysics(),
+      children: generateChildrenDynamically
+          ? List.generate(items.length, (index) {
+              final childToRepeat = children.first;
+              return BracketScope(
+                variables: [('index', index), ('currentItem', items[index])],
+                builder: DUIJsonWidgetBuilder(
+                  data: childToRepeat,
+                  registry: widget.registry ?? DUIWidgetRegistry.shared,
+                ),
+              );
+            })
+          : children.map((e) {
+              return DUIJsonWidgetBuilder(
+                data: e,
+                registry: widget.registry ?? DUIWidgetRegistry.shared,
+              ).build(context);
+            }).toList(),
     );
   }
 
