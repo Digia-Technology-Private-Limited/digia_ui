@@ -29,8 +29,10 @@ class DUIImageBuilder extends DUIWidgetBuilder {
       BuildContext context, Object? imageSource) {
     if (imageSource is List<DUIFile> && imageSource.isNotEmpty) {
       final firstFile = imageSource.first;
-      if (firstFile.isWeb && firstFile.bytes != null) {
-        return MemoryImage(firstFile.bytes!);
+      if (firstFile.isWeb) {
+        if (firstFile.xFile?.path != null) {
+          return CachedNetworkImageProvider(firstFile.xFile!.path);
+        }
       } else if (firstFile.isMobile && firstFile.path != null) {
         return FileImage(File(firstFile.path!));
       }
@@ -39,7 +41,9 @@ class DUIImageBuilder extends DUIWidgetBuilder {
 
     if (imageSource is DUIFile) {
       if (imageSource.isWeb) {
-        return MemoryImage(imageSource.bytes!);
+        if (imageSource.xFile?.path != null) {
+          return CachedNetworkImageProvider(imageSource.xFile!.path);
+        }
       } else if (imageSource.isMobile) {
         return FileImage(File(imageSource.path!));
       }

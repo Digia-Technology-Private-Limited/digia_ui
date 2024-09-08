@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../core/builders/bottom_navigation_bar_item_builder.dart';
+import '../core/builders/custom_shape_builder.dart';
 import '../core/builders/dezerv_component/dezerv_dial_pad_builder.dart';
 import '../core/builders/dezerv_stepper_builder.dart';
 import '../core/builders/dui_animated_button_builder.dart';
@@ -25,8 +26,8 @@ import '../core/builders/dui_htmlview_builder.dart';
 import '../core/builders/dui_icon_builder.dart';
 import '../core/builders/dui_icon_button_builder.dart';
 import '../core/builders/dui_image_builder.dart';
-import '../core/builders/dui_linear_progress_indicator_builder.dart';
 import '../core/builders/dui_line_chart_builder.dart';
+import '../core/builders/dui_linear_progress_indicator_builder.dart';
 import '../core/builders/dui_listview_builder.dart';
 import '../core/builders/dui_lottie_builder.dart';
 import '../core/builders/dui_opacity_builder.dart';
@@ -41,6 +42,8 @@ import '../core/builders/dui_spacer_builder.dart';
 import '../core/builders/dui_stack_builder.dart';
 import '../core/builders/dui_stepper_builder.dart';
 import '../core/builders/dui_stream_builder.dart';
+import '../core/builders/dui_styled_horizontal_divider_builder.dart';
+import '../core/builders/dui_styled_vertical_divider_builder.dart';
 import '../core/builders/dui_switch_builder.dart';
 import '../core/builders/dui_tab_view_builder.dart';
 import '../core/builders/dui_tab_view_item_builder.dart';
@@ -117,6 +120,10 @@ class DUIWidgetRegistry {
         DUIHorizontalDividerBuilder.create(data),
     'digia/verticalDivider': (data, {registry}) =>
         DUIVerticalDividerBuilder.create(data),
+    'digia/styledHorizontalDivider': (data, {registry}) =>
+        DUIStyledHorizontalDividerBuilder.create(data),
+    'digia/styledVerticalDivider': (data, {registry}) =>
+        DUIStyledVerticalDividerBuilder.create(data),
     'digia/customDezervComponent': (data, {registry}) =>
         DUICustomWidgetBuilder.create(data),
     'digia/navigationBarItem': (data, {registry}) =>
@@ -139,6 +146,7 @@ class DUIWidgetRegistry {
     'digia/pinField': withoutRegistry(DUIPinFieldBuilder.create),
     'digia/calendar': withoutRegistry(DUICalendarBuilder.create),
     'digia/lineChart': withoutRegistry(DUILineChartBuilder.create),
+    'digia/customShapeCard': withoutRegistry(CustomShapeBuilder.create),
     'digia/animationBuilder': withoutRegistry(DuiAnimationBuilder.create),
     'digia/opacity': withoutRegistry(DuiOpacityBuilder.create),
     'digia/paginatedListView': (data, {registry}) =>

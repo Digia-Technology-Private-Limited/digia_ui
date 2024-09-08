@@ -4,6 +4,7 @@ import 'package:url_launcher/url_launcher_string.dart';
 
 import 'lodash.dart';
 import 'num_decoder.dart';
+import 'types.dart';
 
 class DUIDecoder {
   static MainAxisAlignment? toMainAxisAlginment(dynamic value) {
@@ -451,6 +452,13 @@ class DUIDecoder {
         _ => null
       };
 
+  static BorderPattern? toBorderPattern(dynamic value) => switch (value) {
+        'solid' => BorderPattern.solid,
+        'dotted' => BorderPattern.dotted,
+        'dashed' => BorderPattern.dashed,
+        _ => null
+      };
+
   static StackFit toStackFit(dynamic value) => switch (value) {
         'expand' => StackFit.expand,
         'passthrough' => StackFit.passthrough,
@@ -597,5 +605,18 @@ class DUIDecoder {
   static TextInputAction? toTextInputAction(dynamic value) {
     return TextInputAction.values
         .firstWhereOrNull((p0) => p0.name.split('.').last == value);
+  }
+
+  static List<double>? toDashPattern(dynamic jsonDashPattern) {
+    if (jsonDashPattern is! String) {
+      return null;
+    }
+    final parsed = tryJsonDecode(jsonDashPattern) ?? jsonDashPattern;
+
+    if (parsed == null) return null;
+
+    if (parsed is! List) return null;
+
+    return parsed.map((e) => NumDecoder.toDouble(e)).nonNulls.toList();
   }
 }

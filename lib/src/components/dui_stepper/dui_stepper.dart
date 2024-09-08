@@ -11,6 +11,7 @@ import '../../core/builders/dui_icon_builder.dart';
 import '../../core/builders/dui_json_widget_builder.dart';
 import '../../core/evaluator.dart';
 import '../dui_base_stateful_widget.dart';
+import 'DashLineConnector.dart';
 
 class DUIStepper extends BaseStatefulWidget {
   final Map<String, dynamic> props;
@@ -58,22 +59,36 @@ class _DUIStepperState extends DUIWidgetState<DUIStepper>
   }
 
   Connector toConnectorType(dynamic value, Color color, double thickness) {
-    return switch (value) {
+    final connectorType = value?['value'];
+    return switch (connectorType) {
       'solid' => Connector.solidLine(
           color: color,
           thickness: thickness,
         ),
-      'dashed' => Connector.dashedLine(
+      'dashed' => CustomDashedLineConnector(
           color: color,
           thickness: thickness,
-          dash: thickness * 3,
-          gap: thickness * 2,
+          dash: value?['dash'] ?? thickness * 3,
+          gap: value?['gap'] ?? thickness * 2,
+          strokeCap: toStrokeCap(value?['strokeCap']),
         ),
       _ => Connector.solidLine(
           color: color,
           thickness: thickness,
         )
     };
+  }
+
+  StrokeCap toStrokeCap(dynamic value) {
+    switch (value) {
+      case 'square':
+        return StrokeCap.square;
+      case 'round':
+        return StrokeCap.round;
+      case 'butt':
+      default:
+        return StrokeCap.butt;
+    }
   }
 
   @override
@@ -165,11 +180,13 @@ class _DUIStepperState extends DUIWidgetState<DUIStepper>
                 final double progress = _controller.value;
                 final bool isCompleted = index <= (progress).round();
                 final Color color = isCompleted
-                    ? eval<String>(widget.props['completedColor'],
+                    ? (makeColor(completedConnector?['color']) ??
+                        eval<String>(widget.props['completedColor'],
                                 context: context)
                             .letIfTrue(toColor) ??
-                        Colors.blue
-                    : eval<String>(widget.props['inCompletedColor'],
+                        Colors.blue)
+                    : makeColor(inCompletedConnector?['color']) ??
+                        eval<String>(widget.props['inCompletedColor'],
                                 context: context)
                             .letIfTrue(toColor) ??
                         Colors.white;
@@ -232,11 +249,13 @@ class _DUIStepperState extends DUIWidgetState<DUIStepper>
                 final double progress = _controller.value;
                 final bool isCompleted = index <= (progress).round();
                 final Color color = isCompleted
-                    ? eval<String>(widget.props['completedColor'],
+                    ? (makeColor(completedConnector?['color']) ??
+                        eval<String>(widget.props['completedColor'],
                                 context: context)
                             .letIfTrue(toColor) ??
-                        Colors.blue
-                    : eval<String>(widget.props['inCompletedColor'],
+                        Colors.blue)
+                    : makeColor(inCompletedConnector?['color']) ??
+                        eval<String>(widget.props['inCompletedColor'],
                                 context: context)
                             .letIfTrue(toColor) ??
                         Colors.white;
