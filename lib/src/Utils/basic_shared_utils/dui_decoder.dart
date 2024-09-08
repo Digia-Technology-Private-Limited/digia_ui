@@ -2,9 +2,9 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
-import '../../components/border/divider_with_pattern/divider_with_pattern.dart';
 import 'lodash.dart';
 import 'num_decoder.dart';
+import 'types.dart';
 
 class DUIDecoder {
   static MainAxisAlignment? toMainAxisAlginment(dynamic value) {
