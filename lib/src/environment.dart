@@ -1,5 +1,7 @@
 enum Environment { local, development, production }
-enum Flavor { debug, staging, release, version}
+
+enum Flavor { debug, staging, release, version }
+
 sealed class FlavorInfo {
   Flavor flavor;
   FlavorInfo(this.flavor);

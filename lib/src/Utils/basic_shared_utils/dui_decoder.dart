@@ -4,6 +4,7 @@ import 'package:url_launcher/url_launcher_string.dart';
 
 import 'lodash.dart';
 import 'num_decoder.dart';
+import 'types.dart';
 
 class DUIDecoder {
   static MainAxisAlignment? toMainAxisAlginment(dynamic value) {
@@ -448,6 +449,13 @@ class DUIDecoder {
         'round' => StrokeCap.round,
         'butt' => StrokeCap.butt,
         'square' => StrokeCap.square,
+        _ => null
+      };
+
+  static BorderPattern? toBorderPattern(dynamic value) => switch (value) {
+        'solid' => BorderPattern.solid,
+        'dotted' => BorderPattern.dotted,
+        'dashed' => BorderPattern.dashed,
         _ => null
       };
 
