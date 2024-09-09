@@ -21,7 +21,7 @@ class DUITabViewBuilder extends DUIWidgetBuilder {
       return fallbackWidget();
     }
     final tabViewWidget = DUITabView(
-      children: data.children['children']!,
+      data: data,
       registry: registry,
       tabViewProps: DUITabViewProps.fromJson(data.props),
     );

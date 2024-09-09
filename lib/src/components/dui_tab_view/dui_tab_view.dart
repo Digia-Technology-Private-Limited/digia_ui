@@ -43,6 +43,12 @@ class _DUITabViewState extends State<DUITabView> with TickerProviderStateMixin {
 
   @override
   void initState() {
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     children = widget.data.children['children'] ?? [];
     dynamicItem =
         createDataItemsForDynamicChildren(data: widget.data, context: context);
@@ -51,7 +57,8 @@ class _DUITabViewState extends State<DUITabView> with TickerProviderStateMixin {
     if (generateChildrenDynamically) {
       dynamicItem = dynamicItem.where((e) {
         final condition =
-            eval<bool>(e.props['condition'], context: context) ?? false;
+            eval<bool>(children.first.props['condition'], context: context) ??
+                false;
         return condition;
       }).map((e) {
         return e;
@@ -69,7 +76,20 @@ class _DUITabViewState extends State<DUITabView> with TickerProviderStateMixin {
     _indicatorSize = _toTabBarIndicatorSize(widget.tabViewProps.buttonProps
             ?.valueFor(keyPath: 'indicatorSize')) ??
         TabBarIndicatorSize.tab;
-    super.initState();
+    // if (dynamicItem.isEmpty) {
+    //   dynamicItem = createDataItemsForDynamicChildren(
+    //     data: widget.data,
+    //     context: context,
+    //   );
+
+    //   if (generateChildrenDynamically) {
+    //     dynamicItem = dynamicItem.where((e) {
+    //       final condition =
+    //           eval<bool>(e.props['condition'], context: context) ?? false;
+    //       return condition;
+    //     }).map((e) => e).toList();
+    //   }
+    // }
   }
 
   void _initializeTabController() {
@@ -95,7 +115,8 @@ class _DUITabViewState extends State<DUITabView> with TickerProviderStateMixin {
               iconPosition: toIconPosition(widget.tabViewProps.iconPosition),
               controller: _tabController,
               isScrollable: widget.tabViewProps.tabBarScrollable
-                  ?.valueFor(keyPath: 'value'),
+                      ?.valueFor(keyPath: 'value') ??
+                  false,
               alignment: DUIDecoder.toAlignment(widget
                       .tabViewProps.tabBarScrollable
                       ?.valueFor(keyPath: 'tabAlignment')) ??
