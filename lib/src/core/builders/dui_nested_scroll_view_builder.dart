@@ -71,7 +71,7 @@ class _DUINestedScrollViewState extends DUIWidgetState<DUINestedScrollView> {
     final bodyWidgetData = widget.data.children['bodyWidget']?.firstOrNull;
 
     if (bodyWidgetData == null) {
-      return const SliverToBoxAdapter(child: SizedBox.shrink());
+      return const SizedBox.shrink();
     }
 
     return DUIWidget(data: bodyWidgetData);

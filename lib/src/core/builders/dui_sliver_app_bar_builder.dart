@@ -39,7 +39,7 @@ class DUISliverAppBarBuilder extends DUIWidgetBuilder {
   }
 
   Widget getLeadingWidget() {
-    final trailingWidgetData = data.children['trailing']?.firstOrNull;
+    final trailingWidgetData = data.children['leading']?.firstOrNull;
     if (trailingWidgetData == null) {
       return const SizedBox.shrink();
     }
