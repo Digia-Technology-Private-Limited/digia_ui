@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 import '../../digia_ui.dart';
 import '../Utils/expr.dart';
-import '../dui_logger.dart';
 
 class AnalyticsHandler {
   static final AnalyticsHandler _instance = AnalyticsHandler._();
