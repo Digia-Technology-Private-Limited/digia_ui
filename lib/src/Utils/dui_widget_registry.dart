@@ -5,6 +5,7 @@ import '../core/builders/custom_shape_builder.dart';
 import '../core/builders/dezerv_component/dezerv_dial_pad_builder.dart';
 import '../core/builders/dezerv_stepper_builder.dart';
 import '../core/builders/dui_animated_button_builder.dart';
+import '../core/builders/dui_animation_builder.dart';
 import '../core/builders/dui_app_bar_builder.dart';
 import '../core/builders/dui_avatar_builder.dart';
 import '../core/builders/dui_button_builder.dart';
@@ -30,6 +31,7 @@ import '../core/builders/dui_line_chart_builder.dart';
 import '../core/builders/dui_linear_progress_indicator_builder.dart';
 import '../core/builders/dui_listview_builder.dart';
 import '../core/builders/dui_lottie_builder.dart';
+import '../core/builders/dui_opacity_builder.dart';
 import '../core/builders/dui_nested_scroll_view_builder.dart';
 import '../core/builders/dui_paginated_listview_builder.dart';
 import '../core/builders/dui_pin_field_builder.dart';
@@ -149,6 +151,8 @@ class DUIWidgetRegistry {
     'digia/calendar': withoutRegistry(DUICalendarBuilder.create),
     'digia/lineChart': withoutRegistry(DUILineChartBuilder.create),
     'digia/customShapeCard': withoutRegistry(CustomShapeBuilder.create),
+    'digia/animationBuilder': withoutRegistry(DuiAnimationBuilder.create),
+    'digia/opacity': withoutRegistry(DuiOpacityBuilder.create),
     'digia/paginatedListView': (data, {registry}) =>
         DUIPaginatedListViewBuilder.create(data),
     'digia/timer': withoutRegistry(DUITimerBuilder.create),
