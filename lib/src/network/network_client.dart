@@ -158,7 +158,7 @@ class NetworkClient {
       'x-app-package-name': packageName,
       'x-app-version': appVersion,
       'x-app-build-number': appBuildNumber,
-      'x-digia-environment':environment
+      'x-digia-environment': environment
     };
   }
 }
