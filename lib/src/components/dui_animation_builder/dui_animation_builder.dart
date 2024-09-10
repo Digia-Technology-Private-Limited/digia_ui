@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
-import '../../Utils/basic_shared_utils/lodash.dart';
+import '../../Utils/dui_widget_registry.dart';
+import '../../core/bracket_scope_provider.dart';
+import '../../core/builders/dui_json_widget_builder.dart';
 import '../../core/evaluator.dart';
 import '../../core/page/props/dui_widget_json_data.dart';
 import '../dui_base_stateful_widget.dart';
-import '../dui_widget.dart';
 
 class DuiAnimationComponent extends BaseStatefulWidget {
   final DUIWidgetJsonData data;
@@ -40,23 +41,25 @@ class DuiAnimationComponentState extends State<DuiAnimationComponent> {
 
   @override
   Widget build(BuildContext context) {
-    Widget? child = widget.data.children['child']?.first.let(
-      (p0) => DUIWidget(data: p0),
-    );
+    if (_valueNotifier == null) {
+      return Text(
+        'No Listenable found!!',
+        style: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.w500,
+          color: Colors.red.shade500,
+        ),
+      );
+    }
 
-    return _valueNotifier != null
-        ? AnimatedBuilder(
-            animation: _valueNotifier!,
-            builder: (context, widget) {
-              return child ?? Container();
-            })
-        : Text(
-            'No Listenable found!!',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-              color: Colors.red.shade500,
-            ),
-          );
+    return AnimatedBuilder(
+        animation: _valueNotifier!,
+        builder: (context, _) {
+          return BracketScope(
+              variables: [('value', _valueNotifier?.value)],
+              builder: DUIJsonWidgetBuilder(
+                  data: widget.data.getChild('child')!,
+                  registry: DUIWidgetRegistry.shared));
+        });
   }
 }
