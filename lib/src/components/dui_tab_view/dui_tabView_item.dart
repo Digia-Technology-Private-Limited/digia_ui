@@ -5,6 +5,7 @@ import '../../Utils/dui_widget_registry.dart';
 import '../../core/bracket_scope_provider.dart';
 import '../../core/builders/common.dart';
 import '../../core/builders/dui_json_widget_builder.dart';
+import 'DUICustomTabController.dart';
 import 'dui_tabview_item_props.dart';
 
 class DUITabViewItem1 extends StatefulWidget {
@@ -24,7 +25,7 @@ class DUITabViewItem1 extends StatefulWidget {
 }
 
 class _DUITabViewItem1State extends State<DUITabViewItem1> {
-  late TabController? _controller;
+  late Duicustomtabcontroller _controller;
   @override
   void initState() {
     super.initState();
@@ -32,10 +33,8 @@ class _DUITabViewItem1State extends State<DUITabViewItem1> {
 
   @override
   Widget build(BuildContext context) {
-    _controller = DefaultTabController.maybeOf(context);
+    _controller = DuicustomTabControllerProvider.of(context);
     final children = widget.data.children['children'] ?? [];
-
-    if (_controller == null) return _emptyControllerWidget();
 
     if (children.isEmpty) return _emptyChildWidget();
 
@@ -45,7 +44,7 @@ class _DUITabViewItem1State extends State<DUITabViewItem1> {
         widget.data.dataRef.isNotEmpty && widget.data.dataRef['kind'] != null;
 
     return TabBarView(
-      // controller: _controller,
+      controller: _controller,
       physics: widget.duiTabView1Props.isScrollable ?? false
           ? const AlwaysScrollableScrollPhysics()
           : const NeverScrollableScrollPhysics(),

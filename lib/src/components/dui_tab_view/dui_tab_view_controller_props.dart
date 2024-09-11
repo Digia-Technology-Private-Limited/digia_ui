@@ -6,7 +6,13 @@ part 'dui_tab_view_controller_props.g.dart';
 class DuiTabViewControllerProps {
   final int? length;
   final Object? initialIndex;
-  DuiTabViewControllerProps({this.length, this.initialIndex});
+  final dynamic dynamicList;
+  final double? animationDuration;
+  DuiTabViewControllerProps(
+      {this.dynamicList,
+      this.animationDuration,
+      this.length,
+      this.initialIndex});
 
   factory DuiTabViewControllerProps.fromJson(Map<String, dynamic> json) {
     return _$DuiTabViewControllerPropsFromJson(json);

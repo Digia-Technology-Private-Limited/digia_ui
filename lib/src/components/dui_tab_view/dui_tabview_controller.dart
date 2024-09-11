@@ -4,35 +4,31 @@ import '../../Utils/dui_widget_registry.dart';
 import '../../Utils/extensions.dart';
 import '../../core/builders/dui_json_widget_builder.dart';
 import '../../core/evaluator.dart';
+import 'DUICustomTabController.dart';
 import 'dui_tab_view_controller_props.dart';
 
-class DUITabViewController extends StatefulWidget {
+class DUITabViewController extends StatelessWidget {
   const DUITabViewController({
     required this.registry,
     required this.child,
     required this.tabViewControllerProps,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final DUIWidgetRegistry registry;
   final DUIWidgetJsonData? child;
   final DuiTabViewControllerProps tabViewControllerProps;
 
   @override
-  State<DUITabViewController> createState() => _DUITabViewControllerState();
-}
-
-class _DUITabViewControllerState extends State<DUITabViewController> {
-  @override
   Widget build(BuildContext context) {
-    if (widget.child.isNull) return _emptyChildWidget();
-    final builder =
-        DUIJsonWidgetBuilder(data: widget.child!, registry: widget.registry);
-    return DefaultTabController(
-      length: widget.tabViewControllerProps.length ?? 0,
-      initialIndex: eval<int>(widget.tabViewControllerProps.initialIndex,
-              context: context) ??
-          0,
+    if (child.isNull) return _emptyChildWidget();
+    final builder = DUIJsonWidgetBuilder(data: child!, registry: registry);
+    return DuicustomTabControllerProvider(
+      length: tabViewControllerProps.length ?? 0,
+      dynamicList: getList(tabViewControllerProps.dynamicList),
+      animationDuration: tabViewControllerProps.animationDuration,
+      initialIndex:
+          eval<int>(tabViewControllerProps.initialIndex, context: context) ?? 0,
       child: builder.build(context),
     );
   }
@@ -44,5 +40,12 @@ class _DUITabViewControllerState extends State<DUITabViewController> {
         textAlign: TextAlign.center,
       ),
     );
+  }
+
+  List<dynamic> getList(dynamic data) {
+    if (data is List) {
+      return data;
+    }
+    return [];
   }
 }
