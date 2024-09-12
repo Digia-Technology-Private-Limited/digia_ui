@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../digia_ui.dart';
+import '../../Utils/basic_shared_utils/lodash.dart';
 import '../../Utils/dui_widget_registry.dart';
 import '../../components/dui_base_stateful_widget.dart';
 import '../bracket_scope_provider.dart';
@@ -40,8 +41,13 @@ class _DUINestedScrollViewState extends DUIWidgetState<DUINestedScrollView> {
   @override
   Widget build(BuildContext context) {
     return NestedScrollView(
-        headerSliverBuilder: (context, innerBoxIsScrolled) {
-          return getHeaderWidget(innerBoxIsScrolled);
+        headerSliverBuilder: (cntx, innerBoxIsScrolled) {
+          return <Widget>[
+            SliverOverlapAbsorber(
+              handle: NestedScrollView.sliverOverlapAbsorberHandleFor(cntx),
+              sliver: getHeaderWidget(innerBoxIsScrolled),
+            ),
+          ];
         },
         body: getBodyWidget());
   }
@@ -51,19 +57,19 @@ class _DUINestedScrollViewState extends DUIWidgetState<DUINestedScrollView> {
     return {};
   }
 
-  List<Widget> getHeaderWidget(bool innerBoxIsScrolled) {
+  Widget? getHeaderWidget(bool innerBoxIsScrolled) {
     final headerWidgetData = widget.data.children['headerWidget'];
 
     if (headerWidgetData == null) {
-      return const [SliverToBoxAdapter(child: SizedBox.shrink())];
+      return const SliverToBoxAdapter(child: SizedBox.shrink());
     }
 
-    final headerWidget = headerWidgetData.map((e) {
+    final headerWidget = headerWidgetData.let((e) {
       return BracketScope(
           variables: [('innerBoxIsScrolled', innerBoxIsScrolled)],
           builder: DUIJsonWidgetBuilder(
-              data: e, registry: DUIWidgetRegistry.shared));
-    }).toList();
+              data: e.first, registry: DUIWidgetRegistry.shared));
+    });
     return headerWidget;
   }
 

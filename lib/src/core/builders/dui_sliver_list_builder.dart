@@ -26,7 +26,9 @@ class DUISliverListBuilder extends DUIWidgetBuilder {
     final generateChildrenDynamically =
         data.dataRef.isNotEmpty && data.dataRef['kind'] != null;
     if (generateChildrenDynamically) {
-      if (children.isEmpty) return const SliverToBoxAdapter(child:  SizedBox.shrink());
+      if (children.isEmpty) {
+        return const SliverToBoxAdapter(child: SizedBox.shrink());
+      }
       return SliverList.builder(
         itemCount: items.length,
         itemBuilder: (context, index) {

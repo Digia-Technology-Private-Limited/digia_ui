@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../digia_ui.dart';
+import '../../Utils/basic_shared_utils/num_decoder.dart';
 import '../../Utils/extensions.dart';
 import '../../Utils/util_functions.dart';
 import '../json_widget_builder.dart';
@@ -25,9 +26,9 @@ class DUISliverAppBarBuilder extends DUIWidgetBuilder {
       leading: getLeadingWidget(),
       flexibleSpace: getFlexibleSpace(),
       backgroundColor: makeColor(backgroundColor),
-      snap: props['snap'] ?? false,
-      pinned: props['pinned'] ?? false,
-      floating: props['floating'] ?? false,
+      snap: NumDecoder.toBool(props['snap']) ?? false,
+      pinned: NumDecoder.toBool(props['pinned']) ?? false,
+      floating: NumDecoder.toBool(props['floating']) ?? false,
       collapsedHeight: collapsedHeight?.toHeight(context),
       expandedHeight: expandedHeight?.toHeight(context),
       title: getTitleWidget(),

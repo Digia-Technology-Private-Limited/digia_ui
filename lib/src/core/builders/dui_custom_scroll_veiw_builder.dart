@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../digia_ui.dart';
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
+import '../../Utils/basic_shared_utils/num_decoder.dart';
 import '../../Utils/dui_widget_registry.dart';
 import '../evaluator.dart';
 import '../json_widget_builder.dart';
@@ -24,17 +25,21 @@ class DUICustomScrollViewBuilder extends DUIWidgetBuilder {
 
     final bool isReverse =
         eval<bool>(data.props['reverse'], context: context) ?? false;
+    final bool enableOverlapInjector =
+       NumDecoder.toBool(data.props['enableOverlapInjector']) ?? true;
 
-    return CustomScrollView(
-      reverse: isReverse,
-      scrollDirection: DUIDecoder.toAxis(data.props['scrollDirection'],
-          defaultValue: Axis.vertical),
-      physics: DUIDecoder.toScrollPhysics(data.props['allowScroll']),
-      slivers: getSlivers(),
-    );
+    return Builder(builder: (cntx) {
+      return CustomScrollView(
+        reverse: isReverse,
+        scrollDirection: DUIDecoder.toAxis(data.props['scrollDirection'],
+            defaultValue: Axis.vertical),
+        physics: DUIDecoder.toScrollPhysics(data.props['allowScroll']),
+        slivers: getSlivers(cntx, enableOverlapInjector),
+      );
+    });
   }
 
-  List<Widget> getSlivers() {
+  List<Widget> getSlivers(BuildContext cntx, bool enableOverlapInjector) {
     final sliverData = data.children['children'];
     if (sliverData == null) {
       return const [
@@ -43,9 +48,20 @@ class DUICustomScrollViewBuilder extends DUIWidgetBuilder {
         )
       ];
     }
-    return sliverData.map((e) {
-      return DUIWidget(data: e);
-    }).toList();
+   final sliverList = sliverData.map((e) {
+    return DUIWidget(data: e);
+  }).toList();
+
+  final slivers = <Widget>[];
+  if (enableOverlapInjector) {
+    slivers.add(SliverOverlapInjector(
+      handle: NestedScrollView.sliverOverlapAbsorberHandleFor(cntx),
+    ));
+  }
+  slivers.addAll(sliverList);
+
+  return slivers;
+
   }
 
   @override
