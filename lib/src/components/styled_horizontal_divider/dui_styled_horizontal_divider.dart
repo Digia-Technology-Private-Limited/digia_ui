@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
+import '../../Utils/basic_shared_utils/types.dart';
 import '../../Utils/util_functions.dart';
 import '../border/divider_with_pattern/divider_with_pattern.dart';
 import 'dui_styled_horizontal_divider_props.dart';
