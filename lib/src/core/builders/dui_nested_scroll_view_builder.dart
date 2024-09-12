@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../digia_ui.dart';
 import '../../Utils/basic_shared_utils/lodash.dart';
 import '../../Utils/dui_widget_registry.dart';
+import '../../Utils/extensions.dart';
 import '../../components/dui_base_stateful_widget.dart';
 import '../bracket_scope_provider.dart';
 import '../json_widget_builder.dart';
@@ -65,6 +66,8 @@ class _DUINestedScrollViewState extends DUIWidgetState<DUINestedScrollView> {
     }
 
     final headerWidget = headerWidgetData.let((e) {
+      if(e.isNullOrEmpty) return null;
+      
       return BracketScope(
           variables: [('innerBoxIsScrolled', innerBoxIsScrolled)],
           builder: DUIJsonWidgetBuilder(

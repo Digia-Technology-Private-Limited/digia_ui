@@ -40,13 +40,13 @@ class DUISliverAppBarBuilder extends DUIWidgetBuilder {
   }
 
   Widget getLeadingWidget() {
-    final trailingWidgetData = data.children['leading']?.firstOrNull;
-    if (trailingWidgetData == null) {
+    final leadingWidgetData = data.children['leading']?.firstOrNull;
+    if (leadingWidgetData == null) {
       return const SizedBox.shrink();
     }
 
-    final trailingWidget = DUIWidget(data: trailingWidgetData);
-    return trailingWidget;
+    final leadingWidget = DUIWidget(data: leadingWidgetData);
+    return leadingWidget;
   }
 
   Widget getTitleWidget() {
