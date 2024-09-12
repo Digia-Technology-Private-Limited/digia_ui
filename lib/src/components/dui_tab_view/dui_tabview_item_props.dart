@@ -6,8 +6,10 @@ part 'dui_tabview_item_props.g.dart';
 class DUITabViewItem1Props {
   final bool? isScrollable;
   final double? viewportFraction;
+  final bool? allDynamic;
 
-  DUITabViewItem1Props({this.isScrollable, this.viewportFraction});
+  DUITabViewItem1Props(
+      {this.isScrollable, this.viewportFraction, this.allDynamic});
 
   factory DUITabViewItem1Props.fromJson(Map<String, dynamic> json) {
     return _$DUITabViewItem1PropsFromJson(json);

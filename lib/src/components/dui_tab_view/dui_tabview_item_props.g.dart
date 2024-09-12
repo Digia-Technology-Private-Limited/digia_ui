@@ -11,6 +11,7 @@ DUITabViewItem1Props _$DUITabViewItem1PropsFromJson(
     DUITabViewItem1Props(
       isScrollable: json['isScrollable'] as bool?,
       viewportFraction: (json['viewportFraction'] as num?)?.toDouble(),
+      allDynamic: json['allDynamic'] as bool?,
     );
 
 Map<String, dynamic> _$DUITabViewItem1PropsToJson(
@@ -18,4 +19,5 @@ Map<String, dynamic> _$DUITabViewItem1PropsToJson(
     <String, dynamic>{
       'isScrollable': instance.isScrollable,
       'viewportFraction': instance.viewportFraction,
+      'allDynamic': instance.allDynamic,
     };

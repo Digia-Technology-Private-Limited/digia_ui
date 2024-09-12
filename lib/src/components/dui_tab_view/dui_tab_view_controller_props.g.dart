@@ -9,6 +9,8 @@ part of 'dui_tab_view_controller_props.dart';
 DuiTabViewControllerProps _$DuiTabViewControllerPropsFromJson(
         Map<String, dynamic> json) =>
     DuiTabViewControllerProps(
+      dynamicList: json['dynamicList'],
+      animationDuration: (json['animationDuration'] as num?)?.toDouble(),
       length: (json['length'] as num?)?.toInt(),
       initialIndex: json['initialIndex'],
     );
@@ -18,4 +20,6 @@ Map<String, dynamic> _$DuiTabViewControllerPropsToJson(
     <String, dynamic>{
       'length': instance.length,
       'initialIndex': instance.initialIndex,
+      'dynamicList': instance.dynamicList,
+      'animationDuration': instance.animationDuration,
     };
