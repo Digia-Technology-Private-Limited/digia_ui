@@ -7,11 +7,86 @@ typedef VirtualWidgetBuilder = VirtualWidget Function(
 
 class VirtualWidgetRegistry {
   final Map<String, VirtualWidgetBuilder> _builders = {
+    // Layout Widgets
+    'digia/container': containerBuilder,
+    // 'digia/column': columnBuilder,
+    // 'digia/row': rowBuilder,
+    // 'digia/stack': stackBuilder,
+    'digia/listView': listViewBuilder,
+    'digia/gridView': gridViewBuilder,
+    'digia/wrap': wrapBuilder,
+    'digia/sizedBox': sizedBoxBuilder,
+    'digia/spacer': spacerBuilder,
+    'digia/safeArea': safeAreaBuilder,
+    // 'digia/customScrollView': customScrollViewBuilder,
+    // 'digia/nestedScrollView': nestedScrollViewBuilder,
+
+    // Basic Widgets
     'digia/text': textBuilder,
     'digia/richText': richTextBuilder,
-    'digia/container': containerBuilder,
     'digia/icon': iconBuilder,
-    'digia/listView': listViewBuilder
+    'digia/image': imageBuilder,
+    'digia/button': buttonBuilder,
+    'digia/iconButton': iconButtonBuilder,
+    'digia/checkbox': checkboxBuilder,
+    'digia/switch': switchBuilder,
+    // 'digia/textFormField': textFormFieldBuilder,
+
+    // Navigation and Structure
+    // 'digia/scaffold': scaffoldBuilder,
+    // 'digia/appBar': appBarBuilder,
+    // 'digia/sliverAppBar': sliverAppBarBuilder,
+    // 'digia/drawer': drawerBuilder,
+    // 'digia/tabView': tabViewBuilder,
+    // 'digia/tabViewItem': tabViewItemBuilder,
+    // 'digia/navigationBarItem': navigationBarItemBuilder,
+
+    // Dividers and Decorative Elements
+    'digia/horizontalDivider': horizontalDividerBuilder,
+    'digia/verticalDivider': verticalDividerBuilder,
+    'digia/styledHorizontalDivider': styledHorizontalDividerBuilder,
+    'digia/styledVerticalDivider': styledVerticalDividerBuilder,
+    'digia/avatar': avatarBuilder,
+
+    // Interactive Widgets
+    'digia/animatedButton': animatedButtonBuilder,
+    // 'digia/expandable': expandableBuilder,
+    'digia/refreshIndicator': refreshIndicatorBuilder,
+    // 'digia/stepper': stepperBuilder,
+    // 'digia/flutterStepper': flutterStepperBuilder,
+    // 'digia/pinField': pinFieldBuilder,
+    'digia/calendar': calendarBuilder,
+
+    // Media and Web Content
+    'digia/lottie': lottieBuilder,
+    'digia/youtubePlayer': youtubePlayerBuilder,
+    'digia/videoPlayer': videoPlayerBuilder,
+    'digia/htmlView': htmlViewBuilder,
+    'digia/webView': webViewBuilder,
+
+    // Data Display
+    // 'digia/carousel': carouselBuilder,
+    // 'digia/lineChart': lineChartBuilder,
+    'digia/circularProgressBar': circularProgressBarBuilder,
+    'digia/linearProgressBar': linearProgressBarBuilder,
+    // 'digia/paginatedListView': paginatedListViewBuilder,
+    // 'digia/sliverList': sliverListBuilder,
+
+    // Async Widgets
+    // 'digia/futureBuilder': futureBuilderBuilder,
+    'digia/streamBuilder': streamBuilder,
+
+    // Utility Widgets
+    // 'digia/conditionalBuilder': conditionalBuilderBuilder,
+    'digia/opacity': opacityBuilder,
+    // 'digia/animationBuilder': animationBuilderBuilder,
+    'digia/timer': timerBuilder,
+
+    // Custom and Specialized Widgets
+    // 'digia/customDezervComponent': customDezervComponentBuilder,
+    // 'digia/dezerv/dialPad': dezervDialPadBuilder,
+    // 'digia/customShapeCard': customShapeCardBuilder,
+    // 'digia/probo/animated_fastscore': proboCustomComponentBuilder,
   };
 
   void registerWidget(String type, VirtualWidgetBuilder builder) {
