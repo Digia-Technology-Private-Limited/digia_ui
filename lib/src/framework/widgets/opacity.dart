@@ -15,7 +15,6 @@ class VWOpacity extends VirtualStatelessWidget {
 
   @override
   Widget render(RenderPayload payload) {
-    final child = childOf('child');
     final opacity = payload.eval<double>(props['opacity']) ?? 1.0;
     final alwaysIncludeSemantics =
         payload.eval<bool>(props['alwaysIncludeSemantics']) ?? false;

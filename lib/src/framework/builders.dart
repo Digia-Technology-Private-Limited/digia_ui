@@ -10,7 +10,7 @@ import 'widgets/calendar.dart';
 import 'widgets/checkbox.dart';
 import 'widgets/circular_progress_bar.dart';
 import 'widgets/container.dart';
-// import 'widgets/expandable.dart';
+import 'widgets/expandable.dart';
 // import 'widgets/flex.dart';
 import 'widgets/grid_view.dart';
 import 'widgets/horizontal_divider.dart';
@@ -332,17 +332,17 @@ VWAnimatedButton animatedButtonBuilder(
 //   return flexBuilder(data, parent, registry, Axis.vertical);
 // }
 
-// VWExpandable expandableBuilder(
-//     VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
-//   return VWExpandable(
-//     props: data.props,
-//     commonProps: data.commonProps,
-//     parent: parent,
-//     refName: data.refName,
-//     childGroups: _createChildGroups(data.childGroups, parent, registry),
-//     repeatData: data.repeatData,
-//   );
-// }
+VWExpandable expandableBuilder(
+    VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
+  return VWExpandable(
+    props: data.props,
+    commonProps: data.commonProps,
+    parent: parent,
+    refName: data.refName,
+    childGroups: _createChildGroups(data.childGroups, parent, registry),
+    repeatData: data.repeatData,
+  );
+}
 
 VWWrap wrapBuilder(
     VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {

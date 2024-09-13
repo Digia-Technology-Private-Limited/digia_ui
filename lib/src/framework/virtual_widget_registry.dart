@@ -50,7 +50,7 @@ class VirtualWidgetRegistry {
 
     // Interactive Widgets
     'digia/animatedButton': animatedButtonBuilder,
-    // 'digia/expandable': expandableBuilder,
+    'digia/expandable': expandableBuilder,
     'digia/refreshIndicator': refreshIndicatorBuilder,
     // 'digia/stepper': stepperBuilder,
     // 'digia/flutterStepper': flutterStepperBuilder,

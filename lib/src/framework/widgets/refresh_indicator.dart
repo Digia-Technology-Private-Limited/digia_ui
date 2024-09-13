@@ -18,7 +18,6 @@ class VWRefreshIndicator extends VirtualStatelessWidget {
 
   @override
   Widget render(RenderPayload payload) {
-    final child = childOf('child');
     return RefreshIndicator(
       color: makeColor(payload.eval<String>(props['color'])),
       backgroundColor:

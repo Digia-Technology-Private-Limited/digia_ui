@@ -18,7 +18,7 @@ class VWTimer extends VirtualStatelessWidget {
     return InternalTimer(
       props: props,
       payload: payload,
-      child: childOf('child'),
+      child: child,
     );
   }
 }
