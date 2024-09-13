@@ -34,19 +34,6 @@ class DUIContainer2 extends StatelessWidget {
     final gradiant = toGradiant(props.gradiant, context);
     final elevation = props.elevation ?? 0.0;
 
-
-    //Advanced Border
-    final borderGradiant = toGradiant(props.border?.borderGradiant, context);
-    final borderPattern =
-        props.border?.borderType?.borderPattern ?? BorderPattern.solid;
-    final strokeCap = props.border?.borderType?.strokeCap ?? StrokeCap.butt;
-    final strokeAlign = props.border?.strokeAlign ?? StrokeAlign.center;
-    final dashPattern =
-        DUIDecoder.toDashPattern(props.border?.borderType?.dashPattern) ??
-            const [3, 1];
-    final borderWidth = NumDecoder.toDoubleOrDefault(props.border?.borderWidth,
-        defaultValue: 0);
-
     Widget container = Container(
       width: width,
       height: height,
