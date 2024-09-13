@@ -8,13 +8,14 @@ const String baseUrl = 'https://dev.digia.tech/api/v1';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(DUIApp(
-      digiaAccessKey: "667301a6b6c3bd6fb255ec0d",
+      digiaAccessKey: "665ae4e5c625f442b6c5515e",
       baseUrl: baseUrl,
-      // environmentInfo: Staging(),
+      flavorInfo: Staging(),
       // environmentInfo: Versioned(19),
       // environmentInfo: Production(PrioritizeNetwork(5), 'assets/prodAppConfig.json','assets/functions.js'),
-      environmentInfo: Production(PrioritizeCache(),
-          'assets/prodAppConfig.json', 'assets/functions.js'),
+      // flavorInfo: Release(PrioritizeCache(),
+      //     'assets/prodAppConfig.json', 'assets/functions.js'),
+      environment: Environment.development.name,
       // environmentInfo: Production(PrioritizeLocal(), 'assets/prodAppConfig.json','assets/functions.js'),
       navigatorKey: null,
       // developerConfig:

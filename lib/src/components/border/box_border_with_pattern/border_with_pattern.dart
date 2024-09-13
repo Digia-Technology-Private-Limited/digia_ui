@@ -1,7 +1,5 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:path_drawing/path_drawing.dart';
+import '../custom_shape/path_draw.dart';
 
 enum BorderPattern {
   solid,
@@ -18,18 +16,18 @@ enum StrokeAlign {
 class BorderWithPattern extends BoxBorder {
   final double strokeWidth;
   final Gradient? gradient;
-  final StrokeCap strokeCap;
-  final List<double>? dashPattern;
   final Color color;
+  final List<double>? dashPattern;
+  final StrokeCap strokeCap;
   final BorderPattern borderPattern;
   final StrokeAlign strokeAlign;
 
   const BorderWithPattern({
-    required this.strokeWidth,
-    required this.color,
+    this.strokeWidth = 0.0,
+    this.color = const Color(0x00000000),
+    this.gradient,
     this.dashPattern,
     this.strokeCap = StrokeCap.butt,
-    this.gradient,
     this.borderPattern = BorderPattern.solid,
     this.strokeAlign = StrokeAlign.outside,
   });
@@ -94,20 +92,18 @@ class BorderWithPattern extends BoxBorder {
     }
 
     switch (borderPattern) {
-      case BorderPattern.solid:
-        canvas.drawPath(path, paint);
-        break;
       case BorderPattern.dotted:
-        path = _createDottedPath(path);
-        canvas.drawPath(path, paint);
+        path = PathDraw.createDottedPath(path, strokeWidth / 2);
         break;
       case BorderPattern.dashed:
         if (dashPattern != null) {
-          path = dashPath(path, dashArray: CircularIntervalList(dashPattern!));
+          path = PathDraw.createDashedPath(path, dashPattern!);
         }
-        canvas.drawPath(path, paint);
+        break;
+      case BorderPattern.solid:
         break;
     }
+    canvas.drawPath(path, paint);
   }
 
   Path _getCirclePath(Rect rect, StrokeAlign strokeAlign) {
@@ -142,35 +138,6 @@ class BorderWithPattern extends BoxBorder {
       default:
     }
     return Path()..addRRect(rRect);
-  }
-
-  Path _createDottedPath(Path path) {
-    final Path dottedPath = Path();
-    final double dashWidth = strokeWidth; // Each dot's diameter
-    final double dashSpacing = strokeWidth * 2; // Space between dots
-
-    // Iterate over the entire path and add circular dots
-    final PathMetrics pathMetrics = path.computeMetrics();
-    for (final PathMetric pathMetric in pathMetrics) {
-      double distance = 0.0;
-
-      while (distance < pathMetric.length) {
-        final Tangent? tangent = pathMetric.getTangentForOffset(distance);
-
-        if (tangent != null) {
-          // Add a circular dot at the current tangent position
-          dottedPath.addOval(Rect.fromCircle(
-            center: tangent.position,
-            radius: dashWidth / 2,
-          ));
-        }
-
-        // Move the distance forward by the width of the dot + the spacing
-        distance += dashWidth + dashSpacing;
-      }
-    }
-
-    return dottedPath;
   }
 
   @override

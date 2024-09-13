@@ -5,6 +5,7 @@ import '../core/builders/custom_shape_builder.dart';
 import '../core/builders/dezerv_component/dezerv_dial_pad_builder.dart';
 import '../core/builders/dezerv_stepper_builder.dart';
 import '../core/builders/dui_animated_button_builder.dart';
+import '../core/builders/dui_animation_builder.dart';
 import '../core/builders/dui_app_bar_builder.dart';
 import '../core/builders/dui_avatar_builder.dart';
 import '../core/builders/dui_button_builder.dart';
@@ -14,6 +15,7 @@ import '../core/builders/dui_checkbox_builder.dart';
 import '../core/builders/dui_circular_progress_indicator_builder.dart';
 import '../core/builders/dui_conditional_builder_builder.dart';
 import '../core/builders/dui_container2_builder.dart';
+import '../core/builders/dui_custom_scroll_veiw_builder.dart';
 import '../core/builders/dui_custom_widget_builder.dart';
 import '../core/builders/dui_drawer_builder.dart';
 import '../core/builders/dui_expandable_builder.dart';
@@ -25,10 +27,12 @@ import '../core/builders/dui_htmlview_builder.dart';
 import '../core/builders/dui_icon_builder.dart';
 import '../core/builders/dui_icon_button_builder.dart';
 import '../core/builders/dui_image_builder.dart';
-import '../core/builders/dui_linear_progress_indicator_builder.dart';
 import '../core/builders/dui_line_chart_builder.dart';
+import '../core/builders/dui_linear_progress_indicator_builder.dart';
 import '../core/builders/dui_listview_builder.dart';
 import '../core/builders/dui_lottie_builder.dart';
+import '../core/builders/dui_opacity_builder.dart';
+import '../core/builders/dui_nested_scroll_view_builder.dart';
 import '../core/builders/dui_paginated_listview_builder.dart';
 import '../core/builders/dui_pin_field_builder.dart';
 import '../core/builders/dui_refresh_indicator_builder.dart';
@@ -36,10 +40,14 @@ import '../core/builders/dui_rich_text_builder.dart';
 import '../core/builders/dui_safearea_builder.dart';
 import '../core/builders/dui_scaffold_builder.dart';
 import '../core/builders/dui_sized_box_builder.dart';
+import '../core/builders/dui_sliver_app_bar_builder.dart';
+import '../core/builders/dui_sliver_list_builder.dart';
 import '../core/builders/dui_spacer_builder.dart';
 import '../core/builders/dui_stack_builder.dart';
 import '../core/builders/dui_stepper_builder.dart';
 import '../core/builders/dui_stream_builder.dart';
+import '../core/builders/dui_styled_horizontal_divider_builder.dart';
+import '../core/builders/dui_styled_vertical_divider_builder.dart';
 import '../core/builders/dui_switch_builder.dart';
 import '../core/builders/dui_tab_view_builder.dart';
 import '../core/builders/dui_tab_view_item_builder.dart';
@@ -119,6 +127,10 @@ class DUIWidgetRegistry {
         DUIHorizontalDividerBuilder.create(data),
     'digia/verticalDivider': (data, {registry}) =>
         DUIVerticalDividerBuilder.create(data),
+    'digia/styledHorizontalDivider': (data, {registry}) =>
+        DUIStyledHorizontalDividerBuilder.create(data),
+    'digia/styledVerticalDivider': (data, {registry}) =>
+        DUIStyledVerticalDividerBuilder.create(data),
     'digia/customDezervComponent': (data, {registry}) =>
         DUICustomWidgetBuilder.create(data),
     'digia/navigationBarItem': (data, {registry}) =>
@@ -142,6 +154,8 @@ class DUIWidgetRegistry {
     'digia/calendar': withoutRegistry(DUICalendarBuilder.create),
     'digia/lineChart': withoutRegistry(DUILineChartBuilder.create),
     'digia/customShapeCard': withoutRegistry(CustomShapeBuilder.create),
+    'digia/animationBuilder': withoutRegistry(DuiAnimationBuilder.create),
+    'digia/opacity': withoutRegistry(DuiOpacityBuilder.create),
     'digia/paginatedListView': (data, {registry}) =>
         DUIPaginatedListViewBuilder.create(data),
     'digia/timer': withoutRegistry(DUITimerBuilder.create),
@@ -154,12 +168,24 @@ class DUIWidgetRegistry {
     'digia/safeArea': (data, {registry}) => DUISafeAreaBuilder(data: data),
     'digia/probo/animated_fastscore': (data, {registry}) =>
         ProboCustomComponentBuilder(data: data),
+
     'digia/tabViewController':
         withoutRegistry(DUITabViewControllerBuilder.create),
     'digia/tabView1': (data, {registry}) =>
         DUITabView1Builder.create(data, registry: DUIWidgetRegistry.shared),
     'digia/tabViewItem1': (data, {registry}) =>
         DUITabViewItem1Builder.create(data, registry: DUIWidgetRegistry.shared),
+
+    'digia/nestedScrollView': (data, {registry}) =>
+        DUINestedScrollViewBuilder(data: data),
+    'digia/sliverAppBar': (data, {registry}) =>
+        DUISliverAppBarBuilder(data: data),
+    'digia/sliverList': (data, {registry}) =>
+        DUISliverListBuilder.create(data, registry: DUIWidgetRegistry.shared),
+    'digia/customScrollView': (data, {registry}) =>
+        DUICustomScrollViewBuilder.create(data,
+            registry: DUIWidgetRegistry.shared),
+
   };
 
   static const DUIWidgetRegistry shared = DUIWidgetRegistry();

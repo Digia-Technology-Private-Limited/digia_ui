@@ -59,26 +59,6 @@ class _DUIStepperState extends DUIWidgetState<DUIStepper>
   }
 
   Connector toConnectorType(dynamic value, Color color, double thickness) {
-    //for backward COmpatible
-    //need to remove ()
-    if (value is String) {
-      return switch (value) {
-        'solid' => Connector.solidLine(
-            color: color,
-            thickness: thickness,
-          ),
-        'dashed' => CustomDashedLineConnector(
-            color: color,
-            thickness: thickness,
-            dash: thickness * 3,
-            gap: thickness * 2,
-          ),
-        _ => Connector.solidLine(
-            color: color,
-            thickness: thickness,
-          )
-      };
-    }
     final connectorType = value?['value'];
     return switch (connectorType) {
       'solid' => Connector.solidLine(
@@ -200,11 +180,13 @@ class _DUIStepperState extends DUIWidgetState<DUIStepper>
                 final double progress = _controller.value;
                 final bool isCompleted = index <= (progress).round();
                 final Color color = isCompleted
-                    ? eval<String>(widget.props['completedColor'],
+                    ? (makeColor(completedConnector?['color']) ??
+                        eval<String>(widget.props['completedColor'],
                                 context: context)
                             .letIfTrue(toColor) ??
-                        Colors.blue
-                    : eval<String>(widget.props['inCompletedColor'],
+                        Colors.blue)
+                    : makeColor(inCompletedConnector?['color']) ??
+                        eval<String>(widget.props['inCompletedColor'],
                                 context: context)
                             .letIfTrue(toColor) ??
                         Colors.white;
@@ -267,11 +249,13 @@ class _DUIStepperState extends DUIWidgetState<DUIStepper>
                 final double progress = _controller.value;
                 final bool isCompleted = index <= (progress).round();
                 final Color color = isCompleted
-                    ? eval<String>(widget.props['completedColor'],
+                    ? (makeColor(completedConnector?['color']) ??
+                        eval<String>(widget.props['completedColor'],
                                 context: context)
                             .letIfTrue(toColor) ??
-                        Colors.blue
-                    : eval<String>(widget.props['inCompletedColor'],
+                        Colors.blue)
+                    : makeColor(inCompletedConnector?['color']) ??
+                        eval<String>(widget.props['inCompletedColor'],
                                 context: context)
                             .letIfTrue(toColor) ??
                         Colors.white;
