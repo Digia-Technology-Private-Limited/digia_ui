@@ -26,7 +26,7 @@ class DUICustomScrollViewBuilder extends DUIWidgetBuilder {
     final bool isReverse =
         eval<bool>(data.props['reverse'], context: context) ?? false;
     final bool enableOverlapInjector =
-       NumDecoder.toBool(data.props['enableOverlapInjector']) ?? true;
+        NumDecoder.toBool(data.props['enableOverlapInjector']) ?? false;
 
     return Builder(builder: (cntx) {
       return CustomScrollView(
@@ -48,20 +48,19 @@ class DUICustomScrollViewBuilder extends DUIWidgetBuilder {
         )
       ];
     }
-   final sliverList = sliverData.map((e) {
-    return DUIWidget(data: e);
-  }).toList();
+    final sliverList = sliverData.map((e) {
+      return DUIWidget(data: e);
+    }).toList();
 
-  final slivers = <Widget>[];
-  if (enableOverlapInjector) {
-    slivers.add(SliverOverlapInjector(
-      handle: NestedScrollView.sliverOverlapAbsorberHandleFor(cntx),
-    ));
-  }
-  slivers.addAll(sliverList);
+    final slivers = <Widget>[];
+    if (enableOverlapInjector) {
+      slivers.add(SliverOverlapInjector(
+        handle: NestedScrollView.sliverOverlapAbsorberHandleFor(cntx),
+      ));
+    }
+    slivers.addAll(sliverList);
 
-  return slivers;
-
+    return slivers;
   }
 
   @override
