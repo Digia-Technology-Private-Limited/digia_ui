@@ -3,10 +3,10 @@ import 'package:flutter/widgets.dart';
 
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
 import '../../Utils/basic_shared_utils/num_decoder.dart';
+import '../core/extensions.dart';
+import '../core/virtual_stateless_widget.dart';
 import '../internal_widgets/internal_list_view.dart';
 import '../render_payload.dart';
-import '../virtual_widgets/extensions.dart';
-import '../virtual_widgets/virtual_stateless_widget.dart';
 
 class VWListView extends VirtualStatelessWidget {
   VWListView({
