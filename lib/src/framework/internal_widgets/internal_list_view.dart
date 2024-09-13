@@ -65,4 +65,10 @@ class _InternalListViewState extends State<InternalListView> {
       children: widget.children,
     );
   }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 }
