@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
 import '../../Utils/basic_shared_utils/num_decoder.dart';
-import '../../Utils/extensions.dart';
 import '../../Utils/util_functions.dart';
 import '../../core/action/action_handler.dart';
 import '../../core/action/action_prop.dart';
 import '../core/virtual_leaf_stateless_widget.dart';
+import '../models/props.dart';
 import '../render_payload.dart';
 import 'icon.dart';
 import 'text.dart';
@@ -21,13 +21,11 @@ class VWButton extends VirtualLeafStatelessWidget {
 
   @override
   Widget render(RenderPayload payload) {
-    final defaultStyleJson =
-        props['defaultStyle'] as Map<String, dynamic>? ?? {};
-    final disabledStyleJson =
-        props['disabledStyle'] as Map<String, dynamic>? ?? {};
+    final defaultStyleJson = props.getMap('defaultStyle') ?? {};
+    final disabledStyleJson = props.getMap('disabledStyle') ?? {};
 
     ButtonStyle style = ButtonStyle(
-      shape: WidgetStateProperty.all(toButtonShape(props['shape'])),
+      shape: WidgetStateProperty.all(toButtonShape(props.get('shape'))),
       padding: WidgetStateProperty.all(DUIDecoder.toEdgeInsets(
         defaultStyleJson['padding'],
         or: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
@@ -35,7 +33,8 @@ class VWButton extends VirtualLeafStatelessWidget {
       elevation: WidgetStateProperty.all(
         NumDecoder.toDouble(defaultStyleJson['elevation']),
       ),
-      shadowColor: WidgetStateProperty.all(defaultStyleJson['shadowColor']),
+      shadowColor:
+          WidgetStateProperty.all(makeColor(defaultStyleJson['shadowColor'])),
       alignment: DUIDecoder.toAlignment(defaultStyleJson['alignment']),
       backgroundColor: WidgetStateProperty.resolveWith((states) {
         if (states.contains(WidgetState.disabled)) {
@@ -45,8 +44,8 @@ class VWButton extends VirtualLeafStatelessWidget {
       }),
     );
 
-    final isDisabled =
-        payload.eval<bool>(props['isDisabled']) ?? props['onClick'] == null;
+    final isDisabled = payload.eval<bool>(props.get('isDisabled')) ??
+        props.get('onClick') == null;
 
     final disabledTextColor = disabledStyleJson['disabledTextColor'] as String?;
     final disabledIconColor = disabledStyleJson['disabledIconColor'] as String?;
@@ -61,7 +60,7 @@ class VWButton extends VirtualLeafStatelessWidget {
       onPressed: isDisabled
           ? null
           : () {
-              final onClick = ActionFlow.fromJson(props['onClick']);
+              final onClick = ActionFlow.fromJson(props.get('onClick'));
               ActionHandler.instance.execute(
                 context: payload.buildContext,
                 actionFlow: onClick,
@@ -82,52 +81,50 @@ class VWButton extends VirtualLeafStatelessWidget {
     Widget? leadingIcon;
     Widget? trailingIcon;
 
-    final localProps = Map<String, dynamic>.from(props);
+    final localProps = Map<String, dynamic>.from(props.value);
 
     if (overrideColor) {
       localProps['text']?['textStyle']?['textColor'] = disabledTextColor;
     } else {
       localProps['text']?['textStyle']?['textColor'] =
-          props.valueFor(keyPath: 'text.textStyle.textColor');
+          props.get('text.textStyle.textColor');
     }
 
     text = VWText(
-      props: localProps['text'] as Map<String, dynamic>,
+      props: Props(localProps['text'] as Map<String, Object?>? ?? {}),
       commonProps: commonProps,
       parent: this,
-    ).render(payload);
+    ).toWidget(payload);
 
-    final leadingIconProps = localProps['leadingIcon'] as Map<String, dynamic>?;
+    final leadingIconProps = localProps['leadingIcon'] as Map<String, Object?>?;
     if (overrideColor) {
       leadingIconProps?['iconColor'] = disabledIconColor;
     } else {
-      leadingIconProps?['iconColor'] =
-          props.valueFor(keyPath: 'leadingIcon.iconColor');
+      leadingIconProps?['iconColor'] = props.get('leadingIcon.iconColor');
     }
 
     if (leadingIconProps != null) {
       leadingIcon = VWIcon(
-        props: leadingIconProps,
-        commonProps: commonProps,
-        parent: this,
-      ).render(payload);
+        props: Props(leadingIconProps),
+        commonProps: null,
+        parent: null,
+      ).toWidget(payload);
     }
 
     final trailingIconProps =
-        localProps['trailingIcon'] as Map<String, dynamic>?;
+        localProps['trailingIcon'] as Map<String, Object?>?;
     if (overrideColor) {
       trailingIconProps?['iconColor'] = disabledIconColor;
     } else {
-      trailingIconProps?['iconColor'] =
-          props.valueFor(keyPath: 'trailingIcon.iconColor');
+      trailingIconProps?['iconColor'] = props.get('trailingIcon.iconColor');
     }
 
     if (trailingIconProps != null) {
       trailingIcon = VWIcon(
-        props: trailingIconProps,
-        commonProps: commonProps,
-        parent: this,
-      ).render(payload);
+        props: Props(trailingIconProps),
+        commonProps: null,
+        parent: null,
+      ).toWidget(payload);
     }
 
     if (leadingIcon == null && trailingIcon == null) {

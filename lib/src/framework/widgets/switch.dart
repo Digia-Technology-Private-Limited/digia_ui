@@ -16,11 +16,11 @@ class VWSwitch extends VirtualLeafStatelessWidget {
   Widget render(RenderPayload payload) {
     return InternalSwitch(
       enabled: true,
-      value: payload.eval<bool>(props['value']) ?? false,
-      activeColor: makeColor(props['activeColor']),
-      inactiveThumbColor: makeColor(props['inactiveThumbColor']),
-      activeTrackColor: makeColor(props['activeTrackColor']),
-      inactiveTrackColor: makeColor(props['inactiveTrackColor']),
+      value: payload.eval<bool>(props.get('value')) ?? false,
+      activeColor: makeColor(props.get('activeColor')),
+      inactiveThumbColor: makeColor(props.get('inactiveThumbColor')),
+      activeTrackColor: makeColor(props.get('activeTrackColor')),
+      inactiveTrackColor: makeColor(props.get('inactiveTrackColor')),
     );
   }
 }

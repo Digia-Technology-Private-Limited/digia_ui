@@ -16,20 +16,21 @@ class VWIcon extends VirtualLeafStatelessWidget {
 
   @override
   Widget render(RenderPayload payload) {
-    if (props['iconData'] == null) {
+    if (props.get('iconData') == null) {
       return const SizedBox.shrink();
     }
 
+    // TODO: Probably re-think this.
     final scope = DUIWidgetScope.maybeOf(payload.buildContext);
-    var iconData = scope?.iconDataProvider?.call(props['iconData']);
+    var iconData = scope?.iconDataProvider?.call(props.getMap('iconData'));
 
-    iconData ??= getIconData(icondataMap: props['iconData']);
+    iconData ??= getIconData(icondataMap: props.getMap('iconData'));
 
     return Icon(
       iconData,
-      size: payload.eval<double>(props['iconSize']),
+      size: payload.eval<double>(props.get('iconSize')),
       color: makeColor(
-        payload.eval<String>(props['iconColor']),
+        payload.eval<String>(props.get('iconColor')),
       ),
     );
   }

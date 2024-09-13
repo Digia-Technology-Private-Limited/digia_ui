@@ -15,12 +15,13 @@ class VWSafeArea extends VirtualStatelessWidget {
 
   @override
   Widget render(RenderPayload payload) {
-    final bottom = payload.eval<bool>(props['bottom']) ?? true;
-    final top = payload.eval<bool>(props['top']) ?? true;
+    final bottom = payload.eval<bool>(props.get('bottom')) ?? true;
+    final top = payload.eval<bool>(props.get('top')) ?? true;
+
     return SafeArea(
       bottom: bottom,
       top: top,
-      child: child?.render(payload) ?? empty(),
+      child: child?.toWidget(payload) ?? empty(),
     );
   }
 }

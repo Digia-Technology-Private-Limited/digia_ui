@@ -19,26 +19,27 @@ class VWStyledVerticalDivider extends VirtualLeafStatelessWidget {
   Widget render(RenderPayload payload) {
     return DividerWithPattern(
       axis: Axis.vertical,
-      size: payload.eval<double>(props['width']),
-      thickness: payload.eval<double>(props['thickness']),
-      indent: payload.eval<double>(props['indent']),
-      endIndent: payload.eval<double>(props['endIndent']),
+      size: payload.eval<double>(props.get('width')),
+      thickness: payload.eval<double>(props.get('thickness')),
+      indent: payload.eval<double>(props.get('indent')),
+      endIndent: payload.eval<double>(props.get('endIndent')),
       borderPattern: DUIDecoder.toBorderPattern(
-            payload.eval<String>(props['borderPattern']?['value']),
+            payload.eval<String>(props.get('borderPattern.value')),
           ) ??
           BorderPattern.solid,
       strokeCap: DUIDecoder.toStrokeCap(
-            payload.eval<String>(props['borderPattern']?['strokeCap']),
+            payload.eval<String>(props.get('borderPattern.strokeCap')),
           ) ??
           StrokeCap.butt,
       dashPattern: DUIDecoder.toDashPattern(
-            payload.eval<List<dynamic>>(props['borderPattern']?['dashPattern']),
+            payload.eval<List>(props.get('borderPattern.dashPattern')),
           ) ??
           [3, 3],
-      color: makeColor(payload.eval<String>(props['colorType']?['color'])),
+      color: makeColor(payload.eval<String>(props.get('colorType.color'))),
       gradient: toGradiant(
-          payload.eval<Map<String, dynamic>>(props['colorType']?['gradient']),
-          payload.buildContext),
+        props.getMap('colorType.gradient'),
+        payload.buildContext,
+      ),
     );
   }
 }

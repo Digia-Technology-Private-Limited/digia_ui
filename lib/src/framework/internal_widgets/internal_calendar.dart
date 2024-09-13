@@ -173,16 +173,16 @@ class _InternalCalendarState extends State<InternalCalendar> {
         DUIDecoder.toEdgeInsets(headerStyle?['headerPadding']);
     Widget? leftChevronIcon = VWIcon(
       props: headerStyle?['leftChevronIcon'],
-      commonProps: {},
+      commonProps: null,
       parent: null,
-    ).render(widget.payload);
+    ).toWidget(widget.payload);
     EdgeInsets? leftChevronPadding =
         DUIDecoder.toEdgeInsets(headerStyle?['leftChevronPadding']);
     Widget? rightChevronIcon = VWIcon(
       props: headerStyle?['rightChevronIcon'],
-      commonProps: {},
+      commonProps: null,
       parent: null,
-    ).render(widget.payload);
+    ).toWidget(widget.payload);
     EdgeInsets? rightChevronPadding =
         DUIDecoder.toEdgeInsets(headerStyle?['rightChevronPadding']);
     Color? headerColor = makeColor(headerStyle?['shape']['color']);

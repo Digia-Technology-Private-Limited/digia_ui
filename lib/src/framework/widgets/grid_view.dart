@@ -24,17 +24,13 @@ class VWGridView extends VirtualStatelessWidget {
   Widget render(RenderPayload payload) {
     if (children == null || children!.isEmpty) return empty();
 
-    final physics = DUIDecoder.toScrollPhysics(props['allowScroll']);
-    final shrinkWrap = NumDecoder.toBool(props['shrinkWrap']) ?? false;
+    final physics = DUIDecoder.toScrollPhysics(props.get('allowScroll'));
+    final shrinkWrap = NumDecoder.toBool(props.get('shrinkWrap')) ?? false;
     final gridDelegate = SliverGridDelegateWithFixedCrossAxisCount(
-      crossAxisCount:
-          NumDecoder.toIntOrDefault(props['crossAxisCount'], defaultValue: 2),
-      mainAxisSpacing: NumDecoder.toDoubleOrDefault(props['mainAxisSpacing'],
-          defaultValue: 0.0),
-      crossAxisSpacing: NumDecoder.toDoubleOrDefault(props['crossAxisSpacing'],
-          defaultValue: 0.0),
-      childAspectRatio: NumDecoder.toDoubleOrDefault(props['childAspectRatio'],
-          defaultValue: 1.0),
+      crossAxisCount: props.getInt('crossAxisCount') ?? 2,
+      mainAxisSpacing: props.getDouble('mainAxisSpacing') ?? 0.0,
+      crossAxisSpacing: props.getDouble('crossAxisSpacing') ?? 0.0,
+      childAspectRatio: props.getDouble('childAspectRatio') ?? 1.0,
     );
 
     if (shouldRepeatChild) {

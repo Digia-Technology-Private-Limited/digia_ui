@@ -24,14 +24,14 @@ class VWListView extends VirtualStatelessWidget {
   Widget render(RenderPayload payload) {
     if (children == null || children!.isEmpty) return empty();
 
-    final reverse = payload.eval<bool>(props['reverse']) ?? false;
-    final scrollDirection = DUIDecoder.toAxis(props['scrollDirection'],
+    final reverse = payload.eval<bool>(props.get('reverse')) ?? false;
+    final scrollDirection = DUIDecoder.toAxis(props.get('scrollDirection'),
         defaultValue: Axis.vertical);
-    final physics = DUIDecoder.toScrollPhysics(props['allowScroll']);
-    final shrinkWrap = NumDecoder.toBool(props['shrinkWrap']) ?? false;
+    final physics = DUIDecoder.toScrollPhysics(props.get('allowScroll'));
+    final shrinkWrap = NumDecoder.toBool(props.get('shrinkWrap')) ?? false;
 
     final initialScrollPosition =
-        payload.eval<String>(props['initialScrollPosition']);
+        payload.eval<String>(props.get('initialScrollPosition'));
 
     if (shouldRepeatChild) {
       final childToRepeat = children!.first;

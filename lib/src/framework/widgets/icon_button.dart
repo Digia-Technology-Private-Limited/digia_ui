@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
+import '../../Utils/extensions.dart';
 import '../../Utils/util_functions.dart';
 import '../../core/action/action_handler.dart';
 import '../../core/action/action_prop.dart';
 import '../core/virtual_leaf_stateless_widget.dart';
+import '../models/props.dart';
 import '../render_payload.dart';
 import 'icon.dart';
 
@@ -19,15 +21,13 @@ class VWIconButton extends VirtualLeafStatelessWidget {
   @override
   Widget render(RenderPayload payload) {
     final icon = VWIcon(
-      props: props['icon'] as Map<String, dynamic>,
+      props: props.toProps('icon') ?? Props.empty(),
       commonProps: commonProps,
       parent: this,
-    ).render(payload);
+    ).toWidget(payload);
 
-    final defaultStyleJson =
-        props['defaultStyle'] as Map<String, dynamic>? ?? {};
-    final disabledStyleJson =
-        props['disabledStyle'] as Map<String, dynamic>? ?? {};
+    final defaultStyleJson = props.getMap('defaultStyle') ?? {};
+    final disabledStyleJson = props.getMap('disabledStyle') ?? {};
 
     ButtonStyle style = ButtonStyle(
       padding: WidgetStateProperty.all(DUIDecoder.toEdgeInsets(
@@ -43,10 +43,10 @@ class VWIconButton extends VirtualLeafStatelessWidget {
       }),
     );
 
-    final isDisabled =
-        payload.eval<bool>(props['isDisabled']) ?? props['onClick'] == null;
-    final height = DUIDecoder.getHeight(payload.buildContext, props['height']);
-    final width = DUIDecoder.getWidth(payload.buildContext, props['width']);
+    final isDisabled = payload.eval<bool>(props.get('isDisabled')) ??
+        props.get('onClick') == null;
+    final height = props.getString('height')?.toHeight(payload.buildContext);
+    final width = props.getString('width')?.toWidth(payload.buildContext);
 
     return SizedBox(
       height: height,
@@ -55,7 +55,7 @@ class VWIconButton extends VirtualLeafStatelessWidget {
         onPressed: isDisabled
             ? null
             : () {
-                final onClick = ActionFlow.fromJson(props['onClick']);
+                final onClick = ActionFlow.fromJson(props.get('onClick'));
                 ActionHandler.instance.execute(
                   context: payload.buildContext,
                   actionFlow: onClick,

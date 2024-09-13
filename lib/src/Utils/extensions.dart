@@ -17,30 +17,6 @@ extension KeyPath on Map {
       return thisValue.valueFor(keyPath: keysSplit.join('.'));
     }
   }
-
-  String? string(String keyPath) {
-    return valueFor(keyPath: keyPath) as String?;
-  }
-
-  int? integer(String keyPath) {
-    return NumDecoder.toInt(valueFor(keyPath: keyPath));
-  }
-
-  double? float(String keyPath) {
-    return NumDecoder.toDouble(valueFor(keyPath: keyPath));
-  }
-
-  bool? boolean(String keyPath) {
-    return NumDecoder.toBool(valueFor(keyPath: keyPath));
-  }
-
-  Map<String, dynamic>? json(String keyPath) {
-    return valueFor(keyPath: keyPath) as Map<String, dynamic>?;
-  }
-
-  List<dynamic>? array(String keyPath) {
-    return valueFor(keyPath: keyPath) as List<dynamic>?;
-  }
 }
 
 extension ExtentUtil on String {

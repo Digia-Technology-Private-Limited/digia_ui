@@ -15,15 +15,17 @@ class VWLottie extends VirtualLeafStatelessWidget {
 
   @override
   Widget render(RenderPayload payload) {
-    final (repeat, reverse) = getAnimationType(props['animationType']);
-    final alignment = DUIDecoder.toAlignment(props['alignment']);
-    final height = DUIDecoder.getHeight(payload.buildContext, props['height']);
-    final width = DUIDecoder.getWidth(payload.buildContext, props['width']);
-    final animate = payload.eval<bool>(props['animate']) ?? true;
-    final frameRate = FrameRate(props['frameRate'] ?? 60);
-    final fit = DUIDecoder.toBoxFit(props['fit']);
+    final (repeat, reverse) =
+        getAnimationType(props.getString('animationType'));
+    final alignment = DUIDecoder.toAlignment(props.get('alignment'));
+    final height =
+        DUIDecoder.getHeight(payload.buildContext, props.get('height'));
+    final width = DUIDecoder.getWidth(payload.buildContext, props.get('width'));
+    final animate = payload.eval<bool>(props.get('animate')) ?? true;
+    final frameRate = FrameRate(props.getDouble('frameRate') ?? 60);
+    final fit = DUIDecoder.toBoxFit(props.get('fit'));
 
-    final lottiePath = payload.eval<String>(props['lottiePath']);
+    final lottiePath = payload.eval<String>(props.get('lottiePath'));
 
     if (lottiePath == null) {
       return const Center(

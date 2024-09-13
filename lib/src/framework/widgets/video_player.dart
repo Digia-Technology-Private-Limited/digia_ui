@@ -18,7 +18,7 @@ class VWVideoPlayer extends VirtualLeafStatelessWidget {
   });
 
   VideoPlayerController _createController(RenderPayload payload) {
-    final videoSource = payload.eval(props['videoUrl']);
+    final videoSource = payload.eval(props.get('videoUrl'));
 
     if (videoSource is List<DUIFile> && videoSource.isNotEmpty) {
       final firstFile = videoSource.first;
@@ -73,13 +73,13 @@ class VWVideoPlayer extends VirtualLeafStatelessWidget {
           ),
         );
       },
-      showControls: payload.eval<bool>(props['showControls']) ?? true,
-      aspectRatio: NumDecoder.toDouble(props['aspectRatio']),
+      showControls: payload.eval<bool>(props.get('showControls')) ?? true,
+      aspectRatio: NumDecoder.toDouble(props.get('aspectRatio')),
       allowPlaybackSpeedChanging: true,
       playbackSpeeds: [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2],
       videoPlayerController: _createController(payload),
-      autoPlay: payload.eval<bool>(props['autoPlay']) ?? true,
-      looping: payload.eval<bool>(props['looping']) ?? false,
+      autoPlay: payload.eval<bool>(props.get('autoPlay')) ?? true,
+      looping: payload.eval<bool>(props.get('looping')) ?? false,
       subtitle: Subtitles(
         [
           Subtitle(

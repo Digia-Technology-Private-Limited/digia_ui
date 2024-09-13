@@ -14,10 +14,10 @@ class VWYoutubePlayer extends VirtualLeafStatelessWidget {
   @override
   Widget render(RenderPayload payload) {
     return InternalYoutubePlayer(
-      videoUrl: payload.eval<String>(props['videoUrl']) ?? '',
-      isMuted: payload.eval<bool>(props['isMuted']) ?? false,
-      loop: payload.eval<bool>(props['loop']) ?? false,
-      autoPlay: payload.eval<bool>(props['autoPlay']) ?? false,
+      videoUrl: payload.eval<String>(props.get('videoUrl')) ?? '',
+      isMuted: payload.eval<bool>(props.get('isMuted')) ?? false,
+      loop: payload.eval<bool>(props.get('loop')) ?? false,
+      autoPlay: payload.eval<bool>(props.get('autoPlay')) ?? false,
     );
   }
 }

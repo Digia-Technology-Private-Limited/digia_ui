@@ -14,7 +14,7 @@ class VWWebView extends VirtualLeafStatelessWidget {
 
   @override
   Widget render(RenderPayload payload) {
-    final url = payload.eval<String>(props['url']);
+    final url = payload.eval<String>(props.get('url'));
 
     if (url == null) {
       return const Center(child: Text('Error: No URL provided'));

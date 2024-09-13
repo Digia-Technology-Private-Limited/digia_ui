@@ -17,12 +17,14 @@ class VWHorizontalDivider extends VirtualLeafStatelessWidget {
   @override
   Widget render(RenderPayload payload) {
     return StyledDivider(
-      lineStyle: toLineStyle(props['lineStyle']) ?? DividerLineStyle.solid,
-      height: payload.eval<double>(props['height']),
-      thickness: payload.eval<double>(props['thickness']),
-      indent: payload.eval<double>(props['indent']),
-      endIndent: payload.eval<double>(props['endIndent']),
-      color: makeColor(payload.eval<String>(props['color'])) ?? Colors.black,
+      lineStyle:
+          toLineStyle(props.getString('lineStyle')) ?? DividerLineStyle.solid,
+      height: payload.eval<double>(props.get('height')),
+      thickness: payload.eval<double>(props.get('thickness')),
+      indent: payload.eval<double>(props.get('indent')),
+      endIndent: payload.eval<double>(props.get('endIndent')),
+      color:
+          makeColor(payload.eval<String>(props.get('color'))) ?? Colors.black,
     );
   }
 }

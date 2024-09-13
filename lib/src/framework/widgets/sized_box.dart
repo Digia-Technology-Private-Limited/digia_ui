@@ -1,6 +1,5 @@
 import 'package:flutter/widgets.dart';
 
-import '../../core/flutter_widgets.dart';
 import '../core/virtual_leaf_stateless_widget.dart';
 import '../render_payload.dart';
 
@@ -14,6 +13,11 @@ class VWSizedBox extends VirtualLeafStatelessWidget {
 
   @override
   Widget render(RenderPayload payload) {
-    return FW.sizedBox(props);
+    final width = props.getDouble('width');
+    final height = props.getDouble('height');
+    return SizedBox(
+      width: width,
+      height: height,
+    );
   }
 }

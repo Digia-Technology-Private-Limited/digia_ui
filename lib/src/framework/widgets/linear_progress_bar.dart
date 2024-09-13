@@ -16,9 +16,9 @@ class VWLinearProgressBar extends VirtualLeafStatelessWidget {
 
   @override
   Widget render(RenderPayload payload) {
-    final progressValue = payload.eval<double>(props['progressValue']);
-    final isReverse = payload.eval<bool>(props['isReverse']) ?? false;
-    final String? type = props['type'] ?? 'indeterminate';
+    final progressValue = payload.eval<double>(props.get('progressValue'));
+    final isReverse = payload.eval<bool>(props.get('isReverse')) ?? false;
+    final String type = props.getString('type') ?? 'indeterminate';
 
     return RotatedBox(
       quarterTurns: isReverse ? 2 : 0,
@@ -29,31 +29,31 @@ class VWLinearProgressBar extends VirtualLeafStatelessWidget {
   Widget _getChild(double? progressValue, String? type, RenderPayload payload) {
     if (type == 'indeterminate') {
       return SizedBox(
-        width: NumDecoder.toDouble(props['width']),
+        width: NumDecoder.toDouble(props.get('width')),
         child: LinearProgressIndicator(
-          color:
-              makeColor(payload.eval(props['indicatorColor'])) ?? Colors.blue,
-          backgroundColor:
-              makeColor(payload.eval(props['bgColor'])) ?? Colors.transparent,
-          minHeight: NumDecoder.toDouble(props['thickness']),
+          color: makeColor(payload.eval(props.get('indicatorColor'))) ??
+              Colors.blue,
+          backgroundColor: makeColor(payload.eval(props.get('bgColor'))) ??
+              Colors.transparent,
+          minHeight: NumDecoder.toDouble(props.get('thickness')),
           borderRadius: BorderRadius.circular(
-            NumDecoder.toDouble(props['borderRadius']) ?? 0.0,
+            NumDecoder.toDouble(props.get('borderRadius')) ?? 0.0,
           ),
         ),
       );
     } else {
       return LinearPercentIndicator(
         barRadius: Radius.circular(
-          NumDecoder.toDouble(props['borderRadius']) ?? 0.0,
+          NumDecoder.toDouble(props.get('borderRadius')) ?? 0.0,
         ),
-        width: NumDecoder.toDouble(props['width']),
-        lineHeight: NumDecoder.toDouble(props['thickness']) ?? 5.0,
+        width: NumDecoder.toDouble(props.get('width')),
+        lineHeight: NumDecoder.toDouble(props.get('thickness')) ?? 5.0,
         percent: progressValue != null ? progressValue / 100.0 : 0,
         animation: true,
         backgroundColor:
-            makeColor(payload.eval(props['bgColor'])) ?? Colors.transparent,
+            makeColor(payload.eval(props.get('bgColor'))) ?? Colors.transparent,
         progressColor:
-            makeColor(payload.eval(props['indicatorColor'])) ?? Colors.blue,
+            makeColor(payload.eval(props.get('indicatorColor'))) ?? Colors.blue,
         padding: EdgeInsets.zero,
       );
     }

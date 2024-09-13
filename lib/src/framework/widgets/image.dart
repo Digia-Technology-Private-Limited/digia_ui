@@ -10,6 +10,7 @@ import '../../components/dui_widget_creator_fn.dart';
 import '../../components/dui_widget_scope.dart';
 import '../../models/dui_file.dart';
 import '../core/virtual_leaf_stateless_widget.dart';
+import '../models/props.dart';
 import '../render_payload.dart';
 
 class VWImage extends VirtualLeafStatelessWidget {
@@ -19,6 +20,17 @@ class VWImage extends VirtualLeafStatelessWidget {
     required super.parent,
     super.refName,
   });
+
+  VWImage.fromValues({
+    required String? imageSrc,
+    String? imageFit,
+  }) : this(
+            props: Props({
+              'imageSrc': imageSrc,
+              'fit': imageFit,
+            }),
+            commonProps: null,
+            parent: null);
 
   ImageProvider _createImageProvider(
       RenderPayload payload, Object? imageSource) {
@@ -58,7 +70,7 @@ class VWImage extends VirtualLeafStatelessWidget {
   OctoPlaceholderBuilder? _placeHolderBuilderCreater() {
     Widget widget = Container(color: Colors.transparent);
 
-    final placeHolderValue = props['placeHolder'];
+    final placeHolderValue = props.getString('placeHolder');
 
     if (placeHolderValue != null && placeHolderValue.isNotEmpty) {
       widget = switch (placeHolderValue.split('/').first) {
@@ -76,12 +88,12 @@ class VWImage extends VirtualLeafStatelessWidget {
   }
 
   _mayWrapInAspectRatio(Widget child) =>
-      DUIAspectRatio(value: props['aspectRatio'], child: child);
+      DUIAspectRatio(value: props.get('aspectRatio'), child: child);
 
   @override
   Widget render(RenderPayload payload) {
-    final imageSource = payload.eval(props['imageSrc']);
-    final opacity = payload.eval<double>(props['opacity']) ?? 1.0;
+    final imageSource = payload.eval(props.get('imageSrc'));
+    final opacity = payload.eval<double>(props.get('opacity')) ?? 1.0;
 
     final imageProvider = _createImageProvider(payload, imageSource);
 
@@ -93,14 +105,14 @@ class VWImage extends VirtualLeafStatelessWidget {
               fadeInDuration: const Duration(microseconds: 0),
               fadeOutDuration: const Duration(microseconds: 0),
               image: imageProvider,
-              fit: DUIDecoder.toBoxFit(props['fit']),
+              fit: DUIDecoder.toBoxFit(props.get('fit')),
               gaplessPlayback: true,
               placeholderBuilder: _placeHolderBuilderCreater(),
               imageBuilder: (BuildContext context, Widget widget) {
                 return _mayWrapInAspectRatio(widget);
               },
               errorBuilder: (context, error, stackTrace) {
-                final errorImage = props['errorImage'];
+                final errorImage = props.getString('errorImage');
                 if (errorImage == null) {
                   return const Center(
                     child: Icon(

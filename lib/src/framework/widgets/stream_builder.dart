@@ -4,7 +4,6 @@ import '../../Utils/extensions.dart';
 import '../../core/action/action_handler.dart';
 import '../../core/action/action_prop.dart';
 import '../../core/page/dui_page_bloc.dart';
-import '../core/extensions.dart';
 import '../core/virtual_stateless_widget.dart';
 import '../render_payload.dart';
 
@@ -20,8 +19,11 @@ class VWStreamBuilder extends VirtualStatelessWidget {
 
   @override
   Widget render(RenderPayload payload) {
+    final streamDef = props.getMap('streamVariable');
+    if (streamDef == null) return empty();
+
     return StreamBuilder(
-      stream: _makeStream(props['streamVariable'], payload),
+      stream: _makeStream(streamDef, payload),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return childOf('loadingWidget')?.toWidget(payload) ??
@@ -30,7 +32,7 @@ class VWStreamBuilder extends VirtualStatelessWidget {
 
         if (snapshot.hasError) {
           Future.delayed(const Duration(seconds: 0), () async {
-            final actionFlow = ActionFlow.fromJson(props['onError']);
+            final actionFlow = ActionFlow.fromJson(props.get('onError'));
             await ActionHandler.instance
                 .execute(context: context, actionFlow: actionFlow);
           });
@@ -43,7 +45,7 @@ class VWStreamBuilder extends VirtualStatelessWidget {
 
         if (snapshot.connectionState == ConnectionState.active) {
           Future.delayed(const Duration(seconds: 0), () async {
-            final actionFlow = ActionFlow.fromJson(props['onSuccess']);
+            final actionFlow = ActionFlow.fromJson(props.get('onSuccess'));
             await ActionHandler.instance.execute(
                 context: context,
                 actionFlow: actionFlow,
@@ -66,7 +68,7 @@ class VWStreamBuilder extends VirtualStatelessWidget {
   }
 
   Stream<Object?> _makeStream(
-      Map<String, dynamic> stream, RenderPayload payload) {
+      Map<String, Object?> stream, RenderPayload payload) {
     final streamName = stream['name'];
     final pageArgsMap =
         payload.buildContext.tryRead<DUIPageBloc>()?.state.pageArgs;

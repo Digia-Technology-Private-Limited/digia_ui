@@ -215,7 +215,7 @@ Color toColor(String colorToken) {
   return color;
 }
 
-Gradient? toGradiant(Map<String, dynamic>? data, BuildContext context) {
+Gradient? toGradiant(Map<String, Object?>? data, BuildContext context) {
   if (data == null) return null;
 
   final type = data['type'] as String?;

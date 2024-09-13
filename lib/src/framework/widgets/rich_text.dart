@@ -20,19 +20,18 @@ class VWRichText extends VirtualLeafStatelessWidget {
 
   @override
   Widget render(RenderPayload payload) {
-    final spanChildren = _toTextSpan(payload, props['textSpans']);
+    final spanChildren = _toTextSpan(payload, props.get('textSpans'));
 
     if (spanChildren == null || spanChildren.isEmpty) {
       return const SizedBox.shrink();
     }
 
-    final maxLines = payload.eval<int>(props['maxLines']);
+    final maxLines = payload.eval<int>(props.get('maxLines'));
     final overflow =
-        DUIDecoder.toTextOverflow(payload.eval<String>(props['overflow']));
+        DUIDecoder.toTextOverflow(payload.eval<String>(props.get('overflow')));
     final textAlign =
-        DUIDecoder.toTextAlign(payload.eval<String>(props['alignment']));
-    final styleJson =
-        (props['textStyle'] ?? props['style']) as Map<String, dynamic>?;
+        DUIDecoder.toTextAlign(payload.eval<String>(props.get('alignment')));
+    final styleJson = props.getMap('textStyle') ?? props.getMap('style');
 
     return RichText(
       maxLines: maxLines,

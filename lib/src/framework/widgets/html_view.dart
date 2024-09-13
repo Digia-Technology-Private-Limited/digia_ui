@@ -19,19 +19,19 @@ class VWHtmlView extends VirtualLeafStatelessWidget {
   @override
   Widget render(RenderPayload payload) {
     return Html(
-      data: payload.eval<String>(props['content']),
-      shrinkWrap: payload.eval<bool>(props['shrinkWrap']) ?? false,
+      data: payload.eval<String>(props.get('content')),
+      shrinkWrap: payload.eval<bool>(props.get('shrinkWrap')) ?? false,
       style: {
         'body': Style(padding: HtmlPaddings.all(0.0), margin: Margins.all(0.0))
-            .merge(_makeStyle(payload, props['htmlStyleOverridesBody'])),
-        'span': _makeStyle(payload, props['htmlStyleOverridesSpan']),
-        'p': _makeStyle(payload, props['htmlStyleOverridesParagraph']),
+            .merge(_makeStyle(payload, props.getMap('htmlStyleOverridesBody'))),
+        'span': _makeStyle(payload, props.getMap('htmlStyleOverridesSpan')),
+        'p': _makeStyle(payload, props.getMap('htmlStyleOverridesParagraph')),
       },
     );
   }
 }
 
-Style _makeStyle(RenderPayload payload, Map<String, dynamic>? styleMap) {
+Style _makeStyle(RenderPayload payload, Map<String, Object?>? styleMap) {
   if (styleMap == null) return Style();
 
   final maxLines = payload.eval<int>(styleMap['maxLines']);

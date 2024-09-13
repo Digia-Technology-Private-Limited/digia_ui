@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
-import '../../Utils/basic_shared_utils/num_decoder.dart';
-import '../../Utils/extensions.dart';
 import '../../Utils/util_functions.dart';
 import '../core/virtual_leaf_stateless_widget.dart';
+import '../models/props.dart';
 import '../render_payload.dart';
 import 'icon.dart';
 
@@ -18,31 +17,35 @@ class VWCheckbox extends VirtualLeafStatelessWidget {
 
   @override
   Widget render(RenderPayload payload) {
-    final value = payload.eval<bool>(props['value']) ?? false;
-    final size = NumDecoder.toDouble(props['size']) ?? 24;
-    final activeColor = makeColor(payload.eval<String>(props['activeColor']));
+    final value = payload.eval<bool>(props.get('value')) ?? false;
+    final size = props.getDouble('size') ?? 24;
+    final activeColor =
+        makeColor(payload.eval<String>(props.get('activeColor')));
     final inactiveColor =
-        makeColor(payload.eval<String>(props['inactiveColor']));
-    final BoxShape shape = switch (props.valueFor(keyPath: 'shape.value')) {
+        makeColor(payload.eval<String>(props.get('inactiveColor')));
+
+    final BoxShape shape = switch (props.getString('shape.value')) {
       'circle' => BoxShape.circle,
       _ => BoxShape.rectangle
     };
-    final borderRadius = DUIDecoder.toBorderRadius(props['shape.borderRadius']);
+    final borderRadius =
+        DUIDecoder.toBorderRadius(props.get('shape.borderRadius'));
     final activeBorderColor =
-        makeColor(payload.eval<String>(props['activeBorderColor']));
+        makeColor(payload.eval<String>(props.get('activeBorderColor')));
     final inactiveBorderColor =
-        makeColor(payload.eval<String>(props['inactiveBorderColor']));
-    final borderWidth = NumDecoder.toDouble(props['borderWidth']);
+        makeColor(payload.eval<String>(props.get('inactiveBorderColor')));
+    final borderWidth = props.getDouble('borderWidth');
 
     final activeIcon = VWIcon(
-      props: props['activeIcon'] as Map<String, dynamic>,
-      commonProps: commonProps,
-      parent: this,
+      props: props.toProps('activeIcon') ?? Props.empty(),
+      commonProps: null,
+      parent: null,
     );
+
     final inactiveIcon = VWIcon(
-      props: props['inactiveIcon'] as Map<String, dynamic>,
-      commonProps: commonProps,
-      parent: this,
+      props: props.toProps('inactiveIcon') ?? Props.empty(),
+      commonProps: null,
+      parent: null,
     );
 
     return Center(
@@ -60,8 +63,9 @@ class VWCheckbox extends VirtualLeafStatelessWidget {
                 Colors.grey,
           ),
         ),
-        child:
-            value ? activeIcon.render(payload) : inactiveIcon.render(payload),
+        child: value
+            ? activeIcon.toWidget(payload)
+            : inactiveIcon.toWidget(payload),
       ),
     );
   }
