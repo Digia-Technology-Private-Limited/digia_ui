@@ -1,17 +1,6 @@
 import 'package:flutter/material.dart';
+import '../../../Utils/basic_shared_utils/types.dart';
 import '../custom_shape/path_draw.dart';
-
-enum BorderPattern {
-  solid,
-  dotted,
-  dashed,
-}
-
-enum StrokeAlign {
-  inside,
-  outside,
-  center,
-}
 
 class BorderWithPattern extends BoxBorder {
   final double strokeWidth;

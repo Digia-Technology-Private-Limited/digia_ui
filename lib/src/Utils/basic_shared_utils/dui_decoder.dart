@@ -452,6 +452,13 @@ class DUIDecoder {
         _ => null
       };
 
+  static StrokeAlign? toStrokeAlign(dynamic string) => switch (string) {
+        'inside' => StrokeAlign.inside,
+        'outside' => StrokeAlign.outside,
+        'center' => StrokeAlign.center,
+        _ => null
+      };
+
   static BorderPattern? toBorderPattern(dynamic value) => switch (value) {
         'solid' => BorderPattern.solid,
         'dotted' => BorderPattern.dotted,
@@ -501,9 +508,7 @@ class DUIDecoder {
     }
   }
 
-  static Axis toAxis(String? value, {Axis defaultValue = Axis.horizontal}) {
-    if (value == null) return defaultValue;
-
+  static Axis toAxis(dynamic value, {Axis defaultValue = Axis.horizontal}) {
     switch (value) {
       case 'horizontal':
         return Axis.horizontal;
