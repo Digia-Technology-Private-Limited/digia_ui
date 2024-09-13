@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 
-import 'render_payload.dart';
-import 'virtual_widget_registry.dart';
+import '../render_payload.dart';
+import '../virtual_widget_registry.dart';
 
 abstract class VirtualWidget {
   String? refName;
@@ -10,8 +10,8 @@ abstract class VirtualWidget {
   VirtualWidgetRegistry registry;
 
   VirtualWidget({
-    this.refName,
-    this.parent,
+    required this.refName,
+    required this.parent,
     VirtualWidgetRegistry? widgetFactory,
   }) : registry = VirtualWidgetRegistry.instance;
 

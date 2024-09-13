@@ -3,15 +3,14 @@ import 'package:flutter/widgets.dart';
 import '../../Utils/util_functions.dart';
 import '../../components/dui_icons/icon_helpers/icon_data_serialization.dart';
 import '../../components/dui_widget_scope.dart';
+import '../core/virtual_leaf_stateless_widget.dart';
 import '../render_payload.dart';
 
-import '../stateless_virtual_widget.dart';
-
-class VWIcon extends StatelessVirtualWidget {
-  VWIcon(
-    super.props, {
-    super.commonProps,
-    super.parent,
+class VWIcon extends VirtualLeafStatelessWidget {
+  VWIcon({
+    required super.props,
+    required super.commonProps,
+    required super.parent,
     super.refName,
   });
 

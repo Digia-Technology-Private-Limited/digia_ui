@@ -66,8 +66,8 @@ class _DUINestedScrollViewState extends DUIWidgetState<DUINestedScrollView> {
     }
 
     final headerWidget = headerWidgetData.let((e) {
-      if(e.isNullOrEmpty) return null;
-      
+      if (e.isNullOrEmpty) return null;
+
       return BracketScope(
           variables: [('innerBoxIsScrolled', innerBoxIsScrolled)],
           builder: DUIJsonWidgetBuilder(

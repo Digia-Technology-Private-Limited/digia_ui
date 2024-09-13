@@ -1,5 +1,5 @@
-import 'base_virtual_widget.dart';
 import 'builders.dart';
+import 'core/virtual_widget.dart';
 import 'models/vw_node_data.dart';
 
 typedef VirtualWidgetBuilder = VirtualWidget Function(
@@ -10,7 +10,8 @@ class VirtualWidgetRegistry {
     'digia/text': textBuilder,
     'digia/richText': richTextBuilder,
     'digia/container': containerBuilder,
-    'digia/icon': iconBuilder
+    'digia/icon': iconBuilder,
+    'digia/listView': listViewBuilder
   };
 
   void registerWidget(String type, VirtualWidgetBuilder builder) {

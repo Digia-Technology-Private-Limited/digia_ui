@@ -7,15 +7,14 @@ import '../../Utils/util_functions.dart';
 import '../../components/DUIText/dui_text_style.dart';
 import '../../core/action/action_handler.dart';
 import '../../core/action/action_prop.dart';
+import '../core/virtual_leaf_stateless_widget.dart';
 import '../render_payload.dart';
 
-import '../stateless_virtual_widget.dart';
-
-class VWRichText extends StatelessVirtualWidget {
-  VWRichText(
-    super.props, {
-    super.commonProps,
-    super.parent,
+class VWRichText extends VirtualLeafStatelessWidget {
+  VWRichText({
+    required super.props,
+    required super.commonProps,
+    required super.parent,
     super.refName,
   });
 

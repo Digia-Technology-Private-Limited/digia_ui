@@ -5,16 +5,17 @@ import '../../Utils/basic_shared_utils/dui_decoder.dart';
 import '../../Utils/basic_shared_utils/num_decoder.dart';
 import '../internal_widgets/internal_list_view.dart';
 import '../render_payload.dart';
-import '../stateless_virtual_widget.dart';
+import '../virtual_widgets/extensions.dart';
+import '../virtual_widgets/virtual_stateless_widget.dart';
 
-class VWListView extends StatelessVirtualWidget {
-  VWListView(
-    super.props, {
-    super.commonProps,
-    super.childGroups,
-    super.parent,
+class VWListView extends VirtualStatelessWidget {
+  VWListView({
+    required super.props,
+    required super.commonProps,
+    required super.childGroups,
+    required super.parent,
     super.refName,
-    super.repeatData,
+    required super.repeatData,
   });
 
   bool get shouldRepeatChild => repeatData != null;

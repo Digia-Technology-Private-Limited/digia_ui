@@ -4,15 +4,14 @@ import 'package:widget_marquee/widget_marquee.dart';
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
 import '../../Utils/util_functions.dart';
 import '../../components/DUIText/dui_text_style.dart';
+import '../core/virtual_leaf_stateless_widget.dart';
 import '../render_payload.dart';
 
-import '../stateless_virtual_widget.dart';
-
-class VWText extends StatelessVirtualWidget {
-  VWText(
-    super.props, {
-    super.commonProps,
-    super.parent,
+class VWText extends VirtualLeafStatelessWidget {
+  VWText({
+    required super.props,
+    required super.commonProps,
+    required super.parent,
     super.refName,
   });
 

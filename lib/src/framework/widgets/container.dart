@@ -8,18 +8,17 @@ import '../../Utils/basic_shared_utils/types.dart';
 import '../../Utils/extensions.dart';
 import '../../Utils/util_functions.dart';
 import '../../components/border/box_border_with_pattern/border_with_pattern.dart';
+import '../core/virtual_stateless_widget.dart';
 import '../render_payload.dart';
 
-import '../stateless_virtual_widget.dart';
-
-class VWContainer extends StatelessVirtualWidget {
-  VWContainer(
-    super.props, {
+class VWContainer extends VirtualStatelessWidget {
+  VWContainer({
+    required super.props,
     super.commonProps,
-    super.childGroups,
-    super.parent,
+    required super.childGroups,
+    required super.parent,
     super.refName,
-  });
+  }) : super(repeatData: null);
 
   @override
   Widget render(RenderPayload payload) {
