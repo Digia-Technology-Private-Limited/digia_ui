@@ -38,18 +38,3 @@ class Props {
 
   factory Props.empty() => Props({});
 }
-
-extension PropsMapExtension on Map<String, Object?>? {
-  String? getString(String key) => this?[key] as String?;
-
-  int? getInt(String key) => NumDecoder.toInt(this?[key]);
-
-  double? getDouble(String key) => NumDecoder.toDouble(this?[key]);
-
-  bool? getBool(String key) => NumDecoder.toBool(this?[key]);
-
-  Map<String, Object?>? getMap(String key) =>
-      this?[key] as Map<String, Object?>?;
-
-  List<Object?>? getList(String key) => this?[key] as List<Object?>?;
-}

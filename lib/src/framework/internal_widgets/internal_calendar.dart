@@ -6,7 +6,7 @@ class InternalCalendar extends StatefulWidget {
   DateTime focusedDay;
   final DateTime firstDay;
   final DateTime lastDay;
-  final DateTime currentDay;
+  final DateTime? currentDay;
   final DateTime? rangeStartDay;
   final DateTime? rangeEndDay;
   final CalendarFormat calendarFormat;

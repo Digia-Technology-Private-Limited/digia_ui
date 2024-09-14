@@ -32,14 +32,9 @@ class VWAvatar extends VirtualLeafStatelessWidget {
   Widget _getCircleAvatar(Map<String, Object?> shape, RenderPayload payload) {
     final bgColor = payload.eval<String>(props.get('bgColor'));
     final radius = payload.eval<double>(shape['radius']);
-    return Container(
-      height: (radius ?? 16) * 2,
-      width: (radius ?? 16) * 2,
-      decoration: BoxDecoration(
-        color: makeColor(bgColor) ?? Colors.grey,
-        shape: BoxShape.circle,
-      ),
-      clipBehavior: Clip.hardEdge,
+    return CircleAvatar(
+      radius: radius ?? 16,
+      backgroundColor: makeColor(bgColor) ?? Colors.grey,
       child: _getAvatarChildWidget(payload),
     );
   }
