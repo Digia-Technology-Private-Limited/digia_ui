@@ -1,22 +1,22 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'dui_tab_view_controller_props.dart';
+part of 'dui_tab_controller_props.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-DuiTabViewControllerProps _$DuiTabViewControllerPropsFromJson(
+DuiTabControllerProps _$DuiTabControllerPropsFromJson(
         Map<String, dynamic> json) =>
-    DuiTabViewControllerProps(
+    DuiTabControllerProps(
       dynamicList: json['dynamicList'],
       animationDuration: (json['animationDuration'] as num?)?.toDouble(),
       length: (json['length'] as num?)?.toInt(),
       initialIndex: json['initialIndex'],
     );
 
-Map<String, dynamic> _$DuiTabViewControllerPropsToJson(
-        DuiTabViewControllerProps instance) =>
+Map<String, dynamic> _$DuiTabControllerPropsToJson(
+        DuiTabControllerProps instance) =>
     <String, dynamic>{
       'length': instance.length,
       'initialIndex': instance.initialIndex,

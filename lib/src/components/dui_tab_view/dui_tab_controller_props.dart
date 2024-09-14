@@ -1,24 +1,24 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'dui_tab_view_controller_props.g.dart';
+part 'dui_tab_controller_props.g.dart';
 
 @JsonSerializable()
-class DuiTabViewControllerProps {
+class DuiTabControllerProps {
   final int? length;
   final Object? initialIndex;
   final dynamic dynamicList;
   final double? animationDuration;
-  DuiTabViewControllerProps(
+  DuiTabControllerProps(
       {this.dynamicList,
       this.animationDuration,
       this.length,
       this.initialIndex});
 
-  factory DuiTabViewControllerProps.fromJson(Map<String, dynamic> json) {
-    return _$DuiTabViewControllerPropsFromJson(json);
+  factory DuiTabControllerProps.fromJson(Map<String, dynamic> json) {
+    return _$DuiTabControllerPropsFromJson(json);
   }
 
   Map<String, dynamic> toJson() {
-    return _$DuiTabViewControllerPropsToJson(this);
+    return _$DuiTabControllerPropsToJson(this);
   }
 }

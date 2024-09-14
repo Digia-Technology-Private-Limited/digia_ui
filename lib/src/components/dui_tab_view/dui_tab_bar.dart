@@ -8,43 +8,42 @@ import '../../Utils/util_functions.dart';
 import '../../core/bracket_scope_provider.dart';
 import '../../core/builders/dui_json_widget_builder.dart';
 import '../dui_base_stateful_widget.dart';
-import 'DUICustomTabController.dart';
-import 'dui_tabview_props.dart';
+import 'dui_custom_tab_controller.dart';
+import 'dui_tab_bar_props.dart';
 
-class DUITabView1 extends BaseStatefulWidget {
+class DUITabBar extends BaseStatefulWidget {
   final DUIWidgetRegistry? registry;
   final DUIWidgetJsonData data;
-  final DUITabView1Props tabViewProps;
+  final DUITabBarProps tabBarProps;
 
-  const DUITabView1({
+  const DUITabBar({
     super.key,
     required this.registry,
     required this.data,
-    required this.tabViewProps,
+    required this.tabBarProps,
     required super.varName,
   });
 
   @override
-  _DUITabView1State createState() => _DUITabView1State();
+  _DUITabBarState createState() => _DUITabBarState();
 }
 
-class _DUITabView1State extends DUIWidgetState<DUITabView1>
+class _DUITabBarState extends DUIWidgetState<DUITabBar>
     with SingleTickerProviderStateMixin {
   late TabBarIndicatorSize _indicatorSize;
-  late Duicustomtabcontroller _controller;
+  late DUICustomTabController _controller;
 
   @override
   void initState() {
     super.initState();
-    _indicatorSize =
-        _toTabBarIndicatorSize(widget.tabViewProps.indicatorSize) ??
-            TabBarIndicatorSize.tab;
+    _indicatorSize = _toTabBarIndicatorSize(widget.tabBarProps.indicatorSize) ??
+        TabBarIndicatorSize.tab;
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _controller = DuicustomTabControllerProvider.of(context);
+    _controller = DUITabControllerProvider.of(context);
     _controller.removeListener(_handleTabSelection);
     _controller.addListener(_handleTabSelection);
   }
@@ -70,11 +69,12 @@ class _DUITabView1State extends DUIWidgetState<DUITabView1>
       tabAlignment: isScrollable ? TabAlignment.start : null,
       indicatorSize: _indicatorSize,
       controller: _controller,
-      padding: DUIDecoder.toEdgeInsets(widget.tabViewProps.tabBarPadding),
-      labelPadding: DUIDecoder.toEdgeInsets(widget.tabViewProps.labelPadding),
-      dividerColor: makeColor(widget.tabViewProps.dividerColor),
-      dividerHeight: widget.tabViewProps.dividerHeight,
-      indicatorColor: makeColor(widget.tabViewProps.indicatorColor),
+      padding: DUIDecoder.toEdgeInsets(widget.tabBarProps.tabBarPadding),
+      labelPadding: DUIDecoder.toEdgeInsets(widget.tabBarProps.labelPadding),
+      dividerColor: makeColor(widget.tabBarProps.dividerColor),
+      dividerHeight: widget.tabBarProps.dividerHeight,
+      indicatorWeight: widget.tabBarProps.indicatorWeight ?? 2.0,
+      indicatorColor: makeColor(widget.tabBarProps.indicatorColor),
       tabs: List.generate(
           !generateChildrenDynamically
               ? children.length
@@ -131,12 +131,11 @@ class _DUITabView1State extends DUIWidgetState<DUITabView1>
   Widget build(BuildContext context) {
     final children = widget.data.children['children'] ?? [];
     final animationType =
-        getTransitionBuilder(widget.tabViewProps.animationType);
+        getTransitionBuilder(widget.tabBarProps.animationType);
     final isScrollable =
-        widget.tabViewProps.tabBarScrollable?.valueFor(keyPath: 'value') ??
+        widget.tabBarProps.tabBarScrollable?.valueFor(keyPath: 'value') ??
             false;
-    final alignment = DUIDecoder.toAlignment(widget
-            .tabViewProps.tabBarScrollable
+    final alignment = DUIDecoder.toAlignment(widget.tabBarProps.tabBarScrollable
             ?.valueFor(keyPath: 'tabAlignment')) ??
         Alignment.center;
 
@@ -145,15 +144,12 @@ class _DUITabView1State extends DUIWidgetState<DUITabView1>
     return isScrollable
         ? Align(
             alignment: alignment,
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: IntrinsicWidth(
-                child: _buildTabBar(
-                  isScrollable: true,
-                  generateChildrenDynamically: _controller.dynamicList != null,
-                  children: children,
-                  animationType: animationType,
-                ),
+            child: IntrinsicWidth(
+              child: _buildTabBar(
+                isScrollable: true,
+                generateChildrenDynamically: _controller.dynamicList != null,
+                children: children,
+                animationType: animationType,
               ),
             ),
           )

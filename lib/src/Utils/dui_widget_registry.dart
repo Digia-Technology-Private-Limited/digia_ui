@@ -168,14 +168,11 @@ class DUIWidgetRegistry {
     'digia/safeArea': (data, {registry}) => DUISafeAreaBuilder(data: data),
     'digia/probo/animated_fastscore': (data, {registry}) =>
         ProboCustomComponentBuilder(data: data),
-
-    'digia/tabViewController':
-        withoutRegistry(DUITabViewControllerBuilder.create),
-    'digia/tabView1': (data, {registry}) =>
-        DUITabView1Builder.create(data, registry: DUIWidgetRegistry.shared),
+    'digia/tabController': withoutRegistry(DUITabControllerBuilder.create),
+    'digia/tabBar': (data, {registry}) =>
+        DUITabBarBuilder.create(data, registry: DUIWidgetRegistry.shared),
     'digia/tabViewItem1': (data, {registry}) =>
         DUITabViewItem1Builder.create(data, registry: DUIWidgetRegistry.shared),
-
     'digia/nestedScrollView': (data, {registry}) =>
         DUINestedScrollViewBuilder(data: data),
     'digia/sliverAppBar': (data, {registry}) =>
@@ -185,7 +182,6 @@ class DUIWidgetRegistry {
     'digia/customScrollView': (data, {registry}) =>
         DUICustomScrollViewBuilder.create(data,
             registry: DUIWidgetRegistry.shared),
-
   };
 
   static const DUIWidgetRegistry shared = DUIWidgetRegistry();

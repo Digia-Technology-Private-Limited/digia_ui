@@ -1,13 +1,13 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'dui_tabview_props.dart';
+part of 'dui_tab_bar_props.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-DUITabView1Props _$DUITabView1PropsFromJson(Map<String, dynamic> json) =>
-    DUITabView1Props(
+DUITabBarProps _$DUITabBarPropsFromJson(Map<String, dynamic> json) =>
+    DUITabBarProps(
       animationType: json['animationType'] as String?,
       tabBarScrollable: json['tabBarScrollable'] as Map<String, dynamic>?,
       indicatorSize: json['indicatorSize'] as String?,
@@ -15,6 +15,7 @@ DUITabView1Props _$DUITabView1PropsFromJson(Map<String, dynamic> json) =>
           ? null
           : DUIInsets.fromJson(json['labelPadding']),
       dividerHeight: (json['dividerHeight'] as num?)?.toDouble(),
+      indicatorWeight: (json['indicatorWeight'] as num?)?.toDouble(),
       indicatorColor: json['indicatorColor'] as String?,
       dividerColor: json['dividerColor'] as String?,
       tabBarPadding: json['tabBarPadding'] == null
@@ -22,10 +23,11 @@ DUITabView1Props _$DUITabView1PropsFromJson(Map<String, dynamic> json) =>
           : DUIInsets.fromJson(json['tabBarPadding']),
     );
 
-Map<String, dynamic> _$DUITabView1PropsToJson(DUITabView1Props instance) =>
+Map<String, dynamic> _$DUITabBarPropsToJson(DUITabBarProps instance) =>
     <String, dynamic>{
       'dividerColor': instance.dividerColor,
       'dividerHeight': instance.dividerHeight,
+      'indicatorWeight': instance.indicatorWeight,
       'indicatorColor': instance.indicatorColor,
       'indicatorSize': instance.indicatorSize,
       'tabBarPadding': instance.tabBarPadding,
