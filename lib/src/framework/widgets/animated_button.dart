@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
-import '../../Utils/basic_shared_utils/num_decoder.dart';
 import '../../Utils/util_functions.dart';
 import '../../components/dui_button_bounce_animation.dart';
 import '../../core/action/action_handler.dart';
@@ -22,26 +21,27 @@ class VWAnimatedButton extends VirtualLeafStatelessWidget {
 
   @override
   Widget render(RenderPayload payload) {
-    final defaultStyleJson = props.getMap('defaultStyle') ?? {};
-    final disabledStyleJson = props.getMap('disabledStyle') ?? {};
+    final defaultStyleJson = props.toProps('defaultStyle') ?? Props.empty();
+    final disabledStyleJson = props.toProps('disabledStyle') ?? Props.empty();
 
     ButtonStyle style = ButtonStyle(
       shape: WidgetStateProperty.all(toButtonShape(props.get('shape'))),
       padding: WidgetStateProperty.all(DUIDecoder.toEdgeInsets(
-        defaultStyleJson['padding'],
+        defaultStyleJson.getMap('padding'),
         or: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
       )),
       elevation: WidgetStateProperty.all(
-        NumDecoder.toDouble(defaultStyleJson['elevation']),
+        defaultStyleJson.getDouble('elevation'),
       ),
-      alignment: DUIDecoder.toAlignment(defaultStyleJson['alignment']),
+      alignment:
+          DUIDecoder.toAlignment(defaultStyleJson.getString('alignment')),
       splashFactory: NoSplash.splashFactory,
       overlayColor: WidgetStateProperty.all(Colors.transparent),
       backgroundColor: WidgetStateProperty.resolveWith((states) {
         if (states.contains(WidgetState.disabled)) {
-          return makeColor(disabledStyleJson['backgroundColor']);
+          return makeColor(disabledStyleJson.get('backgroundColor'));
         }
-        return makeColor(defaultStyleJson['backgroundColor']);
+        return makeColor(defaultStyleJson.get('backgroundColor'));
       }),
     );
 
@@ -49,8 +49,8 @@ class VWAnimatedButton extends VirtualLeafStatelessWidget {
         props.get('onClick') == null;
     final isHaptic = payload.eval<bool>(props.get('haptic')) ?? true;
 
-    final disabledTextColor = disabledStyleJson['disabledTextColor'] as String?;
-    final disabledIconColor = disabledStyleJson['disabledIconColor'] as String?;
+    final disabledTextColor = disabledStyleJson.getString('disabledTextColor');
+    final disabledIconColor = disabledStyleJson.getString('disabledIconColor');
     final content = _buildContent(
       payload,
       overrideColor: isDisabled,

@@ -5,6 +5,7 @@ import '../../core/action/action_handler.dart';
 import '../../core/action/action_prop.dart';
 import '../../core/page/dui_page_bloc.dart';
 import '../core/virtual_stateless_widget.dart';
+import '../models/props.dart';
 import '../render_payload.dart';
 
 class VWStreamBuilder extends VirtualStatelessWidget {
@@ -19,7 +20,7 @@ class VWStreamBuilder extends VirtualStatelessWidget {
 
   @override
   Widget render(RenderPayload payload) {
-    final streamDef = props.getMap('streamVariable');
+    final streamDef = props.toProps('streamVariable');
     if (streamDef == null) return empty();
 
     return StreamBuilder(
@@ -67,9 +68,8 @@ class VWStreamBuilder extends VirtualStatelessWidget {
     );
   }
 
-  Stream<Object?> _makeStream(
-      Map<String, Object?> stream, RenderPayload payload) {
-    final streamName = stream['name'];
+  Stream<Object?> _makeStream(Props stream, RenderPayload payload) {
+    final streamName = stream.get('name');
     final pageArgsMap =
         payload.buildContext.tryRead<DUIPageBloc>()?.state.pageArgs;
     final streamSource = pageArgsMap?[streamName];

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
 import '../../Utils/basic_shared_utils/lodash.dart';
-import '../../Utils/basic_shared_utils/num_decoder.dart';
 import '../../Utils/basic_shared_utils/types.dart';
 import '../../Utils/extensions.dart';
 import '../../Utils/util_functions.dart';
@@ -38,7 +37,7 @@ class VWContainer extends VirtualStatelessWidget {
     BoxShape shape = props.getString('shape') == 'circle'
         ? BoxShape.circle
         : BoxShape.rectangle;
-    final gradiant = toGradiant(props.getMap('gradiant'), payload.buildContext);
+    final gradiant = toGradient(props.getMap('gradiant'), payload.buildContext);
     final elevation = props.getDouble('elevation') ?? 0.0;
 
     Widget container = Container(
@@ -50,7 +49,8 @@ class VWContainer extends VirtualStatelessWidget {
         decoration: BoxDecoration(
             gradient: gradiant,
             color: color,
-            border: _toBorderWithPattern(payload, props.getMap('border')),
+            border: _toBorderWithPattern(
+                payload, props.toProps('border') ?? Props.empty()),
             borderRadius: shape == BoxShape.circle ? null : borderRadius,
             image:
                 _toDecorationImage(payload, props.toProps('decorationImage')),
@@ -103,31 +103,29 @@ DecorationImage? _toDecorationImage(RenderPayload payload, Props? props) {
       fit: DUIDecoder.toBoxFit(props?.get('fit')));
 }
 
-BorderWithPattern? _toBorderWithPattern(
-    RenderPayload payload, Map<String, Object?>? props) {
-  if (props == null) return null;
+BorderWithPattern? _toBorderWithPattern(RenderPayload payload, Props props) {
+  if (props.isEmpty) return null;
 
-  final strokeWidth =
-      NumDecoder.toDoubleOrDefault(props['borderWidth'], defaultValue: 0);
+  final strokeWidth = props.getDouble('borderWidth') ?? 0;
 
   if (strokeWidth <= 0) return null;
 
-  final borderColor = makeColor(payload.eval<String>(props['borderColor'])) ??
-      Colors.transparent;
-  final dashPattern = DUIDecoder.toDashPattern(
-          props.valueFor(keyPath: 'borderType.dashPattern')) ??
-      const [3, 1];
-  final strokeCap =
-      DUIDecoder.toStrokeCap(props.valueFor(keyPath: 'borderType.strokeCap')) ??
-          StrokeCap.butt;
-  final borderGradiant = toGradiant(
-      props['borderGradiant'] as Map<String, Object?>?, payload.buildContext);
+  final borderColor =
+      makeColor(payload.eval<String>(props.get('borderColor'))) ??
+          Colors.transparent;
+  final dashPattern =
+      DUIDecoder.toDashPattern(props.get('borderType.dashPattern')) ??
+          const [3, 1];
+  final strokeCap = DUIDecoder.toStrokeCap(props.get('borderType.strokeCap')) ??
+      StrokeCap.butt;
+  final borderGradiant =
+      toGradient(props.getMap('borderGradiant'), payload.buildContext);
 
-  final BorderPattern borderPattern = DUIDecoder.toBorderPattern(
-          props.valueFor(keyPath: 'borderType.borderPattern')) ??
-      BorderPattern.solid;
+  final BorderPattern borderPattern =
+      DUIDecoder.toBorderPattern(props.get('borderType.borderPattern')) ??
+          BorderPattern.solid;
   final strokeAlign =
-      DUIDecoder.toStrokeAlign(props['strokeAlign']) ?? StrokeAlign.center;
+      DUIDecoder.toStrokeAlign(props.get('strokeAlign')) ?? StrokeAlign.center;
 
   return BorderWithPattern(
     strokeWidth: strokeWidth,

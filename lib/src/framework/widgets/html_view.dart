@@ -6,6 +6,7 @@ import '../../Utils/basic_shared_utils/dui_decoder.dart';
 import '../../Utils/basic_shared_utils/lodash.dart';
 import '../../Utils/util_functions.dart';
 import '../core/virtual_leaf_stateless_widget.dart';
+import '../models/props.dart';
 import '../render_payload.dart';
 
 class VWHtmlView extends VirtualLeafStatelessWidget {
@@ -23,40 +24,43 @@ class VWHtmlView extends VirtualLeafStatelessWidget {
       shrinkWrap: payload.eval<bool>(props.get('shrinkWrap')) ?? false,
       style: {
         'body': Style(padding: HtmlPaddings.all(0.0), margin: Margins.all(0.0))
-            .merge(_makeStyle(payload, props.getMap('htmlStyleOverridesBody'))),
-        'span': _makeStyle(payload, props.getMap('htmlStyleOverridesSpan')),
-        'p': _makeStyle(payload, props.getMap('htmlStyleOverridesParagraph')),
+            .merge(_makeStyle(payload,
+                props.toProps('htmlStyleOverridesBody') ?? Props.empty())),
+        'span': _makeStyle(
+            payload, props.toProps('htmlStyleOverridesSpan') ?? Props.empty()),
+        'p': _makeStyle(payload,
+            props.toProps('htmlStyleOverridesParagraph') ?? Props.empty()),
       },
     );
   }
 }
 
-Style _makeStyle(RenderPayload payload, Map<String, Object?>? styleMap) {
-  if (styleMap == null) return Style();
+Style _makeStyle(RenderPayload payload, Props styleMap) {
+  if (styleMap.isEmpty) return Style();
 
-  final maxLines = payload.eval<int>(styleMap['maxLines']);
-  final textOverflow =
-      DUIDecoder.toTextOverflow(payload.eval<String>(styleMap['textOverflow']));
+  final maxLines = payload.eval<int>(styleMap.get('maxLines'));
+  final textOverflow = DUIDecoder.toTextOverflow(
+      payload.eval<String>(styleMap.get('textOverflow')));
 
-  final googleFont = (styleMap['fontFamily'] as String?)?.let(
+  final googleFont = (styleMap.get('fontFamily') as String?)?.let(
     (p0) => GoogleFonts.getFont(p0,
-        fontSize: payload.eval<double>(styleMap['fontSize']),
-        fontStyle:
-            DUIDecoder.toFontStyle(payload.eval<String>(styleMap['fontStyle'])),
+        fontSize: payload.eval<double>(styleMap.get('fontSize')),
+        fontStyle: DUIDecoder.toFontStyle(
+            payload.eval<String>(styleMap.get('fontStyle'))),
         fontWeight: DUIDecoder.toFontWeight(
-            payload.eval<String>(styleMap['fontWeight'])),
-        height: payload.eval<double>(styleMap['lineHeight']),
+            payload.eval<String>(styleMap.get('fontWeight'))),
+        height: payload.eval<double>(styleMap.get('lineHeight')),
         backgroundColor:
-            makeColor(payload.eval<String>(styleMap['backgroundColor'])),
-        color: makeColor(payload.eval<String>(styleMap['color'])),
+            makeColor(payload.eval<String>(styleMap.get('backgroundColor'))),
+        color: makeColor(payload.eval<String>(styleMap.get('color'))),
         decoration: DUIDecoder.toTextDecoration(
-            payload.eval<String>(styleMap['textDecoration'])),
-        decorationColor:
-            makeColor(payload.eval<String>(styleMap['textDecorationColor'])),
+            payload.eval<String>(styleMap.get('textDecoration'))),
+        decorationColor: makeColor(
+            payload.eval<String>(styleMap.get('textDecorationColor'))),
         decorationStyle: DUIDecoder.toTextDecorationStyle(
-            payload.eval<String>(styleMap['textDecorationStyle'])),
+            payload.eval<String>(styleMap.get('textDecorationStyle'))),
         decorationThickness:
-            payload.eval<double>(styleMap['textDecorationThickness'])),
+            payload.eval<double>(styleMap.get('textDecorationThickness'))),
   );
 
   final style = Style(maxLines: maxLines, textOverflow: textOverflow);

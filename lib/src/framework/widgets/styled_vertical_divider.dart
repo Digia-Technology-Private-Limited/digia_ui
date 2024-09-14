@@ -36,7 +36,7 @@ class VWStyledVerticalDivider extends VirtualLeafStatelessWidget {
           ) ??
           [3, 3],
       color: makeColor(payload.eval<String>(props.get('colorType.color'))),
-      gradient: toGradiant(
+      gradient: toGradient(
         props.getMap('colorType.gradient'),
         payload.buildContext,
       ),

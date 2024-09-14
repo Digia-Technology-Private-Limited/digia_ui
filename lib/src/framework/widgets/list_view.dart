@@ -2,7 +2,6 @@ import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/widgets.dart';
 
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
-import '../../Utils/basic_shared_utils/num_decoder.dart';
 import '../core/extensions.dart';
 import '../core/virtual_stateless_widget.dart';
 import '../internal_widgets/internal_list_view.dart';
@@ -28,7 +27,7 @@ class VWListView extends VirtualStatelessWidget {
     final scrollDirection = DUIDecoder.toAxis(props.get('scrollDirection'),
         defaultValue: Axis.vertical);
     final physics = DUIDecoder.toScrollPhysics(props.get('allowScroll'));
-    final shrinkWrap = NumDecoder.toBool(props.get('shrinkWrap')) ?? false;
+    final shrinkWrap = props.getBool('shrinkWrap') ?? false;
 
     final initialScrollPosition =
         payload.eval<String>(props.get('initialScrollPosition'));

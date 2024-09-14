@@ -2,7 +2,6 @@ import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/widgets.dart';
 
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
-import '../../Utils/basic_shared_utils/num_decoder.dart';
 import '../core/extensions.dart';
 import '../core/virtual_stateless_widget.dart';
 import '../internal_widgets/internal_grid_view.dart';
@@ -25,7 +24,7 @@ class VWGridView extends VirtualStatelessWidget {
     if (children == null || children!.isEmpty) return empty();
 
     final physics = DUIDecoder.toScrollPhysics(props.get('allowScroll'));
-    final shrinkWrap = NumDecoder.toBool(props.get('shrinkWrap')) ?? false;
+    final shrinkWrap = props.getBool('shrinkWrap') ?? false;
     final gridDelegate = SliverGridDelegateWithFixedCrossAxisCount(
       crossAxisCount: props.getInt('crossAxisCount') ?? 2,
       mainAxisSpacing: props.getDouble('mainAxisSpacing') ?? 0.0,

@@ -4,7 +4,6 @@ import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
-import '../../Utils/basic_shared_utils/num_decoder.dart';
 import '../../models/dui_file.dart';
 import '../core/virtual_leaf_stateless_widget.dart';
 import '../render_payload.dart';
@@ -74,7 +73,7 @@ class VWVideoPlayer extends VirtualLeafStatelessWidget {
         );
       },
       showControls: payload.eval<bool>(props.get('showControls')) ?? true,
-      aspectRatio: NumDecoder.toDouble(props.get('aspectRatio')),
+      aspectRatio: props.getDouble('aspectRatio'),
       allowPlaybackSpeedChanging: true,
       playbackSpeeds: [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2],
       videoPlayerController: _createController(payload),
