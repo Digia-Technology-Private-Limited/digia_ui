@@ -139,14 +139,13 @@ class VWCalendar extends VirtualLeafStatelessWidget {
     ).toWidget(payload);
     EdgeInsets? rightChevronPadding =
         DUIDecoder.toEdgeInsets(headerStyle.get('rightChevronPadding'));
-    Color? headerColor = makeColor(headerStyle.toProps('shape')?.get('color'));
+    final shapeProps = headerStyle.toProps('shape');
+    Color? headerColor = makeColor(shapeProps?.get('color'));
     Color headerBorderColor =
-        makeColor(headerStyle.toProps('shape')?.get('borderColor')) ??
-            const Color(0xFF000000);
-    double headerBorderWidth =
-        headerStyle.getDouble('shape.borderWidth') ?? 1.0;
-    BorderRadius? headerBorderRadius = DUIDecoder.toBorderRadius(
-        headerStyle.toProps('shape')?.get('borderRadius'));
+        makeColor(shapeProps?.get('borderColor')) ?? const Color(0xFF000000);
+    double headerBorderWidth = shapeProps?.getDouble('borderWidth') ?? 1.0;
+    BorderRadius? headerBorderRadius =
+        DUIDecoder.toBorderRadius(shapeProps?.get('borderRadius'));
 
     return HeaderStyle(
       formatButtonVisible: false,
@@ -189,15 +188,13 @@ class VWCalendar extends VirtualLeafStatelessWidget {
             DUITextStyle.fromJson(daysOfWeekStyle.get('weekendStyle')),
             payload.buildContext) ??
         const TextStyle(color: Color(0xFF6A6A6A));
-    Color? daysOfWeekColor =
-        makeColor(daysOfWeekStyle.toProps('shape')?.get('color'));
+    final shapeProps = daysOfWeekStyle.toProps('shape');
+    Color? daysOfWeekColor = makeColor(shapeProps?.get('color'));
     Color daysOfWeekBorderColor =
-        makeColor(daysOfWeekStyle.toProps('shape')?.get('borderColor')) ??
-            const Color(0xFF000000);
-    double daysOfWeekBorderWidth =
-        daysOfWeekStyle.toProps('shape')?.getDouble('borderWidth') ?? 1.0;
-    BorderRadius? daysOfWeekBorderRadius = DUIDecoder.toBorderRadius(
-        daysOfWeekStyle.toProps('shape')?.get('borderRadius'));
+        makeColor(shapeProps?.get('borderColor')) ?? const Color(0xFF000000);
+    double daysOfWeekBorderWidth = shapeProps?.getDouble('borderWidth') ?? 1.0;
+    BorderRadius? daysOfWeekBorderRadius =
+        DUIDecoder.toBorderRadius(shapeProps?.get('borderRadius'));
 
     return DaysOfWeekStyle(
       weekdayStyle: weekdayStyle,

@@ -18,20 +18,20 @@ class VWAvatar extends VirtualLeafStatelessWidget {
 
   @override
   Widget render(RenderPayload payload) {
-    final shape = props.toProps('shape');
+    final shapeProps = props.toProps('shape');
 
-    if (shape == null) return empty();
+    if (shapeProps == null) return empty();
 
-    return switch (shape.get('value')) {
-      'circle' => _getCircleAvatar(shape, payload),
-      'square' => _getSquareAvatar(shape, payload),
-      _ => _getCircleAvatar(shape, payload)
+    return switch (shapeProps.get('value')) {
+      'circle' => _getCircleAvatar(shapeProps, payload),
+      'square' => _getSquareAvatar(shapeProps, payload),
+      _ => _getCircleAvatar(shapeProps, payload)
     };
   }
 
-  Widget _getCircleAvatar(Props shape, RenderPayload payload) {
+  Widget _getCircleAvatar(Props shapeProps, RenderPayload payload) {
     final bgColor = payload.eval<String>(props.get('bgColor'));
-    final radius = payload.eval<double>(shape.get('radius'));
+    final radius = payload.eval<double>(shapeProps.get('radius'));
     return CircleAvatar(
       radius: radius ?? 16,
       backgroundColor: makeColor(bgColor) ?? Colors.grey,
@@ -39,10 +39,11 @@ class VWAvatar extends VirtualLeafStatelessWidget {
     );
   }
 
-  Widget _getSquareAvatar(Props shape, RenderPayload payload) {
+  Widget _getSquareAvatar(Props shapeProps, RenderPayload payload) {
     final bgColor = payload.eval<String>(props.get('bgColor'));
-    final cornerRadius = DUIDecoder.toBorderRadius(shape.get('cornerRadius'));
-    final side = payload.eval<double>(shape.get('side'));
+    final cornerRadius =
+        DUIDecoder.toBorderRadius(shapeProps.get('cornerRadius'));
+    final side = payload.eval<double>(shapeProps.get('side'));
 
     return Container(
       height: side,
