@@ -2,6 +2,7 @@ import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/widgets.dart';
 
 import '../Utils/extensions.dart';
+import '../components/dui_widget_scope.dart';
 import 'models/vw_repeat_data.dart';
 
 class RenderPayload {
@@ -9,6 +10,15 @@ class RenderPayload {
   final ExprContext exprContext;
 
   RenderPayload({required this.buildContext, required this.exprContext});
+
+  IconData? getIcon(Map<String, Object?>? map) {
+    if (map == null) return null;
+
+    // TODO: Can we think of something better here?
+    final scope = DUIWidgetScope.maybeOf(buildContext);
+
+    return scope?.iconDataProvider?.call(map);
+  }
 
 // Evaluates an expression with an optional chained exprContext
   T? eval<T extends Object>(Object? expression,
