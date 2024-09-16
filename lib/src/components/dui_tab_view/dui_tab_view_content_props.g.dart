@@ -1,23 +1,21 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'dui_tabview_item_props.dart';
+part of 'dui_tab_view_content_props.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-DUITabViewItem1Props _$DUITabViewItem1PropsFromJson(
+DUITabViewContentProps _$DUITabViewContentPropsFromJson(
         Map<String, dynamic> json) =>
-    DUITabViewItem1Props(
+    DUITabViewContentProps(
       isScrollable: json['isScrollable'] as bool?,
       viewportFraction: (json['viewportFraction'] as num?)?.toDouble(),
-      allDynamic: json['allDynamic'] as bool?,
     );
 
-Map<String, dynamic> _$DUITabViewItem1PropsToJson(
-        DUITabViewItem1Props instance) =>
+Map<String, dynamic> _$DUITabViewContentPropsToJson(
+        DUITabViewContentProps instance) =>
     <String, dynamic>{
       'isScrollable': instance.isScrollable,
       'viewportFraction': instance.viewportFraction,
-      'allDynamic': instance.allDynamic,
     };

@@ -27,7 +27,14 @@ class DUITabController extends StatelessWidget {
     return DUITabControllerProvider(
       length: tabControllerProps.length ?? 0,
       dynamicList: toDynamicList(tabControllerProps.dynamicList),
-      animationDuration: tabControllerProps.animationDuration,
+      // animationDuration: tabControllerProps.animationDuration,
+      // Builder Code
+      //"animationDuration": {
+      // "type": "number",
+      // "panelConfig": {
+      // "label": "Animation Duration (in Seconds)"
+      // }
+      //   },
       initialIndex:
           eval<int>(tabControllerProps.initialIndex, context: context) ?? 0,
       child: builder.build(context),

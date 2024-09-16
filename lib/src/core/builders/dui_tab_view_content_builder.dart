@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 
 import '../../../digia_ui.dart';
 import '../../Utils/dui_widget_registry.dart';
-import '../../components/dui_tab_view/dui_tabView_item.dart';
-import '../../components/dui_tab_view/dui_tabview_item_props.dart';
+import '../../components/dui_tab_view/dui_tab_view_content.dart';
+import '../../components/dui_tab_view/dui_tab_view_content_props.dart';
 import '../json_widget_builder.dart';
 
-class DUITabViewItem1Builder extends DUIWidgetBuilder {
-  DUITabViewItem1Builder(DUIWidgetJsonData data, DUIWidgetRegistry? registry)
+class DUITabViewContentBuilder extends DUIWidgetBuilder {
+  DUITabViewContentBuilder(DUIWidgetJsonData data, DUIWidgetRegistry? registry)
       : super(data: data, registry: registry);
 
-  static DUITabViewItem1Builder create(DUIWidgetJsonData data,
+  static DUITabViewContentBuilder create(DUIWidgetJsonData data,
       {DUIWidgetRegistry? registry}) {
-    return DUITabViewItem1Builder(data, registry);
+    return DUITabViewContentBuilder(data, registry);
   }
 
   @override
@@ -20,10 +20,10 @@ class DUITabViewItem1Builder extends DUIWidgetBuilder {
     if (registry == null) {
       return fallbackWidget();
     }
-    final tabViewWidget = DUITabViewItem1(
+    final tabViewWidget = DUITabViewContent(
       data: data,
       registry: registry,
-      duiTabView1Props: DUITabViewItem1Props.fromJson(data.props),
+      duiTabView1Props: DUITabViewContentProps.fromJson(data.props),
     );
     return tabViewWidget;
   }

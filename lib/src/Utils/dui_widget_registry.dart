@@ -53,7 +53,7 @@ import '../core/builders/dui_tab_bar_builder.dart';
 import '../core/builders/dui_tab_controller_builder.dart';
 import '../core/builders/dui_tab_view_builder.dart';
 import '../core/builders/dui_tab_view_item_builder.dart';
-import '../core/builders/dui_tabview_item_builder.dart';
+import '../core/builders/dui_tab_view_content_builder.dart';
 import '../core/builders/dui_text_builder.dart';
 import '../core/builders/dui_text_form_field_builder.dart';
 import '../core/builders/dui_timer_builder.dart';
@@ -171,8 +171,9 @@ class DUIWidgetRegistry {
     'digia/tabController': withoutRegistry(DUITabControllerBuilder.create),
     'digia/tabBar': (data, {registry}) =>
         DUITabBarBuilder.create(data, registry: DUIWidgetRegistry.shared),
-    'digia/tabViewItem1': (data, {registry}) =>
-        DUITabViewItem1Builder.create(data, registry: DUIWidgetRegistry.shared),
+    'digia/tabViewContent': (data, {registry}) =>
+        DUITabViewContentBuilder.create(data,
+            registry: DUIWidgetRegistry.shared),
     'digia/nestedScrollView': (data, {registry}) =>
         DUINestedScrollViewBuilder(data: data),
     'digia/sliverAppBar': (data, {registry}) =>
