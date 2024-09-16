@@ -3,3 +3,9 @@ enum BorderPattern {
   dotted,
   dashed,
 }
+
+enum StrokeAlign {
+  inside,
+  outside,
+  center;
+}

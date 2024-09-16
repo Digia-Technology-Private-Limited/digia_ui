@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import '../../border/box_border_with_pattern/border_with_pattern.dart';
+import '../../../Utils/basic_shared_utils/types.dart';
 import '../DUIBorder/dui_border.dart';
 import '../DUICornerRadius/dui_corner_radius.dart';
 import 'border_pattern_class.dart';

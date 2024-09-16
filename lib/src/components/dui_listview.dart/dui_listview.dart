@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
@@ -44,10 +42,6 @@ class DuiListviewState extends DUIWidgetState<DuiListview> {
     _scrollController.addListener(() {
       _streamValueNotifier.value = _scrollController.offset;
     });
-  }
-
-  Stream<dynamic> getListStream(dynamic offSet) {
-    return Stream.value(offSet);
   }
 
   @override
