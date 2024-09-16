@@ -9,8 +9,9 @@ class VirtualWidgetRegistry {
   final Map<String, VirtualWidgetBuilder> _builders = {
     // Layout Widgets
     'digia/container': containerBuilder,
-    // 'digia/column': columnBuilder,
-    // 'digia/row': rowBuilder,
+    'digia/column': columnBuilder,
+    'digia/row': rowBuilder,
+    'digia/flexFit': flexFitBuilder,
     // 'digia/stack': stackBuilder,
     'digia/listView': listViewBuilder,
     'digia/gridView': gridViewBuilder,
@@ -73,8 +74,9 @@ class VirtualWidgetRegistry {
     // 'digia/sliverList': sliverListBuilder,
 
     // Async Widgets
-    // 'digia/futureBuilder': futureBuilderBuilder,
-    'digia/streamBuilder': streamBuilder,
+    'digia/futureBuilder': asyncBuilderBuilder,
+    'digia/asyncBuilder': asyncBuilderBuilder,
+    'digia/streamBuilder': streamBuilderBuilder,
 
     // Utility Widgets
     // 'digia/conditionalBuilder': conditionalBuilderBuilder,

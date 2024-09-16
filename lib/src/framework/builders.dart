@@ -1,9 +1,12 @@
 // import 'package:flutter/rendering.dart';
 
+import 'package:flutter/widgets.dart';
+
 import 'core/virtual_widget.dart';
 import 'models/vw_node_data.dart';
 import 'virtual_widget_registry.dart';
 import 'widgets/animated_button.dart';
+import 'widgets/async_builder.dart';
 import 'widgets/avatar.dart';
 import 'widgets/button.dart';
 import 'widgets/calendar.dart';
@@ -12,6 +15,8 @@ import 'widgets/circular_progress_bar.dart';
 import 'widgets/container.dart';
 import 'widgets/expandable.dart';
 // import 'widgets/flex.dart';
+import 'widgets/flex.dart';
+import 'widgets/flex_fit.dart';
 import 'widgets/grid_view.dart';
 import 'widgets/horizontal_divider.dart';
 import 'widgets/html_view.dart';
@@ -89,6 +94,50 @@ VWIcon iconBuilder(VWNodeData data, VirtualWidget? parent, _) {
     commonProps: data.commonProps,
     parent: parent,
     refName: data.refName,
+  );
+}
+
+VWFlex columnBuilder(
+  VWNodeData data,
+  VirtualWidget? parent,
+  VirtualWidgetRegistry registry,
+) =>
+    flexBuilder(Axis.vertical, data, parent, registry);
+
+VWFlex rowBuilder(
+  VWNodeData data,
+  VirtualWidget? parent,
+  VirtualWidgetRegistry registry,
+) =>
+    flexBuilder(Axis.horizontal, data, parent, registry);
+
+VWFlex flexBuilder(
+  Axis direction,
+  VWNodeData data,
+  VirtualWidget? parent,
+  VirtualWidgetRegistry registry,
+) {
+  return VWFlex(
+    direction: direction,
+    props: data.props,
+    commonProps: data.commonProps,
+    parent: parent,
+    repeatData: data.repeatData,
+    childGroups: _createChildGroups(data.childGroups, parent, registry),
+    refName: data.refName,
+  );
+}
+
+VWFlexFit flexFitBuilder(
+  VWNodeData data,
+  VirtualWidget? parent,
+  VirtualWidgetRegistry registry,
+) {
+  return VWFlexFit(
+    props: data.props,
+    parent: parent,
+    refName: data.refName,
+    childGroups: _createChildGroups(data.childGroups, parent, registry),
   );
 }
 
@@ -340,7 +389,6 @@ VWExpandable expandableBuilder(
     parent: parent,
     refName: data.refName,
     childGroups: _createChildGroups(data.childGroups, parent, registry),
-    repeatData: data.repeatData,
   );
 }
 
@@ -395,7 +443,18 @@ VWTimer timerBuilder(
   );
 }
 
-VWStreamBuilder streamBuilder(
+VWAsyncBuilder asyncBuilderBuilder(
+    VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
+  return VWAsyncBuilder(
+    props: data.props,
+    commonProps: data.commonProps,
+    parent: parent,
+    refName: data.refName,
+    childGroups: _createChildGroups(data.childGroups, parent, registry),
+  );
+}
+
+VWStreamBuilder streamBuilderBuilder(
     VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
   return VWStreamBuilder(
     props: data.props,
