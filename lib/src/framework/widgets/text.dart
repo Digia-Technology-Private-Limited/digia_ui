@@ -17,13 +17,14 @@ class VWText extends VirtualLeafStatelessWidget {
 
   @override
   Widget render(RenderPayload payload) {
-    final text = payload.eval<String>(props['text']);
+    final text = payload.eval<String>(props.get('text'));
     final style = toTextStyle(
-        DUITextStyle.fromJson(props['textStyle']), payload.buildContext);
-    final maxLines = payload.eval<int>(props['maxLines']);
-    final textAlign = DUIDecoder.toTextAlign(payload.eval(props['alignment']));
+        DUITextStyle.fromJson(props.get('textStyle')), payload.buildContext);
+    final maxLines = payload.eval<int>(props.get('maxLines'));
+    final textAlign =
+        DUIDecoder.toTextAlign(payload.eval(props.get('alignment')));
 
-    if (props['overflow'] == 'marquee') {
+    if (props.get('overflow') == 'marquee') {
       return Marquee(
         pause: Duration.zero,
         delay: Duration.zero,
@@ -35,7 +36,7 @@ class VWText extends VirtualLeafStatelessWidget {
     }
 
     final overflow =
-        DUIDecoder.toTextOverflow(payload.eval<String>(props['overflow']));
+        DUIDecoder.toTextOverflow(payload.eval<String>(props.get('overflow')));
     return Text(
       text.toString(),
       style: style,

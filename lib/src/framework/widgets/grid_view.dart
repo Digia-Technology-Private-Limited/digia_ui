@@ -4,11 +4,11 @@ import 'package:flutter/widgets.dart';
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
 import '../core/extensions.dart';
 import '../core/virtual_stateless_widget.dart';
-import '../internal_widgets/internal_list_view.dart';
+import '../internal_widgets/internal_grid_view.dart';
 import '../render_payload.dart';
 
-class VWListView extends VirtualStatelessWidget {
-  VWListView({
+class VWGridView extends VirtualStatelessWidget {
+  VWGridView({
     required super.props,
     required super.commonProps,
     required super.childGroups,
@@ -23,24 +23,22 @@ class VWListView extends VirtualStatelessWidget {
   Widget render(RenderPayload payload) {
     if (children == null || children!.isEmpty) return empty();
 
-    final reverse = payload.eval<bool>(props.get('reverse')) ?? false;
-    final scrollDirection = DUIDecoder.toAxis(props.get('scrollDirection'),
-        defaultValue: Axis.vertical);
     final physics = DUIDecoder.toScrollPhysics(props.get('allowScroll'));
     final shrinkWrap = props.getBool('shrinkWrap') ?? false;
-
-    final initialScrollPosition =
-        payload.eval<String>(props.get('initialScrollPosition'));
+    final gridDelegate = SliverGridDelegateWithFixedCrossAxisCount(
+      crossAxisCount: props.getInt('crossAxisCount') ?? 2,
+      mainAxisSpacing: props.getDouble('mainAxisSpacing') ?? 0.0,
+      crossAxisSpacing: props.getDouble('crossAxisSpacing') ?? 0.0,
+      childAspectRatio: props.getDouble('childAspectRatio') ?? 1.0,
+    );
 
     if (shouldRepeatChild) {
       final childToRepeat = children!.first;
       final items = payload.evalRepeatData(repeatData!);
-      return InternalListView(
-        reverse: reverse,
-        scrollDirection: scrollDirection,
+      return InternalGridView(
         physics: physics,
         shrinkWrap: shrinkWrap,
-        initialScrollPosition: initialScrollPosition,
+        gridDelegate: gridDelegate,
         itemCount: items.length,
         itemBuilder: (buildContext, index) => childToRepeat.toWidget(
           payload.copyWithChainedContext(
@@ -50,12 +48,10 @@ class VWListView extends VirtualStatelessWidget {
       );
     }
 
-    return InternalListView(
-      reverse: reverse,
-      scrollDirection: scrollDirection,
+    return InternalGridView(
       physics: physics,
       shrinkWrap: shrinkWrap,
-      initialScrollPosition: initialScrollPosition,
+      gridDelegate: gridDelegate,
       children: children?.toWidgetArray(payload) ?? [],
     );
   }

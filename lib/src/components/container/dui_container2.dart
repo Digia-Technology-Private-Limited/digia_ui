@@ -32,7 +32,7 @@ class DUIContainer2 extends StatelessWidget {
 
     BoxShape shape =
         props.shape == 'circle' ? BoxShape.circle : BoxShape.rectangle;
-    final gradiant = toGradiant(props.gradiant, context);
+    final gradiant = toGradient(props.gradiant, context);
     final elevation = props.elevation ?? 0.0;
 
     Widget container = Container(
@@ -107,7 +107,7 @@ BorderWithPattern? _toBorderWithPattern(
   final dashPattern =
       DUIDecoder.toDashPattern(border.borderType?.dashPattern) ?? const [3, 1];
   final strokeCap = border.borderType?.strokeCap ?? StrokeCap.butt;
-  final borderGradiant = toGradiant(border.borderGradiant, context);
+  final borderGradiant = toGradient(border.borderGradiant, context);
 
   final borderPattern = border.borderType?.borderPattern ?? BorderPattern.solid;
   final strokeAlign = border.strokeAlign ?? StrokeAlign.center;

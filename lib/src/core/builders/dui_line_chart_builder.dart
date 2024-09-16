@@ -79,7 +79,7 @@ BarAreaData? _toBelowbarData(
   return BarAreaData(
       show: eval<bool>(props['show'], context: context) ?? false,
       color: makeColor(eval<String>(props['color'], context: context)),
-      gradient: toGradiant(
+      gradient: toGradient(
           tryCast<Map<String, dynamic>>(props['gradiant']), context));
 }
 

@@ -1,10 +1,11 @@
+import 'props.dart';
 import 'vw_repeat_data.dart';
 
 class VWNodeData {
   final String category;
   final String type;
-  final Map<String, dynamic> props;
-  final Map<String, dynamic>? commonProps;
+  final Props props;
+  final Props? commonProps;
   final Map<String, List<VWNodeData>>? childGroups;
   final VWRepeatData? repeatData;
   final String? refName;

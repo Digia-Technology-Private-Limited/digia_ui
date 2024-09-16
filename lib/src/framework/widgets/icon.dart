@@ -2,7 +2,6 @@ import 'package:flutter/widgets.dart';
 
 import '../../Utils/util_functions.dart';
 import '../../components/dui_icons/icon_helpers/icon_data_serialization.dart';
-import '../../components/dui_widget_scope.dart';
 import '../core/virtual_leaf_stateless_widget.dart';
 import '../render_payload.dart';
 
@@ -16,21 +15,22 @@ class VWIcon extends VirtualLeafStatelessWidget {
 
   @override
   Widget render(RenderPayload payload) {
-    if (props['iconData'] == null) {
-      return const SizedBox.shrink();
-    }
+    final iconConfig = props.getMap('iconData');
+    if (iconConfig == null) return empty();
 
-    final scope = DUIWidgetScope.maybeOf(payload.buildContext);
-    var iconData = scope?.iconDataProvider?.call(props['iconData']);
+    var iconData = payload.getIcon(iconConfig);
 
-    iconData ??= getIconData(icondataMap: props['iconData']);
+    iconData ??= getIconData(icondataMap: iconConfig);
+
+    final iconSize = payload.eval<double>(props.get('iconSize'));
+    final iconColor = makeColor(
+      payload.eval<String>(props.get('iconColor')),
+    );
 
     return Icon(
       iconData,
-      size: payload.eval<double>(props['iconSize']),
-      color: makeColor(
-        payload.eval<String>(props['iconColor']),
-      ),
+      size: iconSize,
+      color: iconColor,
     );
   }
 }
