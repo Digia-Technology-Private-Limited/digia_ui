@@ -35,27 +35,6 @@ ExprContext createScope(BuildContext context, ExprContext? localScope) {
       },
       enclosing: globalScope);
 
-  // Prepare Component Level Vars
-  final componentState = context.read<DUIComponentBloc>().state;
-  final componentWidgetVariables = componentState.widgetVars.map((k, v) =>
-      MapEntry(
-          k,
-          ExprClassInstance(
-              klass: ExprClass(
-                  name: k,
-                  fields: v.map((k1, v1) => MapEntry(k1, v1())),
-                  methods: {}))));
-  ExprContext? componentScope = ExprContext(
-      name: 'component/${componentState.componentUid}',
-      variables: {
-        'componentState':
-            componentState.props.variables?.map((k, v) => MapEntry(k, v.value)),
-        'componentParams': componentState.props.inputArgs?.map((key, value) =>
-            MapEntry(key, pageState.pageArgs?[key] ?? value.value)),
-        ...componentWidgetVariables,
-      },
-      enclosing: pageScope);
-
   // Index scope for ListViews/GridViews
   final indexScope = ifNotNull(IndexedItemWidgetBuilder.maybeOf(context), (p0) {
         return ExprContext(
@@ -76,10 +55,5 @@ ExprContext createScope(BuildContext context, ExprContext? localScope) {
       indexScope;
 
   // Wrap the scope chain from above over localSCope
-  return ifNotNull(
-          localScope,
-          ((p0) => p0
-            ..appendEnclosing(componentScope)
-            ..appendEnclosing(bScope))) ??
-      bScope;
+  return ifNotNull(localScope, ((p0) => p0..appendEnclosing(bScope))) ?? bScope;
 }
