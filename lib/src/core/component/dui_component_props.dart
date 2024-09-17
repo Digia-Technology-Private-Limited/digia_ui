@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import '../../../digia_ui.dart';
+import '../../framework/models/vw_node_data.dart';
 import '../../models/variable_def.dart';
 import '../action/action_prop.dart';
 
@@ -14,7 +14,6 @@ class DUIComponentProps {
   Map<String, VariableDef>? inputArgs;
   @VariablesJsonConverter()
   Map<String, VariableDef>? variables;
-  @ComponentLayoutJsonConverter()
   ComponentLayoutProps? layout;
 
   DUIComponentProps({
@@ -34,37 +33,41 @@ class DUIComponentProps {
   ActionFlow? get onBackPress => actions['onBackPress'];
 }
 
+@JsonSerializable()
 class ComponentLayoutProps {
-  DUIWidgetJsonData root;
+  VWNodeData root;
 
   ComponentLayoutProps({
     required this.root,
   });
+
+  factory ComponentLayoutProps.fromJson(Map<String, dynamic> json) =>
+      _$ComponentLayoutPropsFromJson(json);
 }
 
-class ComponentLayoutJsonConverter
-    extends JsonConverter<ComponentLayoutProps?, Map<String, dynamic>?> {
-  const ComponentLayoutJsonConverter();
+// class ComponentLayoutJsonConverter
+//     extends JsonConverter<ComponentLayoutProps?, Map<String, dynamic>?> {
+//   const ComponentLayoutJsonConverter();
 
-  @override
-  ComponentLayoutProps? fromJson(Map<String, dynamic>? json) {
-    if (json == null) return null;
+//   @override
+//   ComponentLayoutProps? fromJson(Map<String, dynamic>? json) {
+//     if (json == null) return null;
 
-    /// If empty, show Container with no child
-    if (json.isEmpty) {
-      return ComponentLayoutProps(
-          root: DUIWidgetJsonData(type: 'digia/container', children: {}));
-    }
+//     /// If empty, show Container with no child
+//     if (json.isEmpty) {
+//       return ComponentLayoutProps(
+//           root: DUIWidgetJsonData(type: 'digia/container', children: {}));
+//     }
 
-    if (json['root'] != null) {
-      return ComponentLayoutProps(
-          root: DUIWidgetJsonData.fromJson(json['root']));
-    }
-    return null;
-  }
+//     if (json['root'] != null) {
+//       return ComponentLayoutProps(
+//           root: DUIWidgetJsonData.fromJson(json['root']));
+//     }
+//     return null;
+//   }
 
-  @override
-  toJson(ComponentLayoutProps? object) {
-    return null;
-  }
-}
+//   @override
+//   toJson(ComponentLayoutProps? object) {
+//     return null;
+//   }
+// }

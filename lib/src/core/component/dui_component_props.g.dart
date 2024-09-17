@@ -18,8 +18,10 @@ DUIComponentProps _$DUIComponentPropsFromJson(Map<String, dynamic> json) =>
       variables: _$JsonConverterFromJson<Map<String, dynamic>,
               Map<String, VariableDef>>(
           json['variables'], const VariablesJsonConverter().fromJson),
-      layout: const ComponentLayoutJsonConverter()
-          .fromJson(json['layout'] as Map<String, dynamic>?),
+      layout: json['layout'] == null
+          ? null
+          : ComponentLayoutProps.fromJson(
+              json['layout'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$DUIComponentPropsToJson(DUIComponentProps instance) =>
@@ -32,7 +34,7 @@ Map<String, dynamic> _$DUIComponentPropsToJson(DUIComponentProps instance) =>
       'variables':
           _$JsonConverterToJson<Map<String, dynamic>, Map<String, VariableDef>>(
               instance.variables, const VariablesJsonConverter().toJson),
-      'layout': const ComponentLayoutJsonConverter().toJson(instance.layout),
+      'layout': instance.layout,
     };
 
 Value? _$JsonConverterFromJson<Json, Value>(
@@ -46,3 +48,9 @@ Json? _$JsonConverterToJson<Json, Value>(
   Json? Function(Value value) toJson,
 ) =>
     value == null ? null : toJson(value);
+
+ComponentLayoutProps _$ComponentLayoutPropsFromJson(
+        Map<String, dynamic> json) =>
+    ComponentLayoutProps(
+      root: VWNodeData.fromJson(json['root'] as Map<String, dynamic>),
+    );
