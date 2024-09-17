@@ -2,13 +2,13 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
 
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
-import '../../Utils/basic_shared_utils/lodash.dart';
 import '../../Utils/util_functions.dart';
 import '../../components/DUIText/dui_text_style.dart';
 import '../../core/action/action_handler.dart';
 import '../../core/action/action_prop.dart';
 import '../core/virtual_leaf_stateless_widget.dart';
 import '../render_payload.dart';
+import '../utils/functional_util.dart';
 
 class VWRichText extends VirtualLeafStatelessWidget {
   VWRichText({
@@ -38,10 +38,8 @@ class VWRichText extends VirtualLeafStatelessWidget {
       overflow: overflow,
       textAlign: textAlign,
       text: TextSpan(
-        style: ifNotNull(
-            styleJson,
-            (p0) => toTextStyle(
-                DUITextStyle.fromJson(styleJson), payload.buildContext)),
+        style: styleJson.maybe((p0) => toTextStyle(
+            DUITextStyle.fromJson(styleJson), payload.buildContext)),
         children: spanChildren,
       ),
     );
@@ -70,10 +68,8 @@ class VWRichText extends VirtualLeafStatelessWidget {
             final styleJson =
                 span['spanStyle'] ?? span['textStyle'] ?? span['style'];
 
-            style = ifNotNull(
-                styleJson,
-                (p0) => toTextStyle(
-                    DUITextStyle.fromJson(p0), payload.buildContext));
+            style = styleJson.maybe((p0) =>
+                toTextStyle(DUITextStyle.fromJson(p0), payload.buildContext));
           }
 
           if (text == null) return null;
@@ -81,14 +77,12 @@ class VWRichText extends VirtualLeafStatelessWidget {
           return TextSpan(
               text: text,
               style: style,
-              recognizer: ifNotNull(
-                  span['onClick'],
-                  (p0) => TapGestureRecognizer()
-                    ..onTap = () async {
-                      final onClick = ActionFlow.fromJson(span['onClick']);
-                      await ActionHandler.instance.execute(
-                          context: payload.buildContext, actionFlow: onClick);
-                    }));
+              recognizer: span['onClick'].maybe((p0) => TapGestureRecognizer()
+                ..onTap = () async {
+                  final onClick = ActionFlow.fromJson(span['onClick']);
+                  await ActionHandler.instance.execute(
+                      context: payload.buildContext, actionFlow: onClick);
+                }));
         })
         .nonNulls
         .toList();

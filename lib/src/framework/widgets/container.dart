@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
-import '../../Utils/basic_shared_utils/lodash.dart';
 import '../../Utils/basic_shared_utils/types.dart';
 import '../../Utils/extensions.dart';
 import '../../Utils/util_functions.dart';
@@ -10,6 +9,7 @@ import '../../components/border/box_border_with_pattern/border_with_pattern.dart
 import '../core/virtual_stateless_widget.dart';
 import '../models/props.dart';
 import '../render_payload.dart';
+import '../utils/functional_util.dart';
 
 class VWContainer extends VirtualStatelessWidget {
   VWContainer({
@@ -83,7 +83,7 @@ class VWContainer extends VirtualStatelessWidget {
 }
 
 DecorationImage? _toDecorationImage(RenderPayload payload, Props? props) {
-  ImageProvider? imageProvider = props?.getString('source').let((source) {
+  ImageProvider? imageProvider = props!.getString('source').maybe((source) {
     if (source.contains('http')) {
       return CachedNetworkImageProvider(source);
     }
@@ -93,14 +93,14 @@ DecorationImage? _toDecorationImage(RenderPayload payload, Props? props) {
 
   if (imageProvider == null) return null;
 
-  final imageAlignment = DUIDecoder.toAlignment(props?.get('alignment'));
-  final imageOpacity = payload.eval<double>(props?.get('opacity'));
+  final imageAlignment = DUIDecoder.toAlignment(props.get('alignment'));
+  final imageOpacity = payload.eval<double>(props.get('opacity'));
 
   return DecorationImage(
       opacity: imageOpacity ?? 1.0,
       image: imageProvider,
       alignment: imageAlignment ?? Alignment.center,
-      fit: DUIDecoder.toBoxFit(props?.get('fit')));
+      fit: DUIDecoder.toBoxFit(props.get('fit')));
 }
 
 BorderWithPattern? _toBorderWithPattern(RenderPayload payload, Props props) {

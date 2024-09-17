@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import '../../Utils/basic_shared_utils/date_decoder.dart';
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
-import '../../Utils/basic_shared_utils/lodash.dart';
 import '../../Utils/util_functions.dart';
 import '../../components/DUIText/dui_text_style.dart';
 import '../core/virtual_leaf_stateless_widget.dart';
 import '../internal_widgets/internal_calendar.dart';
 import '../models/props.dart';
 import '../render_payload.dart';
+import '../utils/functional_util.dart';
 import 'icon.dart';
 
 class VWCalendar extends VirtualLeafStatelessWidget {
@@ -53,12 +53,12 @@ class VWCalendar extends VirtualLeafStatelessWidget {
     late DateTime focusedDay;
 
     if (rangeSelectionMode == RangeSelectionMode.enforced) {
-      final selectedRange = ifNotNull2(
-          DateDecoder.toDate(payload.eval<String>(
-              props.get('rangeSelectionMode.rangeStartDateInitialValue'))),
-          DateDecoder.toDate(payload.eval<String>(
-              props.get('rangeSelectionMode.rangeEndDateInitialValue'))),
-          (p0, p1) => (start: p0, end: p1));
+      final selectedRange = (
+        DateDecoder.toDate(payload.eval<String>(
+            props.get('rangeSelectionMode.rangeStartDateInitialValue'))),
+        DateDecoder.toDate(payload.eval<String>(
+            props.get('rangeSelectionMode.rangeEndDateInitialValue')))
+      ).maybe((p0, p1) => (start: p0, end: p1));
 
       selectedRangeStart = selectedRange?.start;
       selectedRangeEnd = selectedRange?.end;
@@ -66,10 +66,8 @@ class VWCalendar extends VirtualLeafStatelessWidget {
       focusedDay = selectedRangeStart ?? DateTime.now();
     }
     if (rangeSelectionMode == RangeSelectionMode.disabled) {
-      selectedDate = ifNotNull(
-          DateDecoder.toDate(payload
-              .eval<String>(props.get('rangeSelectionMode.selectedDate'))),
-          (p0) => p0);
+      selectedDate = DateDecoder.toDate(
+          payload.eval<String>(props.get('rangeSelectionMode.selectedDate')));
 
       focusedDay = selectedDate ?? DateTime.now();
     }
