@@ -1,4 +1,5 @@
 import 'builders.dart';
+import 'core/virtual_state_container_widget.dart';
 import 'core/virtual_widget.dart';
 import 'models/vw_node_data.dart';
 
@@ -105,6 +106,16 @@ class VirtualWidgetRegistry {
   VirtualWidgetRegistry._internal();
 
   VirtualWidget createWidget(VWNodeData data, VirtualWidget? parent) {
+    if (data.category == 'state_container') {
+      final child = data.childGroups?.entries.first.value.first;
+      return VirtualStateContainerWidget(
+        refName: data.refName,
+        parent: parent,
+        initialState: {},
+        child: child == null ? null : createWidget(child, parent),
+      );
+    }
+
     String type = data.type;
     if (!_builders.containsKey(type)) {
       throw Exception('Unknown widget type: $type');

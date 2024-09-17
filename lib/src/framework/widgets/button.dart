@@ -26,7 +26,7 @@ class VWButton extends VirtualLeafStatelessWidget {
     ButtonStyle style = ButtonStyle(
       shape: WidgetStateProperty.all(toButtonShape(props.get('shape'))),
       padding: WidgetStateProperty.all(DUIDecoder.toEdgeInsets(
-        defaultStyleJson.getMap('padding'),
+        defaultStyleJson.get('padding'),
         or: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
       )),
       elevation: WidgetStateProperty.all(
@@ -91,7 +91,7 @@ class VWButton extends VirtualLeafStatelessWidget {
 
     text = VWText(
       props: Props(localProps['text'] as Map<String, Object?>? ?? {}),
-      commonProps: commonProps,
+      commonProps: null,
       parent: this,
     ).toWidget(payload);
 
@@ -106,7 +106,7 @@ class VWButton extends VirtualLeafStatelessWidget {
       leadingIcon = VWIcon(
         props: Props(leadingIconProps),
         commonProps: null,
-        parent: null,
+        parent: this,
       ).toWidget(payload);
     }
 
@@ -122,7 +122,7 @@ class VWButton extends VirtualLeafStatelessWidget {
       trailingIcon = VWIcon(
         props: Props(trailingIconProps),
         commonProps: null,
-        parent: null,
+        parent: this,
       ).toWidget(payload);
     }
 

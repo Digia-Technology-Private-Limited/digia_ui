@@ -114,10 +114,10 @@ class VWImage extends VirtualLeafStatelessWidget {
               errorBuilder: (context, error, stackTrace) {
                 final errorImage = props.getString('errorImage');
                 if (errorImage == null) {
-                  return const Center(
-                    child: Icon(
-                      Icons.error_outline,
-                      color: Colors.red,
+                  return Center(
+                    child: Text(
+                      error.toString(),
+                      style: const TextStyle(color: Colors.red),
                     ),
                   );
                 }

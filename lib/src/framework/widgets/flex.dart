@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
 import '../core/extensions.dart';
+import '../core/virtual_leaf_stateless_widget.dart';
 import '../core/virtual_stateless_widget.dart';
 import '../core/virtual_widget.dart';
 import '../render_payload.dart';
@@ -63,7 +64,7 @@ class VWFlex extends VirtualStatelessWidget {
   VirtualWidget _wrapInFlexFitForBackwardCompat(
       VirtualWidget childVirtualWidget) {
     // Ignore if widget is already wrapped in FlexFit
-    if (childVirtualWidget is! VirtualStatelessWidget ||
+    if (childVirtualWidget is! VirtualLeafStatelessWidget ||
         childVirtualWidget is VWFlexFit) {
       return childVirtualWidget;
     }
