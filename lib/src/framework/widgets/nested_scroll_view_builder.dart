@@ -1,10 +1,10 @@
 import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/widgets.dart';
 
-import '../../Utils/basic_shared_utils/lodash.dart';
 import '../../Utils/extensions.dart';
 import '../core/virtual_stateless_widget.dart';
 import '../render_payload.dart';
+import '../utils/functional_util.dart';
 
 class VWNestedScrollView extends VirtualStatelessWidget {
   VWNestedScrollView({
@@ -38,7 +38,7 @@ class VWNestedScrollView extends VirtualStatelessWidget {
       return const SliverToBoxAdapter(child: SizedBox.shrink());
     }
 
-    final headerWidget = headerWidgetData.let((e) {
+    final headerWidget = headerWidgetData.maybe((e) {
       if (e.isNullOrEmpty) return null;
 
       return e.first.toWidget(payload
