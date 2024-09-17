@@ -436,7 +436,6 @@ VWStreamBuilder streamBuilderBuilder(
     parent: parent,
     refName: data.refName,
     childGroups: _createChildGroups(data.childGroups, parent, registry),
-    repeatData: data.repeatData,
   );
 }
 
