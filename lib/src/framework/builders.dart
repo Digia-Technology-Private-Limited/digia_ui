@@ -33,6 +33,7 @@ import 'widgets/safe_area.dart';
 import 'widgets/sized_box.dart';
 import 'widgets/spacer.dart';
 // import 'widgets/stack.dart';
+import 'widgets/stepper.dart';
 import 'widgets/stream_builder.dart';
 import 'widgets/styled_horizontal_divider.dart';
 import 'widgets/styled_vertical_divider.dart';
@@ -487,5 +488,17 @@ VWOpacity opacityBuilder(
     refName: data.refName,
     childGroups: _createChildGroups(data.childGroups, parent, registry),
     repeatData: data.repeatData,
+  );
+}
+
+VWStepper flutterStepperBuilder(
+    VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
+  return VWStepper(
+    props: data.props,
+    commonProps: data.commonProps,
+    parent: parent,
+    repeatData: data.repeatData,
+    childGroups: _createChildGroups(data.childGroups, parent, registry),
+    refName: data.refName,
   );
 }

@@ -10,8 +10,8 @@ import '../models/props.dart';
 import '../render_payload.dart';
 import 'icon.dart';
 
-class VWListView extends VirtualStatelessWidget {
-  VWListView({
+class VWStepper extends VirtualStatelessWidget {
+  VWStepper({
     required super.props,
     required super.commonProps,
     required super.childGroups,

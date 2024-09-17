@@ -54,7 +54,7 @@ class VirtualWidgetRegistry {
     'digia/expandable': expandableBuilder,
     'digia/refreshIndicator': refreshIndicatorBuilder,
     // 'digia/stepper': stepperBuilder,
-    // 'digia/flutterStepper': flutterStepperBuilder,
+    'digia/flutterStepper': flutterStepperBuilder,
     // 'digia/pinField': pinFieldBuilder,
     'digia/calendar': calendarBuilder,
 
