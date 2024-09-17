@@ -15,8 +15,7 @@ class VWStreamBuilder extends VirtualStatelessWidget {
     required super.childGroups,
     required super.parent,
     super.refName,
-    required super.repeatData,
-  });
+  }) : super(repeatData: null);
 
   @override
   Widget render(RenderPayload payload) {
