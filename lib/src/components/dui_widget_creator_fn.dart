@@ -28,10 +28,13 @@ Widget wrapInContainer(
       DUIDecoder.toBorderRadius(styleClass.border?.borderRadius?.toJson());
   final border = toBorder(styleClass.border, context);
   if (!(bgColor == null && borderRadius.isZero() && border == null)) {
-    current = DecoratedBox(
-      decoration: BoxDecoration(
-          color: bgColor, border: border, borderRadius: borderRadius),
-      child: current,
+    current = ClipRRect(
+      borderRadius: borderRadius,
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+            color: bgColor, border: border, borderRadius: borderRadius),
+        child: current,
+      ),
     );
   }
 
