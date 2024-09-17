@@ -37,6 +37,7 @@ import 'widgets/stream_builder.dart';
 import 'widgets/styled_horizontal_divider.dart';
 import 'widgets/styled_vertical_divider.dart';
 import 'widgets/switch.dart';
+import 'widgets/tab_view.dart';
 import 'widgets/text.dart';
 import 'widgets/timer.dart';
 import 'widgets/vertical_divider.dart';
@@ -490,9 +491,9 @@ VWOpacity opacityBuilder(
   );
 }
 
-VWGridView tabViewBuilder(
+VWTabView tabViewBuilder(
     VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
-  return VWGridView(
+  return VWTabView(
     props: data.props,
     commonProps: data.commonProps,
     parent: parent,
