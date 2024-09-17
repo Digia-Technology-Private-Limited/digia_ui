@@ -35,10 +35,12 @@ class VirtualWidgetRegistry {
     // 'digia/textFormField': textFormFieldBuilder,
 
     // Navigation and Structure
-    // 'digia/scaffold': scaffoldBuilder,
-    // 'digia/appBar': appBarBuilder,
+    'digia/scaffold': scaffoldBuilder,
+    'fw/scaffold': scaffoldBuilder,
+    'fw/appBar': appBarBuilder,
+    'digia/appBar': appBarBuilder,
     // 'digia/sliverAppBar': sliverAppBarBuilder,
-    // 'digia/drawer': drawerBuilder,
+    'digia/drawer': drawerBuilder,
     // 'digia/tabView': tabViewBuilder,
     // 'digia/tabViewItem': tabViewItemBuilder,
     // 'digia/navigationBarItem': navigationBarItemBuilder,
