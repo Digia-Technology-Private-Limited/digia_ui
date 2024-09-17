@@ -237,7 +237,6 @@ VWStack stackBuilder(
     props: data.props,
     commonProps: data.commonProps,
     parent: parent,
-    repeatData: data.repeatData,
     childGroups: _createChildGroups(data.childGroups, parent, registry),
     refName: data.refName,
   );

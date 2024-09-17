@@ -1,10 +1,10 @@
 import 'package:flutter/widgets.dart';
 
-import '../../components/utils/DUIInsets/dui_insets.dart';
 import '../core/virtual_stateless_widget.dart';
 import '../core/virtual_widget.dart';
 import '../models/props.dart';
 import '../render_payload.dart';
+import '../utils/type_aliases.dart';
 
 class VWPositioned extends VirtualStatelessWidget {
   VWPositioned({
@@ -20,11 +20,10 @@ class VWPositioned extends VirtualStatelessWidget {
   VWPositioned.fromValues({
     required VirtualWidget child,
     required VirtualWidget? parent,
-    required DUIInsets position,
+    required JsonLike position,
   }) : this(
           props: Props({
             'position': position,
-            'hasPosition': true,
           }),
           parent: parent,
           childGroups: {
@@ -34,14 +33,14 @@ class VWPositioned extends VirtualStatelessWidget {
 
   @override
   Widget render(RenderPayload payload) {
-    final position = DUIInsets.fromJson(props.get('position'));
-    final childWidget = child!.toWidget(payload);
+    if (child == null) return empty();
+
     return Positioned(
-      top: double.tryParse(position.top),
-      bottom: double.tryParse(position.bottom),
-      left: double.tryParse(position.left),
-      right: double.tryParse(position.right),
-      child: childWidget,
+      top: props.getDouble('position.top'),
+      bottom: props.getDouble('position.bottom'),
+      left: props.getDouble('position.left'),
+      right: props.getDouble('position.right'),
+      child: child!.toWidget(payload),
     );
   }
 }
