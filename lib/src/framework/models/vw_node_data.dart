@@ -36,7 +36,11 @@ class VWNodeData {
           ['children', 'composites', 'childGroups'],
           parse: _parseVWNodeDataMap,
         ),
-        repeatData: VWRepeatData.fromJson(json),
+        repeatData: tryKeys(
+          json,
+          ['dataRef', 'repeatData'],
+          parse: VWRepeatData.fromJson,
+        ),
         refName: tryKeys<String>(json, ['varName', 'refName']));
   }
 
