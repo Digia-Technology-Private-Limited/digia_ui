@@ -489,3 +489,15 @@ VWOpacity opacityBuilder(
     repeatData: data.repeatData,
   );
 }
+
+VWGridView tabViewBuilder(
+    VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
+  return VWGridView(
+    props: data.props,
+    commonProps: data.commonProps,
+    parent: parent,
+    repeatData: data.repeatData,
+    childGroups: _createChildGroups(data.childGroups, parent, registry),
+    refName: data.refName,
+  );
+}
