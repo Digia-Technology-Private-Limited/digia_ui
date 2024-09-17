@@ -30,15 +30,17 @@ class VWTimer extends VirtualStatelessWidget {
       seconds: payload.eval<int>(props.get('updateInterval')) ?? 1,
     );
 
+    final initialValue = payload.eval<int>(props.get('initialValue')) ?? 0;
+
     bool isCountDown = timerType == _countDownTimerTypeValue;
 
     return StreamBuilder(
-      initialData: isCountDown ? duration : 0,
+      initialData: isCountDown ? duration : initialValue,
       stream: Stream.periodic(
         updateIntervalInSeconds,
-        (i) => isCountDown ? duration - i : i,
+        (i) => isCountDown ? duration - i : initialValue + i,
       ).takeWhile(
-        (i) => isCountDown ? i >= 0 : i <= duration,
+        (i) => isCountDown ? duration - i >= 0 : initialValue + i <= duration,
       ),
       builder: (context, snapshot) {
         if (snapshot.hasError) return empty();
@@ -52,6 +54,11 @@ class VWTimer extends VirtualStatelessWidget {
         }
 
         if (snapshot.hasData) {
+          final onTickAction = ActionFlow.fromJson(props.get('onTick'));
+          Future.delayed(Duration.zero, () async {
+            await ActionHandler.instance
+                .execute(context: context, actionFlow: onTickAction);
+          });
           return child!.toWidget(payload
               .copyWithChainedContext(_createExprContext(snapshot.data!)));
         }

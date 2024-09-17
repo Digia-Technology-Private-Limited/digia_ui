@@ -3,10 +3,10 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
-import '../../Utils/basic_shared_utils/lodash.dart';
 import '../../Utils/util_functions.dart';
 import '../core/virtual_leaf_stateless_widget.dart';
 import '../render_payload.dart';
+import '../utils/functional_util.dart';
 
 class VWCircularProgressBar extends VirtualLeafStatelessWidget {
   VWCircularProgressBar({
@@ -30,7 +30,7 @@ class VWCircularProgressBar extends VirtualLeafStatelessWidget {
     final progressValue = payload.eval<double>(props.get('progressValue'));
 
     final rotationInRadians =
-        props.getDouble('angle')?.let((p0) => p0 / 180.0 * math.pi);
+        props.getDouble('angle').maybe((p0) => p0 / 180.0 * math.pi);
 
     return Transform.rotate(
       angle: rotationInRadians ?? 0.0,
