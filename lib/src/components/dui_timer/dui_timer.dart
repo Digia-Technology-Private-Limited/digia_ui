@@ -30,7 +30,7 @@ class _DUITimerState extends DUIWidgetState<DUITimer> {
   int duration = 60;
   Duration updateInterval = const Duration(seconds: 1);
   String timerType = 'countDown';
-  int initialValue = 0;
+  int startingPoint = 0;
   ActionFlow? onTimerEnd;
   ActionFlow? onTick;
 
@@ -43,8 +43,8 @@ class _DUITimerState extends DUIWidgetState<DUITimer> {
             eval<int>(widget.props['updateInterval'], context: context) ?? 1);
     timerType = eval<String>(widget.props['timerType'], context: context) ??
         'countDown';
-    initialValue =
-        eval<int>(widget.props['initialValue'], context: context) ?? 0;
+    startingPoint =
+        eval<int>(widget.props['startingPoint'], context: context) ?? 0;
     onTimerEnd = ActionFlow.fromJson(widget.props['onTimerEnd']);
     onTick = ActionFlow.fromJson(widget.props['onTick']);
   }
@@ -60,17 +60,17 @@ class _DUITimerState extends DUIWidgetState<DUITimer> {
     // Handle case: duration is 0
     if (duration <= 0) {
       return BracketScope(
-        variables: [('tickValue', initialValue)],
+        variables: [('tickValue', startingPoint)],
         builder: DUIJsonWidgetBuilder(
             data: widget.child!, registry: DUIWidgetRegistry.shared),
       );
     }
 
     return StreamBuilder<int>(
-        initialData: initialValue,
+        initialData: startingPoint,
         stream: Stream.periodic(
           updateInterval,
-          (i) => isCountDown ? initialValue - i : initialValue + i,
+          (i) => isCountDown ? startingPoint - i : startingPoint + i,
         ).take(duration + 1),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
@@ -79,14 +79,14 @@ class _DUITimerState extends DUIWidgetState<DUITimer> {
 
           if (snapshot.connectionState == ConnectionState.done) {
             // Timer has ended
-            WidgetsBinding.instance.addPostFrameCallback((_) async {
+            Future.delayed(Duration.zero, () async {
               await ActionHandler.instance.execute(
                   context: context,
                   actionFlow: onTimerEnd ?? ActionFlow(actions: []));
             });
           } else if (snapshot.connectionState == ConnectionState.active) {
             // Timer is active
-            WidgetsBinding.instance.addPostFrameCallback((_) async {
+            Future.delayed(Duration.zero, () async {
               await ActionHandler.instance.execute(
                   context: context,
                   actionFlow: onTick ?? ActionFlow(actions: []));
@@ -94,7 +94,7 @@ class _DUITimerState extends DUIWidgetState<DUITimer> {
           }
 
           return BracketScope(
-            variables: [('tickValue', snapshot.data ?? initialValue)],
+            variables: [('tickValue', snapshot.data)],
             builder: DUIJsonWidgetBuilder(
                 data: widget.child!, registry: DUIWidgetRegistry.shared),
           );
