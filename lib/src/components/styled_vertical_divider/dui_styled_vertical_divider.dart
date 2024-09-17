@@ -27,7 +27,7 @@ class DUIStyledVerticalDivider extends StatelessWidget {
           DUIDecoder.toDashPattern(props.borderPattern?['dashPattern']) ??
               [3, 3],
       color: makeColor(props.colorType?['color']),
-      gradient: toGradiant(props.colorType?['gradiant'], context),
+      gradient: toGradient(props.colorType?['gradiant'], context),
     );
   }
 }

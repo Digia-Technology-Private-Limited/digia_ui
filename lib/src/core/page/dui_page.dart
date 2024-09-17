@@ -1,11 +1,14 @@
+import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../digia_ui.dart';
-import '../../Utils/basic_shared_utils/lodash.dart';
 import '../../Utils/extensions.dart';
 import '../../components/dui_widget_scope.dart';
+import '../../framework/render_payload.dart';
+import '../../framework/utils/functional_util.dart';
+import '../../framework/virtual_widget_registry.dart';
 import 'dui_page_event.dart';
 
 class DUIPage extends StatelessWidget {
@@ -33,10 +36,8 @@ class DUIPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) {
-        return DUIPageBloc(
-            pageUid: pageUid, config: _config, pageArgs: _pageArgs);
-      },
+      create: (context) =>
+          DUIPageBloc(pageUid: pageUid, config: _config, pageArgs: _pageArgs),
       child: DUIWidgetScope(
           iconDataProvider: iconDataProvider,
           imageProviderFn: imageProviderFn,
@@ -83,7 +84,12 @@ class _DUIScreenState extends State<_DUIScreen> {
               )));
             }
 
-            return state.props.layout?.root.let((p0) => DUIWidget(data: p0)) ??
+            return state.props.layout?.root
+                    .maybe((p0) =>
+                        VirtualWidgetRegistry.instance.createWidget(p0, null))
+                    ?.toWidget(RenderPayload(
+                        buildContext: context,
+                        exprContext: ExprContext(variables: {}))) ??
                 Center(
                     child: Text('Props not found for page: ${state.pageUid}'));
           }());

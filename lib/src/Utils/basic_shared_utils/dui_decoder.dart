@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
@@ -452,6 +453,13 @@ class DUIDecoder {
         _ => null
       };
 
+  static StrokeAlign? toStrokeAlign(dynamic string) => switch (string) {
+        'inside' => StrokeAlign.inside,
+        'outside' => StrokeAlign.outside,
+        'center' => StrokeAlign.center,
+        _ => null
+      };
+
   static BorderPattern? toBorderPattern(dynamic value) => switch (value) {
         'solid' => BorderPattern.solid,
         'dotted' => BorderPattern.dotted,
@@ -501,9 +509,7 @@ class DUIDecoder {
     }
   }
 
-  static Axis toAxis(String? value, {Axis defaultValue = Axis.horizontal}) {
-    if (value == null) return defaultValue;
-
+  static Axis toAxis(dynamic value, {Axis defaultValue = Axis.horizontal}) {
     switch (value) {
       case 'horizontal':
         return Axis.horizontal;
@@ -618,5 +624,51 @@ class DUIDecoder {
     if (parsed is! List) return null;
 
     return parsed.map((e) => NumDecoder.toDouble(e)).nonNulls.toList();
+  }
+
+  static ExpandablePanelBodyAlignment? toExpandablePanelBodyAlignment(
+      String? bodyAlignment) {
+    if (bodyAlignment == null) return null;
+
+    switch (bodyAlignment.toLowerCase()) {
+      case 'left':
+        return ExpandablePanelBodyAlignment.left;
+      case 'right':
+        return ExpandablePanelBodyAlignment.right;
+      case 'center':
+        return ExpandablePanelBodyAlignment.center;
+      default:
+        return ExpandablePanelBodyAlignment.left;
+    }
+  }
+
+  static ExpandablePanelIconPlacement? toExpandablePanelIconPlacement(
+      String? alignment) {
+    if (alignment == null) return null;
+
+    switch (alignment) {
+      case 'left':
+        return ExpandablePanelIconPlacement.left;
+      case 'right':
+        return ExpandablePanelIconPlacement.right;
+      default:
+        return ExpandablePanelIconPlacement.right;
+    }
+  }
+
+  static ExpandablePanelHeaderAlignment? toExpandablePanelHeaderAlignment(
+      String? alignment) {
+    if (alignment == null) return null;
+
+    switch (alignment.toLowerCase()) {
+      case 'top':
+        return ExpandablePanelHeaderAlignment.top;
+      case 'bottom':
+        return ExpandablePanelHeaderAlignment.bottom;
+      case 'center':
+        return ExpandablePanelHeaderAlignment.center;
+      default:
+        return ExpandablePanelHeaderAlignment.top;
+    }
   }
 }
