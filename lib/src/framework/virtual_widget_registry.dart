@@ -12,7 +12,7 @@ class VirtualWidgetRegistry {
     'digia/column': columnBuilder,
     'digia/row': rowBuilder,
     'digia/flexFit': flexFitBuilder,
-    // 'digia/stack': stackBuilder,
+    'digia/stack': stackBuilder,
     'digia/listView': listViewBuilder,
     'digia/gridView': gridViewBuilder,
     'digia/wrap': wrapBuilder,

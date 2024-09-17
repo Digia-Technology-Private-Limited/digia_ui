@@ -1,6 +1,4 @@
-// import 'package:flutter/rendering.dart';
-
-import 'package:flutter/widgets.dart';
+import 'package:flutter/painting.dart';
 
 import 'core/virtual_widget.dart';
 import 'models/vw_node_data.dart';
@@ -14,7 +12,6 @@ import 'widgets/checkbox.dart';
 import 'widgets/circular_progress_bar.dart';
 import 'widgets/container.dart';
 import 'widgets/expandable.dart';
-// import 'widgets/flex.dart';
 import 'widgets/flex.dart';
 import 'widgets/flex_fit.dart';
 import 'widgets/grid_view.dart';
@@ -32,7 +29,7 @@ import 'widgets/rich_text.dart';
 import 'widgets/safe_area.dart';
 import 'widgets/sized_box.dart';
 import 'widgets/spacer.dart';
-// import 'widgets/stack.dart';
+import 'widgets/stack.dart';
 import 'widgets/stream_builder.dart';
 import 'widgets/styled_horizontal_divider.dart';
 import 'widgets/styled_vertical_divider.dart';
@@ -234,17 +231,17 @@ VWLottie lottieBuilder(VWNodeData data, VirtualWidget? parent, _) {
   );
 }
 
-// VWStack stackBuilder(
-//     VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
-//   return VWStack(
-//     props: data.props,
-//     commonProps: data.commonProps,
-//     parent: parent,
-//     repeatData: data.repeatData,
-//     childGroups: _createChildGroups(data.childGroups, parent, registry),
-//     refName: data.refName,
-//   );
-// }
+VWStack stackBuilder(
+    VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
+  return VWStack(
+    props: data.props,
+    commonProps: data.commonProps,
+    parent: parent,
+    repeatData: data.repeatData,
+    childGroups: _createChildGroups(data.childGroups, parent, registry),
+    refName: data.refName,
+  );
+}
 
 VWVideoPlayer videoPlayerBuilder(VWNodeData data, VirtualWidget? parent, _) {
   return VWVideoPlayer(
@@ -357,29 +354,6 @@ VWAnimatedButton animatedButtonBuilder(
     refName: data.refName,
   );
 }
-
-// VWFlex flexBuilder(VWNodeData data, VirtualWidget? parent,
-//     VirtualWidgetRegistry registry, Axis direction) {
-//   return VWFlex(
-//     props: data.props,
-//     commonProps: data.commonProps,
-//     parent: parent,
-//     repeatData: data.repeatData,
-//     childGroups: _createChildGroups(data.childGroups, parent, registry),
-//     refName: data.refName,
-//     direction: direction,
-//   );
-// }
-
-// VWFlex rowBuilder(
-//     VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
-//   return flexBuilder(data, parent, registry, Axis.horizontal);
-// }
-
-// VWFlex columnBuilder(
-//     VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
-//   return flexBuilder(data, parent, registry, Axis.vertical);
-// }
 
 VWExpandable expandableBuilder(
     VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
