@@ -21,13 +21,14 @@ class VWSliverList extends VirtualStatelessWidget {
       if (children?.isEmpty ?? true) {
         return const SliverToBoxAdapter(child: SizedBox.shrink());
       }
+      final items = payload.evalRepeatData(repeatData!);
       return SliverList.builder(
-        itemCount: children?.length ?? 0,
+        itemCount: items.length,
         itemBuilder: (context, index) {
           final childToRepeat = children?.first;
           return childToRepeat?.toWidget(
             payload.copyWithChainedContext(
-              _createExprContext(children?[index], index),
+              _createExprContext(items[index], index),
             ),
           );
         },
