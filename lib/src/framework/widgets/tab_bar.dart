@@ -2,9 +2,8 @@ import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/material.dart';
 
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
-import '../../Utils/util_functions.dart';
-import '../core/extensions.dart';
 import '../../Utils/extensions.dart';
+import '../../Utils/util_functions.dart';
 import '../core/virtual_stateless_widget.dart';
 import '../internal_widgets/internal_tab_bar.dart';
 import '../render_payload.dart';
@@ -16,12 +15,12 @@ class VWTabBar extends VirtualStatelessWidget {
     required super.childGroups,
     required super.parent,
     super.refName,
-    super.repeatData,
-  });
+  }) : super(repeatData: null);
 
   @override
   Widget render(RenderPayload payload) {
     if (children == null || children!.isEmpty) return empty();
+
     final selectedWidget = List.castFrom(children!).map((child) {
       if (child is! VirtualStatelessWidget) return empty();
       return child.childrenOf('selectedWidget')?.first.render(payload);
