@@ -3,11 +3,11 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
-import '../../Utils/basic_shared_utils/lodash.dart';
 import '../../Utils/util_functions.dart';
 import '../core/virtual_leaf_stateless_widget.dart';
 import '../models/props.dart';
 import '../render_payload.dart';
+import '../utils/functional_util.dart';
 
 class VWHtmlView extends VirtualLeafStatelessWidget {
   VWHtmlView({
@@ -42,7 +42,7 @@ Style _makeStyle(RenderPayload payload, Props styleMap) {
   final textOverflow = DUIDecoder.toTextOverflow(
       payload.eval<String>(styleMap.get('textOverflow')));
 
-  final googleFont = (styleMap.get('fontFamily') as String?)?.let(
+  final googleFont = (styleMap.getString('fontFamily')).maybe(
     (p0) => GoogleFonts.getFont(p0,
         fontSize: payload.eval<double>(styleMap.get('fontSize')),
         fontStyle: DUIDecoder.toFontStyle(
