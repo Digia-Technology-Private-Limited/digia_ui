@@ -37,6 +37,9 @@ import 'widgets/stream_builder.dart';
 import 'widgets/styled_horizontal_divider.dart';
 import 'widgets/styled_vertical_divider.dart';
 import 'widgets/switch.dart';
+import 'widgets/tab_bar.dart';
+import 'widgets/tab_controller.dart';
+import 'widgets/tab_view_content.dart';
 import 'widgets/text.dart';
 import 'widgets/timer.dart';
 import 'widgets/vertical_divider.dart';
@@ -489,5 +492,40 @@ VWOpacity opacityBuilder(
     refName: data.refName,
     childGroups: _createChildGroups(data.childGroups, parent, registry),
     repeatData: data.repeatData,
+  );
+}
+
+VWTabController tabControllerBuilder(
+    VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
+  return VWTabController(
+    props: data.props,
+    commonProps: data.commonProps,
+    parent: parent,
+    childGroups: _createChildGroups(data.childGroups, parent, registry),
+    refName: data.refName,
+  );
+}
+
+VWTabBar tabBarBuilder(
+    VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
+  return VWTabBar(
+    props: data.props,
+    commonProps: data.commonProps,
+    parent: parent,
+    // repeatData: data.repeatData,
+    childGroups: _createChildGroups(data.childGroups, parent, registry),
+    refName: data.refName,
+  );
+}
+
+VWTabViewContent tabViewContentBuilder(
+    VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
+  return VWTabViewContent(
+    props: data.props,
+    commonProps: data.commonProps,
+    parent: parent,
+    // repeatData: data.repeatData,
+    childGroups: _createChildGroups(data.childGroups, parent, registry),
+    refName: data.refName,
   );
 }
