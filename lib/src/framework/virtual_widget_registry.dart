@@ -20,8 +20,8 @@ class VirtualWidgetRegistry {
     'digia/sizedBox': sizedBoxBuilder,
     'digia/spacer': spacerBuilder,
     'digia/safeArea': safeAreaBuilder,
-    // 'digia/customScrollView': customScrollViewBuilder,
-    // 'digia/nestedScrollView': nestedScrollViewBuilder,
+    'digia/customScrollView': customScrollViewBuilder,
+    'digia/nestedScrollView': nestedScrollViewBuilder,
 
     // Basic Widgets
     'digia/text': textBuilder,
@@ -37,7 +37,7 @@ class VirtualWidgetRegistry {
     // Navigation and Structure
     // 'digia/scaffold': scaffoldBuilder,
     // 'digia/appBar': appBarBuilder,
-    // 'digia/sliverAppBar': sliverAppBarBuilder,
+    'digia/sliverAppBar': sliverAppBarBuilder,
     // 'digia/drawer': drawerBuilder,
     // 'digia/tabView': tabViewBuilder,
     // 'digia/tabViewItem': tabViewItemBuilder,
@@ -68,11 +68,11 @@ class VirtualWidgetRegistry {
 
     // Data Display
     // 'digia/carousel': carouselBuilder,
-    // 'digia/lineChart': lineChartBuilder,
+    'digia/lineChart': lineChartBuilder,
     'digia/circularProgressBar': circularProgressBarBuilder,
     'digia/linearProgressBar': linearProgressBarBuilder,
     // 'digia/paginatedListView': paginatedListViewBuilder,
-    // 'digia/sliverList': sliverListBuilder,
+    'digia/sliverList': sliverListBuilder,
 
     // Async Widgets
     'digia/futureBuilder': asyncBuilderBuilder,
