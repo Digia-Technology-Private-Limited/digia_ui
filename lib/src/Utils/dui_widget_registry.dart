@@ -34,6 +34,7 @@ import '../core/builders/dui_lottie_builder.dart';
 import '../core/builders/dui_nested_scroll_view_builder.dart';
 import '../core/builders/dui_opacity_builder.dart';
 import '../core/builders/dui_paginated_listview_builder.dart';
+import '../core/builders/dui_paginated_sliver_list_builder.dart';
 import '../core/builders/dui_pin_field_builder.dart';
 import '../core/builders/dui_refresh_indicator_builder.dart';
 import '../core/builders/dui_rich_text_builder.dart';
@@ -183,6 +184,8 @@ class DUIWidgetRegistry {
     'digia/customScrollView': (data, {registry}) =>
         DUICustomScrollViewBuilder.create(data,
             registry: DUIWidgetRegistry.shared),
+    'digia/paginatedSliverList': (data, {registry}) =>
+        DUIPaginatedSliverListBuilder.create(data),
   };
 
   static const DUIWidgetRegistry shared = DUIWidgetRegistry();

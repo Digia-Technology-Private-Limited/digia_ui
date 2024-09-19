@@ -26,7 +26,7 @@ class DUICustomScrollViewBuilder extends DUIWidgetBuilder {
     final bool isReverse =
         eval<bool>(data.props['reverse'], context: context) ?? false;
     final bool enableOverlapInjector =
-        NumDecoder.toBool(data.props['enableOverlapInjector']) ?? true;
+        NumDecoder.toBool(data.props['enableOverlapInjector']) ?? false;
 
     return Builder(builder: (cntx) {
       return CustomScrollView(
