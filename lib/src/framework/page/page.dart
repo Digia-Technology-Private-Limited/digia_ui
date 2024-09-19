@@ -1,181 +1,125 @@
 import 'package:digia_expr/digia_expr.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
+import '../../core/action/action_handler.dart';
 import '../../core/action/action_prop.dart';
+import '../../core/action/api_handler.dart';
 import '../../models/variable_def.dart';
+import '../../network/api_request/api_request.dart';
 import '../core/virtual_state_container_widget.dart';
+import '../internal_widgets/async_builder/controller.dart';
+import '../internal_widgets/async_builder/index.dart';
+import '../models/page_definition.dart';
 import '../models/vw_node_data.dart';
 import '../render_payload.dart';
 import '../ui_factory.dart';
 import '../utils/expression_util.dart';
 import '../utils/functional_util.dart';
-import '../utils/json_util.dart';
 import '../utils/type_aliases.dart';
 import '../virtual_widget_registry.dart';
-
-class UIResourceScope extends InheritedWidget {
-  final Map<String, IconData> icons;
-  final Map<String, ImageProvider> images;
-  final Map<String, TextStyle> textStyles;
-
-  // final DUIMessageHandler onMessageReceived;
-  final GlobalKey<NavigatorState>? navigatorKey;
-
-  const UIResourceScope({
-    super.key,
-    required this.icons,
-    required this.images,
-    required this.textStyles,
-    // required this.onMessageReceived,
-    this.navigatorKey,
-    required super.child,
-  });
-
-  static UIResourceScope of(BuildContext context) {
-    final UIResourceScope? result =
-        context.dependOnInheritedWidgetOfExactType<UIResourceScope>();
-    assert(result != null, 'No UIResourceScope found in context');
-    return result!;
-  }
-
-  @override
-  bool updateShouldNotify(UIResourceScope oldWidget) => false;
-}
-
-class DUIPageDefinition {
-  final String pageUid;
-  final Map<String, VariableDef>? pageArgDefs;
-  final Map<String, VariableDef>? initStateDefs;
-  final ({VWNodeData? root})? layout;
-  final Map<String, ActionFlow>? actions;
-
-  DUIPageDefinition({
-    required this.pageUid,
-    required this.pageArgDefs,
-    required this.initStateDefs,
-    required this.layout,
-    required this.actions,
-  });
-
-  ActionFlow? get onPageLoad => actions?['onPageLoadAction'];
-  ActionFlow? get executeDataSource => actions?['onPageLoad'];
-  ActionFlow? get onBackPress => actions?['onBackPress'];
-
-  factory DUIPageDefinition.fromJson(JsonLike json) {
-    return DUIPageDefinition(
-      pageUid: tryKeys<String>(json, ['uid', 'pageUid']) ?? '',
-      actions: as$<JsonLike>(json['actions'])?.map(
-        (k, v) => MapEntry(k, ActionFlow.fromJson(v)),
-      ),
-      pageArgDefs: tryKeys<Map<String, VariableDef>>(
-        json,
-        ['inputArgs', 'pageArgDefs'],
-        parse: (p0) => const VariablesJsonConverter().fromJson(p0),
-      ),
-      initStateDefs: tryKeys<Map<String, VariableDef>>(
-        json,
-        ['variables', 'initStateDefs'],
-        parse: (p0) => const VariablesJsonConverter().fromJson(p0),
-      ),
-      layout: as$<JsonLike>(json['layout']).maybe(
-        (p0) => (root: VWNodeData.fromJson(p0)),
-      ),
-    );
-  }
-}
+import 'resource_provider.dart';
 
 class DUIPage extends StatelessWidget {
   final String pageUid;
-  final UIResources resources;
+  final JsonLike? pageArgs;
+  final UIResources? resources;
   final DUIPageDefinition pageDef;
   final VirtualWidgetRegistry registry;
   final ExprContext? scope;
-  final JsonLike? pageArgs;
+  final Map<String, APIModel>? apiModels;
 
   const DUIPage({
     super.key,
     required this.pageUid,
+    required this.pageArgs,
     required this.pageDef,
-    required this.resources,
     required this.registry,
-    this.pageArgs,
+    this.resources,
     this.scope,
+    this.apiModels,
   });
 
   @override
   Widget build(BuildContext context) {
-    final resolvedArgs = pageDef.pageArgDefs?.map((k, v) => MapEntry(
-          k,
-          pageArgs?[k] ?? v.defaultValue,
-        ));
-    final resolvedState = pageDef.initStateDefs?.map((k, v) => MapEntry(
-          k,
-          evaluateNestedExpressions(v.defaultValue, null),
-        ));
-    return UIResourceScope(
-        icons: resources.icons,
-        images: resources.images,
-        textStyles: resources.textStyles,
-        child: _DUIBox(
+    final resolvedArgs = pageDef.pageArgDefs
+        ?.map((k, v) => MapEntry(k, pageArgs?[k] ?? v.defaultValue));
+    return ResourceProvider(
+        icons: resources?.icons ?? {},
+        images: resources?.images ?? {},
+        textStyles: resources?.textStyles ?? {},
+        colors: resources?.colors ?? {},
+        apiModels: apiModels ?? {},
+        child: _DUIPageContent(
           pageUid: pageUid,
           args: resolvedArgs,
-          initialState: resolvedState,
+          initialStateDef: pageDef.initStateDefs,
           layout: pageDef.layout,
           registry: registry,
           scope: scope,
+          onPageLoaded: pageDef.onPageLoad,
+          onBackPress: pageDef.onBackPress,
+          pageDataSource: pageDef.executeDataSource,
         ));
   }
 }
 
-class _DUIBox extends StatefulWidget {
+class _DUIPageContent extends StatefulWidget {
   final String pageUid;
   final Map<String, Object?>? args;
-  final Map<String, Object?>? initialState;
+  final Map<String, VariableDef?>? initialStateDef;
   final ({VWNodeData? root})? layout;
   final VirtualWidgetRegistry registry;
   final ExprContext? scope;
+  final ActionFlow? onPageLoaded;
+  final ActionFlow? onBackPress;
+  final ActionFlow? pageDataSource;
 
-  const _DUIBox({
+  const _DUIPageContent({
     required this.pageUid,
     required this.args,
-    required this.initialState,
+    required this.initialStateDef,
     required this.layout,
     required this.registry,
     this.scope,
+    this.onPageLoaded,
+    this.onBackPress,
+    this.pageDataSource,
   });
 
   @override
-  State<_DUIBox> createState() => _DUIBoxState();
+  State<_DUIPageContent> createState() => _DUIPageContentState();
 }
 
-class _DUIBoxState extends State<_DUIBox> {
+class _DUIPageContentState extends State<_DUIPageContent> {
   late StateContext _stateContext;
 
   @override
   void initState() {
     super.initState();
-    _initializeState();
-    // _loadPageIfApplicable();
+    final resolvedState = widget.initialStateDef?.map((k, v) => MapEntry(
+        k,
+        evaluateNestedExpressions(
+            v?.defaultValue, _createExprContextForPageParams())));
+    _stateContext = StateContext(
+      'page',
+      stateVariables: {...?resolvedState},
+    );
     SchedulerBinding.instance.addPostFrameCallback((_) {
       _onPageLoaded();
     });
   }
 
-  void _initializeState() {
-    _stateContext = StateContext(
-      'page',
-      stateVariables: {...?widget.initialState},
+  ExprContext _createExprContextForPageParams() {
+    return ExprContext(
+      variables: {
+        // Backward Compat
+        'pageParams': widget.args,
+        'params': widget.args,
+      },
+      enclosing: widget.scope,
     );
-  }
-
-  // TODO: Implement this
-  Future<void> _loadPageIfApplicable() async {
-    // // Simulating props loading. Replace with actual loading logic.
-    // await Future.delayed(const Duration(seconds: 1));
-    // final props = {}; // Load actual props here
-    // _stateContext.set('props', props);
-    // _stateContext.set('isLoading', false);
   }
 
   // TODO: Implement this
@@ -185,19 +129,37 @@ class _DUIBoxState extends State<_DUIBox> {
 
   @override
   Widget build(BuildContext context) {
-    return StateContainer(
-      nameSpace: 'page',
-      initialState: _stateContext.stateVariables,
-      childBuilder: (context, state) {
-        return PopScope(
-          onPopInvoked: _handleBackPress,
-          child: _buildContent(state),
-        );
-      },
-    );
+    return PopScope(
+        onPopInvoked: _handleBackPress,
+        child: AsyncBuilder.withController(
+            controller: _makeController(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Scaffold(
+                    body: SafeArea(
+                        child: Center(
+                  child: SizedBox(
+                    child: CircularProgressIndicator(color: Colors.blue),
+                  ),
+                )));
+              }
+
+              if (snapshot.hasData) {
+                Future.delayed(Duration.zero, () {
+                  _executeDataSourceActions(snapshot.data!);
+                });
+              }
+
+              return StateContainer(
+                nameSpace: 'page',
+                initialState: _stateContext.stateVariables,
+                childBuilder: (context, state) =>
+                    _buildContent(state, snapshot.data?.data),
+              );
+            }));
   }
 
-  Widget _buildContent(StateContext state) {
+  Widget _buildContent(StateContext state, Object? response) {
     final rootNode = widget.layout?.root;
     // Blank Layout
     if (rootNode == null) {
@@ -208,22 +170,78 @@ class _DUIBoxState extends State<_DUIBox> {
 
     return virtualWidget.toWidget(RenderPayload(
       buildContext: context,
-      exprContext: ExprContext(
-        variables: {
-          // Backwards compat
-          ...state.stateVariables,
-          'pageParams': widget.args,
-          // New naming convention
-          'state': state.stateVariables,
-          'params': widget.args,
-        },
-        enclosing: widget.scope,
-      ),
+      exprContext:
+          _createExprContextForPageParams().copyWithNewVariables(newVariables: {
+        // Backwards compat
+        ...state.stateVariables,
+        // New naming convention
+        'state': state.stateVariables,
+        'dataSource': response
+      }),
     ));
   }
 
   // TODO: Implement this
   void _handleBackPress(bool didPop) {
     // Handle back press event
+  }
+
+  bool _shouldExecuteDataSource() =>
+      widget.pageDataSource?.actions.firstOrNull?.type == 'Action.loadPage';
+
+  void _executeDataSourceActions(Response<Object?> response) async {
+    final action = widget.pageDataSource!.actions.first;
+
+    final respObj = {
+      'body': response.data,
+      'statusCode': response.statusCode,
+      'headers': response.headers,
+      'requestObj': requestObjToMap(response.requestOptions),
+      'error': null,
+    };
+    final successCondition = as$<String>(action.data['successCondition']);
+
+    final isSuccess = successCondition.maybe((p0) => evaluate<bool>(p0,
+            exprContext: ExprContext(
+              variables: {'response': respObj},
+            ))) ??
+        successCondition == null || successCondition.isEmpty;
+
+    if (isSuccess) {
+      final successAction = ActionFlow.fromJson(action.data['onSuccess']);
+      await ActionHandler.instance.execute(
+          context: context,
+          actionFlow: successAction,
+          enclosing: ExprContext(variables: {'response': respObj}));
+    } else {
+      final errorAction = ActionFlow.fromJson(action.data['onError']);
+      await ActionHandler.instance.execute(
+          context: context,
+          actionFlow: errorAction,
+          enclosing: ExprContext(variables: {'response': respObj}));
+    }
+  }
+
+  AsyncController<Response<Object?>> _makeController() {
+    if (!_shouldExecuteDataSource()) {
+      return AsyncController();
+    }
+
+    return AsyncController(futureBuilder: () {
+      final action = widget.pageDataSource!.actions.first;
+
+      final apiDataSourceId = as$<String>(action.data['dataSourceId']);
+      JsonLike? apiDataSourceArgs = as$<JsonLike>(action.data['args']);
+
+      final apiModel =
+          ResourceProvider.maybeOf(context)?.apiModels[apiDataSourceId];
+
+      if (apiModel == null) return Future.error('API model not found');
+
+      final args = apiDataSourceArgs?.map((key, value) => MapEntry(key,
+          evaluateNestedExpressions(value, _createExprContextForPageParams())));
+
+      return ApiHandler.instance.execute(apiModel: apiModel, args: args);
+    });
   }
 }

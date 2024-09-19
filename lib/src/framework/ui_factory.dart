@@ -4,15 +4,20 @@ import 'package:flutter/widgets.dart';
 import '../Utils/basic_shared_utils/color_decoder.dart';
 import '../config_resolver.dart';
 import '../digia_ui_client.dart';
+import '../network/api_request/api_request.dart';
 import 'core/virtual_widget.dart';
+import 'models/page_definition.dart';
 import 'models/vw_node_data.dart';
 import 'page/page.dart';
+import 'utils/functional_util.dart';
 import 'utils/type_aliases.dart';
 import 'virtual_widget_registry.dart';
 
 abstract class ConfigProvider {
+  String getInitialRoute();
   DUIPageDefinition getPageDefinition(String pageUid);
   JsonLike getComponentConfig(String componentUid);
+  Map<String, APIModel> getAllApiModels();
 }
 
 class DUIConfigProvider implements ConfigProvider {
@@ -38,6 +43,17 @@ class DUIConfigProvider implements ConfigProvider {
     // return config.getPageData(pageUid);
     return {};
   }
+
+  @override
+  String getInitialRoute() => config.initialRoute;
+
+  @override
+  Map<String, APIModel> getAllApiModels() {
+    return as$<JsonLike>(config.restConfig['resources'])?.map((k, v) {
+          return MapEntry(k, APIModel.fromJson(as<JsonLike>(v)));
+        }) ??
+        {};
+  }
 }
 
 class DUIFactory {
@@ -47,8 +63,8 @@ class DUIFactory {
     return _instance;
   }
 
-  late final ConfigProvider configProvider;
-  late final UIResources resources;
+  late ConfigProvider configProvider;
+  late UIResources resources;
 
   DUIFactory._internal();
 
@@ -62,13 +78,13 @@ class DUIFactory {
     configProvider =
         pageConfigProvider ?? DUIConfigProvider(DigiaUIClient.instance.config);
     resources = UIResources(
-      icons: icons ?? {},
-      images: images ?? {},
-      textStyles: textStyles ?? {},
-      colorTokens: DigiaUIClient.instance.config.colorTokens.map(
+      icons: icons,
+      images: images,
+      textStyles: textStyles,
+      colors: DigiaUIClient.instance.config.colorTokens.map(
         (key, value) => MapEntry(
           key,
-          ColorDecoder.fromString(value),
+          as$<String>(value).maybe(ColorDecoder.fromString),
         ),
       ),
     );
@@ -96,10 +112,10 @@ class DUIFactory {
   }) {
     // Merge overriding resources with existing resources
     final mergedResources = UIResources(
-      icons: {...resources.icons, ...?overrideIcons},
-      images: {...resources.images, ...?overrideImages},
-      textStyles: {...resources.textStyles, ...?overrideTextStyles},
-      colorTokens: {...resources.colorTokens, ...?overrideColorTokens},
+      icons: {...?resources.icons, ...?overrideIcons},
+      images: {...?resources.images, ...?overrideImages},
+      textStyles: {...?resources.textStyles, ...?overrideTextStyles},
+      colors: {...?resources.colors, ...?overrideColorTokens},
     );
 
     return DUIPage(
@@ -108,10 +124,27 @@ class DUIFactory {
       resources: mergedResources,
       pageDef: configProvider.getPageDefinition(pageUid),
       registry: VirtualWidgetRegistry.instance,
+      apiModels: configProvider.getAllApiModels(),
       scope: ExprContext(
         name: 'global',
         variables: {...DigiaUIClient.instance.jsVars},
       ),
+    );
+  }
+
+  Widget createInitialPage({
+    Map<String, IconData>? overrideIcons,
+    Map<String, ImageProvider>? overrideImages,
+    Map<String, TextStyle>? overrideTextStyles,
+    Map<String, Color?>? overrideColorTokens,
+  }) {
+    return createPage(
+      configProvider.getInitialRoute(),
+      null,
+      overrideIcons: overrideIcons,
+      overrideImages: overrideImages,
+      overrideTextStyles: overrideTextStyles,
+      overrideColorTokens: overrideColorTokens,
     );
   }
 
@@ -122,15 +155,15 @@ class DUIFactory {
 }
 
 class UIResources {
-  final Map<String, IconData> icons;
-  final Map<String, ImageProvider> images;
-  final Map<String, TextStyle> textStyles;
-  final Map<String, Color?> colorTokens;
+  final Map<String, IconData>? icons;
+  final Map<String, ImageProvider>? images;
+  final Map<String, TextStyle>? textStyles;
+  final Map<String, Color?>? colors;
 
   UIResources({
     required this.icons,
     required this.images,
     required this.textStyles,
-    required this.colorTokens,
+    required this.colors,
   });
 }

@@ -2,7 +2,9 @@ import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/widgets.dart';
 
 import '../components/dui_widget_scope.dart';
+import '../network/api_request/api_request.dart';
 import 'models/vw_repeat_data.dart';
+import 'page/resource_provider.dart';
 import 'utils/expression_util.dart';
 
 class RenderPayload {
@@ -18,6 +20,10 @@ class RenderPayload {
     final scope = DUIWidgetScope.maybeOf(buildContext);
 
     return scope?.iconDataProvider?.call(map);
+  }
+
+  APIModel? getApiModel(String id) {
+    return ResourceProvider.maybeOf(buildContext)?.apiModels[id];
   }
 
 // Evaluates an expression with an optional chained exprContext

@@ -1,12 +1,9 @@
 import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/material.dart';
 
-import '../../Utils/extensions.dart';
 import '../../core/action/action_handler.dart';
 import '../../core/action/action_prop.dart';
 import '../../core/action/api_handler.dart';
-import '../../core/page/dui_page_bloc.dart';
-import '../../digia_ui_client.dart';
 import '../core/virtual_stateless_widget.dart';
 import '../internal_widgets/async_builder/index.dart';
 import '../models/props.dart';
@@ -93,9 +90,11 @@ Future<Object?> _makeFuture(Props futureProps, RenderPayload payload) async {
       Map<String, Object?>? apiDataSourceArgs =
           futureProps.getMap('dataSource.args');
 
-      final apiModel = (payload.buildContext.tryRead<DUIPageBloc>()?.config ??
-              DigiaUIClient.getConfigResolver())
-          .getApiDataSource(apiDataSourceId);
+      final apiModel = payload.getApiModel(apiDataSourceId);
+
+      if (apiModel == null) {
+        return Future.error('No API Selected');
+      }
 
       final args = apiDataSourceArgs?.map((key, value) {
         final evalue = payload.eval(value);

@@ -235,8 +235,8 @@ class AppConfigResolver {
 class DUIConfig {
   final Map<String, dynamic> _themeConfig;
   final Map<String, dynamic> pages;
-  final Map<String, dynamic> _restConfig;
-  final String _initialRoute;
+  final Map<String, dynamic> restConfig;
+  final String initialRoute;
   final String? functionsFilePath;
   final Map<String, dynamic>? appState;
   final bool? versionUpdated;
@@ -245,8 +245,8 @@ class DUIConfig {
   DUIConfig(dynamic data)
       : _themeConfig = data['theme'],
         pages = data['pages'],
-        _restConfig = data['rest'],
-        _initialRoute = data['appSettings']['initialRoute'],
+        restConfig = data['rest'],
+        initialRoute = data['appSettings']['initialRoute'],
         appState = data['appState'],
         version = data['version'],
         versionUpdated = data['versionUpdated'],
@@ -256,7 +256,7 @@ class DUIConfig {
   Map<String, dynamic> get _colors => _themeConfig['colors']['light'];
   Map<String, dynamic> get _fonts => _themeConfig['fonts'];
 
-  Map<String, String?> get colorTokens => _themeConfig['colors']['light'];
+  Map<String, Object?> get colorTokens => _themeConfig['colors']['light'];
 
   String? getColorValue(String colorToken) {
     return _colors[colorToken];
@@ -280,7 +280,7 @@ class DUIConfig {
   }
 
   DUIPageProps getfirstPageData() {
-    final firstPageConfig = pages[_initialRoute];
+    final firstPageConfig = pages[initialRoute];
     if (firstPageConfig == null || firstPageConfig['uid'] == null) {
       throw 'Config for First Page not found.';
     }
@@ -289,10 +289,10 @@ class DUIConfig {
   }
 
   Map<String, dynamic>? getDefaultHeaders() {
-    return _restConfig['defaultHeaders'];
+    return restConfig['defaultHeaders'];
   }
 
   APIModel getApiDataSource(String id) {
-    return APIModel.fromJson(_restConfig['resources'][id]);
+    return APIModel.fromJson(restConfig['resources'][id]);
   }
 }
