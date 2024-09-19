@@ -70,11 +70,21 @@ class _DUITimerState extends DUIWidgetState<DUITimer> {
         initialData: startingPoint,
         stream: Stream.periodic(
           updateInterval,
-          (i) => isCountDown ? startingPoint - i : startingPoint + i,
-        ).take(duration + 1),
+          (i) =>
+              isCountDown ? startingPoint - (i + 1) : startingPoint + (i + 1),
+        ).take(duration),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return const SizedBox.shrink();
+          }
+
+          if (snapshot.connectionState != ConnectionState.none &&
+              snapshot.connectionState != ConnectionState.waiting) {
+            Future.delayed(Duration.zero, () async {
+              await ActionHandler.instance.execute(
+                  context: context,
+                  actionFlow: onTick ?? ActionFlow(actions: []));
+            });
           }
 
           if (snapshot.connectionState == ConnectionState.done) {
@@ -83,13 +93,6 @@ class _DUITimerState extends DUIWidgetState<DUITimer> {
               await ActionHandler.instance.execute(
                   context: context,
                   actionFlow: onTimerEnd ?? ActionFlow(actions: []));
-            });
-          } else if (snapshot.connectionState == ConnectionState.active) {
-            // Timer is active
-            Future.delayed(Duration.zero, () async {
-              await ActionHandler.instance.execute(
-                  context: context,
-                  actionFlow: onTick ?? ActionFlow(actions: []));
             });
           }
 
