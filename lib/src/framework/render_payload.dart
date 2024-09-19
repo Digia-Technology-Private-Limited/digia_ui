@@ -1,9 +1,9 @@
 import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/widgets.dart';
 
-import '../Utils/extensions.dart';
 import '../components/dui_widget_scope.dart';
 import 'models/vw_repeat_data.dart';
+import 'utils/expression_util.dart';
 
 class RenderPayload {
   final BuildContext buildContext;
@@ -72,23 +72,4 @@ class RenderPayload {
       exprContext: exprContext ?? this.exprContext,
     );
   }
-}
-
-T? evaluate<T extends Object>(Object? expression,
-    {ExprContext? exprContext, T? Function(Object?)? decoder}) {
-  if (expression == null) return null;
-
-  if (!hasExpression(expression)) {
-    return decoder?.call(expression) ?? expression.toType<T>();
-  }
-
-  return Expression.eval(expression as String, exprContext)?.toType<T>();
-}
-
-bool hasExpression(dynamic expression) {
-  if (expression == null) return false;
-
-  if (expression is! String) return false;
-
-  return Expression.hasExpression(expression);
 }

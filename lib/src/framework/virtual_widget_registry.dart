@@ -94,8 +94,14 @@ class VirtualWidgetRegistry {
     // 'digia/probo/animated_fastscore': proboCustomComponentBuilder,
   };
 
-  void registerWidget(String type, VirtualWidgetBuilder builder) {
-    _builders[type] = builder;
+  void registerWidget(
+      String type,
+      VirtualWidget Function(
+        VWNodeData data,
+        VirtualWidgetRegistry registry,
+      ) virtualWidgetBuilder) {
+    _builders[type] =
+        (data, _, registry) => virtualWidgetBuilder(data, registry);
   }
 
   static final VirtualWidgetRegistry instance =

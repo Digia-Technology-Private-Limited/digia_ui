@@ -234,7 +234,7 @@ class AppConfigResolver {
 
 class DUIConfig {
   final Map<String, dynamic> _themeConfig;
-  final Map<String, dynamic> _pages;
+  final Map<String, dynamic> pages;
   final Map<String, dynamic> _restConfig;
   final String _initialRoute;
   final String? functionsFilePath;
@@ -244,7 +244,7 @@ class DUIConfig {
 
   DUIConfig(dynamic data)
       : _themeConfig = data['theme'],
-        _pages = data['pages'],
+        pages = data['pages'],
         _restConfig = data['rest'],
         _initialRoute = data['appSettings']['initialRoute'],
         appState = data['appState'],
@@ -255,6 +255,8 @@ class DUIConfig {
   // TODO: @tushar - Add support for light / dark theme
   Map<String, dynamic> get _colors => _themeConfig['colors']['light'];
   Map<String, dynamic> get _fonts => _themeConfig['fonts'];
+
+  Map<String, String?> get colorTokens => _themeConfig['colors']['light'];
 
   String? getColorValue(String colorToken) {
     return _colors[colorToken];
@@ -270,7 +272,7 @@ class DUIConfig {
   // }
 
   DUIPageProps getPageData(String pageUid) {
-    final pageConfig = _pages[pageUid];
+    final pageConfig = pages[pageUid];
     if (pageConfig == null) {
       throw 'Config for Page: $pageUid not found';
     }
@@ -278,7 +280,7 @@ class DUIConfig {
   }
 
   DUIPageProps getfirstPageData() {
-    final firstPageConfig = _pages[_initialRoute];
+    final firstPageConfig = pages[_initialRoute];
     if (firstPageConfig == null || firstPageConfig['uid'] == null) {
       throw 'Config for First Page not found.';
     }

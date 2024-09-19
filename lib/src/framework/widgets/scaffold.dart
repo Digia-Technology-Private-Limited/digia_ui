@@ -37,7 +37,7 @@ class VWScaffold extends VirtualStatelessWidget {
     final endDrawer = childOf('endDrawer')?.toWidget(payload);
     final persistentFooterButtons =
         childrenOf('persistentFooterButtons')?.toWidgetArray(payload);
-    final bottomNavigationBar = null;
+    const bottomNavigationBar = null;
 
     // final pageKey = UniqueKey();
     final themeData = Theme.of(payload.buildContext).copyWith(
