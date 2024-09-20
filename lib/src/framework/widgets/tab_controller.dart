@@ -19,16 +19,7 @@ class VWTabController extends VirtualStatelessWidget {
   Widget render(RenderPayload payload) {
     if (child == null) return empty();
     return InternalTabControllerProvider(
-      length: props.getInt('length') ?? 0,
       dynamicList: toDynamicList(payload.eval(props.get('dynamicList'))),
-      // animationDuration: tabControllerProps.animationDuration,
-      // Builder Code
-      //"animationDuration": {
-      // "type": "number",
-      // "panelConfig": {
-      // "label": "Animation Duration (in Seconds)"
-      // }
-      //   },
       initialIndex: payload.eval<int>(props.get('initialIndex')) ?? 0,
       child: child!.toWidget(payload),
     );

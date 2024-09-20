@@ -32,7 +32,7 @@ class InternalTabControllerProvider extends StatefulWidget {
     required this.child,
   });
 
-  /// Retrieve the `Duicustomtabcontroller` from the context or return null if it doesn't exist
+  /// Retrieve the [InternalTabController] from the context or return null if it doesn't exist
   static InternalTabController? maybeOf(BuildContext context) {
     return context
         .dependOnInheritedWidgetOfExactType<
@@ -40,7 +40,7 @@ class InternalTabControllerProvider extends StatefulWidget {
         ?.tabController;
   }
 
-  /// Retrieve the `Duicustomtabcontroller` from the context and throw an error if not found
+  /// Retrieve the [InternalTabController] from the context and throw an error if not found
   static InternalTabController of(BuildContext context) {
     final tabController = maybeOf(context);
     assert(tabController != null, 'No Duicustomtabcontroller found in context');

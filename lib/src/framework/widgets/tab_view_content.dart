@@ -20,33 +20,23 @@ class VWTabViewContent extends VirtualStatelessWidget {
 
   @override
   Widget render(RenderPayload payload) {
-    if (children == null || children!.isEmpty) return empty();
+    if (child == null) return empty();
     _controller = InternalTabControllerProvider.of(payload.buildContext);
 
-    final generateChildrenDynamically = _controller.dynamicList != null;
-
     return TabBarView(
-      controller: _controller,
-      physics: props.getBool('isScrollable') ?? false
-          ? const AlwaysScrollableScrollPhysics()
-          : const NeverScrollableScrollPhysics(),
-      viewportFraction: props.getDouble('viewportFraction') ?? 1.0,
-      children: generateChildrenDynamically
-          ? List.generate(_controller.dynamicList!.length, (index) {
-              final childToRepeat = children!.first;
-              return childToRepeat.toWidget(payload.copyWithChainedContext(
-                _createExprContext(_controller.dynamicList![index], index),
-              ));
-            })
-          : children?.toWidgetArray(payload) ?? [],
-    );
+        controller: _controller,
+        physics: props.getBool('isScrollable') ?? false
+            ? const AlwaysScrollableScrollPhysics()
+            : const NeverScrollableScrollPhysics(),
+        viewportFraction: props.getDouble('viewportFraction') ?? 1.0,
+        children: List.generate(_controller.dynamicList!.length, (index) {
+          return child!.toWidget(payload.copyWithChainedContext(
+            _createExprContext(_controller.dynamicList![index], index),
+          ));
+        }));
   }
 
   ExprContext _createExprContext(Object? item, int index) {
-    return ExprContext(variables: {
-      'currentItem': item,
-      'index': index
-      // TODO: Add class instance using refName
-    });
+    return ExprContext(variables: {'currentItem': item, 'index': index});
   }
 }
