@@ -6,7 +6,7 @@ import '../../Utils/basic_shared_utils/types.dart';
 import '../../Utils/extensions.dart';
 import '../../Utils/util_functions.dart';
 import '../../components/border/box_border_with_pattern/border_with_pattern.dart';
-import '../core/virtual_stateless_widget.dart';
+import '../base/virtual_stateless_widget.dart';
 import '../models/props.dart';
 import '../render_payload.dart';
 import '../utils/functional_util.dart';

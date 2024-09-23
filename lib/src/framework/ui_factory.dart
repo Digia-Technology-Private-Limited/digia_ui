@@ -5,13 +5,36 @@ import '../Utils/basic_shared_utils/color_decoder.dart';
 import '../config_resolver.dart';
 import '../digia_ui_client.dart';
 import '../network/api_request/api_request.dart';
-import 'core/virtual_widget.dart';
+import 'actions/action_executor.dart';
+import 'base/virtual_widget.dart';
 import 'models/page_definition.dart';
 import 'models/vw_node_data.dart';
 import 'page/page.dart';
+import 'page/page_route.dart';
 import 'utils/functional_util.dart';
-import 'utils/type_aliases.dart';
+import 'utils/types.dart';
 import 'virtual_widget_registry.dart';
+
+// This is just to inject the action executor into the widget tree
+// TODO: Is there a better way to inject the action executor into the widget tree?
+class DefaultActionExecutor extends InheritedWidget {
+  final ActionExecutor actionExecutor;
+
+  const DefaultActionExecutor({
+    super.key,
+    required this.actionExecutor,
+    required super.child,
+  });
+
+  static ActionExecutor of(BuildContext context) {
+    return context
+        .getInheritedWidgetOfExactType<DefaultActionExecutor>()!
+        .actionExecutor;
+  }
+
+  @override
+  bool updateShouldNotify(DefaultActionExecutor oldWidget) => false;
+}
 
 abstract class ConfigProvider {
   String getInitialRoute();
@@ -109,6 +132,7 @@ class DUIFactory {
     Map<String, ImageProvider>? overrideImages,
     Map<String, TextStyle>? overrideTextStyles,
     Map<String, Color?>? overrideColorTokens,
+    GlobalKey<NavigatorState>? navigatorKey,
   }) {
     // Merge overriding resources with existing resources
     final mergedResources = UIResources(
@@ -118,18 +142,47 @@ class DUIFactory {
       colors: {...?resources.colors, ...?overrideColorTokens},
     );
 
-    return DUIPage(
-      pageUid: pageUid,
-      pageArgs: pageArgs,
-      resources: mergedResources,
-      pageDef: configProvider.getPageDefinition(pageUid),
-      registry: VirtualWidgetRegistry.instance,
-      apiModels: configProvider.getAllApiModels(),
-      scope: ExprContext(
-        name: 'global',
-        variables: {...DigiaUIClient.instance.jsVars},
+    return DefaultActionExecutor(
+      actionExecutor: ActionExecutor(
+        viewBuilder: (context, viewId, args) => createPage(viewId, args),
+        pageRouteBuilder: (context, id, args) => createPageRoute(id, args),
+        logger: DigiaUIClient.instance.developerConfig?.logger,
+      ),
+      child: DUIPage(
+        pageUid: pageUid,
+        pageArgs: pageArgs,
+        resources: mergedResources,
+        navigatorKey: navigatorKey,
+        pageDef: configProvider.getPageDefinition(pageUid),
+        registry: VirtualWidgetRegistry.instance,
+        apiModels: configProvider.getAllApiModels(),
+        scope: ExprContext(
+          name: 'global',
+          variables: {...DigiaUIClient.instance.jsVars},
+        ),
       ),
     );
+  }
+
+  Route<Object> createPageRoute(
+    String pageId,
+    JsonLike? pageArgs, {
+    Map<String, IconData>? overrideIcons,
+    Map<String, ImageProvider>? overrideImages,
+    Map<String, TextStyle>? overrideTextStyles,
+    Map<String, Color?>? overrideColorTokens,
+    GlobalKey<NavigatorState>? navigatorKey,
+  }) {
+    return DUIPageRoute<Object>(
+        pageId: pageId,
+        builder: (context) => createPage(
+              pageId,
+              pageArgs,
+              overrideIcons: overrideIcons,
+              overrideImages: overrideImages,
+              overrideTextStyles: overrideTextStyles,
+              overrideColorTokens: overrideColorTokens,
+            ));
   }
 
   Widget createInitialPage({

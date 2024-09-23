@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
 import '../../Utils/util_functions.dart';
 import '../../components/dui_icons/icon_helpers/icon_data_serialization.dart';
-import '../core/virtual_stateless_widget.dart';
+import '../base/virtual_stateless_widget.dart';
 import '../render_payload.dart';
 
 class VWExpandable extends VirtualStatelessWidget {

@@ -2,13 +2,13 @@ import 'package:flutter/widgets.dart';
 
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
 import '../../components/utils/DUIInsets/dui_insets.dart';
-import '../core/extensions.dart';
-import '../core/virtual_leaf_stateless_widget.dart';
-import '../core/virtual_stateless_widget.dart';
-import '../core/virtual_widget.dart';
+import '../base/extensions.dart';
+import '../base/virtual_leaf_stateless_widget.dart';
+import '../base/virtual_stateless_widget.dart';
+import '../base/virtual_widget.dart';
 import '../render_payload.dart';
 import '../utils/functional_util.dart';
-import '../utils/type_aliases.dart';
+import '../utils/types.dart';
 import 'positioned.dart';
 
 class VWStack extends VirtualStatelessWidget {
@@ -42,14 +42,14 @@ class VWStack extends VirtualStatelessWidget {
       return childVirtualWidget;
     }
 
-    final position = as$<JsonLike>(
-            childVirtualWidget.commonProps?.get('positioned.position'))
+    final position = as$<JsonLike>(childVirtualWidget.commonProps?.parentProps
+            ?.get('positioned.position'))
         .maybe(DUIInsets.fromJson)
         ?.toJson();
 
-    final hasPosition =
-        childVirtualWidget.commonProps?.getBool('positioned.hasPosition') ??
-            false;
+    final hasPosition = childVirtualWidget.commonProps?.parentProps
+            ?.getBool('positioned.hasPosition') ??
+        false;
     if (!hasPosition || position == null) return childVirtualWidget;
 
     return VWPositioned.fromValues(

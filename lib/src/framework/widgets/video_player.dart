@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../models/dui_file.dart';
-import '../core/virtual_leaf_stateless_widget.dart';
+import '../base/virtual_leaf_stateless_widget.dart';
 import '../render_payload.dart';
 
 class VWVideoPlayer extends VirtualLeafStatelessWidget {

@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
-import '../core/extensions.dart';
-import '../core/virtual_stateless_widget.dart';
+import '../base/extensions.dart';
+import '../base/virtual_stateless_widget.dart';
 import '../render_payload.dart';
 
 class VWWrap extends VirtualStatelessWidget {

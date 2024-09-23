@@ -4,7 +4,7 @@ import '../../Utils/basic_shared_utils/date_decoder.dart';
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
 import '../../Utils/util_functions.dart';
 import '../../components/DUIText/dui_text_style.dart';
-import '../core/virtual_leaf_stateless_widget.dart';
+import '../base/virtual_leaf_stateless_widget.dart';
 import '../internal_widgets/internal_calendar.dart';
 import '../models/props.dart';
 import '../render_payload.dart';

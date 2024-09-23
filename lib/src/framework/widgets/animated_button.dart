@@ -4,8 +4,8 @@ import '../../Utils/basic_shared_utils/dui_decoder.dart';
 import '../../Utils/util_functions.dart';
 import '../../components/dui_button_bounce_animation.dart';
 import '../../core/action/action_handler.dart';
-import '../../core/action/action_prop.dart';
-import '../core/virtual_leaf_stateless_widget.dart';
+import '../actions/base/action_flow.dart';
+import '../base/virtual_leaf_stateless_widget.dart';
 import '../models/props.dart';
 import '../render_payload.dart';
 import 'icon.dart';
@@ -62,10 +62,7 @@ class VWAnimatedButton extends VirtualLeafStatelessWidget {
         ? null
         : () {
             final onClick = ActionFlow.fromJson(props.get('onClick'));
-            ActionHandler.instance.execute(
-              context: payload.buildContext,
-              actionFlow: onClick,
-            );
+            payload.executeAction(onClick);
           };
 
     return ButtonBounceAnimation(

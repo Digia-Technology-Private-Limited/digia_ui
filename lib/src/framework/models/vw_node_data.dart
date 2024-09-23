@@ -1,6 +1,7 @@
 import '../utils/functional_util.dart';
 import '../utils/json_util.dart';
-import '../utils/type_aliases.dart';
+import '../utils/types.dart';
+import 'common_props.dart';
 import 'props.dart';
 import 'vw_repeat_data.dart';
 
@@ -8,7 +9,7 @@ class VWNodeData {
   final String category;
   final String type;
   final Props props;
-  final Props? commonProps;
+  final CommonProps? commonProps;
   final Map<String, List<VWNodeData>>? childGroups;
   final VWRepeatData? repeatData;
   final String? refName;
@@ -29,8 +30,7 @@ class VWNodeData {
         type: as$<String>(json['type']) ?? '',
         props: as$<JsonLike>(json['props']).maybe((p0) => Props(p0)) ??
             Props.empty(),
-        commonProps:
-            as$<JsonLike>(json['containerProps']).maybe((p0) => Props(p0)),
+        commonProps: CommonProps.fromJson(json['containerProps']),
         childGroups: tryKeys(
           json,
           ['children', 'composites', 'childGroups'],

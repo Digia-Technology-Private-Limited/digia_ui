@@ -4,9 +4,8 @@ import 'package:flutter/widgets.dart';
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
 import '../../Utils/util_functions.dart';
 import '../../components/DUIText/dui_text_style.dart';
-import '../../core/action/action_handler.dart';
-import '../../core/action/action_prop.dart';
-import '../core/virtual_leaf_stateless_widget.dart';
+import '../actions/base/action_flow.dart';
+import '../base/virtual_leaf_stateless_widget.dart';
 import '../render_payload.dart';
 import '../utils/functional_util.dart';
 
@@ -78,10 +77,9 @@ class VWRichText extends VirtualLeafStatelessWidget {
               text: text,
               style: style,
               recognizer: span['onClick'].maybe((p0) => TapGestureRecognizer()
-                ..onTap = () async {
+                ..onTap = () {
                   final onClick = ActionFlow.fromJson(span['onClick']);
-                  await ActionHandler.instance.execute(
-                      context: payload.buildContext, actionFlow: onClick);
+                  payload.executeAction(onClick);
                 }));
         })
         .nonNulls

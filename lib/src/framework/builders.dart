@@ -1,6 +1,6 @@
 import 'package:flutter/painting.dart';
 
-import 'core/virtual_widget.dart';
+import 'base/virtual_widget.dart';
 import 'models/vw_node_data.dart';
 import 'virtual_widget_registry.dart';
 import 'widgets/animated_button.dart';

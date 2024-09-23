@@ -1,6 +1,6 @@
+import 'base/virtual_state_container_widget.dart';
+import 'base/virtual_widget.dart';
 import 'builders.dart';
-import 'core/virtual_state_container_widget.dart';
-import 'core/virtual_widget.dart';
 import 'models/vw_node_data.dart';
 
 typedef VirtualWidgetBuilder = VirtualWidget Function(

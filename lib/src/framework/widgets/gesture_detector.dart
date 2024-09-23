@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
-import '../../core/action/action_handler.dart';
-import '../../core/action/action_prop.dart';
-import '../core/virtual_stateless_widget.dart';
+import '../actions/base/action_flow.dart';
+import '../base/virtual_stateless_widget.dart';
 import '../render_payload.dart';
 
 class VWGestureDetector extends VirtualStatelessWidget {
@@ -27,8 +26,7 @@ class VWGestureDetector extends VirtualStatelessWidget {
     if (actionFlow.actions.isEmpty) return childWidget;
 
     onTap() {
-      ActionHandler.instance
-          .execute(context: payload.buildContext, actionFlow: actionFlow);
+      payload.executeAction(actionFlow);
     }
 
     if (actionFlow.inkwell) {

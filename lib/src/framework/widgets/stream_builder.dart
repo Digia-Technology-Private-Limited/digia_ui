@@ -1,10 +1,9 @@
 import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/material.dart';
 import '../../Utils/extensions.dart';
-import '../../core/action/action_handler.dart';
-import '../../core/action/action_prop.dart';
 import '../../core/page/dui_page_bloc.dart';
-import '../core/virtual_stateless_widget.dart';
+import '../actions/base/action_flow.dart';
+import '../base/virtual_stateless_widget.dart';
 import '../models/props.dart';
 import '../render_payload.dart';
 
@@ -33,8 +32,7 @@ class VWStreamBuilder extends VirtualStatelessWidget {
         if (snapshot.hasError) {
           Future.delayed(const Duration(seconds: 0), () async {
             final actionFlow = ActionFlow.fromJson(props.get('onError'));
-            await ActionHandler.instance
-                .execute(context: context, actionFlow: actionFlow);
+            await payload.executeAction(actionFlow);
           });
           return childOf('errorWidget')?.toWidget(payload) ??
               Text(
@@ -46,10 +44,7 @@ class VWStreamBuilder extends VirtualStatelessWidget {
         if (snapshot.connectionState == ConnectionState.active) {
           Future.delayed(const Duration(seconds: 0), () async {
             final actionFlow = ActionFlow.fromJson(props.get('onSuccess'));
-            await ActionHandler.instance.execute(
-                context: context,
-                actionFlow: actionFlow,
-                enclosing: _createExprContext(snapshot.data, null));
+            await payload.executeAction(actionFlow);
           });
           return childOf('listeningWidget')!.toWidget(
             payload.copyWithChainedContext(

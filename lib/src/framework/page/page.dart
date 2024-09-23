@@ -8,7 +8,8 @@ import '../../core/action/action_prop.dart';
 import '../../core/action/api_handler.dart';
 import '../../models/variable_def.dart';
 import '../../network/api_request/api_request.dart';
-import '../core/virtual_state_container_widget.dart';
+import '../base/state_context.dart';
+import '../base/stateful_scope_widget.dart';
 import '../internal_widgets/async_builder/controller.dart';
 import '../internal_widgets/async_builder/index.dart';
 import '../models/page_definition.dart';
@@ -17,8 +18,9 @@ import '../render_payload.dart';
 import '../ui_factory.dart';
 import '../utils/expression_util.dart';
 import '../utils/functional_util.dart';
-import '../utils/type_aliases.dart';
+import '../utils/types.dart';
 import '../virtual_widget_registry.dart';
+import 'message_handler.dart';
 import 'resource_provider.dart';
 
 class DUIPage extends StatelessWidget {
@@ -29,6 +31,8 @@ class DUIPage extends StatelessWidget {
   final VirtualWidgetRegistry registry;
   final ExprContext? scope;
   final Map<String, APIModel>? apiModels;
+  final DUIMessageHandler? messageHandler;
+  final GlobalKey<NavigatorState>? navigatorKey;
 
   const DUIPage({
     super.key,
@@ -39,6 +43,8 @@ class DUIPage extends StatelessWidget {
     this.resources,
     this.scope,
     this.apiModels,
+    this.messageHandler,
+    this.navigatorKey,
   });
 
   @override
@@ -51,6 +57,8 @@ class DUIPage extends StatelessWidget {
         textStyles: resources?.textStyles ?? {},
         colors: resources?.colors ?? {},
         apiModels: apiModels ?? {},
+        messageHandler: messageHandler,
+        navigatorKey: navigatorKey,
         child: _DUIPageContent(
           pageUid: pageUid,
           args: resolvedArgs,
@@ -104,7 +112,7 @@ class _DUIPageContentState extends State<_DUIPageContent> {
             v?.defaultValue, _createExprContextForPageParams())));
     _stateContext = StateContext(
       'page',
-      stateVariables: {...?resolvedState},
+      initialState: {...?resolvedState},
     );
     SchedulerBinding.instance.addPostFrameCallback((_) {
       _onPageLoaded();
@@ -150,8 +158,8 @@ class _DUIPageContentState extends State<_DUIPageContent> {
                 });
               }
 
-              return StateContainer(
-                nameSpace: 'page',
+              return StatefulScopeWidget(
+                namespace: 'page',
                 initialState: _stateContext.stateVariables,
                 childBuilder: (context, state) =>
                     _buildContent(state, snapshot.data?.data),

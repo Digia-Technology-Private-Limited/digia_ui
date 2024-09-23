@@ -1,10 +1,9 @@
 import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/material.dart';
 
-import '../../core/action/action_handler.dart';
-import '../../core/action/action_prop.dart';
 import '../../core/action/api_handler.dart';
-import '../core/virtual_stateless_widget.dart';
+import '../actions/base/action_flow.dart';
+import '../base/virtual_stateless_widget.dart';
 import '../internal_widgets/async_builder/index.dart';
 import '../models/props.dart';
 import '../render_payload.dart';
@@ -43,8 +42,7 @@ class VWAsyncBuilder extends VirtualStatelessWidget {
             Future.delayed(const Duration(seconds: 0), () async {
               final actionFlow =
                   ActionFlow.fromJson(props.get('postErrorAction'));
-              await ActionHandler.instance.execute(
-                  context: payload.buildContext, actionFlow: actionFlow);
+              await payload.executeAction(actionFlow);
             });
 
             return errorWidget?.toWidget(payload.copyWithChainedContext(
@@ -58,8 +56,7 @@ class VWAsyncBuilder extends VirtualStatelessWidget {
           Future.delayed(const Duration(seconds: 0), () async {
             final actionFlow =
                 ActionFlow.fromJson(props.get('postSuccessAction'));
-            await ActionHandler.instance
-                .execute(context: payload.buildContext, actionFlow: actionFlow);
+            await payload.executeAction(actionFlow);
           });
           return successWidget.toWidget(payload
               .copyWithChainedContext(_createExprContext(snapshot.data, null)));
@@ -105,16 +102,16 @@ Future<Object?> _makeFuture(Props futureProps, RenderPayload payload) async {
       return ApiHandler.instance.execute(apiModel: apiModel, args: args).then(
           (value) {
         final successAction = ActionFlow.fromJson(futureProps.get('onSuccess'));
-        return ActionHandler.instance.execute(
-            context: payload.buildContext,
-            actionFlow: successAction,
-            enclosing: ExprContext(variables: {'response': value.data}));
+        return payload.executeAction(
+          successAction,
+          exprContext: ExprContext(variables: {'response': value.data}),
+        );
       }, onError: (e) async {
         final errorAction = ActionFlow.fromJson(futureProps.get('onFailure'));
-        await ActionHandler.instance.execute(
-            context: payload.buildContext,
-            actionFlow: errorAction,
-            enclosing: ExprContext(variables: {'error': e}));
+        await payload.executeAction(
+          errorAction,
+          exprContext: ExprContext(variables: {'error': e}),
+        );
         throw e;
       });
 

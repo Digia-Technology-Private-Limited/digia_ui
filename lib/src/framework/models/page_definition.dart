@@ -3,7 +3,7 @@ import '../../core/action/action_prop.dart';
 import '../../models/variable_def.dart';
 import '../utils/functional_util.dart';
 import '../utils/json_util.dart';
-import '../utils/type_aliases.dart';
+import '../utils/types.dart';
 import 'vw_node_data.dart';
 
 class DUIPageDefinition {

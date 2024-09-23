@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../Utils/util_functions.dart';
-import '../core/extensions.dart';
-import '../core/virtual_leaf_stateless_widget.dart';
-import '../core/virtual_stateless_widget.dart';
-import '../core/virtual_widget.dart';
+import '../base/extensions.dart';
+import '../base/virtual_leaf_stateless_widget.dart';
+import '../base/virtual_stateless_widget.dart';
+import '../base/virtual_widget.dart';
 import '../models/props.dart';
 import '../render_payload.dart';
 import '../utils/functional_util.dart';

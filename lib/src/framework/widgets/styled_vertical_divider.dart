@@ -4,7 +4,7 @@ import '../../Utils/basic_shared_utils/dui_decoder.dart';
 import '../../Utils/basic_shared_utils/types.dart';
 import '../../Utils/util_functions.dart';
 import '../../components/border/divider_with_pattern/divider_with_pattern.dart';
-import '../core/virtual_leaf_stateless_widget.dart';
+import '../base/virtual_leaf_stateless_widget.dart';
 import '../render_payload.dart';
 
 class VWStyledVerticalDivider extends VirtualLeafStatelessWidget {

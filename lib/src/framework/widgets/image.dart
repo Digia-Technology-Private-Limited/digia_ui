@@ -9,7 +9,7 @@ import '../../Utils/basic_shared_utils/dui_decoder.dart';
 import '../../components/dui_widget_creator_fn.dart';
 import '../../components/dui_widget_scope.dart';
 import '../../models/dui_file.dart';
-import '../core/virtual_leaf_stateless_widget.dart';
+import '../base/virtual_leaf_stateless_widget.dart';
 import '../models/props.dart';
 import '../render_payload.dart';
 

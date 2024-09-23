@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import '../core/virtual_stateless_widget.dart';
+import '../base/virtual_stateless_widget.dart';
 import '../render_payload.dart';
 
 class VWOpacity extends VirtualStatelessWidget {

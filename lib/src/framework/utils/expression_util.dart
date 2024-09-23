@@ -2,6 +2,22 @@ import 'package:digia_expr/digia_expr.dart';
 
 import 'object_util.dart';
 
+/// Evaluates a string expression and converts the result to the specified type.
+///
+/// This function assumes that the input has already been validated and is a
+/// valid string expression. It evaluates the expression using the provided
+/// context and attempts to convert the result to type T.
+///
+/// [expression] The string expression to evaluate.
+/// [exprContext] The context for expression evaluation.
+/// Returns the evaluated result converted to type T, or null if conversion fails.
+T? evaluateExpression<T extends Object>(
+  String expression,
+  ExprContext? exprContext,
+) {
+  return Expression.eval(expression, exprContext)?.to<T>();
+}
+
 T? evaluate<T extends Object>(
   Object? expression, {
   ExprContext? exprContext,

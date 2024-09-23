@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../Utils/util_functions.dart';
-import '../../core/action/action_handler.dart';
-import '../../core/action/action_prop.dart';
-import '../core/virtual_stateless_widget.dart';
+import '../actions/base/action_flow.dart';
+import '../base/virtual_stateless_widget.dart';
 import '../render_payload.dart';
 
 class VWRefreshIndicator extends VirtualStatelessWidget {
@@ -29,10 +28,7 @@ class VWRefreshIndicator extends VirtualStatelessWidget {
           _toTriggerMode(payload.eval<String>(props.get('triggerMode'))),
       onRefresh: () async {
         final onRefresh = ActionFlow.fromJson(props.get('onRefresh'));
-        await ActionHandler.instance.execute(
-          context: payload.buildContext,
-          actionFlow: onRefresh,
-        );
+        payload.executeAction(onRefresh);
       },
       child: child?.toWidget(payload) ?? empty(),
     );

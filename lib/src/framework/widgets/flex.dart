@@ -3,10 +3,10 @@ import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/widgets.dart';
 
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
-import '../core/extensions.dart';
-import '../core/virtual_leaf_stateless_widget.dart';
-import '../core/virtual_stateless_widget.dart';
-import '../core/virtual_widget.dart';
+import '../base/extensions.dart';
+import '../base/virtual_leaf_stateless_widget.dart';
+import '../base/virtual_stateless_widget.dart';
+import '../base/virtual_widget.dart';
 import '../render_payload.dart';
 import 'flex_fit.dart';
 
@@ -69,10 +69,11 @@ class VWFlex extends VirtualStatelessWidget {
       return childVirtualWidget;
     }
 
-    final expansionType =
-        childVirtualWidget.commonProps?.getString('expansion.type');
-    final flexValue =
-        childVirtualWidget.commonProps?.getInt('expansion.flexValue') ?? 1;
+    final expansionType = childVirtualWidget.commonProps?.parentProps
+        ?.getString('expansion.type');
+    final flexValue = childVirtualWidget.commonProps?.parentProps
+            ?.getInt('expansion.flexValue') ??
+        1;
 
     if (expansionType == null) return childVirtualWidget;
 

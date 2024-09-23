@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 
 import '../../core/action/action_handler.dart';
 import '../../core/action/action_prop.dart';
-import '../core/virtual_stateless_widget.dart';
+import '../base/virtual_stateless_widget.dart';
 import '../render_payload.dart';
 
 const String _countDownTimerTypeValue = 'countDown';

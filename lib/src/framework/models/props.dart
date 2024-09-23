@@ -1,7 +1,7 @@
 import '../../Utils/basic_shared_utils/num_decoder.dart';
 import '../../Utils/extensions.dart';
 import '../utils/num_util.dart';
-import '../utils/type_aliases.dart';
+import '../utils/types.dart';
 
 class Props {
   JsonLike value;

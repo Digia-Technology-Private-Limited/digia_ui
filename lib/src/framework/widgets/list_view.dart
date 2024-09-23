@@ -2,8 +2,8 @@ import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/widgets.dart';
 
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
-import '../core/extensions.dart';
-import '../core/virtual_stateless_widget.dart';
+import '../base/extensions.dart';
+import '../base/virtual_stateless_widget.dart';
 import '../internal_widgets/internal_list_view.dart';
 import '../render_payload.dart';
 

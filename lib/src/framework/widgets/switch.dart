@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import '../../Utils/util_functions.dart';
-import '../core/virtual_leaf_stateless_widget.dart';
+import '../base/virtual_leaf_stateless_widget.dart';
 import '../internal_widgets/internal_switch.dart';
 import '../render_payload.dart';
 

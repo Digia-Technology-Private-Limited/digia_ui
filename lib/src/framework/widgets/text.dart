@@ -4,7 +4,7 @@ import 'package:widget_marquee/widget_marquee.dart';
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
 import '../../Utils/util_functions.dart';
 import '../../components/DUIText/dui_text_style.dart';
-import '../core/virtual_leaf_stateless_widget.dart';
+import '../base/virtual_leaf_stateless_widget.dart';
 import '../render_payload.dart';
 
 class VWText extends VirtualLeafStatelessWidget {

@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import '../core/virtual_leaf_stateless_widget.dart';
+import '../base/virtual_leaf_stateless_widget.dart';
 import '../internal_widgets/internal_youtube_player.dart';
 import '../render_payload.dart';
 
