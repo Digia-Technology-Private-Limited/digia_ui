@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-import '../../Utils/basic_shared_utils/dui_decoder.dart';
-import '../../Utils/util_functions.dart';
 import '../actions/base/action_flow.dart';
 import '../base/virtual_leaf_stateless_widget.dart';
 import '../models/props.dart';
 import '../render_payload.dart';
+import '../utils/flutter_type_converters.dart';
+import '../utils/functional_util.dart';
 import 'icon.dart';
 import 'text.dart';
 
@@ -23,8 +23,9 @@ class VWButton extends VirtualLeafStatelessWidget {
     final disabledStyleJson = props.toProps('disabledStyle') ?? Props.empty();
 
     ButtonStyle style = ButtonStyle(
-      shape: WidgetStateProperty.all(toButtonShape(props.get('shape'))),
-      padding: WidgetStateProperty.all(DUIDecoder.toEdgeInsets(
+      shape: WidgetStateProperty.all(
+          To.buttonShape(props.get('shape'), payload.getColor)),
+      padding: WidgetStateProperty.all(To.edgeInsets(
         defaultStyleJson.get('padding'),
         or: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
       )),
@@ -32,13 +33,17 @@ class VWButton extends VirtualLeafStatelessWidget {
         defaultStyleJson.getDouble('elevation') ?? 0.0,
       ),
       shadowColor: WidgetStateProperty.all(
-          makeColor(defaultStyleJson.get('shadowColor'))),
-      alignment: DUIDecoder.toAlignment(defaultStyleJson.get('alignment')),
+          defaultStyleJson.getString('shadowColor').maybe(payload.getColor)),
+      alignment: To.alignment(defaultStyleJson.get('alignment')),
       backgroundColor: WidgetStateProperty.resolveWith((states) {
         if (states.contains(WidgetState.disabled)) {
-          return makeColor(disabledStyleJson.get('backgroundColor'));
+          return disabledStyleJson
+              .getString('backgroundColor')
+              .maybe(payload.getColor);
         }
-        return makeColor(defaultStyleJson.get('backgroundColor'));
+        return defaultStyleJson
+            .getString('backgroundColor')
+            .maybe(payload.getColor);
       }),
     );
 

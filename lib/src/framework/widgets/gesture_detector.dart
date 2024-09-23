@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../Utils/basic_shared_utils/dui_decoder.dart';
 import '../actions/base/action_flow.dart';
 import '../base/virtual_stateless_widget.dart';
 import '../render_payload.dart';
+import '../utils/flutter_type_converters.dart';
 
 class VWGestureDetector extends VirtualStatelessWidget {
   VWGestureDetector({
@@ -34,7 +34,7 @@ class VWGestureDetector extends VirtualStatelessWidget {
         color: Colors.transparent,
         child: InkWell(
           onTap: () => onTap,
-          borderRadius: DUIDecoder.toBorderRadius(props.get('borderRadius')),
+          borderRadius: To.borderRadius(props.get('borderRadius')),
           child: childWidget,
         ),
       );

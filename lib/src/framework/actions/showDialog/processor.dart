@@ -41,7 +41,7 @@ class ShowDialogProcessor implements ActionProcessor<ShowDialogAction> {
     Object? result = await presentDialog(
       context: context,
       builder: (innrCtx) =>
-          viewBuilder(innrCtx, action.pageUid, action.pageArgs),
+          viewBuilder(innrCtx, action.pageId, action.pageArgs),
       barrierDismissible: barrierDismissible,
       barrierColor: barrierColor,
     );

@@ -1,12 +1,12 @@
 import 'package:flutter/widgets.dart';
 
-import '../../Utils/basic_shared_utils/dui_decoder.dart';
 import '../../components/utils/DUIInsets/dui_insets.dart';
 import '../base/extensions.dart';
 import '../base/virtual_leaf_stateless_widget.dart';
 import '../base/virtual_stateless_widget.dart';
 import '../base/virtual_widget.dart';
 import '../render_payload.dart';
+import '../utils/flutter_type_converters.dart';
 import '../utils/functional_util.dart';
 import '../utils/types.dart';
 import 'positioned.dart';
@@ -25,9 +25,8 @@ class VWStack extends VirtualStatelessWidget {
     if (children == null || children!.isEmpty) return empty();
 
     return Stack(
-        alignment:
-            DUIDecoder.toStackChildAlignment(props.getString('childAlignment')),
-        fit: DUIDecoder.toStackFit(props.get('fit')),
+        alignment: To.stackChildAlignment(props.getString('childAlignment')),
+        fit: To.stackFit(props.get('fit')),
         children: children!
             .map(_wrapInPositionedForBackwardCompat)
             .toWidgetArray(payload));

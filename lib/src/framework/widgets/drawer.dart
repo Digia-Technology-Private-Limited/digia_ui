@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../Utils/basic_shared_utils/dui_decoder.dart';
-import '../../Utils/util_functions.dart';
 import '../base/virtual_stateless_widget.dart';
 import '../render_payload.dart';
+import '../utils/flutter_type_converters.dart';
 
 class VWDrawer extends VirtualStatelessWidget {
   VWDrawer({
@@ -17,13 +16,11 @@ class VWDrawer extends VirtualStatelessWidget {
   @override
   Widget render(RenderPayload payload) {
     return Drawer(
-      backgroundColor:
-          makeColor(payload.eval<String>(props.get('backgroundColor'))),
-      shadowColor: makeColor(payload.eval<String>(props.get('shadowColor'))),
-      surfaceTintColor:
-          makeColor(payload.eval<String>(props.get('surfaceTintColor'))),
+      backgroundColor: payload.evalColor(props.get('backgroundColor')),
+      shadowColor: payload.evalColor(props.get('shadowColor')),
+      surfaceTintColor: payload.evalColor(props.get('surfaceTintColor')),
       semanticLabel: payload.eval<String>(props.get('semanticLabel')),
-      clipBehavior: DUIDecoder.toClip(props.get('clipBehavior')),
+      clipBehavior: To.clip(props.get('clipBehavior')),
       width: payload.eval<double>(props.get('width')),
       elevation: payload.eval<double>(props.get('elevation')),
       child: child?.toWidget(payload),

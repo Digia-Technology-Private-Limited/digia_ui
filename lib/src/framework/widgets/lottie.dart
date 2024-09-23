@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
-import '../../Utils/basic_shared_utils/dui_decoder.dart';
 import '../base/virtual_leaf_stateless_widget.dart';
 import '../render_payload.dart';
+import '../utils/flutter_extensions.dart';
+import '../utils/flutter_type_converters.dart';
 
 class VWLottie extends VirtualLeafStatelessWidget {
   VWLottie({
@@ -17,13 +18,12 @@ class VWLottie extends VirtualLeafStatelessWidget {
   Widget render(RenderPayload payload) {
     final (repeat, reverse) =
         getAnimationType(props.getString('animationType'));
-    final alignment = DUIDecoder.toAlignment(props.get('alignment'));
-    final height =
-        DUIDecoder.getHeight(payload.buildContext, props.get('height'));
-    final width = DUIDecoder.getWidth(payload.buildContext, props.get('width'));
+    final alignment = To.alignment(props.get('alignment'));
+    final height = props.getString('height')?.toHeight(payload.buildContext);
+    final width = props.getString('width')?.toWidth(payload.buildContext);
     final animate = payload.eval<bool>(props.get('animate')) ?? true;
     final frameRate = FrameRate(props.getDouble('frameRate') ?? 60);
-    final fit = DUIDecoder.toBoxFit(props.get('fit'));
+    final fit = To.boxFit(props.get('fit'));
 
     final lottiePath = payload.eval<String>(props.get('lottiePath'));
 

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../Utils/util_functions.dart';
 import '../actions/base/action_flow.dart';
 import '../base/virtual_stateless_widget.dart';
 import '../render_payload.dart';
@@ -16,10 +15,11 @@ class VWRefreshIndicator extends VirtualStatelessWidget {
 
   @override
   Widget render(RenderPayload payload) {
+    final color = payload.evalColor(props.get('color'));
+    final bgColor = payload.evalColor(props.get('backgroundColor'));
     return RefreshIndicator(
-      color: makeColor(payload.eval<String>(props.get('color'))),
-      backgroundColor:
-          makeColor(payload.eval<String>(props.get('backgroundColor'))),
+      color: color,
+      backgroundColor: bgColor,
       displacement: payload.eval<double>(props.get('displacement')) ?? 40,
       edgeOffset: payload.eval<double>(props.get('edgeOffset')) ?? 0.0,
       strokeWidth: payload.eval<double>(props.get('strokeWidth')) ??

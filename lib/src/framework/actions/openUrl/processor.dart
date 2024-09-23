@@ -2,7 +2,7 @@ import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/widgets.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../../Utils/basic_shared_utils/dui_decoder.dart';
+import '../../utils/flutter_type_converters.dart';
 import '../base/processor.dart';
 import 'action.dart';
 
@@ -14,7 +14,7 @@ class OpenUrlProcessor implements ActionProcessor<OpenUrlAction> {
     ExprContext? exprContext,
   ) async {
     final urlString = action.url?.evaluate(exprContext);
-    final launchMode = DUIDecoder.toUriLaunchMode(action.launchMode);
+    final launchMode = To.uriLaunchMode(action.launchMode);
 
     if (urlString == null) {
       throw ArgumentError('URL is null');

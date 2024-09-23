@@ -5,13 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_blurhash/flutter_blurhash.dart';
 import 'package:octo_image/octo_image.dart';
 
-import '../../Utils/basic_shared_utils/dui_decoder.dart';
-import '../../components/dui_widget_creator_fn.dart';
-import '../../components/dui_widget_scope.dart';
 import '../../models/dui_file.dart';
 import '../base/virtual_leaf_stateless_widget.dart';
 import '../models/props.dart';
+import '../page/resource_provider.dart';
 import '../render_payload.dart';
+import '../utils/flutter_type_converters.dart';
+import '../utils/widget_util.dart';
 
 class VWImage extends VirtualLeafStatelessWidget {
   VWImage({
@@ -57,9 +57,8 @@ class VWImage extends VirtualLeafStatelessWidget {
       if (imageSource.startsWith('http')) {
         return CachedNetworkImageProvider(imageSource);
       } else {
-        return DUIWidgetScope.maybeOf(payload.buildContext)
-                ?.imageProviderFn
-                ?.call(imageSource) ??
+        return ResourceProvider.maybeOf(payload.buildContext)
+                ?.getImageProvider(imageSource) ??
             AssetImage(imageSource);
       }
     }
@@ -88,7 +87,7 @@ class VWImage extends VirtualLeafStatelessWidget {
   }
 
   _mayWrapInAspectRatio(Widget child) =>
-      DUIAspectRatio(value: props.get('aspectRatio'), child: child);
+      wrapInAspectRatio(value: props.get('aspectRatio'), child: child);
 
   @override
   Widget render(RenderPayload payload) {
@@ -105,7 +104,7 @@ class VWImage extends VirtualLeafStatelessWidget {
               fadeInDuration: const Duration(microseconds: 0),
               fadeOutDuration: const Duration(microseconds: 0),
               image: imageProvider,
-              fit: DUIDecoder.toBoxFit(props.get('fit')),
+              fit: To.boxFit(props.get('fit')),
               gaplessPlayback: true,
               placeholderBuilder: _placeHolderBuilderCreater(),
               imageBuilder: (BuildContext context, Widget widget) {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../actions/base/action_flow.dart';
 import '../models/common_props.dart';
@@ -6,6 +7,7 @@ import '../render_payload.dart';
 import 'flutter_extensions.dart';
 import 'flutter_type_converters.dart';
 import 'functional_util.dart';
+import 'num_util.dart';
 
 Widget wrapInContainer(
     {required RenderPayload payload,
@@ -90,6 +92,20 @@ Widget wrapInAlign({
 
   return Align(
     alignment: alignment,
+    child: child,
+  );
+}
+
+Widget wrapInAspectRatio({
+  dynamic value,
+  required Widget child,
+}) {
+  final aspectRatio = NumUtil.toDouble(value);
+
+  if (aspectRatio == null) return child;
+
+  return AspectRatio(
+    aspectRatio: aspectRatio,
     child: child,
   );
 }

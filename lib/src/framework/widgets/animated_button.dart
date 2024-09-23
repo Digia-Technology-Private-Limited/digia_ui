@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 
-import '../../Utils/basic_shared_utils/dui_decoder.dart';
-import '../../Utils/util_functions.dart';
 import '../../components/dui_button_bounce_animation.dart';
 import '../actions/base/action_flow.dart';
 import '../base/virtual_leaf_stateless_widget.dart';
 import '../models/props.dart';
 import '../render_payload.dart';
+import '../utils/flutter_type_converters.dart';
 import 'icon.dart';
 import 'text.dart';
 
@@ -24,23 +23,23 @@ class VWAnimatedButton extends VirtualLeafStatelessWidget {
     final disabledStyleJson = props.toProps('disabledStyle') ?? Props.empty();
 
     ButtonStyle style = ButtonStyle(
-      shape: WidgetStateProperty.all(toButtonShape(props.get('shape'))),
-      padding: WidgetStateProperty.all(DUIDecoder.toEdgeInsets(
+      shape: WidgetStateProperty.all(
+          To.buttonShape(props.get('shape'), payload.getColor)),
+      padding: WidgetStateProperty.all(To.edgeInsets(
         defaultStyleJson.getMap('padding'),
         or: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
       )),
       elevation: WidgetStateProperty.all(
         defaultStyleJson.getDouble('elevation'),
       ),
-      alignment:
-          DUIDecoder.toAlignment(defaultStyleJson.getString('alignment')),
+      alignment: To.alignment(defaultStyleJson.getString('alignment')),
       splashFactory: NoSplash.splashFactory,
       overlayColor: WidgetStateProperty.all(Colors.transparent),
       backgroundColor: WidgetStateProperty.resolveWith((states) {
         if (states.contains(WidgetState.disabled)) {
-          return makeColor(disabledStyleJson.get('backgroundColor'));
+          return payload.evalColor(disabledStyleJson.get('backgroundColor'));
         }
-        return makeColor(defaultStyleJson.get('backgroundColor'));
+        return payload.evalColor(defaultStyleJson.get('backgroundColor'));
       }),
     );
 

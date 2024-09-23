@@ -1,13 +1,10 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
 
-import '../../Utils/basic_shared_utils/dui_decoder.dart';
-import '../../Utils/util_functions.dart';
-import '../../components/DUIText/dui_text_style.dart';
 import '../actions/base/action_flow.dart';
 import '../base/virtual_leaf_stateless_widget.dart';
 import '../render_payload.dart';
-import '../utils/functional_util.dart';
+import '../utils/flutter_type_converters.dart';
 
 class VWRichText extends VirtualLeafStatelessWidget {
   VWRichText({
@@ -27,9 +24,9 @@ class VWRichText extends VirtualLeafStatelessWidget {
 
     final maxLines = payload.eval<int>(props.get('maxLines'));
     final overflow =
-        DUIDecoder.toTextOverflow(payload.eval<String>(props.get('overflow')));
+        To.textOverflow(payload.eval<String>(props.get('overflow')));
     final textAlign =
-        DUIDecoder.toTextAlign(payload.eval<String>(props.get('alignment')));
+        To.textAlign(payload.eval<String>(props.get('alignment')));
     final styleJson = props.getMap('textStyle') ?? props.getMap('style');
 
     return RichText(
@@ -37,8 +34,7 @@ class VWRichText extends VirtualLeafStatelessWidget {
       overflow: overflow,
       textAlign: textAlign,
       text: TextSpan(
-        style: styleJson.maybe((p0) => toTextStyle(
-            DUITextStyle.fromJson(styleJson), payload.buildContext)),
+        style: payload.getTextStyle(styleJson),
         children: spanChildren,
       ),
     );
@@ -67,8 +63,7 @@ class VWRichText extends VirtualLeafStatelessWidget {
             final styleJson =
                 span['spanStyle'] ?? span['textStyle'] ?? span['style'];
 
-            style = styleJson.maybe((p0) =>
-                toTextStyle(DUITextStyle.fromJson(p0), payload.buildContext));
+            style = payload.getTextStyle(styleJson);
           }
 
           if (text == null) return null;

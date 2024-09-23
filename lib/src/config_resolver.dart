@@ -260,6 +260,7 @@ class DUIConfig {
   Map<String, dynamic> get _fonts => _themeConfig['fonts'];
 
   Map<String, Object?> get colorTokens => _themeConfig['colors']['light'];
+  Map<String, Object?> get fontTokens => _themeConfig['fonts'];
 
   String? getColorValue(String colorToken) {
     return _colors[colorToken];

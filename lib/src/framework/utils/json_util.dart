@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'types.dart';
+
 typedef JsonReviver = Object? Function(Object? key, Object? value);
 
 /// Attempts to decode a JSON string, returning null if decoding fails.
@@ -39,4 +41,33 @@ T? tryKeys<T>(
     }
   }
   return null;
+}
+
+extension KeyPath on JsonLike {
+  /// Retrieves the value for a given key path in a nested map.
+  ///
+  /// The [keyPath] parameter is a dot-separated string representing the path to the desired value.
+  /// For example, 'a.b.c' will retrieve the value at map['a']['b']['c'].
+  dynamic valueFor(String keyPath) {
+    // Split the keyPath into individual keys
+    final keysSplit = keyPath.split('.');
+
+    // Remove and get the first key from the list
+    final thisKey = keysSplit.removeAt(0);
+
+    // Get the value associated with the first key
+    final thisValue = this[thisKey];
+
+    // If there are no more keys, return the current value
+    if (keysSplit.isEmpty) {
+      return thisValue;
+    }
+    // If the current value is a Map, recursively call valueFor on the remaining key path
+    else if (thisValue is JsonLike) {
+      return thisValue.valueFor(keysSplit.join('.'));
+    }
+
+    // If the current value is not a Map and there are still keys left, return null
+    return null;
+  }
 }

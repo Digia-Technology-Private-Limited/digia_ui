@@ -2,12 +2,12 @@ import 'package:collection/collection.dart';
 import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/widgets.dart';
 
-import '../../Utils/basic_shared_utils/dui_decoder.dart';
 import '../base/extensions.dart';
 import '../base/virtual_leaf_stateless_widget.dart';
 import '../base/virtual_stateless_widget.dart';
 import '../base/virtual_widget.dart';
 import '../render_payload.dart';
+import '../utils/flutter_type_converters.dart';
 import 'flex_fit.dart';
 
 class VWFlex extends VirtualStatelessWidget {
@@ -88,18 +88,13 @@ class VWFlex extends VirtualStatelessWidget {
   Widget _buildFlex(List<Widget> Function() childrenBuilder) {
     return Flex(
       direction: direction,
-      mainAxisSize: DUIDecoder.toMainAxisSizeOrDefault(
-        props.get('mainAxisSize'),
-        defaultValue: MainAxisSize.min,
-      ),
-      mainAxisAlignment: DUIDecoder.toMainAxisAlginmentOrDefault(
-        props.get('mainAxisAlignment'),
-        defaultValue: MainAxisAlignment.start,
-      ),
-      crossAxisAlignment: DUIDecoder.toCrossAxisAlignmentOrDefault(
-        props.get('crossAxisAlignment'),
-        defaultValue: CrossAxisAlignment.center,
-      ),
+      mainAxisSize:
+          To.mainAxisSize(props.get('mainAxisSize')) ?? MainAxisSize.min,
+      mainAxisAlignment: To.mainAxisAlginment(props.get('mainAxisAlignment')) ??
+          MainAxisAlignment.start,
+      crossAxisAlignment:
+          To.crossAxisAlignment(props.get('crossAxisAlignment')) ??
+              CrossAxisAlignment.center,
       children: childrenBuilder(),
     );
   }

@@ -6,7 +6,7 @@ import '../base/action.dart';
 import '../base/action_flow.dart';
 
 class ShowDialogAction extends Action {
-  final String pageUid;
+  final String pageId;
   final JsonLike? pageArgs;
   final ExprOr<bool>? barrierDismissible;
   final ExprOr<String>? barrierColor;
@@ -14,7 +14,7 @@ class ShowDialogAction extends Action {
   final ActionFlow? onResult;
 
   ShowDialogAction({
-    required this.pageUid,
+    required this.pageId,
     required this.pageArgs,
     required this.barrierDismissible,
     required this.barrierColor,
@@ -29,7 +29,7 @@ class ShowDialogAction extends Action {
   @override
   Map<String, dynamic> toJson() => {
         'type': actionType.toString(),
-        'pageUid': pageUid,
+        'pageUid': pageId,
         'pageArgs': pageArgs,
         'barrierDismissible': barrierDismissible?.toJson(),
         'barrierColor': barrierColor?.toJson(),
@@ -39,7 +39,7 @@ class ShowDialogAction extends Action {
 
   factory ShowDialogAction.fromJson(Map<String, Object?> json) {
     return ShowDialogAction(
-      pageUid: tryKeys<String>(json, ['pageUid', 'pageId']) ?? '',
+      pageId: tryKeys<String>(json, ['pageUid', 'pageId']) ?? '',
       pageArgs: tryKeys<JsonLike>(json, ['pageArgs', 'args']),
       barrierDismissible: ExprOr.fromJson<bool>(json['barrierDismissible']),
       barrierColor: ExprOr.fromJson<String>(json['barrierColor']),

@@ -3,11 +3,10 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
-import '../../core/action/action_handler.dart';
-import '../../core/action/action_prop.dart';
 import '../../core/action/api_handler.dart';
 import '../../models/variable_def.dart';
 import '../../network/api_request/api_request.dart';
+import '../actions/base/action_flow.dart';
 import '../base/state_context.dart';
 import '../base/stateful_scope_widget.dart';
 import '../internal_widgets/async_builder/controller.dart';
@@ -24,7 +23,7 @@ import 'message_handler.dart';
 import 'resource_provider.dart';
 
 class DUIPage extends StatelessWidget {
-  final String pageUid;
+  final String pageId;
   final JsonLike? pageArgs;
   final UIResources? resources;
   final DUIPageDefinition pageDef;
@@ -36,7 +35,7 @@ class DUIPage extends StatelessWidget {
 
   const DUIPage({
     super.key,
-    required this.pageUid,
+    required this.pageId,
     required this.pageArgs,
     required this.pageDef,
     required this.registry,
@@ -60,7 +59,7 @@ class DUIPage extends StatelessWidget {
         messageHandler: messageHandler,
         navigatorKey: navigatorKey,
         child: _DUIPageContent(
-          pageUid: pageUid,
+          pageId: pageId,
           args: resolvedArgs,
           initialStateDef: pageDef.initStateDefs,
           layout: pageDef.layout,
@@ -74,7 +73,7 @@ class DUIPage extends StatelessWidget {
 }
 
 class _DUIPageContent extends StatefulWidget {
-  final String pageUid;
+  final String pageId;
   final Map<String, Object?>? args;
   final Map<String, VariableDef?>? initialStateDef;
   final ({VWNodeData? root})? layout;
@@ -85,7 +84,7 @@ class _DUIPageContent extends StatefulWidget {
   final ActionFlow? pageDataSource;
 
   const _DUIPageContent({
-    required this.pageUid,
+    required this.pageId,
     required this.args,
     required this.initialStateDef,
     required this.layout,
@@ -130,9 +129,20 @@ class _DUIPageContentState extends State<_DUIPageContent> {
     );
   }
 
-  // TODO: Implement this
   void _onPageLoaded() {
-    // Handle page loaded event
+    if (widget.onPageLoaded != null) {
+      DefaultActionExecutor.of(context).execute(
+        context,
+        widget.onPageLoaded!,
+        _createExprContextForPageParams().copyWithNewVariables(newVariables: {
+          // Backwards compat
+          ..._stateContext.stateVariables,
+          // New naming convention
+          'state': _stateContext.stateVariables,
+          // TODO: What to do api response data.
+        }),
+      );
+    }
   }
 
   @override
@@ -189,13 +199,25 @@ class _DUIPageContentState extends State<_DUIPageContent> {
     ));
   }
 
-  // TODO: Implement this
   void _handleBackPress(bool didPop) {
-    // Handle back press event
+    if (widget.onBackPress != null) {
+      DefaultActionExecutor.of(context).execute(
+        context,
+        widget.onBackPress!,
+        _createExprContextForPageParams().copyWithNewVariables(newVariables: {
+          // Backwards compat
+          ..._stateContext.stateVariables,
+          // New naming convention
+          'state': _stateContext.stateVariables,
+          // TODO: What to do api response data.
+        }),
+      );
+    }
   }
 
   bool _shouldExecuteDataSource() =>
-      widget.pageDataSource?.actions.firstOrNull?.type == 'Action.loadPage';
+      widget.pageDataSource?.actions.firstOrNull?.actionType ==
+      'Action.loadPage';
 
   void _executeDataSourceActions(Response<Object?> response) async {
     final action = widget.pageDataSource!.actions.first;

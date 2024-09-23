@@ -1,8 +1,7 @@
 import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/widgets.dart';
 
-import '../../core/action/action_handler.dart';
-import '../../core/action/action_prop.dart';
+import '../actions/base/action_flow.dart';
 import '../base/virtual_stateless_widget.dart';
 import '../render_payload.dart';
 
@@ -48,16 +47,14 @@ class VWTimer extends VirtualStatelessWidget {
         if (snapshot.connectionState == ConnectionState.done) {
           final timerEndAction = ActionFlow.fromJson(props.get('onTimerEnd'));
           Future.delayed(Duration.zero, () async {
-            await ActionHandler.instance
-                .execute(context: context, actionFlow: timerEndAction);
+            payload.executeAction(timerEndAction);
           });
         }
 
         if (snapshot.hasData) {
           final onTickAction = ActionFlow.fromJson(props.get('onTick'));
           Future.delayed(Duration.zero, () async {
-            await ActionHandler.instance
-                .execute(context: context, actionFlow: onTickAction);
+            payload.executeAction(onTickAction);
           });
           return child!.toWidget(payload
               .copyWithChainedContext(_createExprContext(snapshot.data!)));

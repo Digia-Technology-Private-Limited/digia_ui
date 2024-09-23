@@ -2,9 +2,11 @@ import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-import '../../../Utils/basic_shared_utils/dui_decoder.dart';
-import '../../../Utils/util_functions.dart';
-import '../../../components/DUIText/dui_text_style.dart';
+import '../../models/types.dart';
+import '../../page/resource_provider.dart';
+import '../../utils/flutter_type_converters.dart';
+import '../../utils/functional_util.dart';
+import '../../utils/textstyle_util.dart';
 import '../base/processor.dart';
 import 'action.dart';
 
@@ -15,22 +17,31 @@ class ShowToastProcessor implements ActionProcessor<ShowToastAction> {
     ShowToastAction action,
     ExprContext? exprContext,
   ) async {
+    T? evalExpr<T extends Object>(Object? expr) {
+      return ExprOr.fromJson<T>(expr)?.evaluate(exprContext);
+    }
+
     final message = action.message?.evaluate(exprContext) ?? '';
     final duration = action.duration?.evaluate(exprContext) ?? 2;
 
     final Map<String, dynamic> style = action.style ?? {};
 
-    final Color? bgColor = makeColor(style['bgColor']);
+    final Color? bgColor = ExprOr.fromJson<String>(style['bgColor'])
+        ?.evaluate(exprContext)
+        .maybe((p0) => ResourceProvider.maybeOf(context)?.getColor(p0));
     final borderRadius =
-        DUIDecoder.toBorderRadius(style['borderRadius'] ?? '12, 12, 12, 12');
-    final TextStyle? textStyle =
-        toTextStyle(DUITextStyle.fromJson(style['textStyle']), context);
+        To.borderRadius(style['borderRadius'] ?? '12, 12, 12, 12');
+
+    final TextStyle? textStyle = makeTextStyle(
+      style['textStyle'],
+      context: context,
+      eval: evalExpr,
+    );
     final height = style['height'] as double?;
     final width = style['width'] as double?;
-    final padding =
-        DUIDecoder.toEdgeInsets(style['padding'] ?? '24, 12, 24, 12');
-    final margin = DUIDecoder.toEdgeInsets(style['margin']);
-    final alignment = DUIDecoder.toAlignment(style['alignment']);
+    final padding = To.edgeInsets(style['padding'] ?? '24, 12, 24, 12');
+    final margin = To.edgeInsets(style['margin']);
+    final alignment = To.alignment(style['alignment']);
 
     final toast = FToast().init(context);
     toast.showToast(

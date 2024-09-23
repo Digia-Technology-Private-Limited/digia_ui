@@ -30,7 +30,8 @@ class VWNodeData {
         type: as$<String>(json['type']) ?? '',
         props: as$<JsonLike>(json['props']).maybe((p0) => Props(p0)) ??
             Props.empty(),
-        commonProps: CommonProps.fromJson(json['containerProps']),
+        commonProps:
+            as$<JsonLike>(json['containerProps']).maybe(CommonProps.fromJson),
         childGroups: tryKeys(
           json,
           ['children', 'composites', 'childGroups'],

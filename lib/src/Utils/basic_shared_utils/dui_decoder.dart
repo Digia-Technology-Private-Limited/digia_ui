@@ -3,9 +3,9 @@ import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
+import '../../framework/models/custom_flutter_types.dart';
 import 'lodash.dart';
 import 'num_decoder.dart';
-import 'types.dart';
 
 class DUIDecoder {
   static MainAxisAlignment? toMainAxisAlginment(dynamic value) {

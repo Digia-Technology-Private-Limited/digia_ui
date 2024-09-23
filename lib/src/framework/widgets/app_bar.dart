@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import '../../Utils/util_functions.dart';
-import '../../components/dui_widget_creator_fn.dart';
-import '../../core/action/action_prop.dart';
+
+import '../actions/base/action_flow.dart';
 import '../base/virtual_leaf_stateless_widget.dart';
 import '../base/virtual_widget.dart';
 import '../models/props.dart';
 import '../render_payload.dart';
+import '../utils/widget_util.dart';
 import 'icon.dart';
 import 'text.dart';
 
@@ -33,11 +33,10 @@ class VWAppBar extends VirtualLeafStatelessWidget {
         parent: this,
       ).toWidget(payload),
       elevation: payload.eval<double>(props.get('elevation')),
-      shadowColor: makeColor(payload.eval<String>(props.get('shadowColor'))),
-      backgroundColor:
-          makeColor(payload.eval<String>(props.get('backgroundColor'))),
+      shadowColor: payload.evalColor(props.get('shadowColor')),
+      backgroundColor: payload.evalColor(props.get('backgroundColor')),
       iconTheme: IconThemeData(
-        color: makeColor(payload.eval<String>(props.get('iconColor'))),
+        color: payload.evalColor(props.get('iconColor')),
       ),
       automaticallyImplyLeading: true,
       leading: _buildLeading(payload),
@@ -59,8 +58,8 @@ class VWAppBar extends VirtualLeafStatelessWidget {
       parent: this,
     ).toWidget(payload);
 
-    return DUIGestureDetector(
-        context: payload.buildContext,
+    return wrapInGestureDetector(
+        payload: payload,
         actionFlow: ActionFlow.fromJson(props.getMap('onTapLeadingIcon')),
         child: widget);
   }

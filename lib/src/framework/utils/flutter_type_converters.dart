@@ -1,8 +1,13 @@
-import 'package:flutter/widgets.dart';
+import 'dart:math' as math;
+
+import 'package:expandable/expandable.dart';
+import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../models/custom_flutter_types.dart';
 import 'color_util.dart';
 import 'functional_util.dart';
+import 'json_util.dart';
 import 'num_util.dart';
 
 abstract class To {
@@ -18,7 +23,7 @@ abstract class To {
         _ => null
       };
 
-  static CrossAxisAlignment? toCrossAxisAlignment(dynamic value) =>
+  static CrossAxisAlignment? crossAxisAlignment(dynamic value) =>
       switch (value) {
         'start' => CrossAxisAlignment.start,
         'end' => CrossAxisAlignment.end,
@@ -28,7 +33,7 @@ abstract class To {
         _ => null
       };
 
-  static MainAxisSize? toMainAxisSize(dynamic value) => switch (value) {
+  static MainAxisSize? mainAxisSize(dynamic value) => switch (value) {
         'min' => MainAxisSize.min,
         'max' => MainAxisSize.max,
         _ => null
@@ -52,7 +57,7 @@ abstract class To {
         _ => FontStyle.normal
       };
 
-  static TextAlign toTextAlign(dynamic value) => switch (value) {
+  static TextAlign textAlign(dynamic value) => switch (value) {
         'right' => TextAlign.right,
         'left' => TextAlign.left,
         'center' => TextAlign.center,
@@ -61,7 +66,7 @@ abstract class To {
         _ => TextAlign.start,
       };
 
-  static TextOverflow toTextOverflow(dynamic value) => switch (value) {
+  static TextOverflow textOverflow(dynamic value) => switch (value) {
         'fade' => TextOverflow.fade,
         'visible' => TextOverflow.visible,
         'clip' => TextOverflow.clip,
@@ -69,7 +74,7 @@ abstract class To {
         _ => TextOverflow.clip,
       };
 
-  static TextDecoration? toTextDecoration(dynamic value) => switch (value) {
+  static TextDecoration? textDecoration(dynamic value) => switch (value) {
         'underline' => TextDecoration.underline,
         'overline' => TextDecoration.overline,
         'lineThrough' => TextDecoration.lineThrough,
@@ -77,7 +82,7 @@ abstract class To {
         _ => null,
       };
 
-  static TextDecorationStyle? toTextDecorationStyle(dynamic value) =>
+  static TextDecorationStyle? textDecorationStyle(dynamic value) =>
       switch (value) {
         'dashed' => TextDecorationStyle.dashed,
         'dotted' => TextDecorationStyle.dotted,
@@ -87,7 +92,7 @@ abstract class To {
         _ => null,
       };
 
-  static LaunchMode toUriLaunchMode(dynamic value) => switch (value) {
+  static LaunchMode uriLaunchMode(dynamic value) => switch (value) {
         'inAppWebView' || 'inApp' => LaunchMode.inAppWebView,
         'externalApplication' || 'external' => LaunchMode.externalApplication,
         'externalNonBrowserApplication' =>
@@ -120,7 +125,7 @@ abstract class To {
     return null;
   }
 
-  static BoxFit toBoxFit(dynamic value) => switch (value) {
+  static BoxFit boxFit(dynamic value) => switch (value) {
         'fill' => BoxFit.fill,
         'contain' => BoxFit.contain,
         'cover' => BoxFit.cover,
@@ -207,7 +212,7 @@ abstract class To {
     return null;
   }
 
-  static ScrollPhysics? toScrollPhysics(dynamic physics) {
+  static ScrollPhysics? scrollPhysics(dynamic physics) {
     if (physics is bool) {
       return physics
           ? const AlwaysScrollableScrollPhysics()
@@ -361,4 +366,190 @@ abstract class To {
         'easeInCirc' => Curves.easeInCirc,
         _ => null,
       };
+
+  static AlignmentDirectional stackChildAlignment(String? fit) => switch (fit) {
+        'center' => AlignmentDirectional.center,
+        'topEnd' => AlignmentDirectional.topEnd,
+        'topCenter' => AlignmentDirectional.topCenter,
+        'centerEnd' => AlignmentDirectional.centerEnd,
+        'centerStart' => AlignmentDirectional.centerStart,
+        'bottomStart' => AlignmentDirectional.bottomStart,
+        'bottomCenter' => AlignmentDirectional.bottomCenter,
+        'bottomEnd' => AlignmentDirectional.bottomEnd,
+        _ => AlignmentDirectional.topStart
+      };
+
+  static StackFit stackFit(dynamic value) => switch (value) {
+        'expand' => StackFit.expand,
+        'passthrough' => StackFit.passthrough,
+        _ => StackFit.loose
+      };
+
+  static Axis? axis(dynamic value) => switch (value) {
+        'horizontal' => Axis.horizontal,
+        'vertical' => Axis.vertical,
+        _ => null
+      };
+
+  static Clip? clip(dynamic value) => switch (value) {
+        'antiAlias' => Clip.antiAlias,
+        'hardEdge' => Clip.hardEdge,
+        'antiAliasWithSaveLayer' => Clip.antiAliasWithSaveLayer,
+        _ => null
+      };
+
+  static StrokeCap? strokeCap(dynamic value) => switch (value) {
+        'round' => StrokeCap.round,
+        'butt' => StrokeCap.butt,
+        'square' => StrokeCap.square,
+        _ => null
+      };
+
+  static StrokeAlign? strokeAlign(dynamic string) => switch (string) {
+        'inside' => StrokeAlign.inside,
+        'outside' => StrokeAlign.outside,
+        'center' => StrokeAlign.center,
+        _ => null
+      };
+
+  static BorderPattern? borderPattern(dynamic value) => switch (value) {
+        'solid' => BorderPattern.solid,
+        'dotted' => BorderPattern.dotted,
+        'dashed' => BorderPattern.dashed,
+        _ => null
+      };
+
+  static WrapAlignment? wrapAlignment(dynamic value) => switch (value) {
+        'start' => WrapAlignment.start,
+        'end' => WrapAlignment.end,
+        'center' => WrapAlignment.center,
+        'spaceBetween' => WrapAlignment.spaceBetween,
+        'spaceAround' => WrapAlignment.spaceAround,
+        'spaceEvenly' => WrapAlignment.spaceEvenly,
+        _ => null
+      };
+
+  static WrapCrossAlignment? wrapCrossAlignment(String? value) =>
+      switch (value) {
+        'start' => WrapCrossAlignment.start,
+        'end' => WrapCrossAlignment.end,
+        'center' => WrapCrossAlignment.center,
+        _ => null
+      };
+
+  static VerticalDirection? verticalDirection(String? value) => switch (value) {
+        'up' => VerticalDirection.up,
+        'down' => VerticalDirection.down,
+        _ => null
+      };
+
+  static List<double>? dashPattern(dynamic jsonDashPattern) {
+    if (jsonDashPattern == null || jsonDashPattern is! String) {
+      return null;
+    }
+    final parsed = tryJsonDecode(jsonDashPattern) ?? jsonDashPattern;
+
+    if (parsed is! List) return null;
+
+    return parsed.map((e) => NumUtil.toDouble(e)).nonNulls.toList();
+  }
+
+  static ExpandablePanelBodyAlignment? expandablePanelBodyAlignment(
+          dynamic value) =>
+      switch (value) {
+        'left' => ExpandablePanelBodyAlignment.left,
+        'right' => ExpandablePanelBodyAlignment.right,
+        'center' => ExpandablePanelBodyAlignment.center,
+        _ => null
+      };
+
+  static ExpandablePanelIconPlacement? expandablePanelIconPlacement(
+          dynamic value) =>
+      switch (value) {
+        'left' => ExpandablePanelIconPlacement.left,
+        'right' => ExpandablePanelIconPlacement.right,
+        _ => null
+      };
+
+  static ExpandablePanelHeaderAlignment? expandablePanelHeaderAlignment(
+          dynamic value) =>
+      switch (value) {
+        'top' => ExpandablePanelHeaderAlignment.top,
+        'bottom' => ExpandablePanelHeaderAlignment.bottom,
+        'center' => ExpandablePanelHeaderAlignment.center,
+        _ => null
+      };
+
+  static OutlinedBorder? buttonShape(
+      dynamic value, Color? Function(String) toColor) {
+    if (value == null) {
+      return null;
+    }
+
+    if (value is String) {
+      return switch (value) {
+        'stadium' => const StadiumBorder(),
+        'circle' => const CircleBorder(),
+        'none' => null,
+        'roundedRect' || _ => const RoundedRectangleBorder()
+      };
+    }
+
+    if (value is! Map) return null;
+
+    final shape = value['value'] as String?;
+    final borderColor =
+        (value['borderColor'] as String?).maybe(toColor) ?? Colors.transparent;
+    final borderWidth = NumUtil.toDouble(value['borderWidth']) ?? 1.0;
+    final borderStyle = (value['borderStyle'] == 'solid')
+        ? BorderStyle.solid
+        : BorderStyle.none;
+    final side =
+        BorderSide(color: borderColor, width: borderWidth, style: borderStyle);
+
+    return switch (shape) {
+      'stadium' => StadiumBorder(side: side),
+      'circle' => CircleBorder(
+          eccentricity: NumUtil.toDouble(value['eccentricity']) ?? 0.0,
+          side: side),
+      'roundedRect' || _ => RoundedRectangleBorder(
+          borderRadius: borderRadius(value['borderRadius']), side: side)
+    };
+  }
+
+  static Gradient? gradient(
+    Map<String, Object?>? data, {
+    required Color? Function(Object?) evalColor,
+  }) {
+    if (data == null) return null;
+
+    final type = as$<String>(data['type']);
+
+    switch (type) {
+      case 'linear':
+        final colors = (data['colorList'] as List?)
+            ?.map(
+                (e) => evalColor(as$<String>(e['color'])) ?? Colors.transparent)
+            .nonNulls
+            .toList();
+
+        if (colors == null || colors.isEmpty) return null;
+
+        final stops = (data['colorList'] as List?)
+            ?.map((e) => NumUtil.toDouble(e['stop']))
+            .nonNulls
+            .toList();
+
+        final rotationInRadians = NumUtil.toInt(data['angle'])
+            .maybe((p0) => GradientRotation(p0 / 180.0 * math.pi));
+
+        return LinearGradient(
+            colors: colors,
+            stops: stops?.length == colors.length ? stops! : null,
+            transform: rotationInRadians);
+
+      default:
+        return null;
+    }
+  }
 }

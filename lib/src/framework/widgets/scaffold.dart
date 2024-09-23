@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../Utils/util_functions.dart';
+
 import '../base/extensions.dart';
 import '../base/virtual_leaf_stateless_widget.dart';
 import '../base/virtual_stateless_widget.dart';
@@ -43,7 +43,7 @@ class VWScaffold extends VirtualStatelessWidget {
     final themeData = Theme.of(payload.buildContext).copyWith(
       dividerTheme: const DividerThemeData(color: Colors.transparent),
       scaffoldBackgroundColor:
-          makeColor(payload.eval<String>(props.get('scaffoldBackgroundColor'))),
+          payload.evalColor(props.get('scaffoldBackgroundColor')),
     );
     final enableSafeArea =
         payload.eval<bool>(props.get('enableSafeArea')) ?? true;

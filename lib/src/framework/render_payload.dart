@@ -7,6 +7,8 @@ import 'models/vw_repeat_data.dart';
 import 'page/resource_provider.dart';
 import 'ui_factory.dart';
 import 'utils/expression_util.dart';
+import 'utils/textstyle_util.dart';
+import 'utils/types.dart';
 
 class RenderPayload {
   final BuildContext buildContext;
@@ -32,6 +34,14 @@ class RenderPayload {
     return ResourceProvider.maybeOf(buildContext)?.apiModels[id];
   }
 
+  TextStyle? getTextStyle(JsonLike? json) {
+    return makeTextStyle(
+      json,
+      context: buildContext,
+      eval: eval,
+    );
+  }
+
   // Executes an action flow with an optional expression context
   Future<Object?>? executeAction(
     ActionFlow actionFlow, {
@@ -52,6 +62,17 @@ class RenderPayload {
       exprContext: _chainExprContext(exprContext),
       decoder: decoder,
     );
+  }
+
+  // Evaluates and retrieves a color from the ResourceProvider
+  Color? evalColor(Object? expression,
+      {ExprContext? exprContext, String? Function(Object?)? decoder}) {
+    final colorString =
+        eval<String>(expression, exprContext: exprContext, decoder: decoder);
+
+    if (colorString == null) return null;
+
+    return getColor(colorString);
   }
 
   // Evaluates and retrieves repeatable data

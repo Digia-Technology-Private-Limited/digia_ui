@@ -1,11 +1,9 @@
 import 'package:flutter/widgets.dart';
 import 'package:widget_marquee/widget_marquee.dart';
 
-import '../../Utils/basic_shared_utils/dui_decoder.dart';
-import '../../Utils/util_functions.dart';
-import '../../components/DUIText/dui_text_style.dart';
 import '../base/virtual_leaf_stateless_widget.dart';
 import '../render_payload.dart';
+import '../utils/flutter_type_converters.dart';
 
 class VWText extends VirtualLeafStatelessWidget {
   VWText({
@@ -18,11 +16,9 @@ class VWText extends VirtualLeafStatelessWidget {
   @override
   Widget render(RenderPayload payload) {
     final text = payload.eval<String>(props.get('text'));
-    final style = toTextStyle(
-        DUITextStyle.fromJson(props.get('textStyle')), payload.buildContext);
+    final style = payload.getTextStyle(props.getMap('textStyle'));
     final maxLines = payload.eval<int>(props.get('maxLines'));
-    final textAlign =
-        DUIDecoder.toTextAlign(payload.eval(props.get('alignment')));
+    final textAlign = To.textAlign(payload.eval(props.get('alignment')));
 
     if (props.get('overflow') == 'marquee') {
       return Marquee(
@@ -36,7 +32,7 @@ class VWText extends VirtualLeafStatelessWidget {
     }
 
     final overflow =
-        DUIDecoder.toTextOverflow(payload.eval<String>(props.get('overflow')));
+        To.textOverflow(payload.eval<String>(props.get('overflow')));
     return Text(
       text.toString(),
       style: style,

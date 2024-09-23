@@ -1,8 +1,8 @@
 import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/material.dart';
-import '../../Utils/extensions.dart';
-import '../../core/page/dui_page_bloc.dart';
+
 import '../actions/base/action_flow.dart';
+import '../base/state_context_provider.dart';
 import '../base/virtual_stateless_widget.dart';
 import '../models/props.dart';
 import '../render_payload.dart';
@@ -48,7 +48,7 @@ class VWStreamBuilder extends VirtualStatelessWidget {
           });
           return childOf('listeningWidget')!.toWidget(
             payload.copyWithChainedContext(
-              _createExprContext(null, snapshot.data),
+              _createExprContext(snapshot.data),
             ),
           );
         }
@@ -62,18 +62,19 @@ class VWStreamBuilder extends VirtualStatelessWidget {
     );
   }
 
+  // TODO: Check if this will work.
   Stream<Object?> _makeStream(Props stream, RenderPayload payload) {
-    final streamName = stream.get('name');
-    final pageArgsMap =
-        payload.buildContext.tryRead<DUIPageBloc>()?.state.pageArgs;
-    final streamSource = pageArgsMap?[streamName];
+    final streamName = stream.getString('name');
+    if (streamName == null) {
+      return Stream.error('No source provided');
+    }
+    final streamSource = payload.eval('\${params.$streamName}');
     if (streamSource != null) return streamSource as Stream<Object?>;
     return Stream.error('Stream not found');
   }
 
-  ExprContext _createExprContext(Object? response, Object? streamValue) {
+  ExprContext _createExprContext(Object? streamValue) {
     return ExprContext(variables: {
-      'response': response,
       'streamValue': streamValue,
     });
   }
