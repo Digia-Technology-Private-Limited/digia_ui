@@ -242,7 +242,7 @@ class DUIConfig {
   final Map<String, dynamic>? appState;
   final bool? versionUpdated;
   final int? version;
-  final  Map<String, dynamic>? _environment;
+  final Map<String, dynamic>? _environment;
 
   DUIConfig(dynamic data)
       : _themeConfig = data['theme'],
@@ -295,7 +295,7 @@ class DUIConfig {
     return restConfig['defaultHeaders'];
   }
 
-   Map<String, VariableDef> getEnvironmentVariables() {
+  Map<String, VariableDef> getEnvironmentVariables() {
     return const VariablesJsonConverter().fromJson(_environment?['variables']);
   }
 

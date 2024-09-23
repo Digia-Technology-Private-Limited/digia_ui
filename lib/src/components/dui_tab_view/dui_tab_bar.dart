@@ -243,8 +243,7 @@ class _DUITabBarState extends DUIWidgetState<DUITabBar>
   }
 }
 
-
-// Builder Code 
+// Builder Code
 //  "animationType": {
 //           "type": "string",
 //           "default":"fade",

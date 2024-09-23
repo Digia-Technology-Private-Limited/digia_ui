@@ -9,11 +9,11 @@ import 'dui_tab_view_content_props.dart';
 
 class DUITabViewContent extends StatelessWidget {
   DUITabViewContent({
-    Key? key,
+    super.key,
     required this.registry,
     required this.data,
     required this.duiTabView1Props,
-  }) : super(key: key);
+  });
 
   final DUIWidgetRegistry? registry;
   final DUIWidgetJsonData data;
