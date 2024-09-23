@@ -39,7 +39,7 @@ class ApiHandler {
     final url = _hydrateTemplate(apiModel.url, finalArgs);
     final headers = apiModel.headers?.map((key, value) => MapEntry(
         _hydrateTemplate(key, finalArgs), _hydrateTemplate(value, finalArgs)));
-    final body = _hydrateTemplateInDynamic(apiModel.body, finalArgs);
+    final body = apiModel.method != HttpMethod.get ? _hydrateTemplateInDynamic(apiModel.body, args): null;
     final bodyType = apiModel.bodyType;
 
     final networkClient = DigiaUIClient.getNetworkClient();

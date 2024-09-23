@@ -14,7 +14,7 @@ import 'network/core/types.dart';
 
 class AppConfigResolver {
   final FlavorInfo _flavorInfo;
-  
+
   AppConfigResolver(this._flavorInfo);
 
   Future<Map<String, dynamic>?> _getAppConfigFromNetwork(path) async {
@@ -97,8 +97,8 @@ class AppConfigResolver {
         return appConfig;
       case Staging():
         try {
-          appConfig =
-              DUIConfig(await _getAppConfigFromNetwork('/config/getAppConfigStaging'));
+          appConfig = DUIConfig(
+              await _getAppConfigFromNetwork('/config/getAppConfigStaging'));
         } catch (e) {
           throw _buildInitException('Invalid AppConfig or fetch failed');
         }
