@@ -94,7 +94,6 @@ class ActionProcessorFactory {
       case an.ActionType.uploadFile:
       // return UploadFileProcessor();
       case an.ActionType.imagePicker:
-      // TODO: Handle this case.
     }
     // TODO: Remove later
     return ShowToastProcessor();

@@ -1,6 +1,7 @@
 import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/widgets.dart';
 
+import '../../models/types.dart';
 import '../../page/resource_provider.dart';
 import '../../utils/functional_util.dart';
 import '../../utils/navigation_util.dart';
@@ -47,7 +48,17 @@ class NavigateToPageProcessor implements ActionProcessor<NavigateToPageAction> {
     Object? result = await NavigatorHelper.push(
       context,
       navigatorKey,
-      pageRouteBuilder(context, pageId, action.pageArgs),
+      pageRouteBuilder(
+        context,
+        pageId,
+        action.pageArgs?.map((key, value) {
+          var evaluatedValue = value;
+          if (value is ExprOr) {
+            evaluatedValue = value.evaluate(exprContext);
+          }
+          return MapEntry(key, evaluatedValue);
+        }),
+      ),
       removeRoutesUntilPredicate: routeNametoRemoveUntil.maybe(
         (p0) => removePreviousScreensInStack ? null : ModalRoute.withName(p0),
       ),

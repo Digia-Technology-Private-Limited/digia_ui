@@ -63,11 +63,19 @@ class ShowBottomSheetProcessor
 
     Object? result = await presentBottomSheet(
         context: navigatorKey?.currentContext ?? context,
-        builder: (innerCtx) => viewBuilder(
-              innerCtx,
-              pageId,
-              action.pageArgs,
-            ),
+        builder: (innerCtx) {
+          return viewBuilder(
+            innerCtx,
+            pageId,
+            action.pageArgs?.map((key, value) {
+              var evaluatedValue = value;
+              if (value is ExprOr) {
+                evaluatedValue = value.evaluate(exprContext);
+              }
+              return MapEntry(key, evaluatedValue);
+            }),
+          );
+        },
         navigatorKey: navigatorKey,
         backgroundColor: bgColor,
         scrollControlDisabledMaxHeightRatio: maxHeightRatio,

@@ -1,6 +1,7 @@
 import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/material.dart';
 
+import '../../models/types.dart';
 import '../../page/resource_provider.dart';
 import '../../utils/functional_util.dart';
 import '../../utils/navigation_util.dart';
@@ -40,8 +41,19 @@ class ShowDialogProcessor implements ActionProcessor<ShowDialogAction> {
 
     Object? result = await presentDialog(
       context: context,
-      builder: (innrCtx) =>
-          viewBuilder(innrCtx, action.pageId, action.pageArgs),
+      builder: (innerCtx) {
+        return viewBuilder(
+          innerCtx,
+          action.pageId,
+          action.pageArgs?.map((key, value) {
+            var evaluatedValue = value;
+            if (value is ExprOr) {
+              evaluatedValue = value.evaluate(exprContext);
+            }
+            return MapEntry(key, evaluatedValue);
+          }),
+        );
+      },
       barrierDismissible: barrierDismissible,
       barrierColor: barrierColor,
     );
