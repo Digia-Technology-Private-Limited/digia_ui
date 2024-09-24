@@ -22,8 +22,10 @@ class SetStateProcessor implements ActionProcessor<SetStateAction> {
     final rebuildPage = action.rebuild?.evaluate(exprContext) ?? true;
 
     if (updates.isNotEmpty) {
-      final updatesMap = Map.fromEntries(
-          updates.map((update) => MapEntry(update.stateName, update.newValue)));
+      final updatesMap = Map.fromEntries(updates.map(
+        (update) =>
+            MapEntry(update.stateName, update.newValue?.evaluate(exprContext)),
+      ));
       stateContext.setValues(updatesMap, notify: rebuildPage);
     }
 

@@ -28,6 +28,7 @@ class VirtualStateContainerWidget extends VirtualWidget {
         return child!.toWidget(
           payload.copyWithChainedContext(
             _createExprContext(state),
+            buildContext: context,
           ),
         );
       },
@@ -36,7 +37,7 @@ class VirtualStateContainerWidget extends VirtualWidget {
 
   ExprContext _createExprContext(StateContext stateContext) {
     return ExprContext(
-      variables: Map<String, Object?>.from(stateContext.stateVariables),
+      variables: stateContext.stateVariables,
     );
   }
 }

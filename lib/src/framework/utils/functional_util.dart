@@ -79,7 +79,7 @@ T? as$<T>(Object? x) {
     return x;
   }
   // Consider using a logging framework instead of print for production code
-  if (kDebugMode) {
+  if (kDebugMode && x != null) {
     print('CastError when trying to cast $x to $T');
   }
   return null;

@@ -172,12 +172,13 @@ class _DUIPageContentState extends State<_DUIPageContent> {
                 namespace: 'page',
                 initialState: _stateContext.stateVariables,
                 childBuilder: (context, state) =>
-                    _buildContent(state, snapshot.data?.data),
+                    _buildContent(context, state, snapshot.data?.data),
               );
             }));
   }
 
-  Widget _buildContent(StateContext state, Object? response) {
+  Widget _buildContent(
+      BuildContext context, StateContext state, Object? response) {
     final rootNode = widget.layout?.root;
     // Blank Layout
     if (rootNode == null) {

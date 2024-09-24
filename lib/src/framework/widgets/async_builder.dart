@@ -28,13 +28,13 @@ class VWAsyncBuilder extends VirtualStatelessWidget {
     final futureProps = props.toProps('future');
     if (futureProps == null) return empty();
 
-    final future = _makeFuture(futureProps, payload);
+    return AsyncBuilder<Object?>.withFuture(
+        future: _makeFuture(futureProps, payload),
+        builder: (innerCtx, snapshot) {
+          final innerPayload = payload.copyWith(buildContext: innerCtx);
 
-    return AsyncBuilder.withFuture(
-        future: future,
-        builder: (buildContext, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return loadingWidget?.toWidget(payload) ??
+            return loadingWidget?.toWidget(innerPayload) ??
                 const Center(child: CircularProgressIndicator());
           }
 
@@ -42,11 +42,12 @@ class VWAsyncBuilder extends VirtualStatelessWidget {
             Future.delayed(const Duration(seconds: 0), () async {
               final actionFlow =
                   ActionFlow.fromJson(props.get('postErrorAction'));
-              await payload.executeAction(actionFlow);
+              await innerPayload.executeAction(actionFlow);
             });
 
-            return errorWidget?.toWidget(payload.copyWithChainedContext(
-                    _createExprContext(null, snapshot.error))) ??
+            return errorWidget?.toWidget(innerPayload.copyWithChainedContext(
+                  _createExprContext(null, snapshot.error),
+                )) ??
                 Text(
                   'Error: ${snapshot.error?.toString()}',
                   style: const TextStyle(color: Colors.red),
@@ -56,10 +57,11 @@ class VWAsyncBuilder extends VirtualStatelessWidget {
           Future.delayed(const Duration(seconds: 0), () async {
             final actionFlow =
                 ActionFlow.fromJson(props.get('postSuccessAction'));
-            await payload.executeAction(actionFlow);
+            await innerPayload.executeAction(actionFlow);
           });
-          return successWidget.toWidget(payload
-              .copyWithChainedContext(_createExprContext(snapshot.data, null)));
+          return successWidget.toWidget(innerPayload.copyWithChainedContext(
+            _createExprContext(snapshot.data, null),
+          ));
         });
   }
 

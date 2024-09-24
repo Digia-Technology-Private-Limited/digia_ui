@@ -73,7 +73,7 @@ extension ObjectExt on Object? {
     }
 
     // Log the cast error in debug mode
-    if (kDebugMode) {
+    if (kDebugMode && this != null) {
       print('CastError when trying to cast $this to $R');
     }
 

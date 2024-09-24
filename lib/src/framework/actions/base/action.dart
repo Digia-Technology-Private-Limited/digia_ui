@@ -16,7 +16,7 @@ enum ActionType {
   rebuildPage('Action.rebuildPage'),
   // setAppState('Action.setAppState'),
   // For Backward Compatibility, to be removed in future
-  setPageState('Action.setState'),
+  setPageState('Action.setPageState'),
   setState('Action.setState'),
   shareContent('Action.share'),
   showBottomSheet('Action.showBottomSheet'),

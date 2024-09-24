@@ -29,7 +29,10 @@ class ActionFlow {
               .toList() ??
           [],
       inkwell: inkwell,
-      analyticsData: as$<List>(json['analyticsData'])?.cast<JsonLike>(),
+      analyticsData: as$<List<Object?>>(json['analyticsData'])
+          ?.nonNulls
+          .cast<JsonLike>()
+          .toList(),
     );
   }
 
