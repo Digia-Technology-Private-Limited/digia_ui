@@ -33,8 +33,8 @@ extension ObjectExt on Object? {
           const (double) => NumUtil.toDouble(value) as R?,
           // Use NumUtil for boolean conversion
           const (bool) => NumUtil.toBool(value) as R?,
-          // For any other type, attempt a direct cast
-          _ => value as R?
+          // For any other type, attempt a safe cast
+          _ => value.as$<R>()
         } ??
         // If all conversions fail, return the default value
         defaultValue;

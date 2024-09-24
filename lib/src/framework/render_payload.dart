@@ -7,6 +7,7 @@ import 'models/vw_repeat_data.dart';
 import 'page/resource_provider.dart';
 import 'ui_factory.dart';
 import 'utils/expression_util.dart';
+import 'utils/functional_util.dart';
 import 'utils/textstyle_util.dart';
 import 'utils/types.dart';
 
@@ -83,7 +84,7 @@ class RenderPayload {
 
     return eval<List>(
           data.datum,
-          decoder: (p0) => p0 as List?,
+          decoder: (p0) => as$<List>(p0),
         )?.cast<Object>() ??
         [];
   }

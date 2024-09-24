@@ -36,8 +36,7 @@ TextStyle? makeTextStyle(
   final textDecorationStyle =
       To.textDecorationStyle(json['textDecorationStyle']);
 
-  final fontToken =
-      as$<String>(json['fontToken'] ?? json.valueFor('fontToken.value'));
+  var fontToken = json['fontToken'];
 
   if (fontToken == null) {
     return _defaultTextStyle.copyWith(
@@ -49,7 +48,7 @@ TextStyle? makeTextStyle(
     );
   }
 
-  if (json['fontToken'] is String) {
+  if (fontToken is String) {
     final textStyle =
         ResourceProvider.maybeOf(context)?.getTextStyle(fontToken);
 
@@ -63,22 +62,26 @@ TextStyle? makeTextStyle(
   }
 
   // This means json['fontToken'] is a map
-  final textStyle = ResourceProvider.maybeOf(context)?.getTextStyle(fontToken);
-  final fontFamily = json.valueFor('fontToken.font.fontFamily') as String? ??
-      textStyle?.fontFamily ??
-      _defaultTextStyle.fontFamily!;
-  final fontWeight = eval<String>(json.valueFor('fontToken.font.weight'))
-          .maybe(To.fontWeight) ??
-      textStyle?.fontWeight ??
-      _defaultTextStyle.fontWeight;
+  fontToken = fontToken as JsonLike;
+
+  final textStyle = ResourceProvider.maybeOf(context)
+      ?.getTextStyle(fontToken['value'] as String);
+  // TODO: To be fixed. Not sure if fontFamilyFallback is right for us.
+  final fontFamily = fontToken.valueFor('font.fontFamily') as String? ??
+      textStyle?.fontFamilyFallback?.firstOrNull ??
+      _defaultTextStyle.fontFamilyFallback!.first;
+  final fontWeight =
+      eval<String>(fontToken.valueFor('font.weight')).maybe(To.fontWeight) ??
+          textStyle?.fontWeight ??
+          _defaultTextStyle.fontWeight;
   final fontStyle =
-      eval<String>(json.valueFor('fontToken.font.style')).maybe(To.fontStyle) ??
+      eval<String>(fontToken.valueFor('font.style')).maybe(To.fontStyle) ??
           textStyle?.fontStyle ??
           _defaultTextStyle.fontStyle;
-  final fontSize = eval<double>(json.valueFor('fontToken.font.size')) ??
+  final fontSize = eval<double>(fontToken.valueFor('font.size')) ??
       textStyle?.fontSize ??
       _defaultTextStyle.fontSize;
-  final height = eval<double>(json.valueFor('fontToken.font.height')) ??
+  final height = eval<double>(fontToken.valueFor('font.height')) ??
       textStyle?.height ??
       _defaultTextStyle.height;
   return GoogleFonts.getFont(
