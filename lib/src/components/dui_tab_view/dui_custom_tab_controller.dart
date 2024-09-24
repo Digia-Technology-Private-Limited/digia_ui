@@ -1,35 +1,28 @@
 import 'package:flutter/material.dart';
 
 class DUICustomTabController extends TabController {
-  final List<dynamic>? dynamicList;
+  final List<dynamic> dynamicList;
 
   DUICustomTabController({
-    int? length,
-    this.dynamicList,
+    required this.dynamicList,
     required super.vsync,
     super.animationDuration,
     super.initialIndex,
-  })  : assert(length != null || dynamicList != null,
-            'Either length or dynamicList must be provided'),
-        super(
-          length: dynamicList?.length ?? length!,
-        );
+  }) : super(length: dynamicList.length);
 }
 
 class DUITabControllerProvider extends StatefulWidget {
-  final List<dynamic>? dynamicList;
-  final int? length;
+  final List<dynamic> dynamicList;
   final int initialIndex;
   final double? animationDuration;
   final Widget child;
 
   const DUITabControllerProvider({
     super.key,
-    this.dynamicList,
-    this.length,
+    required this.dynamicList,
+    required this.child,
     this.initialIndex = 0,
     this.animationDuration,
-    required this.child,
   });
 
   /// Retrieve the `Duicustomtabcontroller` from the context or return null if it doesn't exist
@@ -68,7 +61,6 @@ class _DUITabControllerProviderState extends State<DUITabControllerProvider>
       animationDuration: (widget.animationDuration != null)
           ? secondsToDuration(widget.animationDuration!)
           : null,
-      length: widget.length,
       vsync: this,
       initialIndex: widget.initialIndex,
     );
@@ -97,7 +89,6 @@ class _DUITabControllerProviderState extends State<DUITabControllerProvider>
   Widget build(BuildContext context) {
     return _DUICustomTabControllerInheritedWidget(
       tabController: _tabController,
-      dynamicList: widget.dynamicList,
       child: widget.child,
     );
   }
@@ -105,18 +96,15 @@ class _DUITabControllerProviderState extends State<DUITabControllerProvider>
 
 class _DUICustomTabControllerInheritedWidget extends InheritedWidget {
   final DUICustomTabController tabController;
-  final List<dynamic>? dynamicList;
 
   const _DUICustomTabControllerInheritedWidget({
     required this.tabController,
-    this.dynamicList,
     required super.child,
   });
 
   @override
   bool updateShouldNotify(
       covariant _DUICustomTabControllerInheritedWidget oldWidget) {
-    return tabController != oldWidget.tabController ||
-        dynamicList != oldWidget.dynamicList;
+    return tabController != oldWidget.tabController;
   }
 }
