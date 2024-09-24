@@ -67,7 +67,7 @@ class DUIPage extends StatelessWidget {
           scope: scope,
           onPageLoaded: pageDef.onPageLoad,
           onBackPress: pageDef.onBackPress,
-          pageDataSource: pageDef.executeDataSource,
+          pageDataSource: pageDef.pageDataSource,
         ));
   }
 }
@@ -81,7 +81,7 @@ class _DUIPageContent extends StatefulWidget {
   final ExprContext? scope;
   final ActionFlow? onPageLoaded;
   final ActionFlow? onBackPress;
-  final ActionFlow? pageDataSource;
+  final JsonLike? pageDataSource;
 
   const _DUIPageContent({
     required this.pageId,
@@ -216,20 +216,22 @@ class _DUIPageContentState extends State<_DUIPageContent> {
   }
 
   bool _shouldExecuteDataSource() =>
-      widget.pageDataSource?.actions.firstOrNull?.actionType ==
-      'Action.loadPage';
+      widget.pageDataSource?['type'] == 'Action.loadPage';
 
   void _executeDataSourceActions(Response<Object?> response) async {
-    final action = widget.pageDataSource!.actions.first;
+    final action = as$<JsonLike>(widget.pageDataSource!['data']);
+    if (action == null) {
+      return Future.error('Unreachable state. data is corrupt');
+    }
 
     final respObj = {
       'body': response.data,
       'statusCode': response.statusCode,
       'headers': response.headers,
-      'requestObj': requestObjToMap(response.requestOptions),
+      'requestObj': _requestObjToMap(response.requestOptions),
       'error': null,
     };
-    final successCondition = as$<String>(action.data['successCondition']);
+    final successCondition = as$<String>(action['successCondition']);
 
     final isSuccess = successCondition.maybe((p0) => evaluate<bool>(p0,
             exprContext: ExprContext(
@@ -238,17 +240,19 @@ class _DUIPageContentState extends State<_DUIPageContent> {
         successCondition == null || successCondition.isEmpty;
 
     if (isSuccess) {
-      final successAction = ActionFlow.fromJson(action.data['onSuccess']);
-      await ActionHandler.instance.execute(
-          context: context,
-          actionFlow: successAction,
-          enclosing: ExprContext(variables: {'response': respObj}));
+      final successAction = ActionFlow.fromJson(action['onSuccess']);
+      await _executeAction(
+        context,
+        successAction,
+        ExprContext(variables: {'response': respObj}),
+      );
     } else {
-      final errorAction = ActionFlow.fromJson(action.data['onError']);
-      await ActionHandler.instance.execute(
-          context: context,
-          actionFlow: errorAction,
-          enclosing: ExprContext(variables: {'response': respObj}));
+      final errorAction = ActionFlow.fromJson(action['onError']);
+      await _executeAction(
+        context,
+        errorAction,
+        ExprContext(variables: {'response': respObj}),
+      );
     }
   }
 
@@ -258,10 +262,11 @@ class _DUIPageContentState extends State<_DUIPageContent> {
     }
 
     return AsyncController(futureBuilder: () {
-      final action = widget.pageDataSource!.actions.first;
+      final action = as$<JsonLike>(widget.pageDataSource!['data']);
+      if (action == null) return Future.error('Unconfigured data');
 
-      final apiDataSourceId = as$<String>(action.data['dataSourceId']);
-      JsonLike? apiDataSourceArgs = as$<JsonLike>(action.data['args']);
+      final apiDataSourceId = as$<String>(action['dataSourceId']);
+      JsonLike? apiDataSourceArgs = as$<JsonLike>(action['args']);
 
       final apiModel =
           ResourceProvider.maybeOf(context)?.apiModels[apiDataSourceId];
@@ -273,5 +278,33 @@ class _DUIPageContentState extends State<_DUIPageContent> {
 
       return ApiHandler.instance.execute(apiModel: apiModel, args: args);
     });
+  }
+
+  Future<Object?>? _executeAction(
+    BuildContext context,
+    ActionFlow actionFlow,
+    ExprContext? exprContext,
+  ) {
+    return DefaultActionExecutor.of(context).execute(
+      context,
+      actionFlow,
+      _createExprContextForPageParams().copyWithNewVariables(newVariables: {
+        // Backwards compat
+        ..._stateContext.stateVariables,
+        // New naming convention
+        'state': _stateContext.stateVariables,
+        // TODO: What to do api response data.
+      }),
+    );
+  }
+
+  _requestObjToMap(dynamic request) {
+    return {
+      'url': request.path,
+      'method': request.method,
+      'headers': request.headers,
+      'data': request.data,
+      'queryParameters': request.queryParameters,
+    };
   }
 }

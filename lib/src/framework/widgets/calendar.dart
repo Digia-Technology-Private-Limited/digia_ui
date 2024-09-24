@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
-import '../../components/DUIText/dui_text_style.dart';
 import '../base/virtual_leaf_stateless_widget.dart';
 import '../internal_widgets/internal_calendar.dart';
 import '../models/props.dart';

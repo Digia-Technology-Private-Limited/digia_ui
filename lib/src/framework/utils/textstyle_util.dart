@@ -36,7 +36,8 @@ TextStyle? makeTextStyle(
   final textDecorationStyle =
       To.textDecorationStyle(json['textDecorationStyle']);
 
-  final fontToken = json['fontToken'] ?? json.valueFor('fontToken.value');
+  final fontToken =
+      as$<String>(json['fontToken'] ?? json.valueFor('fontToken.value'));
 
   if (fontToken == null) {
     return _defaultTextStyle.copyWith(
@@ -48,7 +49,7 @@ TextStyle? makeTextStyle(
     );
   }
 
-  if (fontToken is String) {
+  if (json['fontToken'] is String) {
     final textStyle =
         ResourceProvider.maybeOf(context)?.getTextStyle(fontToken);
 
@@ -101,8 +102,10 @@ TextStyle? convertToTextStyle(dynamic value) {
   FontStyle fontStyle = To.fontStyle(value['style']);
   double fontSize = NumUtil.toDouble(value['size']) ?? 14;
   double fontHeight = NumUtil.toDouble(value['height']) ?? 1.5;
+  // Below is done purposely. tryKeys doesn't check the type before casting.
+  // Hence moved casting outside of tryKeys.
   String fontFamily =
-      tryKeys<String>(value, ['font-family', 'fontFamily']) ?? 'Poppins';
+      as$<String>(tryKeys(value, ['font-family', 'fontFamily'])) ?? 'Poppins';
 
   return GoogleFonts.getFont(
     fontFamily,

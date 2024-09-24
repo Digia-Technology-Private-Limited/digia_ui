@@ -2,7 +2,6 @@ import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/material.dart';
 
 import '../actions/base/action_flow.dart';
-import '../base/state_context_provider.dart';
 import '../base/virtual_stateless_widget.dart';
 import '../models/props.dart';
 import '../render_payload.dart';

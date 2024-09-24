@@ -44,7 +44,6 @@ class VWIconButton extends VirtualLeafStatelessWidget {
         return defaultStyleJson['backgroundColor']
             ?.to<String>()
             .maybe(payload.getColor);
-        ;
       }),
     );
 

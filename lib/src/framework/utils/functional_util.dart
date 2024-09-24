@@ -49,13 +49,32 @@ T as<T>(dynamic x, {T Function()? orElse}) {
   throw TypeError();
 }
 
-/// Safely attempts to cast a value to a specified type.
+/// Safely attempts to cast a value to a specified type, with graceful fallback options.
+///
+/// This function differs significantly from Dart's `as` operator:
+/// - It returns `null` instead of throwing an exception if the cast fails.
+///
+/// Key differences from Dart's `as`:
+/// 1. `as$<T>(x)` returns `null` if `x` is not of type `T`.
+/// 2. `x as T?` throws an exception if `x` is not `null` and not of type `T`.
+///
+/// Example:
+/// ```dart
+/// int someValue = 42;
+/// String? result1 = as$<String>(someValue); // Returns null
+/// String? result2 = someValue as String?;   // Throws TypeError
+/// ```
 ///
 /// [x] The value to cast.
-/// [orElse] An optional function to provide a default value if casting fails.
 ///
-/// Returns the cast value, the result of [orElse] if provided, or null if casting fails.
-T? as$<T>(dynamic x, {T? Function()? orElse}) {
+/// Returns:
+/// - The cast value if successful.
+/// - `null` if casting fails.
+///
+/// This function is particularly useful in scenarios where you want to
+/// attempt a cast without the risk of runtime exceptions, such as when
+/// working with dynamic data or when graceful degradation is preferred.
+T? as$<T>(dynamic x) {
   if (x is T) {
     return x;
   }
@@ -63,5 +82,5 @@ T? as$<T>(dynamic x, {T? Function()? orElse}) {
   if (kDebugMode) {
     print('CastError when trying to cast $x to $T');
   }
-  return orElse != null ? orElse() : null;
+  return null;
 }

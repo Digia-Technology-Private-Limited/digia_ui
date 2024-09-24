@@ -48,7 +48,7 @@ extension KeyPath on JsonLike {
   ///
   /// The [keyPath] parameter is a dot-separated string representing the path to the desired value.
   /// For example, 'a.b.c' will retrieve the value at map['a']['b']['c'].
-  dynamic valueFor(String keyPath) {
+  Object? valueFor(String keyPath) {
     // Split the keyPath into individual keys
     final keysSplit = keyPath.split('.');
 

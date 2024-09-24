@@ -40,16 +40,33 @@ extension ObjectExt on Object? {
         defaultValue;
   }
 
-  /// Attempts to cast a dynamic value to a specified type R.
+  /// Safely attempts to cast the current object to a specified type R, with graceful fallback to null.
   ///
-  /// This method provides a safe way to cast values, with debug logging for failed casts.
+  /// This method differs significantly from Dart's `as` operator:
+  /// - It returns `null` instead of throwing an exception if the cast fails.
+  /// - It provides debug logging for failed casts in debug mode.
+  ///
+  /// Key differences from Dart's `as`:
+  /// 1. `obj.as$<T>()` returns `null` if `obj` is not of type `T`.
+  /// 2. `obj as T?` throws an exception if `obj` is not `null` and not of type `T`.
+  ///
+  /// Example:
+  /// ```dart
+  /// int someValue = 42;
+  /// String? result1 = someValue.as$<String>(); // Returns null, logs in debug mode
+  /// String? result2 = someValue as String?;    // Throws TypeError
+  /// ```
   ///
   /// [R] The type to cast to.
-  /// [x] The dynamic value to be cast.
   ///
   /// Returns:
   /// - The cast value of type R if successful.
-  /// - null if the cast fails.
+  /// - `null` if the cast fails.
+  ///
+  /// This method is particularly useful in scenarios where you want to
+  /// attempt a cast without the risk of runtime exceptions, such as when
+  /// working with dynamic data or when graceful degradation is preferred.
+  /// The debug logging helps identify type mismatches during development.
   R? as$<R>() {
     if (this is R) {
       return this as R?;

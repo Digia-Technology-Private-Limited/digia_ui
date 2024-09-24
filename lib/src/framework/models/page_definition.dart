@@ -11,6 +11,9 @@ class DUIPageDefinition {
   final Map<String, VariableDef>? initStateDefs;
   final ({VWNodeData? root})? layout;
   final Map<String, ActionFlow>? actions;
+  final JsonLike? pageDataSource;
+  final ActionFlow? onPageLoad;
+  final ActionFlow? onBackPress;
 
   DUIPageDefinition({
     required this.pageId,
@@ -18,11 +21,10 @@ class DUIPageDefinition {
     required this.initStateDefs,
     required this.layout,
     required this.actions,
+    required this.pageDataSource,
+    required this.onPageLoad,
+    required this.onBackPress,
   });
-
-  ActionFlow? get onPageLoad => actions?['onPageLoadAction'];
-  ActionFlow? get pageDataSource => actions?['onPageLoad'];
-  ActionFlow? get onBackPress => actions?['onBackPress'];
 
   factory DUIPageDefinition.fromJson(JsonLike json) {
     return DUIPageDefinition(
@@ -43,6 +45,11 @@ class DUIPageDefinition {
       layout: as$<JsonLike>(json.valueFor('layout.root')).maybe(
         (p0) => (root: VWNodeData.fromJson(p0)),
       ),
+      pageDataSource: as$<JsonLike>(json.valueFor('actions.onPageLoad')),
+      onPageLoad: as$<JsonLike>(json.valueFor('actions.onPageLoadAction'))
+          .maybe(ActionFlow.fromJson),
+      onBackPress: as$<JsonLike>(json.valueFor('actions.onBackPress'))
+          .maybe(ActionFlow.fromJson),
     );
   }
 }

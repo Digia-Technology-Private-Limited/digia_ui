@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import '../actions/base/action_flow.dart';
 import '../models/common_props.dart';
