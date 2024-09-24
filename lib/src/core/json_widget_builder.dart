@@ -24,10 +24,21 @@ abstract class DUIWidgetBuilder {
     final isVisible =
         eval<bool>(data.containerProps['visibility'], context: context) ?? true;
 
+    final wrapWithSliverToBoxAdapter = eval<bool>(
+            data.containerProps['wrapWithSliverToBoxAdapter'],
+            context: context) ??
+        false;
+
     if (!isVisible) return const SizedBox.shrink();
 
     var current = build(context);
     if (data.containerProps.isEmpty) return current;
+
+    if (wrapWithSliverToBoxAdapter) {
+      return SliverToBoxAdapter(
+        child: current,
+      );
+    }
 
     // Styling
     final styleClass = DUIStyleClass.fromJson(data.containerProps['style']);
