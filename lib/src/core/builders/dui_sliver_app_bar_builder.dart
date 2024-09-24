@@ -21,9 +21,13 @@ class DUISliverAppBarBuilder extends DUIWidgetBuilder {
     final collapsedHeight = props['collapsedHeight'] as String?;
     final expandedHeight = props['expandedHeight'] as String?;
     final backgroundColor = props['backgroundColor'] as String?;
+    final titleSpacing = props['titleSpacing'] as String?;
+    final toolbarHeight = props['toolbarHeight'] as String?;
 
     return SliverAppBar(
-      leading: getLeadingWidget(),
+      toolbarHeight: NumDecoder.toDouble(toolbarHeight) ?? 56,
+      leadingWidth: 0,
+      titleSpacing: NumDecoder.toDouble(titleSpacing) ?? 0,
       flexibleSpace: getFlexibleSpace(),
       backgroundColor: makeColor(backgroundColor),
       snap: NumDecoder.toBool(props['snap']) ?? false,
