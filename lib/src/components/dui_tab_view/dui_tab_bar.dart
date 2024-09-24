@@ -54,8 +54,8 @@ class DUITabBar extends StatelessWidget {
             tabBarProps.tabBarScrollable?.valueFor(keyPath: 'tabAlignment')) ??
         Alignment.center;
 
-    if (selectedChild.isNull) return _emptyChildWidget();
-    final dataList = _controller.dynamicList ?? [];
+    if (selectedChild == null) return _emptyChildWidget();
+    final dataList = _controller.dynamicList;
     return TabBar(
       isScrollable: isScrollable,
       tabAlignment: isScrollable
@@ -73,17 +73,17 @@ class DUITabBar extends StatelessWidget {
       indicatorWeight: tabBarProps.indicatorWeight ?? 2.0,
       indicatorColor: makeColor(tabBarProps.indicatorColor),
       tabs: List.generate(dataList.length, (index) {
-        if (unselectedChild.isNull) {
-          return generateWidget(selectedChild!, index, dataList);
+        if (unselectedChild == null) {
+          return generateWidget(selectedChild, index, dataList);
         }
         return AnimatedBuilder(
           animation: _controller.animation!,
           builder: (context, child) {
             final isSelected = _controller.index == index;
             final selectedWidget =
-                generateWidget(selectedChild!, index, dataList);
+                generateWidget(selectedChild, index, dataList);
             final notSelectedWidget =
-                generateWidget(unselectedChild!, index, dataList);
+                generateWidget(unselectedChild, index, dataList);
             return isSelected ? selectedWidget : notSelectedWidget;
           },
         );
