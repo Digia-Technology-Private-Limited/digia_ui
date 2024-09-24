@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import '../actions/base/action_flow.dart';
 import '../base/virtual_stateless_widget.dart';
+import '../models/props.dart';
 import '../render_payload.dart';
 
-class VWRefreshIndicator extends VirtualStatelessWidget {
+class VWRefreshIndicator extends VirtualStatelessWidget<Props> {
   VWRefreshIndicator({
     required super.props,
     required super.commonProps,

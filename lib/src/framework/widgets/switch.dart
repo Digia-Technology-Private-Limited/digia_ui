@@ -1,10 +1,11 @@
 import 'package:flutter/widgets.dart';
 import '../base/virtual_leaf_stateless_widget.dart';
 import '../internal_widgets/internal_switch.dart';
+import '../models/props.dart';
 import '../models/types.dart';
 import '../render_payload.dart';
 
-class VWSwitch extends VirtualLeafStatelessWidget {
+class VWSwitch extends VirtualLeafStatelessWidget<Props> {
   VWSwitch({
     required super.props,
     required super.commonProps,

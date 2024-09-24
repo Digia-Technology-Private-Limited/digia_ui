@@ -9,7 +9,7 @@ import '../utils/flutter_type_converters.dart';
 import '../utils/functional_util.dart';
 import 'icon.dart';
 
-class VWCalendar extends VirtualLeafStatelessWidget {
+class VWCalendar extends VirtualLeafStatelessWidget<Props> {
   VWCalendar({
     required super.props,
     required super.commonProps,

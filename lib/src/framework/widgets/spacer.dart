@@ -2,8 +2,9 @@ import 'package:flutter/widgets.dart';
 
 import '../base/virtual_leaf_stateless_widget.dart';
 import '../render_payload.dart';
+import '../widget_props/spacer_props.dart';
 
-class VWSpacer extends VirtualLeafStatelessWidget {
+class VWSpacer extends VirtualLeafStatelessWidget<SpacerProps> {
   VWSpacer({
     required super.props,
     required super.commonProps,
@@ -13,7 +14,6 @@ class VWSpacer extends VirtualLeafStatelessWidget {
 
   @override
   Widget render(RenderPayload payload) {
-    final flex = props.getInt('flex') ?? 1;
-    return Spacer(flex: flex);
+    return Spacer(flex: props.flex);
   }
 }

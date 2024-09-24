@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 
 import '../actions/base/action_flow.dart';
 import '../base/virtual_stateless_widget.dart';
+import '../models/props.dart';
 import '../render_payload.dart';
 import '../utils/flutter_type_converters.dart';
 
-class VWGestureDetector extends VirtualStatelessWidget {
+class VWGestureDetector extends VirtualStatelessWidget<Props> {
   VWGestureDetector({
     required super.props,
     required super.parent,

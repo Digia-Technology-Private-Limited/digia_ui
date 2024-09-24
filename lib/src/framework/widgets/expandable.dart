@@ -4,10 +4,11 @@ import 'package:expandable/expandable.dart';
 import 'package:flutter/cupertino.dart';
 import '../../components/dui_icons/icon_helpers/icon_data_serialization.dart';
 import '../base/virtual_stateless_widget.dart';
+import '../models/props.dart';
 import '../render_payload.dart';
 import '../utils/flutter_type_converters.dart';
 
-class VWExpandable extends VirtualStatelessWidget {
+class VWExpandable extends VirtualStatelessWidget<Props> {
   VWExpandable({
     required super.props,
     required super.commonProps,

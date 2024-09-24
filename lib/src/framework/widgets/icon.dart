@@ -2,9 +2,10 @@ import 'package:flutter/widgets.dart';
 
 import '../../components/dui_icons/icon_helpers/icon_data_serialization.dart';
 import '../base/virtual_leaf_stateless_widget.dart';
+import '../models/props.dart';
 import '../render_payload.dart';
 
-class VWIcon extends VirtualLeafStatelessWidget {
+class VWIcon extends VirtualLeafStatelessWidget<Props> {
   VWIcon({
     required super.props,
     required super.commonProps,

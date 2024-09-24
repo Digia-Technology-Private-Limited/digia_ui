@@ -2,9 +2,10 @@ import 'package:flutter/widgets.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 import '../base/virtual_leaf_stateless_widget.dart';
+import '../models/props.dart';
 import '../render_payload.dart';
 
-class VWWebView extends VirtualLeafStatelessWidget {
+class VWWebView extends VirtualLeafStatelessWidget<Props> {
   VWWebView({
     required super.props,
     required super.commonProps,

@@ -3,6 +3,8 @@ import 'package:flutter/painting.dart';
 import 'base/virtual_widget.dart';
 import 'models/vw_node_data.dart';
 import 'virtual_widget_registry.dart';
+import 'widget_props/sized_box_props.dart';
+import 'widget_props/spacer_props.dart';
 import 'widgets/animated_button.dart';
 import 'widgets/app_bar.dart';
 import 'widgets/async_builder.dart';
@@ -209,7 +211,7 @@ VWWebView webViewBuilder(VWNodeData data, VirtualWidget? parent, _) {
 
 VWSizedBox sizedBoxBuilder(VWNodeData data, VirtualWidget? parent, _) {
   return VWSizedBox(
-    props: data.props,
+    props: SizedBoxProps.fromJson(data.props.value),
     commonProps: data.commonProps,
     parent: parent,
     refName: data.refName,
@@ -218,7 +220,7 @@ VWSizedBox sizedBoxBuilder(VWNodeData data, VirtualWidget? parent, _) {
 
 VWSpacer spacerBuilder(VWNodeData data, VirtualWidget? parent, _) {
   return VWSpacer(
-    props: data.props,
+    props: SpacerProps.fromJson(data.props.value),
     commonProps: data.commonProps,
     parent: parent,
     refName: data.refName,

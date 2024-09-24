@@ -5,7 +5,7 @@ import '../base/virtual_widget.dart';
 import '../models/props.dart';
 import '../render_payload.dart';
 
-class VWSafeArea extends VirtualStatelessWidget {
+class VWSafeArea extends VirtualStatelessWidget<Props> {
   VWSafeArea({
     required super.props,
     required super.commonProps,

@@ -3,11 +3,12 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../base/virtual_leaf_stateless_widget.dart';
+import '../models/props.dart';
 import '../render_payload.dart';
 import '../utils/flutter_type_converters.dart';
 import '../utils/functional_util.dart';
 
-class VWCircularProgressBar extends VirtualLeafStatelessWidget {
+class VWCircularProgressBar extends VirtualLeafStatelessWidget<Props> {
   VWCircularProgressBar({
     required super.props,
     required super.commonProps,

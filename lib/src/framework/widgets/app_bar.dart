@@ -9,7 +9,7 @@ import '../utils/widget_util.dart';
 import 'icon.dart';
 import 'text.dart';
 
-class VWAppBar extends VirtualLeafStatelessWidget {
+class VWAppBar extends VirtualLeafStatelessWidget<Props> {
   final VirtualWidget? leadingIcon;
   final VirtualWidget? trailingIcon;
 

@@ -5,13 +5,14 @@ import '../base/extensions.dart';
 import '../base/virtual_leaf_stateless_widget.dart';
 import '../base/virtual_stateless_widget.dart';
 import '../base/virtual_widget.dart';
+import '../models/props.dart';
 import '../render_payload.dart';
 import '../utils/flutter_type_converters.dart';
 import '../utils/functional_util.dart';
 import '../utils/types.dart';
 import 'positioned.dart';
 
-class VWStack extends VirtualStatelessWidget {
+class VWStack extends VirtualStatelessWidget<Props> {
   VWStack(
       {required super.props,
       required super.commonProps,

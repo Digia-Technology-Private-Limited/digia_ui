@@ -8,7 +8,7 @@ import '../internal_widgets/async_builder/index.dart';
 import '../models/props.dart';
 import '../render_payload.dart';
 
-class VWAsyncBuilder extends VirtualStatelessWidget {
+class VWAsyncBuilder extends VirtualStatelessWidget<Props> {
   VWAsyncBuilder({
     required super.props,
     required super.commonProps,

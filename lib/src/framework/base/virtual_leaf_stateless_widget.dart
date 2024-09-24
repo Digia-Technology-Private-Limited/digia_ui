@@ -1,15 +1,14 @@
 import 'package:flutter/widgets.dart';
 
 import '../models/common_props.dart';
-import '../models/props.dart';
 import '../render_payload.dart';
 
 import '../utils/flutter_type_converters.dart';
 import '../utils/widget_util.dart';
 import 'virtual_widget.dart';
 
-abstract class VirtualLeafStatelessWidget extends VirtualWidget {
-  Props props;
+abstract class VirtualLeafStatelessWidget<T> extends VirtualWidget {
+  T props;
   CommonProps? commonProps;
 
   VirtualLeafStatelessWidget({

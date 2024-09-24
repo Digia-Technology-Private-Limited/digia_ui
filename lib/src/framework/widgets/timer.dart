@@ -3,11 +3,12 @@ import 'package:flutter/widgets.dart';
 
 import '../actions/base/action_flow.dart';
 import '../base/virtual_stateless_widget.dart';
+import '../models/props.dart';
 import '../render_payload.dart';
 
 const String _countDownTimerTypeValue = 'countDown';
 
-class VWTimer extends VirtualStatelessWidget {
+class VWTimer extends VirtualStatelessWidget<Props> {
   VWTimer({
     required super.props,
     required super.commonProps,

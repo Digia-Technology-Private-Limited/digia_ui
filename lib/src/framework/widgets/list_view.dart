@@ -4,10 +4,11 @@ import 'package:flutter/widgets.dart';
 import '../base/extensions.dart';
 import '../base/virtual_stateless_widget.dart';
 import '../internal_widgets/internal_list_view.dart';
+import '../models/props.dart';
 import '../render_payload.dart';
 import '../utils/flutter_type_converters.dart';
 
-class VWListView extends VirtualStatelessWidget {
+class VWListView extends VirtualStatelessWidget<Props> {
   VWListView({
     required super.props,
     required super.commonProps,

@@ -6,7 +6,7 @@ import '../models/props.dart';
 import '../render_payload.dart';
 import '../utils/types.dart';
 
-class VWPositioned extends VirtualStatelessWidget {
+class VWPositioned extends VirtualStatelessWidget<Props> {
   VWPositioned({
     required super.props,
     required super.parent,

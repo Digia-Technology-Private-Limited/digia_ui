@@ -3,10 +3,11 @@ import 'package:flutter/widgets.dart';
 
 import '../actions/base/action_flow.dart';
 import '../base/virtual_leaf_stateless_widget.dart';
+import '../models/props.dart';
 import '../render_payload.dart';
 import '../utils/flutter_type_converters.dart';
 
-class VWRichText extends VirtualLeafStatelessWidget {
+class VWRichText extends VirtualLeafStatelessWidget<Props> {
   VWRichText({
     required super.props,
     required super.commonProps,

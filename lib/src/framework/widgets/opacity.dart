@@ -1,8 +1,9 @@
 import 'package:flutter/widgets.dart';
 import '../base/virtual_stateless_widget.dart';
+import '../models/props.dart';
 import '../render_payload.dart';
 
-class VWOpacity extends VirtualStatelessWidget {
+class VWOpacity extends VirtualStatelessWidget<Props> {
   VWOpacity({
     required super.props,
     required super.commonProps,

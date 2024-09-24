@@ -6,11 +6,12 @@ import '../base/extensions.dart';
 import '../base/virtual_leaf_stateless_widget.dart';
 import '../base/virtual_stateless_widget.dart';
 import '../base/virtual_widget.dart';
+import '../models/props.dart';
 import '../render_payload.dart';
 import '../utils/flutter_type_converters.dart';
 import 'flex_fit.dart';
 
-class VWFlex extends VirtualStatelessWidget {
+class VWFlex extends VirtualStatelessWidget<Props> {
   final Axis direction;
 
   VWFlex({

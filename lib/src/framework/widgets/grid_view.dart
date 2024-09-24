@@ -4,10 +4,11 @@ import 'package:flutter/widgets.dart';
 import '../base/extensions.dart';
 import '../base/virtual_stateless_widget.dart';
 import '../internal_widgets/internal_grid_view.dart';
+import '../models/props.dart';
 import '../render_payload.dart';
 import '../utils/flutter_type_converters.dart';
 
-class VWGridView extends VirtualStatelessWidget {
+class VWGridView extends VirtualStatelessWidget<Props> {
   VWGridView({
     required super.props,
     required super.commonProps,

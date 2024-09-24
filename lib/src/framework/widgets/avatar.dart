@@ -7,7 +7,7 @@ import '../utils/flutter_type_converters.dart';
 import 'image.dart';
 import 'text.dart';
 
-class VWAvatar extends VirtualLeafStatelessWidget {
+class VWAvatar extends VirtualLeafStatelessWidget<Props> {
   VWAvatar({
     required super.props,
     required super.commonProps,

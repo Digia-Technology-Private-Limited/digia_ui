@@ -6,7 +6,7 @@ import '../base/virtual_stateless_widget.dart';
 import '../models/props.dart';
 import '../render_payload.dart';
 
-class VWStreamBuilder extends VirtualStatelessWidget {
+class VWStreamBuilder extends VirtualStatelessWidget<Props> {
   VWStreamBuilder({
     required super.props,
     required super.commonProps,

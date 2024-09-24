@@ -13,7 +13,7 @@ import '../render_payload.dart';
 import '../utils/flutter_type_converters.dart';
 import '../utils/widget_util.dart';
 
-class VWImage extends VirtualLeafStatelessWidget {
+class VWImage extends VirtualLeafStatelessWidget<Props> {
   VWImage({
     required super.props,
     required super.commonProps,

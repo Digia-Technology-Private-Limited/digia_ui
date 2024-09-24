@@ -6,9 +6,10 @@ import 'package:video_player/video_player.dart';
 
 import '../../models/dui_file.dart';
 import '../base/virtual_leaf_stateless_widget.dart';
+import '../models/props.dart';
 import '../render_payload.dart';
 
-class VWVideoPlayer extends VirtualLeafStatelessWidget {
+class VWVideoPlayer extends VirtualLeafStatelessWidget<Props> {
   VWVideoPlayer({
     required super.props,
     required super.commonProps,

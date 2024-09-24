@@ -10,7 +10,7 @@ import '../utils/flutter_extensions.dart';
 import '../utils/flutter_type_converters.dart';
 import '../utils/functional_util.dart';
 
-class VWContainer extends VirtualStatelessWidget {
+class VWContainer extends VirtualStatelessWidget<Props> {
   VWContainer({
     required super.props,
     super.commonProps,

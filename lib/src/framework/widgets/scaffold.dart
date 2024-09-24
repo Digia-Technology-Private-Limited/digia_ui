@@ -11,7 +11,7 @@ import 'app_bar.dart';
 import 'icon.dart';
 import 'safe_area.dart';
 
-class VWScaffold extends VirtualStatelessWidget {
+class VWScaffold extends VirtualStatelessWidget<Props> {
   VWScaffold({
     required super.props,
     required super.commonProps,

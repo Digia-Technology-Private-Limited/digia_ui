@@ -11,7 +11,7 @@ import '../utils/types.dart';
 import 'icon.dart';
 import 'text.dart';
 
-class VWButton extends VirtualLeafStatelessWidget {
+class VWButton extends VirtualLeafStatelessWidget<Props> {
   VWButton({
     required super.props,
     required super.commonProps,

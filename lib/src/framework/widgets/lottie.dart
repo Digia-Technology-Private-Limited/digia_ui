@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
 import '../base/virtual_leaf_stateless_widget.dart';
+import '../models/props.dart';
 import '../render_payload.dart';
 import '../utils/flutter_extensions.dart';
 import '../utils/flutter_type_converters.dart';
 
-class VWLottie extends VirtualLeafStatelessWidget {
+class VWLottie extends VirtualLeafStatelessWidget<Props> {
   VWLottie({
     required super.props,
     required super.commonProps,

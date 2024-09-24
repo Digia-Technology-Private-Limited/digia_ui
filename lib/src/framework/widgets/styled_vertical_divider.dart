@@ -3,10 +3,11 @@ import 'package:flutter/widgets.dart';
 import '../../components/border/divider_with_pattern/divider_with_pattern.dart';
 import '../base/virtual_leaf_stateless_widget.dart';
 import '../models/custom_flutter_types.dart';
+import '../models/props.dart';
 import '../render_payload.dart';
 import '../utils/flutter_type_converters.dart';
 
-class VWStyledVerticalDivider extends VirtualLeafStatelessWidget {
+class VWStyledVerticalDivider extends VirtualLeafStatelessWidget<Props> {
   VWStyledVerticalDivider({
     required super.props,
     required super.commonProps,

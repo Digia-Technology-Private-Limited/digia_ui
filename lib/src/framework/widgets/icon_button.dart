@@ -10,7 +10,7 @@ import '../utils/functional_util.dart';
 import '../utils/object_util.dart';
 import 'icon.dart';
 
-class VWIconButton extends VirtualLeafStatelessWidget {
+class VWIconButton extends VirtualLeafStatelessWidget<Props> {
   VWIconButton({
     required super.props,
     required super.commonProps,

@@ -6,7 +6,7 @@ import '../render_payload.dart';
 import '../utils/flutter_type_converters.dart';
 import 'icon.dart';
 
-class VWCheckbox extends VirtualLeafStatelessWidget {
+class VWCheckbox extends VirtualLeafStatelessWidget<Props> {
   VWCheckbox({
     required super.props,
     required super.commonProps,

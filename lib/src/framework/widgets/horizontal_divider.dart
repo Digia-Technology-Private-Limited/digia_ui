@@ -3,9 +3,10 @@ import 'package:styled_divider/styled_divider.dart';
 
 import '../../components/utils/decoder.dart';
 import '../base/virtual_leaf_stateless_widget.dart';
+import '../models/props.dart';
 import '../render_payload.dart';
 
-class VWHorizontalDivider extends VirtualLeafStatelessWidget {
+class VWHorizontalDivider extends VirtualLeafStatelessWidget<Props> {
   VWHorizontalDivider({
     required super.props,
     required super.commonProps,

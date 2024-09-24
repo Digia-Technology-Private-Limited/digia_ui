@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
 import '../base/virtual_leaf_stateless_widget.dart';
+import '../models/props.dart';
 import '../render_payload.dart';
 
-class VWLinearProgressBar extends VirtualLeafStatelessWidget {
+class VWLinearProgressBar extends VirtualLeafStatelessWidget<Props> {
   VWLinearProgressBar({
     required super.props,
     required super.commonProps,

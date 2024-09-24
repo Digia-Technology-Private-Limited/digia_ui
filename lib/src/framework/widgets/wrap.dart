@@ -1,10 +1,11 @@
 import 'package:flutter/widgets.dart';
 import '../base/extensions.dart';
 import '../base/virtual_stateless_widget.dart';
+import '../models/props.dart';
 import '../render_payload.dart';
 import '../utils/flutter_type_converters.dart';
 
-class VWWrap extends VirtualStatelessWidget {
+class VWWrap extends VirtualStatelessWidget<Props> {
   VWWrap({
     required super.props,
     required super.commonProps,

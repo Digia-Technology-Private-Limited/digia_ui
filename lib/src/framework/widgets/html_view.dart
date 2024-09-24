@@ -8,7 +8,7 @@ import '../render_payload.dart';
 import '../utils/flutter_type_converters.dart';
 import '../utils/functional_util.dart';
 
-class VWHtmlView extends VirtualLeafStatelessWidget {
+class VWHtmlView extends VirtualLeafStatelessWidget<Props> {
   VWHtmlView({
     required super.props,
     required super.commonProps,

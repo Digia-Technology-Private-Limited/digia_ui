@@ -5,7 +5,7 @@ import '../base/virtual_widget.dart';
 import '../models/props.dart';
 import '../render_payload.dart';
 
-class VWFlexFit extends VirtualStatelessWidget {
+class VWFlexFit extends VirtualStatelessWidget<Props> {
   VWFlexFit({
     required super.props,
     required super.parent,
