@@ -6,6 +6,8 @@ import '../models/props.dart';
 import '../render_payload.dart';
 import '../utils/flutter_type_converters.dart';
 import '../utils/functional_util.dart';
+import '../utils/json_util.dart';
+import '../utils/types.dart';
 import 'icon.dart';
 import 'text.dart';
 
@@ -81,13 +83,13 @@ class VWButton extends VirtualLeafStatelessWidget {
     Widget? leadingIcon;
     Widget? trailingIcon;
 
-    final localProps = Map<String, dynamic>.from(props.value);
+    final localProps = JsonLike.from(props.value);
 
     if (overrideColor) {
-      localProps['text']?['textStyle']?['textColor'] = disabledTextColor;
+      localProps.setValueFor('text.textStyle.textColor', disabledTextColor);
     } else {
-      localProps['text']?['textStyle']?['textColor'] =
-          props.get('text.textStyle.textColor');
+      localProps.setValueFor(
+          'text.textStyle.textColor', props.get('text.textStyle.textColor'));
     }
 
     text = VWText(

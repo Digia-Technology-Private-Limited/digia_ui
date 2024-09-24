@@ -49,9 +49,9 @@ class SetStateAction extends Action {
 
   factory SetStateAction.fromJson(Map<String, Object?> json) {
     return SetStateAction(
-      // fallback to 'page' if not set for backwar
+      // fallback to 'page' if not set for backward compatibility.
       stateContextName: as<String>(json['stateContextName']),
-      updates: (json['updates'] as List<dynamic>)
+      updates: (json['updates'] as List<Object>)
           .map((update) => StateUpdate.fromJson(update as Map<String, Object?>))
           .toList(),
       rebuild: ExprOr.fromJson<bool>(json['rebuild']),

@@ -22,7 +22,7 @@ class VWRepeatData {
 
   VWRepeatData({required this.type, required this.datum});
 
-  static VWRepeatData? fromJson(dynamic json) {
+  static VWRepeatData? fromJson(Object? json) {
     if (json is! Map) return null;
 
     if (json['kind'] == null || json['datum'] == null) return null;

@@ -37,7 +37,7 @@ class VWLottie extends VirtualLeafStatelessWidget {
     }
 
     Widget errorBuilder(
-        BuildContext context, dynamic object, StackTrace? stackTrace) {
+        BuildContext context, Object object, StackTrace? stackTrace) {
       return SizedBox(
         height: height,
         width: width,

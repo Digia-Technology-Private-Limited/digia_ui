@@ -10,7 +10,7 @@ class NumUtil {
   /// - A valid double if parsing is successful
   /// - double.infinity for 'inf' or 'infinity' strings
   /// - null if parsing fails or input is of an unsupported type
-  static double? toDouble(dynamic input) {
+  static double? toDouble(Object? input) {
     if (input is String) {
       // Check for infinity representations
       if (['inf', 'infinity'].contains(input.toLowerCase())) {
@@ -44,7 +44,7 @@ class NumUtil {
   /// Returns:
   /// - A valid integer if parsing is successful
   /// - null if parsing fails or input is of an unsupported type
-  static int? toInt(dynamic value) {
+  static int? toInt(Object? value) {
     if (value is String) {
       // Handle hexadecimal strings
       if (value.toLowerCase().startsWith('0x')) {
@@ -73,7 +73,7 @@ class NumUtil {
   /// Returns:
   /// - A valid boolean if parsing is successful
   /// - null if parsing fails or input is of an unsupported type
-  static bool? toBool(dynamic value) {
+  static bool? toBool(Object? value) {
     if (value is bool) {
       return value;
     }

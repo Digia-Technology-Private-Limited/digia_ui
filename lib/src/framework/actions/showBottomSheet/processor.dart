@@ -61,7 +61,7 @@ class ShowBottomSheetProcessor
 
     final iconProps = as$<JsonLike>(style['icon']).maybe((p0) => Props(p0));
 
-    Object? result = presentBottomSheet(
+    Object? result = await presentBottomSheet(
         context: navigatorKey?.currentContext ?? context,
         builder: (innerCtx) => viewBuilder(
               innerCtx,

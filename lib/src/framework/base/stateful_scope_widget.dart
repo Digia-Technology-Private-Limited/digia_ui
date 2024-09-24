@@ -12,7 +12,7 @@ class StatefulScopeWidget extends StatefulWidget {
   final Widget Function(BuildContext context, StateContext state) childBuilder;
 
   /// The initial state values for this scope.
-  final Map<String, dynamic> initialState;
+  final Map<String, Object?> initialState;
 
   const StatefulScopeWidget({
     super.key,

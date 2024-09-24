@@ -16,6 +16,7 @@ import 'postMessage/processor.dart';
 import 'rebuild_page/processor.dart';
 import 'setState/processor.dart';
 import 'share/processor.dart';
+import 'showBottomSheet/processor.dart';
 import 'showDialog/processor.dart';
 import 'showToast/processor.dart';
 
@@ -45,7 +46,7 @@ class ActionProcessorFactory {
 
   ActionProcessor getProcessor(an.Action action) {
     switch (action.actionType) {
-      // case an.ActionType.callRestApi:
+      case an.ActionType.callRestApi:
       // return CallRestApiProcessor();
       case an.ActionType.controlDrawer:
         return ControlDrawerProcessor();
@@ -84,12 +85,18 @@ class ActionProcessorFactory {
         );
       case an.ActionType.showToast:
         return ShowToastProcessor();
+      case an.ActionType.showBottomSheet:
+        return ShowBottomSheetProcessor(
+          executeActionFlow: dependencies.executeActionFlow,
+          viewBuilder: dependencies.viewBuilder,
+        );
 
-      // case an.ActionType.uploadFile:
+      case an.ActionType.uploadFile:
       // return UploadFileProcessor();
-      default:
-        throw ArgumentError(
-            'No processor found for action type: ${action.runtimeType}');
+      case an.ActionType.imagePicker:
+      // TODO: Handle this case.
     }
+    // TODO: Remove later
+    return ShowToastProcessor();
   }
 }

@@ -35,12 +35,14 @@ class DUIPageDefinition {
       pageArgDefs: tryKeys<Map<String, VariableDef>>(
         json,
         ['inputArgs', 'pageArgDefs'],
-        parse: (p0) => const VariablesJsonConverter().fromJson(p0),
+        parse: (p0) =>
+            as$<JsonLike>(p0).maybe(const VariablesJsonConverter().fromJson),
       ),
       initStateDefs: tryKeys<Map<String, VariableDef>>(
         json,
         ['variables', 'initStateDefs'],
-        parse: (p0) => const VariablesJsonConverter().fromJson(p0),
+        parse: (p0) =>
+            as$<JsonLike>(p0).maybe(const VariablesJsonConverter().fromJson),
       ),
       layout: as$<JsonLike>(json.valueFor('layout.root')).maybe(
         (p0) => (root: VWNodeData.fromJson(p0)),

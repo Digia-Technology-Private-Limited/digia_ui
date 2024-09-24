@@ -39,7 +39,7 @@ extension MaybeTuple2<T, U> on (T?, U?) {
 /// [orElse] An optional function to provide a default value if casting fails.
 ///
 /// Returns the cast value, or throws if casting fails and no [orElse] is provided.
-T as<T>(dynamic x, {T Function()? orElse}) {
+T as<T>(Object? x, {T Function()? orElse}) {
   if (x is T) {
     return x;
   }
@@ -74,7 +74,7 @@ T as<T>(dynamic x, {T Function()? orElse}) {
 /// This function is particularly useful in scenarios where you want to
 /// attempt a cast without the risk of runtime exceptions, such as when
 /// working with dynamic data or when graceful degradation is preferred.
-T? as$<T>(dynamic x) {
+T? as$<T>(Object? x) {
   if (x is T) {
     return x;
   }

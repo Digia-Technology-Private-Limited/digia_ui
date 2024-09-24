@@ -98,7 +98,7 @@ TextStyle? makeTextStyle(
   );
 }
 
-TextStyle? convertToTextStyle(dynamic value) {
+TextStyle? convertToTextStyle(Object? value) {
   if (value == null || value is! JsonLike) return null;
 
   FontWeight fontWeight = To.fontWeight(value['weight']);

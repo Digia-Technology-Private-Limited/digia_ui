@@ -32,7 +32,7 @@ T? evaluate<T extends Object>(
   return Expression.eval(expression as String, exprContext)?.to<T>();
 }
 
-bool hasExpression(dynamic expression) {
+bool hasExpression(Object? expression) {
   return expression is String && Expression.hasExpression(expression);
 }
 

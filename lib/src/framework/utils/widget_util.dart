@@ -82,7 +82,7 @@ Widget wrapInGestureDetector(
 }
 
 Widget wrapInAlign({
-  dynamic value,
+  Object? value,
   required Widget child,
 }) {
   final alignment = To.alignment(value);
@@ -96,7 +96,7 @@ Widget wrapInAlign({
 }
 
 Widget wrapInAspectRatio({
-  dynamic value,
+  Object? value,
   required Widget child,
 }) {
   final aspectRatio = NumUtil.toDouble(value);

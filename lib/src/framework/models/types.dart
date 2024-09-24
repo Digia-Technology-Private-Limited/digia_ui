@@ -50,13 +50,13 @@ class ExprOr<T extends Object> {
   }
 
   // Creates an ExprOr instance from a JSON representation
-  static ExprOr<T>? fromJson<T extends Object>(dynamic json) {
+  static ExprOr<T>? fromJson<T extends Object>(Object? json) {
     if (json == null) return null;
-    return ExprOr<T>(json as Object);
+    return ExprOr<T>(json);
   }
 
   // Converts the ExprOr instance to a JSON-compatible representation
-  dynamic toJson() => _value;
+  Object? toJson() => _value;
 
   @override
   String toString() => 'ExprOr($_value)';

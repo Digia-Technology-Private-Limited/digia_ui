@@ -64,7 +64,7 @@ class CommonProps {
       style: tryKeys<CommonStyle>(
         json,
         ['style', 'styleClass'],
-        parse: (v) => CommonStyle.fromJson(v),
+        parse: (it) => as$<JsonLike>(it).maybe(CommonStyle.fromJson),
       ),
       onClick: ActionFlow.fromJson(json['onClick']),
       // Dont change anything. Flex & Stack use this.

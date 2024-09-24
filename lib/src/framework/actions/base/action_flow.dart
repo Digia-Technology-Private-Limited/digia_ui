@@ -17,7 +17,7 @@ class ActionFlow {
 
   factory ActionFlow.empty() => ActionFlow(actions: []);
 
-  factory ActionFlow.fromJson(dynamic json) {
+  factory ActionFlow.fromJson(Object? json) {
     if (json is! JsonLike) return ActionFlow.empty();
 
     final inkwell = NumUtil.toBool(json['inkwell']) ?? true;

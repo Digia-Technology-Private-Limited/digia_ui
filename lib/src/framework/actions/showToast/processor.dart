@@ -7,6 +7,7 @@ import '../../page/resource_provider.dart';
 import '../../utils/flutter_type_converters.dart';
 import '../../utils/functional_util.dart';
 import '../../utils/textstyle_util.dart';
+import '../../utils/types.dart';
 import '../base/processor.dart';
 import 'action.dart';
 
@@ -24,7 +25,7 @@ class ShowToastProcessor implements ActionProcessor<ShowToastAction> {
     final message = action.message?.evaluate(exprContext) ?? '';
     final duration = action.duration?.evaluate(exprContext) ?? 2;
 
-    final Map<String, dynamic> style = action.style ?? {};
+    final JsonLike style = action.style ?? {};
 
     final Color? bgColor = ExprOr.fromJson<String>(style['bgColor'])
         ?.evaluate(exprContext)
@@ -33,7 +34,7 @@ class ShowToastProcessor implements ActionProcessor<ShowToastAction> {
         To.borderRadius(style['borderRadius'] ?? '12, 12, 12, 12');
 
     final TextStyle? textStyle = makeTextStyle(
-      style['textStyle'],
+      as$<JsonLike>(style['textStyle']),
       context: context,
       eval: evalExpr,
     );

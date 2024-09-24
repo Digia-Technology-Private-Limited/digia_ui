@@ -24,7 +24,7 @@ class VWNodeData {
     required this.refName,
   });
 
-  factory VWNodeData.fromJson(Map<String, dynamic> json) {
+  factory VWNodeData.fromJson(Map<String, Object?> json) {
     return VWNodeData(
         category: as$<String>(json['category']) ?? '',
         type: as$<String>(json['type']) ?? '',
@@ -45,7 +45,7 @@ class VWNodeData {
         refName: tryKeys<String>(json, ['varName', 'refName']));
   }
 
-  static Map<String, List<VWNodeData>>? _parseVWNodeDataMap(dynamic json) {
+  static Map<String, List<VWNodeData>>? _parseVWNodeDataMap(Object? json) {
     final jsonMap = as$<JsonLike>(json);
     if (jsonMap == null) return null;
 

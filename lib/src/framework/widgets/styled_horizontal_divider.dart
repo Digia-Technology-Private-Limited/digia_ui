@@ -30,7 +30,7 @@ class VWStyledHorizontalDivider extends VirtualLeafStatelessWidget {
               payload.eval<String>(props.get('borderPattern.strokeCap'))) ??
           StrokeCap.butt,
       dashPattern: To.dashPattern(payload
-              .eval<List<dynamic>>(props.get('borderPattern.dashPattern'))) ??
+              .eval<List<Object>>(props.get('borderPattern.dashPattern'))) ??
           [3, 3],
       color: payload.evalColor(props.get('colorType.color')),
       gradient: To.gradient(

@@ -30,9 +30,9 @@ Object? tryJsonDecode(String source, {JsonReviver? reviver}) {
 ///
 /// Returns the value associated with the first matching key, or null if no key is found.
 T? tryKeys<T>(
-  Map<String, dynamic> json,
+  JsonLike json,
   List<String> keys, {
-  T? Function(dynamic)? parse,
+  T? Function(Object?)? parse,
 }) {
   for (final key in keys) {
     if (json.containsKey(key)) {
@@ -69,5 +69,32 @@ extension KeyPath on JsonLike {
 
     // If the current value is not a Map and there are still keys left, return null
     return null;
+  }
+
+  /// Sets the value for a given key path in a nested map.
+  ///
+  /// The [keyPath] parameter is a dot-separated string representing the path to the desired value.
+  /// For example, 'a.b.c' will set the value at map['a']['b']['c'].
+  /// If intermediate maps do not exist, they will be created.
+  void setValueFor(String keyPath, Object? value) {
+    // Split the keyPath into individual keys
+    final keysSplit = keyPath.split('.');
+
+    // Remove and get the first key from the list
+    final thisKey = keysSplit.removeAt(0);
+
+    // If there are no more keys, set the value at the current key
+    if (keysSplit.isEmpty) {
+      this[thisKey] = value;
+      return;
+    }
+
+    // If the current value is not a Map, create a new Map
+    if (this[thisKey] is! JsonLike) {
+      this[thisKey] = <String, Object?>{};
+    }
+
+    // Recursively call setValueFor on the remaining key path
+    (this[thisKey] as JsonLike).setValueFor(keysSplit.join('.'), value);
   }
 }

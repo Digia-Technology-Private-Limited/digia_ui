@@ -3,7 +3,7 @@ class DateUtil {
   ///
   /// Accepts String, DateTime, and int (milliseconds since epoch) as input.
   /// Returns null if the input cannot be converted to a valid DateTime.
-  static DateTime? toDate(dynamic date) {
+  static DateTime? toDate(Object? date) {
     if (date is DateTime) {
       // If it's already a DateTime, return it as is
       return date;

@@ -9,6 +9,7 @@ import 'color_util.dart';
 import 'functional_util.dart';
 import 'json_util.dart';
 import 'num_util.dart';
+import 'types.dart';
 
 abstract class To {
   static MainAxisAlignment? mainAxisAlginment(dynamic value) => switch (value) {
@@ -172,7 +173,7 @@ abstract class To {
     }
 
     // Handle Map input
-    if (value is Map<String, dynamic>) {
+    if (value is JsonLike) {
       // Check for 'all' key
       if (value['all'] != null) {
         return EdgeInsets.all(NumUtil.toDouble(value['all']) ?? 0);
@@ -293,7 +294,7 @@ abstract class To {
       return _toBorderRadiusFromList([value.toDouble()]) ?? BorderRadius.zero;
     }
 
-    if (value is Map<String, dynamic>) {
+    if (value is JsonLike) {
       return BorderRadius.only(
         topLeft: toRadius(value['topLeft']),
         topRight: toRadius(value['topRight']),

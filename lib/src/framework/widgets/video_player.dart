@@ -89,7 +89,7 @@ class VWVideoPlayer extends VirtualLeafStatelessWidget {
           ),
         ],
       ),
-      subtitleBuilder: (context, dynamic subtitle) => Container(
+      subtitleBuilder: (context, subtitle) => Container(
         padding: const EdgeInsets.all(10.0),
         child: subtitle is InlineSpan
             ? RichText(text: subtitle)

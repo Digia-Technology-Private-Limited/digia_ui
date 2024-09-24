@@ -298,7 +298,7 @@ class _DUIPageContentState extends State<_DUIPageContent> {
     );
   }
 
-  _requestObjToMap(dynamic request) {
+  _requestObjToMap(RequestOptions request) {
     return {
       'url': request.path,
       'method': request.method,

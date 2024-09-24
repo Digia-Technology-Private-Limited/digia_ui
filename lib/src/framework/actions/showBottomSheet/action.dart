@@ -1,5 +1,6 @@
 import '../../utils/functional_util.dart';
 import '../../utils/json_util.dart';
+import '../../utils/object_util.dart';
 import '../../utils/types.dart';
 import '../base/action.dart';
 import '../base/action_flow.dart';
@@ -35,7 +36,7 @@ class ShowBottomSheetAction extends Action {
     };
   }
 
-  factory ShowBottomSheetAction.fromJson(Map<String, dynamic> json) {
+  factory ShowBottomSheetAction.fromJson(Map<String, Object?> json) {
     return ShowBottomSheetAction(
       pageId: tryKeys<String>(json, ['pageUId', 'pageId']),
       pageArgs: tryKeys<JsonLike>(json, ['pageArgs', 'args']),

@@ -40,7 +40,7 @@ class VWRichText extends VirtualLeafStatelessWidget {
     );
   }
 
-  List<TextSpan>? _toTextSpan(RenderPayload payload, dynamic textSpan) {
+  List<TextSpan>? _toTextSpan(RenderPayload payload, Object? textSpan) {
     if (textSpan == null) return null;
 
     if (textSpan is String) {

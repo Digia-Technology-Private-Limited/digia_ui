@@ -6,14 +6,14 @@ class StateContext extends ChangeNotifier {
   final String? namespace;
 
   /// The state variables stored in this context.
-  final Map<String, dynamic> _stateVariables;
+  final Map<String, Object?> _stateVariables;
 
   /// The parent context, if any.
   final StateContext? _ancestorContext;
 
   StateContext(
     this.namespace, {
-    required Map<String, dynamic> initialState,
+    required Map<String, Object?> initialState,
     StateContext? ancestorContext,
   })  : _stateVariables = Map.from(initialState),
         _ancestorContext = ancestorContext;
@@ -32,7 +32,7 @@ class StateContext extends ChangeNotifier {
   }
 
   /// Retrieves a value from the state, searching up the context hierarchy if necessary.
-  dynamic getValue(String key) {
+  Object? getValue(String key) {
     if (_stateVariables.containsKey(key)) {
       return _stateVariables[key];
     }
@@ -48,7 +48,7 @@ class StateContext extends ChangeNotifier {
   /// Updates a value in the state, notifying listeners if specified.
   ///
   /// Returns true if the update was successful, false otherwise.
-  bool setValue(String key, dynamic value, {bool notify = true}) {
+  bool setValue(String key, Object? value, {bool notify = true}) {
     if (_stateVariables.containsKey(key)) {
       _stateVariables[key] = value;
       if (notify) notifyListeners();
@@ -91,5 +91,5 @@ class StateContext extends ChangeNotifier {
   bool hasKey(String key) => _stateVariables.containsKey(key);
 
   /// Returns a read-only view of the state variables.
-  Map<String, dynamic> get stateVariables => Map.unmodifiable(_stateVariables);
+  Map<String, Object?> get stateVariables => Map.unmodifiable(_stateVariables);
 }
