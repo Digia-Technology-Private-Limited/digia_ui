@@ -2,6 +2,12 @@
 
 Digia Ui Sdk.
 
+## [0.0.6-beta.33] - 2024-09-25
+
+- New Sliver widgets.
+- Nested Scroll View
+- Bug fixes
+
 ## [0.0.6-beta.32] - 2024-08-09
 
 - Bug Fixes (Stepper Alignment)
