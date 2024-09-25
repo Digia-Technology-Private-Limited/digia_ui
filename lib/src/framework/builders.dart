@@ -40,6 +40,7 @@ import 'widgets/styled_horizontal_divider.dart';
 import 'widgets/styled_vertical_divider.dart';
 import 'widgets/switch.dart';
 import 'widgets/text.dart';
+import 'widgets/text_form_field.dart';
 import 'widgets/timer.dart';
 import 'widgets/vertical_divider.dart';
 import 'widgets/video_player.dart';
@@ -75,6 +76,17 @@ VWRichText richTextBuilder(VWNodeData data, VirtualWidget? parent, _) {
     props: data.props,
     commonProps: data.commonProps,
     parent: parent,
+    refName: data.refName,
+  );
+}
+
+VWTextFormField textFormFieldBuilder(
+    VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
+  return VWTextFormField(
+    props: data.props,
+    commonProps: data.commonProps,
+    parent: parent,
+    childGroups: _createChildGroups(data.childGroups, parent, registry),
     refName: data.refName,
   );
 }
