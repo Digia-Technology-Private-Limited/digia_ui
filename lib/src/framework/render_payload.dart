@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 
 import '../network/api_request/api_request.dart';
 import 'actions/base/action_flow.dart';
+import 'models/types.dart';
 import 'models/vw_repeat_data.dart';
 import 'page/resource_provider.dart';
 import 'ui_factory.dart';
@@ -57,6 +58,10 @@ class RenderPayload {
     );
   }
 
+  T? evalExpr<T extends Object>(ExprOr<T>? expr) {
+    return expr?.evaluate(exprContext);
+  }
+
   // Evaluates an expression with an optional chained expression context
   T? eval<T extends Object>(Object? expression,
       {ExprContext? exprContext, T? Function(Object?)? decoder}) {
@@ -70,8 +75,11 @@ class RenderPayload {
   // Evaluates and retrieves a color from the ResourceProvider
   Color? evalColor(Object? expression,
       {ExprContext? exprContext, String? Function(Object?)? decoder}) {
-    final colorString =
-        eval<String>(expression, exprContext: exprContext, decoder: decoder);
+    final colorString = eval<String>(
+      expression,
+      exprContext: exprContext,
+      decoder: decoder,
+    );
 
     if (colorString == null) return null;
 

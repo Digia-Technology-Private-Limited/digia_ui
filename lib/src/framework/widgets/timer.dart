@@ -18,8 +18,8 @@ class VWTimer extends VirtualStatelessWidget<TimerProps> {
   Widget render(RenderPayload payload) {
     if (child == null) return empty();
 
-    final duration = props.duration?.evaluate(payload.exprContext) ?? 0;
-    final initialValue = props.initialValue?.evaluate(payload.exprContext) ?? 0;
+    final duration = payload.evalExpr(props.duration) ?? 0;
+    final initialValue = payload.evalExpr(props.initialValue) ?? 0;
 
     if (duration <= 0) {
       return child!.toWidget(
@@ -30,7 +30,7 @@ class VWTimer extends VirtualStatelessWidget<TimerProps> {
     }
 
     final updateInterval = Duration(
-      seconds: props.updateInterval?.evaluate(payload.exprContext) ?? 1,
+      seconds: payload.evalExpr(props.updateInterval) ?? 1,
     );
 
     return StreamBuilder(
@@ -40,7 +40,11 @@ class VWTimer extends VirtualStatelessWidget<TimerProps> {
         (i) =>
             props.isCountDown ? initialValue - (i + 1) : initialValue + (i + 1),
       ).take(duration),
-      builder: (context, snapshot) {
+      builder: (innerCtx, snapshot) {
+        final updatedPayload = payload.copyWithChainedContext(
+          _createExprContext(snapshot.data),
+          buildContext: innerCtx,
+        );
         // This should never happen
         if (snapshot.hasError) {
           return empty();
@@ -50,7 +54,7 @@ class VWTimer extends VirtualStatelessWidget<TimerProps> {
             snapshot.connectionState != ConnectionState.waiting) {
           Future.delayed(
             Duration.zero,
-            () async => await payload.executeAction(props.onTick),
+            () async => await updatedPayload.executeAction(props.onTick),
           );
         }
 
@@ -59,16 +63,12 @@ class VWTimer extends VirtualStatelessWidget<TimerProps> {
           Future.delayed(Duration.zero, () async {
             Future.delayed(
               Duration.zero,
-              () async => await payload.executeAction(props.onTimerEnd),
+              () async => await updatedPayload.executeAction(props.onTimerEnd),
             );
           });
         }
 
-        return child!.toWidget(
-          payload.copyWithChainedContext(
-            _createExprContext(snapshot.data!),
-          ),
-        );
+        return child!.toWidget(updatedPayload);
       },
     );
   }
