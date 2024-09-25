@@ -19,7 +19,6 @@ import 'widgets/expandable.dart';
 import 'widgets/flex.dart';
 import 'widgets/flex_fit.dart';
 import 'widgets/grid_view.dart';
-import 'widgets/horizontal_divider.dart';
 import 'widgets/html_view.dart';
 import 'widgets/icon.dart';
 import 'widgets/icon_button.dart';
@@ -41,7 +40,6 @@ import 'widgets/styled_vertical_divider.dart';
 import 'widgets/switch.dart';
 import 'widgets/text.dart';
 import 'widgets/timer.dart';
-import 'widgets/vertical_divider.dart';
 import 'widgets/video_player.dart';
 import 'widgets/web_view.dart';
 import 'widgets/wrap.dart';
@@ -256,23 +254,25 @@ VWVideoPlayer videoPlayerBuilder(VWNodeData data, VirtualWidget? parent, _) {
   );
 }
 
-VWHorizontalDivider horizontalDividerBuilder(
+VWStyledHorizontalDivider horizontalDividerBuilder(
     VWNodeData data, VirtualWidget? parent, _) {
-  return VWHorizontalDivider(
+  return VWStyledHorizontalDivider(
     props: data.props,
     commonProps: data.commonProps,
     parent: parent,
     refName: data.refName,
+    isSimple: true,
   );
 }
 
-VWVerticalDivider verticalDividerBuilder(
+VWStyledVerticalDivider verticalDividerBuilder(
     VWNodeData data, VirtualWidget? parent, _) {
-  return VWVerticalDivider(
+  return VWStyledVerticalDivider(
     props: data.props,
     commonProps: data.commonProps,
     parent: parent,
     refName: data.refName,
+    isSimple: true,
   );
 }
 

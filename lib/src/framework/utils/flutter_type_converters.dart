@@ -4,6 +4,7 @@ import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../components/border/divider_with_pattern/divider_with_pattern.dart';
 import '../models/custom_flutter_types.dart';
 import 'color_util.dart';
 import 'functional_util.dart';
@@ -23,6 +24,23 @@ abstract class To {
         // Return null for any unrecognized input
         _ => null
       };
+
+  static DividerLineStyle? toLineStyle(String? style) {
+    if (style == null) return null;
+
+    switch (style) {
+      case 'dashdotted':
+        return DividerLineStyle.dashDotted;
+      case 'dashed':
+        return DividerLineStyle.dashed;
+      case 'dotted':
+        return DividerLineStyle.dotted;
+      case 'solid':
+        return DividerLineStyle.solid;
+    }
+
+    return null;
+  }
 
   static CrossAxisAlignment? crossAxisAlignment(dynamic value) =>
       switch (value) {

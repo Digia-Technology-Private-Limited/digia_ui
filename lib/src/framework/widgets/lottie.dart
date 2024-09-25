@@ -20,8 +20,9 @@ class VWLottie extends VirtualLeafStatelessWidget<Props> {
     final (repeat, reverse) =
         getAnimationType(props.getString('animationType'));
     final alignment = To.alignment(props.get('alignment'));
-    final height = props.getString('height')?.toHeight(payload.buildContext);
-    final width = props.getString('width')?.toWidth(payload.buildContext);
+    final height =
+        props.get('height').toString().toHeight(payload.buildContext);
+    final width = props.get('width').toString().toWidth(payload.buildContext);
     final animate = payload.eval<bool>(props.get('animate')) ?? true;
     final frameRate = FrameRate(props.getDouble('frameRate') ?? 60);
     final fit = To.boxFit(props.get('fit'));
