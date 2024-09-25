@@ -45,9 +45,11 @@ class RenderPayload {
 
   // Executes an action flow with an optional expression context
   Future<Object?>? executeAction(
-    ActionFlow actionFlow, {
+    ActionFlow? actionFlow, {
     ExprContext? exprContext,
   }) {
+    if (actionFlow == null) return null;
+
     return DefaultActionExecutor.of(buildContext).execute(
       buildContext,
       actionFlow,
