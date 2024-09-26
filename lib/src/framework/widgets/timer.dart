@@ -2,6 +2,8 @@ import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/widgets.dart';
 
 import '../base/virtual_stateless_widget.dart';
+import '../internal_widgets/timer/controller.dart';
+import '../internal_widgets/timer/widget.dart';
 import '../render_payload.dart';
 import '../widget_props/timer_props.dart';
 
@@ -29,22 +31,23 @@ class VWTimer extends VirtualStatelessWidget<TimerProps> {
       );
     }
 
-    final updateInterval = Duration(
-      seconds: payload.evalExpr(props.updateInterval) ?? 1,
+    final controller = TimerController(
+      duration: duration,
+      initialValue: initialValue,
+      updateInterval: Duration(
+        seconds: payload.evalExpr(props.updateInterval) ?? 1,
+      ),
+      isCountDown: props.isCountDown,
     );
 
-    return StreamBuilder(
-      initialData: initialValue,
-      stream: Stream<int>.periodic(
-        updateInterval,
-        (i) =>
-            props.isCountDown ? initialValue - (i + 1) : initialValue + (i + 1),
-      ).take(duration),
+    return TimerWidget(
+      controller: controller,
       builder: (innerCtx, snapshot) {
         final updatedPayload = payload.copyWithChainedContext(
           _createExprContext(snapshot.data),
           buildContext: innerCtx,
         );
+
         // This should never happen
         if (snapshot.hasError) {
           return empty();
