@@ -1,118 +1,114 @@
-// import 'package:digia_expr/digia_expr.dart';
-// import 'package:flutter/widgets.dart';
+import 'package:digia_expr/digia_expr.dart';
+import 'package:flutter/material.dart';
 
-// import '../../../digia_ui.dart';
-// import '../../Utils/basic_shared_utils/dui_decoder.dart';
-// import '../../Utils/basic_shared_utils/num_decoder.dart';
-// import '../../Utils/extensions.dart';
-// import '../../core/action/api_handler.dart';
-// import '../base/extensions.dart';
-// import '../base/virtual_stateless_widget.dart';
-// import '../internal_widgets/internal_paginated_list_view.dart';
-// import '../render_payload.dart';
+import '../../core/action/action_handler.dart';
+import '../../core/action/api_handler.dart';
+import '../base/extensions.dart';
+import '../base/virtual_stateless_widget.dart';
+import '../internal_widgets/internal_paginated_list_view.dart';
+import '../models/props.dart';
+import '../render_payload.dart';
+import '../utils/flutter_type_converters.dart';
 
+class VWPaginatedListView extends VirtualStatelessWidget<Props> {
+  VWPaginatedListView({
+    required super.props,
+    required super.commonProps,
+    required super.childGroups,
+    required super.parent,
+    super.refName,
+    required super.repeatData,
+  });
 
-// class VWPaginatedListView extends VirtualStatelessWidget {
-//   VWPaginatedListView({
-//     required super.props,
-//     required super.commonProps,
-//     required super.childGroups,
-//     required super.parent,
-//     super.refName,
-//     required super.repeatData,
-//   });
+  bool get shouldRepeatChild => repeatData != null;
 
-//   bool get shouldRepeatChild => repeatData != null;
+  @override
+  Widget render(RenderPayload payload) {
+    if (children == null || children!.isEmpty) return empty();
 
-//   @override
-//   Widget render(RenderPayload payload) {
-//     if (children == null || children!.isEmpty) return empty();
+    final initialScrollPosition =
+        payload.eval<String>(props.getString('initialScrollPosition'));
+    final isReverse = payload.eval<bool>(props.getBool('reverse'));
 
-//     final initialScrollPosition =
-//         payload.eval<String>(props.getString('initialScrollPosition'));
-//     final isReverse = payload.eval<bool>(props.getBool('reverse'));
+    if (shouldRepeatChild) {
+      final childToRepeat = children!.first;
+      final items = payload.evalRepeatData(repeatData!);
 
-//     if (shouldRepeatChild) {
-//       final childToRepeat = children!.first;
-//       final items = payload.evalRepeatData(repeatData!);
+      return InternalPaginatedListView(
+        firstPageLoadingWidget:
+            childOf('firstPageLoadingWidget')?.toWidget(payload),
+        newpageLoadingWidget:
+            childOf('newPageLoadingWidget')?.toWidget(payload),
+        pageErrorWidget: childOf('pageErrorWidget')?.toWidget(payload),
+        initialScrollPosition: initialScrollPosition ?? 'start',
+        isReverse: isReverse,
+        scrollDirection: To.axis(props.get('scrollDirection')) ?? Axis.vertical,
+        physics: To.scrollPhysics(props.get('allowScroll')),
+        shrinkWrap: props.getBool('shrinkWrap') ?? false,
+        itemBuilder: (buildContext, index) => childToRepeat.toWidget(
+          payload.copyWithChainedContext(
+            _createExprContext(items[index], index),
+          ),
+        ),
+        apiRequestHandler: (pageKey, controller) {
+          final apiDataSourceId = props.getString('dataSource.id');
+          Map<String, Object?>? apiDataSourceArgs =
+              props.getMap('dataSource.args');
+          if (apiDataSourceId == null) {
+            return;
+          }
+          final apiModel = payload.getApiModel(apiDataSourceId);
+          if (apiModel == null) {
+            return;
+          }
+          final args = apiDataSourceArgs?.map((key, value) {
+            final evalue = payload.eval(value,
+                exprContext: ExprContext(variables: {'offset': pageKey}));
+            final dvalue = apiModel.variables?[key]?.defaultValue;
+            return MapEntry(key, evalue ?? dvalue);
+          });
 
-//       return InternalPaginatedListView(
-//         firstPageLoadingWidget:
-//             childOf('firstPageLoadingWidget')?.toWidget(payload),
-//         newpageLoadingWidget:
-//             childOf('newPageLoadingWidget')?.toWidget(payload),
-//         pageErrorWidget: childOf('pageErrorWidget')?.toWidget(payload),
-//         initialScrollPosition: initialScrollPosition ?? 'start',
-//         isReverse: isReverse,
-//         scrollDirection: DUIDecoder.toAxis(props.get('scrollDirection'),
-//             defaultValue: Axis.vertical),
-//         physics: DUIDecoder.toScrollPhysics(props.get('allowScroll')),
-//         shrinkWrap: NumDecoder.toBoolOrDefault(props.get('shrinkWrap'),
-//             defaultValue: false),
-//         itemBuilder: (buildContext, index) => childToRepeat.toWidget(
-//           payload.copyWithChainedContext(
-//             _createExprContext(items[index], index),
-//           ),
-//         ),
-//         apiRequestHandler: (pageKey, controller) {
-//           final apiDataSourceId =
-//               props.value.valueFor(keyPath: 'dataSource.id');
-//           Map<String, dynamic>? apiDataSourceArgs =
-//               props.value.valueFor(keyPath: 'dataSource.args');
+          ApiHandler.instance
+              .execute(apiModel: apiModel, args: args)
+              .then((resp) {
+            final response = {
+              'body': resp.data,
+              'statusCode': resp.statusCode,
+              'headers': resp.headers,
+              'requestObj': requestObjToMap(resp.requestOptions),
+              'error': null,
+            };
 
-//           final apiModel =
-//               (payload.buildContext.tryRead<DUIPageBloc>()?.config ??
-//                       DigiaUIClient.getConfigResolver())
-//                   .getApiDataSource(apiDataSourceId);
+            final newItems = props.get('newItemsTransformation') == null
+                ? response['body']
+                : payload.eval<List>(props.get('newItemsTransformation'),
+                    exprContext:
+                        ExprContext(variables: {'response': response}));
 
-//           final args = apiDataSourceArgs?.map((key, value) {
-//             final evalue = eval(value,
-//                 context: context,
-//                 enclosing: ExprContext(variables: {'offset': pageKey}));
-//             final dvalue = apiModel.variables?[key]?.defaultValue;
-//             return MapEntry(key, evalue ?? dvalue);
-//           });
+            if (newItems == null || newItems is! List || newItems.isEmpty) {
+              controller.appendLastPage([]);
+            } else {
+              controller.appendPage(newItems.cast<Object>(), pageKey + 1);
+            }
+          });
+        },
+      );
+    }
 
-//           ApiHandler.instance
-//               .execute(apiModel: apiModel, args: args)
-//               .then((resp) {
-//             final response = {
-//               'body': resp.data,
-//               'statusCode': resp.statusCode,
-//               'headers': resp.headers,
-//               'requestObj': requestObjToMap(resp.requestOptions),
-//               'error': null,
-//             };
+    return InternalPaginatedListView(
+      isReverse: isReverse,
+      scrollDirection: To.axis(props.get('scrollDirection')) ?? Axis.vertical,
+      physics: To.scrollPhysics(props.get('allowScroll')),
+      shrinkWrap: props.getBool('shrinkWrap') ?? false,
+      children: children?.toWidgetArray(payload) ?? [],
+    );
+  }
 
-//             final newItems =
-//                 ifNotNull(widget.data.props['newItemsTransformation'], (p0) {
-//                       return eval<List>(p0,
-//                           context: context,
-//                           enclosing:
-//                               ExprContext(variables: {'response': response}));
-//                     }) ??
-//                     response['body'];
-
-//             if (newItems == null || newItems is! List || newItems.isEmpty) {
-//               controller.appendLastPage([]);
-//             } else {
-//               controller.appendPage(newItems.cast<Object>(), pageKey + 1);
-//             }
-//           });
-//         },
-//       );
-//     }
-
-//     return InternalPaginatedListView(
-//       children: children?.toWidgetArray(payload) ?? [],
-//     );
-//   }
-
-//   ExprContext _createExprContext(Object? item, int index) {
-//     return ExprContext(variables: {
-//       'currentItem': item,
-//       'index': index
-//       // TODO: Add class instance using refName
-//     });
-//   }
-// }
+  ExprContext _createExprContext(Object? item, int index) {
+    return ExprContext(variables: {
+      'currentItem': item,
+      'index': index
+      // TODO: Add class instance using refName
+    });
+  }
+}

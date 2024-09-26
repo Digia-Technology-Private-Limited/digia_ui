@@ -5,20 +5,18 @@ class InternalPaginatedSliverList extends StatefulWidget {
   final Widget Function(BuildContext context, int index)? itemBuilder;
   final List<Widget> children;
   final Future<void> Function(
-      int pageKey, PagingController<int, Object> controller) apiRequestHandler;
-  final String dataSourceId;
-  final Map<String, dynamic>? dataSourceArgs;
+      int pageKey, PagingController<int, Object> controller)? apiRequestHandler;
+      final void Function()
   final Widget? firstPageLoadingWidget;
   final Widget? newpageLoadingWidget;
   final Widget? pageErrorWidget;
   final String? newItemsTransformation;
 
   const InternalPaginatedSliverList(
-      {this.itemBuilder,
+      {super.key,
+      this.itemBuilder,
       required this.children,
-      required this.apiRequestHandler,
-      required this.dataSourceId,
-      this.dataSourceArgs,
+      this.apiRequestHandler,
       this.firstPageLoadingWidget,
       this.newpageLoadingWidget,
       this.pageErrorWidget,
@@ -38,7 +36,9 @@ class _InternalPaginatedSliverListState
   void initState() {
     super.initState();
     _pagingController.addPageRequestListener((pageKey) {
-      widget.apiRequestHandler(pageKey, _pagingController);
+      if (widget.apiRequestHandler != null) {
+        widget.apiRequestHandler!(pageKey, _pagingController);
+      }
     });
   }
 
@@ -47,7 +47,7 @@ class _InternalPaginatedSliverListState
     // final items =
     //     createDataItemsForDynamicChildren(data: widget.data, context: context);
     // final items=widget.itemBuilder;
-    // _pagingController.value = PagingState(nextPageKey: 2, itemList: items);
+    _pagingController.value = PagingState(nextPageKey: 2, itemList: items);
 
     super.didChangeDependencies();
   }

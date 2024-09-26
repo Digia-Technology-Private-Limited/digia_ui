@@ -4,8 +4,8 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 class InternalPaginatedListView extends StatefulWidget {
   final Widget Function(BuildContext context, int index)? itemBuilder;
   final List<Widget> children;
-  final Future<void> Function(
-      int pageKey, PagingController<int, Object> controller) apiRequestHandler;
+  final void Function(int pageKey, PagingController<int, Object> controller)?
+      apiRequestHandler;
   final Widget? firstPageLoadingWidget;
   final Widget? newpageLoadingWidget;
   final Widget? pageErrorWidget;
@@ -20,7 +20,7 @@ class InternalPaginatedListView extends StatefulWidget {
       {super.key,
       this.itemBuilder,
       this.children = const [],
-      required this.apiRequestHandler,
+      this.apiRequestHandler,
       this.firstPageLoadingWidget,
       this.newpageLoadingWidget,
       this.pageErrorWidget,
@@ -44,7 +44,8 @@ class _InternalPaginatedListViewState extends State<InternalPaginatedListView> {
   void initState() {
     super.initState();
     _pagingController.addPageRequestListener((pageKey) {
-      widget.apiRequestHandler(pageKey, _pagingController);
+      if (widget.apiRequestHandler == null) return;
+      widget.apiRequestHandler!(pageKey, _pagingController);
     });
   }
 
@@ -59,11 +60,6 @@ class _InternalPaginatedListViewState extends State<InternalPaginatedListView> {
 
   @override
   Widget build(BuildContext context) {
-    // final children = widget.data.children['children']!;
-
-    // final generateChildrenDynamically =
-    //     widget.data.dataRef.isNotEmpty && widget.data.dataRef['kind'] != null;
-
     final initialScrollPosition = widget.initialScrollPosition;
     final bool isReverse = widget.isReverse ?? false;
 
