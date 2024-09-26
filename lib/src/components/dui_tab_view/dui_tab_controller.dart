@@ -25,16 +25,7 @@ class DUITabController extends StatelessWidget {
     if (child.isNull) return _emptyChildWidget();
     final builder = DUIJsonWidgetBuilder(data: child!, registry: registry);
     return DUITabControllerProvider(
-      length: tabControllerProps.length ?? 0,
-      dynamicList: toDynamicList(tabControllerProps.dynamicList),
-      // animationDuration: tabControllerProps.animationDuration,
-      // Builder Code
-      //"animationDuration": {
-      // "type": "number",
-      // "panelConfig": {
-      // "label": "Animation Duration (in Seconds)"
-      // }
-      //   },
+      dynamicList: toDynamicList(tabControllerProps.dynamicList, context) ?? [],
       initialIndex:
           eval<int>(tabControllerProps.initialIndex, context: context) ?? 0,
       child: builder.build(context),
@@ -50,16 +41,18 @@ class DUITabController extends StatelessWidget {
     );
   }
 
-  static List<dynamic>? toDynamicList(dynamic dynamicList) {
-    if (dynamicList is! String) {
-      return null;
-    }
-    final parsed = tryJsonDecode(dynamicList) ?? dynamicList;
+  static List? toDynamicList(dynamic dynamicList, BuildContext context) {
+    if (dynamicList is List) return dynamicList;
 
-    if (parsed == null) return null;
+    return eval<List>(
+      dynamicList,
+      context: context,
+      decoder: (p0) {
+        final parsed = tryJsonDecode(dynamicList);
+        if (parsed is List) return parsed;
 
-    if (parsed is! List) return null;
-
-    return parsed;
+        return null;
+      },
+    );
   }
 }

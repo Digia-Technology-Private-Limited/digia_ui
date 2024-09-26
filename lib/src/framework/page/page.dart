@@ -10,7 +10,7 @@ import '../actions/base/action_flow.dart';
 import '../base/state_context.dart';
 import '../base/stateful_scope_widget.dart';
 import '../internal_widgets/async_builder/controller.dart';
-import '../internal_widgets/async_builder/index.dart';
+import '../internal_widgets/async_builder/widget.dart';
 import '../models/page_definition.dart';
 import '../models/vw_node_data.dart';
 import '../render_payload.dart';
@@ -149,7 +149,7 @@ class _DUIPageContentState extends State<_DUIPageContent> {
   Widget build(BuildContext context) {
     return PopScope(
         onPopInvoked: _handleBackPress,
-        child: AsyncBuilder.withController(
+        child: AsyncBuilder(
             controller: _makeController(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {

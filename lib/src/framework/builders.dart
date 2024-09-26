@@ -5,6 +5,7 @@ import 'models/vw_node_data.dart';
 import 'virtual_widget_registry.dart';
 import 'widget_props/sized_box_props.dart';
 import 'widget_props/spacer_props.dart';
+import 'widget_props/timer_props.dart';
 import 'widgets/animated_button.dart';
 import 'widgets/app_bar.dart';
 import 'widgets/async_builder.dart';
@@ -452,7 +453,7 @@ VWCalendar calendarBuilder(VWNodeData data, VirtualWidget? parent, _) {
 VWTimer timerBuilder(
     VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
   return VWTimer(
-    props: data.props,
+    props: TimerProps.fromJson(data.props.value),
     commonProps: data.commonProps,
     parent: parent,
     refName: data.refName,
