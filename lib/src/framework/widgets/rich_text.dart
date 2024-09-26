@@ -6,6 +6,7 @@ import '../base/virtual_leaf_stateless_widget.dart';
 import '../models/props.dart';
 import '../render_payload.dart';
 import '../utils/flutter_type_converters.dart';
+import '../utils/functional_util.dart';
 
 class VWRichText extends VirtualLeafStatelessWidget<Props> {
   VWRichText({
@@ -68,15 +69,15 @@ class VWRichText extends VirtualLeafStatelessWidget<Props> {
           }
 
           if (text == null) return null;
-
           return TextSpan(
               text: text,
               style: style,
-              recognizer: span['onClick'].maybe((p0) => TapGestureRecognizer()
-                ..onTap = () {
-                  final onClick = ActionFlow.fromJson(span['onClick']);
-                  payload.executeAction(onClick);
-                }));
+              recognizer: (span['onClick'] as Object?)
+                  .maybe((p0) => TapGestureRecognizer()
+                    ..onTap = () {
+                      final onClick = ActionFlow.fromJson(span['onClick']);
+                      payload.executeAction(onClick);
+                    }));
         })
         .nonNulls
         .toList();
