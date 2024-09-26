@@ -29,6 +29,7 @@ import 'widgets/linear_progress_bar.dart';
 import 'widgets/list_view.dart';
 import 'widgets/lottie.dart';
 import 'widgets/opacity.dart';
+import 'widgets/pin_field.dart';
 import 'widgets/refresh_indicator.dart';
 import 'widgets/rich_text.dart';
 import 'widgets/safe_area.dart';
@@ -93,6 +94,15 @@ VWContainer containerBuilder(
 
 VWIcon iconBuilder(VWNodeData data, VirtualWidget? parent, _) {
   return VWIcon(
+    props: data.props,
+    commonProps: data.commonProps,
+    parent: parent,
+    refName: data.refName,
+  );
+}
+
+VWPinField pinFieldBuilder(VWNodeData data, VirtualWidget? parent, _) {
+  return VWPinField(
     props: data.props,
     commonProps: data.commonProps,
     parent: parent,
