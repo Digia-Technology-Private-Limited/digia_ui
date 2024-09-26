@@ -88,7 +88,9 @@ class VWScaffold extends VirtualStatelessWidget<Props> {
 
   VirtualWidget? _drawerIcon() {
     final child = childOf('drawer');
-    if (child == null || child is! VirtualLeafStatelessWidget) return null;
+    if (child == null || child is! VirtualLeafStatelessWidget<Props>) {
+      return null;
+    }
 
     return child.props.getMap('drawerIcon').maybe((p0) {
       return VWIcon(props: Props(p0), commonProps: null, parent: null);
@@ -97,7 +99,9 @@ class VWScaffold extends VirtualStatelessWidget<Props> {
 
   VirtualWidget? _endDrawerIcon() {
     final child = childOf('endDrawer');
-    if (child == null || child is! VirtualLeafStatelessWidget) return null;
+    if (child == null || child is! VirtualLeafStatelessWidget<Props>) {
+      return null;
+    }
 
     return child.props.getMap('drawerIcon').maybe((p0) {
       return VWIcon(props: Props(p0), commonProps: null, parent: null);
