@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 import '../base/extensions.dart';
-import '../base/virtual_leaf_stateless_widget.dart';
 import '../base/virtual_stateless_widget.dart';
 import '../base/virtual_widget.dart';
 import '../models/props.dart';
 import '../render_payload.dart';
 import '../utils/functional_util.dart';
 import 'app_bar.dart';
+import 'drawer.dart';
 import 'icon.dart';
 import 'safe_area.dart';
 
@@ -88,7 +88,9 @@ class VWScaffold extends VirtualStatelessWidget<Props> {
 
   VirtualWidget? _drawerIcon() {
     final child = childOf('drawer');
-    if (child == null || child is! VirtualLeafStatelessWidget<Props>) {
+
+    if (child == null || child is! VWDrawer) {
+
       return null;
     }
 
@@ -99,7 +101,9 @@ class VWScaffold extends VirtualStatelessWidget<Props> {
 
   VirtualWidget? _endDrawerIcon() {
     final child = childOf('endDrawer');
-    if (child == null || child is! VirtualLeafStatelessWidget<Props>) {
+
+    if (child == null || child is! VWDrawer) {
+
       return null;
     }
 
