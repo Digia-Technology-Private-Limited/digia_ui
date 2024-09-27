@@ -34,7 +34,7 @@ class VWTabBar extends VirtualStatelessWidget {
             ?.valueFor(keyPath: 'tabAlignment')) ??
         Alignment.center;
     if (selectedChild.isNull) return _emptyChildWidget();
-    final dataList = _controller.dynamicList ?? [];
+    final dataList = _controller.dynamicList;
     return TabBar(
       isScrollable: isScrollable,
       tabAlignment: isScrollable
