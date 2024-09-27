@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../base/virtual_stateless_widget.dart';
 import '../../internal_widgets/tab_view/controller.dart';
-import '../../internal_widgets/tab_view/tab_view_controller_provider.dart';
+import '../../internal_widgets/tab_view/inherited_tab_view_controller.dart';
 import '../../render_payload.dart';
 import '../../utils/flutter_type_converters.dart';
 import '../../utils/functional_util.dart';
@@ -22,7 +22,7 @@ class VWTabViewContent extends VirtualStatelessWidget<TabViewContentProps> {
   @override
   Widget render(RenderPayload payload) {
     TabViewController? controller =
-        TabViewControllerProvider.maybeOf(payload.buildContext);
+        InheritedTabViewController.maybeOf(payload.buildContext);
     if (controller == null) return empty();
 
     if (child == null) return empty();

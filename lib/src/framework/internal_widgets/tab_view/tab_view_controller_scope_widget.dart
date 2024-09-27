@@ -1,17 +1,17 @@
 import 'package:flutter/widgets.dart';
 
 import 'controller.dart';
-import 'tab_view_controller_provider.dart';
+import 'inherited_tab_view_controller.dart';
 
 class TabViewControllerScopeWidget extends StatefulWidget {
   final List<Object?> tabs;
   final int initialIndex;
-  final Widget child;
+  final WidgetBuilder childBuilder;
 
   const TabViewControllerScopeWidget({
     super.key,
     required this.tabs,
-    required this.child,
+    required this.childBuilder,
     this.initialIndex = 0,
   });
 
@@ -47,9 +47,10 @@ class _TabViewControllerScopeWidgetState
 
   @override
   Widget build(BuildContext context) {
-    return TabViewControllerProvider(
+    return InheritedTabViewController(
       tabController: _tabController,
-      child: widget.child,
+      // This is important, to insert a layer of BuildContext in between inheritedwidget and its child.
+      child: Builder(builder: (innerCtx) => widget.childBuilder(innerCtx)),
     );
   }
 }

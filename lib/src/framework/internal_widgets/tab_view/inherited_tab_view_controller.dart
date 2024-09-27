@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 import 'controller.dart';
 
-class TabViewControllerProvider extends InheritedWidget {
+class InheritedTabViewController extends InheritedWidget {
   final TabViewController tabController;
 
-  const TabViewControllerProvider({
+  const InheritedTabViewController({
     super.key,
     required this.tabController,
     required super.child,
@@ -14,7 +14,7 @@ class TabViewControllerProvider extends InheritedWidget {
   /// Retrieve the [TabViewController] from the context or return null if it doesn't exist
   static TabViewController? maybeOf(BuildContext context) {
     return context
-        .getInheritedWidgetOfExactType<TabViewControllerProvider>()
+        .getInheritedWidgetOfExactType<InheritedTabViewController>()
         ?.tabController;
   }
 
@@ -26,6 +26,6 @@ class TabViewControllerProvider extends InheritedWidget {
   }
 
   @override
-  bool updateShouldNotify(covariant TabViewControllerProvider oldWidget) =>
+  bool updateShouldNotify(covariant InheritedTabViewController oldWidget) =>
       false;
 }

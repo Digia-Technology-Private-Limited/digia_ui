@@ -6,7 +6,7 @@ import '../../../Utils/extensions.dart';
 import '../../../Utils/util_functions.dart';
 import '../../base/virtual_stateless_widget.dart';
 import '../../internal_widgets/tab_view/controller.dart';
-import '../../internal_widgets/tab_view/tab_view_controller_provider.dart';
+import '../../internal_widgets/tab_view/inherited_tab_view_controller.dart';
 import '../../models/props.dart';
 import '../../render_payload.dart';
 import '../../utils/flutter_type_converters.dart';
@@ -23,7 +23,7 @@ class VWTabBar extends VirtualStatelessWidget<Props> {
   @override
   Widget render(RenderPayload payload) {
     TabViewController? controller =
-        TabViewControllerProvider.maybeOf(payload.buildContext);
+        InheritedTabViewController.maybeOf(payload.buildContext);
     if (controller == null) return empty();
 
     final selectedChild = childOf('selectedWidget');

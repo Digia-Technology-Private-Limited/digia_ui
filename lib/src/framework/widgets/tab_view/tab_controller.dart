@@ -39,7 +39,10 @@ class VWTabController extends VirtualStatelessWidget<TabViewControllerProps> {
     return TabViewControllerScopeWidget(
       tabs: tabs,
       initialIndex: initialIndex,
-      child: child!.toWidget(payload),
+      childBuilder: (innerCtx) {
+        final updatedPayload = payload.copyWith(buildContext: innerCtx);
+        return child!.toWidget(updatedPayload);
+      },
     );
   }
 }
