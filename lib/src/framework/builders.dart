@@ -3,6 +3,7 @@ import 'package:flutter/painting.dart';
 import 'base/virtual_widget.dart';
 import 'models/vw_node_data.dart';
 import 'virtual_widget_registry.dart';
+import 'widget_props/pin_field_props.dart';
 import 'widget_props/sized_box_props.dart';
 import 'widget_props/spacer_props.dart';
 import 'widget_props/timer_props.dart';
@@ -103,7 +104,7 @@ VWIcon iconBuilder(VWNodeData data, VirtualWidget? parent, _) {
 
 VWPinField pinFieldBuilder(VWNodeData data, VirtualWidget? parent, _) {
   return VWPinField(
-    props: data.props,
+    props: PinFieldProps.fromJson(data.props.value),
     commonProps: data.commonProps,
     parent: parent,
     refName: data.refName,
