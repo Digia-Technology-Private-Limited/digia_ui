@@ -6,6 +6,8 @@ import 'virtual_widget_registry.dart';
 import 'widget_props/pin_field_props.dart';
 import 'widget_props/sized_box_props.dart';
 import 'widget_props/spacer_props.dart';
+import 'widget_props/tab_view_content_props.dart';
+import 'widget_props/tab_view_controller_props.dart';
 import 'widget_props/timer_props.dart';
 import 'widgets/animated_button.dart';
 import 'widgets/app_bar.dart';
@@ -42,9 +44,9 @@ import 'widgets/stream_builder.dart';
 import 'widgets/styled_horizontal_divider.dart';
 import 'widgets/styled_vertical_divider.dart';
 import 'widgets/switch.dart';
-import 'widgets/tab_bar.dart';
-import 'widgets/tab_controller.dart';
-import 'widgets/tab_view_content.dart';
+import 'widgets/tab_view/tab_bar.dart';
+import 'widgets/tab_view/tab_controller.dart';
+import 'widgets/tab_view/tab_view_content.dart';
 import 'widgets/text.dart';
 import 'widgets/timer.dart';
 import 'widgets/vertical_divider.dart';
@@ -512,7 +514,7 @@ VWOpacity opacityBuilder(
 VWTabController tabControllerBuilder(
     VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
   return VWTabController(
-    props: data.props,
+    props: TabViewControllerProps.fromJson(data.props.value),
     commonProps: data.commonProps,
     parent: parent,
     childGroups: _createChildGroups(data.childGroups, parent, registry),
@@ -534,7 +536,7 @@ VWTabBar tabBarBuilder(
 VWTabViewContent tabViewContentBuilder(
     VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
   return VWTabViewContent(
-    props: data.props,
+    props: TabViewContentProps.fromJson(data.props.value),
     commonProps: data.commonProps,
     parent: parent,
     // repeatData: data.repeatData,

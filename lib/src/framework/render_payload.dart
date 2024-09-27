@@ -58,8 +58,12 @@ class RenderPayload {
     );
   }
 
-  T? evalExpr<T extends Object>(ExprOr<T>? expr) {
-    return expr?.evaluate(exprContext);
+  T? evalExpr<T extends Object>(ExprOr<T>? expr,
+      {T? Function(Object?)? decoder}) {
+    return expr?.evaluate(
+      exprContext,
+      decoder: decoder,
+    );
   }
 
   // Evaluates an expression with an optional chained expression context
