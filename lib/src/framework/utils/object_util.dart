@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 
+import 'json_util.dart';
 import 'num_util.dart';
 
 /// Extension on Object? to provide a flexible type conversion method.
@@ -33,11 +34,21 @@ extension ObjectExt on Object? {
           const (double) => NumUtil.toDouble(value) as R?,
           // Use NumUtil for boolean conversion
           const (bool) => NumUtil.toBool(value) as R?,
+          // List conversion
+          const (List) || const (List<Object>) => _toList(value) as R?,
           // For any other type, attempt a safe cast
           _ => value.as$<R>()
         } ??
         // If all conversions fail, return the default value
         defaultValue;
+  }
+
+  // Helper method for List conversion
+  List<Object>? _toList(Object? value) {
+    if (value is List<Object>) return value;
+    if (value is! String) return null;
+    final parsed = tryJsonDecode(value);
+    return parsed is List<Object> ? parsed : null;
   }
 
   /// Safely attempts to cast the current object to a specified type R, with graceful fallback to null.
@@ -69,7 +80,7 @@ extension ObjectExt on Object? {
   /// The debug logging helps identify type mismatches during development.
   R? as$<R>() {
     if (this is R) {
-      return this as R?;
+      return this as R;
     }
 
     // Log the cast error in debug mode
