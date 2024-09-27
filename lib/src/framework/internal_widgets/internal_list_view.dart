@@ -37,18 +37,15 @@ class _InternalListViewState extends State<InternalListView> {
 
     if (widget.initialScrollPosition == 'end') {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        _scrollToEnd();
+        _setInitialScrollPosition();
       });
     }
   }
 
-  void _scrollToEnd() {
+  void _setInitialScrollPosition() {
+    if (!mounted) return;
     if (_scrollController.hasClients) {
-      _scrollController.animateTo(
-        _scrollController.position.maxScrollExtent,
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeOut,
-      );
+      _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
     }
   }
 

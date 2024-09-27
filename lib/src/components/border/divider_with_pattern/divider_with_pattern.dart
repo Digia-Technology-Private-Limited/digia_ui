@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import '../../../framework/models/custom_flutter_types.dart';
 import '../custom_shape/path_draw.dart';
 
-enum DividerLineStyle { solid, dotted, dashed, dashDotted }
-
 class DividerWithPattern extends StatelessWidget {
   final double? size;
   final double? thickness;

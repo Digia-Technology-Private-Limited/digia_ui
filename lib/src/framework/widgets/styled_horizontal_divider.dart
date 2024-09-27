@@ -9,19 +9,35 @@ import '../models/props.dart';
 import '../render_payload.dart';
 import '../utils/flutter_type_converters.dart';
 
+/// A styled horizontal divider widget that supports custom patterns and gradients.
+///
+/// You must provide either [horizontalDividerProps] or [styledHorizontalDividerProps].
+/// This ensures that the widget can render with the proper divider style and attributes.
 class VWStyledHorizontalDivider extends VirtualLeafStatelessWidget<Props> {
-  final bool isSimple;
+  final Props? horizontalDividerProps;
+  final Props? styledHorizontalDividerProps;
   VWStyledHorizontalDivider({
-    required super.props,
     required super.commonProps,
     required super.parent,
-    this.isSimple = false,
+    this.horizontalDividerProps,
+    this.styledHorizontalDividerProps,
     super.refName,
-  });
+  })  : assert(
+            horizontalDividerProps != null ||
+                styledHorizontalDividerProps != null,
+            'Either horizontalDividerProps or styledHorizontalDividerProps must not be null.'),
+        super(
+          props: styledHorizontalDividerProps ??
+              horizontalDividerProps ??
+              Props.empty(),
+        );
 
   @override
   Widget render(RenderPayload payload) {
-    if (isSimple) {
+    if (props.isEmpty) {
+      return empty();
+    }
+    if (horizontalDividerProps != null) {
       final thickness = payload.eval<double>(props.get('thickness')) ?? 1;
       final lineStyle = To.toLineStyle(props.getString('lineStyle')) ??
           DividerLineStyle.solid;
