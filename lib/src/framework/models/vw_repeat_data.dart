@@ -1,4 +1,4 @@
-import '../../Utils/basic_shared_utils/lodash.dart';
+import '../utils/json_util.dart';
 
 class VWRepeatData {
   final String type;
@@ -22,10 +22,10 @@ class VWRepeatData {
 
   VWRepeatData({required this.type, required this.datum});
 
-  static VWRepeatData? fromJson(dynamic json) {
+  static VWRepeatData? fromJson(Object? json) {
     if (json is! Map) return null;
 
-    if (json['kind'] == null) return null;
+    if (json['kind'] == null || json['datum'] == null) return null;
 
     return VWRepeatData(type: json['kind'], datum: json['datum']);
   }

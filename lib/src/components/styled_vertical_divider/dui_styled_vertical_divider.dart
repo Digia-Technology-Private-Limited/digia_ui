@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
-import '../../Utils/basic_shared_utils/types.dart';
 import '../../Utils/util_functions.dart';
+import '../../framework/models/custom_flutter_types.dart';
 import '../border/divider_with_pattern/divider_with_pattern.dart';
 import 'dui_styled_vertical_divider_props.dart';
 

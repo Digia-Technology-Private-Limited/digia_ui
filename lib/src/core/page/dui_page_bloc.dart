@@ -135,11 +135,13 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
       final res = {
         'error': e,
       };
-
+      
+      
       if (!context.mounted) {
-        emit(state.copyWith(isLoading: false, dataSource: null));
         return;
       }
+
+      emit(state.copyWith(isLoading: false, dataSource: null));
 
       final errorAction = ActionFlow.fromJson(action.data['onError']);
       await ActionHandler.instance.execute(

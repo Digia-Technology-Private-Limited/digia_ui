@@ -2,14 +2,16 @@ import 'package:collection/collection.dart';
 import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/widgets.dart';
 
-import '../../Utils/basic_shared_utils/dui_decoder.dart';
-import '../core/extensions.dart';
-import '../core/virtual_stateless_widget.dart';
-import '../core/virtual_widget.dart';
+import '../base/extensions.dart';
+import '../base/virtual_leaf_stateless_widget.dart';
+import '../base/virtual_stateless_widget.dart';
+import '../base/virtual_widget.dart';
+import '../models/props.dart';
 import '../render_payload.dart';
+import '../utils/flutter_type_converters.dart';
 import 'flex_fit.dart';
 
-class VWFlex extends VirtualStatelessWidget {
+class VWFlex extends VirtualStatelessWidget<Props> {
   final Axis direction;
 
   VWFlex({
@@ -63,15 +65,16 @@ class VWFlex extends VirtualStatelessWidget {
   VirtualWidget _wrapInFlexFitForBackwardCompat(
       VirtualWidget childVirtualWidget) {
     // Ignore if widget is already wrapped in FlexFit
-    if (childVirtualWidget is! VirtualStatelessWidget ||
+    if (childVirtualWidget is! VirtualLeafStatelessWidget ||
         childVirtualWidget is VWFlexFit) {
       return childVirtualWidget;
     }
 
-    final expansionType =
-        childVirtualWidget.commonProps?.getString('expansion.type');
-    final flexValue =
-        childVirtualWidget.commonProps?.getInt('expansion.flexValue') ?? 1;
+    final expansionType = childVirtualWidget.commonProps?.parentProps
+        ?.getString('expansion.type');
+    final flexValue = childVirtualWidget.commonProps?.parentProps
+            ?.getInt('expansion.flexValue') ??
+        1;
 
     if (expansionType == null) return childVirtualWidget;
 
@@ -86,18 +89,13 @@ class VWFlex extends VirtualStatelessWidget {
   Widget _buildFlex(List<Widget> Function() childrenBuilder) {
     return Flex(
       direction: direction,
-      mainAxisSize: DUIDecoder.toMainAxisSizeOrDefault(
-        props.get('mainAxisSize'),
-        defaultValue: MainAxisSize.min,
-      ),
-      mainAxisAlignment: DUIDecoder.toMainAxisAlginmentOrDefault(
-        props.get('mainAxisAlignment'),
-        defaultValue: MainAxisAlignment.start,
-      ),
-      crossAxisAlignment: DUIDecoder.toCrossAxisAlignmentOrDefault(
-        props.get('crossAxisAlignment'),
-        defaultValue: CrossAxisAlignment.center,
-      ),
+      mainAxisSize:
+          To.mainAxisSize(props.get('mainAxisSize')) ?? MainAxisSize.min,
+      mainAxisAlignment: To.mainAxisAlginment(props.get('mainAxisAlignment')) ??
+          MainAxisAlignment.start,
+      crossAxisAlignment:
+          To.crossAxisAlignment(props.get('crossAxisAlignment')) ??
+              CrossAxisAlignment.center,
       children: childrenBuilder(),
     );
   }

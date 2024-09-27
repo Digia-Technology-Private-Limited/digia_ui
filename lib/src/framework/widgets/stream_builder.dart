@@ -1,22 +1,19 @@
 import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/material.dart';
-import '../../Utils/extensions.dart';
-import '../../core/action/action_handler.dart';
-import '../../core/action/action_prop.dart';
-import '../../core/page/dui_page_bloc.dart';
-import '../core/virtual_stateless_widget.dart';
+
+import '../actions/base/action_flow.dart';
+import '../base/virtual_stateless_widget.dart';
 import '../models/props.dart';
 import '../render_payload.dart';
 
-class VWStreamBuilder extends VirtualStatelessWidget {
+class VWStreamBuilder extends VirtualStatelessWidget<Props> {
   VWStreamBuilder({
     required super.props,
     required super.commonProps,
     required super.childGroups,
     required super.parent,
     super.refName,
-    required super.repeatData,
-  });
+  }) : super(repeatData: null);
 
   @override
   Widget render(RenderPayload payload) {
@@ -34,8 +31,7 @@ class VWStreamBuilder extends VirtualStatelessWidget {
         if (snapshot.hasError) {
           Future.delayed(const Duration(seconds: 0), () async {
             final actionFlow = ActionFlow.fromJson(props.get('onError'));
-            await ActionHandler.instance
-                .execute(context: context, actionFlow: actionFlow);
+            await payload.executeAction(actionFlow);
           });
           return childOf('errorWidget')?.toWidget(payload) ??
               Text(
@@ -47,14 +43,11 @@ class VWStreamBuilder extends VirtualStatelessWidget {
         if (snapshot.connectionState == ConnectionState.active) {
           Future.delayed(const Duration(seconds: 0), () async {
             final actionFlow = ActionFlow.fromJson(props.get('onSuccess'));
-            await ActionHandler.instance.execute(
-                context: context,
-                actionFlow: actionFlow,
-                enclosing: _createExprContext(snapshot.data, null));
+            await payload.executeAction(actionFlow);
           });
           return childOf('listeningWidget')!.toWidget(
             payload.copyWithChainedContext(
-              _createExprContext(null, snapshot.data),
+              _createExprContext(snapshot.data),
             ),
           );
         }
@@ -68,18 +61,19 @@ class VWStreamBuilder extends VirtualStatelessWidget {
     );
   }
 
+  // TODO: Check if this will work.
   Stream<Object?> _makeStream(Props stream, RenderPayload payload) {
-    final streamName = stream.get('name');
-    final pageArgsMap =
-        payload.buildContext.tryRead<DUIPageBloc>()?.state.pageArgs;
-    final streamSource = pageArgsMap?[streamName];
+    final streamName = stream.getString('name');
+    if (streamName == null) {
+      return Stream.error('No source provided');
+    }
+    final streamSource = payload.eval('\${params.$streamName}');
     if (streamSource != null) return streamSource as Stream<Object?>;
     return Stream.error('Stream not found');
   }
 
-  ExprContext _createExprContext(Object? response, Object? streamValue) {
+  ExprContext _createExprContext(Object? streamValue) {
     return ExprContext(variables: {
-      'response': response,
       'streamValue': streamValue,
     });
   }

@@ -1,10 +1,11 @@
 import 'package:flutter/widgets.dart';
-import '../../Utils/util_functions.dart';
-import '../core/virtual_leaf_stateless_widget.dart';
+import '../base/virtual_leaf_stateless_widget.dart';
 import '../internal_widgets/internal_switch.dart';
+import '../models/props.dart';
+import '../models/types.dart';
 import '../render_payload.dart';
 
-class VWSwitch extends VirtualLeafStatelessWidget {
+class VWSwitch extends VirtualLeafStatelessWidget<Props> {
   VWSwitch({
     required super.props,
     required super.commonProps,
@@ -14,13 +15,22 @@ class VWSwitch extends VirtualLeafStatelessWidget {
 
   @override
   Widget render(RenderPayload payload) {
+    final activeColor = payload
+        .evalColor(ExprOr.fromJson<String>(props.getString('activeColor')));
+    final inactiveThumbColor = payload.evalColor(
+        ExprOr.fromJson<String>(props.getString('inactiveThumbColor')));
+    final activeTrackColor = payload.evalColor(
+        ExprOr.fromJson<String>(props.getString('activeTrackColor')));
+    final inactiveTrackColor = payload.evalColor(
+        ExprOr.fromJson<String>(props.getString('inactiveTrackColor')));
+
     return InternalSwitch(
       enabled: true,
       value: payload.eval<bool>(props.get('value')) ?? false,
-      activeColor: makeColor(props.get('activeColor')),
-      inactiveThumbColor: makeColor(props.get('inactiveThumbColor')),
-      activeTrackColor: makeColor(props.get('activeTrackColor')),
-      inactiveTrackColor: makeColor(props.get('inactiveTrackColor')),
+      activeColor: activeColor,
+      inactiveThumbColor: inactiveThumbColor,
+      activeTrackColor: activeTrackColor,
+      inactiveTrackColor: inactiveTrackColor,
     );
   }
 }

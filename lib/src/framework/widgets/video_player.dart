@@ -5,10 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../models/dui_file.dart';
-import '../core/virtual_leaf_stateless_widget.dart';
+import '../base/virtual_leaf_stateless_widget.dart';
+import '../models/props.dart';
 import '../render_payload.dart';
 
-class VWVideoPlayer extends VirtualLeafStatelessWidget {
+class VWVideoPlayer extends VirtualLeafStatelessWidget<Props> {
   VWVideoPlayer({
     required super.props,
     required super.commonProps,
@@ -89,7 +90,7 @@ class VWVideoPlayer extends VirtualLeafStatelessWidget {
           ),
         ],
       ),
-      subtitleBuilder: (context, dynamic subtitle) => Container(
+      subtitleBuilder: (context, subtitle) => Container(
         padding: const EdgeInsets.all(10.0),
         child: subtitle is InlineSpan
             ? RichText(text: subtitle)

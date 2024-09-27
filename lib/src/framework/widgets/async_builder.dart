@@ -1,18 +1,14 @@
 import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/material.dart';
 
-import '../../Utils/extensions.dart';
-import '../../core/action/action_handler.dart';
-import '../../core/action/action_prop.dart';
 import '../../core/action/api_handler.dart';
-import '../../core/page/dui_page_bloc.dart';
-import '../../digia_ui_client.dart';
-import '../core/virtual_stateless_widget.dart';
+import '../actions/base/action_flow.dart';
+import '../base/virtual_stateless_widget.dart';
 import '../internal_widgets/async_builder/index.dart';
 import '../models/props.dart';
 import '../render_payload.dart';
 
-class VWAsyncBuilder extends VirtualStatelessWidget {
+class VWAsyncBuilder extends VirtualStatelessWidget<Props> {
   VWAsyncBuilder({
     required super.props,
     required super.commonProps,
@@ -32,13 +28,13 @@ class VWAsyncBuilder extends VirtualStatelessWidget {
     final futureProps = props.toProps('future');
     if (futureProps == null) return empty();
 
-    final future = _makeFuture(futureProps, payload);
+    return AsyncBuilder<Object?>.withFuture(
+        future: _makeFuture(futureProps, payload),
+        builder: (innerCtx, snapshot) {
+          final innerPayload = payload.copyWith(buildContext: innerCtx);
 
-    return AsyncBuilder.withFuture(
-        future: future,
-        builder: (buildContext, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return loadingWidget?.toWidget(payload) ??
+            return loadingWidget?.toWidget(innerPayload) ??
                 const Center(child: CircularProgressIndicator());
           }
 
@@ -46,12 +42,12 @@ class VWAsyncBuilder extends VirtualStatelessWidget {
             Future.delayed(const Duration(seconds: 0), () async {
               final actionFlow =
                   ActionFlow.fromJson(props.get('postErrorAction'));
-              await ActionHandler.instance.execute(
-                  context: payload.buildContext, actionFlow: actionFlow);
+              await innerPayload.executeAction(actionFlow);
             });
 
-            return errorWidget?.toWidget(payload.copyWithChainedContext(
-                    _createExprContext(null, snapshot.error))) ??
+            return errorWidget?.toWidget(innerPayload.copyWithChainedContext(
+                  _createExprContext(null, snapshot.error),
+                )) ??
                 Text(
                   'Error: ${snapshot.error?.toString()}',
                   style: const TextStyle(color: Colors.red),
@@ -61,11 +57,11 @@ class VWAsyncBuilder extends VirtualStatelessWidget {
           Future.delayed(const Duration(seconds: 0), () async {
             final actionFlow =
                 ActionFlow.fromJson(props.get('postSuccessAction'));
-            await ActionHandler.instance
-                .execute(context: payload.buildContext, actionFlow: actionFlow);
+            await innerPayload.executeAction(actionFlow);
           });
-          return successWidget.toWidget(payload
-              .copyWithChainedContext(_createExprContext(snapshot.data, null)));
+          return successWidget.toWidget(innerPayload.copyWithChainedContext(
+            _createExprContext(snapshot.data, null),
+          ));
         });
   }
 
@@ -93,9 +89,11 @@ Future<Object?> _makeFuture(Props futureProps, RenderPayload payload) async {
       Map<String, Object?>? apiDataSourceArgs =
           futureProps.getMap('dataSource.args');
 
-      final apiModel = (payload.buildContext.tryRead<DUIPageBloc>()?.config ??
-              DigiaUIClient.getConfigResolver())
-          .getApiDataSource(apiDataSourceId);
+      final apiModel = payload.getApiModel(apiDataSourceId);
+
+      if (apiModel == null) {
+        return Future.error('No API Selected');
+      }
 
       final args = apiDataSourceArgs?.map((key, value) {
         final evalue = payload.eval(value);
@@ -106,16 +104,16 @@ Future<Object?> _makeFuture(Props futureProps, RenderPayload payload) async {
       return ApiHandler.instance.execute(apiModel: apiModel, args: args).then(
           (value) {
         final successAction = ActionFlow.fromJson(futureProps.get('onSuccess'));
-        return ActionHandler.instance.execute(
-            context: payload.buildContext,
-            actionFlow: successAction,
-            enclosing: ExprContext(variables: {'response': value.data}));
+        return payload.executeAction(
+          successAction,
+          exprContext: ExprContext(variables: {'response': value.data}),
+        );
       }, onError: (e) async {
         final errorAction = ActionFlow.fromJson(futureProps.get('onFailure'));
-        await ActionHandler.instance.execute(
-            context: payload.buildContext,
-            actionFlow: errorAction,
-            enclosing: ExprContext(variables: {'error': e}));
+        await payload.executeAction(
+          errorAction,
+          exprContext: ExprContext(variables: {'error': e}),
+        );
         throw e;
       });
 

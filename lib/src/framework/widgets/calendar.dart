@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
-import '../../Utils/basic_shared_utils/date_decoder.dart';
-import '../../Utils/basic_shared_utils/dui_decoder.dart';
-import '../../Utils/basic_shared_utils/lodash.dart';
-import '../../Utils/util_functions.dart';
-import '../../components/DUIText/dui_text_style.dart';
-import '../core/virtual_leaf_stateless_widget.dart';
+import '../base/virtual_leaf_stateless_widget.dart';
 import '../internal_widgets/internal_calendar.dart';
 import '../models/props.dart';
 import '../render_payload.dart';
+import '../utils/date_util.dart';
+import '../utils/flutter_type_converters.dart';
+import '../utils/functional_util.dart';
 import 'icon.dart';
 
-class VWCalendar extends VirtualLeafStatelessWidget {
+class VWCalendar extends VirtualLeafStatelessWidget<Props> {
   VWCalendar({
     required super.props,
     required super.commonProps,
@@ -22,10 +20,10 @@ class VWCalendar extends VirtualLeafStatelessWidget {
   @override
   Widget render(RenderPayload payload) {
     DateTime firstDay =
-        DateDecoder.toDate(props.get('firstDay')) ?? DateTime(1970, 1, 1);
+        DateUtil.toDate(props.get('firstDay')) ?? DateTime(1970, 1, 1);
     DateTime lastDay =
-        DateDecoder.toDate(props.get('lastDay')) ?? DateTime(2100, 1, 1);
-    DateTime? currentDay = DateDecoder.toDate(props.get('currentDay'));
+        DateUtil.toDate(props.get('lastDay')) ?? DateTime(2100, 1, 1);
+    DateTime? currentDay = DateUtil.toDate(props.get('currentDay'));
 
     CalendarFormat calendarFormat =
         _toCalendarFormat(props.get('calendarFormat')) ?? CalendarFormat.month;
@@ -53,12 +51,12 @@ class VWCalendar extends VirtualLeafStatelessWidget {
     late DateTime focusedDay;
 
     if (rangeSelectionMode == RangeSelectionMode.enforced) {
-      final selectedRange = ifNotNull2(
-          DateDecoder.toDate(payload.eval<String>(
-              props.get('rangeSelectionMode.rangeStartDateInitialValue'))),
-          DateDecoder.toDate(payload.eval<String>(
-              props.get('rangeSelectionMode.rangeEndDateInitialValue'))),
-          (p0, p1) => (start: p0, end: p1));
+      final selectedRange = (
+        DateUtil.toDate(payload.eval<String>(
+            props.get('rangeSelectionMode.rangeStartDateInitialValue'))),
+        DateUtil.toDate(payload.eval<String>(
+            props.get('rangeSelectionMode.rangeEndDateInitialValue')))
+      ).maybe((p0, p1) => (start: p0, end: p1));
 
       selectedRangeStart = selectedRange?.start;
       selectedRangeEnd = selectedRange?.end;
@@ -66,10 +64,8 @@ class VWCalendar extends VirtualLeafStatelessWidget {
       focusedDay = selectedRangeStart ?? DateTime.now();
     }
     if (rangeSelectionMode == RangeSelectionMode.disabled) {
-      selectedDate = ifNotNull(
-          DateDecoder.toDate(payload
-              .eval<String>(props.get('rangeSelectionMode.selectedDate'))),
-          (p0) => p0);
+      selectedDate = DateUtil.toDate(
+          payload.eval<String>(props.get('rangeSelectionMode.selectedDate')));
 
       focusedDay = selectedDate ?? DateTime.now();
     }
@@ -119,33 +115,32 @@ class VWCalendar extends VirtualLeafStatelessWidget {
 
     bool titleCentered = headerStyle.getBool('titleCentered') ?? false;
     BoxShape? shape = _toBoxShape(headerStyle.get('shape'));
-    TextStyle titleTextStyle = toTextStyle(
-            DUITextStyle.fromJson(headerStyle.get('titleTextStyle')),
-            payload.buildContext) ??
-        const TextStyle(fontSize: 17.0);
-    EdgeInsets? headerPadding =
-        DUIDecoder.toEdgeInsets(headerStyle.get('headerPadding'));
+    TextStyle titleTextStyle =
+        payload.getTextStyle(headerStyle.getMap('titleTextStyle')) ??
+            const TextStyle(fontSize: 17.0);
+    EdgeInsets? headerPadding = To.edgeInsets(headerStyle.get('headerPadding'));
     Widget? leftChevronIcon = VWIcon(
       props: headerStyle.toProps('leftChevronIcon') ?? Props.empty(),
       commonProps: null,
       parent: null,
     ).toWidget(payload);
     EdgeInsets? leftChevronPadding =
-        DUIDecoder.toEdgeInsets(headerStyle.get('leftChevronPadding'));
+        To.edgeInsets(headerStyle.get('leftChevronPadding'));
     Widget? rightChevronIcon = VWIcon(
       props: headerStyle.toProps('rightChevronIcon') ?? Props.empty(),
       commonProps: null,
       parent: null,
     ).toWidget(payload);
     EdgeInsets? rightChevronPadding =
-        DUIDecoder.toEdgeInsets(headerStyle.get('rightChevronPadding'));
+        To.edgeInsets(headerStyle.get('rightChevronPadding'));
     final shapeProps = headerStyle.toProps('shape');
-    Color? headerColor = makeColor(shapeProps?.get('color'));
+    Color? headerColor = shapeProps?.getString('color').maybe(payload.getColor);
     Color headerBorderColor =
-        makeColor(shapeProps?.get('borderColor')) ?? const Color(0xFF000000);
+        shapeProps?.getString('borderColor').maybe(payload.getColor) ??
+            const Color(0xFF000000);
     double headerBorderWidth = shapeProps?.getDouble('borderWidth') ?? 1.0;
     BorderRadius? headerBorderRadius =
-        DUIDecoder.toBorderRadius(shapeProps?.get('borderRadius'));
+        To.borderRadius(shapeProps?.get('borderRadius'));
 
     return HeaderStyle(
       formatButtonVisible: false,
@@ -180,21 +175,21 @@ class VWCalendar extends VirtualLeafStatelessWidget {
     }
 
     BoxShape? shape = _toBoxShape(daysOfWeekStyle.get('shape'));
-    TextStyle weekdayStyle = toTextStyle(
-            DUITextStyle.fromJson(daysOfWeekStyle.get('weekdayStyle')),
-            payload.buildContext) ??
-        const TextStyle(color: Color(0xFF4F4F4F));
-    TextStyle weekendStyle = toTextStyle(
-            DUITextStyle.fromJson(daysOfWeekStyle.get('weekendStyle')),
-            payload.buildContext) ??
-        const TextStyle(color: Color(0xFF6A6A6A));
+    TextStyle weekdayStyle =
+        payload.getTextStyle(daysOfWeekStyle.getMap('weekdayStyle')) ??
+            const TextStyle(color: Color(0xFF4F4F4F));
+    TextStyle weekendStyle =
+        payload.getTextStyle(daysOfWeekStyle.getMap('weekendStyle')) ??
+            const TextStyle(color: Color(0xFF6A6A6A));
     final shapeProps = daysOfWeekStyle.toProps('shape');
-    Color? daysOfWeekColor = makeColor(shapeProps?.get('color'));
+    Color? daysOfWeekColor =
+        shapeProps?.getString('color').maybe(payload.getColor);
     Color daysOfWeekBorderColor =
-        makeColor(shapeProps?.get('borderColor')) ?? const Color(0xFF000000);
+        shapeProps?.getString('borderColor').maybe(payload.getColor) ??
+            const Color(0xFF000000);
     double daysOfWeekBorderWidth = shapeProps?.getDouble('borderWidth') ?? 1.0;
     BorderRadius? daysOfWeekBorderRadius =
-        DUIDecoder.toBorderRadius(shapeProps?.get('borderRadius'));
+        To.borderRadius(shapeProps?.get('borderRadius'));
 
     return DaysOfWeekStyle(
       weekdayStyle: weekdayStyle,
@@ -228,24 +223,26 @@ class VWCalendar extends VirtualLeafStatelessWidget {
     double? rangeHighlightScale =
         calendarStyle.getDouble('rangeHighlightScale');
     Color? rangeHighlightColor =
-        makeColor(calendarStyle.get('rangeHighlightColor'));
+        calendarStyle.getString('rangeHighlightColor').maybe(payload.getColor);
     bool? outsideDaysVisible = calendarStyle.getBool('outsideDaysVisible');
     bool? isTodayHighlighted = calendarStyle.getBool('isTodayHighlighted');
     Color? tableBorderColor =
-        makeColor(calendarStyle.get('tableBorderColor')) ?? Colors.black;
+        calendarStyle.getString('tableBorderColor').maybe(payload.getColor) ??
+            Colors.black;
     double? tableBorderWidth = calendarStyle.getDouble('tableBorderWidth');
     BorderStyle? tableBorderStyle =
         _toBorderStyle(calendarStyle.get('tableBorderStyle'));
     BorderRadius? tableBorderRadius =
-        DUIDecoder.toBorderRadius(calendarStyle.get('tableBorderRadius'));
-    TableBorder? tableBorder = _toTableBorder(Props({
-      'color': tableBorderColor,
-      'width': tableBorderWidth,
-      'style': tableBorderStyle,
-      'borderRadius': tableBorderRadius,
-    }));
-    EdgeInsets? tablePadding =
-        DUIDecoder.toEdgeInsets(calendarStyle.get('tablePadding'));
+        To.borderRadius(calendarStyle.get('tableBorderRadius'));
+    TableBorder? tableBorder = _toTableBorder(
+        payload,
+        Props({
+          'color': tableBorderColor,
+          'width': tableBorderWidth,
+          'style': tableBorderStyle,
+          'borderRadius': tableBorderRadius,
+        }));
+    EdgeInsets? tablePadding = To.edgeInsets(calendarStyle.get('tablePadding'));
 
     return CalendarStyle(
       rangeHighlightScale: rangeHighlightScale ?? 1.0,
@@ -287,13 +284,14 @@ class VWCalendar extends VirtualLeafStatelessWidget {
         _ => BoxShape.rectangle
       };
 
-  TableBorder? _toTableBorder(Props value) {
+  TableBorder? _toTableBorder(RenderPayload payload, Props value) {
     if (value.isEmpty) return null;
     return TableBorder.all(
-      color: makeColor(value.get('color')) ?? Colors.transparent,
+      color: value.getString('color').maybe(payload.getColor) ??
+          Colors.transparent,
       width: value.getDouble('width') ?? 1.0,
       style: _toBorderStyle(value.get('style')),
-      borderRadius: DUIDecoder.toBorderRadius(value.get('borderRadius')),
+      borderRadius: To.borderRadius(value.get('borderRadius')),
     );
   }
 

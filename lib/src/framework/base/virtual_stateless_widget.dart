@@ -2,7 +2,7 @@ import '../models/vw_repeat_data.dart';
 import 'virtual_leaf_stateless_widget.dart';
 import 'virtual_widget.dart';
 
-abstract class VirtualStatelessWidget extends VirtualLeafStatelessWidget {
+abstract class VirtualStatelessWidget<T> extends VirtualLeafStatelessWidget<T> {
   Map<String, List<VirtualWidget>>? childGroups;
   VWRepeatData? repeatData;
 

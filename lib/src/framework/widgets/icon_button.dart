@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 
-import '../../Utils/basic_shared_utils/dui_decoder.dart';
-import '../../Utils/extensions.dart';
-import '../../Utils/util_functions.dart';
-import '../../core/action/action_handler.dart';
-import '../../core/action/action_prop.dart';
-import '../core/virtual_leaf_stateless_widget.dart';
+import '../actions/base/action_flow.dart';
+import '../base/virtual_leaf_stateless_widget.dart';
 import '../models/props.dart';
 import '../render_payload.dart';
+import '../utils/flutter_extensions.dart';
+import '../utils/flutter_type_converters.dart';
+import '../utils/functional_util.dart';
+import '../utils/object_util.dart';
 import 'icon.dart';
 
-class VWIconButton extends VirtualLeafStatelessWidget {
+class VWIconButton extends VirtualLeafStatelessWidget<Props> {
   VWIconButton({
     required super.props,
     required super.commonProps,
@@ -30,16 +30,20 @@ class VWIconButton extends VirtualLeafStatelessWidget {
     final disabledStyleJson = props.getMap('disabledStyle') ?? {};
 
     ButtonStyle style = ButtonStyle(
-      padding: WidgetStateProperty.all(DUIDecoder.toEdgeInsets(
+      padding: WidgetStateProperty.all(To.edgeInsets(
         defaultStyleJson['padding'],
         or: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
       )),
-      alignment: DUIDecoder.toAlignment(defaultStyleJson['alignment']),
+      alignment: To.alignment(defaultStyleJson['alignment']),
       backgroundColor: WidgetStateProperty.resolveWith((states) {
         if (states.contains(WidgetState.disabled)) {
-          return makeColor(disabledStyleJson['backgroundColor']);
+          return disabledStyleJson['backgroundColor']
+              ?.to<String>()
+              .maybe(payload.getColor);
         }
-        return makeColor(defaultStyleJson['backgroundColor']);
+        return defaultStyleJson['backgroundColor']
+            ?.to<String>()
+            .maybe(payload.getColor);
       }),
     );
 
@@ -56,10 +60,7 @@ class VWIconButton extends VirtualLeafStatelessWidget {
             ? null
             : () {
                 final onClick = ActionFlow.fromJson(props.get('onClick'));
-                ActionHandler.instance.execute(
-                  context: payload.buildContext,
-                  actionFlow: onClick,
-                );
+                payload.executeAction(onClick);
               },
         icon: icon,
         style: style,

@@ -11,5 +11,5 @@ class DUIInsets {
 
   factory DUIInsets.fromJson(dynamic json) => _$DUIInsetsFromJson(json);
 
-  Map<String, dynamic> toJson() => _$DUIInsetsToJson(this);
+  Map<String, Object?> toJson() => _$DUIInsetsToJson(this);
 }

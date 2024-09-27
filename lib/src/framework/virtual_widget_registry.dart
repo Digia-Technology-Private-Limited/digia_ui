@@ -1,5 +1,6 @@
+import 'base/virtual_state_container_widget.dart';
+import 'base/virtual_widget.dart';
 import 'builders.dart';
-import 'core/virtual_widget.dart';
 import 'models/vw_node_data.dart';
 
 typedef VirtualWidgetBuilder = VirtualWidget Function(
@@ -12,7 +13,7 @@ class VirtualWidgetRegistry {
     'digia/column': columnBuilder,
     'digia/row': rowBuilder,
     'digia/flexFit': flexFitBuilder,
-    // 'digia/stack': stackBuilder,
+    'digia/stack': stackBuilder,
     'digia/listView': listViewBuilder,
     'digia/gridView': gridViewBuilder,
     'digia/wrap': wrapBuilder,
@@ -34,11 +35,13 @@ class VirtualWidgetRegistry {
     // 'digia/textFormField': textFormFieldBuilder,
 
     // Navigation and Structure
-    // 'digia/scaffold': scaffoldBuilder,
-    // 'digia/appBar': appBarBuilder,
+    'digia/scaffold': scaffoldBuilder,
+    'fw/scaffold': scaffoldBuilder,
+    'fw/appBar': appBarBuilder,
+    'digia/appBar': appBarBuilder,
     // 'digia/sliverAppBar': sliverAppBarBuilder,
-    // 'digia/drawer': drawerBuilder,
     'digia/tabView': tabViewBuilder,
+    'digia/drawer': drawerBuilder,
     // 'digia/tabViewItem': tabViewItemBuilder,
     // 'digia/navigationBarItem': navigationBarItemBuilder,
 
@@ -91,8 +94,14 @@ class VirtualWidgetRegistry {
     // 'digia/probo/animated_fastscore': proboCustomComponentBuilder,
   };
 
-  void registerWidget(String type, VirtualWidgetBuilder builder) {
-    _builders[type] = builder;
+  void registerWidget(
+      String type,
+      VirtualWidget Function(
+        VWNodeData data,
+        VirtualWidgetRegistry registry,
+      ) virtualWidgetBuilder) {
+    _builders[type] =
+        (data, _, registry) => virtualWidgetBuilder(data, registry);
   }
 
   static final VirtualWidgetRegistry instance =
@@ -105,6 +114,16 @@ class VirtualWidgetRegistry {
   VirtualWidgetRegistry._internal();
 
   VirtualWidget createWidget(VWNodeData data, VirtualWidget? parent) {
+    if (data.category == 'state_container') {
+      final child = data.childGroups?.entries.first.value.first;
+      return VirtualStateContainerWidget(
+        refName: data.refName,
+        parent: parent,
+        initialState: {},
+        child: child == null ? null : createWidget(child, parent),
+      );
+    }
+
     String type = data.type;
     if (!_builders.containsKey(type)) {
       throw Exception('Unknown widget type: $type');

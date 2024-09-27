@@ -2,13 +2,13 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
-import '../../Utils/basic_shared_utils/dui_decoder.dart';
-import '../../Utils/basic_shared_utils/lodash.dart';
-import '../../Utils/util_functions.dart';
-import '../core/virtual_leaf_stateless_widget.dart';
+import '../base/virtual_leaf_stateless_widget.dart';
+import '../models/props.dart';
 import '../render_payload.dart';
+import '../utils/flutter_type_converters.dart';
+import '../utils/functional_util.dart';
 
-class VWCircularProgressBar extends VirtualLeafStatelessWidget {
+class VWCircularProgressBar extends VirtualLeafStatelessWidget<Props> {
   VWCircularProgressBar({
     required super.props,
     required super.commonProps,
@@ -18,10 +18,9 @@ class VWCircularProgressBar extends VirtualLeafStatelessWidget {
 
   @override
   Widget render(RenderPayload payload) {
-    final bgColor = makeColor(payload.eval<String>(props.get('bgColor')));
+    final bgColor = payload.evalColor(props.get('bgColor'));
 
-    final indicatorColor =
-        makeColor(payload.eval<String>(props.get('indicatorColor')));
+    final indicatorColor = payload.evalColor(props.get('indicatorColor'));
 
     final strokeWidth = payload.eval<double>(props.get('strokeWidth'));
 
@@ -30,7 +29,7 @@ class VWCircularProgressBar extends VirtualLeafStatelessWidget {
     final progressValue = payload.eval<double>(props.get('progressValue'));
 
     final rotationInRadians =
-        props.getDouble('angle')?.let((p0) => p0 / 180.0 * math.pi);
+        props.getDouble('angle').maybe((p0) => p0 / 180.0 * math.pi);
 
     return Transform.rotate(
       angle: rotationInRadians ?? 0.0,
@@ -40,7 +39,7 @@ class VWCircularProgressBar extends VirtualLeafStatelessWidget {
         color: indicatorColor,
         strokeWidth: strokeWidth ?? 4.0,
         strokeAlign: strokeAlign ?? CircularProgressIndicator.strokeAlignCenter,
-        strokeCap: DUIDecoder.toStrokeCap(props.get('strokeCap')),
+        strokeCap: To.strokeCap(props.get('strokeCap')),
       ),
     );
   }

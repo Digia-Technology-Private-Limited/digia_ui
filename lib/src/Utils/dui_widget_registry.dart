@@ -34,6 +34,7 @@ import '../core/builders/dui_lottie_builder.dart';
 import '../core/builders/dui_nested_scroll_view_builder.dart';
 import '../core/builders/dui_opacity_builder.dart';
 import '../core/builders/dui_paginated_listview_builder.dart';
+import '../core/builders/dui_paginated_sliver_list_builder.dart';
 import '../core/builders/dui_pin_field_builder.dart';
 import '../core/builders/dui_refresh_indicator_builder.dart';
 import '../core/builders/dui_rich_text_builder.dart';
@@ -49,7 +50,10 @@ import '../core/builders/dui_stream_builder.dart';
 import '../core/builders/dui_styled_horizontal_divider_builder.dart';
 import '../core/builders/dui_styled_vertical_divider_builder.dart';
 import '../core/builders/dui_switch_builder.dart';
+import '../core/builders/dui_tab_bar_builder.dart';
+import '../core/builders/dui_tab_controller_builder.dart';
 import '../core/builders/dui_tab_view_builder.dart';
+import '../core/builders/dui_tab_view_content_builder.dart';
 import '../core/builders/dui_tab_view_item_builder.dart';
 import '../core/builders/dui_text_builder.dart';
 import '../core/builders/dui_text_form_field_builder.dart';
@@ -165,6 +169,12 @@ class DUIWidgetRegistry {
     'digia/safeArea': (data, {registry}) => DUISafeAreaBuilder(data: data),
     'digia/probo/animated_fastscore': (data, {registry}) =>
         ProboCustomComponentBuilder(data: data),
+    'digia/tabController': withoutRegistry(DUITabControllerBuilder.create),
+    'digia/tabBar': (data, {registry}) =>
+        DUITabBarBuilder.create(data, registry: DUIWidgetRegistry.shared),
+    'digia/tabViewContent': (data, {registry}) =>
+        DUITabViewContentBuilder.create(data,
+            registry: DUIWidgetRegistry.shared),
     'digia/nestedScrollView': (data, {registry}) =>
         DUINestedScrollViewBuilder(data: data),
     'digia/sliverAppBar': (data, {registry}) =>
@@ -174,6 +184,8 @@ class DUIWidgetRegistry {
     'digia/customScrollView': (data, {registry}) =>
         DUICustomScrollViewBuilder.create(data,
             registry: DUIWidgetRegistry.shared),
+    'digia/paginatedSliverList': (data, {registry}) =>
+        DUIPaginatedSliverListBuilder.create(data),
   };
 
   static const DUIWidgetRegistry shared = DUIWidgetRegistry();

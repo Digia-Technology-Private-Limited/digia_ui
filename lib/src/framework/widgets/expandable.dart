@@ -2,13 +2,13 @@ import 'dart:math';
 
 import 'package:expandable/expandable.dart';
 import 'package:flutter/cupertino.dart';
-import '../../Utils/basic_shared_utils/dui_decoder.dart';
-import '../../Utils/util_functions.dart';
 import '../../components/dui_icons/icon_helpers/icon_data_serialization.dart';
-import '../core/virtual_stateless_widget.dart';
+import '../base/virtual_stateless_widget.dart';
+import '../models/props.dart';
 import '../render_payload.dart';
+import '../utils/flutter_type_converters.dart';
 
-class VWExpandable extends VirtualStatelessWidget {
+class VWExpandable extends VirtualStatelessWidget<Props> {
   VWExpandable({
     required super.props,
     required super.commonProps,
@@ -36,14 +36,14 @@ class VWExpandable extends VirtualStatelessWidget {
         initialExpanded: props.getBool('initiallyExpanded'),
       ),
       theme: ExpandableThemeData(
-        bodyAlignment: DUIDecoder.toExpandablePanelBodyAlignment(
-            props.getString('bodyAlignment')),
-        headerAlignment: DUIDecoder.toExpandablePanelHeaderAlignment(
+        bodyAlignment:
+            To.expandablePanelBodyAlignment(props.getString('bodyAlignment')),
+        headerAlignment: To.expandablePanelHeaderAlignment(
             props.getString('headerAlignment')),
-        iconPlacement: DUIDecoder.toExpandablePanelIconPlacement(
+        iconPlacement: To.expandablePanelIconPlacement(
             iconProps?.getString('iconPlacement')),
-        iconColor: makeColor(props.get('color')),
-        alignment: DUIDecoder.toAlignment(props.getString('alignment')),
+        iconColor: payload.evalColor(props.get('color')),
+        alignment: To.alignment(props.getString('alignment')),
         animationDuration:
             Duration(milliseconds: props.getInt('animationDuration') ?? 1000),
         collapseIcon: (iconProps?.getMap('collapseIcon') != null)
@@ -53,7 +53,7 @@ class VWExpandable extends VirtualStatelessWidget {
             ? getIconData(icondataMap: iconProps?.getMap('expandIcon') ?? {})
             : CupertinoIcons.chevron_down,
         hasIcon: props.getBool('hasIcon') ?? true,
-        iconPadding: DUIDecoder.toEdgeInsets(iconProps?.getMap('iconPadding')),
+        iconPadding: To.edgeInsets(iconProps?.getMap('iconPadding')),
         iconSize: iconProps?.getDouble('size'),
         iconRotationAngle:
             ((iconProps?.getDouble('iconRotationAngle') ?? 90.0) / 180) * pi,
