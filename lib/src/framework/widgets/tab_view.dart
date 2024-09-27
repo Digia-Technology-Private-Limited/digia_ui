@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
 import '../../Utils/util_functions.dart';
 import '../../components/DUIText/dui_text_style.dart';
-import '../core/extensions.dart';
-import '../core/virtual_stateless_widget.dart';
+import '../base/extensions.dart';
+import '../base/virtual_stateless_widget.dart';
+import '../models/props.dart';
 import '../render_payload.dart';
 import 'icon.dart';
 import 'text.dart';
 
-class VWTabView extends VirtualStatelessWidget {
+class VWTabView extends VirtualStatelessWidget<Props> {
   VWTabView({
     required super.props,
     required super.commonProps,
