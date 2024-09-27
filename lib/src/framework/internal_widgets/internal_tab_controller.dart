@@ -1,38 +1,31 @@
 import 'package:flutter/material.dart';
 
 class InternalTabController extends TabController {
-  final List<dynamic>? dynamicList;
+  final List<dynamic> dynamicList;
 
   InternalTabController({
-    int? length,
-    this.dynamicList,
+    required this.dynamicList,
     required super.vsync,
     super.animationDuration,
     super.initialIndex,
-  })  : assert(length != null || dynamicList != null,
-            'Either length or dynamicList must be provided'),
-        super(
-          length: dynamicList?.length ?? length!,
-        );
+  }) : super(length: dynamicList.length);
 }
 
 class InternalTabControllerProvider extends StatefulWidget {
-  final List<dynamic>? dynamicList;
-  final int? length;
+  final List<dynamic> dynamicList;
   final int initialIndex;
   final double? animationDuration;
   final Widget child;
 
   const InternalTabControllerProvider({
     super.key,
-    this.dynamicList,
-    this.length,
+    required this.dynamicList,
+    required this.child,
     this.initialIndex = 0,
     this.animationDuration,
-    required this.child,
   });
 
-  /// Retrieve the `Duicustomtabcontroller` from the context or return null if it doesn't exist
+  /// Retrieve the [InternalTabController] from the context or return null if it doesn't exist
   static InternalTabController? maybeOf(BuildContext context) {
     return context
         .dependOnInheritedWidgetOfExactType<
@@ -40,10 +33,10 @@ class InternalTabControllerProvider extends StatefulWidget {
         ?.tabController;
   }
 
-  /// Retrieve the `Duicustomtabcontroller` from the context and throw an error if not found
+  /// Retrieve the [InternalTabController] from the context and throw an error if not found
   static InternalTabController of(BuildContext context) {
     final tabController = maybeOf(context);
-    assert(tabController != null, 'No Duicustomtabcontroller found in context');
+    assert(tabController != null, 'No InternalTabController found in context');
     return tabController!;
   }
 
@@ -69,7 +62,6 @@ class _InternalTabControllerProviderState
       animationDuration: (widget.animationDuration != null)
           ? secondsToDuration(widget.animationDuration!)
           : null,
-      length: widget.length,
       vsync: this,
       initialIndex: widget.initialIndex,
     );
@@ -98,7 +90,6 @@ class _InternalTabControllerProviderState
   Widget build(BuildContext context) {
     return _InternalTabControllerInheritedWidget(
       tabController: _tabController,
-      dynamicList: widget.dynamicList,
       child: widget.child,
     );
   }
@@ -106,18 +97,15 @@ class _InternalTabControllerProviderState
 
 class _InternalTabControllerInheritedWidget extends InheritedWidget {
   final InternalTabController tabController;
-  final List<dynamic>? dynamicList;
 
   const _InternalTabControllerInheritedWidget({
     required this.tabController,
-    this.dynamicList,
     required super.child,
   });
 
   @override
   bool updateShouldNotify(
       covariant _InternalTabControllerInheritedWidget oldWidget) {
-    return tabController != oldWidget.tabController ||
-        dynamicList != oldWidget.dynamicList;
+    return tabController != oldWidget.tabController;
   }
 }
