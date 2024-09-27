@@ -45,8 +45,8 @@ import 'widgets/styled_horizontal_divider.dart';
 import 'widgets/styled_vertical_divider.dart';
 import 'widgets/switch.dart';
 import 'widgets/tab_view/tab_bar.dart';
-import 'widgets/tab_view/tab_controller.dart';
 import 'widgets/tab_view/tab_view_content.dart';
+import 'widgets/tab_view/tab_view_controller.dart';
 import 'widgets/text.dart';
 import 'widgets/timer.dart';
 import 'widgets/vertical_divider.dart';
@@ -511,9 +511,9 @@ VWOpacity opacityBuilder(
   );
 }
 
-VWTabController tabControllerBuilder(
+VWTabViewController tabControllerBuilder(
     VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
-  return VWTabController(
+  return VWTabViewController(
     props: TabViewControllerProps.fromJson(data.props.value),
     commonProps: data.commonProps,
     parent: parent,

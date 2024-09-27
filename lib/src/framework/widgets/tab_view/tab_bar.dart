@@ -1,7 +1,5 @@
 import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/material.dart';
-
-import '../../../Utils/basic_shared_utils/dui_decoder.dart';
 import '../../../Utils/extensions.dart';
 import '../../../Utils/util_functions.dart';
 import '../../base/virtual_stateless_widget.dart';
@@ -34,10 +32,9 @@ class VWTabBar extends VirtualStatelessWidget<Props> {
         TabBarIndicatorSize.tab;
     final isScrollable =
         props.getMap('tabBarScrollable')?.valueFor(keyPath: 'value') ?? false;
-    final alignment = DUIDecoder.toAlignment(props
-            .getMap('tabBarScrollable')
-            ?.valueFor(keyPath: 'tabAlignment')) ??
-        Alignment.center;
+    final alignment =
+        To.alignment(props.getString('tabBarScrollable.tabAlignment')) ??
+            Alignment.center;
 
     return TabBar(
       isScrollable: isScrollable,
@@ -49,8 +46,8 @@ class VWTabBar extends VirtualStatelessWidget<Props> {
       indicatorSize: indicatorSize,
       controller: controller,
       overlayColor: WidgetStateProperty.all(Colors.transparent),
-      padding: DUIDecoder.toEdgeInsets(props.get('tabBarPadding')),
-      labelPadding: DUIDecoder.toEdgeInsets(props.get('labelPadding')),
+      padding: To.edgeInsets(props.get('tabBarPadding')),
+      labelPadding: To.edgeInsets(props.get('labelPadding')),
       dividerColor: makeColor(props.get('dividerColor')),
       dividerHeight: props.getDouble('dividerHeight'),
       indicatorWeight: props.getDouble('indicatorWeight') ?? 2.0,

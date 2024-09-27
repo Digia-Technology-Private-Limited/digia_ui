@@ -5,8 +5,9 @@ import '../../internal_widgets/tab_view/tab_view_controller_scope_widget.dart';
 import '../../render_payload.dart';
 import '../../widget_props/tab_view_controller_props.dart';
 
-class VWTabController extends VirtualStatelessWidget<TabViewControllerProps> {
-  VWTabController({
+class VWTabViewController
+    extends VirtualStatelessWidget<TabViewControllerProps> {
+  VWTabViewController({
     required super.props,
     required super.commonProps,
     required super.childGroups,
