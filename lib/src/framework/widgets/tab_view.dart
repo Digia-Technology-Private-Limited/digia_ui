@@ -8,6 +8,7 @@ import '../base/virtual_stateless_widget.dart';
 import '../models/props.dart';
 import '../render_payload.dart';
 import 'icon.dart';
+import 'tab_view_item.dart';
 import 'text.dart';
 
 class VWTabView extends VirtualStatelessWidget<Props> {
@@ -33,8 +34,14 @@ class VWTabView extends VirtualStatelessWidget<Props> {
   @override
   Widget render(RenderPayload payload) {
     if (children == null || children!.isEmpty) return empty();
+    for (var child in children!) {
+      if (child is! VWTabViewItem) {
+        throw Exception('All children of TabView must be of type TabViewItem');
+      }
+    }
     _indicatorSize = _toTabBarIndicatorSize(props.getString('indicatorSize')) ??
         TabBarIndicatorSize.tab;
+    final tabBarPosition = props.getString('tabBarPosition') ?? 'top';
     final tabs = List.castFrom(children!).map((child) {
       if (child is! VirtualStatelessWidget) return empty();
       final icon =
@@ -51,7 +58,7 @@ class VWTabView extends VirtualStatelessWidget<Props> {
         length: (children?.toWidgetArray(payload) ?? []).length,
         child: Column(
           children: [
-            if (props.getString('tabBarPosition') == 'top')
+            if (tabBarPosition == 'top')
               Visibility(
                 visible: props.getBool('hasTabs') ?? false,
                 child: TabBar(
@@ -83,7 +90,7 @@ class VWTabView extends VirtualStatelessWidget<Props> {
                 children: children?.toWidgetArray(payload) ?? [],
               ),
             ),
-            if (props.getString('tabBarPosition') == 'bottom')
+            if (tabBarPosition == 'bottom')
               Visibility(
                 visible: props.getBool('hasTabs') ?? false,
                 child: TabBar(

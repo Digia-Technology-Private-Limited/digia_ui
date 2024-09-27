@@ -42,7 +42,7 @@ class VirtualWidgetRegistry {
     // 'digia/sliverAppBar': sliverAppBarBuilder,
     'digia/tabView': tabViewBuilder,
     'digia/drawer': drawerBuilder,
-    // 'digia/tabViewItem': tabViewItemBuilder,
+    'digia/tabViewItem': tabViewItemBuilder,
     // 'digia/navigationBarItem': navigationBarItemBuilder,
 
     // Dividers and Decorative Elements

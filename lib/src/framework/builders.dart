@@ -41,6 +41,7 @@ import 'widgets/styled_horizontal_divider.dart';
 import 'widgets/styled_vertical_divider.dart';
 import 'widgets/switch.dart';
 import 'widgets/tab_view.dart';
+import 'widgets/tab_view_item.dart';
 import 'widgets/text.dart';
 import 'widgets/timer.dart';
 import 'widgets/vertical_divider.dart';
@@ -503,6 +504,17 @@ VWTabView tabViewBuilder(
     commonProps: data.commonProps,
     parent: parent,
     repeatData: data.repeatData,
+    childGroups: _createChildGroups(data.childGroups, parent, registry),
+    refName: data.refName,
+  );
+}
+
+VWTabViewItem tabViewItemBuilder(
+    VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
+  return VWTabViewItem(
+    props: data.props,
+    commonProps: data.commonProps,
+    parent: parent,
     childGroups: _createChildGroups(data.childGroups, parent, registry),
     refName: data.refName,
   );
