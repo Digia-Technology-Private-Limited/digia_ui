@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 
-import '../../Utils/basic_shared_utils/dui_decoder.dart';
-import '../../Utils/util_functions.dart';
-import '../../core/action/action_handler.dart';
-import '../../core/action/action_prop.dart';
-import '../core/virtual_leaf_stateless_widget.dart';
+import '../actions/base/action_flow.dart';
+import '../base/virtual_leaf_stateless_widget.dart';
 import '../models/props.dart';
 import '../render_payload.dart';
+import '../utils/flutter_type_converters.dart';
+import '../utils/functional_util.dart';
+import '../utils/json_util.dart';
+import '../utils/types.dart';
 import 'icon.dart';
 import 'text.dart';
 
-class VWButton extends VirtualLeafStatelessWidget {
+class VWButton extends VirtualLeafStatelessWidget<Props> {
   VWButton({
     required super.props,
     required super.commonProps,
@@ -24,8 +25,9 @@ class VWButton extends VirtualLeafStatelessWidget {
     final disabledStyleJson = props.toProps('disabledStyle') ?? Props.empty();
 
     ButtonStyle style = ButtonStyle(
-      shape: WidgetStateProperty.all(toButtonShape(props.get('shape'))),
-      padding: WidgetStateProperty.all(DUIDecoder.toEdgeInsets(
+      shape: WidgetStateProperty.all(
+          To.buttonShape(props.get('shape'), payload.getColor)),
+      padding: WidgetStateProperty.all(To.edgeInsets(
         defaultStyleJson.get('padding'),
         or: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
       )),
@@ -33,13 +35,17 @@ class VWButton extends VirtualLeafStatelessWidget {
         defaultStyleJson.getDouble('elevation') ?? 0.0,
       ),
       shadowColor: WidgetStateProperty.all(
-          makeColor(defaultStyleJson.get('shadowColor'))),
-      alignment: DUIDecoder.toAlignment(defaultStyleJson.get('alignment')),
+          defaultStyleJson.getString('shadowColor').maybe(payload.getColor)),
+      alignment: To.alignment(defaultStyleJson.get('alignment')),
       backgroundColor: WidgetStateProperty.resolveWith((states) {
         if (states.contains(WidgetState.disabled)) {
-          return makeColor(disabledStyleJson.get('backgroundColor'));
+          return disabledStyleJson
+              .getString('backgroundColor')
+              .maybe(payload.getColor);
         }
-        return makeColor(defaultStyleJson.get('backgroundColor'));
+        return defaultStyleJson
+            .getString('backgroundColor')
+            .maybe(payload.getColor);
       }),
     );
 
@@ -60,10 +66,7 @@ class VWButton extends VirtualLeafStatelessWidget {
           ? null
           : () {
               final onClick = ActionFlow.fromJson(props.get('onClick'));
-              ActionHandler.instance.execute(
-                context: payload.buildContext,
-                actionFlow: onClick,
-              );
+              payload.executeAction(onClick);
             },
       style: style,
       child: content,
@@ -80,13 +83,13 @@ class VWButton extends VirtualLeafStatelessWidget {
     Widget? leadingIcon;
     Widget? trailingIcon;
 
-    final localProps = Map<String, dynamic>.from(props.value);
+    final localProps = JsonLike.from(props.value);
 
     if (overrideColor) {
-      localProps['text']?['textStyle']?['textColor'] = disabledTextColor;
+      localProps.setValueFor('text.textStyle.textColor', disabledTextColor);
     } else {
-      localProps['text']?['textStyle']?['textColor'] =
-          props.get('text.textStyle.textColor');
+      localProps.setValueFor(
+          'text.textStyle.textColor', props.get('text.textStyle.textColor'));
     }
 
     text = VWText(

@@ -1,13 +1,14 @@
 import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/widgets.dart';
 
-import '../../Utils/basic_shared_utils/dui_decoder.dart';
-import '../core/extensions.dart';
-import '../core/virtual_stateless_widget.dart';
+import '../base/extensions.dart';
+import '../base/virtual_stateless_widget.dart';
 import '../internal_widgets/internal_grid_view.dart';
+import '../models/props.dart';
 import '../render_payload.dart';
+import '../utils/flutter_type_converters.dart';
 
-class VWGridView extends VirtualStatelessWidget {
+class VWGridView extends VirtualStatelessWidget<Props> {
   VWGridView({
     required super.props,
     required super.commonProps,
@@ -23,7 +24,7 @@ class VWGridView extends VirtualStatelessWidget {
   Widget render(RenderPayload payload) {
     if (children == null || children!.isEmpty) return empty();
 
-    final physics = DUIDecoder.toScrollPhysics(props.get('allowScroll'));
+    final physics = To.scrollPhysics(props.get('allowScroll'));
     final shrinkWrap = props.getBool('shrinkWrap') ?? false;
     final gridDelegate = SliverGridDelegateWithFixedCrossAxisCount(
       crossAxisCount: props.getInt('crossAxisCount') ?? 2,

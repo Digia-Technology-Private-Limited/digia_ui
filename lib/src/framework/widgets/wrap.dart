@@ -1,10 +1,11 @@
 import 'package:flutter/widgets.dart';
-import '../../Utils/basic_shared_utils/dui_decoder.dart';
-import '../core/extensions.dart';
-import '../core/virtual_stateless_widget.dart';
+import '../base/extensions.dart';
+import '../base/virtual_stateless_widget.dart';
+import '../models/props.dart';
 import '../render_payload.dart';
+import '../utils/flutter_type_converters.dart';
 
-class VWWrap extends VirtualStatelessWidget {
+class VWWrap extends VirtualStatelessWidget<Props> {
   VWWrap({
     required super.props,
     required super.commonProps,
@@ -20,19 +21,23 @@ class VWWrap extends VirtualStatelessWidget {
 
     return Wrap(
       spacing: payload.eval<double>(props.get('spacing')) ?? 0,
-      alignment: DUIDecoder.toWrapAlignment(
-          payload.eval<String>(props.get('wrapAlignment'))),
-      crossAxisAlignment: DUIDecoder.toWrapCrossAlignment(
-          payload.eval<String>(props.get('wrapCrossAlignment'))),
-      direction:
-          DUIDecoder.toAxis(payload.eval<String>(props.get('direction'))),
+      alignment:
+          To.wrapAlignment(payload.eval<String>(props.get('wrapAlignment'))) ??
+              WrapAlignment.start,
+      crossAxisAlignment: To.wrapCrossAlignment(
+              payload.eval<String>(props.get('wrapCrossAlignment'))) ??
+          WrapCrossAlignment.start,
+      direction: To.axis(payload.eval<String>(props.get('direction'))) ??
+          Axis.horizontal,
       runSpacing: payload.eval<double>(props.get('runSpacing')) ?? 0,
-      runAlignment: DUIDecoder.toWrapAlignment(
-          payload.eval<String>(props.get('runAlignment'))),
-      verticalDirection: DUIDecoder.toVerticalDirection(
-          payload.eval<String>(props.get('verticalDirection'))),
+      runAlignment:
+          To.wrapAlignment(payload.eval<String>(props.get('runAlignment'))) ??
+              WrapAlignment.start,
+      verticalDirection: To.verticalDirection(
+              payload.eval<String>(props.get('verticalDirection'))) ??
+          VerticalDirection.down,
       clipBehavior:
-          DUIDecoder.toClip(payload.eval<String>(props.get('clipBehavior'))),
+          To.clip(payload.eval<String>(props.get('clipBehavior'))) ?? Clip.none,
       children: children!.toWidgetArray(payload),
     );
   }

@@ -1,12 +1,12 @@
 import 'package:flutter/widgets.dart';
 
-import '../core/virtual_stateless_widget.dart';
-import '../core/virtual_widget.dart';
+import '../base/virtual_stateless_widget.dart';
+import '../base/virtual_widget.dart';
 import '../models/props.dart';
 import '../render_payload.dart';
-import '../utils/type_aliases.dart';
+import '../utils/types.dart';
 
-class VWPositioned extends VirtualStatelessWidget {
+class VWPositioned extends VirtualStatelessWidget<Props> {
   VWPositioned({
     required super.props,
     required super.parent,

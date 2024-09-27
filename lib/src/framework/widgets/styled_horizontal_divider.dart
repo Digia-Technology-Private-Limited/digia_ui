@@ -1,13 +1,13 @@
 import 'package:flutter/widgets.dart';
 
-import '../../Utils/basic_shared_utils/dui_decoder.dart';
-import '../../Utils/basic_shared_utils/types.dart';
-import '../../Utils/util_functions.dart';
 import '../../components/border/divider_with_pattern/divider_with_pattern.dart';
-import '../core/virtual_leaf_stateless_widget.dart';
+import '../base/virtual_leaf_stateless_widget.dart';
+import '../models/custom_flutter_types.dart';
+import '../models/props.dart';
 import '../render_payload.dart';
+import '../utils/flutter_type_converters.dart';
 
-class VWStyledHorizontalDivider extends VirtualLeafStatelessWidget {
+class VWStyledHorizontalDivider extends VirtualLeafStatelessWidget<Props> {
   VWStyledHorizontalDivider({
     required super.props,
     required super.commonProps,
@@ -23,22 +23,20 @@ class VWStyledHorizontalDivider extends VirtualLeafStatelessWidget {
       thickness: payload.eval<double>(props.get('thickness')),
       indent: payload.eval<double>(props.get('indent')),
       endIndent: payload.eval<double>(props.get('endIndent')),
-      borderPattern: DUIDecoder.toBorderPattern(
+      borderPattern: To.borderPattern(
             payload.eval<String>(props.get('borderPattern.value')),
           ) ??
           BorderPattern.solid,
-      strokeCap: DUIDecoder.toStrokeCap(
-            payload.eval<String>(props.get('borderPattern.strokeCap')),
-          ) ??
+      strokeCap: To.strokeCap(
+              payload.eval<String>(props.get('borderPattern.strokeCap'))) ??
           StrokeCap.butt,
-      dashPattern: DUIDecoder.toDashPattern(
-            payload.eval<List<dynamic>>(props.get('borderPattern.dashPattern')),
-          ) ??
+      dashPattern: To.dashPattern(payload
+              .eval<List<Object>>(props.get('borderPattern.dashPattern'))) ??
           [3, 3],
-      color: makeColor(payload.eval<String>(props.get('colorType.color'))),
-      gradient: toGradient(
+      color: payload.evalColor(props.get('colorType.color')),
+      gradient: To.gradient(
         props.getMap('colorType.gradient'),
-        payload.buildContext,
+        evalColor: payload.evalColor,
       ),
     );
   }

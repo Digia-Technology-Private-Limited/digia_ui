@@ -1,8 +1,12 @@
 import 'package:flutter/painting.dart';
 
-import 'core/virtual_widget.dart';
+import 'base/virtual_widget.dart';
 import 'models/vw_node_data.dart';
 import 'virtual_widget_registry.dart';
+import 'widget_props/pin_field_props.dart';
+import 'widget_props/sized_box_props.dart';
+import 'widget_props/spacer_props.dart';
+import 'widget_props/timer_props.dart';
 import 'widgets/animated_button.dart';
 import 'widgets/app_bar.dart';
 import 'widgets/async_builder.dart';
@@ -26,6 +30,7 @@ import 'widgets/linear_progress_bar.dart';
 import 'widgets/list_view.dart';
 import 'widgets/lottie.dart';
 import 'widgets/opacity.dart';
+import 'widgets/pin_field.dart';
 import 'widgets/refresh_indicator.dart';
 import 'widgets/rich_text.dart';
 import 'widgets/safe_area.dart';
@@ -94,6 +99,15 @@ VWContainer containerBuilder(
 VWIcon iconBuilder(VWNodeData data, VirtualWidget? parent, _) {
   return VWIcon(
     props: data.props,
+    commonProps: data.commonProps,
+    parent: parent,
+    refName: data.refName,
+  );
+}
+
+VWPinField pinFieldBuilder(VWNodeData data, VirtualWidget? parent, _) {
+  return VWPinField(
+    props: PinFieldProps.fromJson(data.props.value),
     commonProps: data.commonProps,
     parent: parent,
     refName: data.refName,
@@ -212,7 +226,7 @@ VWWebView webViewBuilder(VWNodeData data, VirtualWidget? parent, _) {
 
 VWSizedBox sizedBoxBuilder(VWNodeData data, VirtualWidget? parent, _) {
   return VWSizedBox(
-    props: data.props,
+    props: SizedBoxProps.fromJson(data.props.value),
     commonProps: data.commonProps,
     parent: parent,
     refName: data.refName,
@@ -221,7 +235,7 @@ VWSizedBox sizedBoxBuilder(VWNodeData data, VirtualWidget? parent, _) {
 
 VWSpacer spacerBuilder(VWNodeData data, VirtualWidget? parent, _) {
   return VWSpacer(
-    props: data.props,
+    props: SpacerProps.fromJson(data.props.value),
     commonProps: data.commonProps,
     parent: parent,
     refName: data.refName,
@@ -441,7 +455,7 @@ VWCalendar calendarBuilder(VWNodeData data, VirtualWidget? parent, _) {
 VWTimer timerBuilder(
     VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
   return VWTimer(
-    props: data.props,
+    props: TimerProps.fromJson(data.props.value),
     commonProps: data.commonProps,
     parent: parent,
     refName: data.refName,

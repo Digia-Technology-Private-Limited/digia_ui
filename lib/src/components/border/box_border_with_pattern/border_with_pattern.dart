@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../Utils/basic_shared_utils/types.dart';
+import '../../../framework/models/custom_flutter_types.dart';
 import '../custom_shape/path_draw.dart';
 
 class BorderWithPattern extends BoxBorder {

@@ -24,10 +24,24 @@ class ApiHandler {
   Future<Response<Object?>> execute(
       {required APIModel apiModel, required Map<String, dynamic>? args}) async {
     final stopwatch = Stopwatch();
-    final url = _hydrateTemplate(apiModel.url, args);
-    final headers = apiModel.headers?.map((key, value) =>
-        MapEntry(_hydrateTemplate(key, args), _hydrateTemplate(value, args)));
-    final body = apiModel.method != HttpMethod.get ? _hydrateTemplateInDynamic(apiModel.body, args): null;
+    final envVariables =
+        DigiaUIClient.instance.config.getEnvironmentVariables();
+    final envArgs = envVariables.map((key, value) {
+      final dvalue = envVariables[key]?.defaultValue;
+      return MapEntry('env.$key', dvalue);
+    });
+
+    var finalArgs = {...envArgs};
+    if (args != null) {
+      finalArgs.addAll(args);
+    }
+
+    final url = _hydrateTemplate(apiModel.url, finalArgs);
+    final headers = apiModel.headers?.map((key, value) => MapEntry(
+        _hydrateTemplate(key, finalArgs), _hydrateTemplate(value, finalArgs)));
+    final body = apiModel.method != HttpMethod.get
+        ? _hydrateTemplateInDynamic(apiModel.body, args)
+        : null;
     final bodyType = apiModel.bodyType;
 
     final networkClient = DigiaUIClient.getNetworkClient();
@@ -163,7 +177,7 @@ class ApiHandler {
   }
 
   String _hydrateTemplate(String template, Map<String, dynamic>? values) {
-    final regex = RegExp(r'\{\{(\w+)\}\}');
+    final regex = RegExp(r'\{\{([\w\.]+)\}\}');
     return template.replaceAllMapped(regex, (match) {
       final variableName = match.group(1);
       return values?[variableName]?.toString() ??
@@ -189,7 +203,7 @@ class ApiHandler {
 
     if (json is! String) return json;
 
-    final regex = RegExp(r'^\{\{(\w+)\}\}$');
+    final regex = RegExp(r'^\{\{([\w\.]+)\}\}$');
     final match = regex.firstMatch(json);
     if (match != null) {
       final variableName = match.group(1);
@@ -197,7 +211,7 @@ class ApiHandler {
     }
 
     // Checking for case of String interpolation
-    final innerVarRegex = RegExp(r'\{\{(\w+)\}\}');
+    final innerVarRegex = RegExp(r'\{\{([\w\.]+)\}\}');
     final innerVarMatch = innerVarRegex.firstMatch(json);
     if (innerVarMatch == null) return json;
 

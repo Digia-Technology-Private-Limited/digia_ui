@@ -1,9 +1,10 @@
 import 'package:flutter/widgets.dart';
-import '../core/virtual_leaf_stateless_widget.dart';
+import '../base/virtual_leaf_stateless_widget.dart';
 import '../internal_widgets/internal_youtube_player.dart';
+import '../models/props.dart';
 import '../render_payload.dart';
 
-class VWYoutubePlayer extends VirtualLeafStatelessWidget {
+class VWYoutubePlayer extends VirtualLeafStatelessWidget<Props> {
   VWYoutubePlayer({
     required super.props,
     required super.commonProps,

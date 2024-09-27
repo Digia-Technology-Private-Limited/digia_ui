@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../digia_ui.dart';
 import 'core/app_state_provider.dart';
+import 'framework/ui_factory.dart';
 
 class DUIApp extends StatelessWidget {
   final String digiaAccessKey;
@@ -108,12 +109,10 @@ class DUIApp extends StatelessWidget {
             );
           }
 
-          final initialRouteData =
-              DigiaUIClient.getConfigResolver().getfirstPageData();
-
+          DUIFactory().initialize();
           return AppStateProvider(
               state: DigiaUIClient.instance.appState.variables,
-              child: DUIPage(pageUid: initialRouteData.uid));
+              child: DUIFactory().createInitialPage());
         },
       ),
     );

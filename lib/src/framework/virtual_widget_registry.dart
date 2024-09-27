@@ -1,6 +1,6 @@
+import 'base/virtual_state_container_widget.dart';
+import 'base/virtual_widget.dart';
 import 'builders.dart';
-import 'core/virtual_state_container_widget.dart';
-import 'core/virtual_widget.dart';
 import 'models/vw_node_data.dart';
 
 typedef VirtualWidgetBuilder = VirtualWidget Function(
@@ -61,7 +61,7 @@ class VirtualWidgetRegistry {
     'digia/refreshIndicator': refreshIndicatorBuilder,
     // 'digia/stepper': stepperBuilder,
     // 'digia/flutterStepper': flutterStepperBuilder,
-    // 'digia/pinField': pinFieldBuilder,
+    'digia/pinField': pinFieldBuilder,
     'digia/calendar': calendarBuilder,
 
     // Media and Web Content
@@ -97,8 +97,14 @@ class VirtualWidgetRegistry {
     // 'digia/probo/animated_fastscore': proboCustomComponentBuilder,
   };
 
-  void registerWidget(String type, VirtualWidgetBuilder builder) {
-    _builders[type] = builder;
+  void registerWidget(
+      String type,
+      VirtualWidget Function(
+        VWNodeData data,
+        VirtualWidgetRegistry registry,
+      ) virtualWidgetBuilder) {
+    _builders[type] =
+        (data, _, registry) => virtualWidgetBuilder(data, registry);
   }
 
   static final VirtualWidgetRegistry instance =

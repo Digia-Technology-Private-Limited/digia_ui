@@ -1,13 +1,14 @@
 import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/widgets.dart';
 
-import '../../Utils/basic_shared_utils/dui_decoder.dart';
-import '../core/extensions.dart';
-import '../core/virtual_stateless_widget.dart';
+import '../base/extensions.dart';
+import '../base/virtual_stateless_widget.dart';
 import '../internal_widgets/internal_list_view.dart';
+import '../models/props.dart';
 import '../render_payload.dart';
+import '../utils/flutter_type_converters.dart';
 
-class VWListView extends VirtualStatelessWidget {
+class VWListView extends VirtualStatelessWidget<Props> {
   VWListView({
     required super.props,
     required super.commonProps,
@@ -24,9 +25,9 @@ class VWListView extends VirtualStatelessWidget {
     if (children == null || children!.isEmpty) return empty();
 
     final reverse = payload.eval<bool>(props.get('reverse')) ?? false;
-    final scrollDirection = DUIDecoder.toAxis(props.get('scrollDirection'),
-        defaultValue: Axis.vertical);
-    final physics = DUIDecoder.toScrollPhysics(props.get('allowScroll'));
+    final scrollDirection =
+        To.axis(props.get('scrollDirection')) ?? Axis.vertical;
+    final physics = To.scrollPhysics(props.get('allowScroll'));
     final shrinkWrap = props.getBool('shrinkWrap') ?? false;
 
     final initialScrollPosition =

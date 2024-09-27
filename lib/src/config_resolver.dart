@@ -8,6 +8,7 @@ import 'Utils/file_operations.dart';
 import 'core/functions/download.dart';
 import 'core/functions/js_functions.dart';
 import 'core/page/props/dui_page_props.dart';
+import 'models/variable_def.dart';
 import 'network/api_request/api_request.dart';
 import 'network/core/types.dart';
 
@@ -234,27 +235,32 @@ class AppConfigResolver {
 
 class DUIConfig {
   final Map<String, dynamic> _themeConfig;
-  final Map<String, dynamic> _pages;
-  final Map<String, dynamic> _restConfig;
-  final String _initialRoute;
+  final Map<String, dynamic> pages;
+  final Map<String, dynamic> restConfig;
+  final String initialRoute;
   final String? functionsFilePath;
   final Map<String, dynamic>? appState;
   final bool? versionUpdated;
   final int? version;
+  final Map<String, dynamic>? _environment;
 
   DUIConfig(dynamic data)
       : _themeConfig = data['theme'],
-        _pages = data['pages'],
-        _restConfig = data['rest'],
-        _initialRoute = data['appSettings']['initialRoute'],
+        pages = data['pages'],
+        restConfig = data['rest'],
+        initialRoute = data['appSettings']['initialRoute'],
         appState = data['appState'],
         version = data['version'],
         versionUpdated = data['versionUpdated'],
-        functionsFilePath = data['functionsFilePath'];
+        functionsFilePath = data['functionsFilePath'],
+        _environment = data['environment'];
 
   // TODO: @tushar - Add support for light / dark theme
   Map<String, dynamic> get _colors => _themeConfig['colors']['light'];
   Map<String, dynamic> get _fonts => _themeConfig['fonts'];
+
+  Map<String, Object?> get colorTokens => _themeConfig['colors']['light'];
+  Map<String, Object?> get fontTokens => _themeConfig['fonts'];
 
   String? getColorValue(String colorToken) {
     return _colors[colorToken];
@@ -270,7 +276,7 @@ class DUIConfig {
   // }
 
   DUIPageProps getPageData(String pageUid) {
-    final pageConfig = _pages[pageUid];
+    final pageConfig = pages[pageUid];
     if (pageConfig == null) {
       throw 'Config for Page: $pageUid not found';
     }
@@ -278,7 +284,7 @@ class DUIConfig {
   }
 
   DUIPageProps getfirstPageData() {
-    final firstPageConfig = _pages[_initialRoute];
+    final firstPageConfig = pages[initialRoute];
     if (firstPageConfig == null || firstPageConfig['uid'] == null) {
       throw 'Config for First Page not found.';
     }
@@ -287,10 +293,14 @@ class DUIConfig {
   }
 
   Map<String, dynamic>? getDefaultHeaders() {
-    return _restConfig['defaultHeaders'];
+    return restConfig['defaultHeaders'];
+  }
+
+  Map<String, VariableDef> getEnvironmentVariables() {
+    return const VariablesJsonConverter().fromJson(_environment?['variables']);
   }
 
   APIModel getApiDataSource(String id) {
-    return APIModel.fromJson(_restConfig['resources'][id]);
+    return APIModel.fromJson(restConfig['resources'][id]);
   }
 }

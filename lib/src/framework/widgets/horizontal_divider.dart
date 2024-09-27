@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:styled_divider/styled_divider.dart';
 
-import '../../Utils/util_functions.dart';
 import '../../components/utils/decoder.dart';
-import '../core/virtual_leaf_stateless_widget.dart';
+import '../base/virtual_leaf_stateless_widget.dart';
+import '../models/props.dart';
 import '../render_payload.dart';
 
-class VWHorizontalDivider extends VirtualLeafStatelessWidget {
+class VWHorizontalDivider extends VirtualLeafStatelessWidget<Props> {
   VWHorizontalDivider({
     required super.props,
     required super.commonProps,
@@ -23,8 +23,7 @@ class VWHorizontalDivider extends VirtualLeafStatelessWidget {
       thickness: payload.eval<double>(props.get('thickness')),
       indent: payload.eval<double>(props.get('indent')),
       endIndent: payload.eval<double>(props.get('endIndent')),
-      color:
-          makeColor(payload.eval<String>(props.get('color'))) ?? Colors.black,
+      color: payload.evalColor(props.get('color')) ?? Colors.black,
     );
   }
 }

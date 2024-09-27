@@ -1,6 +1,7 @@
 import '../utils/functional_util.dart';
 import '../utils/json_util.dart';
-import '../utils/type_aliases.dart';
+import '../utils/types.dart';
+import 'common_props.dart';
 import 'props.dart';
 import 'vw_repeat_data.dart';
 
@@ -8,7 +9,7 @@ class VWNodeData {
   final String category;
   final String type;
   final Props props;
-  final Props? commonProps;
+  final CommonProps? commonProps;
   final Map<String, List<VWNodeData>>? childGroups;
   final VWRepeatData? repeatData;
   final String? refName;
@@ -23,14 +24,14 @@ class VWNodeData {
     required this.refName,
   });
 
-  factory VWNodeData.fromJson(Map<String, dynamic> json) {
+  factory VWNodeData.fromJson(Map<String, Object?> json) {
     return VWNodeData(
         category: as$<String>(json['category']) ?? '',
         type: as$<String>(json['type']) ?? '',
         props: as$<JsonLike>(json['props']).maybe((p0) => Props(p0)) ??
             Props.empty(),
         commonProps:
-            as$<JsonLike>(json['containerProps']).maybe((p0) => Props(p0)),
+            as$<JsonLike>(json['containerProps']).maybe(CommonProps.fromJson),
         childGroups: tryKeys(
           json,
           ['children', 'composites', 'childGroups'],
@@ -44,7 +45,7 @@ class VWNodeData {
         refName: tryKeys<String>(json, ['varName', 'refName']));
   }
 
-  static Map<String, List<VWNodeData>>? _parseVWNodeDataMap(dynamic json) {
+  static Map<String, List<VWNodeData>>? _parseVWNodeDataMap(Object? json) {
     final jsonMap = as$<JsonLike>(json);
     if (jsonMap == null) return null;
 

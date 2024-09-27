@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import '../../Utils/util_functions.dart';
-import '../core/extensions.dart';
-import '../core/virtual_leaf_stateless_widget.dart';
-import '../core/virtual_stateless_widget.dart';
-import '../core/virtual_widget.dart';
+
+import '../base/extensions.dart';
+import '../base/virtual_stateless_widget.dart';
+import '../base/virtual_widget.dart';
 import '../models/props.dart';
 import '../render_payload.dart';
 import '../utils/functional_util.dart';
 import 'app_bar.dart';
+import 'drawer.dart';
 import 'icon.dart';
 import 'safe_area.dart';
 
-class VWScaffold extends VirtualStatelessWidget {
+class VWScaffold extends VirtualStatelessWidget<Props> {
   VWScaffold({
     required super.props,
     required super.commonProps,
@@ -37,13 +37,13 @@ class VWScaffold extends VirtualStatelessWidget {
     final endDrawer = childOf('endDrawer')?.toWidget(payload);
     final persistentFooterButtons =
         childrenOf('persistentFooterButtons')?.toWidgetArray(payload);
-    final bottomNavigationBar = null;
+    const bottomNavigationBar = null;
 
     // final pageKey = UniqueKey();
     final themeData = Theme.of(payload.buildContext).copyWith(
       dividerTheme: const DividerThemeData(color: Colors.transparent),
       scaffoldBackgroundColor:
-          makeColor(payload.eval<String>(props.get('scaffoldBackgroundColor'))),
+          payload.evalColor(props.get('scaffoldBackgroundColor')),
     );
     final enableSafeArea =
         payload.eval<bool>(props.get('enableSafeArea')) ?? true;
@@ -88,7 +88,9 @@ class VWScaffold extends VirtualStatelessWidget {
 
   VirtualWidget? _drawerIcon() {
     final child = childOf('drawer');
-    if (child == null || child is! VirtualLeafStatelessWidget) return null;
+    if (child == null || child is! VWDrawer) {
+      return null;
+    }
 
     return child.props.getMap('drawerIcon').maybe((p0) {
       return VWIcon(props: Props(p0), commonProps: null, parent: null);
@@ -97,7 +99,9 @@ class VWScaffold extends VirtualStatelessWidget {
 
   VirtualWidget? _endDrawerIcon() {
     final child = childOf('endDrawer');
-    if (child == null || child is! VirtualLeafStatelessWidget) return null;
+    if (child == null || child is! VWDrawer) {
+      return null;
+    }
 
     return child.props.getMap('drawerIcon').maybe((p0) {
       return VWIcon(props: Props(p0), commonProps: null, parent: null);

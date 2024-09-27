@@ -1,7 +1,6 @@
-import '../../Utils/basic_shared_utils/num_decoder.dart';
-import '../../Utils/extensions.dart';
+import '../utils/json_util.dart';
 import '../utils/num_util.dart';
-import '../utils/type_aliases.dart';
+import '../utils/types.dart';
 
 class Props {
   JsonLike value;
@@ -9,15 +8,15 @@ class Props {
   Props(this.value);
 
   Object? get(String? keyPath) =>
-      keyPath == null ? null : value.valueFor(keyPath: keyPath);
+      keyPath == null ? null : value.valueFor(keyPath);
 
   String? getString(String keyPath) => get(keyPath) as String?;
 
-  int? getInt(String keyPath) => NumDecoder.toInt(get(keyPath));
+  int? getInt(String keyPath) => NumUtil.toInt(get(keyPath));
 
   double? getDouble(String keyPath) => NumUtil.toDouble(get(keyPath));
 
-  bool? getBool(String keyPath) => NumDecoder.toBool(get(keyPath));
+  bool? getBool(String keyPath) => NumUtil.toBool(get(keyPath));
 
   JsonLike? getMap(String keyPath) => get(keyPath) as JsonLike?;
 
