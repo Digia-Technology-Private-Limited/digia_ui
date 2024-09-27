@@ -3,6 +3,7 @@ import 'package:flutter/painting.dart';
 import 'base/virtual_widget.dart';
 import 'models/vw_node_data.dart';
 import 'virtual_widget_registry.dart';
+import 'widget_props/pin_field_props.dart';
 import 'widget_props/sized_box_props.dart';
 import 'widget_props/spacer_props.dart';
 import 'widget_props/timer_props.dart';
@@ -29,6 +30,7 @@ import 'widgets/linear_progress_bar.dart';
 import 'widgets/list_view.dart';
 import 'widgets/lottie.dart';
 import 'widgets/opacity.dart';
+import 'widgets/pin_field.dart';
 import 'widgets/refresh_indicator.dart';
 import 'widgets/rich_text.dart';
 import 'widgets/safe_area.dart';
@@ -94,6 +96,15 @@ VWContainer containerBuilder(
 VWIcon iconBuilder(VWNodeData data, VirtualWidget? parent, _) {
   return VWIcon(
     props: data.props,
+    commonProps: data.commonProps,
+    parent: parent,
+    refName: data.refName,
+  );
+}
+
+VWPinField pinFieldBuilder(VWNodeData data, VirtualWidget? parent, _) {
+  return VWPinField(
+    props: PinFieldProps.fromJson(data.props.value),
     commonProps: data.commonProps,
     parent: parent,
     refName: data.refName,
