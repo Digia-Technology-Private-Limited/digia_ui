@@ -1,6 +1,7 @@
 import 'package:digia_expr/digia_expr.dart';
 
-import 'object_util.dart';
+import '../utils/object_util.dart';
+import 'scope_context.dart';
 
 /// Evaluates a string expression and converts the result to the specified type.
 ///
@@ -9,18 +10,18 @@ import 'object_util.dart';
 /// context and attempts to convert the result to type T.
 ///
 /// [expression] The string expression to evaluate.
-/// [exprContext] The context for expression evaluation.
+/// [scopeContext] The context for expression evaluation.
 /// Returns the evaluated result converted to type T, or null if conversion fails.
 T? evaluateExpression<T extends Object>(
   String expression,
-  ExprContext? exprContext,
+  ScopeContext? scopeContext,
 ) {
-  return Expression.eval(expression, exprContext)?.to<T>();
+  return Expression.eval(expression, scopeContext)?.to<T>();
 }
 
 T? evaluate<T extends Object>(
   Object? expression, {
-  ExprContext? exprContext,
+  ScopeContext? scopeContext,
   T? Function(Object?)? decoder,
 }) {
   if (expression == null) return null;
@@ -29,26 +30,26 @@ T? evaluate<T extends Object>(
     return decoder?.call(expression) ?? expression.to<T>();
   }
 
-  return Expression.eval(expression as String, exprContext)?.to<T>();
+  return Expression.eval(expression as String, scopeContext)?.to<T>();
 }
 
 bool hasExpression(Object? expression) {
   return expression is String && Expression.hasExpression(expression);
 }
 
-Object? evaluateNestedExpressions(Object? data, ExprContext? context) {
+Object? evaluateNestedExpressions(Object? data, ScopeContext? context) {
   if (data == null) return null;
 
   // Evaluate primitive types directly
   if (data is String || data is num || data is bool) {
-    return evaluate(data, exprContext: context);
+    return evaluate(data, scopeContext: context);
   }
 
   // Recursively evaluate Map entries
   if (data is Map<String, Object?>) {
     return data.map((key, value) {
       var evaluatedKey =
-          hasExpression(key) ? evaluate(key, exprContext: context) : key;
+          hasExpression(key) ? evaluate(key, scopeContext: context) : key;
       var evaluatedValue = evaluateNestedExpressions(value, context);
       return MapEntry(evaluatedKey, evaluatedValue);
     });

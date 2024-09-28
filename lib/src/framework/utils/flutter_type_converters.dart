@@ -275,9 +275,9 @@ abstract class To {
     );
   }
 
-  static BorderRadiusGeometry borderRadius(
+  static BorderRadius borderRadius(
     dynamic value, {
-    BorderRadiusGeometry? or = BorderRadius.zero,
+    BorderRadius? or = BorderRadius.zero,
   }) {
     final fallBackValue = or ?? BorderRadius.zero;
     if (value == null) return fallBackValue;

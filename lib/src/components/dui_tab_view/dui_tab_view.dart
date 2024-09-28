@@ -41,93 +41,90 @@ class _DUITabViewState extends State<DUITabView> {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: DefaultTabController(
-        initialIndex:
-            eval<int>(widget.tabViewProps.initialIndex, context: context) ?? 0,
-        length: widget.children.length,
-        child: Column(
-          children: [
-            if (widget.tabViewProps.tabBarPosition == 'top')
-              Visibility(
-                visible: widget.tabViewProps.hasTabs ?? false,
-                child: TabBar(
-                  indicatorSize: _indicatorSize,
-                  labelPadding:
-                      DUIDecoder.toEdgeInsets(widget.tabViewProps.labelPadding),
-                  padding: DUIDecoder.toEdgeInsets(
-                      widget.tabViewProps.tabBarPadding),
-                  unselectedLabelColor:
-                      makeColor(widget.tabViewProps.unselectedLabelColor),
-                  unselectedLabelStyle: toTextStyle(
-                      widget.tabViewProps.unselectedLabelStyle, context),
-                  indicatorColor: makeColor(widget.tabViewProps.indicatorColor),
-                  labelStyle: toTextStyle(
-                      widget.tabViewProps.selectedLabelStyle, context),
-                  dividerColor: makeColor(widget.tabViewProps.dividerColor),
-                  labelColor: makeColor(widget.tabViewProps.selectedLabelColor),
-                  dividerHeight: widget.tabViewProps.dividerHeight,
-                  tabs: List.generate(widget.children.length, (index) {
-                    final icon = DUIIconBuilder.fromProps(
-                                props: widget.children[index].props['icon'])
-                            ?.build(context) ??
-                        DUIIconBuilder.emptyIconWidget();
-                    return Column(children: [
-                      icon,
-                      Text(eval<String>(widget.children[index].props['title'],
-                              context: context) ??
-                          ''),
-                    ]);
-                  }),
-                ),
+    return DefaultTabController(
+      initialIndex:
+          eval<int>(widget.tabViewProps.initialIndex, context: context) ?? 0,
+      length: widget.children.length,
+      child: Column(
+        children: [
+          if (widget.tabViewProps.tabBarPosition == 'top')
+            Visibility(
+              visible: widget.tabViewProps.hasTabs ?? false,
+              child: TabBar(
+                indicatorSize: _indicatorSize,
+                labelPadding:
+                    DUIDecoder.toEdgeInsets(widget.tabViewProps.labelPadding),
+                padding:
+                    DUIDecoder.toEdgeInsets(widget.tabViewProps.tabBarPadding),
+                unselectedLabelColor:
+                    makeColor(widget.tabViewProps.unselectedLabelColor),
+                unselectedLabelStyle: toTextStyle(
+                    widget.tabViewProps.unselectedLabelStyle, context),
+                indicatorColor: makeColor(widget.tabViewProps.indicatorColor),
+                labelStyle: toTextStyle(
+                    widget.tabViewProps.selectedLabelStyle, context),
+                dividerColor: makeColor(widget.tabViewProps.dividerColor),
+                labelColor: makeColor(widget.tabViewProps.selectedLabelColor),
+                dividerHeight: widget.tabViewProps.dividerHeight,
+                tabs: List.generate(widget.children.length, (index) {
+                  final icon = DUIIconBuilder.fromProps(
+                              props: widget.children[index].props['icon'])
+                          ?.build(context) ??
+                      DUIIconBuilder.emptyIconWidget();
+                  return Column(children: [
+                    icon,
+                    Text(eval<String>(widget.children[index].props['title'],
+                            context: context) ??
+                        ''),
+                  ]);
+                }),
               ),
-            Expanded(
-                child: TabBarView(
-                    viewportFraction:
-                        widget.tabViewProps.viewportFraction ?? 1.0,
-                    physics: widget.tabViewProps.isScrollable ?? false
-                        ? const AlwaysScrollableScrollPhysics()
-                        : const NeverScrollableScrollPhysics(),
-                    children: widget.children.map((e) {
-                      final builder = DUIJsonWidgetBuilder(
-                          data: e, registry: widget.registry!);
-                      return builder.build(context);
-                    }).toList())),
-            if (widget.tabViewProps.tabBarPosition == 'bottom')
-              Visibility(
-                visible: widget.tabViewProps.hasTabs ?? false,
-                child: TabBar(
-                  indicatorSize: _indicatorSize,
-                  labelPadding:
-                      DUIDecoder.toEdgeInsets(widget.tabViewProps.labelPadding),
-                  padding: DUIDecoder.toEdgeInsets(
-                      widget.tabViewProps.tabBarPadding),
-                  unselectedLabelColor:
-                      makeColor(widget.tabViewProps.unselectedLabelColor),
-                  unselectedLabelStyle: toTextStyle(
-                      widget.tabViewProps.unselectedLabelStyle, context),
-                  labelStyle: toTextStyle(
-                      widget.tabViewProps.selectedLabelStyle, context),
-                  dividerColor: makeColor(widget.tabViewProps.dividerColor),
-                  labelColor: makeColor(widget.tabViewProps.selectedLabelColor),
-                  dividerHeight: widget.tabViewProps.dividerHeight,
-                  indicatorColor: makeColor(widget.tabViewProps.indicatorColor),
-                  tabs: List.generate(widget.children.length, (index) {
-                    final icon = DUIIconBuilder.fromProps(
-                                props: widget.children[index].props['icon'])
-                            ?.build(context) ??
-                        DUIIconBuilder.emptyIconWidget();
-                    return Column(children: [
-                      icon,
-                      Text(eval<String>(widget.children[index].props['title'],
-                              context: context) ??
-                          ''),
-                    ]);
-                  }),
-                ),
+            ),
+          Expanded(
+              child: TabBarView(
+                  viewportFraction: widget.tabViewProps.viewportFraction ?? 1.0,
+                  physics: widget.tabViewProps.isScrollable ?? false
+                      ? const AlwaysScrollableScrollPhysics()
+                      : const NeverScrollableScrollPhysics(),
+                  children: widget.children.map((e) {
+                    final builder = DUIJsonWidgetBuilder(
+                        data: e, registry: widget.registry!);
+                    return builder.build(context);
+                  }).toList())),
+          if (widget.tabViewProps.tabBarPosition == 'bottom')
+            Visibility(
+              visible: widget.tabViewProps.hasTabs ?? false,
+              child: TabBar(
+                indicatorSize: _indicatorSize,
+                labelPadding:
+                    DUIDecoder.toEdgeInsets(widget.tabViewProps.labelPadding),
+                padding:
+                    DUIDecoder.toEdgeInsets(widget.tabViewProps.tabBarPadding),
+                unselectedLabelColor:
+                    makeColor(widget.tabViewProps.unselectedLabelColor),
+                unselectedLabelStyle: toTextStyle(
+                    widget.tabViewProps.unselectedLabelStyle, context),
+                labelStyle: toTextStyle(
+                    widget.tabViewProps.selectedLabelStyle, context),
+                dividerColor: makeColor(widget.tabViewProps.dividerColor),
+                labelColor: makeColor(widget.tabViewProps.selectedLabelColor),
+                dividerHeight: widget.tabViewProps.dividerHeight,
+                indicatorColor: makeColor(widget.tabViewProps.indicatorColor),
+                tabs: List.generate(widget.children.length, (index) {
+                  final icon = DUIIconBuilder.fromProps(
+                              props: widget.children[index].props['icon'])
+                          ?.build(context) ??
+                      DUIIconBuilder.emptyIconWidget();
+                  return Column(children: [
+                    icon,
+                    Text(eval<String>(widget.children[index].props['title'],
+                            context: context) ??
+                        ''),
+                  ]);
+                }),
               ),
-          ],
-        ),
+            ),
+        ],
       ),
     );
   }

@@ -1,9 +1,11 @@
-import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/widgets.dart';
 
 import '../digia_ui_client.dart';
 import 'actions/action_executor.dart';
+import 'base/message_handler.dart';
 import 'base/virtual_widget.dart';
+import 'component/component.dart';
+import 'expr/default_scope_context.dart';
 import 'models/vw_node_data.dart';
 import 'page/config_provider.dart';
 import 'page/page.dart';
@@ -89,6 +91,7 @@ class DUIFactory {
     Map<String, TextStyle>? overrideTextStyles,
     Map<String, Color?>? overrideColorTokens,
     GlobalKey<NavigatorState>? navigatorKey,
+    DUIMessageHandler? messageHandler,
   }) {
     // Merge overriding resources with existing resources
     final mergedResources = UIResources(
@@ -101,7 +104,12 @@ class DUIFactory {
     return DefaultActionExecutor(
       actionExecutor: ActionExecutor(
         viewBuilder: (context, viewId, args) => createPage(viewId, args),
-        pageRouteBuilder: (context, id, args) => createPageRoute(id, args),
+        pageRouteBuilder: (context, id, args) => createPageRoute(
+          id,
+          args,
+          messageHandler:
+              messageHandler?.propagateHandler == true ? messageHandler : null,
+        ),
         logger: DigiaUIClient.instance.developerConfig?.logger,
       ),
       child: DUIPage(
@@ -112,7 +120,8 @@ class DUIFactory {
         pageDef: configProvider.getPageDefinition(pageId),
         registry: VirtualWidgetRegistry.instance,
         apiModels: configProvider.getAllApiModels(),
-        scope: ExprContext(
+        messageHandler: messageHandler,
+        scope: DefaultScopeContext(
           name: 'global',
           variables: {...DigiaUIClient.instance.jsVars},
         ),
@@ -128,6 +137,7 @@ class DUIFactory {
     Map<String, TextStyle>? overrideTextStyles,
     Map<String, Color?>? overrideColorTokens,
     GlobalKey<NavigatorState>? navigatorKey,
+    DUIMessageHandler? messageHandler,
   }) {
     return DUIPageRoute<Object>(
         pageId: pageId,
@@ -138,6 +148,7 @@ class DUIFactory {
               overrideImages: overrideImages,
               overrideTextStyles: overrideTextStyles,
               overrideColorTokens: overrideColorTokens,
+              messageHandler: messageHandler,
             ));
   }
 
@@ -157,9 +168,45 @@ class DUIFactory {
     );
   }
 
-  Widget createComponent(String componentUid) {
-    return const SizedBox.shrink();
-    // return DUIComponent(componentUid: componentUid);
+  // TODO: What should be done about MessageHandler here?
+  // Show it propagate to Page?
+  Widget createComponent(
+    String componentid,
+    JsonLike? args, {
+    Map<String, IconData>? overrideIcons,
+    Map<String, ImageProvider>? overrideImages,
+    Map<String, TextStyle>? overrideTextStyles,
+    Map<String, Color?>? overrideColorTokens,
+    GlobalKey<NavigatorState>? navigatorKey,
+  }) {
+    // Merge overriding resources with existing resources
+    final mergedResources = UIResources(
+      icons: {...?resources.icons, ...?overrideIcons},
+      images: {...?resources.images, ...?overrideImages},
+      textStyles: {...?resources.textStyles, ...?overrideTextStyles},
+      colors: {...?resources.colors, ...?overrideColorTokens},
+    );
+
+    return DefaultActionExecutor(
+      actionExecutor: ActionExecutor(
+        viewBuilder: (context, viewId, args) => createPage(viewId, args),
+        pageRouteBuilder: (context, id, args) => createPageRoute(id, args),
+        logger: DigiaUIClient.instance.developerConfig?.logger,
+      ),
+      child: DUIComponent(
+        id: componentid,
+        args: args,
+        resources: mergedResources,
+        navigatorKey: navigatorKey,
+        definition: configProvider.getComponentDefinition(componentid),
+        registry: VirtualWidgetRegistry.instance,
+        apiModels: configProvider.getAllApiModels(),
+        scope: DefaultScopeContext(
+          name: 'global',
+          variables: {...DigiaUIClient.instance.jsVars},
+        ),
+      ),
+    );
   }
 }
 

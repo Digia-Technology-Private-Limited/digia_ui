@@ -1,9 +1,10 @@
-import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/action/api_handler.dart';
 import '../actions/base/action_flow.dart';
 import '../base/virtual_stateless_widget.dart';
+import '../expr/default_scope_context.dart';
+import '../expr/scope_context.dart';
 import '../internal_widgets/async_builder/controller.dart';
 import '../internal_widgets/async_builder/widget.dart';
 import '../models/props.dart';
@@ -68,8 +69,8 @@ class VWAsyncBuilder extends VirtualStatelessWidget<Props> {
         });
   }
 
-  ExprContext _createExprContext(Object? data, Object? error) {
-    return ExprContext(variables: {
+  ScopeContext _createExprContext(Object? data, Object? error) {
+    return DefaultScopeContext(variables: {
       'data': data,
       'errorObj': error
       // TODO: Add class instance using refName
@@ -109,13 +110,14 @@ Future<Object?> _makeFuture(Props futureProps, RenderPayload payload) async {
         final successAction = ActionFlow.fromJson(futureProps.get('onSuccess'));
         return payload.executeAction(
           successAction,
-          exprContext: ExprContext(variables: {'response': value.data}),
+          scopeContext:
+              DefaultScopeContext(variables: {'response': value.data}),
         );
       }, onError: (e) async {
         final errorAction = ActionFlow.fromJson(futureProps.get('onFailure'));
         await payload.executeAction(
           errorAction,
-          exprContext: ExprContext(variables: {'error': e}),
+          scopeContext: DefaultScopeContext(variables: {'error': e}),
         );
         throw e;
       });

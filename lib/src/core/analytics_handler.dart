@@ -1,8 +1,8 @@
-import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/material.dart';
 
 import '../../digia_ui.dart';
 import '../Utils/expr.dart';
+import '../framework/expr/scope_context.dart';
 
 class AnalyticsHandler {
   static final AnalyticsHandler _instance = AnalyticsHandler._();
@@ -14,7 +14,7 @@ class AnalyticsHandler {
   Future<dynamic>? execute(
       {required BuildContext context,
       required List<Map<String, dynamic>>? events,
-      ExprContext? enclosing}) async {
+      ScopeContext? enclosing}) async {
     if (events == null) return;
     final DUILogger? logger = DigiaUIClient.instance.developerConfig?.logger;
 
@@ -36,7 +36,7 @@ class AnalyticsHandler {
 }
 
 void _logAnalytics(DUILogger? logger, List<Map<String, dynamic>>? events,
-    BuildContext context, ExprContext? enclosing) {
+    BuildContext context, ScopeContext? enclosing) {
   if (events == null) return;
 
   for (var event in events) {

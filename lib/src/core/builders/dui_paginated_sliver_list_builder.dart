@@ -1,4 +1,3 @@
-import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
@@ -7,6 +6,7 @@ import '../../Utils/basic_shared_utils/lodash.dart';
 import '../../Utils/dui_widget_registry.dart';
 import '../../Utils/extensions.dart';
 import '../../components/dui_base_stateful_widget.dart';
+import '../../framework/expr/default_scope_context.dart';
 import '../action/action_handler.dart';
 import '../action/api_handler.dart';
 import '../evaluator.dart';
@@ -70,7 +70,7 @@ class _DUIPaginatedSliverListState
       final args = apiDataSourceArgs?.map((key, value) {
         final evalue = eval(value,
             context: context,
-            enclosing: ExprContext(variables: {'offset': pageKey}));
+            enclosing: DefaultScopeContext(variables: {'offset': pageKey}));
         final dvalue = apiModel.variables?[key]?.defaultValue;
         return MapEntry(key, evalue ?? dvalue);
       });
@@ -88,8 +88,8 @@ class _DUIPaginatedSliverListState
             ifNotNull(widget.data.props['newItemsTransformation'], (p0) {
                   return eval<List>(p0,
                       context: context,
-                      enclosing:
-                          ExprContext(variables: {'response': response}));
+                      enclosing: DefaultScopeContext(
+                          variables: {'response': response}));
                 }) ??
                 response['body'];
 

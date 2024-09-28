@@ -1,8 +1,8 @@
-import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/widgets.dart';
 
-import '../../page/message_handler.dart';
-import '../../page/resource_provider.dart';
+import '../../base/message_handler.dart';
+import '../../expr/scope_context.dart';
+import '../../resource_provider.dart';
 import '../base/processor.dart';
 import 'action.dart';
 
@@ -11,10 +11,10 @@ class PostMessageProcessor implements ActionProcessor<PostMessageAction> {
   Future<Object?>? execute(
     BuildContext context,
     PostMessageAction action,
-    ExprContext? exprContext,
+    ScopeContext? scopeContext,
   ) async {
     final name = action.name;
-    final payload = action.payload?.deepEvaluate(exprContext);
+    final payload = action.payload?.deepEvaluate(scopeContext);
 
     final handler = ResourceProvider.maybeOf(context)?.messageHandler;
     if (handler == null) return null;

@@ -1,6 +1,5 @@
 import 'package:flutter/widgets.dart';
 
-import '../../components/utils/DUIInsets/dui_insets.dart';
 import '../base/extensions.dart';
 import '../base/virtual_leaf_stateless_widget.dart';
 import '../base/virtual_stateless_widget.dart';
@@ -10,6 +9,7 @@ import '../render_payload.dart';
 import '../utils/flutter_type_converters.dart';
 import '../utils/functional_util.dart';
 import '../utils/types.dart';
+import '../widget_props/positioned_props.dart';
 import 'positioned.dart';
 
 class VWStack extends VirtualStatelessWidget<Props> {
@@ -43,19 +43,19 @@ class VWStack extends VirtualStatelessWidget<Props> {
     }
 
     final position = as$<JsonLike>(childVirtualWidget.commonProps?.parentProps
-            ?.get('positioned.position'))
-        .maybe(DUIInsets.fromJson)
-        ?.toJson();
+        ?.get('positioned.position'));
 
     final hasPosition = childVirtualWidget.commonProps?.parentProps
             ?.getBool('positioned.hasPosition') ??
         false;
     if (!hasPosition || position == null) return childVirtualWidget;
 
-    return VWPositioned.fromValues(
-      position: position,
-      child: childVirtualWidget,
-      parent: this,
+    return VWPositioned(
+      props: PositionedProps.fromJson(position),
+      childGroups: {
+        'child': [childVirtualWidget]
+      },
+      parent: null,
     );
   }
 }

@@ -1,7 +1,8 @@
-import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/widgets.dart';
 
 import '../base/virtual_stateless_widget.dart';
+import '../expr/default_scope_context.dart';
+import '../expr/scope_context.dart';
 import '../internal_widgets/timer/controller.dart';
 import '../internal_widgets/timer/widget.dart';
 import '../render_payload.dart';
@@ -76,8 +77,8 @@ class VWTimer extends VirtualStatelessWidget<TimerProps> {
     );
   }
 
-  ExprContext _createExprContext(int? value) {
-    return ExprContext(variables: {
+  ScopeContext _createExprContext(int? value) {
+    return DefaultScopeContext(variables: {
       'tickValue': value,
     });
   }

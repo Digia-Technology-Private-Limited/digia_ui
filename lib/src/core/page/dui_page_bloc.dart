@@ -1,12 +1,12 @@
 import 'dart:async';
 
-import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../digia_ui.dart';
 import '../../Utils/basic_shared_utils/lodash.dart';
 import '../../Utils/expr.dart';
+import '../../framework/expr/default_scope_context.dart';
 import '../action/action_handler.dart';
 import '../action/action_prop.dart';
 import '../action/api_handler.dart';
@@ -47,7 +47,7 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
       for (final element in pageStates.entries) {
         final pageStateDefaultValue = element.value.value;
         final evaluatedValue = evalDynamic(pageStateDefaultValue,
-            blocEvent.context, ExprContext(variables: {}));
+            blocEvent.context, DefaultScopeContext(variables: {}));
         state.props.variables?[element.key]?.set(evaluatedValue);
       }
     }
@@ -121,13 +121,13 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
         await ActionHandler.instance.execute(
             context: context,
             actionFlow: successAction,
-            enclosing: ExprContext(variables: {'response': respObj}));
+            enclosing: DefaultScopeContext(variables: {'response': respObj}));
       } else {
         final errorAction = ActionFlow.fromJson(action.data['onError']);
         await ActionHandler.instance.execute(
             context: context,
             actionFlow: errorAction,
-            enclosing: ExprContext(variables: {'response': respObj}));
+            enclosing: DefaultScopeContext(variables: {'response': respObj}));
       }
 
       emit(state.copyWith(isLoading: false, dataSource: resp.data));
@@ -135,8 +135,7 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
       final res = {
         'error': e,
       };
-      
-      
+
       if (!context.mounted) {
         return;
       }
@@ -147,7 +146,7 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
       await ActionHandler.instance.execute(
           context: context,
           actionFlow: errorAction,
-          enclosing: ExprContext(variables: {'response': res}));
+          enclosing: DefaultScopeContext(variables: {'response': res}));
     }
   }
 
@@ -155,7 +154,7 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
       BuildContext context, String? successCondition, Object response) {
     return successCondition?.let((p0) => eval<bool>(successCondition,
             context: context,
-            enclosing: ExprContext(
+            enclosing: DefaultScopeContext(
               variables: {'response': response},
             ))) ??
         successCondition == null || successCondition.isEmpty;

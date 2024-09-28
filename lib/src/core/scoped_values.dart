@@ -4,13 +4,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../digia_ui.dart';
 import '../Utils/basic_shared_utils/lodash.dart';
+import '../framework/expr/default_scope_context.dart';
+import '../framework/expr/scope_context.dart';
 import 'app_state_provider.dart';
 import 'bracket_scope_provider.dart';
 import 'indexed_item_provider.dart';
 
-ExprContext createScope(BuildContext context, ExprContext? localScope) {
+ExprContext createScope(BuildContext context, ScopeContext? localScope) {
   // Global Level
-  ExprContext globalScope = ExprContext(name: 'global', variables: {
+  ScopeContext globalScope = DefaultScopeContext(name: 'global', variables: {
     ...?AppStateProvider.maybeOf(context)?.variables,
     ...DigiaUIClient.instance.jsVars
   });
@@ -24,7 +26,7 @@ ExprContext createScope(BuildContext context, ExprContext? localScope) {
               name: k,
               fields: v.map((k1, v1) => MapEntry(k1, v1())),
               methods: {}))));
-  ExprContext pageScope = ExprContext(
+  ScopeContext pageScope = DefaultScopeContext(
       name: 'page/${pageState.pageUid}',
       variables: {
         ...?pageState.props.variables?.map((k, v) => MapEntry(k, v.value)),
@@ -37,7 +39,7 @@ ExprContext createScope(BuildContext context, ExprContext? localScope) {
 
   // Index scope for ListViews/GridViews
   final indexScope = ifNotNull(IndexedItemWidgetBuilder.maybeOf(context), (p0) {
-        return ExprContext(
+        return DefaultScopeContext(
             name: 'indexed',
             variables: {'index': p0.index, 'currentItem': p0.currentItem},
             enclosing: pageScope);
@@ -45,7 +47,7 @@ ExprContext createScope(BuildContext context, ExprContext? localScope) {
       pageScope;
 
   final bScope = ifNotNull(BracketScope.maybeOf(context), (p0) {
-        return ExprContext(
+        return DefaultScopeContext(
             name: 'bracket',
             variables:
                 Map.fromEntries(p0.variables.map((e) => MapEntry(e.$1, e.$2))),
@@ -54,5 +56,6 @@ ExprContext createScope(BuildContext context, ExprContext? localScope) {
       indexScope;
 
   // Wrap the scope chain from above over localSCope
-  return ifNotNull(localScope, ((p0) => p0..appendEnclosing(bScope))) ?? bScope;
+  return ifNotNull(localScope, ((p0) => p0..addContextAtTail(bScope))) ??
+      bScope;
 }

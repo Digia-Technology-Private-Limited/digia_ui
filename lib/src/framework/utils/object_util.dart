@@ -45,10 +45,11 @@ extension ObjectExt on Object? {
 
   // Helper method for List conversion
   List<Object>? _toList(Object? value) {
-    if (value is List<Object>) return value;
+    if (value is List) return value.cast<Object>();
     if (value is! String) return null;
     final parsed = tryJsonDecode(value);
-    return parsed is List<Object> ? parsed : null;
+
+    return parsed is List ? parsed.cast<Object>() : null;
   }
 
   /// Safely attempts to cast the current object to a specified type R, with graceful fallback to null.

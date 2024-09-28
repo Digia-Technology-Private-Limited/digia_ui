@@ -1,0 +1,111 @@
+import 'package:flutter/widgets.dart';
+
+import '../../network/api_request/api_request.dart';
+import '../base/message_handler.dart';
+import '../base/state_context.dart';
+import '../base/state_scope_context.dart';
+import '../base/stateful_scope_widget.dart';
+import '../expr/default_scope_context.dart';
+import '../expr/expression_util.dart';
+import '../expr/scope_context.dart';
+import '../models/component_definition.dart';
+import '../render_payload.dart';
+import '../resource_provider.dart';
+import '../ui_factory.dart';
+import '../utils/types.dart';
+import '../virtual_widget_registry.dart';
+
+class DUIComponent extends StatelessWidget {
+  final String id;
+  final JsonLike? args;
+  final DUIComponentDefinition definition;
+  final VirtualWidgetRegistry registry;
+  final UIResources? resources;
+  final ScopeContext? scope;
+  final Map<String, APIModel>? apiModels;
+  final DUIMessageHandler? messageHandler;
+  final GlobalKey<NavigatorState>? navigatorKey;
+
+  const DUIComponent({
+    super.key,
+    required this.id,
+    required this.args,
+    required this.definition,
+    required this.registry,
+    this.resources,
+    this.scope,
+    this.apiModels,
+    this.messageHandler,
+    this.navigatorKey,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final resolvedArgs = definition.argsDefs
+        ?.map((k, v) => MapEntry(k, args?[k] ?? v.defaultValue));
+    final resolvedState =
+        definition.initStateDefs?.map((key, value) => MapEntry(
+              key,
+              evaluateNestedExpressions(
+                value.defaultValue,
+                _createExprContext(resolvedArgs, null),
+              ),
+            ));
+    return ResourceProvider(
+        icons: resources?.icons ?? {},
+        images: resources?.images ?? {},
+        textStyles: resources?.textStyles ?? {},
+        colors: resources?.colors ?? {},
+        apiModels: apiModels ?? {},
+        messageHandler: messageHandler,
+        navigatorKey: navigatorKey,
+        child: StatefulScopeWidget(
+          namespace: 'page',
+          initialState: resolvedState ?? {},
+          childBuilder: (context, state) {
+            return _buildContent(
+              context,
+              _createExprContext(
+                resolvedArgs,
+                state,
+              ),
+            );
+          },
+        ));
+  }
+
+  Widget _buildContent(BuildContext context, ScopeContext scopeContext) {
+    final rootNode = definition.layout?.root;
+    // Blank Layout
+    if (rootNode == null) {
+      return Container();
+    }
+
+    final virtualWidget = registry.createWidget(rootNode, null);
+
+    return virtualWidget.toWidget(
+      RenderPayload(
+        buildContext: context,
+        scopeContext: scopeContext,
+      ),
+    );
+  }
+
+  ScopeContext _createExprContext(
+    Map<String, Object?>? params,
+    StateContext? stateContext,
+  ) {
+    if (stateContext == null) {
+      return DefaultScopeContext(
+        variables: {'params': params},
+        enclosing: scope,
+      );
+    }
+
+    return StateScopeContext(
+      stateContext: stateContext,
+      variables: {'params': params},
+      enclosing: scope,
+    );
+  }
+}
