@@ -5,12 +5,12 @@ import '../base/virtual_stateless_widget.dart';
 import '../models/props.dart';
 import '../render_payload.dart';
 import '../utils/flutter_type_converters.dart';
+import 'contained_tab_view_item.dart';
 import 'icon.dart';
-import 'tab_view_item.dart';
 import 'text.dart';
 
-class VWTabView extends VirtualStatelessWidget<Props> {
-  VWTabView({
+class VWContainedTabView extends VirtualStatelessWidget<Props> {
+  VWContainedTabView({
     required super.props,
     required super.commonProps,
     required super.childGroups,
@@ -33,7 +33,7 @@ class VWTabView extends VirtualStatelessWidget<Props> {
   Widget render(RenderPayload payload) {
     if (children == null || children!.isEmpty) return empty();
     for (var child in children!) {
-      if (child is! VWTabViewItem) {
+      if (child is! VWContainedTabViewItem) {
         return empty();
         // throw Exception('All children of TabView must be of type TabViewItem');
       }

@@ -4,8 +4,8 @@ import '../base/virtual_stateless_widget.dart';
 import '../models/props.dart';
 import '../render_payload.dart';
 
-class VWTabViewItem extends VirtualStatelessWidget<Props> {
-  VWTabViewItem({
+class VWContainedTabViewItem extends VirtualStatelessWidget<Props> {
+  VWContainedTabViewItem({
     required super.props,
     super.commonProps,
     required super.childGroups,

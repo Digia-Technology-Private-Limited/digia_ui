@@ -14,6 +14,8 @@ import 'widgets/button.dart';
 import 'widgets/calendar.dart';
 import 'widgets/checkbox.dart';
 import 'widgets/circular_progress_bar.dart';
+import 'widgets/contained_tab_view.dart';
+import 'widgets/contained_tab_view_item.dart';
 import 'widgets/container.dart';
 import 'widgets/drawer.dart';
 import 'widgets/expandable.dart';
@@ -40,8 +42,6 @@ import 'widgets/stream_builder.dart';
 import 'widgets/styled_horizontal_divider.dart';
 import 'widgets/styled_vertical_divider.dart';
 import 'widgets/switch.dart';
-import 'widgets/tab_view.dart';
-import 'widgets/tab_view_item.dart';
 import 'widgets/text.dart';
 import 'widgets/timer.dart';
 import 'widgets/vertical_divider.dart';
@@ -497,9 +497,9 @@ VWOpacity opacityBuilder(
   );
 }
 
-VWTabView tabViewBuilder(
+VWContainedTabView tabViewBuilder(
     VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
-  return VWTabView(
+  return VWContainedTabView(
     props: data.props,
     commonProps: data.commonProps,
     parent: parent,
@@ -509,9 +509,9 @@ VWTabView tabViewBuilder(
   );
 }
 
-VWTabViewItem tabViewItemBuilder(
+VWContainedTabViewItem tabViewItemBuilder(
     VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
-  return VWTabViewItem(
+  return VWContainedTabViewItem(
     props: data.props,
     commonProps: data.commonProps,
     parent: parent,
