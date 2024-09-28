@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../../Utils/basic_shared_utils/dui_decoder.dart';
-import '../../Utils/util_functions.dart';
-import '../../components/DUIText/dui_text_style.dart';
 import '../base/extensions.dart';
 import '../base/virtual_stateless_widget.dart';
 import '../models/props.dart';
 import '../render_payload.dart';
+import '../utils/flutter_type_converters.dart';
 import 'icon.dart';
 import 'tab_view_item.dart';
 import 'text.dart';
@@ -36,12 +34,12 @@ class VWTabView extends VirtualStatelessWidget<Props> {
     if (children == null || children!.isEmpty) return empty();
     for (var child in children!) {
       if (child is! VWTabViewItem) {
-        throw Exception('All children of TabView must be of type TabViewItem');
+        return empty();
+        // throw Exception('All children of TabView must be of type TabViewItem');
       }
     }
     _indicatorSize = _toTabBarIndicatorSize(props.getString('indicatorSize')) ??
         TabBarIndicatorSize.tab;
-    final tabBarPosition = props.getString('tabBarPosition') ?? 'top';
     final tabs = List.castFrom(children!).map((child) {
       if (child is! VirtualStatelessWidget) return empty();
       final icon =
@@ -52,67 +50,55 @@ class VWTabView extends VirtualStatelessWidget<Props> {
               .render(payload);
       return Column(children: [icon, title]);
     });
+
+    final initialIndex = payload.eval<int>(props.get('initialIndex')) ?? 0;
+    final length = (children?.toWidgetArray(payload) ?? []).length;
+    final hasTabs = props.getBool('hasTabs') ?? false;
+    final labelPadding = To.edgeInsets(props.get('labelPadding'));
+    final tabBarPadding = To.edgeInsets(props.get('tabBarPadding'));
+    final unselectedLabelColor =
+        payload.evalColor(props.get('unselectedLabelColor'));
+    final unselectedLabelStyle =
+        payload.getTextStyle(props.getMap('unselectedLabelStyle'));
+    final indicatorColor = payload.evalColor(props.get('indicatorColor'));
+    final labelStyle = payload.getTextStyle(props.getMap('selectedLabelStyle'));
+    final dividerColor = payload.evalColor(props.get('dividerColor'));
+    final labelColor = payload.evalColor(props.get('selectedLabelColor'));
+    final dividerHeight = props.getDouble('dividerHeight');
+
+    final viewportFraction = props.getDouble('viewportFraction') ?? 1.0;
+    final scrollPhysics =
+        To.scrollPhysics(props.getBool('isScrollable') ?? false);
+
     return Expanded(
       child: DefaultTabController(
-        initialIndex: payload.eval<int>(props.get('initialIndex')) ?? 0,
-        length: (children?.toWidgetArray(payload) ?? []).length,
+        initialIndex: initialIndex,
+        length: length,
         child: Column(
           children: [
-            if (tabBarPosition == 'top')
-              Visibility(
-                visible: props.getBool('hasTabs') ?? false,
-                child: TabBar(
-                  indicatorSize: _indicatorSize,
-                  labelPadding:
-                      DUIDecoder.toEdgeInsets(props.get('labelPadding')),
-                  padding: DUIDecoder.toEdgeInsets(props.get('tabBarPadding')),
-                  unselectedLabelColor:
-                      makeColor(props.get('unselectedLabelColor')),
-                  unselectedLabelStyle: toTextStyle(
-                      DUITextStyle.fromJson(props.get('unselectedLabelStyle')),
-                      payload.buildContext),
-                  indicatorColor: makeColor(props.get('indicatorColor')),
-                  labelStyle: toTextStyle(
-                      DUITextStyle.fromJson(props.get('selectedLabelStyle')),
-                      payload.buildContext),
-                  dividerColor: makeColor(props.get('dividerColor')),
-                  labelColor: makeColor(props.get('selectedLabelColor')),
-                  dividerHeight: props.getDouble('dividerHeight'),
-                  tabs: tabs.toList(),
-                ),
+            Visibility(
+              visible: hasTabs,
+              child: TabBar(
+                indicatorSize: _indicatorSize,
+                labelPadding: labelPadding,
+                padding: tabBarPadding,
+                unselectedLabelColor: unselectedLabelColor,
+                unselectedLabelStyle: unselectedLabelStyle,
+                indicatorColor: indicatorColor,
+                labelStyle: labelStyle,
+                dividerColor: dividerColor,
+                labelColor: labelColor,
+                dividerHeight: dividerHeight,
+                tabs: tabs.toList(),
               ),
+            ),
             Expanded(
               child: TabBarView(
-                viewportFraction: props.getDouble('viewportFraction') ?? 1.0,
-                physics: props.getBool('isScrollable') ?? false
-                    ? const AlwaysScrollableScrollPhysics()
-                    : const NeverScrollableScrollPhysics(),
+                viewportFraction: viewportFraction,
+                physics: scrollPhysics,
                 children: children?.toWidgetArray(payload) ?? [],
               ),
             ),
-            if (tabBarPosition == 'bottom')
-              Visibility(
-                visible: props.getBool('hasTabs') ?? false,
-                child: TabBar(
-                  indicatorSize: _indicatorSize,
-                  labelPadding:
-                      DUIDecoder.toEdgeInsets(props.get('labelPadding')),
-                  padding: DUIDecoder.toEdgeInsets(props.get('tabBarPadding')),
-                  unselectedLabelColor:
-                      makeColor(props.get('unselectedLabelColor')),
-                  unselectedLabelStyle: toTextStyle(
-                      DUITextStyle.fromJson(props.get('unselectedLabelStyle')),
-                      payload.buildContext),
-                  labelStyle: toTextStyle(
-                      DUITextStyle.fromJson(props.get('selectedLabelStyle')),
-                      payload.buildContext),
-                  dividerColor: makeColor(props.get('dividerColor')),
-                  labelColor: makeColor(props.get('selectedLabelColor')),
-                  dividerHeight: props.getDouble('dividerHeight'),
-                  indicatorColor: makeColor(props.get('indicatorColor')),
-                  tabs: tabs.toList(),
-                ),
-              ),
           ],
         ),
       ),

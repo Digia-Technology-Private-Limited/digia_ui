@@ -17,6 +17,7 @@ class VWTabViewItem extends VirtualStatelessWidget<Props> {
   Widget render(RenderPayload payload) {
     if (children == null || children!.isEmpty) empty();
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: children!.toWidgetArray(payload),
     );
