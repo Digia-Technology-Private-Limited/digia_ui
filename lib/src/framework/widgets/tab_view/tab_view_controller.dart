@@ -20,7 +20,7 @@ class VWTabViewController
   Widget render(RenderPayload payload) {
     if (child == null) return empty();
 
-    final tabs = payload.evalExpr(
+    final tabs = payload.evalExpr<List>(
           props.tabs,
           decoder: (p0) {
             if (p0 == null) return null;
@@ -35,7 +35,7 @@ class VWTabViewController
           },
         ) ??
         [];
-    final initialIndex = payload.eval<int>(props.initialIndex) ?? 0;
+    final initialIndex = payload.evalExpr<int>(props.initialIndex) ?? 0;
 
     return TabViewControllerScopeWidget(
       tabs: tabs,
