@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import '../../core/action/api_handler.dart';
 import '../actions/base/action_flow.dart';
 import '../base/virtual_stateless_widget.dart';
-import '../internal_widgets/async_builder/index.dart';
+import '../internal_widgets/async_builder/controller.dart';
+import '../internal_widgets/async_builder/widget.dart';
 import '../models/props.dart';
 import '../render_payload.dart';
 
@@ -28,13 +29,15 @@ class VWAsyncBuilder extends VirtualStatelessWidget<Props> {
     final futureProps = props.toProps('future');
     if (futureProps == null) return empty();
 
-    return AsyncBuilder<Object?>.withFuture(
-        future: _makeFuture(futureProps, payload),
+    return AsyncBuilder<Object?>(
+        controller: AsyncController<Object?>(
+          futureBuilder: () => _makeFuture(futureProps, payload),
+        ),
         builder: (innerCtx, snapshot) {
-          final innerPayload = payload.copyWith(buildContext: innerCtx);
+          final updatedPayload = payload.copyWith(buildContext: innerCtx);
 
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return loadingWidget?.toWidget(innerPayload) ??
+            return loadingWidget?.toWidget(updatedPayload) ??
                 const Center(child: CircularProgressIndicator());
           }
 
@@ -42,10 +45,10 @@ class VWAsyncBuilder extends VirtualStatelessWidget<Props> {
             Future.delayed(const Duration(seconds: 0), () async {
               final actionFlow =
                   ActionFlow.fromJson(props.get('postErrorAction'));
-              await innerPayload.executeAction(actionFlow);
+              await updatedPayload.executeAction(actionFlow);
             });
 
-            return errorWidget?.toWidget(innerPayload.copyWithChainedContext(
+            return errorWidget?.toWidget(updatedPayload.copyWithChainedContext(
                   _createExprContext(null, snapshot.error),
                 )) ??
                 Text(
@@ -57,9 +60,9 @@ class VWAsyncBuilder extends VirtualStatelessWidget<Props> {
           Future.delayed(const Duration(seconds: 0), () async {
             final actionFlow =
                 ActionFlow.fromJson(props.get('postSuccessAction'));
-            await innerPayload.executeAction(actionFlow);
+            await updatedPayload.executeAction(actionFlow);
           });
-          return successWidget.toWidget(innerPayload.copyWithChainedContext(
+          return successWidget.toWidget(updatedPayload.copyWithChainedContext(
             _createExprContext(snapshot.data, null),
           ));
         });
