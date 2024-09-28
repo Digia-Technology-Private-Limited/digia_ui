@@ -70,37 +70,35 @@ class VWContainedTabView extends VirtualStatelessWidget<Props> {
     final scrollPhysics =
         To.scrollPhysics(props.getBool('isScrollable') ?? false);
 
-    return Expanded(
-      child: DefaultTabController(
-        initialIndex: initialIndex,
-        length: length,
-        child: Column(
-          children: [
-            Visibility(
-              visible: hasTabs,
-              child: TabBar(
-                indicatorSize: _indicatorSize,
-                labelPadding: labelPadding,
-                padding: tabBarPadding,
-                unselectedLabelColor: unselectedLabelColor,
-                unselectedLabelStyle: unselectedLabelStyle,
-                indicatorColor: indicatorColor,
-                labelStyle: labelStyle,
-                dividerColor: dividerColor,
-                labelColor: labelColor,
-                dividerHeight: dividerHeight,
-                tabs: tabs.toList(),
-              ),
+    return DefaultTabController(
+      initialIndex: initialIndex,
+      length: length,
+      child: Column(
+        children: [
+          Visibility(
+            visible: hasTabs,
+            child: TabBar(
+              indicatorSize: _indicatorSize,
+              labelPadding: labelPadding,
+              padding: tabBarPadding,
+              unselectedLabelColor: unselectedLabelColor,
+              unselectedLabelStyle: unselectedLabelStyle,
+              indicatorColor: indicatorColor,
+              labelStyle: labelStyle,
+              dividerColor: dividerColor,
+              labelColor: labelColor,
+              dividerHeight: dividerHeight,
+              tabs: tabs.toList(),
             ),
-            Expanded(
-              child: TabBarView(
-                viewportFraction: viewportFraction,
-                physics: scrollPhysics,
-                children: children?.toWidgetArray(payload) ?? [],
-              ),
+          ),
+          Expanded(
+            child: TabBarView(
+              viewportFraction: viewportFraction,
+              physics: scrollPhysics,
+              children: children?.toWidgetArray(payload) ?? [],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
