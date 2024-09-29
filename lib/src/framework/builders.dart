@@ -16,6 +16,7 @@ import 'widgets/calendar.dart';
 import 'widgets/checkbox.dart';
 import 'widgets/circular_progress_bar.dart';
 import 'widgets/container.dart';
+import 'widgets/custom_scroll_view.dart';
 import 'widgets/drawer.dart';
 import 'widgets/expandable.dart';
 import 'widgets/flex.dart';
@@ -29,6 +30,7 @@ import 'widgets/image.dart';
 import 'widgets/linear_progress_bar.dart';
 import 'widgets/list_view.dart';
 import 'widgets/lottie.dart';
+import 'widgets/nested_scroll_view.dart';
 import 'widgets/opacity.dart';
 import 'widgets/pin_field.dart';
 import 'widgets/refresh_indicator.dart';
@@ -36,6 +38,8 @@ import 'widgets/rich_text.dart';
 import 'widgets/safe_area.dart';
 import 'widgets/scaffold.dart';
 import 'widgets/sized_box.dart';
+import 'widgets/sliver_app_bar.dart';
+import 'widgets/sliver_list.dart';
 import 'widgets/spacer.dart';
 import 'widgets/stack.dart';
 import 'widgets/stream_builder.dart';
@@ -503,5 +507,53 @@ VWOpacity opacityBuilder(
     refName: data.refName,
     childGroups: _createChildGroups(data.childGroups, parent, registry),
     repeatData: data.repeatData,
+  );
+}
+
+VWSliverAppBar sliverAppBarBuilder(
+    VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
+  return VWSliverAppBar(
+    props: data.props,
+    commonProps: data.commonProps,
+    parent: parent,
+    refName: data.refName,
+    repeatData: data.repeatData,
+    childGroups: _createChildGroups(data.childGroups, parent, registry),
+  );
+}
+
+VWCustomScrollView customScrollViewBuilder(
+    VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
+  return VWCustomScrollView(
+    props: data.props,
+    commonProps: data.commonProps,
+    parent: parent,
+    refName: data.refName,
+    repeatData: data.repeatData,
+    childGroups: _createChildGroups(data.childGroups, parent, registry),
+  );
+}
+
+VWNestedScrollView nestedScrollViewBuilder(
+    VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
+  return VWNestedScrollView(
+    props: data.props,
+    commonProps: data.commonProps,
+    parent: parent,
+    refName: data.refName,
+    repeatData: data.repeatData,
+    childGroups: _createChildGroups(data.childGroups, parent, registry),
+  );
+}
+
+VWSliverList sliverListBuilder(
+    VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
+  return VWSliverList(
+    props: data.props,
+    commonProps: data.commonProps,
+    parent: parent,
+    refName: data.refName,
+    repeatData: data.repeatData,
+    childGroups: _createChildGroups(data.childGroups, parent, registry),
   );
 }
