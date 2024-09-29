@@ -52,9 +52,10 @@ class VWRichText extends VirtualLeafStatelessWidget<Props> {
       return value == null ? null : [TextSpan(text: value)];
     }
 
-    if (textSpan is! List<Object>) return null;
+    if (textSpan is! List) return null;
 
     final spanChildren = textSpan
+        .cast<Object>()
         .map((span) {
           if (span is String) {
             return TextSpan(text: payload.eval<String>(span));
