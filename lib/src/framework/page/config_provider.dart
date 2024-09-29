@@ -1,13 +1,15 @@
 import '../../config_resolver.dart';
 import '../../network/api_request/api_request.dart';
+import '../models/component_definition.dart';
 import '../models/page_definition.dart';
 import '../utils/functional_util.dart';
+import '../utils/object_util.dart';
 import '../utils/types.dart';
 
 abstract class ConfigProvider {
   String getInitialRoute();
   DUIPageDefinition getPageDefinition(String pageId);
-  JsonLike getComponentConfig(String componentId);
+  DUIComponentDefinition getComponentDefinition(String componentId);
   Map<String, APIModel> getAllApiModels();
 }
 
@@ -19,7 +21,7 @@ class DUIConfigProvider implements ConfigProvider {
   @override
   DUIPageDefinition getPageDefinition(String pageId) {
     // Extract page config from DUIConfig
-    final pageDef = config.pages[pageId];
+    final pageDef = config.pages[pageId]?.as$<JsonLike>();
 
     if (pageDef == null) {
       throw 'Page definition for $pageId not found';
@@ -29,10 +31,14 @@ class DUIConfigProvider implements ConfigProvider {
   }
 
   @override
-  JsonLike getComponentConfig(String componentId) {
-    // Extract page config from DUIConfig
-    // return config.getPageData(pageUid);
-    return {};
+  DUIComponentDefinition getComponentDefinition(String componentId) {
+    final componentDef = config.components?[componentId]?.as$<JsonLike>();
+
+    if (componentDef == null) {
+      throw 'Page definition for $componentId not found';
+    }
+
+    return DUIComponentDefinition.fromJson(componentDef);
   }
 
   @override

@@ -23,7 +23,7 @@ abstract class VirtualLeafStatelessWidget<T> extends VirtualWidget {
     if (commonProps == null) return render(payload);
 
     final isVisible =
-        commonProps?.visibility?.evaluate(payload.exprContext) ?? true;
+        commonProps?.visibility?.evaluate(payload.scopeContext) ?? true;
     if (!isVisible) return empty();
 
     var current = render(payload);

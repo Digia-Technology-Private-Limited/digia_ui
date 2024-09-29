@@ -8,8 +8,8 @@ import 'package:octo_image/octo_image.dart';
 import '../../models/dui_file.dart';
 import '../base/virtual_leaf_stateless_widget.dart';
 import '../models/props.dart';
-import '../page/resource_provider.dart';
 import '../render_payload.dart';
+import '../resource_provider.dart';
 import '../utils/flutter_type_converters.dart';
 import '../utils/widget_util.dart';
 

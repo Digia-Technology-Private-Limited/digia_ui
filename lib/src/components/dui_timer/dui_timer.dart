@@ -74,9 +74,12 @@ class _DUITimerState extends DUIWidgetState<DUITimer> {
 
     // Handle case: duration is 0
     if (duration <= 0) {
-       //TODO: @tushar @vivek used for PROBO football release. Remove when things moved to new system
+      //TODO: @tushar @vivek used for PROBO football release. Remove when things moved to new system
       return BracketScope(
-        variables: [('tickValue', startingPoint), ...?BracketScope.maybeOf(context)?.variables],
+        variables: [
+          ('tickValue', startingPoint),
+          ...?BracketScope.maybeOf(context)?.variables
+        ],
         builder: DUIJsonWidgetBuilder(
             data: widget.child!, registry: DUIWidgetRegistry.shared),
       );
@@ -114,7 +117,10 @@ class _DUITimerState extends DUIWidgetState<DUITimer> {
 
           //TODO: @tushar @vivek used for PROBO football release. Remove when things moved to new system
           return BracketScope(
-            variables: [('tickValue', snapshot.data), ...?BracketScope.maybeOf(context)?.variables],
+            variables: [
+              ('tickValue', snapshot.data),
+              ...?BracketScope.maybeOf(context)?.variables
+            ],
             builder: DUIJsonWidgetBuilder(
                 data: widget.child!, registry: DUIWidgetRegistry.shared),
           );

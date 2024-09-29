@@ -1,8 +1,9 @@
-import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/widgets.dart';
 
+import '../expr/scope_context.dart';
 import '../render_payload.dart';
 import 'state_context.dart';
+import 'state_scope_context.dart';
 import 'stateful_scope_widget.dart';
 import 'virtual_widget.dart';
 
@@ -35,9 +36,9 @@ class VirtualStateContainerWidget extends VirtualWidget {
     );
   }
 
-  ExprContext _createExprContext(StateContext stateContext) {
-    return ExprContext(
-      variables: stateContext.stateVariables,
+  ScopeContext _createExprContext(StateContext stateContext) {
+    return StateScopeContext(
+      stateContext: stateContext,
     );
   }
 }

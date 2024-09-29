@@ -1,6 +1,6 @@
-import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/widgets.dart';
 
+import '../../expr/scope_context.dart';
 import '../base/processor.dart';
 import 'action.dart';
 
@@ -9,9 +9,9 @@ class DelayProcessor implements ActionProcessor<DelayAction> {
   Future<Object?>? execute(
     BuildContext context,
     DelayAction action,
-    ExprContext? exprContext,
+    ScopeContext? scopeContext,
   ) async {
-    final durationInMs = action.durationInMs?.evaluate(exprContext);
+    final durationInMs = action.durationInMs?.evaluate(scopeContext);
 
     if (durationInMs != null) {
       await Future.delayed(Duration(milliseconds: durationInMs));
