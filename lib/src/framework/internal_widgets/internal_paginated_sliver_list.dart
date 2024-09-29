@@ -4,9 +4,8 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 class InternalPaginatedSliverList extends StatefulWidget {
   final Widget Function(BuildContext context, int index)? itemBuilder;
   final List<Widget> children;
-  final Future<void> Function(
-      int pageKey, PagingController<int, Object> controller)? apiRequestHandler;
-      final void Function()
+  final void Function(int pageKey, PagingController<int, Object> controller)?
+      apiRequestHandler;
   final Widget? firstPageLoadingWidget;
   final Widget? newpageLoadingWidget;
   final Widget? pageErrorWidget;
@@ -15,7 +14,7 @@ class InternalPaginatedSliverList extends StatefulWidget {
   const InternalPaginatedSliverList(
       {super.key,
       this.itemBuilder,
-      required this.children,
+      this.children = const [],
       this.apiRequestHandler,
       this.firstPageLoadingWidget,
       this.newpageLoadingWidget,
@@ -47,7 +46,7 @@ class _InternalPaginatedSliverListState
     // final items =
     //     createDataItemsForDynamicChildren(data: widget.data, context: context);
     // final items=widget.itemBuilder;
-    _pagingController.value = PagingState(nextPageKey: 2, itemList: items);
+    // _pagingController.value = PagingState(nextPageKey: 2, itemList: items);
 
     super.didChangeDependencies();
   }

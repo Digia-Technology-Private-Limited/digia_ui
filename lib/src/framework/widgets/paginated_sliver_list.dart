@@ -6,13 +6,12 @@ import '../base/extensions.dart';
 import '../base/virtual_stateless_widget.dart';
 import '../expr/default_scope_context.dart';
 import '../expr/scope_context.dart';
-import '../internal_widgets/internal_paginated_list_view.dart';
+import '../internal_widgets/internal_paginated_sliver_list.dart';
 import '../models/props.dart';
 import '../render_payload.dart';
-import '../utils/flutter_type_converters.dart';
 
-class VWPaginatedListView extends VirtualStatelessWidget<Props> {
-  VWPaginatedListView({
+class VWPaginatedSliverList extends VirtualStatelessWidget<Props> {
+  VWPaginatedSliverList({
     required super.props,
     required super.commonProps,
     required super.childGroups,
@@ -27,25 +26,16 @@ class VWPaginatedListView extends VirtualStatelessWidget<Props> {
   Widget render(RenderPayload payload) {
     if (children == null || children!.isEmpty) return empty();
 
-    final initialScrollPosition =
-        payload.eval<String>(props.getString('initialScrollPosition'));
-    final isReverse = payload.eval<bool>(props.getBool('reverse'));
-
     if (shouldRepeatChild) {
       final childToRepeat = children!.first;
       final items = payload.evalRepeatData(repeatData!);
 
-      return InternalPaginatedListView(
+      return InternalPaginatedSliverList(
         firstPageLoadingWidget:
             childOf('firstPageLoadingWidget')?.toWidget(payload),
         newpageLoadingWidget:
             childOf('newPageLoadingWidget')?.toWidget(payload),
         pageErrorWidget: childOf('pageErrorWidget')?.toWidget(payload),
-        initialScrollPosition: initialScrollPosition ?? 'start',
-        isReverse: isReverse,
-        scrollDirection: To.axis(props.get('scrollDirection')) ?? Axis.vertical,
-        physics: To.scrollPhysics(props.get('allowScroll')),
-        shrinkWrap: props.getBool('shrinkWrap') ?? false,
         itemBuilder: (buildContext, index) => childToRepeat.toWidget(
           payload.copyWithChainedContext(
             _createExprContext(items[index], index),
@@ -97,11 +87,7 @@ class VWPaginatedListView extends VirtualStatelessWidget<Props> {
       );
     }
 
-    return InternalPaginatedListView(
-      isReverse: isReverse,
-      scrollDirection: To.axis(props.get('scrollDirection')) ?? Axis.vertical,
-      physics: To.scrollPhysics(props.get('allowScroll')),
-      shrinkWrap: props.getBool('shrinkWrap') ?? false,
+    return InternalPaginatedSliverList(
       children: children?.toWidgetArray(payload) ?? [],
     );
   }

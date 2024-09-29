@@ -30,6 +30,8 @@ import 'widgets/linear_progress_bar.dart';
 import 'widgets/list_view.dart';
 import 'widgets/lottie.dart';
 import 'widgets/opacity.dart';
+import 'widgets/paginated_list_view.dart';
+import 'widgets/paginated_sliver_list.dart';
 import 'widgets/pin_field.dart';
 import 'widgets/refresh_indicator.dart';
 import 'widgets/rich_text.dart';
@@ -503,5 +505,29 @@ VWOpacity opacityBuilder(
     refName: data.refName,
     childGroups: _createChildGroups(data.childGroups, parent, registry),
     repeatData: data.repeatData,
+  );
+}
+
+VWPaginatedListView paginatedListViewBuilder(
+    VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
+  return VWPaginatedListView(
+    props: data.props,
+    commonProps: data.commonProps,
+    parent: parent,
+    repeatData: data.repeatData,
+    childGroups: _createChildGroups(data.childGroups, parent, registry),
+    refName: data.refName,
+  );
+}
+
+VWPaginatedSliverList paginatedSliverListBuilder(
+    VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
+  return VWPaginatedSliverList(
+    props: data.props,
+    commonProps: data.commonProps,
+    parent: parent,
+    repeatData: data.repeatData,
+    childGroups: _createChildGroups(data.childGroups, parent, registry),
+    refName: data.refName,
   );
 }

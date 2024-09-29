@@ -73,7 +73,8 @@ class VirtualWidgetRegistry {
     // 'digia/lineChart': lineChartBuilder,
     'digia/circularProgressBar': circularProgressBarBuilder,
     'digia/linearProgressBar': linearProgressBarBuilder,
-    // 'digia/paginatedListView': paginatedListViewBuilder,
+    'digia/paginatedListView': paginatedListViewBuilder,
+    'digia/paginatedSliverList': paginatedSliverListBuilder,
     // 'digia/sliverList': sliverListBuilder,
 
     // Async Widgets
