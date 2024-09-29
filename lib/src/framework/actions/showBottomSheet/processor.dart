@@ -1,10 +1,11 @@
-import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/widgets.dart';
 
+import '../../expr/default_scope_context.dart';
+import '../../expr/scope_context.dart';
 import '../../models/props.dart';
 import '../../models/types.dart';
-import '../../page/resource_provider.dart';
 import '../../render_payload.dart';
+import '../../resource_provider.dart';
 import '../../utils/flutter_type_converters.dart';
 import '../../utils/functional_util.dart';
 import '../../utils/navigation_util.dart';
@@ -19,7 +20,7 @@ class ShowBottomSheetProcessor
   final Future<Object?>? Function(
     BuildContext context,
     ActionFlow actionFlow,
-    ExprContext? exprContext,
+    ScopeContext? scopeContext,
   ) executeActionFlow;
 
   final Widget Function(
@@ -37,7 +38,7 @@ class ShowBottomSheetProcessor
   Future<Object?>? execute(
     BuildContext context,
     ShowBottomSheetAction action,
-    ExprContext? exprContext,
+    ScopeContext? scopeContext,
   ) async {
     final pageId = action.pageId;
     if (pageId == null) {
@@ -48,16 +49,17 @@ class ShowBottomSheetProcessor
     final provider = ResourceProvider.maybeOf(context);
     final navigatorKey = provider?.navigatorKey;
     final bgColor = ExprOr.fromJson<String>(style['bgColor'])
-        ?.evaluate(exprContext)
+        ?.evaluate(scopeContext)
         .maybe((p0) => provider?.getColor(p0));
     final barrierColor = ExprOr.fromJson<String>(style['barrierColor'])
-        ?.evaluate(exprContext)
+        ?.evaluate(scopeContext)
         .maybe((p0) => provider?.getColor(p0));
     final borderColor = ExprOr.fromJson<String>(style['borderColor'])
-        ?.evaluate(exprContext)
+        ?.evaluate(scopeContext)
         .maybe((p0) => provider?.getColor(p0));
     final maxHeightRatio =
-        ExprOr.fromJson<double>(style['maxHeight'])?.evaluate(exprContext) ?? 1;
+        ExprOr.fromJson<double>(style['maxHeight'])?.evaluate(scopeContext) ??
+            1;
 
     final iconProps = as$<JsonLike>(style['icon']).maybe((p0) => Props(p0));
 
@@ -70,7 +72,7 @@ class ShowBottomSheetProcessor
             action.pageArgs?.map((key, value) {
               var evaluatedValue = value;
               if (value is ExprOr) {
-                evaluatedValue = value.evaluate(exprContext);
+                evaluatedValue = value.evaluate(scopeContext);
               }
               return MapEntry(key, evaluatedValue);
             }),
@@ -94,9 +96,9 @@ class ShowBottomSheetProcessor
               ).toWidget(
                 RenderPayload(
                   buildContext: innerCtx,
-                  exprContext: ExprContext(
+                  scopeContext: DefaultScopeContext(
                     variables: {},
-                    enclosing: exprContext,
+                    enclosing: scopeContext,
                   ),
                 ),
               );
@@ -106,9 +108,9 @@ class ShowBottomSheetProcessor
       await executeActionFlow(
         context,
         action.onResult ?? ActionFlow.empty(),
-        ExprContext(variables: {
+        DefaultScopeContext(variables: {
           'result': result,
-        }, enclosing: exprContext),
+        }, enclosing: scopeContext),
       );
     }
 

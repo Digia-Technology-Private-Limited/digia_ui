@@ -1,8 +1,9 @@
-import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/material.dart';
 
+import '../../expr/default_scope_context.dart';
+import '../../expr/scope_context.dart';
 import '../../models/types.dart';
-import '../../page/resource_provider.dart';
+import '../../resource_provider.dart';
 import '../../utils/functional_util.dart';
 import '../../utils/navigation_util.dart';
 import '../../utils/types.dart';
@@ -16,7 +17,7 @@ class ShowDialogProcessor implements ActionProcessor<ShowDialogAction> {
   final Future<Object?>? Function(
     BuildContext context,
     ActionFlow actionFlow,
-    ExprContext? exprContext,
+    ScopeContext? scopeContext,
   ) executeActionFlow;
 
   ShowDialogProcessor({
@@ -28,14 +29,14 @@ class ShowDialogProcessor implements ActionProcessor<ShowDialogAction> {
   Future<Object?>? execute(
     BuildContext context,
     ShowDialogAction action,
-    ExprContext? exprContext,
+    ScopeContext? scopeContext,
   ) async {
     final provider = ResourceProvider.maybeOf(context);
 
     final barrierDismissible =
-        action.barrierDismissible?.evaluate(exprContext) ?? true;
+        action.barrierDismissible?.evaluate(scopeContext) ?? true;
     final barrierColor = action.barrierColor
-        ?.evaluate(exprContext)
+        ?.evaluate(scopeContext)
         .maybe((p0) => provider?.getColor(p0));
     final waitForResult = action.waitForResult;
 
@@ -48,7 +49,7 @@ class ShowDialogProcessor implements ActionProcessor<ShowDialogAction> {
           action.pageArgs?.map((key, value) {
             var evaluatedValue = value;
             if (value is ExprOr) {
-              evaluatedValue = value.evaluate(exprContext);
+              evaluatedValue = value.evaluate(scopeContext);
             }
             return MapEntry(key, evaluatedValue);
           }),
@@ -62,9 +63,9 @@ class ShowDialogProcessor implements ActionProcessor<ShowDialogAction> {
       await executeActionFlow(
         context,
         action.onResult ?? ActionFlow.empty(),
-        ExprContext(variables: {
+        DefaultScopeContext(variables: {
           'result': result,
-        }, enclosing: exprContext),
+        }, enclosing: scopeContext),
       );
     }
 

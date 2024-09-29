@@ -1,8 +1,8 @@
 import 'package:flutter/widgets.dart';
 
-import '../../network/api_request/api_request.dart';
-import '../utils/color_util.dart';
-import 'message_handler.dart';
+import '../network/api_request/api_request.dart';
+import 'base/message_handler.dart';
+import 'utils/color_util.dart';
 
 class ResourceProvider extends InheritedWidget {
   final Map<String, IconData> icons;

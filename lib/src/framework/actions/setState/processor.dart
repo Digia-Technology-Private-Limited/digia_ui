@@ -1,7 +1,7 @@
-import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/widgets.dart';
 
 import '../../base/state_context_provider.dart';
+import '../../expr/scope_context.dart';
 import '../base/processor.dart';
 import 'action.dart';
 
@@ -10,7 +10,7 @@ class SetStateProcessor implements ActionProcessor<SetStateAction> {
   Future<Object?>? execute(
     BuildContext context,
     SetStateAction action,
-    ExprContext? exprContext,
+    ScopeContext? scopeContext,
   ) async {
     final stateContext =
         StateContextProvider.findStateByName(context, action.stateContextName);
@@ -19,12 +19,12 @@ class SetStateProcessor implements ActionProcessor<SetStateAction> {
     }
 
     final updates = action.updates;
-    final rebuildPage = action.rebuild?.evaluate(exprContext) ?? true;
+    final rebuildPage = action.rebuild?.evaluate(scopeContext) ?? true;
 
     if (updates.isNotEmpty) {
       final updatesMap = Map.fromEntries(updates.map(
         (update) =>
-            MapEntry(update.stateName, update.newValue?.evaluate(exprContext)),
+            MapEntry(update.stateName, update.newValue?.evaluate(scopeContext)),
       ));
       stateContext.setValues(updatesMap, notify: rebuildPage);
     }

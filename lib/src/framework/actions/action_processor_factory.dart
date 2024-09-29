@@ -1,6 +1,6 @@
-import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/widgets.dart';
 
+import '../expr/scope_context.dart';
 import '../utils/types.dart';
 import 'base/action.dart' as an;
 import 'base/action_flow.dart';
@@ -23,12 +23,15 @@ import 'showToast/processor.dart';
 class ActionProcDependencies {
   final Widget Function(BuildContext context, String id, JsonLike? args)
       viewBuilder;
-  final Route<Object> Function(BuildContext context, String id, JsonLike? args)
-      pageRouteBuilder;
+  final Route<Object> Function(
+    BuildContext context,
+    String id,
+    JsonLike? args,
+  ) pageRouteBuilder;
   final Future<Object?>? Function(
     BuildContext context,
     ActionFlow actionFlow,
-    ExprContext? exprContext,
+    ScopeContext? scopeContext,
   ) executeActionFlow;
   // Add other shared dependencies here
 

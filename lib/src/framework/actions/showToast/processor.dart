@@ -1,9 +1,9 @@
-import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
+import '../../expr/scope_context.dart';
 import '../../models/types.dart';
-import '../../page/resource_provider.dart';
+import '../../resource_provider.dart';
 import '../../utils/flutter_type_converters.dart';
 import '../../utils/functional_util.dart';
 import '../../utils/textstyle_util.dart';
@@ -16,19 +16,19 @@ class ShowToastProcessor implements ActionProcessor<ShowToastAction> {
   Future<Object?>? execute(
     BuildContext context,
     ShowToastAction action,
-    ExprContext? exprContext,
+    ScopeContext? scopeContext,
   ) async {
     T? evalExpr<T extends Object>(Object? expr) {
-      return ExprOr.fromJson<T>(expr)?.evaluate(exprContext);
+      return ExprOr.fromJson<T>(expr)?.evaluate(scopeContext);
     }
 
-    final message = action.message?.evaluate(exprContext) ?? '';
-    final duration = action.duration?.evaluate(exprContext) ?? 2;
+    final message = action.message?.evaluate(scopeContext) ?? '';
+    final duration = action.duration?.evaluate(scopeContext) ?? 2;
 
     final JsonLike style = action.style ?? {};
 
     final Color? bgColor = ExprOr.fromJson<String>(style['bgColor'])
-        ?.evaluate(exprContext)
+        ?.evaluate(scopeContext)
         .maybe((p0) => ResourceProvider.maybeOf(context)?.getColor(p0));
     final borderRadius =
         To.borderRadius(style['borderRadius'] ?? '12, 12, 12, 12');

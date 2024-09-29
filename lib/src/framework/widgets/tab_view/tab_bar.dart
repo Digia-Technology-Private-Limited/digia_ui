@@ -1,8 +1,9 @@
-import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/material.dart';
 import '../../../Utils/extensions.dart';
 import '../../../Utils/util_functions.dart';
 import '../../base/virtual_stateless_widget.dart';
+import '../../expr/default_scope_context.dart';
+import '../../expr/scope_context.dart';
 import '../../internal_widgets/tab_view/controller.dart';
 import '../../internal_widgets/tab_view/inherited_tab_view_controller.dart';
 import '../../models/props.dart';
@@ -75,8 +76,8 @@ class VWTabBar extends VirtualStatelessWidget<Props> {
     );
   }
 
-  ExprContext _createExprContext(Object? item, int index) {
-    return ExprContext(variables: {
+  ScopeContext _createExprContext(Object? item, int index) {
+    return DefaultScopeContext(variables: {
       'currentItem': item,
       'index': index,
     });

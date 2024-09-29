@@ -1,9 +1,9 @@
-import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/material.dart';
 
 import '../core/evaluator.dart';
+import '../framework/expr/scope_context.dart';
 
-evalDynamic(dynamic pageArgs, BuildContext context, ExprContext? enclosing) {
+evalDynamic(dynamic pageArgs, BuildContext context, ScopeContext? enclosing) {
   if (pageArgs == null) return null;
 
   if (pageArgs is String || pageArgs is num || pageArgs is bool) {

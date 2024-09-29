@@ -23,8 +23,6 @@ class VWTabViewController
     final tabs = payload.evalExpr<List>(
           props.tabs,
           decoder: (p0) {
-            if (p0 == null) return null;
-
             if (p0 is List) return p0;
 
             if (p0 is! String) return null;

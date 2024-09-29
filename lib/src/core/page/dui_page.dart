@@ -1,4 +1,3 @@
-import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../digia_ui.dart';
 import '../../Utils/extensions.dart';
 import '../../components/dui_widget_scope.dart';
+import '../../framework/expr/default_scope_context.dart';
 import '../../framework/render_payload.dart';
 import '../../framework/utils/functional_util.dart';
 import '../../framework/virtual_widget_registry.dart';
@@ -89,7 +89,7 @@ class _DUIScreenState extends State<_DUIScreen> {
                         VirtualWidgetRegistry.instance.createWidget(p0, null))
                     ?.toWidget(RenderPayload(
                         buildContext: context,
-                        exprContext: ExprContext(variables: {}))) ??
+                        scopeContext: DefaultScopeContext(variables: {}))) ??
                 Center(
                     child: Text('Props not found for page: ${state.pageUid}'));
           }());

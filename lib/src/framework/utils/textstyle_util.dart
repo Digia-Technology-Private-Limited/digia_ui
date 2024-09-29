@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../page/resource_provider.dart';
+import '../resource_provider.dart';
 import 'flutter_type_converters.dart';
 import 'functional_util.dart';
 import 'json_util.dart';

@@ -1,9 +1,8 @@
-import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/widgets.dart';
-// import 'package:flutter/widgets.dart';
 
 import '../../core/analytics_handler.dart';
 import '../../dui_logger.dart';
+import '../expr/scope_context.dart';
 import '../utils/types.dart';
 import 'action_processor_factory.dart';
 import 'base/action_flow.dart';
@@ -14,8 +13,11 @@ class ActionExecutor {
     String id,
     JsonLike? args,
   ) viewBuilder;
-  final Route<Object> Function(BuildContext context, String id, JsonLike? args)
-      pageRouteBuilder;
+  final Route<Object> Function(
+    BuildContext context,
+    String id,
+    JsonLike? args,
+  ) pageRouteBuilder;
 
   final DUILogger? logger;
 
@@ -28,19 +30,19 @@ class ActionExecutor {
   Future<Object?>? execute(
     BuildContext context,
     ActionFlow actionFlow,
-    ExprContext? exprContext,
+    ScopeContext? scopeContext,
   ) async {
     AnalyticsHandler.instance.execute(
       context: context,
       events: actionFlow.analyticsData,
-      enclosing: exprContext,
+      enclosing: scopeContext,
     );
 
     for (final action in actionFlow.actions) {
       if (!context.mounted) continue;
 
       final disableAction =
-          action.disableActionIf?.evaluate(exprContext) ?? false;
+          action.disableActionIf?.evaluate(scopeContext) ?? false;
 
       if (disableAction) continue;
 
@@ -51,7 +53,7 @@ class ActionExecutor {
           pageRouteBuilder: pageRouteBuilder,
         ),
       ).getProcessor(action);
-      await processor.execute(context, action, exprContext);
+      await processor.execute(context, action, scopeContext);
     }
 
     return null;

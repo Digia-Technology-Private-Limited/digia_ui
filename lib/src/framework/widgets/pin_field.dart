@@ -1,10 +1,11 @@
-import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:pinput/pinput.dart';
 
 import '../base/virtual_leaf_stateless_widget.dart';
+import '../expr/default_scope_context.dart';
+import '../expr/scope_context.dart';
 import '../internal_widgets/pin_field.dart';
 import '../render_payload.dart';
 import '../utils/flutter_type_converters.dart';
@@ -39,13 +40,13 @@ class VWPinField extends VirtualLeafStatelessWidget<PinFieldProps> {
         // _createExprContext(pinValue);
         await payload.executeAction(
           props.onChanged,
-          exprContext: _createExprContext(pinValue),
+          scopeContext: _createExprContext(pinValue),
         );
       },
       onCompleted: (pinValue) async {
         await payload.executeAction(
           props.onCompleted,
-          exprContext: _createExprContext(pinValue),
+          scopeContext: _createExprContext(pinValue),
         );
       },
       pinTheme: PinTheme(
@@ -71,8 +72,8 @@ class VWPinField extends VirtualLeafStatelessWidget<PinFieldProps> {
     );
   }
 
-  ExprContext _createExprContext(String text) {
-    return ExprContext(variables: {
+  ScopeContext _createExprContext(String text) {
+    return DefaultScopeContext(variables: {
       'pin': text,
     });
   }
