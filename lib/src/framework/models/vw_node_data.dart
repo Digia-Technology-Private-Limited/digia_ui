@@ -1,3 +1,4 @@
+import '../../models/variable_def.dart';
 import '../utils/functional_util.dart';
 import '../utils/json_util.dart';
 import '../utils/types.dart';
@@ -13,6 +14,7 @@ class VWNodeData {
   final Map<String, List<VWNodeData>>? childGroups;
   final VWRepeatData? repeatData;
   final String? refName;
+  final Map<String, VariableDef> initStateDefs;
 
   VWNodeData({
     required this.category,
@@ -22,27 +24,32 @@ class VWNodeData {
     required this.childGroups,
     required this.repeatData,
     required this.refName,
+    required this.initStateDefs,
   });
 
   factory VWNodeData.fromJson(Map<String, Object?> json) {
     return VWNodeData(
-        category: as$<String>(json['category']) ?? '',
-        type: as$<String>(json['type']) ?? '',
-        props: as$<JsonLike>(json['props']).maybe((p0) => Props(p0)) ??
-            Props.empty(),
-        commonProps:
-            as$<JsonLike>(json['containerProps']).maybe(CommonProps.fromJson),
-        childGroups: tryKeys(
-          json,
-          ['children', 'composites', 'childGroups'],
-          parse: _parseVWNodeDataMap,
-        ),
-        repeatData: tryKeys(
-          json,
-          ['dataRef', 'repeatData'],
-          parse: VWRepeatData.fromJson,
-        ),
-        refName: tryKeys<String>(json, ['varName', 'refName']));
+      category: as$<String>(json['category']) ?? '',
+      type: as$<String>(json['type']) ?? '',
+      props: as$<JsonLike>(json['props']).maybe((p0) => Props(p0)) ??
+          Props.empty(),
+      commonProps:
+          as$<JsonLike>(json['containerProps']).maybe(CommonProps.fromJson),
+      childGroups: tryKeys(
+        json,
+        ['children', 'composites', 'childGroups'],
+        parse: _parseVWNodeDataMap,
+      ),
+      repeatData: tryKeys(
+        json,
+        ['dataRef', 'repeatData'],
+        parse: VWRepeatData.fromJson,
+      ),
+      refName: tryKeys<String>(json, ['varName', 'refName']),
+      initStateDefs: as$<JsonLike>(json['initStateDefs'])
+              .maybe(const VariablesJsonConverter().fromJson) ??
+          {},
+    );
   }
 
   static Map<String, List<VWNodeData>>? _parseVWNodeDataMap(Object? json) {

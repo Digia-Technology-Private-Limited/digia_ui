@@ -117,12 +117,12 @@ class VirtualWidgetRegistry {
   VirtualWidgetRegistry._internal();
 
   VirtualWidget createWidget(VWNodeData data, VirtualWidget? parent) {
-    if (data.category == 'state_container') {
+    if (data.category == 'state') {
       final child = data.childGroups?.entries.first.value.first;
       return VirtualStateContainerWidget(
         refName: data.refName,
         parent: parent,
-        initialState: {},
+        initStateDefs: data.initStateDefs,
         child: child == null ? null : createWidget(child, parent),
       );
     }
