@@ -32,7 +32,7 @@ class VirtualWidgetRegistry {
     'digia/iconButton': iconButtonBuilder,
     'digia/checkbox': checkboxBuilder,
     'digia/switch': switchBuilder,
-    // 'digia/textFormField': textFormFieldBuilder,
+    'digia/textFormField': textFormFieldBuilder,
 
     // Navigation and Structure
     'digia/scaffold': scaffoldBuilder,

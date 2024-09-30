@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'package:collection/collection.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -252,6 +253,30 @@ abstract class To {
     }
 
     return null;
+  }
+
+  static TextInputType? toKeyBoardType(dynamic value) {
+    if (value is! String) return null;
+
+    return switch (value) {
+      'text' => TextInputType.text,
+      'multiline' => TextInputType.multiline,
+      'number' => TextInputType.number,
+      'phone' => TextInputType.phone,
+      'datetime' => TextInputType.datetime,
+      'emailAddress' => TextInputType.emailAddress,
+      'url' => TextInputType.url,
+      'visiblePassword' => TextInputType.visiblePassword,
+      'name' => TextInputType.name,
+      'streetAddress' => TextInputType.streetAddress,
+      'none' => TextInputType.none,
+      _ => null
+    };
+  }
+
+  static TextInputAction? toTextInputAction(dynamic value) {
+    return TextInputAction.values
+        .firstWhereOrNull((p0) => p0.name.split('.').last == value);
   }
 
   static Radius toRadius(dynamic value) {
