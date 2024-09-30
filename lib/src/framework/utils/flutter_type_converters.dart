@@ -575,4 +575,11 @@ abstract class To {
         return null;
     }
   }
+
+  static TabBarIndicatorSize? tabBarIndicatorSize(dynamic value) =>
+      switch (value) {
+        'tab' => TabBarIndicatorSize.tab,
+        'label' => TabBarIndicatorSize.label,
+        _ => null
+      };
 }
