@@ -25,9 +25,17 @@ class VWStyledVerticalDivider
     BorderPattern? borderPattern = To.borderPattern(props.borderPattern);
     List<double>? dashPattern = payload
             .evalExpr<List<dynamic>>(props.dashPattern)
-            ?.map((e) => double.parse(e.toString()))
+            ?.where((e) => e != null)
+            .map((e) {
+              try {
+                return double.parse(e.toString());
+              } catch (e) {
+                return null;
+              }
+            })
+            .whereType<double>()
             .toList() ??
-        [3, 3];
+        [];
     if (lineStyle != null) {
       final result = getData(lineStyle, thickness);
       borderPattern = result.$1;
