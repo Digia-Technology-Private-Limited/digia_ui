@@ -3,8 +3,10 @@ import 'package:flutter/painting.dart';
 import 'base/virtual_widget.dart';
 import 'models/vw_node_data.dart';
 import 'virtual_widget_registry.dart';
+import 'widget_props/custom_scroll_view_props.dart';
 import 'widget_props/pin_field_props.dart';
 import 'widget_props/sized_box_props.dart';
+import 'widget_props/sliver_app_bar_props.dart';
 import 'widget_props/spacer_props.dart';
 import 'widget_props/timer_props.dart';
 import 'widgets/animated_button.dart';
@@ -513,7 +515,7 @@ VWOpacity opacityBuilder(
 VWSliverAppBar sliverAppBarBuilder(
     VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
   return VWSliverAppBar(
-    props: data.props,
+    props: SliverAppBarProps.fromJson(data.props.value),
     commonProps: data.commonProps,
     parent: parent,
     refName: data.refName,
@@ -525,7 +527,7 @@ VWSliverAppBar sliverAppBarBuilder(
 VWCustomScrollView customScrollViewBuilder(
     VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
   return VWCustomScrollView(
-    props: data.props,
+    props: CustomScrollViewProps.fromJson(data.props.value),
     commonProps: data.commonProps,
     parent: parent,
     refName: data.refName,

@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 
 import '../../Utils/extensions.dart';
-import '../../Utils/util_functions.dart';
 import '../base/virtual_stateless_widget.dart';
-import '../models/props.dart';
 import '../render_payload.dart';
+import '../widget_props/sliver_app_bar_props.dart';
 
-class VWSliverAppBar extends VirtualStatelessWidget<Props> {
+class VWSliverAppBar extends VirtualStatelessWidget<SliverAppBarProps> {
   VWSliverAppBar({
     required super.props,
     required super.commonProps,
@@ -18,23 +17,23 @@ class VWSliverAppBar extends VirtualStatelessWidget<Props> {
 
   @override
   Widget render(RenderPayload payload) {
-    final bottomPreferredWidth = props.getString('bottomPreferredWidth');
-    final bottomPreferredHeight = props.getString('bottomPreferredHeight');
-    final collapsedHeight = props.getString('collapsedHeight');
-    final expandedHeight = props.getString('expandedHeight');
-    final backgroundColor = props.getString('backgroundColor');
-    final leadingWidth = props.getDouble('leadingWidth');
-    final titleSpacing = props.getDouble('titleSpacing');
+    final bottomPreferredWidth = props.bottomPreferredWidth;
+    final bottomPreferredHeight = props.bottomPreferredHeight;
+    final collapsedHeight = props.collapsedHeight;
+    final expandedHeight = props.expandedHeight;
+    final backgroundColor = props.backgroundColor;
+    final leadingWidth = props.leadingWidth;
+    final titleSpacing = props.titleSpacing;
 
     return SliverAppBar(
       leading: childOf('leading')?.toWidget(payload),
       leadingWidth: leadingWidth ?? 0,
       titleSpacing: titleSpacing ?? 0,
       flexibleSpace: childOf('flexibleSpace')?.toWidget(payload),
-      backgroundColor: makeColor(backgroundColor),
-      snap: props.getBool('snap') ?? false,
-      pinned: props.getBool('pinned') ?? false,
-      floating: props.getBool('floating') ?? false,
+      backgroundColor: payload.evalColor(backgroundColor),
+      snap: props.snap ?? false,
+      pinned: props.pinned ?? false,
+      floating: props.floating ?? false,
       collapsedHeight: collapsedHeight?.toHeight(payload.buildContext),
       expandedHeight: expandedHeight?.toHeight(payload.buildContext),
       title: childOf('title')?.toWidget(payload),

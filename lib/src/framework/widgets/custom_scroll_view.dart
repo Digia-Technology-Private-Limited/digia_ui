@@ -1,10 +1,10 @@
 import 'package:flutter/widgets.dart';
 import '../base/virtual_stateless_widget.dart';
-import '../models/props.dart';
 import '../render_payload.dart';
 import '../utils/flutter_type_converters.dart';
+import '../widget_props/custom_scroll_view_props.dart';
 
-class VWCustomScrollView extends VirtualStatelessWidget<Props> {
+class VWCustomScrollView extends VirtualStatelessWidget<CustomScrollViewProps> {
   VWCustomScrollView(
       {required super.props,
       required super.commonProps,
@@ -15,16 +15,14 @@ class VWCustomScrollView extends VirtualStatelessWidget<Props> {
 
   @override
   Widget render(RenderPayload payload) {
-    final bool isReverse = payload.eval<bool>(props.get('reverse')) ?? false;
-    final bool enableOverlapInjector =
-        props.getBool('enableOverlapInjector') ?? true;
+    final bool isReverse = payload.evalExpr<bool>(props.isReverse) ?? false;
+    final bool enableOverlapInjector = props.enableOverlapInjector ?? true;
 
     return Builder(builder: (cntx) {
       return CustomScrollView(
         reverse: isReverse,
-        scrollDirection:
-            To.axis(props.getString('scrollDirection')) ?? Axis.vertical,
-        physics: To.scrollPhysics(props.getBool('allowScroll')),
+        scrollDirection: To.axis(props.scrollDirection) ?? Axis.vertical,
+        physics: To.scrollPhysics(props.allowScroll),
         slivers: getSlivers(cntx, enableOverlapInjector, payload),
       );
     });
