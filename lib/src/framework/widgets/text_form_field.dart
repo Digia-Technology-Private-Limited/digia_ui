@@ -1,7 +1,4 @@
-import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/material.dart';
-
-import '../../Utils/basic_shared_utils/dui_decoder.dart';
 
 import '../../Utils/util_functions.dart';
 import '../../components/border/dashed_input_border/dashed_outline_input_border.dart';
@@ -9,6 +6,8 @@ import '../../components/border/dashed_input_border/dashed_underline_input_borde
 import '../../components/utils/DUIBorder/dui_border.dart';
 import '../actions/base/action_flow.dart';
 import '../base/virtual_stateless_widget.dart';
+import '../expr/default_scope_context.dart';
+import '../expr/scope_context.dart';
 import '../internal_widgets/internal_text_form_field.dart';
 import '../models/props.dart';
 import '../render_payload.dart';
@@ -58,7 +57,7 @@ class VWTextFormField extends VirtualStatelessWidget<Props> {
       onChangedAction: (p0, p1) async {
         final actionFlow = ActionFlow.fromJson(props.get('onChanged'));
         await payload.executeAction(actionFlow,
-            exprContext: _createExprContext(p0, p1));
+            scopeContext: _createExprContext(p0, p1));
       },
       // onChanged: (p0, p1) => _createExprContext(p0, p1),
       textAlign: textAlign,
@@ -88,7 +87,7 @@ class VWTextFormField extends VirtualStatelessWidget<Props> {
         focusColor: focusColor,
         prefixIcon: childOf('prefix')?.toWidget(payload),
         suffixIcon: childOf('suffix')?.toWidget(payload),
-        enabledBorder: errorBorder,
+        enabledBorder: enabledBorder,
         disabledBorder: disabledBorder,
         focusedBorder: focusedBorder,
         focusedErrorBorder: focusedErrorBorder,
@@ -100,8 +99,7 @@ class VWTextFormField extends VirtualStatelessWidget<Props> {
   InputBorder? _toInputBorder(dynamic border) {
     if (border == null || border is! Map) return null;
 
-    BorderRadius borderRadius =
-        DUIDecoder.toBorderRadius(border['borderRadius']);
+    BorderRadius borderRadius = To.borderRadius(border['borderRadius']);
 
     BorderSide borderSide = toBorderSide(DUIBorder.fromJson({
       'borderStyle': border['borderStyle'],
@@ -128,30 +126,26 @@ class VWTextFormField extends VirtualStatelessWidget<Props> {
           borderSide: borderSide,
           borderRadius: borderRadius,
           strokeCap:
-              DUIDecoder.toStrokeCap(border['borderType']['strokeCap']) ??
-                  StrokeCap.butt,
-          dashPattern:
-              DUIDecoder.toDashPattern(border['borderType']['dashPattern']) ??
-                  const [3, 3],
+              To.strokeCap(border['borderType']['strokeCap']) ?? StrokeCap.butt,
+          dashPattern: To.dashPattern(border['borderType']['dashPattern']) ??
+              const [3, 3],
         );
       case 'underlineDashedInputBorder':
         return DashedUnderlineInputBorder(
           borderSide: borderSide,
           borderRadius: borderRadius,
           strokeCap:
-              DUIDecoder.toStrokeCap(border['borderType']['strokeCap']) ??
-                  StrokeCap.butt,
-          dashPattern:
-              DUIDecoder.toDashPattern(border['borderType']['dashPattern']) ??
-                  const [3, 3],
+              To.strokeCap(border['borderType']['strokeCap']) ?? StrokeCap.butt,
+          dashPattern: To.dashPattern(border['borderType']['dashPattern']) ??
+              const [3, 3],
         );
       default:
         return InputBorder.none;
     }
   }
 
-  ExprContext _createExprContext(String text, bool isValid) {
-    return ExprContext(variables: {
+  ScopeContext _createExprContext(String text, bool isValid) {
+    return DefaultScopeContext(variables: {
       'text': text,
       'isValid': isValid,
     });

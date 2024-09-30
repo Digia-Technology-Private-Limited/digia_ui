@@ -56,9 +56,6 @@ class _DUITextFieldState extends State<InternalTextFormField> {
       widget.onChangedAction
           ?.call(_controller.text, _setErrorText == null ? true : false);
     });
-    // _keyboardType = DUIDecoder.toKeyBoardType(widget.props['keyboardType']);
-    // _textInputAction =
-    //     DUIDecoder.toTextInputAction(widget.props['textInputAction']);
 
     super.initState();
   }
@@ -87,8 +84,6 @@ class _DUITextFieldState extends State<InternalTextFormField> {
       decoration: widget.inputDecoration?..copyWith(errorText: _setErrorText),
       onChanged: (value) {
         _validateInput(value);
-        // widget.onChanged
-        //     ?.call(_controller.text, _setErrorText == null ? true : false);
       },
     );
   }
