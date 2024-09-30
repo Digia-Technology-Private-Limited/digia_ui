@@ -1,11 +1,11 @@
 import 'dart:async';
-import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/material.dart';
 
 import '../../../digia_ui.dart';
 import '../../Utils/basic_shared_utils/lodash.dart';
 import '../../Utils/dui_widget_registry.dart';
 import '../../Utils/extensions.dart';
+import '../../framework/expr/default_scope_context.dart';
 import '../action/action_handler.dart';
 import '../action/action_prop.dart';
 import '../bracket_scope_provider.dart';
@@ -49,8 +49,8 @@ class DUIStreamBuilder extends DUIWidgetBuilder {
               await ActionHandler.instance.execute(
                   context: context,
                   actionFlow: actionFlow,
-                  enclosing:
-                      ExprContext(variables: {'response': snapshot.data}));
+                  enclosing: DefaultScopeContext(
+                      variables: {'response': snapshot.data}));
             });
             return BracketScope(
                 variables: [('streamValue', snapshot.data)],

@@ -49,6 +49,21 @@ class _DUITimerState extends DUIWidgetState<DUITimer> {
     onTick = ActionFlow.fromJson(widget.props['onTick']);
   }
 
+  @override
+  void didUpdateWidget(covariant DUITimer oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    duration = eval<int>(widget.props['duration'], context: context) ?? 60;
+    updateInterval = Duration(
+        seconds:
+            eval<int>(widget.props['updateInterval'], context: context) ?? 1);
+    timerType = eval<String>(widget.props['timerType'], context: context) ??
+        'countDown';
+    startingPoint =
+        eval<int>(widget.props['startingPoint'], context: context) ?? 0;
+    onTimerEnd = ActionFlow.fromJson(widget.props['onTimerEnd']);
+    onTick = ActionFlow.fromJson(widget.props['onTick']);
+  }
+
   bool get isCountDown => timerType == 'countDown';
 
   @override
@@ -59,8 +74,12 @@ class _DUITimerState extends DUIWidgetState<DUITimer> {
 
     // Handle case: duration is 0
     if (duration <= 0) {
+      //TODO: @tushar @vivek used for PROBO football release. Remove when things moved to new system
       return BracketScope(
-        variables: [('tickValue', startingPoint)],
+        variables: [
+          ('tickValue', startingPoint),
+          ...?BracketScope.maybeOf(context)?.variables
+        ],
         builder: DUIJsonWidgetBuilder(
             data: widget.child!, registry: DUIWidgetRegistry.shared),
       );
@@ -96,8 +115,12 @@ class _DUITimerState extends DUIWidgetState<DUITimer> {
             });
           }
 
+          //TODO: @tushar @vivek used for PROBO football release. Remove when things moved to new system
           return BracketScope(
-            variables: [('tickValue', snapshot.data)],
+            variables: [
+              ('tickValue', snapshot.data),
+              ...?BracketScope.maybeOf(context)?.variables
+            ],
             builder: DUIJsonWidgetBuilder(
                 data: widget.child!, registry: DUIWidgetRegistry.shared),
           );

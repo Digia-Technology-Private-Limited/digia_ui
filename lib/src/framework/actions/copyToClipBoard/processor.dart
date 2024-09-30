@@ -1,8 +1,8 @@
-import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
+import '../../expr/scope_context.dart';
 import '../base/processor.dart';
 import 'action.dart';
 
@@ -12,9 +12,9 @@ class CopyToClipBoardProcessor
   Future<Object?>? execute(
     BuildContext context,
     CopyToClipBoardAction action,
-    ExprContext? exprContext,
+    ScopeContext? scopeContext,
   ) async {
-    final message = action.message?.evaluate(exprContext);
+    final message = action.message?.evaluate(scopeContext);
 
     final toast = FToast().init(context);
 

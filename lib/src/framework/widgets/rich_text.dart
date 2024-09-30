@@ -6,6 +6,9 @@ import '../base/virtual_leaf_stateless_widget.dart';
 import '../models/props.dart';
 import '../render_payload.dart';
 import '../utils/flutter_type_converters.dart';
+import '../utils/functional_util.dart';
+import '../utils/json_util.dart';
+import '../utils/types.dart';
 
 class VWRichText extends VirtualLeafStatelessWidget<Props> {
   VWRichText({
@@ -49,34 +52,35 @@ class VWRichText extends VirtualLeafStatelessWidget<Props> {
       return value == null ? null : [TextSpan(text: value)];
     }
 
-    if (textSpan is! List) return null;
+    if (textSpan is! List<Object>) return null;
 
     final spanChildren = textSpan
         .map((span) {
-          String? text;
-          TextStyle? style;
-
           if (span is String) {
-            text = payload.eval<String>(span);
-            style = null;
-          } else {
-            text = payload.eval<String>(span['text']);
-            final styleJson =
-                span['spanStyle'] ?? span['textStyle'] ?? span['style'];
-
-            style = payload.getTextStyle(styleJson);
+            return TextSpan(text: payload.eval<String>(span));
           }
 
-          if (text == null) return null;
+          final spanObject = as$<JsonLike>(span);
+          if (spanObject == null) return null;
+
+          final text = payload.eval<String>(spanObject['text']);
+          final styleJson = tryKeys<JsonLike>(
+            spanObject,
+            ['spanStyle', 'textStyle', 'style'],
+          );
+
+          final style = payload.getTextStyle(styleJson);
 
           return TextSpan(
               text: text,
               style: style,
-              recognizer: span['onClick'].maybe((p0) => TapGestureRecognizer()
-                ..onTap = () {
-                  final onClick = ActionFlow.fromJson(span['onClick']);
-                  payload.executeAction(onClick);
-                }));
+              recognizer: spanObject['onClick'].maybe(
+                (p0) => TapGestureRecognizer()
+                  ..onTap = () {
+                    final onClick = ActionFlow.fromJson(p0);
+                    payload.executeAction(onClick);
+                  },
+              ));
         })
         .nonNulls
         .toList();

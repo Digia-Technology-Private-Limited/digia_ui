@@ -235,7 +235,8 @@ class AppConfigResolver {
 
 class DUIConfig {
   final Map<String, dynamic> _themeConfig;
-  final Map<String, dynamic> pages;
+  final Map<String, Object?> pages;
+  final Map<String, Object?>? components;
   final Map<String, dynamic> restConfig;
   final String initialRoute;
   final String? functionsFilePath;
@@ -247,6 +248,7 @@ class DUIConfig {
   DUIConfig(dynamic data)
       : _themeConfig = data['theme'],
         pages = data['pages'],
+        components = data['components'],
         restConfig = data['rest'],
         initialRoute = data['appSettings']['initialRoute'],
         appState = data['appState'],
@@ -280,11 +282,11 @@ class DUIConfig {
     if (pageConfig == null) {
       throw 'Config for Page: $pageUid not found';
     }
-    return DUIPageProps.fromJson(pageConfig);
+    return DUIPageProps.fromJson(pageConfig as Map<String, dynamic>);
   }
 
   DUIPageProps getfirstPageData() {
-    final firstPageConfig = pages[initialRoute];
+    final firstPageConfig = pages[initialRoute] as Map<String, dynamic>?;
     if (firstPageConfig == null || firstPageConfig['uid'] == null) {
       throw 'Config for First Page not found.';
     }
