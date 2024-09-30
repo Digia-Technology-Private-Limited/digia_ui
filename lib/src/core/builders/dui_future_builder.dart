@@ -1,12 +1,12 @@
 import 'dart:async';
 
-import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/material.dart';
 
 import '../../../digia_ui.dart';
 import '../../Utils/basic_shared_utils/lodash.dart';
 import '../../Utils/dui_widget_registry.dart';
 import '../../Utils/extensions.dart';
+import '../../framework/expr/default_scope_context.dart';
 import '../action/action_handler.dart';
 import '../action/action_prop.dart';
 import '../action/api_handler.dart';
@@ -87,14 +87,15 @@ Future<Object?> _makeFuture(
         return ActionHandler.instance.execute(
             context: context,
             actionFlow: successAction,
-            enclosing: ExprContext(variables: {'response': value.data}));
+            enclosing:
+                DefaultScopeContext(variables: {'response': value.data}));
       }, onError: (e) async {
         final errorAction =
             ActionFlow.fromJson(future.valueFor(keyPath: 'onFailure'));
         await ActionHandler.instance.execute(
             context: context,
             actionFlow: errorAction,
-            enclosing: ExprContext(variables: {'error': e}));
+            enclosing: DefaultScopeContext(variables: {'error': e}));
         throw e;
       });
 

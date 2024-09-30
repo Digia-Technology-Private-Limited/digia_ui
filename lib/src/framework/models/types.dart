@@ -1,11 +1,10 @@
-import 'package:digia_expr/digia_expr.dart';
-
-import '../utils/expression_util.dart' as expr;
+import '../expr/expression_util.dart' as expr;
+import '../expr/scope_context.dart';
 import '../utils/object_util.dart';
 
 typedef ExpressionEvaluatorFn<T extends Object> = T? Function(
   Object? expression, {
-  ExprContext? exprContext,
+  ScopeContext? scopeContext,
   T? Function(Object?)? decoder,
 });
 
@@ -21,12 +20,12 @@ class ExprOr<T extends Object> {
 
   // Evaluates the value, returning a result of type T
   T? evaluate(
-    ExprContext? exprContext, {
+    ScopeContext? scopeContext, {
     T? Function(Object)? decoder,
   }) {
     if (isExpr) {
       // If it's an expression, evaluate it using the expression utility
-      return expr.evaluateExpression<T>(_value as String, exprContext);
+      return expr.evaluateExpression<T>(_value as String, scopeContext);
     } else {
       // If it's not an expression, cast it to T
       return decoder?.call(_value) ?? _value.to<T>();
@@ -38,12 +37,12 @@ class ExprOr<T extends Object> {
   /// This method performs a deep evaluation of the value, resolving any nested
   /// expressions within complex data structures like maps and lists.
   ///
-  /// [exprContext] The context for expression evaluation.
+  /// [scopeContext] The context for expression evaluation.
   ///
   /// Returns the deeply evaluated result.
-  Object? deepEvaluate(ExprContext? exprContext) {
+  Object? deepEvaluate(ScopeContext? scopeContext) {
     if (isExpr) {
-      return expr.evaluateNestedExpressions(_value, exprContext);
+      return expr.evaluateNestedExpressions(_value, scopeContext);
     } else {
       return _value;
     }

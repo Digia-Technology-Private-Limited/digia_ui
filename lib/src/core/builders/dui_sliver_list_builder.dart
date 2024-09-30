@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../../../digia_ui.dart';
 import '../../Utils/dui_widget_registry.dart';
 import '../bracket_scope_provider.dart';
-import '../indexed_item_provider.dart';
 import '../json_widget_builder.dart';
 import 'common.dart';
 import 'dui_json_widget_builder.dart';
@@ -35,10 +34,7 @@ class DUISliverListBuilder extends DUIWidgetBuilder {
         itemBuilder: (context, index) {
           final childToRepeat = children.first;
           return BracketScope(
-              variables: [
-                      ('index', index),
-                      ('currentItem', items[index])
-                    ],
+              variables: [('index', index), ('currentItem', items[index])],
               builder: DUIJsonWidgetBuilder(
                   data: childToRepeat, registry: registry!));
         },

@@ -1,7 +1,7 @@
-import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/widgets.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../expr/scope_context.dart';
 import '../../utils/flutter_type_converters.dart';
 import '../base/processor.dart';
 import 'action.dart';
@@ -11,9 +11,9 @@ class OpenUrlProcessor implements ActionProcessor<OpenUrlAction> {
   Future<Object?>? execute(
     BuildContext context,
     OpenUrlAction action,
-    ExprContext? exprContext,
+    ScopeContext? scopeContext,
   ) async {
-    final urlString = action.url?.evaluate(exprContext);
+    final urlString = action.url?.evaluate(scopeContext);
     final launchMode = To.uriLaunchMode(action.launchMode);
 
     if (urlString == null) {

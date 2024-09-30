@@ -293,23 +293,27 @@ abstract class To {
     );
   }
 
-  static BorderRadius borderRadius(dynamic value) {
-    if (value == null) return BorderRadius.zero;
+  static BorderRadius borderRadius(
+    dynamic value, {
+    BorderRadius? or = BorderRadius.zero,
+  }) {
+    final fallBackValue = or ?? BorderRadius.zero;
+    if (value == null) return fallBackValue;
 
     if (value is List) {
       return _toBorderRadiusFromList(
               value.map((e) => NumUtil.toDouble(e) ?? 0).toList()) ??
-          BorderRadius.zero;
+          fallBackValue;
     }
 
     if (value is String) {
       return _toBorderRadiusFromList(
               value.split(',').map((e) => NumUtil.toDouble(e) ?? 0).toList()) ??
-          BorderRadius.zero;
+          fallBackValue;
     }
 
     if (value is num) {
-      return _toBorderRadiusFromList([value.toDouble()]) ?? BorderRadius.zero;
+      return _toBorderRadiusFromList([value.toDouble()]) ?? fallBackValue;
     }
 
     if (value is JsonLike) {
@@ -321,7 +325,7 @@ abstract class To {
       );
     }
 
-    return BorderRadius.zero;
+    return fallBackValue;
   }
 
   static BorderRadius? _toBorderRadiusFromList(List<double> values) {

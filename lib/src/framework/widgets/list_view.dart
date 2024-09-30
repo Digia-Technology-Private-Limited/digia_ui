@@ -1,8 +1,9 @@
-import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/widgets.dart';
 
 import '../base/extensions.dart';
 import '../base/virtual_stateless_widget.dart';
+import '../expr/default_scope_context.dart';
+import '../expr/scope_context.dart';
 import '../internal_widgets/internal_list_view.dart';
 import '../models/props.dart';
 import '../render_payload.dart';
@@ -61,8 +62,8 @@ class VWListView extends VirtualStatelessWidget<Props> {
     );
   }
 
-  ExprContext _createExprContext(Object? item, int index) {
-    return ExprContext(variables: {
+  ScopeContext _createExprContext(Object? item, int index) {
+    return DefaultScopeContext(variables: {
       'currentItem': item,
       'index': index
       // TODO: Add class instance using refName

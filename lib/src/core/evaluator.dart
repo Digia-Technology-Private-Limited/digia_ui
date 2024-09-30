@@ -2,11 +2,12 @@ import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/material.dart';
 
 import '../Utils/extensions.dart';
+import '../framework/expr/scope_context.dart';
 import 'scoped_values.dart';
 
 T? eval<T extends Object>(Object? expression,
     {required BuildContext context,
-    ExprContext? enclosing,
+    ScopeContext? enclosing,
     T? Function(Object?)? decoder}) {
   if (expression == null) return null;
 

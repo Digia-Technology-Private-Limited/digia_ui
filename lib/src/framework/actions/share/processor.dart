@@ -1,8 +1,8 @@
-import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../../expr/scope_context.dart';
 import '../base/processor.dart';
 import 'action.dart';
 
@@ -11,10 +11,10 @@ class ShareProcessor implements ActionProcessor<ShareAction> {
   Future<Object?>? execute(
     BuildContext context,
     ShareAction action,
-    ExprContext? exprContext,
+    ScopeContext? scopeContext,
   ) async {
-    final message = action.message?.evaluate(exprContext);
-    final subject = action.subject?.evaluate(exprContext);
+    final message = action.message?.evaluate(scopeContext);
+    final subject = action.subject?.evaluate(scopeContext);
 
     if (message != null && message.isNotEmpty) {
       if (kIsWeb) {

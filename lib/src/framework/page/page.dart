@@ -1,4 +1,3 @@
-import 'package:digia_expr/digia_expr.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -7,20 +6,23 @@ import '../../core/action/api_handler.dart';
 import '../../models/variable_def.dart';
 import '../../network/api_request/api_request.dart';
 import '../actions/base/action_flow.dart';
+import '../base/message_handler.dart';
 import '../base/state_context.dart';
+import '../base/state_scope_context.dart';
 import '../base/stateful_scope_widget.dart';
+import '../expr/default_scope_context.dart';
+import '../expr/expression_util.dart';
+import '../expr/scope_context.dart';
 import '../internal_widgets/async_builder/controller.dart';
-import '../internal_widgets/async_builder/index.dart';
+import '../internal_widgets/async_builder/widget.dart';
 import '../models/page_definition.dart';
 import '../models/vw_node_data.dart';
 import '../render_payload.dart';
+import '../resource_provider.dart';
 import '../ui_factory.dart';
-import '../utils/expression_util.dart';
 import '../utils/functional_util.dart';
 import '../utils/types.dart';
 import '../virtual_widget_registry.dart';
-import 'message_handler.dart';
-import 'resource_provider.dart';
 
 class DUIPage extends StatelessWidget {
   final String pageId;
@@ -28,7 +30,7 @@ class DUIPage extends StatelessWidget {
   final UIResources? resources;
   final DUIPageDefinition pageDef;
   final VirtualWidgetRegistry registry;
-  final ExprContext? scope;
+  final ScopeContext? scope;
   final Map<String, APIModel>? apiModels;
   final DUIMessageHandler? messageHandler;
   final GlobalKey<NavigatorState>? navigatorKey;
@@ -48,8 +50,16 @@ class DUIPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final resolvedArgs = pageDef.pageArgDefs
+    final resolvePageArgs = pageDef.pageArgDefs
         ?.map((k, v) => MapEntry(k, pageArgs?[k] ?? v.defaultValue));
+    final resolvedState = pageDef.initStateDefs?.map((key, value) => MapEntry(
+          key,
+          evaluateNestedExpressions(
+            value.defaultValue,
+            _createExprContext(resolvePageArgs, null),
+          ),
+        ));
+
     return ResourceProvider(
         icons: resources?.icons ?? {},
         images: resources?.images ?? {},
@@ -58,17 +68,50 @@ class DUIPage extends StatelessWidget {
         apiModels: apiModels ?? {},
         messageHandler: messageHandler,
         navigatorKey: navigatorKey,
-        child: _DUIPageContent(
-          pageId: pageId,
-          args: resolvedArgs,
-          initialStateDef: pageDef.initStateDefs,
-          layout: pageDef.layout,
-          registry: registry,
-          scope: scope,
-          onPageLoaded: pageDef.onPageLoad,
-          onBackPress: pageDef.onBackPress,
-          pageDataSource: pageDef.pageDataSource,
+        child: StatefulScopeWidget(
+          namespace: 'page',
+          initialState: resolvedState ?? {},
+          childBuilder: (context, state) {
+            return _DUIPageContent(
+              pageId: pageId,
+              args: resolvePageArgs,
+              initialStateDef: pageDef.initStateDefs,
+              layout: pageDef.layout,
+              registry: registry,
+              scope: _createExprContext(
+                resolvePageArgs,
+                state,
+              ),
+              onPageLoaded: pageDef.onPageLoad,
+              onBackPress: pageDef.onBackPress,
+              pageDataSource: pageDef.pageDataSource,
+            );
+          },
         ));
+  }
+
+  ScopeContext _createExprContext(
+    Map<String, Object?>? pageParams,
+    StateContext? stateContext,
+  ) {
+    final pageVariables = {
+      // Backward Compat
+      'pageParams': pageParams,
+      // New Naming Convention,
+      'params': pageParams,
+    };
+    if (stateContext == null) {
+      return DefaultScopeContext(
+        variables: pageVariables,
+        enclosing: scope,
+      );
+    }
+
+    return StateScopeContext(
+      stateContext: stateContext,
+      variables: pageVariables,
+      enclosing: scope,
+    );
   }
 }
 
@@ -78,7 +121,7 @@ class _DUIPageContent extends StatefulWidget {
   final Map<String, VariableDef?>? initialStateDef;
   final ({VWNodeData? root})? layout;
   final VirtualWidgetRegistry registry;
-  final ExprContext? scope;
+  final ScopeContext? scope;
   final ActionFlow? onPageLoaded;
   final ActionFlow? onBackPress;
   final JsonLike? pageDataSource;
@@ -100,56 +143,19 @@ class _DUIPageContent extends StatefulWidget {
 }
 
 class _DUIPageContentState extends State<_DUIPageContent> {
-  late StateContext _stateContext;
-
   @override
   void initState() {
     super.initState();
-    final resolvedState = widget.initialStateDef?.map((k, v) => MapEntry(
-        k,
-        evaluateNestedExpressions(
-            v?.defaultValue, _createExprContextForPageParams())));
-    _stateContext = StateContext(
-      'page',
-      initialState: {...?resolvedState},
-    );
     SchedulerBinding.instance.addPostFrameCallback((_) {
       _onPageLoaded();
     });
-  }
-
-  ExprContext _createExprContextForPageParams() {
-    return ExprContext(
-      variables: {
-        // Backward Compat
-        'pageParams': widget.args,
-        'params': widget.args,
-      },
-      enclosing: widget.scope,
-    );
-  }
-
-  void _onPageLoaded() {
-    if (widget.onPageLoaded != null) {
-      DefaultActionExecutor.of(context).execute(
-        context,
-        widget.onPageLoaded!,
-        _createExprContextForPageParams().copyWithNewVariables(newVariables: {
-          // Backwards compat
-          ..._stateContext.stateVariables,
-          // New naming convention
-          'state': _stateContext.stateVariables,
-          // TODO: What to do api response data.
-        }),
-      );
-    }
   }
 
   @override
   Widget build(BuildContext context) {
     return PopScope(
         onPopInvoked: _handleBackPress,
-        child: AsyncBuilder.withController(
+        child: AsyncBuilder(
             controller: _makeController(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
@@ -162,23 +168,11 @@ class _DUIPageContentState extends State<_DUIPageContent> {
                 )));
               }
 
-              if (snapshot.hasData) {
-                Future.delayed(Duration.zero, () {
-                  _executeDataSourceActions(snapshot.data!);
-                });
-              }
-
-              return StatefulScopeWidget(
-                namespace: 'page',
-                initialState: _stateContext.stateVariables,
-                childBuilder: (context, state) =>
-                    _buildContent(context, state, snapshot.data?.data),
-              );
+              return _buildContent(context, snapshot.data?.data);
             }));
   }
 
-  Widget _buildContent(
-      BuildContext context, StateContext state, Object? response) {
+  Widget _buildContent(BuildContext context, Object? response) {
     final rootNode = widget.layout?.root;
     // Blank Layout
     if (rootNode == null) {
@@ -187,17 +181,31 @@ class _DUIPageContentState extends State<_DUIPageContent> {
 
     final virtualWidget = widget.registry.createWidget(rootNode, null);
 
-    return virtualWidget.toWidget(RenderPayload(
-      buildContext: context,
-      exprContext:
-          _createExprContextForPageParams().copyWithNewVariables(newVariables: {
-        // Backwards compat
-        ...state.stateVariables,
-        // New naming convention
-        'state': state.stateVariables,
-        'dataSource': response
-      }),
-    ));
+    return virtualWidget.toWidget(
+      RenderPayload(
+        buildContext: context,
+        scopeContext: _createExprContext(response),
+      ),
+    );
+  }
+
+  ScopeContext _createExprContext(Object? response) {
+    return DefaultScopeContext(
+      variables: {
+        'dataSource': response,
+      },
+      enclosing: widget.scope,
+    );
+  }
+
+  void _onPageLoaded() {
+    if (widget.onPageLoaded != null) {
+      DefaultActionExecutor.of(context).execute(
+        context,
+        widget.onPageLoaded!,
+        null,
+      );
+    }
   }
 
   void _handleBackPress(bool didPop) {
@@ -205,13 +213,7 @@ class _DUIPageContentState extends State<_DUIPageContent> {
       DefaultActionExecutor.of(context).execute(
         context,
         widget.onBackPress!,
-        _createExprContextForPageParams().copyWithNewVariables(newVariables: {
-          // Backwards compat
-          ..._stateContext.stateVariables,
-          // New naming convention
-          'state': _stateContext.stateVariables,
-          // TODO: What to do api response data.
-        }),
+        _createExprContext(null),
       );
     }
   }
@@ -219,7 +221,7 @@ class _DUIPageContentState extends State<_DUIPageContent> {
   bool _shouldExecuteDataSource() =>
       widget.pageDataSource?['type'] == 'Action.loadPage';
 
-  void _executeDataSourceActions(Response<Object?> response) async {
+  Future<void> _executeDataSourceActions(Response<Object?> response) async {
     final action = as$<JsonLike>(widget.pageDataSource!['data']);
     if (action == null) {
       return Future.error('Unreachable state. data is corrupt');
@@ -235,7 +237,7 @@ class _DUIPageContentState extends State<_DUIPageContent> {
     final successCondition = as$<String>(action['successCondition']);
 
     final isSuccess = successCondition.maybe((p0) => evaluate<bool>(p0,
-            exprContext: ExprContext(
+            scopeContext: DefaultScopeContext(
               variables: {'response': respObj},
             ))) ??
         successCondition == null || successCondition.isEmpty;
@@ -245,14 +247,14 @@ class _DUIPageContentState extends State<_DUIPageContent> {
       await _executeAction(
         context,
         successAction,
-        ExprContext(variables: {'response': respObj}),
+        DefaultScopeContext(variables: {'response': respObj}),
       );
     } else {
       final errorAction = ActionFlow.fromJson(action['onError']);
       await _executeAction(
         context,
         errorAction,
-        ExprContext(variables: {'response': respObj}),
+        DefaultScopeContext(variables: {'response': respObj}),
       );
     }
   }
@@ -274,28 +276,29 @@ class _DUIPageContentState extends State<_DUIPageContent> {
 
       if (apiModel == null) return Future.error('API model not found');
 
-      final args = apiDataSourceArgs?.map((key, value) => MapEntry(key,
-          evaluateNestedExpressions(value, _createExprContextForPageParams())));
+      final args = apiDataSourceArgs?.map((key, value) => MapEntry(
+          key, evaluateNestedExpressions(value, _createExprContext(null))));
 
-      return ApiHandler.instance.execute(apiModel: apiModel, args: args);
+      final response = ApiHandler.instance
+          .execute(apiModel: apiModel, args: args)
+          .then((value) {
+        _executeDataSourceActions(value);
+        return value;
+      });
+
+      return response;
     });
   }
 
   Future<Object?>? _executeAction(
     BuildContext context,
     ActionFlow actionFlow,
-    ExprContext? exprContext,
+    ScopeContext? scopeContext,
   ) {
     return DefaultActionExecutor.of(context).execute(
       context,
       actionFlow,
-      _createExprContextForPageParams().copyWithNewVariables(newVariables: {
-        // Backwards compat
-        ..._stateContext.stateVariables,
-        // New naming convention
-        'state': _stateContext.stateVariables,
-        // TODO: What to do api response data.
-      }),
+      scopeContext,
     );
   }
 

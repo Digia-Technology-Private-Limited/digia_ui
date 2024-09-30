@@ -1,6 +1,6 @@
-import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/material.dart';
 
+import '../../expr/scope_context.dart';
 import '../base/processor.dart';
 import 'action.dart';
 
@@ -9,9 +9,9 @@ class ControlDrawerProcessor implements ActionProcessor<ControlDrawerAction> {
   Future<Object?>? execute(
     BuildContext context,
     ControlDrawerAction action,
-    ExprContext? exprContext,
+    ScopeContext? scopeContext,
   ) async {
-    final choice = action.choice?.evaluate(exprContext);
+    final choice = action.choice?.evaluate(scopeContext);
     final scaffold = Scaffold.maybeOf(context);
 
     switch (choice) {

@@ -1,8 +1,9 @@
-import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/material.dart';
 
 import '../actions/base/action_flow.dart';
 import '../base/virtual_stateless_widget.dart';
+import '../expr/default_scope_context.dart';
+import '../expr/scope_context.dart';
 import '../models/props.dart';
 import '../render_payload.dart';
 
@@ -72,8 +73,8 @@ class VWStreamBuilder extends VirtualStatelessWidget<Props> {
     return Stream.error('Stream not found');
   }
 
-  ExprContext _createExprContext(Object? streamValue) {
-    return ExprContext(variables: {
+  ScopeContext _createExprContext(Object? streamValue) {
+    return DefaultScopeContext(variables: {
       'streamValue': streamValue,
     });
   }

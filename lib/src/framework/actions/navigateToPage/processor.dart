@@ -1,8 +1,9 @@
-import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/widgets.dart';
 
+import '../../expr/default_scope_context.dart';
+import '../../expr/scope_context.dart';
 import '../../models/types.dart';
-import '../../page/resource_provider.dart';
+import '../../resource_provider.dart';
 import '../../utils/functional_util.dart';
 import '../../utils/navigation_util.dart';
 import '../../utils/types.dart';
@@ -14,7 +15,7 @@ class NavigateToPageProcessor implements ActionProcessor<NavigateToPageAction> {
   final Future<Object?>? Function(
     BuildContext context,
     ActionFlow actionFlow,
-    ExprContext? exprContext,
+    ScopeContext? scopeContext,
   ) executeActionFlow;
 
   final Route<Object> Function(
@@ -32,7 +33,7 @@ class NavigateToPageProcessor implements ActionProcessor<NavigateToPageAction> {
   Future<Object?>? execute(
     BuildContext context,
     NavigateToPageAction action,
-    ExprContext? exprContext,
+    ScopeContext? scopeContext,
   ) async {
     final pageId = action.pageId;
     if (pageId == null) {
@@ -42,7 +43,7 @@ class NavigateToPageProcessor implements ActionProcessor<NavigateToPageAction> {
     final removePreviousScreensInStack =
         action.shouldRemovePreviousScreensInStack;
     final routeNametoRemoveUntil =
-        action.routeNametoRemoveUntil?.evaluate(exprContext);
+        action.routeNametoRemoveUntil?.evaluate(scopeContext);
 
     final navigatorKey = ResourceProvider.maybeOf(context)?.navigatorKey;
     Object? result = await NavigatorHelper.push(
@@ -51,13 +52,15 @@ class NavigateToPageProcessor implements ActionProcessor<NavigateToPageAction> {
       pageRouteBuilder(
         context,
         pageId,
-        action.pageArgs?.map((key, value) {
-          var evaluatedValue = value;
-          if (value is ExprOr) {
-            evaluatedValue = value.evaluate(exprContext);
-          }
-          return MapEntry(key, evaluatedValue);
-        }),
+        action.pageArgs?.map(
+          (key, value) {
+            var evaluatedValue = value;
+            if (value is ExprOr) {
+              evaluatedValue = value.evaluate(scopeContext);
+            }
+            return MapEntry(key, evaluatedValue);
+          },
+        ),
       ),
       removeRoutesUntilPredicate: routeNametoRemoveUntil.maybe(
         (p0) => removePreviousScreensInStack ? null : ModalRoute.withName(p0),
@@ -68,9 +71,9 @@ class NavigateToPageProcessor implements ActionProcessor<NavigateToPageAction> {
       await executeActionFlow(
         context,
         action.onResult ?? ActionFlow.empty(),
-        ExprContext(variables: {
+        DefaultScopeContext(variables: {
           'result': result,
-        }, enclosing: exprContext),
+        }, enclosing: scopeContext),
       );
     }
 

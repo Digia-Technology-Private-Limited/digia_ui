@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:digia_expr/digia_expr.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +20,8 @@ import '../../components/DUIText/dui_text_style.dart';
 import '../../components/dui_widget_scope.dart';
 import '../../digia_ui_client.dart';
 import '../../dui_logger.dart';
+import '../../framework/expr/default_scope_context.dart';
+import '../../framework/expr/scope_context.dart';
 import '../../models/dui_file.dart';
 import '../../types.dart';
 import '../analytics_handler.dart';
@@ -35,7 +36,7 @@ import 'api_handler.dart';
 typedef ActionHandlerFn = Future<dynamic>? Function({
   required BuildContext context,
   required ActionProp action,
-  ExprContext? enclosing,
+  ScopeContext? enclosing,
   DUILogger? logger,
 });
 
@@ -150,7 +151,7 @@ Map<String, ActionHandlerFn> _actionsMap = {
       await ActionHandler.instance.execute(
           context: context,
           actionFlow: onResultActionflow,
-          enclosing: ExprContext(variables: {
+          enclosing: DefaultScopeContext(variables: {
             'result': result,
           }, enclosing: enclosing));
     }
@@ -329,7 +330,7 @@ Map<String, ActionHandlerFn> _actionsMap = {
       await ActionHandler.instance.execute(
           context: context,
           actionFlow: onResultActionflow,
-          enclosing: ExprContext(variables: {
+          enclosing: DefaultScopeContext(variables: {
             'result': result,
           }, enclosing: enclosing));
     }
@@ -370,7 +371,7 @@ Map<String, ActionHandlerFn> _actionsMap = {
       final evaluatedSuccessCond = successCondition.let((p0) => eval<bool>(
               successCondition,
               context: context,
-              enclosing: ExprContext(
+              enclosing: DefaultScopeContext(
                   variables: {'response': response}, enclosing: enclosing))) ??
           successCondition == null || successCondition.isEmpty;
 
@@ -379,14 +380,14 @@ Map<String, ActionHandlerFn> _actionsMap = {
         return ActionHandler.instance.execute(
             context: context,
             actionFlow: successAction,
-            enclosing: ExprContext(
+            enclosing: DefaultScopeContext(
                 variables: {'response': response}, enclosing: enclosing));
       } else {
         final errorAction = ActionFlow.fromJson(action.data['onError']);
         return ActionHandler.instance.execute(
             context: context,
             actionFlow: errorAction,
-            enclosing: ExprContext(
+            enclosing: DefaultScopeContext(
                 variables: {'response': response}, enclosing: enclosing));
       }
     }, onError: (e) async {
@@ -403,7 +404,7 @@ Map<String, ActionHandlerFn> _actionsMap = {
       return ActionHandler.instance.execute(
           context: context,
           actionFlow: errorAction,
-          enclosing: ExprContext(
+          enclosing: DefaultScopeContext(
               variables: {'response': response}, enclosing: enclosing));
     });
 
@@ -802,7 +803,7 @@ Map<String, ActionHandlerFn> _actionsMap = {
       final evaluatedSuccessCond = successCondition.let((p0) => eval<bool>(
               successCondition,
               context: context,
-              enclosing: ExprContext(
+              enclosing: DefaultScopeContext(
                   variables: {'response': response}, enclosing: enclosing))) ??
           successCondition == null || successCondition.isEmpty;
 
@@ -811,14 +812,14 @@ Map<String, ActionHandlerFn> _actionsMap = {
         return ActionHandler.instance.execute(
             context: context,
             actionFlow: successAction,
-            enclosing: ExprContext(
+            enclosing: DefaultScopeContext(
                 variables: {'response': response}, enclosing: enclosing));
       } else {
         final errorAction = ActionFlow.fromJson(action.data['onError']);
         return ActionHandler.instance.execute(
             context: context,
             actionFlow: errorAction,
-            enclosing: ExprContext(
+            enclosing: DefaultScopeContext(
                 variables: {'response': response}, enclosing: enclosing));
       }
     }, onError: (e) async {
@@ -835,7 +836,7 @@ Map<String, ActionHandlerFn> _actionsMap = {
       return ActionHandler.instance.execute(
           context: context,
           actionFlow: errorAction,
-          enclosing: ExprContext(
+          enclosing: DefaultScopeContext(
               variables: {'response': response}, enclosing: enclosing));
     });
 
@@ -945,7 +946,7 @@ class ActionHandler {
   Future<dynamic>? execute(
       {required BuildContext context,
       required ActionFlow actionFlow,
-      ExprContext? enclosing,
+      ScopeContext? enclosing,
       DUILogger? logger}) async {
     AnalyticsHandler.instance.execute(
         context: context,
