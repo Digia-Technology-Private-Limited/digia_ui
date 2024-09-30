@@ -24,7 +24,6 @@ class DUITabBarBuilder extends DUIWidgetBuilder {
       data: data,
       registry: registry,
       tabBarProps: DUITabBarProps.fromJson(data.props),
-      varName: data.varName,
     );
     return tabViewWidget;
   }

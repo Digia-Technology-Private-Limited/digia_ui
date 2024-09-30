@@ -1,14 +1,11 @@
 import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/widgets.dart';
 
-import '../actions/base/action_flow.dart';
 import '../base/virtual_stateless_widget.dart';
-import '../models/props.dart';
 import '../render_payload.dart';
+import '../widget_props/timer_props.dart';
 
-const String _countDownTimerTypeValue = 'countDown';
-
-class VWTimer extends VirtualStatelessWidget<Props> {
+class VWTimer extends VirtualStatelessWidget<TimerProps> {
   VWTimer({
     required super.props,
     required super.commonProps,
@@ -21,47 +18,57 @@ class VWTimer extends VirtualStatelessWidget<Props> {
   Widget render(RenderPayload payload) {
     if (child == null) return empty();
 
-    final timerType = payload.eval<String>(props.get('timerType')) ??
-        _countDownTimerTypeValue;
+    final duration = payload.evalExpr(props.duration) ?? 0;
+    final initialValue = payload.evalExpr(props.initialValue) ?? 0;
 
-    final duration = payload.eval<int>(props.get('duration')) ?? 60;
+    if (duration <= 0) {
+      return child!.toWidget(
+        payload.copyWithChainedContext(
+          _createExprContext(initialValue),
+        ),
+      );
+    }
 
-    final updateIntervalInSeconds = Duration(
-      seconds: payload.eval<int>(props.get('updateInterval')) ?? 1,
+    final updateInterval = Duration(
+      seconds: payload.evalExpr(props.updateInterval) ?? 1,
     );
 
-    final initialValue = payload.eval<int>(props.get('initialValue')) ?? 0;
-
-    bool isCountDown = timerType == _countDownTimerTypeValue;
-
     return StreamBuilder(
-      initialData: isCountDown ? duration : initialValue,
-      stream: Stream.periodic(
-        updateIntervalInSeconds,
-        (i) => isCountDown ? duration - i : initialValue + i,
-      ).takeWhile(
-        (i) => isCountDown ? duration - i >= 0 : initialValue + i <= duration,
-      ),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) return empty();
+      initialData: initialValue,
+      stream: Stream<int>.periodic(
+        updateInterval,
+        (i) =>
+            props.isCountDown ? initialValue - (i + 1) : initialValue + (i + 1),
+      ).take(duration),
+      builder: (innerCtx, snapshot) {
+        final updatedPayload = payload.copyWithChainedContext(
+          _createExprContext(snapshot.data),
+          buildContext: innerCtx,
+        );
+        // This should never happen
+        if (snapshot.hasError) {
+          return empty();
+        }
+
+        if (snapshot.connectionState != ConnectionState.none &&
+            snapshot.connectionState != ConnectionState.waiting) {
+          Future.delayed(
+            Duration.zero,
+            () async => await updatedPayload.executeAction(props.onTick),
+          );
+        }
 
         if (snapshot.connectionState == ConnectionState.done) {
-          final timerEndAction = ActionFlow.fromJson(props.get('onTimerEnd'));
+          // Timer has ended
           Future.delayed(Duration.zero, () async {
-            payload.executeAction(timerEndAction);
+            Future.delayed(
+              Duration.zero,
+              () async => await updatedPayload.executeAction(props.onTimerEnd),
+            );
           });
         }
 
-        if (snapshot.hasData) {
-          final onTickAction = ActionFlow.fromJson(props.get('onTick'));
-          Future.delayed(Duration.zero, () async {
-            payload.executeAction(onTickAction);
-          });
-          return child!.toWidget(payload
-              .copyWithChainedContext(_createExprContext(snapshot.data!)));
-        }
-
-        return empty();
+        return child!.toWidget(updatedPayload);
       },
     );
   }
