@@ -1,11 +1,13 @@
 import 'package:flutter/painting.dart';
 
 import 'base/virtual_widget.dart';
+import 'models/types.dart';
 import 'models/vw_node_data.dart';
 import 'virtual_widget_registry.dart';
 import 'widget_props/pin_field_props.dart';
 import 'widget_props/sized_box_props.dart';
 import 'widget_props/spacer_props.dart';
+import 'widget_props/styled_divider_props.dart';
 import 'widget_props/timer_props.dart';
 import 'widgets/animated_button.dart';
 import 'widgets/app_bar.dart';
@@ -269,29 +271,42 @@ VWVideoPlayer videoPlayerBuilder(VWNodeData data, VirtualWidget? parent, _) {
 VWStyledHorizontalDivider horizontalDividerBuilder(
     VWNodeData data, VirtualWidget? parent, _) {
   return VWStyledHorizontalDivider(
-    props: data.props,
+    props: StyledDividerProps(
+      thickness: ExprOr<double>(data.props.get('thickness')),
+      lineStyle: data.props.getString('lineStyle'),
+      size: SizeProps(height: ExprOr<double>(data.props.get('height'))),
+      indent: ExprOr<double>(data.props.get('indent')),
+      endIndent: ExprOr<double>(data.props.get('endIndent')),
+      color: ExprOr<Color>(data.props.get('color')),
+    ),
     commonProps: data.commonProps,
     parent: parent,
     refName: data.refName,
-    isSimple: true,
   );
 }
 
 VWStyledVerticalDivider verticalDividerBuilder(
     VWNodeData data, VirtualWidget? parent, _) {
+  final props = data.props;
   return VWStyledVerticalDivider(
-    props: data.props,
+    props: StyledDividerProps(
+      thickness: ExprOr<double>(props.get('thickness')),
+      lineStyle: props.getString('lineStyle'),
+      size: SizeProps(height: ExprOr<double>(props.get('height'))),
+      indent: ExprOr<double>(props.get('indent')),
+      endIndent: ExprOr<double>(props.get('endIndent')),
+      color: ExprOr<Color>(props.get('color')),
+    ),
     commonProps: data.commonProps,
     parent: parent,
     refName: data.refName,
-    isSimple: true,
   );
 }
 
 VWStyledHorizontalDivider styledHorizontalDividerBuilder(
     VWNodeData data, VirtualWidget? parent, _) {
   return VWStyledHorizontalDivider(
-    props: data.props,
+    props: StyledDividerProps.fromJson(data.props.value),
     commonProps: data.commonProps,
     parent: parent,
     refName: data.refName,
@@ -301,7 +316,7 @@ VWStyledHorizontalDivider styledHorizontalDividerBuilder(
 VWStyledVerticalDivider styledVerticalDividerBuilder(
     VWNodeData data, VirtualWidget? parent, _) {
   return VWStyledVerticalDivider(
-    props: data.props,
+    props: StyledDividerProps.fromJson(data.props.value),
     commonProps: data.commonProps,
     parent: parent,
     refName: data.refName,

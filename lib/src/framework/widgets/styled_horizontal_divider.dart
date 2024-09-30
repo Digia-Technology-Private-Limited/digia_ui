@@ -5,77 +5,48 @@ import 'package:flutter/widgets.dart';
 import '../../components/border/divider_with_pattern/divider_with_pattern.dart';
 import '../base/virtual_leaf_stateless_widget.dart';
 import '../models/custom_flutter_types.dart';
-import '../models/props.dart';
 import '../render_payload.dart';
 import '../utils/flutter_type_converters.dart';
+import '../widget_props/styled_divider_props.dart';
 
-/// A styled horizontal divider widget that supports custom patterns and gradients.
-///
-/// You must provide either [horizontalDividerProps] or [styledHorizontalDividerProps].
-/// This ensures that the widget can render with the proper divider style and attributes.
-class VWStyledHorizontalDivider extends VirtualLeafStatelessWidget<Props> {
-  final Props? horizontalDividerProps;
-  final Props? styledHorizontalDividerProps;
+class VWStyledHorizontalDivider
+    extends VirtualLeafStatelessWidget<StyledDividerProps> {
   VWStyledHorizontalDivider({
     required super.commonProps,
     required super.parent,
-    this.horizontalDividerProps,
-    this.styledHorizontalDividerProps,
+    required super.props,
     super.refName,
-  })  : assert(
-            horizontalDividerProps != null ||
-                styledHorizontalDividerProps != null,
-            'Either horizontalDividerProps or styledHorizontalDividerProps must not be null.'),
-        super(
-          props: styledHorizontalDividerProps ??
-              horizontalDividerProps ??
-              Props.empty(),
-        );
+  });
 
   @override
   Widget render(RenderPayload payload) {
-    if (props.isEmpty) {
-      return empty();
+    final thickness = payload.evalExpr<double>(props.thickness) ?? 1;
+    final lineStyle = To.toLineStyle(props.lineStyle);
+    BorderPattern? borderPattern;
+    List<double>? dashPattern;
+    if (lineStyle != null) {
+      final result = getData(lineStyle, thickness);
+      borderPattern = result.$1;
+      dashPattern = result.$2;
     }
-    if (horizontalDividerProps != null) {
-      final thickness = payload.eval<double>(props.get('thickness')) ?? 1;
-      final lineStyle = To.toLineStyle(props.getString('lineStyle')) ??
-          DividerLineStyle.solid;
-      final (borderPattern, dashPattern) = getData(lineStyle, thickness);
-      return DividerWithPattern(
-        axis: Axis.horizontal,
-        size: payload.eval<double>(props.get('height')),
-        thickness: thickness,
-        indent: payload.eval<double>(props.get('indent')),
-        endIndent: payload.eval<double>(props.get('endIndent')),
-        borderPattern: borderPattern,
-        dashPattern: dashPattern,
-        color: payload.evalColor(props.get('color')),
-      );
-    } else {
-      return DividerWithPattern(
-        axis: Axis.horizontal,
-        size: payload.eval<double>(props.get('height')),
-        thickness: payload.eval<double>(props.get('thickness')),
-        indent: payload.eval<double>(props.get('indent')),
-        endIndent: payload.eval<double>(props.get('endIndent')),
-        borderPattern: To.borderPattern(
-              payload.eval<String>(props.get('borderPattern.value')),
-            ) ??
-            BorderPattern.solid,
-        strokeCap: To.strokeCap(
-                payload.eval<String>(props.get('borderPattern.strokeCap'))) ??
-            StrokeCap.butt,
-        dashPattern: To.dashPattern(
-                payload.eval<String>(props.get('borderPattern.dashPattern'))) ??
-            [3, 3],
-        color: payload.evalColor(props.get('colorType.color')),
-        gradient: To.gradient(
-          props.getMap('colorType.gradiant'),
-          evalColor: payload.evalColor,
-        ),
-      );
-    }
+
+    return DividerWithPattern(
+      axis: Axis.horizontal,
+      size: payload.evalExpr<double>(props.size?.height),
+      thickness: thickness,
+      indent: payload.evalExpr<double>(props.indent),
+      endIndent: payload.evalExpr<double>(props.endIndent),
+      borderPattern: To.borderPattern(props.borderPattern) ??
+          borderPattern ??
+          BorderPattern.solid,
+      strokeCap: To.strokeCap(props.strokeCap) ?? StrokeCap.butt,
+      dashPattern: To.dashPattern(props.dashPattern) ?? dashPattern ?? [3, 3],
+      color: payload.evalExpr<Color>(props.color),
+      gradient: To.gradient(
+        props.gradient,
+        evalColor: payload.evalColor,
+      ),
+    );
   }
 
   (BorderPattern, List<double>?) getData(
