@@ -8,6 +8,7 @@ import 'widget_props/pin_field_props.dart';
 import 'widget_props/sized_box_props.dart';
 import 'widget_props/spacer_props.dart';
 import 'widget_props/styled_divider_props.dart';
+import 'widget_props/switch_props.dart';
 import 'widget_props/timer_props.dart';
 import 'widgets/animated_button.dart';
 import 'widgets/app_bar.dart';
@@ -448,7 +449,7 @@ VWYoutubePlayer youtubePlayerBuilder(
 
 VWSwitch switchBuilder(VWNodeData data, VirtualWidget? parent, _) {
   return VWSwitch(
-    props: data.props,
+    props: SwitchProps.fromJson(data.props.value),
     commonProps: data.commonProps,
     parent: parent,
     refName: data.refName,
