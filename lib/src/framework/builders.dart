@@ -271,14 +271,26 @@ VWVideoPlayer videoPlayerBuilder(VWNodeData data, VirtualWidget? parent, _) {
 
 VWStyledHorizontalDivider horizontalDividerBuilder(
     VWNodeData data, VirtualWidget? parent, _) {
+  final props = data.props;
   return VWStyledHorizontalDivider(
     props: StyledDividerProps(
-      thickness: ExprOr<double>(data.props.get('thickness')),
+      thickness: props.get('thickness') != null
+          ? ExprOr<double>(props.get('thickness')!)
+          : null,
       lineStyle: data.props.getString('lineStyle'),
-      size: SizeProps(height: ExprOr<double>(data.props.get('height'))),
-      indent: ExprOr<double>(data.props.get('indent')),
-      endIndent: ExprOr<double>(data.props.get('endIndent')),
-      color: ExprOr<Color>(data.props.get('color')),
+      size: SizeProps(
+          height: props.get('height') != null
+              ? ExprOr<double>(data.props.get('height')!)
+              : null),
+      indent: props.get('indent') != null
+          ? ExprOr<double>(props.get('indent')!)
+          : null,
+      endIndent: props.get('endIndent') != null
+          ? ExprOr<double>(props.get('endIndent')!)
+          : null,
+      color: props.get('color') != null
+          ? ExprOr<Color>(props.get('color')!)
+          : null,
     ),
     commonProps: data.commonProps,
     parent: parent,
@@ -291,12 +303,23 @@ VWStyledVerticalDivider verticalDividerBuilder(
   final props = data.props;
   return VWStyledVerticalDivider(
     props: StyledDividerProps(
-      thickness: ExprOr<double>(props.get('thickness')),
-      lineStyle: props.getString('lineStyle'),
-      size: SizeProps(height: ExprOr<double>(props.get('height'))),
-      indent: ExprOr<double>(props.get('indent')),
-      endIndent: ExprOr<double>(props.get('endIndent')),
-      color: ExprOr<Color>(props.get('color')),
+      thickness: props.get('thickness') != null
+          ? ExprOr<double>(props.get('thickness')!)
+          : null,
+      lineStyle: data.props.getString('lineStyle'),
+      size: SizeProps(
+          width: props.get('width') != null
+              ? ExprOr<double>(data.props.get('width')!)
+              : null),
+      indent: props.get('indent') != null
+          ? ExprOr<double>(props.get('indent')!)
+          : null,
+      endIndent: props.get('endIndent') != null
+          ? ExprOr<double>(props.get('endIndent')!)
+          : null,
+      color: props.get('color') != null
+          ? ExprOr<Color>(props.get('color')!)
+          : null,
     ),
     commonProps: data.commonProps,
     parent: parent,
