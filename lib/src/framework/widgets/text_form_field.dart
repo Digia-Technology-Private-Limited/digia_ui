@@ -27,9 +27,8 @@ class VWTextFormField extends VirtualStatelessWidget<Props> {
   Widget render(RenderPayload payload) {
     final initialValue = props.getString('initialValue');
     final enabled = props.getBool('enabled');
-    final keyboardType = DUIDecoder.toKeyBoardType(props.get('keyboardType'));
-    final textInputAction =
-        DUIDecoder.toTextInputAction(props.get('textInputAction'));
+    final keyboardType = To.toKeyBoardType(props.get('keyboardType'));
+    final textInputAction = To.toTextInputAction(props.get('textInputAction'));
     final style = payload.getTextStyle(props.getMap('textStyle'));
     final textAlign =
         To.textAlign(payload.eval<String>(props.get('textAlign')));
@@ -56,8 +55,6 @@ class VWTextFormField extends VirtualStatelessWidget<Props> {
     final errorBorder = _toInputBorder(props.get('errorBorder'));
     return InternalTextFormField(
       initialValue: initialValue,
-      prefixIcon: childOf('prefix')?.toWidget(payload),
-      suffixIcon: childOf('suffix')?.toWidget(payload),
       onChangedAction: (p0, p1) async {
         final actionFlow = ActionFlow.fromJson(props.get('onChanged'));
         await payload.executeAction(actionFlow,
@@ -74,22 +71,29 @@ class VWTextFormField extends VirtualStatelessWidget<Props> {
       maxLines: maxLines,
       minLines: minLines,
       maxLength: maxLength,
-      fillColor: fillColor,
-      labelText: labelText,
-      labelStyle: labelStyle,
-      hintText: hintText,
-      hintStyle: hintStyle,
-      contentPadding: contentPadding,
-      focusColor: focusColor,
       cursorColor: cursorColor,
       regex: regex,
       errorText: errorText,
-      errorStyle: errorStyle,
-      enabledBorder: enabledBorder,
-      disabledBorder: disabledBorder,
-      focusedBorder: focusedBorder,
-      focusedErrorBorder: focusedErrorBorder,
-      errorBorder: errorBorder,
+      inputDecoration: InputDecoration(
+        fillColor: fillColor,
+        filled: fillColor != null,
+        labelText: labelText,
+        labelStyle: labelStyle,
+        errorStyle: errorStyle,
+        hintText: hintText,
+        hintStyle: hintStyle,
+        contentPadding: minLines != null
+            ? (minLines > 1 ? const EdgeInsets.all(12) : contentPadding)
+            : contentPadding,
+        focusColor: focusColor,
+        prefixIcon: childOf('prefix')?.toWidget(payload),
+        suffixIcon: childOf('suffix')?.toWidget(payload),
+        enabledBorder: errorBorder,
+        disabledBorder: disabledBorder,
+        focusedBorder: focusedBorder,
+        focusedErrorBorder: focusedErrorBorder,
+        errorBorder: errorBorder,
+      ),
     );
   }
 

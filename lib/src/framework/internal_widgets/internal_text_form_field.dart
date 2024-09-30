@@ -13,26 +13,12 @@ class InternalTextFormField extends StatefulWidget {
   final int? minLines;
   final int? maxLength;
 
-  final Color? fillColor;
-  final String? labelText;
-  final TextStyle? labelStyle;
-  final TextStyle? hintStyle;
-  final TextStyle? errorStyle;
-  final String? hintText;
-  final EdgeInsets? contentPadding;
-  final Color? focusColor;
   final Color? cursorColor;
   final String? regex;
   final String? errorText;
   final Function(String, bool)? onChangedAction;
   // final Function(String, bool)? onChanged;
-  final InputBorder? enabledBorder;
-  final InputBorder? disabledBorder;
-  final InputBorder? focusedBorder;
-  final InputBorder? focusedErrorBorder;
-  final InputBorder? errorBorder;
-  final Widget? prefixIcon;
-  final Widget? suffixIcon;
+  final InputDecoration? inputDecoration;
 
   const InternalTextFormField({
     super.key,
@@ -47,25 +33,11 @@ class InternalTextFormField extends StatefulWidget {
     this.maxLines,
     this.minLines,
     this.maxLength,
-    this.fillColor,
-    this.labelText,
-    this.labelStyle,
-    this.hintStyle,
-    this.errorStyle,
-    this.hintText,
-    this.contentPadding,
-    this.focusColor,
     this.cursorColor,
     this.regex,
     this.errorText,
-    this.enabledBorder,
-    this.disabledBorder,
-    this.focusedBorder,
-    this.focusedErrorBorder,
-    this.errorBorder,
-    this.prefixIcon,
-    this.suffixIcon,
     this.initialValue,
+    this.inputDecoration = const InputDecoration(),
     // this.onChanged,
   });
 
@@ -112,29 +84,7 @@ class _DUITextFieldState extends State<InternalTextFormField> {
               required maxLength}) =>
           null,
       onTapOutside: (event) => FocusScope.of(context).unfocus(),
-      decoration: InputDecoration(
-        fillColor: widget.fillColor,
-        filled: widget.fillColor != null,
-        labelText: widget.labelText,
-        labelStyle: widget.labelStyle,
-        errorStyle: widget.errorStyle,
-        hintText: widget.hintText,
-        hintStyle: widget.hintStyle,
-        contentPadding: widget.minLines != null
-            ? (widget.minLines! > 1
-                ? const EdgeInsets.all(12)
-                : widget.contentPadding)
-            : widget.contentPadding,
-        focusColor: widget.focusColor,
-        prefixIcon: widget.prefixIcon,
-        suffixIcon: widget.suffixIcon,
-        enabledBorder: widget.enabledBorder,
-        disabledBorder: widget.disabledBorder,
-        focusedBorder: widget.focusedBorder,
-        focusedErrorBorder: widget.focusedErrorBorder,
-        errorBorder: widget.errorBorder,
-        errorText: _setErrorText,
-      ),
+      decoration: widget.inputDecoration?..copyWith(errorText: _setErrorText),
       onChanged: (value) {
         _validateInput(value);
         // widget.onChanged
