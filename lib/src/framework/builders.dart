@@ -297,7 +297,7 @@ VWStyledHorizontalDivider horizontalDividerBuilder(
           ? ExprOr<double>(props.get('endIndent')!)
           : null,
       color: props.get('color') != null
-          ? ExprOr<Color>(props.get('color')!)
+          ? ExprOr<String>(props.get('color')!)
           : null,
     ),
     commonProps: data.commonProps,
@@ -326,7 +326,7 @@ VWStyledVerticalDivider verticalDividerBuilder(
           ? ExprOr<double>(props.get('endIndent')!)
           : null,
       color: props.get('color') != null
-          ? ExprOr<Color>(props.get('color')!)
+          ? ExprOr<String>(props.get('color')!)
           : null,
     ),
     commonProps: data.commonProps,

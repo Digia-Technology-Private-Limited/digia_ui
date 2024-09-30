@@ -22,8 +22,11 @@ class VWStyledHorizontalDivider
   Widget render(RenderPayload payload) {
     final thickness = payload.evalExpr<double>(props.thickness) ?? 1;
     final lineStyle = To.toLineStyle(props.lineStyle);
-    BorderPattern? borderPattern;
-    List<double>? dashPattern;
+    BorderPattern? borderPattern = To.borderPattern(props.borderPattern);
+    List<double>? dashPattern = payload
+        .evalExpr<List<dynamic>>(props.dashPattern)
+        ?.map((e) => double.parse(e.toString()))
+        .toList();
     if (lineStyle != null) {
       final result = getData(lineStyle, thickness);
       borderPattern = result.$1;
@@ -36,12 +39,12 @@ class VWStyledHorizontalDivider
       thickness: thickness,
       indent: payload.evalExpr<double>(props.indent),
       endIndent: payload.evalExpr<double>(props.endIndent),
-      borderPattern: To.borderPattern(props.borderPattern) ??
-          borderPattern ??
-          BorderPattern.solid,
+      borderPattern: borderPattern ?? BorderPattern.solid,
       strokeCap: To.strokeCap(props.strokeCap) ?? StrokeCap.butt,
-      dashPattern: To.dashPattern(props.dashPattern) ?? dashPattern ?? [3, 3],
-      color: payload.evalExpr<Color>(props.color),
+      dashPattern: (dashPattern != null && dashPattern.isNotEmpty)
+          ? dashPattern
+          : [3, 3],
+      color: payload.evalColor(payload.evalExpr<String>(props.color)),
       gradient: To.gradient(
         props.gradient,
         evalColor: payload.evalColor,

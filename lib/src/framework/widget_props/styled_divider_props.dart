@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 import '../models/types.dart';
 import '../utils/functional_util.dart';
 import '../utils/types.dart';
@@ -25,8 +23,8 @@ class StyledDividerProps {
   final ExprOr<double>? indent;
   final ExprOr<double>? endIndent;
   final String? strokeCap;
-  final ExprOr<Object?>? dashPattern;
-  final ExprOr<Color>? color;
+  final ExprOr<List<dynamic>>? dashPattern;
+  final ExprOr<String>? color;
   final JsonLike? gradient;
   final String? borderPattern;
 
@@ -53,8 +51,8 @@ class StyledDividerProps {
       endIndent: ExprOr.fromJson<double>(json['endIndent']),
       strokeCap: as$<String>(json['borderPattern']?['strokeCap']),
       dashPattern:
-          ExprOr.fromJson<Object>(json['borderPattern']?['dashPattern']),
-      color: ExprOr.fromJson<Color>(json['colorType']?['color']),
+          ExprOr.fromJson<List<dynamic>>(json['borderPattern']?['dashPattern']),
+      color: ExprOr.fromJson<String>(json['colorType']?['color']),
       borderPattern: as$<String>(json['borderPattern']?['value']),
     );
   }
