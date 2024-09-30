@@ -37,10 +37,15 @@ class _InternalListViewState extends State<InternalListView> {
 
     if (widget.initialScrollPosition == 'end') {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (_scrollController.hasClients) {
-          _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
-        }
+        _setInitialScrollPosition();
       });
+    }
+  }
+
+  void _setInitialScrollPosition() {
+    if (!mounted) return;
+    if (_scrollController.hasClients) {
+      _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
     }
   }
 
@@ -48,6 +53,7 @@ class _InternalListViewState extends State<InternalListView> {
   Widget build(BuildContext context) {
     if (widget.itemBuilder != null) {
       return ListView.builder(
+        controller: _scrollController,
         reverse: widget.reverse,
         scrollDirection: widget.scrollDirection,
         physics: widget.physics,
@@ -58,6 +64,7 @@ class _InternalListViewState extends State<InternalListView> {
     }
 
     return ListView(
+      controller: _scrollController,
       reverse: widget.reverse,
       scrollDirection: widget.scrollDirection,
       physics: widget.physics,

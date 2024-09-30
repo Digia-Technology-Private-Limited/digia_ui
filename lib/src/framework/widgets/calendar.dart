@@ -36,7 +36,7 @@ class VWCalendar extends VirtualLeafStatelessWidget<Props> {
             StartingDayOfWeek.sunday;
     bool pageJumpingEnabled = props.getBool('pageJumpingEnabled') ?? false;
     bool shouldFillViewport = props.getBool('shouldFillViewport') ?? false;
-    bool weekNumbersVisible = false;
+    bool weekNumbersVisible = props.getBool('weekNumbersVisible') ?? false;
 
     Props headerStyle = props.toProps('headerStyle') ?? Props.empty();
     Props daysOfWeekStyle = props.toProps('daysOfWeekStyle') ?? Props.empty();
@@ -226,21 +226,13 @@ class VWCalendar extends VirtualLeafStatelessWidget<Props> {
         calendarStyle.getString('rangeHighlightColor').maybe(payload.getColor);
     bool? outsideDaysVisible = calendarStyle.getBool('outsideDaysVisible');
     bool? isTodayHighlighted = calendarStyle.getBool('isTodayHighlighted');
-    Color? tableBorderColor =
-        calendarStyle.getString('tableBorderColor').maybe(payload.getColor) ??
-            Colors.black;
-    double? tableBorderWidth = calendarStyle.getDouble('tableBorderWidth');
-    BorderStyle? tableBorderStyle =
-        _toBorderStyle(calendarStyle.get('tableBorderStyle'));
-    BorderRadius? tableBorderRadius =
-        To.borderRadius(calendarStyle.get('tableBorderRadius'));
     TableBorder? tableBorder = _toTableBorder(
         payload,
         Props({
-          'color': tableBorderColor,
-          'width': tableBorderWidth,
-          'style': tableBorderStyle,
-          'borderRadius': tableBorderRadius,
+          'color': calendarStyle.getString('tableBorderColor'),
+          'width': calendarStyle.getDouble('tableBorderWidth'),
+          'style': calendarStyle.get('tableBorderStyle'),
+          'borderRadius': calendarStyle.get('tableBorderRadius'),
         }));
     EdgeInsets? tablePadding = To.edgeInsets(calendarStyle.get('tablePadding'));
 
