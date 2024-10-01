@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/action/api_handler.dart';
@@ -9,6 +10,7 @@ import '../internal_widgets/async_builder/controller.dart';
 import '../internal_widgets/async_builder/widget.dart';
 import '../models/props.dart';
 import '../render_payload.dart';
+import '../utils/functional_util.dart';
 
 class VWAsyncBuilder extends VirtualStatelessWidget<Props> {
   VWAsyncBuilder({
@@ -30,8 +32,8 @@ class VWAsyncBuilder extends VirtualStatelessWidget<Props> {
     final futureProps = props.toProps('future');
     if (futureProps == null) return empty();
 
-    return AsyncBuilder<Object?>(
-        controller: AsyncController<Object?>(
+    return AsyncBuilder<Response<Object?>>(
+        controller: AsyncController<Response<Object?>>(
           futureBuilder: () => _makeFuture(futureProps, payload),
         ),
         builder: (innerCtx, snapshot) {
@@ -49,9 +51,14 @@ class VWAsyncBuilder extends VirtualStatelessWidget<Props> {
               await updatedPayload.executeAction(actionFlow);
             });
 
-            return errorWidget?.toWidget(updatedPayload.copyWithChainedContext(
-                  _createExprContext(null, snapshot.error),
-                )) ??
+            return errorWidget?.toWidget(
+                  updatedPayload.copyWithChainedContext(
+                    _createExprContext(
+                      snapshot.data,
+                      snapshot.error,
+                    ),
+                  ),
+                ) ??
                 Text(
                   'Error: ${snapshot.error?.toString()}',
                   style: const TextStyle(color: Colors.red),
@@ -63,22 +70,39 @@ class VWAsyncBuilder extends VirtualStatelessWidget<Props> {
                 ActionFlow.fromJson(props.get('postSuccessAction'));
             await updatedPayload.executeAction(actionFlow);
           });
-          return successWidget.toWidget(updatedPayload.copyWithChainedContext(
-            _createExprContext(snapshot.data, null),
-          ));
+          return successWidget.toWidget(
+            updatedPayload.copyWithChainedContext(
+              _createExprContext(
+                snapshot.data,
+                snapshot.error,
+              ),
+            ),
+          );
         });
   }
 
-  ScopeContext _createExprContext(Object? data, Object? error) {
+  ScopeContext _createExprContext(Response<Object?>? response, Object? error) {
+    final respObj = {
+      'response': {
+        'body': response?.data,
+        'statusCode': response?.statusCode,
+        'headers': response?.headers,
+        'requestObj': _requestObjToMap(response?.requestOptions),
+        'error': error,
+      }
+    };
+
     return DefaultScopeContext(variables: {
-      'data': data,
-      'errorObj': error
-      // TODO: Add class instance using refName
+      ...respObj,
+      ...?refName.maybe((it) => {it: respObj}),
     });
   }
 }
 
-Future<Object?> _makeFuture(Props futureProps, RenderPayload payload) async {
+Future<Response<Object?>> _makeFuture(
+  Props futureProps,
+  RenderPayload payload,
+) async {
   final type = futureProps.getString('futureType');
   if (type == null) return Future.error('Type not selected');
 
@@ -106,13 +130,14 @@ Future<Object?> _makeFuture(Props futureProps, RenderPayload payload) async {
       });
 
       return ApiHandler.instance.execute(apiModel: apiModel, args: args).then(
-          (value) {
+          (response) async {
         final successAction = ActionFlow.fromJson(futureProps.get('onSuccess'));
-        return payload.executeAction(
+        await payload.executeAction(
           successAction,
           scopeContext:
-              DefaultScopeContext(variables: {'response': value.data}),
+              DefaultScopeContext(variables: {'response': response.data}),
         );
+        return response;
       }, onError: (e) async {
         final errorAction = ActionFlow.fromJson(futureProps.get('onFailure'));
         await payload.executeAction(
@@ -127,4 +152,16 @@ Future<Object?> _makeFuture(Props futureProps, RenderPayload payload) async {
           Duration(milliseconds: futureProps.getInt('durationInMs') ?? 0));
   }
   return Future.error('No future type selected.');
+}
+
+_requestObjToMap(RequestOptions? requestOptions) {
+  if (requestOptions == null) return null;
+
+  return {
+    'url': requestOptions.path,
+    'method': requestOptions.method,
+    'headers': requestOptions.headers,
+    'data': requestOptions.data,
+    'queryParameters': requestOptions.queryParameters,
+  };
 }

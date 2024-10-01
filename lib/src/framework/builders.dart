@@ -8,6 +8,8 @@ import 'widget_props/pin_field_props.dart';
 import 'widget_props/sized_box_props.dart';
 import 'widget_props/sliver_app_bar_props.dart';
 import 'widget_props/spacer_props.dart';
+import 'widget_props/tab_view_content_props.dart';
+import 'widget_props/tab_view_controller_props.dart';
 import 'widget_props/timer_props.dart';
 import 'widgets/animated_button.dart';
 import 'widgets/app_bar.dart';
@@ -48,6 +50,9 @@ import 'widgets/stream_builder.dart';
 import 'widgets/styled_horizontal_divider.dart';
 import 'widgets/styled_vertical_divider.dart';
 import 'widgets/switch.dart';
+import 'widgets/tab_view/tab_bar.dart';
+import 'widgets/tab_view/tab_view_content.dart';
+import 'widgets/tab_view/tab_view_controller.dart';
 import 'widgets/text.dart';
 import 'widgets/timer.dart';
 import 'widgets/vertical_divider.dart';
@@ -509,6 +514,40 @@ VWOpacity opacityBuilder(
     refName: data.refName,
     childGroups: _createChildGroups(data.childGroups, parent, registry),
     repeatData: data.repeatData,
+  );
+}
+
+VWTabViewController tabControllerBuilder(
+    VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
+  return VWTabViewController(
+    props: TabViewControllerProps.fromJson(data.props.value),
+    commonProps: data.commonProps,
+    parent: parent,
+    childGroups: _createChildGroups(data.childGroups, parent, registry),
+    refName: data.refName,
+  );
+}
+
+VWTabBar tabBarBuilder(
+    VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
+  return VWTabBar(
+    props: data.props,
+    commonProps: data.commonProps,
+    parent: parent,
+    childGroups: _createChildGroups(data.childGroups, parent, registry),
+    refName: data.refName,
+  );
+}
+
+VWTabViewContent tabViewContentBuilder(
+    VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
+  return VWTabViewContent(
+    props: TabViewContentProps.fromJson(data.props.value),
+    commonProps: data.commonProps,
+    parent: parent,
+    // repeatData: data.repeatData,
+    childGroups: _createChildGroups(data.childGroups, parent, registry),
+    refName: data.refName,
   );
 }
 
