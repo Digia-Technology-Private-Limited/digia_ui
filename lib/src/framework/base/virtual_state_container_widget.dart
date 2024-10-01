@@ -11,14 +11,14 @@ import 'virtual_widget.dart';
 
 class VirtualStateContainerWidget extends VirtualWidget {
   final Map<String, VariableDef?> initStateDefs;
-  final VirtualWidget? child;
+  VirtualWidget? child;
 
   VirtualStateContainerWidget({
     required super.refName,
     required super.parent,
     required this.initStateDefs,
-    required this.child,
-  });
+    Map<String, List<VirtualWidget>>? childGroups,
+  }) : child = childGroups?.entries.firstOrNull?.value.firstOrNull;
 
   @override
   Widget render(RenderPayload payload) {
@@ -35,12 +35,11 @@ class VirtualStateContainerWidget extends VirtualWidget {
       namespace: refName,
       initialState: resolvedState,
       childBuilder: (context, state) {
-        return child!.toWidget(
-          payload.copyWithChainedContext(
-            _createExprContext(state),
-            buildContext: context,
-          ),
+        final updatedPayload = payload.copyWithChainedContext(
+          _createExprContext(state),
+          buildContext: context,
         );
+        return child!.toWidget(updatedPayload);
       },
     );
   }

@@ -1,4 +1,3 @@
-import 'base/virtual_state_container_widget.dart';
 import 'base/virtual_widget.dart';
 import 'builders.dart';
 import 'models/vw_node_data.dart';
@@ -117,22 +116,22 @@ class VirtualWidgetRegistry {
   VirtualWidgetRegistry._internal();
 
   VirtualWidget createWidget(VWNodeData data, VirtualWidget? parent) {
-    if (data.category == 'state') {
-      final child = data.childGroups?.entries.first.value.first;
-      return VirtualStateContainerWidget(
-        refName: data.refName,
-        parent: parent,
-        initStateDefs: data.initStateDefs,
-        child: child == null ? null : createWidget(child, parent),
-      );
-    }
+    switch (data.nodeType) {
+      case NodeType.widget:
+        {
+          String type = data.type;
+          if (!_builders.containsKey(type)) {
+            throw Exception('Unknown widget type: $type');
+          }
 
-    String type = data.type;
-    if (!_builders.containsKey(type)) {
-      throw Exception('Unknown widget type: $type');
+          return _builders[type]!(data, parent, this);
+        }
+      case NodeType.state:
+        return stateContainerBuilder(data, parent, this);
+      case NodeType.component:
+        // TODO: Add support for Components
+        throw UnimplementedError();
     }
-
-    return _builders[type]!(data, parent, this);
   }
 
   VirtualWidget? createChild(

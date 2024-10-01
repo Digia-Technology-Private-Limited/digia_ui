@@ -1,5 +1,6 @@
 import 'package:flutter/painting.dart';
 
+import 'base/virtual_state_container_widget.dart';
 import 'base/virtual_widget.dart';
 import 'models/types.dart';
 import 'models/vw_node_data.dart';
@@ -72,6 +73,19 @@ Map<String, List<VirtualWidget>>? _createChildGroups(
       childrenData.map((data) => registry.createWidget(data, parent)).toList(),
     );
   });
+}
+
+VirtualStateContainerWidget stateContainerBuilder(
+  VWNodeData data,
+  VirtualWidget? parent,
+  VirtualWidgetRegistry registry,
+) {
+  return VirtualStateContainerWidget(
+    refName: data.refName,
+    parent: parent,
+    initStateDefs: data.initStateDefs,
+    childGroups: _createChildGroups(data.childGroups, parent, registry),
+  );
 }
 
 VWText textBuilder(VWNodeData data, VirtualWidget? parent, _) {
