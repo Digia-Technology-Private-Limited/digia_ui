@@ -5,6 +5,7 @@ import 'base/virtual_widget.dart';
 import 'models/types.dart';
 import 'models/vw_node_data.dart';
 import 'virtual_widget_registry.dart';
+import 'widget_props/app_bar_props.dart';
 import 'widget_props/pin_field_props.dart';
 import 'widget_props/sized_box_props.dart';
 import 'widget_props/spacer_props.dart';
@@ -15,6 +16,7 @@ import 'widget_props/switch_props.dart';
 import 'widget_props/tab_view_content_props.dart';
 import 'widget_props/tab_view_controller_props.dart';
 
+import 'widget_props/text_props.dart';
 import 'widget_props/timer_props.dart';
 import 'widgets/animated_button.dart';
 import 'widgets/app_bar.dart';
@@ -92,7 +94,7 @@ VirtualStateContainerWidget stateContainerBuilder(
 
 VWText textBuilder(VWNodeData data, VirtualWidget? parent, _) {
   return VWText(
-    props: data.props,
+    props: TextProps.fromJson(data.props.value),
     commonProps: data.commonProps,
     parent: parent,
     refName: data.refName,
@@ -414,7 +416,7 @@ VWCheckbox checkboxBuilder(VWNodeData data, VirtualWidget? parent, _) {
 
 VWAppBar appBarBuilder(VWNodeData data, VirtualWidget? parent, _) {
   return VWAppBar(
-    props: data.props,
+    props: AppBarProps.fromJson(data.props.value),
     parent: parent,
   );
 }

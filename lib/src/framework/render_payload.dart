@@ -73,6 +73,15 @@ class RenderPayload {
     );
   }
 
+  Color? evalColorExpr(ExprOr<String>? expression,
+      {ScopeContext? scopeContext, String? Function(Object?)? decoder}) {
+    final colorString = expression?.evaluate(scopeContext, decoder: decoder);
+
+    if (colorString == null) return null;
+
+    return getColor(colorString);
+  }
+
   // Evaluates and retrieves a color from the ResourceProvider
   Color? evalColor(Object? expression,
       {ScopeContext? scopeContext, String? Function(Object?)? decoder}) {

@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 
-import '../actions/base/action_flow.dart';
 import '../base/virtual_leaf_stateless_widget.dart';
 import '../base/virtual_widget.dart';
 import '../models/props.dart';
 import '../render_payload.dart';
+import '../utils/functional_util.dart';
 import '../utils/widget_util.dart';
+import '../widget_props/app_bar_props.dart';
 import 'icon.dart';
 import 'text.dart';
 
-class VWAppBar extends VirtualLeafStatelessWidget<Props> {
+class VWAppBar extends VirtualLeafStatelessWidget<AppBarProps> {
   final VirtualWidget? leadingIcon;
   final VirtualWidget? trailingIcon;
 
@@ -28,15 +29,14 @@ class VWAppBar extends VirtualLeafStatelessWidget<Props> {
   Widget render(RenderPayload payload) {
     return AppBar(
       title: VWText(
-        props: props.toProps('title') ?? Props.empty(),
+        props: props.title,
         commonProps: null,
-        parent: this,
       ).toWidget(payload),
-      elevation: payload.eval<double>(props.get('elevation')),
-      shadowColor: payload.evalColor(props.get('shadowColor')),
-      backgroundColor: payload.evalColor(props.get('backgroundColor')),
+      elevation: payload.evalExpr(props.elevation),
+      shadowColor: payload.evalColorExpr(props.shadowColor),
+      backgroundColor: payload.evalColorExpr(props.backgroundColor),
       iconTheme: IconThemeData(
-        color: payload.evalColor(props.get('iconColor')),
+        color: payload.evalColorExpr(props.iconColor),
       ),
       automaticallyImplyLeading: true,
       leading: _buildLeading(payload),
@@ -49,7 +49,7 @@ class VWAppBar extends VirtualLeafStatelessWidget<Props> {
       return leadingIcon!.toWidget(payload);
     }
 
-    final leadingIconProps = props.toProps('leadingIcon');
+    final leadingIconProps = props.leadingIcon.maybe((it) => Props(it));
     if (leadingIconProps == null) return null;
 
     var widget = VWIcon(
@@ -59,9 +59,10 @@ class VWAppBar extends VirtualLeafStatelessWidget<Props> {
     ).toWidget(payload);
 
     return wrapInGestureDetector(
-        payload: payload,
-        actionFlow: ActionFlow.fromJson(props.getMap('onTapLeadingIcon')),
-        child: widget);
+      payload: payload,
+      actionFlow: props.onTapLeadingIcon,
+      child: widget,
+    );
   }
 
   List<Widget>? _buildActions(RenderPayload payload) {
@@ -69,7 +70,7 @@ class VWAppBar extends VirtualLeafStatelessWidget<Props> {
       return [trailingIcon!.toWidget(payload)];
     }
 
-    final trailingIconProps = props.toProps('trailingIcon');
+    final trailingIconProps = props.trailingIcon.maybe((it) => Props(it));
     if (trailingIconProps == null) return null;
 
     return [

@@ -4,6 +4,8 @@ import '../base/virtual_leaf_stateless_widget.dart';
 import '../models/props.dart';
 import '../render_payload.dart';
 import '../utils/flutter_type_converters.dart';
+import '../utils/functional_util.dart';
+import '../widget_props/text_props.dart';
 import 'image.dart';
 import 'text.dart';
 
@@ -68,7 +70,7 @@ class VWAvatar extends VirtualLeafStatelessWidget<Props> {
     return Align(
       alignment: Alignment.center,
       child: VWText(
-        props: props.toProps('text') ?? Props.empty(),
+        props: props.getMap('text').maybe(TextProps.fromJson) ?? TextProps(),
         commonProps: null,
         parent: null,
       ).toWidget(payload),
