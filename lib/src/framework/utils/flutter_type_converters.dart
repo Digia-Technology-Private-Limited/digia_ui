@@ -1,9 +1,11 @@
 import 'dart:math' as math;
 
+import 'package:collection/collection.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../components/border/divider_with_pattern/divider_with_pattern.dart';
 import '../models/custom_flutter_types.dart';
 import 'color_util.dart';
 import 'functional_util.dart';
@@ -23,6 +25,23 @@ abstract class To {
         // Return null for any unrecognized input
         _ => null
       };
+
+  static DividerLineStyle? toLineStyle(String? style) {
+    if (style == null) return null;
+
+    switch (style) {
+      case 'dashdotted':
+        return DividerLineStyle.dashDotted;
+      case 'dashed':
+        return DividerLineStyle.dashed;
+      case 'dotted':
+        return DividerLineStyle.dotted;
+      case 'solid':
+        return DividerLineStyle.solid;
+    }
+
+    return null;
+  }
 
   static CrossAxisAlignment? crossAxisAlignment(dynamic value) =>
       switch (value) {
@@ -234,6 +253,30 @@ abstract class To {
     }
 
     return null;
+  }
+
+  static TextInputType? toKeyBoardType(dynamic value) {
+    if (value is! String) return null;
+
+    return switch (value) {
+      'text' => TextInputType.text,
+      'multiline' => TextInputType.multiline,
+      'number' => TextInputType.number,
+      'phone' => TextInputType.phone,
+      'datetime' => TextInputType.datetime,
+      'emailAddress' => TextInputType.emailAddress,
+      'url' => TextInputType.url,
+      'visiblePassword' => TextInputType.visiblePassword,
+      'name' => TextInputType.name,
+      'streetAddress' => TextInputType.streetAddress,
+      'none' => TextInputType.none,
+      _ => null
+    };
+  }
+
+  static TextInputAction? toTextInputAction(dynamic value) {
+    return TextInputAction.values
+        .firstWhereOrNull((p0) => p0.name.split('.').last == value);
   }
 
   static Radius toRadius(dynamic value) {
@@ -557,4 +600,11 @@ abstract class To {
         return null;
     }
   }
+
+  static TabBarIndicatorSize? tabBarIndicatorSize(dynamic value) =>
+      switch (value) {
+        'tab' => TabBarIndicatorSize.tab,
+        'label' => TabBarIndicatorSize.label,
+        _ => null
+      };
 }

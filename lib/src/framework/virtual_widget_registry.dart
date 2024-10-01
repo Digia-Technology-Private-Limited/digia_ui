@@ -1,4 +1,3 @@
-import 'base/virtual_state_container_widget.dart';
 import 'base/virtual_widget.dart';
 import 'builders.dart';
 import 'models/vw_node_data.dart';
@@ -17,8 +16,8 @@ class VirtualWidgetRegistry {
     'digia/listView': listViewBuilder,
     'digia/gridView': gridViewBuilder,
     'digia/wrap': wrapBuilder,
-    'digia/sizedBox': sizedBoxBuilder,
-    'digia/spacer': spacerBuilder,
+    'fw/sized_box': sizedBoxBuilder,
+    'fw/spacer': spacerBuilder,
     'digia/safeArea': safeAreaBuilder,
     // 'digia/customScrollView': customScrollViewBuilder,
     // 'digia/nestedScrollView': nestedScrollViewBuilder,
@@ -32,7 +31,7 @@ class VirtualWidgetRegistry {
     'digia/iconButton': iconButtonBuilder,
     'digia/checkbox': checkboxBuilder,
     'digia/switch': switchBuilder,
-    // 'digia/textFormField': textFormFieldBuilder,
+    'digia/textFormField': textFormFieldBuilder,
 
     // Navigation and Structure
     'digia/scaffold': scaffoldBuilder,
@@ -41,6 +40,9 @@ class VirtualWidgetRegistry {
     'digia/appBar': appBarBuilder,
     // 'digia/sliverAppBar': sliverAppBarBuilder,
     'digia/drawer': drawerBuilder,
+    'digia/tabController': tabControllerBuilder,
+    'digia/tabBar': tabBarBuilder,
+    'digia/tabViewContent': tabViewContentBuilder,
     // 'digia/tabView': tabViewBuilder,
     // 'digia/tabViewItem': tabViewItemBuilder,
     // 'digia/navigationBarItem': navigationBarItemBuilder,
@@ -115,22 +117,22 @@ class VirtualWidgetRegistry {
   VirtualWidgetRegistry._internal();
 
   VirtualWidget createWidget(VWNodeData data, VirtualWidget? parent) {
-    if (data.category == 'state_container') {
-      final child = data.childGroups?.entries.first.value.first;
-      return VirtualStateContainerWidget(
-        refName: data.refName,
-        parent: parent,
-        initialState: {},
-        child: child == null ? null : createWidget(child, parent),
-      );
-    }
+    switch (data.nodeType) {
+      case NodeType.widget:
+        {
+          String type = data.type;
+          if (!_builders.containsKey(type)) {
+            throw Exception('Unknown widget type: $type');
+          }
 
-    String type = data.type;
-    if (!_builders.containsKey(type)) {
-      throw Exception('Unknown widget type: $type');
+          return _builders[type]!(data, parent, this);
+        }
+      case NodeType.state:
+        return stateContainerBuilder(data, parent, this);
+      case NodeType.component:
+        // TODO: Add support for Components
+        throw UnimplementedError();
     }
-
-    return _builders[type]!(data, parent, this);
   }
 
   VirtualWidget? createChild(

@@ -19,18 +19,18 @@ class VWAvatar extends VirtualLeafStatelessWidget<Props> {
   Widget render(RenderPayload payload) {
     final shapeProps = props.toProps('shape');
 
-    if (shapeProps == null) return empty();
+    // if (shapeProps == null) return empty();
 
-    return switch (shapeProps.get('value')) {
+    return switch (shapeProps?.get('value')) {
       'circle' => _getCircleAvatar(shapeProps, payload),
       'square' => _getSquareAvatar(shapeProps, payload),
       _ => _getCircleAvatar(shapeProps, payload)
     };
   }
 
-  Widget _getCircleAvatar(Props shapeProps, RenderPayload payload) {
+  Widget _getCircleAvatar(Props? shapeProps, RenderPayload payload) {
     final bgColor = payload.evalColor(props.get('bgColor'));
-    final radius = payload.eval<double>(shapeProps.get('radius'));
+    final radius = payload.eval<double>(shapeProps?.get('radius'));
     return CircleAvatar(
       radius: radius ?? 16,
       backgroundColor: bgColor ?? Colors.grey,
@@ -38,10 +38,10 @@ class VWAvatar extends VirtualLeafStatelessWidget<Props> {
     );
   }
 
-  Widget _getSquareAvatar(Props shapeProps, RenderPayload payload) {
+  Widget _getSquareAvatar(Props? shapeProps, RenderPayload payload) {
     final bgColor = payload.evalColor(props.get('bgColor'));
-    final cornerRadius = To.borderRadius(shapeProps.get('cornerRadius'));
-    final side = payload.eval<double>(shapeProps.get('side'));
+    final cornerRadius = To.borderRadius(shapeProps?.get('cornerRadius'));
+    final side = payload.eval<double>(shapeProps?.get('side'));
 
     return Container(
       height: side,

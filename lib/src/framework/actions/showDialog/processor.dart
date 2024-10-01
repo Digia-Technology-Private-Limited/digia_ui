@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../expr/default_scope_context.dart';
 import '../../expr/scope_context.dart';
-import '../../models/types.dart';
 import '../../resource_provider.dart';
 import '../../utils/functional_util.dart';
 import '../../utils/navigation_util.dart';
@@ -46,13 +45,10 @@ class ShowDialogProcessor implements ActionProcessor<ShowDialogAction> {
         return viewBuilder(
           innerCtx,
           action.pageId,
-          action.pageArgs?.map((key, value) {
-            var evaluatedValue = value;
-            if (value is ExprOr) {
-              evaluatedValue = value.evaluate(scopeContext);
-            }
-            return MapEntry(key, evaluatedValue);
-          }),
+          action.pageArgs?.map((key, value) => MapEntry(
+                key,
+                value?.evaluate(scopeContext),
+              )),
         );
       },
       barrierDismissible: barrierDismissible,
