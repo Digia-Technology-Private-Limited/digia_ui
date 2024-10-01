@@ -15,7 +15,7 @@ class SetStateProcessor implements ActionProcessor<SetStateAction> {
     final stateContext =
         StateContextProvider.findStateByName(context, action.stateContextName);
     if (stateContext == null) {
-      throw 'Action.setPageState called on a widget which is not wrapped in StateContextProvider';
+      throw 'Action.setState called on a widget which is not wrapped in StateContextProvider';
     }
 
     final updates = action.updates;

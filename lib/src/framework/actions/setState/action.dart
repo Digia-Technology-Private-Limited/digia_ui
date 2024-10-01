@@ -1,5 +1,6 @@
 import '../../models/types.dart';
 import '../../utils/functional_util.dart';
+import '../../utils/types.dart';
 import '../base/action.dart';
 
 class StateUpdate {
@@ -42,7 +43,7 @@ class SetStateAction extends Action {
 
   @override
   Map<String, dynamic> toJson() => {
-        'type': actionType.toString(),
+        'stateContextName': actionType.toString(),
         'updates': updates,
         'rebuild': rebuild?.toJson(),
       };
@@ -51,9 +52,12 @@ class SetStateAction extends Action {
     return SetStateAction(
       // fallback to 'page' if not set for backward compatibility.
       stateContextName: as<String>(json['stateContextName']),
-      updates: (json['updates'] as List<Object>)
-          .map((update) => StateUpdate.fromJson(update as Map<String, Object?>))
-          .toList(),
+      updates: as$<List>(json['updates'])
+              ?.map((it) => as$<JsonLike>(it))
+              .nonNulls
+              .map(StateUpdate.fromJson)
+              .toList() ??
+          [],
       rebuild: ExprOr.fromJson<bool>(json['rebuild']),
     );
   }
