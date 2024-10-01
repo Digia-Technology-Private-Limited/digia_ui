@@ -2,7 +2,6 @@ import 'package:flutter/widgets.dart';
 
 import '../../expr/default_scope_context.dart';
 import '../../expr/scope_context.dart';
-import '../../models/types.dart';
 import '../../resource_provider.dart';
 import '../../utils/functional_util.dart';
 import '../../utils/navigation_util.dart';
@@ -53,13 +52,10 @@ class NavigateToPageProcessor implements ActionProcessor<NavigateToPageAction> {
         context,
         pageId,
         action.pageArgs?.map(
-          (key, value) {
-            var evaluatedValue = value;
-            if (value is ExprOr) {
-              evaluatedValue = value.evaluate(scopeContext);
-            }
-            return MapEntry(key, evaluatedValue);
-          },
+          (key, value) => MapEntry(
+            key,
+            value?.evaluate(scopeContext),
+          ),
         ),
       ),
       removeRoutesUntilPredicate: routeNametoRemoveUntil.maybe(

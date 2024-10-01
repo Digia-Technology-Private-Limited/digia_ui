@@ -1,13 +1,19 @@
 import 'package:flutter/painting.dart';
 
 import 'base/virtual_widget.dart';
+import 'models/types.dart';
 import 'models/vw_node_data.dart';
 import 'virtual_widget_registry.dart';
 import 'widget_props/pin_field_props.dart';
 import 'widget_props/sized_box_props.dart';
 import 'widget_props/spacer_props.dart';
+
+import 'widget_props/styled_divider_props.dart';
+import 'widget_props/switch_props.dart';
+
 import 'widget_props/tab_view_content_props.dart';
 import 'widget_props/tab_view_controller_props.dart';
+
 import 'widget_props/timer_props.dart';
 import 'widgets/animated_button.dart';
 import 'widgets/app_bar.dart';
@@ -23,7 +29,6 @@ import 'widgets/expandable.dart';
 import 'widgets/flex.dart';
 import 'widgets/flex_fit.dart';
 import 'widgets/grid_view.dart';
-import 'widgets/horizontal_divider.dart';
 import 'widgets/html_view.dart';
 import 'widgets/icon.dart';
 import 'widgets/icon_button.dart';
@@ -48,8 +53,8 @@ import 'widgets/tab_view/tab_bar.dart';
 import 'widgets/tab_view/tab_view_content.dart';
 import 'widgets/tab_view/tab_view_controller.dart';
 import 'widgets/text.dart';
+import 'widgets/text_form_field.dart';
 import 'widgets/timer.dart';
-import 'widgets/vertical_divider.dart';
 import 'widgets/video_player.dart';
 import 'widgets/web_view.dart';
 import 'widgets/wrap.dart';
@@ -83,6 +88,17 @@ VWRichText richTextBuilder(VWNodeData data, VirtualWidget? parent, _) {
     props: data.props,
     commonProps: data.commonProps,
     parent: parent,
+    refName: data.refName,
+  );
+}
+
+VWTextFormField textFormFieldBuilder(
+    VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
+  return VWTextFormField(
+    props: data.props,
+    commonProps: data.commonProps,
+    parent: parent,
+    childGroups: _createChildGroups(data.childGroups, parent, registry),
     refName: data.refName,
   );
 }
@@ -273,20 +289,58 @@ VWVideoPlayer videoPlayerBuilder(VWNodeData data, VirtualWidget? parent, _) {
   );
 }
 
-VWHorizontalDivider horizontalDividerBuilder(
+VWStyledHorizontalDivider horizontalDividerBuilder(
     VWNodeData data, VirtualWidget? parent, _) {
-  return VWHorizontalDivider(
-    props: data.props,
+  final props = data.props;
+  return VWStyledHorizontalDivider(
+    props: StyledDividerProps(
+      thickness: props.get('thickness') != null
+          ? ExprOr<double>(props.get('thickness')!)
+          : null,
+      lineStyle: data.props.getString('lineStyle'),
+      size: SizeProps(
+          height: props.get('height') != null
+              ? ExprOr<double>(data.props.get('height')!)
+              : null),
+      indent: props.get('indent') != null
+          ? ExprOr<double>(props.get('indent')!)
+          : null,
+      endIndent: props.get('endIndent') != null
+          ? ExprOr<double>(props.get('endIndent')!)
+          : null,
+      color: props.get('color') != null
+          ? ExprOr<String>(props.get('color')!)
+          : null,
+    ),
     commonProps: data.commonProps,
     parent: parent,
     refName: data.refName,
   );
 }
 
-VWVerticalDivider verticalDividerBuilder(
+VWStyledVerticalDivider verticalDividerBuilder(
     VWNodeData data, VirtualWidget? parent, _) {
-  return VWVerticalDivider(
-    props: data.props,
+  final props = data.props;
+  return VWStyledVerticalDivider(
+    props: StyledDividerProps(
+      thickness: props.get('thickness') != null
+          ? ExprOr<double>(props.get('thickness')!)
+          : null,
+      lineStyle: data.props.getString('lineStyle'),
+      size: SizeProps(
+          width: props.get('width') != null
+              ? ExprOr<double>(data.props.get('width')!)
+              : null),
+      indent: props.get('indent') != null
+          ? ExprOr<double>(props.get('indent')!)
+          : null,
+      endIndent: props.get('endIndent') != null
+          ? ExprOr<double>(props.get('endIndent')!)
+          : null,
+      color: props.get('color') != null
+          ? ExprOr<String>(props.get('color')!)
+          : null,
+    ),
     commonProps: data.commonProps,
     parent: parent,
     refName: data.refName,
@@ -296,7 +350,7 @@ VWVerticalDivider verticalDividerBuilder(
 VWStyledHorizontalDivider styledHorizontalDividerBuilder(
     VWNodeData data, VirtualWidget? parent, _) {
   return VWStyledHorizontalDivider(
-    props: data.props,
+    props: StyledDividerProps.fromJson(data.props.value),
     commonProps: data.commonProps,
     parent: parent,
     refName: data.refName,
@@ -306,7 +360,7 @@ VWStyledHorizontalDivider styledHorizontalDividerBuilder(
 VWStyledVerticalDivider styledVerticalDividerBuilder(
     VWNodeData data, VirtualWidget? parent, _) {
   return VWStyledVerticalDivider(
-    props: data.props,
+    props: StyledDividerProps.fromJson(data.props.value),
     commonProps: data.commonProps,
     parent: parent,
     refName: data.refName,
@@ -438,7 +492,7 @@ VWYoutubePlayer youtubePlayerBuilder(
 
 VWSwitch switchBuilder(VWNodeData data, VirtualWidget? parent, _) {
   return VWSwitch(
-    props: data.props,
+    props: SwitchProps.fromJson(data.props.value),
     commonProps: data.commonProps,
     parent: parent,
     refName: data.refName,

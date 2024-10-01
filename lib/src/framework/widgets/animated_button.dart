@@ -28,7 +28,7 @@ class VWAnimatedButton extends VirtualLeafStatelessWidget<Props> {
       shape: WidgetStateProperty.all(
           To.buttonShape(props.get('shape'), payload.getColor)),
       padding: WidgetStateProperty.all(To.edgeInsets(
-        defaultStyleJson.getMap('padding'),
+        defaultStyleJson.get('padding'),
         or: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
       )),
       elevation: WidgetStateProperty.all(

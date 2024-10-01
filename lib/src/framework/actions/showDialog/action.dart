@@ -1,4 +1,5 @@
 import '../../models/types.dart';
+import '../../utils/functional_util.dart';
 import '../../utils/json_util.dart';
 import '../../utils/object_util.dart';
 import '../../utils/types.dart';
@@ -7,7 +8,7 @@ import '../base/action_flow.dart';
 
 class ShowDialogAction extends Action {
   final String pageId;
-  final JsonLike? pageArgs;
+  final Map<String, ExprOr<Object>?>? pageArgs;
   final ExprOr<bool>? barrierDismissible;
   final ExprOr<String>? barrierColor;
   final bool waitForResult;
@@ -40,7 +41,16 @@ class ShowDialogAction extends Action {
   factory ShowDialogAction.fromJson(Map<String, Object?> json) {
     return ShowDialogAction(
       pageId: tryKeys<String>(json, ['pageUid', 'pageId']) ?? '',
-      pageArgs: tryKeys<JsonLike>(json, ['pageArgs', 'args']),
+      pageArgs: tryKeys<Map<String, ExprOr<Object>?>>(
+        json,
+        ['pageArgs', 'args'],
+        parse: (it) {
+          return as$<JsonLike>(it)?.map((key, value) => MapEntry(
+                key,
+                ExprOr.fromJson<Object>(value),
+              ));
+        },
+      ),
       barrierDismissible: ExprOr.fromJson<bool>(json['barrierDismissible']),
       barrierColor: ExprOr.fromJson<String>(json['barrierColor']),
       waitForResult: json['waitForResult']?.to<bool>() ?? false,

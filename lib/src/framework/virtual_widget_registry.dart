@@ -17,8 +17,8 @@ class VirtualWidgetRegistry {
     'digia/listView': listViewBuilder,
     'digia/gridView': gridViewBuilder,
     'digia/wrap': wrapBuilder,
-    'digia/sizedBox': sizedBoxBuilder,
-    'digia/spacer': spacerBuilder,
+    'fw/sized_box': sizedBoxBuilder,
+    'fw/spacer': spacerBuilder,
     'digia/safeArea': safeAreaBuilder,
     // 'digia/customScrollView': customScrollViewBuilder,
     // 'digia/nestedScrollView': nestedScrollViewBuilder,
@@ -32,7 +32,7 @@ class VirtualWidgetRegistry {
     'digia/iconButton': iconButtonBuilder,
     'digia/checkbox': checkboxBuilder,
     'digia/switch': switchBuilder,
-    // 'digia/textFormField': textFormFieldBuilder,
+    'digia/textFormField': textFormFieldBuilder,
 
     // Navigation and Structure
     'digia/scaffold': scaffoldBuilder,

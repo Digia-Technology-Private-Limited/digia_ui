@@ -44,7 +44,6 @@ class VWContainer extends VirtualStatelessWidget<Props> {
         height: height,
         alignment: alignment,
         padding: padding,
-        margin: margin,
         decoration: BoxDecoration(
             gradient: gradiant,
             color: color,
@@ -77,7 +76,10 @@ class VWContainer extends VirtualStatelessWidget<Props> {
       );
     }
 
-    return container;
+    return Padding(
+      padding: margin,
+      child: container,
+    );
   }
 }
 
