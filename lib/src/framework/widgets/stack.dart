@@ -52,9 +52,7 @@ class VWStack extends VirtualStatelessWidget<Props> {
 
     return VWPositioned(
       props: PositionedProps.fromJson(position),
-      childGroups: {
-        'child': [childVirtualWidget]
-      },
+      child: childVirtualWidget,
       parent: null,
     );
   }

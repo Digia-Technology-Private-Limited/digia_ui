@@ -44,9 +44,10 @@ class VWListView extends VirtualStatelessWidget<Props> {
         shrinkWrap: shrinkWrap,
         initialScrollPosition: initialScrollPosition,
         itemCount: items.length,
-        itemBuilder: (buildContext, index) => childToRepeat.toWidget(
+        itemBuilder: (innerCtx, index) => childToRepeat.toWidget(
           payload.copyWithChainedContext(
             _createExprContext(items[index], index),
+            buildContext: innerCtx,
           ),
         ),
       );

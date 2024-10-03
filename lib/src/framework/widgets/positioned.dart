@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 
 import '../base/virtual_stateless_widget.dart';
+import '../base/virtual_widget.dart';
 import '../render_payload.dart';
 import '../widget_props/positioned_props.dart';
 
@@ -9,10 +10,13 @@ class VWPositioned extends VirtualStatelessWidget<PositionedProps> {
     required super.props,
     required super.parent,
     super.refName,
-    required super.childGroups,
+    required VirtualWidget child,
   }) : super(
           commonProps: null,
           repeatData: null,
+          childGroups: {
+            'child': [child]
+          },
         );
 
   @override

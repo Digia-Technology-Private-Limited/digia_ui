@@ -5,7 +5,6 @@ import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../components/border/divider_with_pattern/divider_with_pattern.dart';
 import '../models/custom_flutter_types.dart';
 import 'color_util.dart';
 import 'functional_util.dart';
