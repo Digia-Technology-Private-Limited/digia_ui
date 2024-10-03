@@ -5,6 +5,7 @@ import '../utils/types.dart';
 import 'base/action.dart' as an;
 import 'base/action_flow.dart';
 import 'base/processor.dart';
+import 'callRestApi/processor.dart';
 import 'controlDrawer/processor.dart';
 import 'copyToClipBoard/processor.dart';
 import 'delay/processor.dart';
@@ -50,7 +51,9 @@ class ActionProcessorFactory {
   ActionProcessor getProcessor(an.Action action) {
     switch (action.actionType) {
       case an.ActionType.callRestApi:
-      // return CallRestApiProcessor();
+        return CallRestApiProcessor(
+          executeActionFlow: dependencies.executeActionFlow,
+        );
       case an.ActionType.controlDrawer:
         return ControlDrawerProcessor();
       case an.ActionType.copyToClipBoard:

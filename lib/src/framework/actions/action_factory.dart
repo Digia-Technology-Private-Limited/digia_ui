@@ -3,6 +3,7 @@ import '../utils/functional_util.dart';
 import '../utils/json_util.dart';
 import '../utils/types.dart';
 import 'base/action.dart';
+import 'callRestApi/action.dart';
 import 'controlDrawer/action.dart';
 import 'copyToClipBoard/action.dart';
 import 'delay/action.dart';
@@ -30,7 +31,7 @@ class ActionFactory {
 
     switch (actionType) {
       case ActionType.callRestApi:
-      // action = CallRestApiAction.fromJson(actionData);
+        action = CallRestApiAction.fromJson(actionData);
       case ActionType.copyToClipBoard:
         action = CopyToClipBoardAction.fromJson(actionData);
       case ActionType.controlDrawer:
