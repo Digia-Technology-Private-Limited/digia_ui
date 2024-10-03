@@ -45,7 +45,7 @@ class DUIPageDefinition {
             as$<JsonLike>(p0).maybe(const VariablesJsonConverter().fromJson),
       ),
       layout: as$<JsonLike>(json.valueFor('layout.root')).maybe(
-        (p0) => (root: VWNodeData.fromJson(p0)),
+        (p0) => (root: VWData.fromJson(p0)),
       ),
       pageDataSource: as$<JsonLike>(json.valueFor('actions.onPageLoad')),
       onPageLoad: as$<JsonLike>(json.valueFor('actions.onPageLoadAction'))
