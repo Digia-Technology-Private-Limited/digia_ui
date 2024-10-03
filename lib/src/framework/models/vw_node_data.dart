@@ -28,8 +28,11 @@ class VWNodeData {
   final Map<String, List<VWNodeData>>? childGroups;
   final VWRepeatData? repeatData;
   final String? refName;
-  // Applicable only when category is 'state'
+  // Applicable only when nodeType is 'state'
   final Map<String, VariableDef> initStateDefs;
+  // Applicable only when nodeType is 'component'
+  final String? componentId;
+  final JsonLike? componentargs;
 
   VWNodeData({
     required this.nodeType,
@@ -40,6 +43,8 @@ class VWNodeData {
     required this.repeatData,
     required this.refName,
     required this.initStateDefs,
+    required this.componentId,
+    required this.componentargs,
   });
 
   factory VWNodeData.fromJson(Map<String, Object?> json) {
@@ -69,6 +74,8 @@ class VWNodeData {
       initStateDefs: as$<JsonLike>(json['initStateDefs'])
               .maybe(const VariablesJsonConverter().fromJson) ??
           {},
+      componentId: as$<String>(json['componentId']),
+      componentargs: as$<JsonLike>(json['componentArgs']),
     );
   }
 

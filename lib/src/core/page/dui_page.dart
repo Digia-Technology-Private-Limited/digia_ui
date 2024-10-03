@@ -5,10 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../digia_ui.dart';
 import '../../Utils/extensions.dart';
 import '../../components/dui_widget_scope.dart';
-import '../../framework/expr/default_scope_context.dart';
-import '../../framework/render_payload.dart';
-import '../../framework/utils/functional_util.dart';
-import '../../framework/virtual_widget_registry.dart';
 import 'dui_page_event.dart';
 
 class DUIPage extends StatelessWidget {
@@ -84,14 +80,14 @@ class _DUIScreenState extends State<_DUIScreen> {
               )));
             }
 
-            return state.props.layout?.root
-                    .maybe((p0) =>
-                        VirtualWidgetRegistry.instance.createWidget(p0, null))
-                    ?.toWidget(RenderPayload(
-                        buildContext: context,
-                        scopeContext: DefaultScopeContext(variables: {}))) ??
-                Center(
-                    child: Text('Props not found for page: ${state.pageUid}'));
+            // return state.props.layout?.root
+            //         .maybe((p0) =>
+            //             VirtualWidgetRegistry.instance.createWidget(p0, null))
+            //         ?.toWidget(RenderPayload(
+            //             buildContext: context,
+            //             scopeContext: DefaultScopeContext(variables: {}))) ??
+            return Center(
+                child: Text('Props not found for page: ${state.pageUid}'));
           }());
     });
   }

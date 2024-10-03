@@ -1,9 +1,9 @@
 import 'package:flutter/painting.dart';
 
-import 'base/virtual_state_container_widget.dart';
 import 'base/virtual_widget.dart';
 import 'models/types.dart';
 import 'models/vw_node_data.dart';
+import 'state/virtual_state_container_widget.dart';
 import 'virtual_widget_registry.dart';
 import 'widget_props/app_bar_props.dart';
 import 'widget_props/custom_scroll_view_props.dart';
@@ -70,7 +70,7 @@ import 'widgets/web_view.dart';
 import 'widgets/wrap.dart';
 import 'widgets/youtube_player.dart';
 
-Map<String, List<VirtualWidget>>? _createChildGroups(
+Map<String, List<VirtualWidget>>? createChildGroups(
     Map<String, List<VWNodeData>>? childGroups,
     VirtualWidget? parent,
     VirtualWidgetRegistry registry) {
@@ -93,7 +93,7 @@ VirtualStateContainerWidget stateContainerBuilder(
     refName: data.refName,
     parent: parent,
     initStateDefs: data.initStateDefs,
-    childGroups: _createChildGroups(data.childGroups, parent, registry),
+    childGroups: createChildGroups(data.childGroups, parent, registry),
   );
 }
 
@@ -121,7 +121,7 @@ VWTextFormField textFormFieldBuilder(
     props: data.props,
     commonProps: data.commonProps,
     parent: parent,
-    childGroups: _createChildGroups(data.childGroups, parent, registry),
+    childGroups: createChildGroups(data.childGroups, parent, registry),
     refName: data.refName,
   );
 }
@@ -132,7 +132,7 @@ VWContainer containerBuilder(
     props: data.props,
     commonProps: data.commonProps,
     parent: parent,
-    childGroups: _createChildGroups(data.childGroups, parent, registry),
+    childGroups: createChildGroups(data.childGroups, parent, registry),
     refName: data.refName,
   );
 }
@@ -181,7 +181,7 @@ VWFlex flexBuilder(
     commonProps: data.commonProps,
     parent: parent,
     repeatData: data.repeatData,
-    childGroups: _createChildGroups(data.childGroups, parent, registry),
+    childGroups: createChildGroups(data.childGroups, parent, registry),
     refName: data.refName,
   );
 }
@@ -195,7 +195,7 @@ VWFlexFit flexFitBuilder(
     props: data.props,
     parent: parent,
     refName: data.refName,
-    childGroups: _createChildGroups(data.childGroups, parent, registry),
+    childGroups: createChildGroups(data.childGroups, parent, registry),
   );
 }
 
@@ -206,7 +206,7 @@ VWListView listViewBuilder(
     commonProps: data.commonProps,
     parent: parent,
     repeatData: data.repeatData,
-    childGroups: _createChildGroups(data.childGroups, parent, registry),
+    childGroups: createChildGroups(data.childGroups, parent, registry),
     refName: data.refName,
   );
 }
@@ -298,7 +298,7 @@ VWStack stackBuilder(
     props: data.props,
     commonProps: data.commonProps,
     parent: parent,
-    childGroups: _createChildGroups(data.childGroups, parent, registry),
+    childGroups: createChildGroups(data.childGroups, parent, registry),
     refName: data.refName,
   );
 }
@@ -433,7 +433,7 @@ VWDrawer drawerBuilder(
     commonProps: data.commonProps,
     parent: parent,
     refName: data.refName,
-    childGroups: _createChildGroups(data.childGroups, parent, registry),
+    childGroups: createChildGroups(data.childGroups, parent, registry),
   );
 }
 
@@ -443,7 +443,7 @@ VWScaffold scaffoldBuilder(
     props: data.props,
     commonProps: data.commonProps,
     parent: parent,
-    childGroups: _createChildGroups(data.childGroups, parent, registry),
+    childGroups: createChildGroups(data.childGroups, parent, registry),
   );
 }
 
@@ -453,7 +453,7 @@ VWSafeArea safeAreaBuilder(
     props: data.props,
     commonProps: data.commonProps,
     parent: parent,
-    childGroups: _createChildGroups(data.childGroups, parent, registry),
+    childGroups: createChildGroups(data.childGroups, parent, registry),
     refName: data.refName,
   );
 }
@@ -465,7 +465,7 @@ VWGridView gridViewBuilder(
     commonProps: data.commonProps,
     parent: parent,
     repeatData: data.repeatData,
-    childGroups: _createChildGroups(data.childGroups, parent, registry),
+    childGroups: createChildGroups(data.childGroups, parent, registry),
     refName: data.refName,
   );
 }
@@ -487,7 +487,7 @@ VWExpandable expandableBuilder(
     commonProps: data.commonProps,
     parent: parent,
     refName: data.refName,
-    childGroups: _createChildGroups(data.childGroups, parent, registry),
+    childGroups: createChildGroups(data.childGroups, parent, registry),
   );
 }
 
@@ -498,7 +498,7 @@ VWWrap wrapBuilder(
     commonProps: data.commonProps,
     parent: parent,
     refName: data.refName,
-    childGroups: _createChildGroups(data.childGroups, parent, registry),
+    childGroups: createChildGroups(data.childGroups, parent, registry),
     repeatData: data.repeatData,
   );
 }
@@ -538,7 +538,7 @@ VWTimer timerBuilder(
     commonProps: data.commonProps,
     parent: parent,
     refName: data.refName,
-    childGroups: _createChildGroups(data.childGroups, parent, registry),
+    childGroups: createChildGroups(data.childGroups, parent, registry),
   );
 }
 
@@ -549,7 +549,7 @@ VWAsyncBuilder asyncBuilderBuilder(
     commonProps: data.commonProps,
     parent: parent,
     refName: data.refName,
-    childGroups: _createChildGroups(data.childGroups, parent, registry),
+    childGroups: createChildGroups(data.childGroups, parent, registry),
   );
 }
 
@@ -560,7 +560,7 @@ VWStreamBuilder streamBuilderBuilder(
     commonProps: data.commonProps,
     parent: parent,
     refName: data.refName,
-    childGroups: _createChildGroups(data.childGroups, parent, registry),
+    childGroups: createChildGroups(data.childGroups, parent, registry),
   );
 }
 
@@ -571,7 +571,7 @@ VWRefreshIndicator refreshIndicatorBuilder(
     commonProps: data.commonProps,
     parent: parent,
     refName: data.refName,
-    childGroups: _createChildGroups(data.childGroups, parent, registry),
+    childGroups: createChildGroups(data.childGroups, parent, registry),
     repeatData: data.repeatData,
   );
 }
@@ -583,7 +583,7 @@ VWOpacity opacityBuilder(
     commonProps: data.commonProps,
     parent: parent,
     refName: data.refName,
-    childGroups: _createChildGroups(data.childGroups, parent, registry),
+    childGroups: createChildGroups(data.childGroups, parent, registry),
     repeatData: data.repeatData,
   );
 }
@@ -594,7 +594,7 @@ VWTabViewController tabControllerBuilder(
     props: TabViewControllerProps.fromJson(data.props.value),
     commonProps: data.commonProps,
     parent: parent,
-    childGroups: _createChildGroups(data.childGroups, parent, registry),
+    childGroups: createChildGroups(data.childGroups, parent, registry),
     refName: data.refName,
   );
 }
@@ -605,7 +605,7 @@ VWTabBar tabBarBuilder(
     props: data.props,
     commonProps: data.commonProps,
     parent: parent,
-    childGroups: _createChildGroups(data.childGroups, parent, registry),
+    childGroups: createChildGroups(data.childGroups, parent, registry),
     refName: data.refName,
   );
 }
@@ -617,7 +617,7 @@ VWTabViewContent tabViewContentBuilder(
     commonProps: data.commonProps,
     parent: parent,
     // repeatData: data.repeatData,
-    childGroups: _createChildGroups(data.childGroups, parent, registry),
+    childGroups: createChildGroups(data.childGroups, parent, registry),
     refName: data.refName,
   );
 }
@@ -630,7 +630,7 @@ VWSliverAppBar sliverAppBarBuilder(
     parent: parent,
     refName: data.refName,
     repeatData: data.repeatData,
-    childGroups: _createChildGroups(data.childGroups, parent, registry),
+    childGroups: createChildGroups(data.childGroups, parent, registry),
   );
 }
 
@@ -642,7 +642,7 @@ VWCustomScrollView customScrollViewBuilder(
     parent: parent,
     refName: data.refName,
     repeatData: data.repeatData,
-    childGroups: _createChildGroups(data.childGroups, parent, registry),
+    childGroups: createChildGroups(data.childGroups, parent, registry),
   );
 }
 
@@ -654,7 +654,7 @@ VWNestedScrollView nestedScrollViewBuilder(
     parent: parent,
     refName: data.refName,
     repeatData: data.repeatData,
-    childGroups: _createChildGroups(data.childGroups, parent, registry),
+    childGroups: createChildGroups(data.childGroups, parent, registry),
   );
 }
 
@@ -666,6 +666,6 @@ VWSliverList sliverListBuilder(
     parent: parent,
     refName: data.refName,
     repeatData: data.repeatData,
-    childGroups: _createChildGroups(data.childGroups, parent, registry),
+    childGroups: createChildGroups(data.childGroups, parent, registry),
   );
 }
