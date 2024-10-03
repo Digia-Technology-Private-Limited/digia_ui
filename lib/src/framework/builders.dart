@@ -626,7 +626,6 @@ VWTabViewContent tabViewContentBuilder(
   );
 }
 
-
 VWPaginatedListView paginatedListViewBuilder(
     VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
   return VWPaginatedListView(
@@ -648,8 +647,9 @@ VWPaginatedSliverList paginatedSliverListBuilder(
     repeatData: data.repeatData,
     childGroups: _createChildGroups(data.childGroups, parent, registry),
     refName: data.refName,
-);
+  );
 }
+
 VWSliverAppBar sliverAppBarBuilder(
     VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
   return VWSliverAppBar(
