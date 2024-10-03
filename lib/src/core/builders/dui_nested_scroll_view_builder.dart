@@ -39,9 +39,28 @@ class DUINestedScrollView extends BaseStatefulWidget {
 }
 
 class _DUINestedScrollViewState extends DUIWidgetState<DUINestedScrollView> {
+  late ValueNotifier<dynamic> _streamValueNotifier;
+
+  late ScrollController _scrollController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _streamValueNotifier = ValueNotifier<double>(0.0);
+
+    _scrollController = ScrollController(
+      keepScrollOffset: true,
+    );
+    _scrollController.addListener(() {
+      _streamValueNotifier.value = _scrollController.offset;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return NestedScrollView(
+        controller: _scrollController,
         headerSliverBuilder: (cntx, innerBoxIsScrolled) {
           return <Widget>[
             SliverOverlapAbsorber(
@@ -53,9 +72,14 @@ class _DUINestedScrollViewState extends DUIWidgetState<DUINestedScrollView> {
         body: getBodyWidget());
   }
 
+  Stream<dynamic> getListStream(dynamic offSet) {
+    return Stream.value(offSet);
+  }
+
   @override
-  Map<String, Function> getVariables() {
-    return {};
+  void dispose() {
+    _streamValueNotifier.dispose();
+    super.dispose();
   }
 
   Widget? getHeaderWidget(bool innerBoxIsScrolled) {
@@ -66,8 +90,8 @@ class _DUINestedScrollViewState extends DUIWidgetState<DUINestedScrollView> {
     }
 
     final headerWidget = headerWidgetData.let((e) {
-      if(e.isNullOrEmpty) return null;
-      
+      if (e.isNullOrEmpty) return null;
+
       return BracketScope(
           variables: [('innerBoxIsScrolled', innerBoxIsScrolled)],
           builder: DUIJsonWidgetBuilder(
@@ -84,5 +108,12 @@ class _DUINestedScrollViewState extends DUIWidgetState<DUINestedScrollView> {
     }
 
     return DUIWidget(data: bodyWidgetData);
+  }
+
+  @override
+  Map<String, Function> getVariables() {
+    return {
+      'scrollNotifier': () => _streamValueNotifier,
+    };
   }
 }
