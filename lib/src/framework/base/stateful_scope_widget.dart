@@ -26,7 +26,7 @@ class StatefulScopeWidget extends StatefulWidget {
 }
 
 class _StatefulScopeWidgetState extends State<StatefulScopeWidget> {
-  late final StateContext _stateContext;
+  late StateContext _stateContext;
 
   @override
   void initState() {
@@ -46,10 +46,10 @@ class _StatefulScopeWidgetState extends State<StatefulScopeWidget> {
   @override
   void didUpdateWidget(StatefulScopeWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.namespace != oldWidget.namespace) {
-      // If the namespace changes, we need to reinitialize the state context
-      _initializeStateContext();
-    }
+    // if (widget.namespace != oldWidget.namespace) {
+    // If the namespace changes, we need to reinitialize the state context
+    _initializeStateContext();
+    // }
   }
 
   @override
