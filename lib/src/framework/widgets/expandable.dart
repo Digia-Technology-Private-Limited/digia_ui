@@ -19,11 +19,9 @@ class VWExpandable extends VirtualStatelessWidget<Props> {
 
   @override
   Widget render(RenderPayload payload) {
-    if (children == null || children!.isEmpty) return empty();
-
     final header = childOf('header');
-    final collapsed = childOf('collapsed');
-    final expanded = childOf('expanded');
+    final collapsed = childOf('collapsedView');
+    final expanded = childOf('expandedView');
     if (header == null || collapsed == null || expanded == null) return empty();
     final iconProps = props.toProps('icon');
 
@@ -43,7 +41,7 @@ class VWExpandable extends VirtualStatelessWidget<Props> {
         iconPlacement: To.expandablePanelIconPlacement(
             iconProps?.getString('iconPlacement')),
         iconColor: payload.evalColor(props.get('color')),
-        alignment: To.alignment(props.getString('alignment')),
+        alignment: To.alignment(props.get('alignment')),
         animationDuration:
             Duration(milliseconds: props.getInt('animationDuration') ?? 1000),
         collapseIcon: (iconProps?.getMap('collapseIcon') != null)
@@ -53,7 +51,7 @@ class VWExpandable extends VirtualStatelessWidget<Props> {
             ? getIconData(icondataMap: iconProps?.getMap('expandIcon') ?? {})
             : CupertinoIcons.chevron_down,
         hasIcon: props.getBool('hasIcon') ?? true,
-        iconPadding: To.edgeInsets(iconProps?.getMap('iconPadding')),
+        iconPadding: To.edgeInsets(iconProps?.get('iconPadding')),
         iconSize: iconProps?.getDouble('size'),
         iconRotationAngle:
             ((iconProps?.getDouble('iconRotationAngle') ?? 90.0) / 180) * pi,

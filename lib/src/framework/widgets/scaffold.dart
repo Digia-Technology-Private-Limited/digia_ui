@@ -88,7 +88,9 @@ class VWScaffold extends VirtualStatelessWidget<Props> {
 
   VirtualWidget? _drawerIcon() {
     final child = childOf('drawer');
+
     if (child == null || child is! VWDrawer) {
+
       return null;
     }
 
@@ -99,7 +101,9 @@ class VWScaffold extends VirtualStatelessWidget<Props> {
 
   VirtualWidget? _endDrawerIcon() {
     final child = childOf('endDrawer');
+
     if (child == null || child is! VWDrawer) {
+
       return null;
     }
 

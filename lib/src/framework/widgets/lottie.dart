@@ -4,7 +4,6 @@ import 'package:lottie/lottie.dart';
 import '../base/virtual_leaf_stateless_widget.dart';
 import '../models/props.dart';
 import '../render_payload.dart';
-import '../utils/flutter_extensions.dart';
 import '../utils/flutter_type_converters.dart';
 
 class VWLottie extends VirtualLeafStatelessWidget<Props> {
@@ -20,8 +19,8 @@ class VWLottie extends VirtualLeafStatelessWidget<Props> {
     final (repeat, reverse) =
         getAnimationType(props.getString('animationType'));
     final alignment = To.alignment(props.get('alignment'));
-    final height = props.getString('height')?.toHeight(payload.buildContext);
-    final width = props.getString('width')?.toWidth(payload.buildContext);
+    final height = props.getDouble('height');
+    final width = props.getDouble('width');
     final animate = payload.eval<bool>(props.get('animate')) ?? true;
     final frameRate = FrameRate(props.getDouble('frameRate') ?? 60);
     final fit = To.boxFit(props.get('fit'));

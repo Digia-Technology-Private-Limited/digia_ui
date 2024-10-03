@@ -6,8 +6,10 @@ import '../base/virtual_leaf_stateless_widget.dart';
 import '../models/props.dart';
 import '../render_payload.dart';
 import '../utils/flutter_type_converters.dart';
+import '../utils/functional_util.dart';
 import '../utils/json_util.dart';
 import '../utils/types.dart';
+import '../widget_props/text_props.dart';
 import 'icon.dart';
 import 'text.dart';
 
@@ -28,7 +30,7 @@ class VWAnimatedButton extends VirtualLeafStatelessWidget<Props> {
       shape: WidgetStateProperty.all(
           To.buttonShape(props.get('shape'), payload.getColor)),
       padding: WidgetStateProperty.all(To.edgeInsets(
-        defaultStyleJson.getMap('padding'),
+        defaultStyleJson.get('padding'),
         or: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
       )),
       elevation: WidgetStateProperty.all(
@@ -97,9 +99,9 @@ class VWAnimatedButton extends VirtualLeafStatelessWidget<Props> {
     }
 
     text = VWText(
-      props: Props(localProps['text'] as Map<String, Object?>? ?? {}),
+      props: as$<JsonLike>(localProps['text']).maybe(TextProps.fromJson) ??
+          TextProps(),
       commonProps: null,
-      parent: null,
     ).toWidget(payload);
 
     final leadingIconProps = localProps['leadingIcon'] as Map<String, Object?>?;

@@ -8,6 +8,7 @@ import '../utils/flutter_type_converters.dart';
 import '../utils/functional_util.dart';
 import '../utils/json_util.dart';
 import '../utils/types.dart';
+import '../widget_props/text_props.dart';
 import 'icon.dart';
 import 'text.dart';
 
@@ -93,7 +94,8 @@ class VWButton extends VirtualLeafStatelessWidget<Props> {
     }
 
     text = VWText(
-      props: Props(localProps['text'] as Map<String, Object?>? ?? {}),
+      props: as$<JsonLike>(localProps['text']).maybe(TextProps.fromJson) ??
+          TextProps(),
       commonProps: null,
       parent: this,
     ).toWidget(payload);

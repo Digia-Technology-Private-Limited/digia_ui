@@ -9,3 +9,5 @@ enum StrokeAlign {
   outside,
   center;
 }
+
+enum DividerLineStyle { solid, dotted, dashed, dashDotted }
