@@ -7,6 +7,7 @@ import 'models/vw_node_data.dart';
 import 'virtual_widget_registry.dart';
 import 'widget_props/app_bar_props.dart';
 import 'widget_props/paginated_list_view_props.dart';
+import 'widget_props/paginated_sliver_list_props.dart';
 import 'widget_props/pin_field_props.dart';
 import 'widget_props/sized_box_props.dart';
 import 'widget_props/spacer_props.dart';
@@ -633,7 +634,7 @@ VWPaginatedListView paginatedListViewBuilder(
 VWPaginatedSliverList paginatedSliverListBuilder(
     VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
   return VWPaginatedSliverList(
-    props: data.props,
+    props: PaginatedSliverListProps.fromJson(data.props.value),
     commonProps: data.commonProps,
     parent: parent,
     repeatData: data.repeatData,

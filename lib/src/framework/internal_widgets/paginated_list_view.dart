@@ -4,7 +4,8 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'scrollable_position_mixin.dart';
 
 class PaginatedListView extends StatefulWidget {
-  final Widget Function(BuildContext context, int index) itemBuilder;
+  final Widget Function(BuildContext context, int index, List<Object>? data)
+      itemBuilder;
   final void Function(int pageKey, PagingController<int, Object> controller)
       pageRequestListener;
 
@@ -13,6 +14,7 @@ class PaginatedListView extends StatefulWidget {
   final bool? isReverse;
   final WidgetBuilder? firstPageLoadingBuilder;
   final WidgetBuilder? newPageLoadingBuilder;
+  final WidgetBuilder? pageErrorBuilder;
 
   const PaginatedListView({
     super.key,
@@ -21,6 +23,7 @@ class PaginatedListView extends StatefulWidget {
     required this.pageRequestListener,
     this.firstPageLoadingBuilder,
     this.newPageLoadingBuilder,
+    this.pageErrorBuilder,
     this.initialScrollPosition,
     this.isReverse,
   });
@@ -63,9 +66,13 @@ class _PaginatedListViewState extends State<PaginatedListView>
       pagingController: _pagingController,
       builderDelegate: PagedChildBuilderDelegate(
         itemBuilder: (context, item, index) =>
-            widget.itemBuilder(context, index),
+            widget.itemBuilder(context, index, _pagingController.itemList),
         firstPageProgressIndicatorBuilder: widget.firstPageLoadingBuilder,
         newPageProgressIndicatorBuilder: widget.newPageLoadingBuilder,
+        firstPageErrorIndicatorBuilder: widget.pageErrorBuilder ??
+            (context) {
+              return const Center(child: Text('first page error'));
+            },
       ),
     );
   }

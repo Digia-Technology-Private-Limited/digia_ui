@@ -40,12 +40,14 @@ class VWPaginatedListView
         initialScrollPosition: initialScrollPosition ?? 'start',
         isReverse: isReverse,
         items: items,
-        itemBuilder: (innerCtx, index) => childToRepeat.toWidget(
-          payload.copyWithChainedContext(
-            _createExprContext(items[index], index),
-            buildContext: innerCtx,
-          ),
-        ),
+        itemBuilder: (innerCtx, index, data) {
+          return childToRepeat.toWidget(
+            payload.copyWithChainedContext(
+              _createExprContext(data?[index], index),
+              buildContext: innerCtx,
+            ),
+          );
+        },
         firstPageLoadingBuilder: childOf('firstPageLoadingWidget').maybe((it) {
           return (innerCtx) {
             return it.toWidget(payload.copyWith(buildContext: innerCtx));
@@ -63,7 +65,8 @@ class VWPaginatedListView
 
           final args = props.args?.map((k, v) => MapEntry(
                 k,
-                v?.evaluate(payload.scopeContext),
+                v?.evaluate(
+                    DefaultScopeContext(variables: {'offset': pageKey})),
               ));
 
           ApiHandler.instance

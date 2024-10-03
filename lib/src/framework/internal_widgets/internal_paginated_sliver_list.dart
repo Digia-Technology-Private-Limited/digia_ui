@@ -2,24 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 class InternalPaginatedSliverList extends StatefulWidget {
-  final Widget Function(BuildContext context, int index)? itemBuilder;
-  final List<Widget> children;
-  final void Function(int pageKey, PagingController<int, Object> controller)?
-      apiRequestHandler;
-  final Widget? firstPageLoadingWidget;
-  final Widget? newpageLoadingWidget;
-  final Widget? pageErrorWidget;
-  final String? newItemsTransformation;
+  final Widget Function(BuildContext context, int index, List<Object>? data)
+      itemBuilder;
 
-  const InternalPaginatedSliverList(
-      {super.key,
-      this.itemBuilder,
-      this.children = const [],
-      this.apiRequestHandler,
-      this.firstPageLoadingWidget,
-      this.newpageLoadingWidget,
-      this.pageErrorWidget,
-      this.newItemsTransformation});
+  final void Function(int pageKey, PagingController<int, Object> controller)
+      pageRequestListener;
+  final WidgetBuilder? firstPageLoadingBuilder;
+  final WidgetBuilder? newPageLoadingBuilder;
+  final WidgetBuilder? pageErrorBuilder;
+  final List<Object> items;
+
+  const InternalPaginatedSliverList({
+    super.key,
+    required this.itemBuilder,
+    required this.items,
+    required this.pageRequestListener,
+    this.firstPageLoadingBuilder,
+    this.newPageLoadingBuilder,
+    this.pageErrorBuilder,
+  });
 
   @override
   State<StatefulWidget> createState() => _InternalPaginatedSliverListState();
@@ -27,63 +28,43 @@ class InternalPaginatedSliverList extends StatefulWidget {
 
 class _InternalPaginatedSliverListState
     extends State<InternalPaginatedSliverList> {
-  final ScrollController _scrollController = ScrollController();
-  final PagingController<int, Object> _pagingController =
-      PagingController(firstPageKey: 1);
+  late PagingController<int, Object> _pagingController;
 
   @override
   void initState() {
+    _pagingController = PagingController.fromValue(
+      PagingState(itemList: widget.items, nextPageKey: 1),
+      firstPageKey: 0,
+    );
     super.initState();
-    _pagingController.addPageRequestListener((pageKey) {
-      if (widget.apiRequestHandler != null) {
-        widget.apiRequestHandler!(pageKey, _pagingController);
-      }
-    });
-  }
 
-  @override
-  void didChangeDependencies() {
-    // final items =
-    //     createDataItemsForDynamicChildren(data: widget.data, context: context);
-    // final items=widget.itemBuilder;
-    // _pagingController.value = PagingState(nextPageKey: 2, itemList: items);
-
-    super.didChangeDependencies();
+    _pagingController.addPageRequestListener(
+      (pageKey) => widget.pageRequestListener(
+        pageKey,
+        _pagingController,
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    if (widget.itemBuilder != null) {
-      return PagedSliverList(
-        pagingController: _pagingController,
-        builderDelegate: PagedChildBuilderDelegate(
-          itemBuilder: (cntx, item, index) {
-            return widget.itemBuilder!.call(cntx, index);
-          },
-          firstPageProgressIndicatorBuilder: (cntx) =>
-              widget.firstPageLoadingWidget ??
-              const Center(child: CircularProgressIndicator()),
-          newPageProgressIndicatorBuilder: (cntx) =>
-              widget.newpageLoadingWidget ??
-              const Center(child: CircularProgressIndicator()),
-          firstPageErrorIndicatorBuilder: (cntx) =>
-              widget.pageErrorWidget ??
-              const Center(child: Text('first page error')),
-        ),
-      );
-    } else {
-      return SliverList.builder(
-        itemCount: widget.children.length,
-        itemBuilder: (cntx, index) {
-          return widget.children[index];
-        },
-      );
-    }
+    return PagedSliverList(
+      pagingController: _pagingController,
+      builderDelegate: PagedChildBuilderDelegate(
+        itemBuilder: (cntx, item, index) =>
+            widget.itemBuilder(context, index, _pagingController.itemList),
+        firstPageProgressIndicatorBuilder: widget.firstPageLoadingBuilder,
+        newPageProgressIndicatorBuilder: widget.newPageLoadingBuilder,
+        firstPageErrorIndicatorBuilder: widget.pageErrorBuilder ??
+            (context) {
+              return const Center(child: Text('first page error'));
+            },
+      ),
+    );
   }
 
   @override
   void dispose() {
-    _scrollController.dispose();
     _pagingController.dispose();
     super.dispose();
   }
