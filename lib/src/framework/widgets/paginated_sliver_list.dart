@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/action/action_handler.dart';
 import '../../core/action/api_handler.dart';
-import '../base/virtual_stateless_widget.dart';
+import '../base/virtual_sliver.dart';
 import '../expr/default_scope_context.dart';
 import '../expr/scope_context.dart';
 import '../internal_widgets/internal_paginated_sliver_list.dart';
@@ -10,8 +10,7 @@ import '../render_payload.dart';
 import '../utils/functional_util.dart';
 import '../widget_props/paginated_sliver_list_props.dart';
 
-class VWPaginatedSliverList
-    extends VirtualStatelessWidget<PaginatedSliverListProps> {
+class VWPaginatedSliverList extends VirtualSliver<PaginatedSliverListProps> {
   VWPaginatedSliverList({
     required super.props,
     required super.commonProps,
