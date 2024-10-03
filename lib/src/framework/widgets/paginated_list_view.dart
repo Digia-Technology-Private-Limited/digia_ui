@@ -6,12 +6,14 @@ import '../base/extensions.dart';
 import '../base/virtual_stateless_widget.dart';
 import '../expr/default_scope_context.dart';
 import '../expr/scope_context.dart';
-import '../internal_widgets/internal_paginated_list_view.dart';
-import '../models/props.dart';
+import '../internal_widgets/internal_list_view.dart';
+import '../internal_widgets/paginated_list_view.dart';
 import '../render_payload.dart';
-import '../utils/flutter_type_converters.dart';
+import '../utils/functional_util.dart';
+import '../widget_props/paginated_list_view_props.dart';
 
-class VWPaginatedListView extends VirtualStatelessWidget<Props> {
+class VWPaginatedListView
+    extends VirtualStatelessWidget<PaginatedListViewProps> {
   VWPaginatedListView({
     required super.props,
     required super.commonProps,
@@ -27,48 +29,42 @@ class VWPaginatedListView extends VirtualStatelessWidget<Props> {
   Widget render(RenderPayload payload) {
     if (children == null || children!.isEmpty) return empty();
 
-    final initialScrollPosition =
-        payload.eval<String>(props.getString('initialScrollPosition'));
-    final isReverse = payload.eval<bool>(props.getBool('reverse'));
+    final initialScrollPosition = payload.evalExpr(props.initialScrollPosition);
+    final isReverse = payload.evalExpr(props.reverse) ?? false;
 
     if (shouldRepeatChild) {
       final childToRepeat = children!.first;
       final items = payload.evalRepeatData(repeatData!);
 
-      return InternalPaginatedListView(
-        firstPageLoadingWidget:
-            childOf('firstPageLoadingWidget')?.toWidget(payload),
-        newpageLoadingWidget:
-            childOf('newPageLoadingWidget')?.toWidget(payload),
-        pageErrorWidget: childOf('pageErrorWidget')?.toWidget(payload),
+      return PaginatedListView(
         initialScrollPosition: initialScrollPosition ?? 'start',
         isReverse: isReverse,
-        scrollDirection: To.axis(props.get('scrollDirection')) ?? Axis.vertical,
-        physics: To.scrollPhysics(props.get('allowScroll')),
-        shrinkWrap: props.getBool('shrinkWrap') ?? false,
-        itemBuilder: (buildContext, index) => childToRepeat.toWidget(
+        items: items,
+        itemBuilder: (innerCtx, index) => childToRepeat.toWidget(
           payload.copyWithChainedContext(
             _createExprContext(items[index], index),
+            buildContext: innerCtx,
           ),
         ),
-        apiRequestHandler: (pageKey, controller) {
-          final apiDataSourceId = props.getString('dataSource.id');
-          Map<String, Object?>? apiDataSourceArgs =
-              props.getMap('dataSource.args');
-          if (apiDataSourceId == null) {
-            return;
-          }
-          final apiModel = payload.getApiModel(apiDataSourceId);
-          if (apiModel == null) {
-            return;
-          }
-          final args = apiDataSourceArgs?.map((key, value) {
-            final evalue = payload.eval(value,
-                scopeContext:
-                    DefaultScopeContext(variables: {'offset': pageKey}));
-            final dvalue = apiModel.variables?[key]?.defaultValue;
-            return MapEntry(key, evalue ?? dvalue);
-          });
+        firstPageLoadingBuilder: childOf('firstPageLoadingWidget').maybe((it) {
+          return (innerCtx) {
+            return it.toWidget(payload.copyWith(buildContext: innerCtx));
+          };
+        }),
+        newPageLoadingBuilder: childOf('newPageLoadingWidget').maybe((it) {
+          return (innerCtx) {
+            return it.toWidget(payload.copyWith(buildContext: innerCtx));
+          };
+        }),
+        pageRequestListener: (pageKey, controller) {
+          final apiModel = props.apiId.maybe((it) => payload.getApiModel(it));
+
+          if (apiModel == null) return;
+
+          final args = props.args?.map((k, v) => MapEntry(
+                k,
+                v?.evaluate(payload.scopeContext),
+              ));
 
           ApiHandler.instance
               .execute(apiModel: apiModel, args: args)
@@ -81,13 +77,13 @@ class VWPaginatedListView extends VirtualStatelessWidget<Props> {
               'error': null,
             };
 
-            final newItems = props.get('newItemsTransformation') == null
-                ? response['body']
-                : payload.eval<List>(props.get('newItemsTransformation'),
-                    scopeContext:
-                        DefaultScopeContext(variables: {'response': response}));
+            final newItems = props.transformItems?.evaluate(DefaultScopeContext(
+                  variables: {'response': response},
+                  enclosing: payload.scopeContext,
+                )) ??
+                as$<List>(response['body']);
 
-            if (newItems == null || newItems is! List || newItems.isEmpty) {
+            if (newItems == null || newItems.isEmpty) {
               controller.appendLastPage([]);
             } else {
               controller.appendPage(newItems.cast<Object>(), pageKey + 1);
@@ -97,11 +93,10 @@ class VWPaginatedListView extends VirtualStatelessWidget<Props> {
       );
     }
 
-    return InternalPaginatedListView(
-      isReverse: isReverse,
-      scrollDirection: To.axis(props.get('scrollDirection')) ?? Axis.vertical,
-      physics: To.scrollPhysics(props.get('allowScroll')),
-      shrinkWrap: props.getBool('shrinkWrap') ?? false,
+    return InternalListView(
+      reverse: isReverse,
+      initialScrollPosition: initialScrollPosition,
+      itemCount: children?.length ?? 0,
       children: children?.toWidgetArray(payload) ?? [],
     );
   }
@@ -109,8 +104,7 @@ class VWPaginatedListView extends VirtualStatelessWidget<Props> {
   ScopeContext _createExprContext(Object? item, int index) {
     return DefaultScopeContext(variables: {
       'currentItem': item,
-      'index': index
-      // TODO: Add class instance using refName
+      'index': index,
     });
   }
 }

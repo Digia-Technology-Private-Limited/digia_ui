@@ -1,5 +1,7 @@
 import 'package:flutter/widgets.dart';
 
+import 'scrollable_position_mixin.dart';
+
 class InternalListView extends StatefulWidget {
   final Axis scrollDirection;
   final bool reverse;
@@ -25,35 +27,23 @@ class InternalListView extends StatefulWidget {
   State<InternalListView> createState() => _InternalListViewState();
 }
 
-class _InternalListViewState extends State<InternalListView> {
-  late ScrollController _scrollController;
+class _InternalListViewState extends State<InternalListView>
+    with ScrollablePositionMixin {
+  late ScrollController _controller;
 
   @override
   void initState() {
-    _scrollController = ScrollController(
+    _controller = ScrollController(
       keepScrollOffset: true,
     );
     super.initState();
-
-    if (widget.initialScrollPosition == 'end') {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _setInitialScrollPosition();
-      });
-    }
-  }
-
-  void _setInitialScrollPosition() {
-    if (!mounted) return;
-    if (_scrollController.hasClients) {
-      _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
-    }
   }
 
   @override
   Widget build(BuildContext context) {
     if (widget.itemBuilder != null) {
       return ListView.builder(
-        controller: _scrollController,
+        controller: _controller,
         reverse: widget.reverse,
         scrollDirection: widget.scrollDirection,
         physics: widget.physics,
@@ -64,7 +54,7 @@ class _InternalListViewState extends State<InternalListView> {
     }
 
     return ListView(
-      controller: _scrollController,
+      controller: _controller,
       reverse: widget.reverse,
       scrollDirection: widget.scrollDirection,
       physics: widget.physics,
@@ -75,7 +65,7 @@ class _InternalListViewState extends State<InternalListView> {
 
   @override
   void dispose() {
-    _scrollController.dispose();
+    _controller.dispose();
     super.dispose();
   }
 }
