@@ -13,7 +13,7 @@ import '../expr/scope_context.dart';
 import '../internal_widgets/async_builder/controller.dart';
 import '../internal_widgets/async_builder/widget.dart';
 import '../models/page_definition.dart';
-import '../models/vw_node_data.dart';
+import '../models/vw_data.dart';
 import '../render_payload.dart';
 import '../resource_provider.dart';
 import '../state/state_context.dart';
@@ -119,7 +119,7 @@ class _DUIPageContent extends StatefulWidget {
   final String pageId;
   final Map<String, Object?>? args;
   final Map<String, VariableDef?>? initialStateDef;
-  final ({VWNodeData? root})? layout;
+  final ({VWData? root})? layout;
   final VirtualWidgetRegistry registry;
   final ScopeContext? scope;
   final ActionFlow? onPageLoaded;

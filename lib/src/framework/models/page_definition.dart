@@ -3,13 +3,13 @@ import '../actions/base/action_flow.dart';
 import '../utils/functional_util.dart';
 import '../utils/json_util.dart';
 import '../utils/types.dart';
-import 'vw_node_data.dart';
+import 'vw_data.dart';
 
 class DUIPageDefinition {
   final String pageId;
   final Map<String, VariableDef>? pageArgDefs;
   final Map<String, VariableDef>? initStateDefs;
-  final ({VWNodeData? root})? layout;
+  final ({VWData? root})? layout;
   final Map<String, ActionFlow>? actions;
   final JsonLike? pageDataSource;
   final ActionFlow? onPageLoad;

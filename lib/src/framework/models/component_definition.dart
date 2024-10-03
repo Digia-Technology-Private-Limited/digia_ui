@@ -2,13 +2,13 @@ import '../../models/variable_def.dart';
 import '../utils/functional_util.dart';
 import '../utils/json_util.dart';
 import '../utils/types.dart';
-import 'vw_node_data.dart';
+import 'vw_data.dart';
 
 class DUIComponentDefinition {
   final String id;
   final Map<String, VariableDef>? argsDefs;
   final Map<String, VariableDef>? initStateDefs;
-  final ({VWNodeData? root})? layout;
+  final ({VWData? root})? layout;
 
   const DUIComponentDefinition({
     required this.id,
@@ -33,7 +33,7 @@ class DUIComponentDefinition {
             as$<JsonLike>(p0).maybe(const VariablesJsonConverter().fromJson),
       ),
       layout: as$<JsonLike>(json.valueFor('layout.root')).maybe(
-        (p0) => (root: VWNodeData.fromJson(p0)),
+        (p0) => (root: VWData.fromJson(p0)),
       ),
     );
   }

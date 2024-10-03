@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'base/virtual_builder_widget.dart';
 import 'base/virtual_widget.dart';
 import 'builders.dart';
-import 'models/vw_node_data.dart';
+import 'models/vw_data.dart';
 import 'utils/types.dart';
 
 typedef VirtualWidgetBuilder = VirtualWidget Function(
@@ -126,7 +126,7 @@ abstract class VirtualWidgetRegistry {
     required Widget Function(String id, JsonLike? args) componentBuilder,
   }) = DefaultVirtualWidgetRegistry;
 
-  VirtualWidget createWidget(VWNodeData data, VirtualWidget? parent);
+  VirtualWidget createWidget(VWData data, VirtualWidget? parent);
 }
 
 class DefaultVirtualWidgetRegistry implements VirtualWidgetRegistry {
@@ -138,10 +138,11 @@ class DefaultVirtualWidgetRegistry implements VirtualWidgetRegistry {
   }) : builders = Map.from(VirtualWidgetRegistry._defaultBuilders);
 
   @override
-  VirtualWidget createWidget(VWNodeData data, VirtualWidget? parent) {
+  VirtualWidget createWidget(VWData data, VirtualWidget? parent) {
     VirtualWidget widget;
-    switch (data.nodeType) {
-      case NodeType.widget:
+
+    switch (data) {
+      case VWNodeData():
         {
           String type = data.type;
           if (!builders.containsKey(type)) {
@@ -150,13 +151,13 @@ class DefaultVirtualWidgetRegistry implements VirtualWidgetRegistry {
           widget = builders[type]!(data, parent, this);
         }
         break;
-      case NodeType.state:
+      case VWStateData():
         widget = stateContainerBuilder(data, parent, this);
         break;
-      case NodeType.component:
+      case VWComponentData():
         widget = VirtualBuilderWidget((_) => componentBuilder(
-              data.componentId!,
-              data.componentargs,
+              data.id,
+              data.args,
             ));
         break;
     }

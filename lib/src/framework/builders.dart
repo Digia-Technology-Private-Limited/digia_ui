@@ -2,25 +2,22 @@ import 'package:flutter/painting.dart';
 
 import 'base/virtual_widget.dart';
 import 'models/types.dart';
-import 'models/vw_node_data.dart';
+import 'models/vw_data.dart';
 import 'state/virtual_state_container_widget.dart';
 import 'virtual_widget_registry.dart';
 import 'widget_props/app_bar_props.dart';
-import 'widget_props/paginated_list_view_props.dart';
-import 'widget_props/paginated_sliver_list_props.dart';
 import 'widget_props/custom_scroll_view_props.dart';
 import 'widget_props/nested_scroll_view_props.dart';
+import 'widget_props/paginated_list_view_props.dart';
+import 'widget_props/paginated_sliver_list_props.dart';
 import 'widget_props/pin_field_props.dart';
 import 'widget_props/sized_box_props.dart';
 import 'widget_props/sliver_app_bar_props.dart';
 import 'widget_props/spacer_props.dart';
-
 import 'widget_props/styled_divider_props.dart';
 import 'widget_props/switch_props.dart';
-
 import 'widget_props/tab_view_content_props.dart';
 import 'widget_props/tab_view_controller_props.dart';
-
 import 'widget_props/text_props.dart';
 import 'widget_props/timer_props.dart';
 import 'widgets/animated_button.dart';
@@ -75,7 +72,7 @@ import 'widgets/wrap.dart';
 import 'widgets/youtube_player.dart';
 
 Map<String, List<VirtualWidget>>? createChildGroups(
-    Map<String, List<VWNodeData>>? childGroups,
+    Map<String, List<VWData>>? childGroups,
     VirtualWidget? parent,
     VirtualWidgetRegistry registry) {
   if (childGroups == null || childGroups.isEmpty) return null;
@@ -89,7 +86,7 @@ Map<String, List<VirtualWidget>>? createChildGroups(
 }
 
 VirtualStateContainerWidget stateContainerBuilder(
-  VWNodeData data,
+  VWStateData data,
   VirtualWidget? parent,
   VirtualWidgetRegistry registry,
 ) {
@@ -633,7 +630,7 @@ VWPaginatedListView paginatedListViewBuilder(
     commonProps: data.commonProps,
     parent: parent,
     repeatData: data.repeatData,
-    childGroups: _createChildGroups(data.childGroups, parent, registry),
+    childGroups: createChildGroups(data.childGroups, parent, registry),
     refName: data.refName,
   );
 }
@@ -645,7 +642,7 @@ VWPaginatedSliverList paginatedSliverListBuilder(
     commonProps: data.commonProps,
     parent: parent,
     repeatData: data.repeatData,
-    childGroups: _createChildGroups(data.childGroups, parent, registry),
+    childGroups: createChildGroups(data.childGroups, parent, registry),
     refName: data.refName,
   );
 }
