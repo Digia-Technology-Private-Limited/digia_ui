@@ -6,9 +6,10 @@ import 'models/types.dart';
 import 'models/vw_node_data.dart';
 import 'virtual_widget_registry.dart';
 import 'widget_props/app_bar_props.dart';
+import 'widget_props/paginated_list_view_props.dart';
+import 'widget_props/paginated_sliver_list_props.dart';
 import 'widget_props/custom_scroll_view_props.dart';
 import 'widget_props/nested_scroll_view_props.dart';
-import 'widget_props/paginated_list_view_props.dart';
 import 'widget_props/pin_field_props.dart';
 import 'widget_props/sized_box_props.dart';
 import 'widget_props/sliver_app_bar_props.dart';
@@ -625,6 +626,30 @@ VWTabViewContent tabViewContentBuilder(
   );
 }
 
+VWPaginatedListView paginatedListViewBuilder(
+    VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
+  return VWPaginatedListView(
+    props: PaginatedListViewProps.fromJson(data.props.value),
+    commonProps: data.commonProps,
+    parent: parent,
+    repeatData: data.repeatData,
+    childGroups: _createChildGroups(data.childGroups, parent, registry),
+    refName: data.refName,
+  );
+}
+
+VWPaginatedSliverList paginatedSliverListBuilder(
+    VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
+  return VWPaginatedSliverList(
+    props: PaginatedSliverListProps.fromJson(data.props.value),
+    commonProps: data.commonProps,
+    parent: parent,
+    repeatData: data.repeatData,
+    childGroups: _createChildGroups(data.childGroups, parent, registry),
+    refName: data.refName,
+  );
+}
+
 VWSliverAppBar sliverAppBarBuilder(
     VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
   return VWSliverAppBar(
@@ -670,29 +695,5 @@ VWSliverList sliverListBuilder(
     refName: data.refName,
     repeatData: data.repeatData,
     childGroups: _createChildGroups(data.childGroups, parent, registry),
-  );
-}
-
-VWPaginatedListView paginatedListViewBuilder(
-    VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
-  return VWPaginatedListView(
-    props: PaginatedListViewProps.fromJson(data.props.value),
-    commonProps: data.commonProps,
-    parent: parent,
-    repeatData: data.repeatData,
-    childGroups: _createChildGroups(data.childGroups, parent, registry),
-    refName: data.refName,
-  );
-}
-
-VWPaginatedSliverList paginatedSliverListBuilder(
-    VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
-  return VWPaginatedSliverList(
-    props: data.props,
-    commonProps: data.commonProps,
-    parent: parent,
-    repeatData: data.repeatData,
-    childGroups: _createChildGroups(data.childGroups, parent, registry),
-    refName: data.refName,
   );
 }

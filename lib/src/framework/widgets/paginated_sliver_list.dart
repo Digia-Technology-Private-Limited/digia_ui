@@ -2,15 +2,16 @@ import 'package:flutter/material.dart';
 
 import '../../core/action/action_handler.dart';
 import '../../core/action/api_handler.dart';
-import '../base/extensions.dart';
 import '../base/virtual_stateless_widget.dart';
 import '../expr/default_scope_context.dart';
 import '../expr/scope_context.dart';
 import '../internal_widgets/internal_paginated_sliver_list.dart';
-import '../models/props.dart';
 import '../render_payload.dart';
+import '../utils/functional_util.dart';
+import '../widget_props/paginated_sliver_list_props.dart';
 
-class VWPaginatedSliverList extends VirtualStatelessWidget<Props> {
+class VWPaginatedSliverList
+    extends VirtualStatelessWidget<PaginatedSliverListProps> {
   VWPaginatedSliverList({
     required super.props,
     required super.commonProps,
@@ -31,34 +32,40 @@ class VWPaginatedSliverList extends VirtualStatelessWidget<Props> {
       final items = payload.evalRepeatData(repeatData!);
 
       return InternalPaginatedSliverList(
-        firstPageLoadingWidget:
-            childOf('firstPageLoadingWidget')?.toWidget(payload),
-        newpageLoadingWidget:
-            childOf('newPageLoadingWidget')?.toWidget(payload),
-        pageErrorWidget: childOf('pageErrorWidget')?.toWidget(payload),
-        itemBuilder: (buildContext, index) => childToRepeat.toWidget(
-          payload.copyWithChainedContext(
-            _createExprContext(items[index], index),
-          ),
-        ),
-        apiRequestHandler: (pageKey, controller) {
-          final apiDataSourceId = props.getString('dataSource.id');
-          Map<String, Object?>? apiDataSourceArgs =
-              props.getMap('dataSource.args');
-          if (apiDataSourceId == null) {
-            return;
-          }
-          final apiModel = payload.getApiModel(apiDataSourceId);
-          if (apiModel == null) {
-            return;
-          }
-          final args = apiDataSourceArgs?.map((key, value) {
-            final evalue = payload.eval(value,
-                scopeContext:
-                    DefaultScopeContext(variables: {'offset': pageKey}));
-            final dvalue = apiModel.variables?[key]?.defaultValue;
-            return MapEntry(key, evalue ?? dvalue);
-          });
+        items: items,
+        firstPageLoadingBuilder: childOf('firstPageLoadingWidget').maybe((it) {
+          return (innerCtx) {
+            return it.toWidget(payload.copyWith(buildContext: innerCtx));
+          };
+        }),
+        newPageLoadingBuilder: childOf('newPageLoadingWidget').maybe((it) {
+          return (innerCtx) {
+            return it.toWidget(payload.copyWith(buildContext: innerCtx));
+          };
+        }),
+        pageErrorBuilder: childOf('pageErrorWidget').maybe((it) {
+          return (innerCtx) {
+            return it.toWidget(payload.copyWith(buildContext: innerCtx));
+          };
+        }),
+        itemBuilder: (innerCtx, index, data) {
+          return childToRepeat.toWidget(
+            payload.copyWithChainedContext(
+              _createExprContext(data?[index], index),
+              buildContext: innerCtx,
+            ),
+          );
+        },
+        pageRequestListener: (pageKey, controller) {
+          final apiModel = props.apiId.maybe((it) => payload.getApiModel(it));
+
+          if (apiModel == null) return;
+
+          final args = props.args?.map((k, v) => MapEntry(
+                k,
+                v?.evaluate(
+                    DefaultScopeContext(variables: {'offset': pageKey})),
+              ));
 
           ApiHandler.instance
               .execute(apiModel: apiModel, args: args)
@@ -71,13 +78,13 @@ class VWPaginatedSliverList extends VirtualStatelessWidget<Props> {
               'error': null,
             };
 
-            final newItems = props.get('newItemsTransformation') == null
-                ? response['body']
-                : payload.eval<List>(props.get('newItemsTransformation'),
-                    scopeContext:
-                        DefaultScopeContext(variables: {'response': response}));
+            final newItems = props.transformItems?.evaluate(DefaultScopeContext(
+                  variables: {'response': response},
+                  enclosing: payload.scopeContext,
+                )) ??
+                as$<List>(response['body']);
 
-            if (newItems == null || newItems is! List || newItems.isEmpty) {
+            if (newItems == null || newItems.isEmpty) {
               controller.appendLastPage([]);
             } else {
               controller.appendPage(newItems.cast<Object>(), pageKey + 1);
@@ -87,8 +94,11 @@ class VWPaginatedSliverList extends VirtualStatelessWidget<Props> {
       );
     }
 
-    return InternalPaginatedSliverList(
-      children: children?.toWidgetArray(payload) ?? [],
+    return SliverList.builder(
+      itemCount: children!.length,
+      itemBuilder: (cntx, index) {
+        return children![index].toWidget(payload);
+      },
     );
   }
 
