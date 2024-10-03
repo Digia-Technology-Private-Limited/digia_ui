@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import '../models/types.dart';
-import '../utils/object_util.dart';
 import '../utils/types.dart';
 
 class SwitchProps {

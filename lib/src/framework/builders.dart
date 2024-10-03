@@ -8,8 +8,11 @@ import 'virtual_widget_registry.dart';
 import 'widget_props/app_bar_props.dart';
 import 'widget_props/paginated_list_view_props.dart';
 import 'widget_props/paginated_sliver_list_props.dart';
+import 'widget_props/custom_scroll_view_props.dart';
+import 'widget_props/nested_scroll_view_props.dart';
 import 'widget_props/pin_field_props.dart';
 import 'widget_props/sized_box_props.dart';
+import 'widget_props/sliver_app_bar_props.dart';
 import 'widget_props/spacer_props.dart';
 
 import 'widget_props/styled_divider_props.dart';
@@ -29,6 +32,7 @@ import 'widgets/calendar.dart';
 import 'widgets/checkbox.dart';
 import 'widgets/circular_progress_bar.dart';
 import 'widgets/container.dart';
+import 'widgets/custom_scroll_view.dart';
 import 'widgets/drawer.dart';
 import 'widgets/expandable.dart';
 import 'widgets/flex.dart';
@@ -41,6 +45,7 @@ import 'widgets/image.dart';
 import 'widgets/linear_progress_bar.dart';
 import 'widgets/list_view.dart';
 import 'widgets/lottie.dart';
+import 'widgets/nested_scroll_view.dart';
 import 'widgets/opacity.dart';
 import 'widgets/paginated_list_view.dart';
 import 'widgets/paginated_sliver_list.dart';
@@ -50,6 +55,8 @@ import 'widgets/rich_text.dart';
 import 'widgets/safe_area.dart';
 import 'widgets/scaffold.dart';
 import 'widgets/sized_box.dart';
+import 'widgets/sliver_app_bar.dart';
+import 'widgets/sliver_list.dart';
 import 'widgets/spacer.dart';
 import 'widgets/stack.dart';
 import 'widgets/stream_builder.dart';
@@ -619,6 +626,7 @@ VWTabViewContent tabViewContentBuilder(
   );
 }
 
+
 VWPaginatedListView paginatedListViewBuilder(
     VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
   return VWPaginatedListView(
@@ -640,5 +648,52 @@ VWPaginatedSliverList paginatedSliverListBuilder(
     repeatData: data.repeatData,
     childGroups: _createChildGroups(data.childGroups, parent, registry),
     refName: data.refName,
+);
+}
+VWSliverAppBar sliverAppBarBuilder(
+    VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
+  return VWSliverAppBar(
+    props: SliverAppBarProps.fromJson(data.props.value),
+    commonProps: data.commonProps,
+    parent: parent,
+    refName: data.refName,
+    repeatData: data.repeatData,
+    childGroups: _createChildGroups(data.childGroups, parent, registry),
+  );
+}
+
+VWCustomScrollView customScrollViewBuilder(
+    VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
+  return VWCustomScrollView(
+    props: CustomScrollViewProps.fromJson(data.props.value),
+    commonProps: data.commonProps,
+    parent: parent,
+    refName: data.refName,
+    repeatData: data.repeatData,
+    childGroups: _createChildGroups(data.childGroups, parent, registry),
+  );
+}
+
+VWNestedScrollView nestedScrollViewBuilder(
+    VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
+  return VWNestedScrollView(
+    props: NestedScrollViewProps.fromJson(data.props.value),
+    commonProps: data.commonProps,
+    parent: parent,
+    refName: data.refName,
+    repeatData: data.repeatData,
+    childGroups: _createChildGroups(data.childGroups, parent, registry),
+  );
+}
+
+VWSliverList sliverListBuilder(
+    VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
+  return VWSliverList(
+    props: data.props,
+    commonProps: data.commonProps,
+    parent: parent,
+    refName: data.refName,
+    repeatData: data.repeatData,
+    childGroups: _createChildGroups(data.childGroups, parent, registry),
   );
 }
