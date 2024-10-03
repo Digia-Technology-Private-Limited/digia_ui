@@ -7,6 +7,7 @@ import 'models/vw_node_data.dart';
 import 'virtual_widget_registry.dart';
 import 'widget_props/app_bar_props.dart';
 import 'widget_props/custom_scroll_view_props.dart';
+import 'widget_props/nested_scroll_view_props.dart';
 import 'widget_props/pin_field_props.dart';
 import 'widget_props/sized_box_props.dart';
 import 'widget_props/sliver_app_bar_props.dart';
@@ -648,7 +649,7 @@ VWCustomScrollView customScrollViewBuilder(
 VWNestedScrollView nestedScrollViewBuilder(
     VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
   return VWNestedScrollView(
-    props: data.props,
+    props: NestedScrollViewProps.fromJson(data.props.value),
     commonProps: data.commonProps,
     parent: parent,
     refName: data.refName,

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 import '../../Utils/extensions.dart';
-import '../base/virtual_stateless_widget.dart';
+import '../base/virtual_sliver.dart';
 import '../render_payload.dart';
 import '../widget_props/sliver_app_bar_props.dart';
 
-class VWSliverAppBar extends VirtualStatelessWidget<SliverAppBarProps> {
+class VWSliverAppBar extends VirtualSliver<SliverAppBarProps> {
   VWSliverAppBar({
     required super.props,
     required super.commonProps,

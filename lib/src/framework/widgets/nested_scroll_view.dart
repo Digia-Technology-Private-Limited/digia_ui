@@ -1,14 +1,30 @@
 import 'package:flutter/widgets.dart';
 
-import '../../Utils/extensions.dart';
 import '../base/virtual_stateless_widget.dart';
 import '../expr/default_scope_context.dart';
 import '../expr/scope_context.dart';
-import '../models/props.dart';
 import '../render_payload.dart';
-import '../utils/functional_util.dart';
+import '../widget_props/nested_scroll_view_props.dart';
 
-class VWNestedScrollView extends VirtualStatelessWidget<Props> {
+class NestedScrollViewData extends InheritedWidget {
+  final bool
+      enableOverlapAbsorption; // Replace SomeDataType with your actual data type
+
+  const NestedScrollViewData({
+    super.key,
+    required this.enableOverlapAbsorption,
+    required super.child,
+  });
+
+  static NestedScrollViewData? maybeOf(BuildContext context) {
+    return context.getInheritedWidgetOfExactType<NestedScrollViewData>();
+  }
+
+  @override
+  bool updateShouldNotify(NestedScrollViewData oldWidget) => false;
+}
+
+class VWNestedScrollView extends VirtualStatelessWidget<NestedScrollViewProps> {
   VWNestedScrollView({
     required super.props,
     required super.commonProps,
@@ -20,33 +36,38 @@ class VWNestedScrollView extends VirtualStatelessWidget<Props> {
 
   @override
   Widget render(RenderPayload payload) {
+    final enableOverlapAbsorption =
+        props.enableOverlapAbsorber?.evaluate(payload.scopeContext) ?? true;
+
+    final header = childrenOf('headerWidget')?.firstOrNull;
+    final body = childOf('bodyWidget');
+
     return NestedScrollView(
-      headerSliverBuilder: (cntx, innerBoxIsScrolled) {
-        return <Widget>[
-          SliverOverlapAbsorber(
-            handle: NestedScrollView.sliverOverlapAbsorberHandleFor(cntx),
-            sliver: getHeaderWidget(innerBoxIsScrolled, payload),
-          ),
-        ];
-      },
-      body: childOf('bodyWidget')?.toWidget(payload) ?? empty(),
-    );
-  }
+        headerSliverBuilder: (innerCtx, innerBoxIsScrolled) {
+          final updatedPayload = payload.copyWithChainedContext(
+            _createExprContext(innerBoxIsScrolled),
+            buildContext: innerCtx,
+          );
 
-  Widget? getHeaderWidget(bool innerBoxIsScrolled, RenderPayload payload) {
-    final headerWidgetData = childrenOf('headerWidget');
+          var output = header?.toWidget(updatedPayload) ??
+              SliverToBoxAdapter(child: empty());
 
-    if (headerWidgetData == null) {
-      return const SliverToBoxAdapter(child: SizedBox.shrink());
-    }
+          if (enableOverlapAbsorption) {
+            output = SliverOverlapAbsorber(
+              handle: NestedScrollView.sliverOverlapAbsorberHandleFor(innerCtx),
+              sliver: output,
+            );
+          }
 
-    final headerWidget = headerWidgetData.maybe((e) {
-      if (e.isNullOrEmpty) return null;
-
-      return e.first.toWidget(payload
-          .copyWithChainedContext(_createExprContext(innerBoxIsScrolled)));
-    });
-    return headerWidget;
+          return <Widget>[output];
+        },
+        body: NestedScrollViewData(
+          enableOverlapAbsorption: enableOverlapAbsorption,
+          child: Builder(builder: (innerCtx) {
+            final updatedPayload = payload.copyWith(buildContext: innerCtx);
+            return body?.toWidget(updatedPayload) ?? empty();
+          }),
+        ));
   }
 
   ScopeContext _createExprContext(bool? value) {
