@@ -18,7 +18,7 @@ class StreamBuilderProps {
   factory StreamBuilderProps.fromJson(JsonLike json) {
     var streamRef =
         ExprOr.fromJson<Object>(json.valueFor('streamVariable.name'));
-    if (streamRef?.isExpr ?? false) {
+    if (!(streamRef?.isExpr ?? true)) {
       final streamName = as$<String>(json.valueFor('streamVariable.name'));
       streamRef = ExprOr.fromJson<Object>('\${params.$streamName}');
     }

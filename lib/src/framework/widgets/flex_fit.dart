@@ -2,10 +2,10 @@ import 'package:flutter/widgets.dart';
 
 import '../base/virtual_stateless_widget.dart';
 import '../base/virtual_widget.dart';
-import '../models/props.dart';
 import '../render_payload.dart';
+import '../widget_props/flex_fit_props.dart';
 
-class VWFlexFit extends VirtualStatelessWidget<Props> {
+class VWFlexFit extends VirtualStatelessWidget<FlexFitProps> {
   VWFlexFit({
     required super.props,
     required super.parent,
@@ -16,19 +16,14 @@ class VWFlexFit extends VirtualStatelessWidget<Props> {
           repeatData: null,
         );
 
-  VWFlexFit.fromValues({
-    required String? flexFitType,
-    int flexValue = 1,
+  VWFlexFit.withChild({
+    required FlexFitProps props,
     required VirtualWidget child,
-    required VirtualWidget? parent,
   }) : this(
-          props: Props({
-            'flexFitType': flexFitType,
-            'flexValue': flexValue,
-          }),
-          parent: parent,
+          props: props,
+          parent: null,
           childGroups: {
-            'child': [child]
+            'child': [child],
           },
         );
 
@@ -36,20 +31,20 @@ class VWFlexFit extends VirtualStatelessWidget<Props> {
   Widget render(RenderPayload payload) {
     if (child == null) return empty();
 
-    final flexFitType = props.getString('flexFitType');
-    final flexValue = props.getInt('flexValue');
+    final flexFitType = props.flexFitType;
+    final flexValue = props.flexValue ?? 1;
     final childWidget = child!.toWidget(payload);
 
     if (flexFitType == 'tight') {
       return Expanded(
-        flex: flexValue ?? 1,
+        flex: flexValue,
         child: childWidget,
       );
     }
 
     if (flexFitType == 'loose') {
       return Flexible(
-        flex: flexValue ?? 1,
+        flex: flexValue,
         child: childWidget,
       );
     }

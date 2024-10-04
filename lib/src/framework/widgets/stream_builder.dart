@@ -1,13 +1,14 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
-import '../actions/base/action_flow.dart';
 import '../base/virtual_stateless_widget.dart';
 import '../expr/default_scope_context.dart';
 import '../expr/scope_context.dart';
-import '../models/props.dart';
 import '../render_payload.dart';
+import '../widget_props/stream_builder_props.dart';
 
-class VWStreamBuilder extends VirtualStatelessWidget<Props> {
+class VWStreamBuilder extends VirtualStatelessWidget<StreamBuilderProps> {
   VWStreamBuilder({
     required super.props,
     required super.commonProps,
@@ -18,11 +19,11 @@ class VWStreamBuilder extends VirtualStatelessWidget<Props> {
 
   @override
   Widget render(RenderPayload payload) {
-    final streamDef = props.toProps('streamVariable');
+    final streamDef = payload.evalExpr(props.streamRef);
     if (streamDef == null) return empty();
 
     return StreamBuilder(
-      stream: _makeStream(streamDef, payload),
+      stream: _makeStream(streamDef).stream,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return childOf('loadingWidget')?.toWidget(payload) ??
@@ -31,8 +32,7 @@ class VWStreamBuilder extends VirtualStatelessWidget<Props> {
 
         if (snapshot.hasError) {
           Future.delayed(const Duration(seconds: 0), () async {
-            final actionFlow = ActionFlow.fromJson(props.get('onError'));
-            await payload.executeAction(actionFlow);
+            await payload.executeAction(props.onError);
           });
           return childOf('errorWidget')?.toWidget(payload) ??
               Text(
@@ -43,8 +43,7 @@ class VWStreamBuilder extends VirtualStatelessWidget<Props> {
 
         if (snapshot.connectionState == ConnectionState.active) {
           Future.delayed(const Duration(seconds: 0), () async {
-            final actionFlow = ActionFlow.fromJson(props.get('onSuccess'));
-            await payload.executeAction(actionFlow);
+            await payload.executeAction(props.onSuccess);
           });
           return childOf('listeningWidget')!.toWidget(
             payload.copyWithChainedContext(
@@ -62,15 +61,17 @@ class VWStreamBuilder extends VirtualStatelessWidget<Props> {
     );
   }
 
-  // TODO: Check if this will work.
-  Stream<Object?> _makeStream(Props stream, RenderPayload payload) {
-    final streamName = stream.getString('name');
-    if (streamName == null) {
-      return Stream.error('No source provided');
+  StreamController<Object?> _makeStream(Object? stream) {
+    if (stream is Stream<Object>) {
+      return StreamController<Object>()..addStream(stream);
     }
-    final streamSource = payload.eval('\${params.$streamName}');
-    if (streamSource != null) return streamSource as Stream<Object?>;
-    return Stream.error('Stream not found');
+
+    if (stream is StreamController<Object>) {
+      return stream;
+    }
+
+    return StreamController<Object>()
+      ..addStream(Stream.error('No Stream provided'));
   }
 
   ScopeContext _createExprContext(Object? streamValue) {

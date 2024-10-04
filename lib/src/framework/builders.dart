@@ -7,13 +7,16 @@ import 'state/virtual_state_container_widget.dart';
 import 'virtual_widget_registry.dart';
 import 'widget_props/app_bar_props.dart';
 import 'widget_props/custom_scroll_view_props.dart';
+import 'widget_props/flex_fit_props.dart';
 import 'widget_props/nested_scroll_view_props.dart';
 import 'widget_props/paginated_list_view_props.dart';
 import 'widget_props/paginated_sliver_list_props.dart';
 import 'widget_props/pin_field_props.dart';
+import 'widget_props/safe_area_props.dart';
 import 'widget_props/sized_box_props.dart';
 import 'widget_props/sliver_app_bar_props.dart';
 import 'widget_props/spacer_props.dart';
+import 'widget_props/stream_builder_props.dart';
 import 'widget_props/styled_divider_props.dart';
 import 'widget_props/switch_props.dart';
 import 'widget_props/tab_view_content_props.dart';
@@ -193,7 +196,7 @@ VWFlexFit flexFitBuilder(
   VirtualWidgetRegistry registry,
 ) {
   return VWFlexFit(
-    props: data.props,
+    props: FlexFitProps.fromJson(data.props.value),
     parent: parent,
     refName: data.refName,
     childGroups: createChildGroups(data.childGroups, parent, registry),
@@ -451,9 +454,7 @@ VWScaffold scaffoldBuilder(
 VWSafeArea safeAreaBuilder(
     VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
   return VWSafeArea(
-    props: data.props,
-    commonProps: data.commonProps,
-    parent: parent,
+    props: SafeAreaProps.fromJson(data.props.value),
     childGroups: createChildGroups(data.childGroups, parent, registry),
     refName: data.refName,
   );
@@ -557,7 +558,7 @@ VWAsyncBuilder asyncBuilderBuilder(
 VWStreamBuilder streamBuilderBuilder(
     VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
   return VWStreamBuilder(
-    props: data.props,
+    props: StreamBuilderProps.fromJson(data.props.value),
     commonProps: data.commonProps,
     parent: parent,
     refName: data.refName,

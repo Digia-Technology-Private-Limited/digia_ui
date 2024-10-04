@@ -17,22 +17,29 @@ class ActionFlow {
 
   factory ActionFlow.empty() => ActionFlow(actions: []);
 
-  factory ActionFlow.fromJson(Object? json) {
-    if (json is! JsonLike) return ActionFlow.empty();
+  static ActionFlow? fromJson(Object? json) {
+    if (json is! JsonLike) return null;
 
     final inkwell = NumUtil.toBool(json['inkwell']) ?? true;
 
+    final actions = as$<List>(json['steps'])
+            ?.where((e) => e != null)
+            .map((e) => ActionFactory.fromJson(e))
+            .toList() ??
+        [];
+
+    final analyticsData =
+        as$<List>(json['analyticsData'])?.nonNulls.cast<JsonLike>().toList() ??
+            [];
+
+    // It's possible that events need to be sent, regardless of
+    // whether actions are present or not.
+    if (analyticsData.isEmpty && actions.isEmpty) return null;
+
     return ActionFlow(
-      actions: as$<List>(json['steps'])
-              ?.where((e) => e != null)
-              .map((e) => ActionFactory.fromJson(e))
-              .toList() ??
-          [],
+      actions: actions,
       inkwell: inkwell,
-      analyticsData: as$<List<Object?>>(json['analyticsData'])
-          ?.nonNulls
-          .cast<JsonLike>()
-          .toList(),
+      analyticsData: analyticsData,
     );
   }
 

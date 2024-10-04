@@ -244,18 +244,22 @@ class _DUIPageContentState extends State<_DUIPageContent> {
 
     if (isSuccess) {
       final successAction = ActionFlow.fromJson(action['onSuccess']);
-      await _executeAction(
-        context,
-        successAction,
-        DefaultScopeContext(variables: {'response': respObj}),
-      );
+      if (successAction != null) {
+        await _executeAction(
+          context,
+          successAction,
+          DefaultScopeContext(variables: {'response': respObj}),
+        );
+      }
     } else {
       final errorAction = ActionFlow.fromJson(action['onError']);
-      await _executeAction(
-        context,
-        errorAction,
-        DefaultScopeContext(variables: {'response': respObj}),
-      );
+      if (errorAction != null) {
+        await _executeAction(
+          context,
+          errorAction,
+          DefaultScopeContext(variables: {'response': respObj}),
+        );
+      }
     }
   }
 

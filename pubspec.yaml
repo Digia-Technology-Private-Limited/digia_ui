@@ -62,7 +62,7 @@ dependencies:
   flutter_blurhash: ^0.8.2
   flutter_cache_manager: ^3.3.0
   flutter_html: ^3.0.0-beta.2
-  digia_expr: ^0.0.12
+  # digia_expr: ^0.0.12
   flutter_js: ^0.8.0
   fluttertoast: ^8.2.5
   font_awesome_flutter: ^10.6.0
@@ -103,6 +103,10 @@ dev_dependencies:
     sdk: flutter
   json_serializable: ^6.7.0
   flutter_lints: ^4.0.0
+
+dependency_overrides:
+  digia_expr:
+    path: ../digia_expr/
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

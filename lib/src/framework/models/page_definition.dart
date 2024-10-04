@@ -10,7 +10,6 @@ class DUIPageDefinition {
   final Map<String, VariableDef>? pageArgDefs;
   final Map<String, VariableDef>? initStateDefs;
   final ({VWData? root})? layout;
-  final Map<String, ActionFlow>? actions;
   final JsonLike? pageDataSource;
   final ActionFlow? onPageLoad;
   final ActionFlow? onBackPress;
@@ -20,7 +19,6 @@ class DUIPageDefinition {
     required this.pageArgDefs,
     required this.initStateDefs,
     required this.layout,
-    required this.actions,
     required this.pageDataSource,
     required this.onPageLoad,
     required this.onBackPress,
@@ -29,9 +27,6 @@ class DUIPageDefinition {
   factory DUIPageDefinition.fromJson(JsonLike json) {
     return DUIPageDefinition(
       pageId: tryKeys<String>(json, ['uid', 'pageUid', 'pageId']) ?? '',
-      actions: as$<JsonLike>(json['actions'])?.map(
-        (k, v) => MapEntry(k, ActionFlow.fromJson(v)),
-      ),
       pageArgDefs: tryKeys<Map<String, VariableDef>>(
         json,
         ['inputArgs', 'pageArgDefs'],

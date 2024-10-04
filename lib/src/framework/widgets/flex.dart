@@ -10,6 +10,7 @@ import '../expr/scope_context.dart';
 import '../models/props.dart';
 import '../render_payload.dart';
 import '../utils/flutter_type_converters.dart';
+import '../widget_props/flex_fit_props.dart';
 import 'flex_fit.dart';
 
 class VWFlex extends VirtualStatelessWidget<Props> {
@@ -74,16 +75,16 @@ class VWFlex extends VirtualStatelessWidget<Props> {
     final expansionType = childVirtualWidget.commonProps?.parentProps
         ?.getString('expansion.type');
     final flexValue = childVirtualWidget.commonProps?.parentProps
-            ?.getInt('expansion.flexValue') ??
-        1;
+        ?.getInt('expansion.flexValue');
 
     if (expansionType == null) return childVirtualWidget;
 
-    return VWFlexFit.fromValues(
-      flexFitType: expansionType,
-      flexValue: flexValue,
+    return VWFlexFit.withChild(
+      props: FlexFitProps(
+        flexFitType: expansionType,
+        flexValue: flexValue,
+      ),
       child: childVirtualWidget,
-      parent: this,
     );
   }
 
