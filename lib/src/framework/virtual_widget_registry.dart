@@ -155,9 +155,10 @@ class DefaultVirtualWidgetRegistry implements VirtualWidgetRegistry {
         widget = stateContainerBuilder(data, parent, this);
         break;
       case VWComponentData():
-        widget = VirtualBuilderWidget((_) => componentBuilder(
+        widget = VirtualBuilderWidget((payload) => componentBuilder(
               data.id,
-              data.args,
+              data.args?.map(
+                  (k, v) => MapEntry(k, v?.evaluate(payload.scopeContext))),
             ));
         break;
     }

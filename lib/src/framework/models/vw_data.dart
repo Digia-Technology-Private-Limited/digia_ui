@@ -6,6 +6,7 @@ import '../utils/json_util.dart';
 import '../utils/types.dart';
 import 'common_props.dart';
 import 'props.dart';
+import 'types.dart';
 import 'vw_repeat_data.dart';
 
 enum NodeType {
@@ -47,7 +48,7 @@ sealed class VWData {
 
 class VWComponentData extends VWData {
   final String id;
-  final JsonLike? args;
+  final Map<String, ExprOr<Object>?>? args;
 
   VWComponentData({
     required this.id,
@@ -58,7 +59,8 @@ class VWComponentData extends VWData {
   factory VWComponentData.fromJson(JsonLike json) {
     return VWComponentData(
       id: json['componentId'] as String,
-      args: as$<JsonLike>(json['componentArgs']),
+      args: as$<JsonLike>(json['componentArgs'])
+          ?.map((k, v) => MapEntry(k, ExprOr.fromJson<Object>(v))),
       refName: as$<String>(json['refName']),
     );
   }
