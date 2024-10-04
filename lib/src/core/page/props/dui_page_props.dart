@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import '../../../framework/models/vw_node_data.dart';
+import '../../../framework/models/vw_data.dart';
 import '../../../models/variable_def.dart';
 import '../../action/action_prop.dart';
 

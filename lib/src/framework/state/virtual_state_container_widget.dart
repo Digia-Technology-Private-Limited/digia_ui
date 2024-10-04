@@ -1,13 +1,13 @@
 import 'package:flutter/widgets.dart';
 
 import '../../models/variable_def.dart';
+import '../base/virtual_widget.dart';
 import '../expr/expression_util.dart';
 import '../expr/scope_context.dart';
 import '../render_payload.dart';
 import 'state_context.dart';
 import 'state_scope_context.dart';
 import 'stateful_scope_widget.dart';
-import 'virtual_widget.dart';
 
 class VirtualStateContainerWidget extends VirtualWidget {
   final Map<String, VariableDef?> initStateDefs;

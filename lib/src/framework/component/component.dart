@@ -2,15 +2,15 @@ import 'package:flutter/widgets.dart';
 
 import '../../network/api_request/api_request.dart';
 import '../base/message_handler.dart';
-import '../base/state_context.dart';
-import '../base/state_scope_context.dart';
-import '../base/stateful_scope_widget.dart';
 import '../expr/default_scope_context.dart';
 import '../expr/expression_util.dart';
 import '../expr/scope_context.dart';
 import '../models/component_definition.dart';
 import '../render_payload.dart';
 import '../resource_provider.dart';
+import '../state/state_context.dart';
+import '../state/state_scope_context.dart';
+import '../state/stateful_scope_widget.dart';
 import '../ui_factory.dart';
 import '../utils/types.dart';
 import '../virtual_widget_registry.dart';

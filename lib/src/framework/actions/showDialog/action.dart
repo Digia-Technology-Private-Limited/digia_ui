@@ -7,16 +7,16 @@ import '../base/action.dart';
 import '../base/action_flow.dart';
 
 class ShowDialogAction extends Action {
-  final String pageId;
-  final Map<String, ExprOr<Object>?>? pageArgs;
+  final String viewId;
+  final Map<String, ExprOr<Object>?>? args;
   final ExprOr<bool>? barrierDismissible;
   final ExprOr<String>? barrierColor;
   final bool waitForResult;
   final ActionFlow? onResult;
 
   ShowDialogAction({
-    required this.pageId,
-    required this.pageArgs,
+    required this.viewId,
+    required this.args,
     required this.barrierDismissible,
     required this.barrierColor,
     required this.waitForResult,
@@ -30,8 +30,8 @@ class ShowDialogAction extends Action {
   @override
   Map<String, dynamic> toJson() => {
         'type': actionType.toString(),
-        'pageUid': pageId,
-        'pageArgs': pageArgs,
+        'viewId': viewId,
+        'args': args,
         'barrierDismissible': barrierDismissible?.toJson(),
         'barrierColor': barrierColor?.toJson(),
         'waitForResult': waitForResult,
@@ -40,8 +40,14 @@ class ShowDialogAction extends Action {
 
   factory ShowDialogAction.fromJson(Map<String, Object?> json) {
     return ShowDialogAction(
-      pageId: tryKeys<String>(json, ['pageUid', 'pageId']) ?? '',
-      pageArgs: tryKeys<Map<String, ExprOr<Object>?>>(
+      viewId: tryKeys<String>(json, [
+            'pageUid',
+            'pageId',
+            'componentId',
+            'viewId',
+          ]) ??
+          '',
+      args: tryKeys<Map<String, ExprOr<Object>?>>(
         json,
         ['pageArgs', 'args'],
         parse: (it) {

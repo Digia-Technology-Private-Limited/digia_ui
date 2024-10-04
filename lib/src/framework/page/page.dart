@@ -7,18 +7,18 @@ import '../../models/variable_def.dart';
 import '../../network/api_request/api_request.dart';
 import '../actions/base/action_flow.dart';
 import '../base/message_handler.dart';
-import '../base/state_context.dart';
-import '../base/state_scope_context.dart';
-import '../base/stateful_scope_widget.dart';
 import '../expr/default_scope_context.dart';
 import '../expr/expression_util.dart';
 import '../expr/scope_context.dart';
 import '../internal_widgets/async_builder/controller.dart';
 import '../internal_widgets/async_builder/widget.dart';
 import '../models/page_definition.dart';
-import '../models/vw_node_data.dart';
+import '../models/vw_data.dart';
 import '../render_payload.dart';
 import '../resource_provider.dart';
+import '../state/state_context.dart';
+import '../state/state_scope_context.dart';
+import '../state/stateful_scope_widget.dart';
 import '../ui_factory.dart';
 import '../utils/functional_util.dart';
 import '../utils/types.dart';
@@ -119,7 +119,7 @@ class _DUIPageContent extends StatefulWidget {
   final String pageId;
   final Map<String, Object?>? args;
   final Map<String, VariableDef?>? initialStateDef;
-  final ({VWNodeData? root})? layout;
+  final ({VWData? root})? layout;
   final VirtualWidgetRegistry registry;
   final ScopeContext? scope;
   final ActionFlow? onPageLoaded;
@@ -244,18 +244,22 @@ class _DUIPageContentState extends State<_DUIPageContent> {
 
     if (isSuccess) {
       final successAction = ActionFlow.fromJson(action['onSuccess']);
-      await _executeAction(
-        context,
-        successAction,
-        DefaultScopeContext(variables: {'response': respObj}),
-      );
+      if (successAction != null) {
+        await _executeAction(
+          context,
+          successAction,
+          DefaultScopeContext(variables: {'response': respObj}),
+        );
+      }
     } else {
       final errorAction = ActionFlow.fromJson(action['onError']);
-      await _executeAction(
-        context,
-        errorAction,
-        DefaultScopeContext(variables: {'response': respObj}),
-      );
+      if (errorAction != null) {
+        await _executeAction(
+          context,
+          errorAction,
+          DefaultScopeContext(variables: {'response': respObj}),
+        );
+      }
     }
   }
 

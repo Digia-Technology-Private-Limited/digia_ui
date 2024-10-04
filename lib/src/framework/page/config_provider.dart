@@ -11,6 +11,7 @@ abstract class ConfigProvider {
   DUIPageDefinition getPageDefinition(String pageId);
   DUIComponentDefinition getComponentDefinition(String componentId);
   Map<String, APIModel> getAllApiModels();
+  bool isPage(String id);
 }
 
 class DUIConfigProvider implements ConfigProvider {
@@ -51,4 +52,7 @@ class DUIConfigProvider implements ConfigProvider {
         }) ??
         {};
   }
+
+  @override
+  bool isPage(String id) => (config.pages[id] != null);
 }

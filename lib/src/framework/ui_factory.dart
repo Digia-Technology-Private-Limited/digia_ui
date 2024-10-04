@@ -6,7 +6,6 @@ import 'base/message_handler.dart';
 import 'base/virtual_widget.dart';
 import 'component/component.dart';
 import 'expr/default_scope_context.dart';
-import 'models/vw_node_data.dart';
 import 'page/config_provider.dart';
 import 'page/page.dart';
 import 'page/page_route.dart';
@@ -46,6 +45,7 @@ class DUIFactory {
 
   late ConfigProvider configProvider;
   late UIResources resources;
+  late VirtualWidgetRegistry widgetRegistry;
 
   DUIFactory._internal();
 
@@ -55,6 +55,9 @@ class DUIFactory {
     Map<String, IconData>? icons,
     Map<String, ImageProvider>? images,
   }) {
+    widgetRegistry = DefaultVirtualWidgetRegistry(
+      componentBuilder: (id, args) => createComponent(id, args),
+    );
     configProvider =
         pageConfigProvider ?? DUIConfigProvider(DigiaUIClient.instance.config);
     resources = UIResources(
@@ -72,14 +75,26 @@ class DUIFactory {
   }
 
   // Register a new widget
-  void registerWidget(
-      String identifier,
-      VirtualWidget Function(
-        VWNodeData data,
-        VirtualWidgetRegistry registry,
-      ) virtualWidgetBuilder) {
-    VirtualWidgetRegistry.instance
-        .registerWidget(identifier, virtualWidgetBuilder);
+  void registerWidget<T>(
+    String type,
+    T Function(JsonLike) fromJsonT,
+    VirtualWidget Function(
+      T props,
+      Map<String, List<VirtualWidget>>? childGroups,
+    ) builder,
+  ) {
+    widgetRegistry.registerWidget(type, fromJsonT, builder);
+  }
+
+  // Register a new widget
+  void registerJsonWidget(
+    String type,
+    VirtualWidget Function(
+      JsonLike props,
+      Map<String, List<VirtualWidget>>? childGroups,
+    ) builder,
+  ) {
+    widgetRegistry.registerJsonWidget(type, builder);
   }
 
   // Create a page with optional overriding UI resources
@@ -103,7 +118,7 @@ class DUIFactory {
 
     return DefaultActionExecutor(
       actionExecutor: ActionExecutor(
-        viewBuilder: (context, viewId, args) => createPage(viewId, args),
+        viewBuilder: _buildView,
         pageRouteBuilder: (context, id, args) => createPageRoute(
           id,
           args,
@@ -118,7 +133,7 @@ class DUIFactory {
         resources: mergedResources,
         navigatorKey: navigatorKey,
         pageDef: configProvider.getPageDefinition(pageId),
-        registry: VirtualWidgetRegistry.instance,
+        registry: widgetRegistry,
         apiModels: configProvider.getAllApiModels(),
         messageHandler: messageHandler,
         scope: DefaultScopeContext(
@@ -168,6 +183,14 @@ class DUIFactory {
     );
   }
 
+  Widget _buildView(BuildContext context, String viewId, JsonLike? args) {
+    if (configProvider.isPage(viewId)) {
+      return createPage(viewId, args);
+    }
+
+    return createComponent(viewId, args);
+  }
+
   // TODO: What should be done about MessageHandler here?
   // Show it propagate to Page?
   Widget createComponent(
@@ -189,7 +212,7 @@ class DUIFactory {
 
     return DefaultActionExecutor(
       actionExecutor: ActionExecutor(
-        viewBuilder: (context, viewId, args) => createPage(viewId, args),
+        viewBuilder: _buildView,
         pageRouteBuilder: (context, id, args) => createPageRoute(id, args),
         logger: DigiaUIClient.instance.developerConfig?.logger,
       ),
@@ -199,7 +222,7 @@ class DUIFactory {
         resources: mergedResources,
         navigatorKey: navigatorKey,
         definition: configProvider.getComponentDefinition(componentid),
-        registry: VirtualWidgetRegistry.instance,
+        registry: widgetRegistry,
         apiModels: configProvider.getAllApiModels(),
         scope: DefaultScopeContext(
           name: 'global',

@@ -1,12 +1,19 @@
+import 'package:flutter/widgets.dart';
+
+import 'base/virtual_builder_widget.dart';
 import 'base/virtual_widget.dart';
 import 'builders.dart';
-import 'models/vw_node_data.dart';
+import 'models/vw_data.dart';
+import 'utils/types.dart';
 
 typedef VirtualWidgetBuilder = VirtualWidget Function(
-    VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry);
+  VWNodeData data,
+  VirtualWidget? parent,
+  VirtualWidgetRegistry registry,
+);
 
-class VirtualWidgetRegistry {
-  final Map<String, VirtualWidgetBuilder> _builders = {
+abstract class VirtualWidgetRegistry {
+  static final Map<String, VirtualWidgetBuilder> _defaultBuilders = {
     // Layout Widgets
     'digia/container': containerBuilder,
     'digia/column': columnBuilder,
@@ -39,6 +46,7 @@ class VirtualWidgetRegistry {
     'fw/appBar': appBarBuilder,
     'digia/appBar': appBarBuilder,
     'digia/sliverAppBar': sliverAppBarBuilder,
+    'digia/sliverList': sliverListBuilder,
     'digia/drawer': drawerBuilder,
     'digia/tabController': tabControllerBuilder,
     'digia/tabBar': tabBarBuilder,
@@ -75,8 +83,9 @@ class VirtualWidgetRegistry {
     'digia/lineChart': lineChartBuilder,
     'digia/circularProgressBar': circularProgressBarBuilder,
     'digia/linearProgressBar': linearProgressBarBuilder,
-    // 'digia/paginatedListView': paginatedListViewBuilder,
-    'digia/sliverList': sliverListBuilder,
+    'digia/paginatedListView': paginatedListViewBuilder,
+    'digia/paginatedSliverList': paginatedSliverListBuilder,
+    // 'digia/sliverList': sliverListBuilder,
 
     // Async Widgets
     'digia/futureBuilder': asyncBuilderBuilder,
@@ -84,7 +93,8 @@ class VirtualWidgetRegistry {
     'digia/streamBuilder': streamBuilderBuilder,
 
     // Utility Widgets
-    // 'digia/conditionalBuilder': conditionalBuilderBuilder,
+    'digia/conditionalBuilder': conditionalBuilderBuilder,
+    'digia/conditionalItem': conditionalItemBuilder,
     'digia/opacity': opacityBuilder,
     // 'digia/animationBuilder': animationBuilderBuilder,
     'digia/timer': timerBuilder,
@@ -96,61 +106,96 @@ class VirtualWidgetRegistry {
     // 'digia/probo/animated_fastscore': proboCustomComponentBuilder,
   };
 
-  void registerWidget(
-      String type,
-      VirtualWidget Function(
-        VWNodeData data,
-        VirtualWidgetRegistry registry,
-      ) virtualWidgetBuilder) {
-    _builders[type] =
-        (data, _, registry) => virtualWidgetBuilder(data, registry);
-  }
+  void registerWidget<T>(
+    String type,
+    T Function(JsonLike) fromJsonT,
+    VirtualWidget Function(
+      T props,
+      Map<String, List<VirtualWidget>>? childGroups,
+    ) builder,
+  );
 
-  static final VirtualWidgetRegistry instance =
-      VirtualWidgetRegistry._internal();
+  void registerJsonWidget(
+    String type,
+    VirtualWidget Function(
+      JsonLike props,
+      Map<String, List<VirtualWidget>>? childGroups,
+    ) builder,
+  );
 
-  factory VirtualWidgetRegistry() {
-    return instance;
-  }
+  factory VirtualWidgetRegistry({
+    required Widget Function(String id, JsonLike? args) componentBuilder,
+  }) = DefaultVirtualWidgetRegistry;
 
-  VirtualWidgetRegistry._internal();
+  VirtualWidget createWidget(VWData data, VirtualWidget? parent);
+}
 
-  VirtualWidget createWidget(VWNodeData data, VirtualWidget? parent) {
-    switch (data.nodeType) {
-      case NodeType.widget:
+class DefaultVirtualWidgetRegistry implements VirtualWidgetRegistry {
+  final Widget Function(String id, JsonLike? args) componentBuilder;
+  final Map<String, VirtualWidgetBuilder> builders;
+
+  DefaultVirtualWidgetRegistry({
+    required this.componentBuilder,
+  }) : builders = Map.from(VirtualWidgetRegistry._defaultBuilders);
+
+  @override
+  VirtualWidget createWidget(VWData data, VirtualWidget? parent) {
+    VirtualWidget widget;
+
+    switch (data) {
+      case VWNodeData():
         {
           String type = data.type;
-          if (!_builders.containsKey(type)) {
+          if (!builders.containsKey(type)) {
             throw Exception('Unknown widget type: $type');
           }
-
-          return _builders[type]!(data, parent, this);
+          widget = builders[type]!(data, parent, this);
         }
-      case NodeType.state:
-        return stateContainerBuilder(data, parent, this);
-      case NodeType.component:
-        // TODO: Add support for Components
-        throw UnimplementedError();
+        break;
+      case VWStateData():
+        widget = stateContainerBuilder(data, parent, this);
+        break;
+      case VWComponentData():
+        widget = VirtualBuilderWidget((payload) => componentBuilder(
+              data.id,
+              data.args?.map(
+                  (k, v) => MapEntry(k, v?.evaluate(payload.scopeContext))),
+            ));
+        break;
     }
+
+    return widget;
   }
 
-  VirtualWidget? createChild(
-      {required VWNodeData data, String key = 'child', VirtualWidget? parent}) {
-    final child = data.childGroups?[key]?.firstOrNull;
-
-    if (child == null) return null;
-
-    return createWidget(child, parent);
+  @override
+  void registerWidget<T>(
+      String type,
+      T Function(JsonLike) fromJsonT,
+      VirtualWidget Function(
+        T props,
+        Map<String, List<VirtualWidget>>? childGroups,
+      ) builder) {
+    builders[type] = (data, parent, registry) {
+      return builder(
+        fromJsonT(data.props.value),
+        createChildGroups(data.childGroups, parent, registry),
+      );
+    };
   }
 
-  List<VirtualWidget?>? createChildren(
-      {required VWNodeData data,
-      String key = 'children',
-      VirtualWidget? parent}) {
-    final children = data.childGroups?[key];
-
-    if (children == null || children.isEmpty) return null;
-
-    return children.map((p0) => createChild(data: p0, parent: parent)).toList();
+  @override
+  void registerJsonWidget(
+    String type,
+    VirtualWidget Function(
+      JsonLike props,
+      Map<String, List<VirtualWidget>>? childGroups,
+    ) builder,
+  ) {
+    builders[type] = (data, parent, registry) {
+      return builder(
+        data.props.value,
+        createChildGroups(data.childGroups, parent, registry),
+      );
+    };
   }
 }
