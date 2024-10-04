@@ -9,6 +9,7 @@ import 'callRestApi/processor.dart';
 import 'controlDrawer/processor.dart';
 import 'copyToClipBoard/processor.dart';
 import 'delay/processor.dart';
+import 'filePicker/processor.dart';
 import 'navigateBack/processor.dart';
 import 'navigateBackUntil/processor.dart';
 import 'navigateToPage/processor.dart';
@@ -20,6 +21,7 @@ import 'share/processor.dart';
 import 'showBottomSheet/processor.dart';
 import 'showDialog/processor.dart';
 import 'showToast/processor.dart';
+import 'upload/processor.dart';
 
 class ActionProcDependencies {
   final Widget Function(BuildContext context, String id, JsonLike? args)
@@ -96,9 +98,11 @@ class ActionProcessorFactory {
           executeActionFlow: dependencies.executeActionFlow,
           viewBuilder: dependencies.viewBuilder,
         );
-
+      case an.ActionType.filePicker:
+        return FilePickerProcessor();
       case an.ActionType.uploadFile:
-      // return UploadFileProcessor();
+        return UploadProcessor(
+            executeActionFlow: dependencies.executeActionFlow);
       case an.ActionType.imagePicker:
     }
     // TODO: Remove later

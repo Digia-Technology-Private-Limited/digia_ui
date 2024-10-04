@@ -22,7 +22,8 @@ enum ActionType {
   showBottomSheet('Action.showBottomSheet'),
   showDialog('Action.openDialog'),
   showToast('Action.showToast'),
-  uploadFile('Action.upload');
+  uploadFile('Action.upload'),
+  filePicker('Action.filePicker');
 
   final String value;
   const ActionType(this.value);

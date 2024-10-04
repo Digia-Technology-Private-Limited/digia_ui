@@ -161,4 +161,37 @@ class NetworkClient {
       'x-digia-environment': environment
     };
   }
+
+  Future<Response<Object?>> multipartRequestProject({
+    required String url,
+    required HttpMethod method,
+    //these headers get appended to baseHeaders, a default Dio behavior
+    Map<String, dynamic>? additionalHeaders,
+    Object? data,
+    required void Function(int, int) uploadProgress,
+  }) {
+    //Remove headers already passed in baseHeaders
+    if (additionalHeaders != null) {
+      Set<String> commonKeys = projectDioInstance.options.headers.keys
+          .toSet()
+          .intersection(additionalHeaders.keys.toSet());
+      for (var key in commonKeys) {
+        additionalHeaders.remove(key);
+      }
+    }
+
+    projectDioInstance.options.connectTimeout = null;
+
+    return projectDioInstance.request(
+      url,
+      data: data,
+      options: Options(
+        method: method.stringValue,
+        headers: additionalHeaders,
+      ),
+      onSendProgress: (count, total) {
+        uploadProgress(count, total);
+      },
+    );
+  }
 }

@@ -1,41 +1,21 @@
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-import '../../../core/action/api_handler.dart';
-import '../../../core/page/dui_page_bloc.dart';
 import '../../../models/dui_file.dart';
 import '../../base/state_context_provider.dart';
-import '../../expr/default_scope_context.dart';
 import '../../expr/scope_context.dart';
-import '../../resource_provider.dart';
-import '../base/action_flow.dart';
 import '../base/processor.dart';
 import 'action.dart';
 
 class FilePickerProcessor extends ActionProcessor<FilePickerAction> {
-  final Future<Object?>? Function(
-    BuildContext context,
-    ActionFlow actionFlow,
-    ScopeContext? scopeContext,
-  ) executeActionFlow;
-
-  FilePickerProcessor({
-    required this.executeActionFlow,
-  });
-
   @override
   Future<Object?>? execute(
     BuildContext context,
     FilePickerAction action,
     ScopeContext? scopeContext,
   ) async {
-    //  final bloc = context.tryRead<DUIPageBloc>();
-    //   if (bloc == null) {
-    //     throw 'Action.filePicker called on a widget which is not wrapped in DUIPageBloc';
-    //   }
     final stateContext = StateContextProvider.getOriginState(context);
 
     final fileType = action.fileType;
@@ -90,51 +70,32 @@ class FilePickerProcessor extends ActionProcessor<FilePickerAction> {
         }).toList();
 
         final variables = stateContext.stateVariables;
-        final events = [
-          {
-            'variableName': selectedPageState,
-            'value': isSinglePick ? finalFiles.first : finalFiles,
-          }
-        ];
 
-        final updatesMap = Map.fromEntries(variables.map(
-          (update) => MapEntry(
-              selectedPageState, isSinglePick ? finalFiles.first : finalFiles),
-        ));
-        stateContext.setValues(updatesMap, notify: rebuildPage);
-
-        bloc.add(SetStateEvent(
-          events: events
-              .where((e) => variables?[e['variableName']] != null)
-              .map((e) => SingleSetStateEvent(
-                    variableName: e['variableName'],
-                    context: context,
-                    value: e['value'],
-                  ))
-              .toList(),
-          rebuildPage: rebuildPage,
-        ));
+        if (selectedPageState != null) {
+          final updatesMap = variables.map((key, value) {
+            if (key == selectedPageState) {
+              return MapEntry(
+                  key, isSinglePick ? finalFiles.first : finalFiles);
+            } else {
+              return MapEntry(key, value);
+            }
+          });
+          stateContext.setValues(updatesMap, notify: rebuildPage);
+        }
       } catch (e) {
         print('Error: $e');
       }
     }
 
-    return;
-  }
-
-  _requestObjToMap(RequestOptions request) {
-    return {
-      'url': request.path,
-      'method': request.method,
-      'headers': request.headers,
-      'data': request.data,
-      'queryParameters': request.queryParameters,
-    };
+    return null;
   }
 }
 
 toFileType(String? fileType) {
-  switch (fileType!.toLowerCase()) {
+  if (fileType == null) {
+    return FileType.any;
+  }
+  switch (fileType.toLowerCase()) {
     case 'image':
       return FileType.image;
     case 'video':

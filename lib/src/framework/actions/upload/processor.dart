@@ -1,7 +1,11 @@
+import 'dart:async';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/widgets.dart';
 
 import '../../../core/action/api_handler.dart';
+import '../../base/state_context.dart';
+import '../../base/state_context_provider.dart';
 import '../../expr/default_scope_context.dart';
 import '../../expr/scope_context.dart';
 import '../../resource_provider.dart';
@@ -26,8 +30,9 @@ class UploadProcessor extends ActionProcessor<UploadAction> {
     UploadAction action,
     ScopeContext? scopeContext,
   ) async {
+    final stateContext = StateContextProvider.getOriginState(context);
     final apiModel = ResourceProvider.maybeOf(context)?.apiModels[action.apiId];
-
+    final selectedPageState = action.selectedPageState;
     final args = action.args?.map((k, v) => MapEntry(
           k,
           v?.evaluate(scopeContext),
@@ -37,8 +42,28 @@ class UploadProcessor extends ActionProcessor<UploadAction> {
       return Future.error('No API Selected');
     }
 
+    final StreamController progressStreamController = StreamController();
+    final Stream progressStream =
+        progressStreamController.stream.asBroadcastStream();
+
+    final variables = stateContext.stateVariables;
+
+    if (selectedPageState != null) {
+      final updatesMap = variables.map((key, value) {
+        if (key == selectedPageState) {
+          return MapEntry(key, progressStream);
+        } else {
+          return MapEntry(key, value);
+        }
+      });
+      stateContext.setValues(updatesMap, notify: false);
+    }
+
     final result = ApiHandler.instance
-        .execute(apiModel: apiModel, args: args)
+        .execute(
+            apiModel: apiModel,
+            args: args,
+            progressStreamController: progressStreamController)
         .then((response) async {
       final respObj = {
         'body': response.data,

@@ -7,6 +7,7 @@ import '../base/action_flow.dart';
 class UploadAction extends Action {
   final String apiId;
   final Map<String, ExprOr<Object>?>? args;
+  final String? selectedPageState;
   final ExprOr<bool>? successCondition;
   final ActionFlow? onSuccess;
   final ActionFlow? onError;
@@ -14,13 +15,14 @@ class UploadAction extends Action {
   UploadAction({
     required this.apiId,
     required this.args,
+    this.selectedPageState,
     this.successCondition,
     this.onSuccess,
     this.onError,
   });
 
   @override
-  ActionType get actionType => ActionType.callRestApi;
+  ActionType get actionType => ActionType.uploadFile;
 
   factory UploadAction.fromJson(Map<String, Object?> json) {
     return UploadAction(
@@ -32,6 +34,7 @@ class UploadAction extends Action {
       successCondition: ExprOr.fromJson<bool>(json['successCondition']),
       onSuccess: ActionFlow.fromJson(json['onSuccess']),
       onError: ActionFlow.fromJson(json['onError']),
+      selectedPageState: as$<String>(json['selectedPageState']),
     );
   }
 

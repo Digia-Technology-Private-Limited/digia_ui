@@ -9,6 +9,7 @@ class FilePickerAction extends Action {
   final bool? rebuildPage;
   final String? selectedPageState;
   final bool? isMultiSelected;
+  // final List<StateUpdate> updates;
 
   FilePickerAction({
     this.fileType,
@@ -17,10 +18,11 @@ class FilePickerAction extends Action {
     this.rebuildPage,
     this.selectedPageState,
     this.isMultiSelected,
+    // required this.updates,
   });
 
   @override
-  ActionType get actionType => ActionType.callRestApi;
+  ActionType get actionType => ActionType.filePicker;
 
   factory FilePickerAction.fromJson(Map<String, Object?> json) {
     return FilePickerAction(
@@ -29,7 +31,7 @@ class FilePickerAction extends Action {
       showToast: as$<bool>(json['showToast']),
       rebuildPage: as$<bool>(json['rebuildPage']),
       isMultiSelected: as$<bool>(json['isMultiSelected']),
-      selectedPageState: as$<String>(json['fileType']),
+      selectedPageState: as$<String>(json['selectedPageState']),
     );
   }
 
@@ -37,11 +39,11 @@ class FilePickerAction extends Action {
   Map<String, dynamic> toJson() {
     return {
       'type': actionType.toString(),
-      'dataSourceId': apiId,
-      'args': args,
-      'successCondition': sizeLimit?.toJson(),
-      'onSuccess': onSuccess?.toJson(),
-      'onError': onError?.toJson(),
+      // 'dataSourceId': apiId,
+      // 'args': args,
+      // 'successCondition': sizeLimit?.toJson(),
+      // 'onSuccess': onSuccess?.toJson(),
+      // 'onError': onError?.toJson(),
     };
   }
 }

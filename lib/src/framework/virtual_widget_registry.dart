@@ -72,7 +72,7 @@ class VirtualWidgetRegistry {
 
     // Data Display
     // 'digia/carousel': carouselBuilder,
-    // 'digia/lineChart': lineChartBuilder,
+    'digia/lineChart': lineChartBuilder,
     'digia/circularProgressBar': circularProgressBarBuilder,
     'digia/linearProgressBar': linearProgressBarBuilder,
     // 'digia/paginatedListView': paginatedListViewBuilder,

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -22,7 +23,9 @@ class ApiHandler {
   static ApiHandler get instance => _instance;
 
   Future<Response<Object?>> execute(
-      {required APIModel apiModel, required Map<String, dynamic>? args}) async {
+      {required APIModel apiModel,
+      required Map<String, dynamic>? args,
+      StreamController<Object?>? progressStreamController}) async {
     final stopwatch = Stopwatch();
     final envVariables =
         DigiaUIClient.instance.config.getEnvironmentVariables();
@@ -45,15 +48,33 @@ class ApiHandler {
     final bodyType = apiModel.bodyType;
 
     final networkClient = DigiaUIClient.getNetworkClient();
+    Response<Object?> response;
 
     stopwatch.start();
     try {
       final preparedData = await _prepareRequestData(body, bodyType);
-      final response = await networkClient.requestProject(
+      if (bodyType == BodyType.multipart) {
+        response = await networkClient.multipartRequestProject(
           url: url,
           method: apiModel.method,
           additionalHeaders: headers,
-          data: preparedData);
+          data: preparedData,
+          uploadProgress: (p0, p1) {
+            progressStreamController?.sink.add({
+              'count': p0,
+              'total': p1,
+              'progress': p0 / p1 * 100,
+            });
+            print('Progress: ${p0 / p1 * 100}');
+          },
+        );
+      } else {
+        response = await networkClient.requestProject(
+            url: url,
+            method: apiModel.method,
+            additionalHeaders: headers,
+            data: preparedData);
+      }
       stopwatch.stop();
       stopwatch.reset();
       DigiaUIClient.instance.duiAnalytics?.onDataSourceSuccess(

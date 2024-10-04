@@ -68,6 +68,8 @@ class VWStreamBuilder extends VirtualStatelessWidget<Props> {
     if (streamName == null) {
       return Stream.error('No source provided');
     }
+    final streamByState = payload.eval(streamName);
+    if (streamByState != null) return streamByState as Stream<Object?>;
     final streamSource = payload.eval('\${params.$streamName}');
     if (streamSource != null) return streamSource as Stream<Object?>;
     return Stream.error('Stream not found');

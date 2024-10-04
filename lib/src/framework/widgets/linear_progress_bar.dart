@@ -47,7 +47,9 @@ class VWLinearProgressBar extends VirtualLeafStatelessWidget<Props> {
         width: props.getDouble('width'),
         lineHeight: props.getDouble('thickness') ?? 5.0,
         percent: progressValue != null ? progressValue / 100.0 : 0,
-        animation: true,
+        animation: props.getBool('animation') ?? false,
+        animateFromLastPercent:
+            props.getBool('animateFromLastPercent') ?? false,
         backgroundColor:
             payload.evalColor(props.get('bgColor')) ?? Colors.transparent,
         progressColor:
