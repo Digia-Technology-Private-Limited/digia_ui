@@ -118,7 +118,7 @@ class DUIFactory {
 
     return DefaultActionExecutor(
       actionExecutor: ActionExecutor(
-        viewBuilder: (context, viewId, args) => createPage(viewId, args),
+        viewBuilder: _buildView,
         pageRouteBuilder: (context, id, args) => createPageRoute(
           id,
           args,
@@ -183,6 +183,14 @@ class DUIFactory {
     );
   }
 
+  Widget _buildView(BuildContext context, String viewId, JsonLike? args) {
+    if (configProvider.isPage(viewId)) {
+      return createPage(viewId, args);
+    }
+
+    return createComponent(viewId, args);
+  }
+
   // TODO: What should be done about MessageHandler here?
   // Show it propagate to Page?
   Widget createComponent(
@@ -204,7 +212,7 @@ class DUIFactory {
 
     return DefaultActionExecutor(
       actionExecutor: ActionExecutor(
-        viewBuilder: (context, viewId, args) => createPage(viewId, args),
+        viewBuilder: _buildView,
         pageRouteBuilder: (context, id, args) => createPageRoute(id, args),
         logger: DigiaUIClient.instance.developerConfig?.logger,
       ),

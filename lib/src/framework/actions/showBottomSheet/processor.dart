@@ -40,11 +40,7 @@ class ShowBottomSheetProcessor
     ShowBottomSheetAction action,
     ScopeContext? scopeContext,
   ) async {
-    final pageId = action.pageId;
-    if (pageId == null) {
-      throw ArgumentError('Null value', 'pageId');
-    }
-
+    final pageId = action.viewId;
     final JsonLike style = action.style ?? {};
     final provider = ResourceProvider.maybeOf(context);
     final navigatorKey = provider?.navigatorKey;
@@ -68,14 +64,11 @@ class ShowBottomSheetProcessor
         builder: (innerCtx) {
           return viewBuilder(
             innerCtx,
-            pageId,
-            action.pageArgs?.map((key, value) {
-              var evaluatedValue = value;
-              if (value is ExprOr) {
-                evaluatedValue = value.evaluate(scopeContext);
-              }
-              return MapEntry(key, evaluatedValue);
-            }),
+            action.viewId,
+            action.args?.map((key, value) => MapEntry(
+                  key,
+                  value?.evaluate(scopeContext),
+                )),
           );
         },
         navigatorKey: navigatorKey,

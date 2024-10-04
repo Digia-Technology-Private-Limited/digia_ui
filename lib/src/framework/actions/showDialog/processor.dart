@@ -44,8 +44,8 @@ class ShowDialogProcessor implements ActionProcessor<ShowDialogAction> {
       builder: (innerCtx) {
         return viewBuilder(
           innerCtx,
-          action.pageId,
-          action.pageArgs?.map((key, value) => MapEntry(
+          action.viewId,
+          action.args?.map((key, value) => MapEntry(
                 key,
                 value?.evaluate(scopeContext),
               )),
