@@ -84,6 +84,8 @@ class ApiHandler {
           {'responseTime': stopwatch.elapsedMilliseconds});
       return response;
     } on DioException catch (e) {
+      progressStreamController?.sink.addError(e);
+
       DigiaUIClient.instance.duiAnalytics?.onDataSourceError(
           'api',
           url,
@@ -91,9 +93,13 @@ class ApiHandler {
               e.response?.statusCode, e.error, e.message));
       rethrow;
     } catch (e) {
+      progressStreamController?.sink.addError(e);
+
       DigiaUIClient.instance.duiAnalytics?.onDataSourceError(
           'api', url, ApiServerInfo(null, null, -1, e, null));
       rethrow;
+    } finally {
+      progressStreamController?.sink.close();
     }
   }
 

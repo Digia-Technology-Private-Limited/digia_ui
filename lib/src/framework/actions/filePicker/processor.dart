@@ -1,11 +1,10 @@
-import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../../models/dui_file.dart';
-import '../../base/state_context_provider.dart';
 import '../../expr/scope_context.dart';
+import '../../state/state_context_provider.dart';
 import '../base/processor.dart';
 import 'action.dart';
 

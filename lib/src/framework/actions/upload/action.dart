@@ -7,7 +7,7 @@ import '../base/action_flow.dart';
 class UploadAction extends Action {
   final String apiId;
   final Map<String, ExprOr<Object>?>? args;
-  final String? selectedPageState;
+  final String? selectedPageStream;
   final ExprOr<bool>? successCondition;
   final ActionFlow? onSuccess;
   final ActionFlow? onError;
@@ -15,7 +15,7 @@ class UploadAction extends Action {
   UploadAction({
     required this.apiId,
     required this.args,
-    this.selectedPageState,
+    this.selectedPageStream,
     this.successCondition,
     this.onSuccess,
     this.onError,
@@ -34,7 +34,7 @@ class UploadAction extends Action {
       successCondition: ExprOr.fromJson<bool>(json['successCondition']),
       onSuccess: ActionFlow.fromJson(json['onSuccess']),
       onError: ActionFlow.fromJson(json['onError']),
-      selectedPageState: as$<String>(json['selectedPageState']),
+      selectedPageStream: as$<String>(json['selectedPageStream']),
     );
   }
 
@@ -47,6 +47,7 @@ class UploadAction extends Action {
       'successCondition': successCondition?.toJson(),
       'onSuccess': onSuccess?.toJson(),
       'onError': onError?.toJson(),
+      'selectedPageStream': selectedPageStream,
     };
   }
 }

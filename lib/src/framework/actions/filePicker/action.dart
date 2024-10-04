@@ -9,7 +9,6 @@ class FilePickerAction extends Action {
   final bool? rebuildPage;
   final String? selectedPageState;
   final bool? isMultiSelected;
-  // final List<StateUpdate> updates;
 
   FilePickerAction({
     this.fileType,
@@ -18,7 +17,6 @@ class FilePickerAction extends Action {
     this.rebuildPage,
     this.selectedPageState,
     this.isMultiSelected,
-    // required this.updates,
   });
 
   @override
@@ -39,11 +37,12 @@ class FilePickerAction extends Action {
   Map<String, dynamic> toJson() {
     return {
       'type': actionType.toString(),
-      // 'dataSourceId': apiId,
-      // 'args': args,
-      // 'successCondition': sizeLimit?.toJson(),
-      // 'onSuccess': onSuccess?.toJson(),
-      // 'onError': onError?.toJson(),
+      'fileType': fileType,
+      'sizeLimit': sizeLimit,
+      'showToast': showToast,
+      'rebuildPage': rebuildPage,
+      'isMultiSelected': isMultiSelected,
+      'selectedPageState': selectedPageState,
     };
   }
 }

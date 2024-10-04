@@ -4,11 +4,10 @@ import 'package:dio/dio.dart';
 import 'package:flutter/widgets.dart';
 
 import '../../../core/action/api_handler.dart';
-import '../../base/state_context.dart';
-import '../../base/state_context_provider.dart';
 import '../../expr/default_scope_context.dart';
 import '../../expr/scope_context.dart';
 import '../../resource_provider.dart';
+import '../../state/state_context_provider.dart';
 import '../base/action_flow.dart';
 import '../base/processor.dart';
 import 'action.dart';
@@ -32,7 +31,7 @@ class UploadProcessor extends ActionProcessor<UploadAction> {
   ) async {
     final stateContext = StateContextProvider.getOriginState(context);
     final apiModel = ResourceProvider.maybeOf(context)?.apiModels[action.apiId];
-    final selectedPageState = action.selectedPageState;
+    final selectedPageState = action.selectedPageStream;
     final args = action.args?.map((k, v) => MapEntry(
           k,
           v?.evaluate(scopeContext),
@@ -42,9 +41,9 @@ class UploadProcessor extends ActionProcessor<UploadAction> {
       return Future.error('No API Selected');
     }
 
-    final StreamController progressStreamController = StreamController();
-    final Stream progressStream =
-        progressStreamController.stream.asBroadcastStream();
+    final StreamController<Object?> progressStreamController =
+        StreamController<Object?>();
+    final Stream<Object?> progressStream = progressStreamController.stream;
 
     final variables = stateContext.stateVariables;
 
@@ -56,7 +55,7 @@ class UploadProcessor extends ActionProcessor<UploadAction> {
           return MapEntry(key, value);
         }
       });
-      stateContext.setValues(updatesMap, notify: false);
+      stateContext.setValues(updatesMap, notify: true);
     }
 
     final result = ApiHandler.instance
@@ -72,7 +71,6 @@ class UploadProcessor extends ActionProcessor<UploadAction> {
         'requestObj': _requestObjToMap(response.requestOptions),
         'error': null,
       };
-
       final isSuccess = action.successCondition?.evaluate(scopeContext) ?? true;
       if (isSuccess) {
         if (action.onSuccess != null) {
