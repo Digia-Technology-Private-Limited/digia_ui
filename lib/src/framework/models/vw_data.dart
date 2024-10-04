@@ -41,7 +41,7 @@ sealed class VWData {
         return VWStateData.fromJson(json);
 
       default:
-        return null;
+        return VWNodeData.fromJson(json);
     }
   }
 }

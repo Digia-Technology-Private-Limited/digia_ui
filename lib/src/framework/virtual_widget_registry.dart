@@ -93,7 +93,8 @@ abstract class VirtualWidgetRegistry {
     'digia/streamBuilder': streamBuilderBuilder,
 
     // Utility Widgets
-    // 'digia/conditionalBuilder': conditionalBuilderBuilder,
+    'digia/conditionalBuilder': conditionalBuilderBuilder,
+    'digia/conditionalItem': conditionalItemBuilder,
     'digia/opacity': opacityBuilder,
     // 'digia/animationBuilder': animationBuilderBuilder,
     'digia/timer': timerBuilder,

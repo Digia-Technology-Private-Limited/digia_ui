@@ -6,6 +6,7 @@ import 'models/vw_data.dart';
 import 'state/virtual_state_container_widget.dart';
 import 'virtual_widget_registry.dart';
 import 'widget_props/app_bar_props.dart';
+import 'widget_props/condtional_item_props.dart';
 import 'widget_props/custom_scroll_view_props.dart';
 import 'widget_props/flex_fit_props.dart';
 import 'widget_props/nested_scroll_view_props.dart';
@@ -31,6 +32,8 @@ import 'widgets/button.dart';
 import 'widgets/calendar.dart';
 import 'widgets/checkbox.dart';
 import 'widgets/circular_progress_bar.dart';
+import 'widgets/conditional_builder.dart';
+import 'widgets/condtional_item.dart';
 import 'widgets/container.dart';
 import 'widgets/custom_scroll_view.dart';
 import 'widgets/drawer.dart';
@@ -120,7 +123,10 @@ VWRichText richTextBuilder(VWNodeData data, VirtualWidget? parent, _) {
 }
 
 VWTextFormField textFormFieldBuilder(
-    VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
+  VWNodeData data,
+  VirtualWidget? parent,
+  VirtualWidgetRegistry registry,
+) {
   return VWTextFormField(
     props: data.props,
     commonProps: data.commonProps,
@@ -131,7 +137,10 @@ VWTextFormField textFormFieldBuilder(
 }
 
 VWContainer containerBuilder(
-    VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
+  VWNodeData data,
+  VirtualWidget? parent,
+  VirtualWidgetRegistry registry,
+) {
   return VWContainer(
     props: data.props,
     commonProps: data.commonProps,
@@ -204,7 +213,10 @@ VWFlexFit flexFitBuilder(
 }
 
 VWListView listViewBuilder(
-    VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
+  VWNodeData data,
+  VirtualWidget? parent,
+  VirtualWidgetRegistry registry,
+) {
   return VWListView(
     props: data.props,
     commonProps: data.commonProps,
@@ -297,7 +309,10 @@ VWLottie lottieBuilder(VWNodeData data, VirtualWidget? parent, _) {
 }
 
 VWStack stackBuilder(
-    VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
+  VWNodeData data,
+  VirtualWidget? parent,
+  VirtualWidgetRegistry registry,
+) {
   return VWStack(
     props: data.props,
     commonProps: data.commonProps,
@@ -431,7 +446,10 @@ VWAppBar appBarBuilder(VWNodeData data, VirtualWidget? parent, _) {
 }
 
 VWDrawer drawerBuilder(
-    VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
+  VWNodeData data,
+  VirtualWidget? parent,
+  VirtualWidgetRegistry registry,
+) {
   return VWDrawer(
     props: data.props,
     commonProps: data.commonProps,
@@ -442,7 +460,10 @@ VWDrawer drawerBuilder(
 }
 
 VWScaffold scaffoldBuilder(
-    VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
+  VWNodeData data,
+  VirtualWidget? parent,
+  VirtualWidgetRegistry registry,
+) {
   return VWScaffold(
     props: data.props,
     commonProps: data.commonProps,
@@ -452,7 +473,10 @@ VWScaffold scaffoldBuilder(
 }
 
 VWSafeArea safeAreaBuilder(
-    VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
+  VWNodeData data,
+  VirtualWidget? parent,
+  VirtualWidgetRegistry registry,
+) {
   return VWSafeArea(
     props: SafeAreaProps.fromJson(data.props.value),
     childGroups: createChildGroups(data.childGroups, parent, registry),
@@ -461,7 +485,10 @@ VWSafeArea safeAreaBuilder(
 }
 
 VWGridView gridViewBuilder(
-    VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
+  VWNodeData data,
+  VirtualWidget? parent,
+  VirtualWidgetRegistry registry,
+) {
   return VWGridView(
     props: data.props,
     commonProps: data.commonProps,
@@ -473,7 +500,10 @@ VWGridView gridViewBuilder(
 }
 
 VWAnimatedButton animatedButtonBuilder(
-    VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
+  VWNodeData data,
+  VirtualWidget? parent,
+  VirtualWidgetRegistry registry,
+) {
   return VWAnimatedButton(
     props: data.props,
     commonProps: data.commonProps,
@@ -483,7 +513,10 @@ VWAnimatedButton animatedButtonBuilder(
 }
 
 VWExpandable expandableBuilder(
-    VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
+  VWNodeData data,
+  VirtualWidget? parent,
+  VirtualWidgetRegistry registry,
+) {
   return VWExpandable(
     props: data.props,
     commonProps: data.commonProps,
@@ -494,7 +527,10 @@ VWExpandable expandableBuilder(
 }
 
 VWWrap wrapBuilder(
-    VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
+  VWNodeData data,
+  VirtualWidget? parent,
+  VirtualWidgetRegistry registry,
+) {
   return VWWrap(
     props: data.props,
     commonProps: data.commonProps,
@@ -534,7 +570,10 @@ VWCalendar calendarBuilder(VWNodeData data, VirtualWidget? parent, _) {
 }
 
 VWTimer timerBuilder(
-    VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
+  VWNodeData data,
+  VirtualWidget? parent,
+  VirtualWidgetRegistry registry,
+) {
   return VWTimer(
     props: TimerProps.fromJson(data.props.value),
     commonProps: data.commonProps,
@@ -545,7 +584,10 @@ VWTimer timerBuilder(
 }
 
 VWAsyncBuilder asyncBuilderBuilder(
-    VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
+  VWNodeData data,
+  VirtualWidget? parent,
+  VirtualWidgetRegistry registry,
+) {
   return VWAsyncBuilder(
     props: data.props,
     commonProps: data.commonProps,
@@ -556,7 +598,10 @@ VWAsyncBuilder asyncBuilderBuilder(
 }
 
 VWStreamBuilder streamBuilderBuilder(
-    VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
+  VWNodeData data,
+  VirtualWidget? parent,
+  VirtualWidgetRegistry registry,
+) {
   return VWStreamBuilder(
     props: StreamBuilderProps.fromJson(data.props.value),
     commonProps: data.commonProps,
@@ -566,8 +611,33 @@ VWStreamBuilder streamBuilderBuilder(
   );
 }
 
+VWConditionalBuilder conditionalBuilderBuilder(
+  VWNodeData data,
+  VirtualWidget? parent,
+  VirtualWidgetRegistry registry,
+) {
+  return VWConditionalBuilder(
+    childGroups: createChildGroups(data.childGroups, parent, registry),
+  );
+}
+
+VWConditionItem conditionalItemBuilder(
+  VWNodeData data,
+  VirtualWidget? parent,
+  VirtualWidgetRegistry registry,
+) {
+  return VWConditionItem(
+    props: CondtionalItemProps.fromJson(data.props.value),
+    refName: data.refName,
+    childGroups: createChildGroups(data.childGroups, parent, registry),
+  );
+}
+
 VWRefreshIndicator refreshIndicatorBuilder(
-    VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
+  VWNodeData data,
+  VirtualWidget? parent,
+  VirtualWidgetRegistry registry,
+) {
   return VWRefreshIndicator(
     props: data.props,
     commonProps: data.commonProps,
@@ -579,7 +649,10 @@ VWRefreshIndicator refreshIndicatorBuilder(
 }
 
 VWOpacity opacityBuilder(
-    VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
+  VWNodeData data,
+  VirtualWidget? parent,
+  VirtualWidgetRegistry registry,
+) {
   return VWOpacity(
     props: data.props,
     commonProps: data.commonProps,
@@ -591,7 +664,10 @@ VWOpacity opacityBuilder(
 }
 
 VWTabViewController tabControllerBuilder(
-    VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
+  VWNodeData data,
+  VirtualWidget? parent,
+  VirtualWidgetRegistry registry,
+) {
   return VWTabViewController(
     props: TabViewControllerProps.fromJson(data.props.value),
     commonProps: data.commonProps,
@@ -602,7 +678,10 @@ VWTabViewController tabControllerBuilder(
 }
 
 VWTabBar tabBarBuilder(
-    VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
+  VWNodeData data,
+  VirtualWidget? parent,
+  VirtualWidgetRegistry registry,
+) {
   return VWTabBar(
     props: data.props,
     commonProps: data.commonProps,
@@ -613,7 +692,10 @@ VWTabBar tabBarBuilder(
 }
 
 VWTabViewContent tabViewContentBuilder(
-    VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
+  VWNodeData data,
+  VirtualWidget? parent,
+  VirtualWidgetRegistry registry,
+) {
   return VWTabViewContent(
     props: TabViewContentProps.fromJson(data.props.value),
     commonProps: data.commonProps,
@@ -625,7 +707,10 @@ VWTabViewContent tabViewContentBuilder(
 }
 
 VWPaginatedListView paginatedListViewBuilder(
-    VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
+  VWNodeData data,
+  VirtualWidget? parent,
+  VirtualWidgetRegistry registry,
+) {
   return VWPaginatedListView(
     props: PaginatedListViewProps.fromJson(data.props.value),
     commonProps: data.commonProps,
@@ -637,7 +722,10 @@ VWPaginatedListView paginatedListViewBuilder(
 }
 
 VWPaginatedSliverList paginatedSliverListBuilder(
-    VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
+  VWNodeData data,
+  VirtualWidget? parent,
+  VirtualWidgetRegistry registry,
+) {
   return VWPaginatedSliverList(
     props: PaginatedSliverListProps.fromJson(data.props.value),
     commonProps: data.commonProps,
@@ -649,7 +737,10 @@ VWPaginatedSliverList paginatedSliverListBuilder(
 }
 
 VWSliverAppBar sliverAppBarBuilder(
-    VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
+  VWNodeData data,
+  VirtualWidget? parent,
+  VirtualWidgetRegistry registry,
+) {
   return VWSliverAppBar(
     props: SliverAppBarProps.fromJson(data.props.value),
     commonProps: data.commonProps,
@@ -661,7 +752,10 @@ VWSliverAppBar sliverAppBarBuilder(
 }
 
 VWCustomScrollView customScrollViewBuilder(
-    VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
+  VWNodeData data,
+  VirtualWidget? parent,
+  VirtualWidgetRegistry registry,
+) {
   return VWCustomScrollView(
     props: CustomScrollViewProps.fromJson(data.props.value),
     commonProps: data.commonProps,
@@ -673,7 +767,10 @@ VWCustomScrollView customScrollViewBuilder(
 }
 
 VWNestedScrollView nestedScrollViewBuilder(
-    VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
+  VWNodeData data,
+  VirtualWidget? parent,
+  VirtualWidgetRegistry registry,
+) {
   return VWNestedScrollView(
     props: NestedScrollViewProps.fromJson(data.props.value),
     commonProps: data.commonProps,
@@ -685,7 +782,10 @@ VWNestedScrollView nestedScrollViewBuilder(
 }
 
 VWSliverList sliverListBuilder(
-    VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
+  VWNodeData data,
+  VirtualWidget? parent,
+  VirtualWidgetRegistry registry,
+) {
   return VWSliverList(
     props: data.props,
     commonProps: data.commonProps,
