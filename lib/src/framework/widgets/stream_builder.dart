@@ -74,34 +74,15 @@ class VWStreamBuilder extends VirtualStatelessWidget<StreamBuilderProps> {
   //     ..addStream(Stream.error('No Stream provided'));
   // }
   StreamController<Object?> _makeStream(Object? stream) {
-    if (stream is Stream<Object?>) {
-      // Create a new StreamController and add the stream to it.
-      final controller = StreamController<Object?>();
-      controller.addStream(stream);
-      return controller;
+    if (stream is Stream) {
+      return StreamController<Object?>()..addStream(stream);
     }
 
-    if (stream is Stream<Object>) {
-      // Create a new StreamController and add the stream to it, mapping it to Object? type.
-      final controller = StreamController<Object?>();
-      controller.addStream(stream.map((event) => event as Object?));
-      return controller;
-    }
-
-    if (stream is StreamController<Object?>) {
-      // If the input is already a StreamController<Object?>, return it directly.
-      return stream;
-    }
-
-    if (stream is StreamController<Object>) {
-      // If the input is a StreamController<Object>, cast it to StreamController<Object?>.
+    if (stream is StreamController) {
       return stream as StreamController<Object?>;
     }
 
-    // Return a new StreamController with an error stream if no valid input is provided.
-    final controller = StreamController<Object?>();
-    controller.addStream(Stream.error('No Stream provided'));
-    return controller;
+    return StreamController<Object?>()..addError('No Stream provided');
   }
 
   ScopeContext _createExprContext(Object? streamValue) {

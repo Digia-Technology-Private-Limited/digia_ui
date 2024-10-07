@@ -43,14 +43,13 @@ class UploadProcessor extends ActionProcessor<UploadAction> {
 
     final StreamController<Object?> progressStreamController =
         StreamController<Object?>();
-    final Stream<Object?> progressStream = progressStreamController.stream;
 
     final variables = stateContext.stateVariables;
 
     if (selectedPageState != null) {
       final updatesMap = variables.map((key, value) {
         if (key == selectedPageState) {
-          return MapEntry(key, progressStream);
+          return MapEntry(key, progressStreamController);
         } else {
           return MapEntry(key, value);
         }
