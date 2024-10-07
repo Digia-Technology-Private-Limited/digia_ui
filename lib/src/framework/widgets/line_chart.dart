@@ -7,11 +7,12 @@ import '../models/props.dart';
 import '../render_payload.dart';
 
 class VWLineChart extends VirtualLeafStatelessWidget<Props> {
-  VWLineChart(
-      {required super.props,
-      required super.commonProps,
-      required super.parent,
-      required super.refName});
+  VWLineChart({
+    required super.props,
+    required super.commonProps,
+    required super.parent,
+    required super.refName,
+  });
 
   @override
   Widget render(RenderPayload payload) {
@@ -20,71 +21,53 @@ class VWLineChart extends VirtualLeafStatelessWidget<Props> {
       borderData: FlBorderData(show: false),
       extraLinesData: _toExtraLinesData(
         payload,
-        (props.toProps('extraLines')) ?? Props.empty(),
+        props.toProps('extraLines') ?? Props.empty(),
       ),
       titlesData: const FlTitlesData(show: false),
-      lineBarsData: _toLineBarsData(
-            payload,
-            props.getList('lines').cast(),
-          ) ??
-          [],
+      lineBarsData: _toLineBarsData(payload, props.getList('lines')) ?? [],
     );
 
     return LineChart(chartData);
   }
 }
 
-List<Props?>? _getSpots(RenderPayload payload, Object? input) {
+List<Props>? _getSpots(RenderPayload payload, Object? input) {
   if (input == null) return null;
 
-  if (input is List<Props?>) return input;
+  if (input is List<Props>) return input;
 
   if (input is! String) return null;
 
-  return tryJsonDecode(input) ?? payload.eval<List>(input);
+  List? list = tryJsonDecode(input) ?? payload.eval<List>(input);
+  return list?.map((map) => Props(map)).toList();
 }
 
-List<LineChartBarData>? _toLineBarsData(RenderPayload payload, lines) {
+List<LineChartBarData>? _toLineBarsData(RenderPayload payload, List? lines) {
   if (lines == null || lines.isEmpty) return null;
 
-  return lines.map((line) {
-    // final List<FlSpot>? spots = _getSpots(payload, (line as Map)['spots'])
-    //     ?.map((s) => ifNotNull2(line.getDouble('s['x'],')).
-    //        line.getDouble(s['y']) (x, y) => FlSpot(x, y))
-    //     .nonNulls
-    //     .toList() as List<FlSpot>;
-
-    final List<FlSpot>? spots = _getSpots(payload, line.get('spots'))
+  return lines.map((lineData) => Props(lineData)).map((line) {
+    final spots = _getSpots(payload, line.get('spots'))
         ?.map((s) => ifNotNull2(
-            s?.getDouble('x'), s?.getDouble('y'), (x, y) => FlSpot(x, y)))
+            s.getDouble('x'), s.getDouble('y'), (x, y) => FlSpot(x, y)))
         .nonNulls
         .toList();
 
     return LineChartBarData(
       spots: spots ?? [],
-      // isCurved: eval<bool>(line['isCurved'], context: context) ?? false,
       isCurved: payload.eval<bool>(line.get('isCurved')) ?? false,
-      barWidth: payload.eval<double>(
-            line.get('barWidth'),
-          ) ??
-          2,
+      barWidth: payload.eval<double>(line.get('barWidth')) ?? 2,
       color: makeColor(payload.eval<String>(line.get('lineColor'))),
-      belowBarData: _toBelowbarData(payload, (line.toProps('belowBarData'))),
+      belowBarData: _toBelowBarData(payload, line.toProps('belowBarData')),
     );
   }).toList();
 }
 
-BarAreaData? _toBelowbarData(RenderPayload payload, Props? props) {
+BarAreaData? _toBelowBarData(RenderPayload payload, Props? props) {
   if (props == null || props.isEmpty) return null;
 
   return BarAreaData(
-    show: payload.eval<bool>(
-          props.get('show'),
-        ) ??
-        false,
-    color: makeColor(payload.eval<String>(
-      props.getString('color'),
-    )),
+    show: payload.eval<bool>(props.get('show')) ?? false,
+    color: makeColor(payload.eval<String>(props.getString('color'))),
     gradient: toGradient(props.getMap('gradiant'), payload.buildContext),
   );
 }
@@ -92,39 +75,59 @@ BarAreaData? _toBelowbarData(RenderPayload payload, Props? props) {
 ExtraLinesData? _toExtraLinesData(RenderPayload payload, Props? props) {
   if (props == null || props.isEmpty) return null;
 
-  final showExtraLines = payload.eval<bool>(
-        props.get('show'),
-      ) ??
-      false;
+  if (!(payload.eval<bool>(props.get('show')) ?? false)) return null;
 
-  if (!showExtraLines) return null;
+  List<HorizontalLine> horizontalLines = props
+          .getList('horizontalLines')
+          ?.map((e) => _toHorizontalLine(payload, e))
+          .whereType<HorizontalLine>()
+          .toList() ??
+      [];
 
-  List<int>? toDashArray(dynamic dashArray) {
-    return ifNotNull2(payload.eval<int>(dashArray['length'])!,
-        payload.eval<int>(dashArray['gap'])!, (p0, p1) => [p0, p1]);
-  }
-
-  List<HorizontalLine>? horizontalLines =
-      props.getList('horizontalLines').cast()?.map((e) {
-    return HorizontalLine(
-      y: payload.eval<double>(e['linePoint']) ?? 0,
-      color: makeColor(payload.eval<String>(e['color'])),
-      strokeWidth: payload.eval<double>(e['strokeWidth']) ?? 2,
-      dashArray: toDashArray(e['dashArray']),
-    );
-  }).toList();
-
-  List<VerticalLine>? verticalLines =
-      props.getList('verticalLines').cast()?.map((e) {
-    return VerticalLine(
-      x: payload.eval<double>(e['linePoint']) ?? 0,
-      color: makeColor(payload.eval<String>(e['color'])),
-      strokeWidth: payload.eval<double>(e['strokeWidth']) ?? 2,
-      dashArray: toDashArray(e['dashArray']),
-    );
-  }).toList();
+  List<VerticalLine> verticalLines = props
+          .getList('verticalLines')
+          ?.map((e) => _toVerticalLine(payload, e))
+          .whereType<VerticalLine>()
+          .toList() ??
+      [];
 
   return ExtraLinesData(
-      horizontalLines: horizontalLines ?? [],
-      verticalLines: verticalLines ?? []);
+    horizontalLines: horizontalLines,
+    verticalLines: verticalLines,
+  );
+}
+
+HorizontalLine? _toHorizontalLine(RenderPayload payload, dynamic e) {
+  final map = e as Map?;
+  if (map == null) return null;
+
+  return HorizontalLine(
+    y: payload.eval<double>(map['linePoint']) ?? 0,
+    color: makeColor(payload.eval<String>(map['color'])),
+    strokeWidth: payload.eval<double>(map['strokeWidth']) ?? 2,
+    dashArray: _toDashArray(map['dashArray']),
+  );
+}
+
+VerticalLine? _toVerticalLine(RenderPayload payload, dynamic e) {
+  final map = e as Map?;
+  if (map == null) return null;
+
+  return VerticalLine(
+    x: payload.eval<double>(map['linePoint']) ?? 0,
+    color: makeColor(payload.eval<String>(map['color'])),
+    strokeWidth: payload.eval<double>(map['strokeWidth']) ?? 2,
+    dashArray: _toDashArray(map['dashArray']),
+  );
+}
+
+List<int>? _toDashArray(dynamic dashArray) {
+  if (dashArray is Map) {
+    return ifNotNull2(
+      dashArray['length'] as int?,
+      dashArray['gap'] as int?,
+      (length, gap) => [length, gap],
+    );
+  }
+  return null;
 }
