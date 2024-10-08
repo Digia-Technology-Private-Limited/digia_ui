@@ -5,6 +5,7 @@ import 'models/types.dart';
 import 'models/vw_data.dart';
 import 'state/virtual_state_container_widget.dart';
 import 'virtual_widget_registry.dart';
+import 'widget_props/animated_switcher_props.dart';
 import 'widget_props/app_bar_props.dart';
 import 'widget_props/condtional_item_props.dart';
 import 'widget_props/custom_scroll_view_props.dart';
@@ -27,6 +28,7 @@ import 'widget_props/text_props.dart';
 import 'widget_props/timer_props.dart';
 import 'widgets/animated_builder.dart';
 import 'widgets/animated_button.dart';
+import 'widgets/animated_switcher.dart';
 import 'widgets/app_bar.dart';
 import 'widgets/async_builder.dart';
 import 'widgets/avatar.dart';
@@ -805,6 +807,20 @@ VWAnimatedBuilder animationBuilder(
 ) {
   return VWAnimatedBuilder(
     props: data.props,
+    commonProps: data.commonProps,
+    parent: parent,
+    refName: data.refName,
+    childGroups: createChildGroups(data.childGroups, parent, registry),
+  );
+}
+
+VWAnimatedSwitcher animatedSwitcher(
+  VWNodeData data,
+  VirtualWidget? parent,
+  VirtualWidgetRegistry registry,
+) {
+  return VWAnimatedSwitcher(
+    props: AnimatedSwitcherProps.fromJson(data.props.value),
     commonProps: data.commonProps,
     parent: parent,
     refName: data.refName,
