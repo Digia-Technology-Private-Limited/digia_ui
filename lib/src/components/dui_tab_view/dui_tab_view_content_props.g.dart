@@ -11,6 +11,7 @@ DUITabViewContentProps _$DUITabViewContentPropsFromJson(
     DUITabViewContentProps(
       isScrollable: json['isScrollable'] as bool?,
       viewportFraction: (json['viewportFraction'] as num?)?.toDouble(),
+      keepTabsAlive: json['keepTabsAlive'] as bool?,
     );
 
 Map<String, dynamic> _$DUITabViewContentPropsToJson(
@@ -18,4 +19,5 @@ Map<String, dynamic> _$DUITabViewContentPropsToJson(
     <String, dynamic>{
       'isScrollable': instance.isScrollable,
       'viewportFraction': instance.viewportFraction,
+      'keepTabsAlive': instance.keepTabsAlive,
     };
