@@ -5,6 +5,7 @@ import '../core/builders/custom_shape_builder.dart';
 import '../core/builders/dezerv_component/dezerv_dial_pad_builder.dart';
 import '../core/builders/dezerv_stepper_builder.dart';
 import '../core/builders/dui_animated_button_builder.dart';
+import '../core/builders/dui_animated_switcher_builder.dart';
 import '../core/builders/dui_animation_builder.dart';
 import '../core/builders/dui_app_bar_builder.dart';
 import '../core/builders/dui_avatar_builder.dart';
@@ -186,6 +187,8 @@ class DUIWidgetRegistry {
             registry: DUIWidgetRegistry.shared),
     'digia/paginatedSliverList': (data, {registry}) =>
         DUIPaginatedSliverListBuilder.create(data),
+    'digia/animatedSwitcher': (data, {registry}) =>
+        DUIAnimatedSwitcherBuilder.create(data),
   };
 
   static const DUIWidgetRegistry shared = DUIWidgetRegistry();
