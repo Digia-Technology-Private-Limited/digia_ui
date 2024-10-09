@@ -61,7 +61,7 @@ class VWComponentData extends VWData {
       id: json['componentId'] as String,
       args: as$<JsonLike>(json['componentArgs'])
           ?.map((k, v) => MapEntry(k, ExprOr.fromJson<Object>(v))),
-      refName: as$<String>(json['refName']),
+      refName: tryKeys<String>(json, ['varName', 'refName']),
     );
   }
 }

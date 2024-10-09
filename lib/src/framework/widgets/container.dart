@@ -84,7 +84,7 @@ class VWContainer extends VirtualStatelessWidget<Props> {
 }
 
 DecorationImage? _toDecorationImage(RenderPayload payload, Props? props) {
-  ImageProvider? imageProvider = props!.getString('source').maybe((source) {
+  ImageProvider? imageProvider = props?.getString('source').maybe((source) {
     if (source.contains('http')) {
       return CachedNetworkImageProvider(source);
     }
@@ -94,14 +94,14 @@ DecorationImage? _toDecorationImage(RenderPayload payload, Props? props) {
 
   if (imageProvider == null) return null;
 
-  final imageAlignment = To.alignment(props.get('alignment'));
-  final imageOpacity = payload.eval<double>(props.get('opacity'));
+  final imageAlignment = To.alignment(props?.get('alignment'));
+  final imageOpacity = payload.eval<double>(props?.get('opacity'));
 
   return DecorationImage(
       opacity: imageOpacity ?? 1.0,
       image: imageProvider,
       alignment: imageAlignment ?? Alignment.center,
-      fit: To.boxFit(props.get('fit')));
+      fit: To.boxFit(props?.get('fit')));
 }
 
 BorderWithPattern? _toBorderWithPattern(RenderPayload payload, Props props) {

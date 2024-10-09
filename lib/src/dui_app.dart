@@ -1,9 +1,13 @@
 // import 'package:chucker_flutter/chucker_flutter.dart';
 import 'package:flutter/material.dart';
 
-import '../digia_ui.dart';
+import 'analytics/dui_analytics.dart';
 import 'core/app_state_provider.dart';
+import 'digia_ui_client.dart';
+import 'dui_dev_config.dart';
+import 'environment.dart';
 import 'framework/ui_factory.dart';
+import 'network/netwok_config.dart';
 
 class DUIApp extends StatelessWidget {
   final String digiaAccessKey;

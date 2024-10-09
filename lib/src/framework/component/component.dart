@@ -41,7 +41,7 @@ class DUIComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final resolvedArgs = definition.argsDefs
+    final resolvedArgs = definition.argDefs
         ?.map((k, v) => MapEntry(k, args?[k] ?? v.defaultValue));
     final resolvedState =
         definition.initStateDefs?.map((key, value) => MapEntry(
@@ -60,7 +60,7 @@ class DUIComponent extends StatelessWidget {
         messageHandler: messageHandler,
         navigatorKey: navigatorKey,
         child: StatefulScopeWidget(
-          namespace: 'page',
+          namespace: 'component',
           initialState: resolvedState ?? {},
           childBuilder: (context, state) {
             return _buildContent(
@@ -97,14 +97,14 @@ class DUIComponent extends StatelessWidget {
   ) {
     if (stateContext == null) {
       return DefaultScopeContext(
-        variables: {'params': params},
+        variables: {...params ?? {}},
         enclosing: scope,
       );
     }
 
     return StateScopeContext(
       stateContext: stateContext,
-      variables: {'params': params},
+      variables: {...params ?? {}},
       enclosing: scope,
     );
   }

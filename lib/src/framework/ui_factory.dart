@@ -201,6 +201,7 @@ class DUIFactory {
     Map<String, TextStyle>? overrideTextStyles,
     Map<String, Color?>? overrideColorTokens,
     GlobalKey<NavigatorState>? navigatorKey,
+    Key? key,
   }) {
     // Merge overriding resources with existing resources
     final mergedResources = UIResources(
@@ -217,6 +218,7 @@ class DUIFactory {
         logger: DigiaUIClient.instance.developerConfig?.logger,
       ),
       child: DUIComponent(
+        key: key,
         id: componentid,
         args: args,
         resources: mergedResources,
