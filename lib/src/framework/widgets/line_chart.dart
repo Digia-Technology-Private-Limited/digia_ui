@@ -17,18 +17,76 @@ class VWLineChart extends VirtualLeafStatelessWidget<Props> {
   @override
   Widget render(RenderPayload payload) {
     final LineChartData chartData = LineChartData(
+      minX: 0,
+      minY: 0,
+      maxX: payload.eval(props.get('maxX')),
+      maxY: payload.eval(props.get('maxY')),
       gridData: const FlGridData(show: false),
       borderData: FlBorderData(show: false),
       extraLinesData: _toExtraLinesData(
         payload,
         props.toProps('extraLines') ?? Props.empty(),
       ),
-      titlesData: const FlTitlesData(show: false),
+      titlesData: _toSideTitlesData(
+        payload,
+        props.toProps('sideTitles') ?? Props.empty(),
+      ),
       lineBarsData: _toLineBarsData(payload, props.getList('lines')) ?? [],
     );
 
     return LineChart(chartData);
   }
+}
+
+FlTitlesData _toSideTitlesData(RenderPayload payload, Props? props) {
+  if (props == null || props.isEmpty) return const FlTitlesData(show: false);
+
+  if (!(payload.eval<bool>(props.get('show')) ?? false)) {
+    return const FlTitlesData(show: false);
+  }
+  return FlTitlesData(
+    show: payload.eval<bool>(props.get('show'))!,
+    bottomTitles: getSideTitlesData(
+      payload,
+      props.toProps('bottomTitles') ?? Props.empty(),
+    ),
+  );
+}
+
+AxisTitles getSideTitlesData(RenderPayload payload, Props? props) {
+  if (props == null || props.isEmpty) return const AxisTitles();
+  if (!(payload.eval<bool>(props.get('show')) ?? false)) {
+    return const AxisTitles(sideTitles: SideTitles());
+  }
+  return AxisTitles(
+    axisNameWidget: payload.eval<String>(props.get('')) != null
+        ? Text(
+            payload.eval<String>(props.get(''))!,
+            style: payload.getTextStyle(props.getMap('axisLabelStyle')),
+          )
+        : null,
+    sideTitles: SideTitles(
+        showTitles: payload.eval<bool>(props.get('show'))!,
+        getTitlesWidget: (value, meta) {
+          final titleTextList =
+              payload.eval<List>(props.get('titleList'))?.cast<String>();
+          if (titleTextList == null || titleTextList.isEmpty) return Text('');
+          return getSideTitleWidget(
+            value,
+            titleTextList,
+            payload.getTextStyle(
+              props.getMap('titleStyle'),
+            ),
+          );
+        }),
+  );
+}
+
+Widget getSideTitleWidget(double value, List<String> list, TextStyle? style) {
+  return Text(
+    list[value.toInt()],
+    style: style,
+  );
 }
 
 List<Props>? _getSpots(RenderPayload payload, Object? input) {
