@@ -10,7 +10,7 @@ on:
       version_type:
         description: 'Version to bump'
         required: true
-        default: 'patch'
+        default: 'beta'
         type: choice
         options: ['major', 'minor', 'patch', 'beta']
 
@@ -38,3 +38,16 @@ jobs:
           git status
           git commit -m "Bump version to ${{ env.new_version }}" || echo "No changes to commit"
           git push
+
+      # - name: Generate code
+      #   run: dart run build_runner build --delete-conflicting-outputs
+      # - name: Check Publish Warnings
+      #   run: dart pub publish --dry-run
+      - name: Publish
+        uses: k-paxian/dart-package-publisher@v1.5.1
+        with:
+          credentialJson: ${{ secrets.PUB_DEV_CREDS }}
+          flutter: true
+          skipTests: true
+          force: true
+          flutterBranch: 3.19.0
