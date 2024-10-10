@@ -58,8 +58,8 @@ fi
 sed -i '' "s/^version: .*/version: $new_version/" pubspec.yaml
 
 # Update version.dart
-echo "// Generated code. Do not modify." > lib/version.dart
-echo "const packageVersion = '$new_version';" >> lib/version.dart
+echo "// Generated code. Do not modify." > lib/src/version.dart
+echo "const packageVersion = '$new_version';" >> lib/src/version.dart
 
 # Add changelog entry to CHANGELOG.md
 date=$(date +'%Y-%m-%d')  # Get today's date in YYYY-MM-DD format
