@@ -1,0 +1,40 @@
+name: Version Bump and Changelog Update
+
+on:
+  workflow_dispatch:
+    inputs:
+      changelog:
+        description: 'Changelog description for this version (use ; to separate lines)'
+        required: true
+        default: ''
+      version_type:
+        description: 'Version to bump'
+        required: true
+        default: 'patch'
+        type: choice
+        options: ['major', 'minor', 'patch', 'beta']
+
+jobs:
+  version-bump:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set execute permissions on the script
+        run: |
+          chmod +x ./bump_version.sh
+
+      - name: Bump version and update changelog
+        run: |
+          ./bump_version.sh "${{ github.event.inputs.changelog }}" "${{ github.event.inputs.version_type }}"
+
+      - name: Commit changes
+        run: |
+          git config --global user.name "digia-version-up-bot"
+          git config --global user.email "digia-version-up-bot@digia.github.com"
+          git add .
+          git status
+          git commit -m "Bump version to ${{ env.new_version }}" || echo "No changes to commit"
+          git push
