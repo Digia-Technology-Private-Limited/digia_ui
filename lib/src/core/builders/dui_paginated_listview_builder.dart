@@ -11,8 +11,8 @@ import '../../Utils/extensions.dart';
 import '../../components/dui_base_stateful_widget.dart';
 import '../action/action_handler.dart';
 import '../action/api_handler.dart';
+import '../bracket_scope_provider.dart';
 import '../evaluator.dart';
-import '../indexed_item_provider.dart';
 import '../json_widget_builder.dart';
 import 'common.dart';
 import 'dui_json_widget_builder.dart';
@@ -143,9 +143,8 @@ class _DUIPaginatedListViewState extends DUIWidgetState<DUIPaginatedListView> {
         builderDelegate: PagedChildBuilderDelegate(
           itemBuilder: (context, item, index) {
             final childToRepeat = children.first;
-            return IndexedItemWidgetBuilder(
-                index: index,
-                currentItem: item,
+            return BracketScope(
+                variables: [('index', index), ('currentItem', item)],
                 builder: DUIJsonWidgetBuilder(
                     data: childToRepeat, registry: widget.registry!));
           },

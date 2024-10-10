@@ -6,8 +6,13 @@ part 'dui_tab_view_content_props.g.dart';
 class DUITabViewContentProps {
   final bool? isScrollable;
   final double? viewportFraction;
+  final bool? keepTabsAlive;
 
-  DUITabViewContentProps({this.isScrollable, this.viewportFraction});
+  DUITabViewContentProps({
+    this.isScrollable,
+    this.viewportFraction,
+    this.keepTabsAlive,
+  });
 
   factory DUITabViewContentProps.fromJson(Map<String, dynamic> json) {
     return _$DUITabViewContentPropsFromJson(json);
