@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import '../../core/analytics_handler.dart';
 import '../../dui_logger.dart';
 import '../expr/scope_context.dart';
+import '../method_bindings/method_binding_registry.dart';
 import '../utils/types.dart';
 import 'action_processor_factory.dart';
 import 'base/action_flow.dart';
@@ -18,12 +19,14 @@ class ActionExecutor {
     String id,
     JsonLike? args,
   ) pageRouteBuilder;
+  final MethodBindingRegistry bindingRegistry;
 
   final DUILogger? logger;
 
   ActionExecutor({
     required this.viewBuilder,
     required this.pageRouteBuilder,
+    required this.bindingRegistry,
     this.logger,
   });
 
@@ -51,6 +54,7 @@ class ActionExecutor {
           viewBuilder: viewBuilder,
           executeActionFlow: execute,
           pageRouteBuilder: pageRouteBuilder,
+          bindingRegistry: bindingRegistry,
         ),
       ).getProcessor(action);
       await processor.execute(context, action, scopeContext);

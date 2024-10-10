@@ -6,6 +6,8 @@ import 'base/message_handler.dart';
 import 'base/virtual_widget.dart';
 import 'component/component.dart';
 import 'expr/default_scope_context.dart';
+import 'method_bindings/method_binding_registry.dart';
+import 'method_bindings/register_bindings.dart';
 import 'page/config_provider.dart';
 import 'page/page.dart';
 import 'page/page_route.dart';
@@ -46,6 +48,7 @@ class DUIFactory {
   late ConfigProvider configProvider;
   late UIResources resources;
   late VirtualWidgetRegistry widgetRegistry;
+  late MethodBindingRegistry bindingRegistry;
 
   DUIFactory._internal();
 
@@ -58,6 +61,9 @@ class DUIFactory {
     widgetRegistry = DefaultVirtualWidgetRegistry(
       componentBuilder: (id, args) => createComponent(id, args),
     );
+    bindingRegistry = MethodBindingRegistry();
+    registerBindings(bindingRegistry);
+
     configProvider =
         pageConfigProvider ?? DUIConfigProvider(DigiaUIClient.instance.config);
     resources = UIResources(
@@ -125,6 +131,7 @@ class DUIFactory {
           messageHandler:
               messageHandler?.propagateHandler == true ? messageHandler : null,
         ),
+        bindingRegistry: bindingRegistry,
         logger: DigiaUIClient.instance.developerConfig?.logger,
       ),
       child: DUIPage(
@@ -214,6 +221,7 @@ class DUIFactory {
       actionExecutor: ActionExecutor(
         viewBuilder: _buildView,
         pageRouteBuilder: (context, id, args) => createPageRoute(id, args),
+        bindingRegistry: bindingRegistry,
         logger: DigiaUIClient.instance.developerConfig?.logger,
       ),
       child: DUIComponent(

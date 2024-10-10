@@ -1,5 +1,7 @@
 import 'package:digia_expr/src/expr_context.dart';
 
+import '../type_adaptors/adaptor_registry.dart';
+
 import 'scope_context.dart';
 
 /// A basic implementation of ExprContext that can be used as-is or extended.
@@ -9,6 +11,8 @@ class DefaultScopeContext extends ScopeContext {
 
   ExprContext? _enclosing;
   final Map<String, Object?> _variables;
+
+  final AdapterRegistry _adaptor = AdapterRegistry();
 
   DefaultScopeContext({
     this.name = '',
@@ -28,9 +32,18 @@ class DefaultScopeContext extends ScopeContext {
   @override
   ({bool found, Object? value}) getValue(String key) {
     if (_variables.containsKey(key)) {
-      return (found: true, value: _variables[key]);
+      return (
+        found: true,
+        value: adaptValue(_variables[key]),
+      );
     }
     return _enclosing?.getValue(key) ?? (found: false, value: null);
+  }
+
+  Object? adaptValue(Object? value) {
+    if (value == null) return null;
+
+    return _adaptor.adaptValue(value) ?? value;
   }
 
   @override
