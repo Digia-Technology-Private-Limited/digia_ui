@@ -1,9 +1,6 @@
 name: Version Bump and Changelog Update
 
 on:
-  push:
-    branches:
-      - vivek/versionUp
   workflow_dispatch:
     inputs:
       changelog:
@@ -27,8 +24,6 @@ jobs:
 
       - name: Set execute permissions on the script
         run: |
-          pwd
-          ls -la
           chmod +x ./bump_version.sh
 
       - name: Bump version and update changelog
