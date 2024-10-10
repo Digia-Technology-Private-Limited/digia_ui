@@ -30,6 +30,7 @@ jobs:
       - name: Set execute permissions on the script
         run: |
           pwd
+          ls -la
           chmod +x ./bump_version.sh
 
       - name: Bump version and update changelog
