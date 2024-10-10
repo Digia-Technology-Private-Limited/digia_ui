@@ -28,11 +28,11 @@ jobs:
           path: vivek/versionUp
 
       - name: Set execute permissions on the script
-        run: chmod +x ./../bump_version.sh
+        run: chmod +x ../../bump_version.sh
 
       - name: Bump version and update changelog
         run: |
-          ./../bump_version.sh "${{ github.event.inputs.changelog }}" "${{ github.event.inputs.version_type }}"
+          ../../bump_version.sh "${{ github.event.inputs.changelog }}" "${{ github.event.inputs.version_type }}"
 
       - name: Commit changes
         run: |
