@@ -55,7 +55,7 @@ else
 fi
 
 # Update pubspec.yaml
-sed -i '' "s/^version: .*/version: $new_version/" pubspec.yaml
+sed -i "s/^version: .*/version: $new_version/" pubspec.yaml
 
 # Update version.dart
 echo "// Generated code. Do not modify." > lib/src/version.dart
