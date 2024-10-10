@@ -24,8 +24,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-        with:
-          path: vivek/versionUp
 
       - name: Set execute permissions on the script
         run: |
