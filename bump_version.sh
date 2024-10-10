@@ -91,10 +91,4 @@ temp_file=$(mktemp)
 
 # Replace the original CHANGELOG.md with the updated temp file
 mv "$temp_file" CHANGELOG.md
-
-# # Commit the changes
-# git config --global user.name 'github-actions[bot]'
-# git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-# git add pubspec.yaml lib/version.dart CHANGELOG.md
-# git commit -m "Bump version to $new_version"
-# git tag -a "v$new_version" -m "$changelog"
+echo "new_version=$new_version" >> $GITHUB_ENV
