@@ -42,6 +42,7 @@ jobs:
   publish:
     permissions:
       id-token: write # Required for authentication using OIDC
+      contents: read
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
