@@ -1,6 +1,9 @@
 name: Version Bump and Changelog Update
 
 on:
+  push:
+    branches:
+      - vivek/versionUp
   workflow_dispatch:
     inputs:
       changelog:
@@ -22,7 +25,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
-          path: vivek/test
+          path: vivek/versionUp
 
       - name: Set execute permissions on the script
         run: chmod +x bump_version.sh
