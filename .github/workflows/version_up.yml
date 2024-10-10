@@ -58,3 +58,5 @@ jobs:
           credentialJson: ${{ secrets.PUB_DEV_CREDS }}
           flutter: true
           skipTests: true
+          force: true
+          flutterBranch: 3.19.0
