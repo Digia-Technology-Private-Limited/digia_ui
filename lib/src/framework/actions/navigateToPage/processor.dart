@@ -68,7 +68,9 @@ class NavigateToPageProcessor implements ActionProcessor<NavigateToPageAction> {
         context,
         action.onResult ?? ActionFlow.empty(),
         DefaultScopeContext(variables: {
-          'result': result,
+          'result': {
+            'data': result,
+          },
         }, enclosing: scopeContext),
       );
     }

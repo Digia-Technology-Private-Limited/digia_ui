@@ -130,14 +130,20 @@ Future<Response<Object?>> _makeFuture(
       });
 
       return ApiHandler.instance.execute(apiModel: apiModel, args: args).then(
-          (response) async {
+          (resp) async {
+        final respObj = {
+          'body': resp.data,
+          'statusCode': resp.statusCode,
+          'headers': resp.headers,
+          'requestObj': _requestObjToMap(resp.requestOptions),
+          'error': null,
+        };
         final successAction = ActionFlow.fromJson(futureProps.get('onSuccess'));
         await payload.executeAction(
           successAction,
-          scopeContext:
-              DefaultScopeContext(variables: {'response': response.data}),
+          scopeContext: DefaultScopeContext(variables: {'response': respObj}),
         );
-        return response;
+        return resp;
       }, onError: (e) async {
         final errorAction = ActionFlow.fromJson(futureProps.get('onFailure'));
         await payload.executeAction(
