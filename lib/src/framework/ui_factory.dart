@@ -11,6 +11,7 @@ import 'page/page.dart';
 import 'page/page_route.dart';
 import 'utils/color_util.dart';
 import 'utils/functional_util.dart';
+import 'utils/navigation_util.dart';
 import 'utils/textstyle_util.dart';
 import 'utils/types.dart';
 import 'virtual_widget_registry.dart';
@@ -231,6 +232,31 @@ class DUIFactory {
           variables: {...DigiaUIClient.instance.jsVars},
         ),
       ),
+    );
+  }
+
+  Future<T?> showBottomSheet<T>(
+    BuildContext context,
+    String viewId,
+    JsonLike? args, {
+    double scrollControlDisabledMaxHeightRatio = 1,
+    Color? backgroundColor,
+    Color? barrierColor,
+    BoxBorder? border,
+    BorderRadius? borderRadius,
+    WidgetBuilder? iconBuilder,
+    GlobalKey<NavigatorState>? navigatorKey,
+  }) {
+    return presentBottomSheet(
+      context: context,
+      builder: (innerCtx) => _buildView(innerCtx, viewId, args),
+      scrollControlDisabledMaxHeightRatio: scrollControlDisabledMaxHeightRatio,
+      backgroundColor: backgroundColor,
+      barrierColor: barrierColor,
+      border: border,
+      borderRadius: borderRadius,
+      iconBuilder: iconBuilder,
+      navigatorKey: navigatorKey,
     );
   }
 }
