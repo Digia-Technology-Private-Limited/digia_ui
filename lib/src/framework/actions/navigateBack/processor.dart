@@ -12,7 +12,9 @@ class NavigateBackProcessor implements ActionProcessor<NavigateBackAction> {
     ScopeContext? scopeContext,
   ) async {
     final maybe = action.maybe?.evaluate(scopeContext) ?? false;
-    final result = action.result?.deepEvaluate(scopeContext);
+    final result = {
+      'data': action.result?.deepEvaluate(scopeContext),
+    };
 
     if (maybe) {
       return Navigator.of(context).maybePop(result);
