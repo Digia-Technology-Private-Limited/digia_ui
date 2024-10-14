@@ -49,7 +49,7 @@ Object? evaluateNestedExpressions(Object? data, ScopeContext? context) {
   if (data is Map<String, Object?>) {
     return data.map((key, value) {
       var evaluatedKey =
-          hasExpression(key) ? evaluate(key, scopeContext: context) : key;
+          hasExpression(key) ? evaluate<String>(key, scopeContext: context)! : key;
       var evaluatedValue = evaluateNestedExpressions(value, context);
       return MapEntry(evaluatedKey, evaluatedValue);
     });
