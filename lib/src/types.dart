@@ -30,4 +30,4 @@ class MessagePayload {
       required this.dispatchAction});
 }
 
-typedef DUIMessageHandler = void Function(MessagePayload);
+typedef DUIMessageHandler2 = void Function(MessagePayload);
