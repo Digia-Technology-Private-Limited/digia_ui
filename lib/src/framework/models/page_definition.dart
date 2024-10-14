@@ -29,7 +29,7 @@ class DUIPageDefinition {
       pageId: tryKeys<String>(json, ['uid', 'pageUid', 'pageId']) ?? '',
       pageArgDefs: tryKeys<Map<String, VariableDef>>(
         json,
-        ['inputArgs', 'pageArgDefs'],
+        ['inputArgs', 'pageArgDefs', 'argDefs'],
         parse: (p0) =>
             as$<JsonLike>(p0).maybe(const VariablesJsonConverter().fromJson),
       ),

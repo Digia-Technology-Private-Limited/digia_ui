@@ -67,9 +67,11 @@ TextStyle? makeTextStyle(
   final textStyle = ResourceProvider.maybeOf(context)
       ?.getTextStyle(fontToken['value'] as String);
   // TODO: To be fixed. Not sure if fontFamilyFallback is right for us.
-  final fontFamily = fontToken.valueFor('font.fontFamily') as String? ??
-      textStyle?.fontFamilyFallback?.firstOrNull ??
-      _defaultTextStyle.fontFamilyFallback!.first;
+  // final fontFamily = fontToken.valueFor('font.fontFamily') as String? ??
+  //     textStyle?.fontFamilyFallback?.firstOrNull ??
+  //     _defaultTextStyle.fontFamilyFallback!.first;
+  final fontFamily = 'Work Sans';
+
   final fontWeight =
       eval<String>(fontToken.valueFor('font.weight')).maybe(To.fontWeight) ??
           textStyle?.fontWeight ??

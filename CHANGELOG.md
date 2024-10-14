@@ -2,6 +2,15 @@
 
 Digia Ui Sdk.
 
+## [0.0.6-beta.35] - 2024-10-10
+
+- Tab reload fix
+
+## [0.0.6-beta.34] - 2024-10-04
+
+- ScrollNotifier on ScrollViews
+- Animated Switcher <> Animated Builder
+
 ## [0.0.6-beta.33] - 2024-09-25
 
 - New Sliver widgets.

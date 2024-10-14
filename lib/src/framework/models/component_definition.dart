@@ -6,13 +6,13 @@ import 'vw_data.dart';
 
 class DUIComponentDefinition {
   final String id;
-  final Map<String, VariableDef>? argsDefs;
+  final Map<String, VariableDef>? argDefs;
   final Map<String, VariableDef>? initStateDefs;
   final ({VWData? root})? layout;
 
   const DUIComponentDefinition({
     required this.id,
-    required this.argsDefs,
+    required this.argDefs,
     required this.initStateDefs,
     required this.layout,
   });
@@ -20,9 +20,9 @@ class DUIComponentDefinition {
   factory DUIComponentDefinition.fromJson(JsonLike json) {
     return DUIComponentDefinition(
       id: tryKeys<String>(json, ['uid', 'pageUid', 'pageId']) ?? '',
-      argsDefs: tryKeys<Map<String, VariableDef>>(
+      argDefs: tryKeys<Map<String, VariableDef>>(
         json,
-        ['argsDefs'],
+        ['argDefs'],
         parse: (p0) =>
             as$<JsonLike>(p0).maybe(const VariablesJsonConverter().fromJson),
       ),
