@@ -60,10 +60,11 @@ class VWPaginatedSliverList extends VirtualSliver<PaginatedSliverListProps> {
 
           if (apiModel == null) return;
 
-          final args = props.args?.map((k, v) => MapEntry(
+          final args = apiModel.variables?.map((k, v) => MapEntry(
                 k,
-                v?.evaluate(
-                    DefaultScopeContext(variables: {'offset': pageKey})),
+                props.args?[k]?.evaluate(
+                        DefaultScopeContext(variables: {'offset': pageKey})) ??
+                    v.defaultValue,
               ));
 
           ApiHandler.instance
