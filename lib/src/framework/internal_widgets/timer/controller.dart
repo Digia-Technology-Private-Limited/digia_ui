@@ -43,6 +43,12 @@ class TimerController {
     );
   }
 
+  void reset() {
+    _subscription?.cancel();
+    _currentValue = initialValue;
+    start();
+  }
+
   void pause() {
     _subscription?.pause();
   }
