@@ -2,8 +2,8 @@ import 'package:flutter/widgets.dart';
 
 import '../../models/variable_def.dart';
 import '../base/virtual_widget.dart';
-import '../expr/expression_util.dart';
 import '../expr/scope_context.dart';
+import '../page/type_creator.dart';
 import '../render_payload.dart';
 import 'state_context.dart';
 import 'state_scope_context.dart';
@@ -23,13 +23,8 @@ class VirtualStateContainerWidget extends VirtualWidget {
   @override
   Widget render(RenderPayload payload) {
     if (child == null) return empty();
-
-    final resolvedState = initStateDefs.map((key, value) => MapEntry(
-        key,
-        evaluateNestedExpressions(
-          value?.defaultValue,
-          payload.scopeContext,
-        )));
+    final resolvedState =
+        initStateDefs.map((k, v) => MapEntry(k, TypeCreator.create(v)));
 
     return StatefulScopeWidget(
       namespace: refName,

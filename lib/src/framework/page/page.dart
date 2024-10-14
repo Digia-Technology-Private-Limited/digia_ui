@@ -23,6 +23,7 @@ import '../ui_factory.dart';
 import '../utils/functional_util.dart';
 import '../utils/types.dart';
 import '../virtual_widget_registry.dart';
+import 'type_creator.dart';
 
 class DUIPage extends StatelessWidget {
   final String pageId;
@@ -52,13 +53,9 @@ class DUIPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final resolvePageArgs = pageDef.pageArgDefs
         ?.map((k, v) => MapEntry(k, pageArgs?[k] ?? v.defaultValue));
-    final resolvedState = pageDef.initStateDefs?.map((key, value) => MapEntry(
-          key,
-          evaluateNestedExpressions(
-            value.defaultValue,
-            _createExprContext(resolvePageArgs, null),
-          ),
-        ));
+    TypeCreator.initialize(resolvePageArgs);
+    final resolvedState = pageDef.initStateDefs
+        ?.map((k, v) => MapEntry(k, TypeCreator.create(v)));
 
     return ResourceProvider(
         icons: resources?.icons ?? {},
