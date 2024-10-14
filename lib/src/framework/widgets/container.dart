@@ -1,12 +1,14 @@
+import 'dart:ui';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
+import '../../Utils/extensions.dart';
 import '../../components/border/box_border_with_pattern/border_with_pattern.dart';
 import '../base/virtual_stateless_widget.dart';
 import '../models/custom_flutter_types.dart';
 import '../models/props.dart';
 import '../render_payload.dart';
-import '../utils/flutter_extensions.dart';
 import '../utils/flutter_type_converters.dart';
 import '../utils/functional_util.dart';
 
@@ -39,6 +41,39 @@ class VWContainer extends VirtualStatelessWidget<Props> {
         evalColor: (it) => payload.evalColor(it));
     final elevation = props.getDouble('elevation') ?? 0.0;
 
+    List<BoxShadow>? getShadowList(RenderPayload payload, Props props) {
+      if (props.getList('shadow').isNullOrEmpty) return null;
+
+      List<Map<String, dynamic>> tempShadowList =
+          props.getList('shadow')!.cast<Map<String, dynamic>>();
+
+      BlurStyle getBlurStyle(String style) {
+        switch (style) {
+          case 'inner':
+            return BlurStyle.inner;
+          case 'outer':
+            return BlurStyle.outer;
+          case 'solid':
+            return BlurStyle.solid;
+          case 'normal':
+          default:
+            return BlurStyle.normal;
+        }
+      }
+
+      List<BoxShadow> shadowList = tempShadowList.map((element) {
+        return BoxShadow(
+          blurStyle: getBlurStyle((element['blurStyle']) ?? 'normal'),
+          blurRadius: element['blur'],
+          spreadRadius: element['spreadRadius'],
+          color: payload.evalColor(element['color']) ?? Colors.black,
+          offset: Offset(element['offset']['x'], element['offset']['y']),
+        );
+      }).toList();
+
+      return shadowList;
+    }
+
     Widget container = Container(
         width: width,
         height: height,
@@ -46,6 +81,7 @@ class VWContainer extends VirtualStatelessWidget<Props> {
         padding: padding,
         decoration: BoxDecoration(
             gradient: gradiant,
+            boxShadow: getShadowList(payload, props),
             color: color,
             border: _toBorderWithPattern(
                 payload, props.toProps('border') ?? Props.empty()),
