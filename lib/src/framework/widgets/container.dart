@@ -62,10 +62,13 @@ class VWContainer extends VirtualStatelessWidget<Props> {
       List<BoxShadow> shadowList = tempShadowList.map((element) {
         return BoxShadow(
           blurStyle: getBlurStyle((element['blurStyle']) ?? 'normal'),
-          blurRadius: element['blur'],
-          spreadRadius: element['spreadRadius'],
+          blurRadius: payload.eval<double>(element['blur']) ?? 0,
+          spreadRadius: payload.eval<double>(element['spreadRadius']) ?? 0,
           color: payload.evalColor(element['color']) ?? Colors.black,
-          offset: Offset(element['offset']['x'], element['offset']['y']),
+          offset: Offset(
+            payload.eval<double>(element['offset']['x']) ?? 0,
+            payload.eval<double>(element['offset']['y']) ?? 0,
+          ),
         );
       }).toList();
 
