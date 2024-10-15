@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../core/action/action_handler.dart';
-import '../../core/action/api_handler.dart';
 import '../base/extensions.dart';
 import '../base/virtual_stateless_widget.dart';
 import '../expr/default_scope_context.dart';
@@ -10,6 +8,7 @@ import '../internal_widgets/internal_list_view.dart';
 import '../internal_widgets/paginated_list_view.dart';
 import '../render_payload.dart';
 import '../utils/functional_util.dart';
+import '../utils/network_util.dart';
 import '../widget_props/paginated_list_view_props.dart';
 
 class VWPaginatedListView
@@ -58,41 +57,36 @@ class VWPaginatedListView
             return it.toWidget(payload.copyWith(buildContext: innerCtx));
           };
         }),
-        pageRequestListener: (pageKey, controller) {
+        pageRequestListener: (pageKey, controller) async {
           final apiModel = props.apiId.maybe((it) => payload.getApiModel(it));
 
           if (apiModel == null) return;
 
-          final args = apiModel.variables?.map((k, v) => MapEntry(
-                k,
-                props.args?[k]?.evaluate(
-                        DefaultScopeContext(variables: {'offset': pageKey})) ??
-                    v.defaultValue,
-              ));
+          final scope = DefaultScopeContext(
+            variables: {'offset': pageKey},
+            enclosing: payload.scopeContext,
+          );
 
-          ApiHandler.instance
-              .execute(apiModel: apiModel, args: args)
-              .then((resp) {
-            final response = {
-              'body': resp.data,
-              'statusCode': resp.statusCode,
-              'headers': resp.headers,
-              'requestObj': requestObjToMap(resp.requestOptions),
-              'error': null,
-            };
+          await executeApiAction(
+            scope,
+            apiModel,
+            props.args,
+            onSuccess: (response) async {
+              final newItems = props.transformItems?.evaluate(
+                    DefaultScopeContext(
+                      variables: {'response': response},
+                      enclosing: scope,
+                    ),
+                  ) ??
+                  as$<List>(response['body']);
 
-            final newItems = props.transformItems?.evaluate(DefaultScopeContext(
-                  variables: {'response': response},
-                  enclosing: payload.scopeContext,
-                )) ??
-                as$<List>(response['body']);
-
-            if (newItems == null || newItems.isEmpty) {
-              controller.appendLastPage([]);
-            } else {
-              controller.appendPage(newItems.cast<Object>(), pageKey + 1);
-            }
-          });
+              if (newItems == null || newItems.isEmpty) {
+                controller.appendLastPage([]);
+              } else {
+                controller.appendPage(newItems.cast<Object>(), pageKey + 1);
+              }
+            },
+          );
         },
       );
     }

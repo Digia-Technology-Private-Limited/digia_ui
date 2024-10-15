@@ -1,7 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
-import '../../core/action/api_handler.dart';
 import '../actions/base/action_flow.dart';
 import '../base/virtual_stateless_widget.dart';
 import '../expr/default_scope_context.dart';
@@ -9,8 +8,10 @@ import '../expr/scope_context.dart';
 import '../internal_widgets/async_builder/controller.dart';
 import '../internal_widgets/async_builder/widget.dart';
 import '../models/props.dart';
+import '../models/types.dart';
 import '../render_payload.dart';
 import '../utils/functional_util.dart';
+import '../utils/network_util.dart';
 
 class VWAsyncBuilder extends VirtualStatelessWidget<Props> {
   VWAsyncBuilder({
@@ -37,7 +38,9 @@ class VWAsyncBuilder extends VirtualStatelessWidget<Props> {
           futureBuilder: () => _makeFuture(futureProps, payload),
         ),
         builder: (innerCtx, snapshot) {
-          final updatedPayload = payload.copyWith(buildContext: innerCtx);
+          final updatedPayload = payload.copyWithChainedContext(
+              _createExprContext(snapshot.data, snapshot.error),
+              buildContext: innerCtx);
 
           if (snapshot.connectionState == ConnectionState.waiting) {
             return loadingWidget?.toWidget(updatedPayload) ??
@@ -51,14 +54,7 @@ class VWAsyncBuilder extends VirtualStatelessWidget<Props> {
               await updatedPayload.executeAction(actionFlow);
             });
 
-            return errorWidget?.toWidget(
-                  updatedPayload.copyWithChainedContext(
-                    _createExprContext(
-                      snapshot.data,
-                      snapshot.error,
-                    ),
-                  ),
-                ) ??
+            return errorWidget?.toWidget(updatedPayload) ??
                 Text(
                   'Error: ${snapshot.error?.toString()}',
                   style: const TextStyle(color: Colors.red),
@@ -70,14 +66,7 @@ class VWAsyncBuilder extends VirtualStatelessWidget<Props> {
                 ActionFlow.fromJson(props.get('postSuccessAction'));
             await updatedPayload.executeAction(actionFlow);
           });
-          return successWidget.toWidget(
-            updatedPayload.copyWithChainedContext(
-              _createExprContext(
-                snapshot.data,
-                snapshot.error,
-              ),
-            ),
-          );
+          return successWidget.toWidget(updatedPayload);
         });
   }
 
@@ -114,44 +103,36 @@ Future<Response<Object?>> _makeFuture(
         return Future.error('No API Selected');
       }
 
-      Map<String, Object?>? apiDataSourceArgs =
-          futureProps.getMap('dataSource.args');
-
       final apiModel = payload.getApiModel(apiDataSourceId);
 
       if (apiModel == null) {
         return Future.error('No API Selected');
       }
 
-      final args = apiDataSourceArgs?.map((key, value) {
-        final evalue = payload.eval(value);
-        final dvalue = apiModel.variables?[key]?.defaultValue;
-        return MapEntry(key, evalue ?? dvalue);
-      });
-
-      return ApiHandler.instance.execute(apiModel: apiModel, args: args).then(
-          (resp) async {
-        final respObj = {
-          'body': resp.data,
-          'statusCode': resp.statusCode,
-          'headers': resp.headers,
-          'requestObj': _requestObjToMap(resp.requestOptions),
-          'error': null,
-        };
-        final successAction = ActionFlow.fromJson(futureProps.get('onSuccess'));
-        await payload.executeAction(
-          successAction,
-          scopeContext: DefaultScopeContext(variables: {'response': respObj}),
-        );
-        return resp;
-      }, onError: (e) async {
-        final errorAction = ActionFlow.fromJson(futureProps.get('onFailure'));
-        await payload.executeAction(
-          errorAction,
-          scopeContext: DefaultScopeContext(variables: {'error': e}),
-        );
-        throw e;
-      });
+      return executeApiAction(
+        payload.scopeContext,
+        apiModel,
+        futureProps.getMap('dataSource.args')?.map((key, value) => MapEntry(
+              key,
+              ExprOr.fromJson<Object>(value),
+            )),
+        onSuccess: (response) async {
+          final actionFlow = ActionFlow.fromJson(futureProps.get('onSuccess'));
+          payload.executeAction(
+            actionFlow,
+            scopeContext:
+                DefaultScopeContext(variables: {'response': response}),
+          );
+        },
+        onError: (response) async {
+          final actionFlow = ActionFlow.fromJson(futureProps.get('onError'));
+          payload.executeAction(
+            actionFlow,
+            scopeContext:
+                DefaultScopeContext(variables: {'response': response}),
+          );
+        },
+      );
 
     case 'delay':
       return Future.delayed(

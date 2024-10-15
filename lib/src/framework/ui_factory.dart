@@ -117,15 +117,15 @@ class DUIFactory {
       colors: {...?resources.colors, ...?overrideColorTokens},
     );
 
+    final handler =
+        messageHandler?.propagateHandler == true ? messageHandler : null;
+
     return DefaultActionExecutor(
       actionExecutor: ActionExecutor(
-        viewBuilder: _buildView,
-        pageRouteBuilder: (context, id, args) => createPageRoute(
-          id,
-          args,
-          messageHandler:
-              messageHandler?.propagateHandler == true ? messageHandler : null,
-        ),
+        viewBuilder: (context, id, args) =>
+            _buildView(context, id, args, handler),
+        pageRouteBuilder: (context, id, args) =>
+            createPageRoute(id, args, messageHandler: handler),
         logger: DigiaUIClient.instance.developerConfig?.logger,
       ),
       child: DUIPage(
@@ -184,12 +184,17 @@ class DUIFactory {
     );
   }
 
-  Widget _buildView(BuildContext context, String viewId, JsonLike? args) {
+  Widget _buildView(
+    BuildContext context,
+    String viewId,
+    JsonLike? args,
+    DUIMessageHandler? messageHandler,
+  ) {
     if (configProvider.isPage(viewId)) {
-      return createPage(viewId, args);
+      return createPage(viewId, args, messageHandler: messageHandler);
     }
 
-    return createComponent(viewId, args);
+    return createComponent(viewId, args, messageHandler: messageHandler);
   }
 
   // TODO: What should be done about MessageHandler here?
@@ -202,7 +207,7 @@ class DUIFactory {
     Map<String, TextStyle>? overrideTextStyles,
     Map<String, Color?>? overrideColorTokens,
     GlobalKey<NavigatorState>? navigatorKey,
-    Key? key,
+    DUIMessageHandler? messageHandler,
   }) {
     // Merge overriding resources with existing resources
     final mergedResources = UIResources(
@@ -214,12 +219,13 @@ class DUIFactory {
 
     return DefaultActionExecutor(
       actionExecutor: ActionExecutor(
-        viewBuilder: _buildView,
-        pageRouteBuilder: (context, id, args) => createPageRoute(id, args),
+        viewBuilder: (context, id, args) =>
+            _buildView(context, id, args, messageHandler),
+        pageRouteBuilder: (context, id, args) =>
+            createPageRoute(id, args, messageHandler: messageHandler),
         logger: DigiaUIClient.instance.developerConfig?.logger,
       ),
       child: DUIComponent(
-        key: key,
         id: componentid,
         args: args,
         resources: mergedResources,
@@ -227,6 +233,7 @@ class DUIFactory {
         definition: configProvider.getComponentDefinition(componentid),
         registry: widgetRegistry,
         apiModels: configProvider.getAllApiModels(),
+        messageHandler: messageHandler,
         scope: DefaultScopeContext(
           name: 'global',
           variables: {...DigiaUIClient.instance.jsVars},
@@ -246,10 +253,11 @@ class DUIFactory {
     BorderRadius? borderRadius,
     WidgetBuilder? iconBuilder,
     GlobalKey<NavigatorState>? navigatorKey,
+    DUIMessageHandler? messageHandler,
   }) {
     return presentBottomSheet(
       context: context,
-      builder: (innerCtx) => _buildView(innerCtx, viewId, args),
+      builder: (innerCtx) => _buildView(innerCtx, viewId, args, messageHandler),
       scrollControlDisabledMaxHeightRatio: scrollControlDisabledMaxHeightRatio,
       backgroundColor: backgroundColor,
       barrierColor: barrierColor,

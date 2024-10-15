@@ -48,8 +48,7 @@ Object? evaluateNestedExpressions(Object? data, ScopeContext? context) {
   // Recursively evaluate Map entries
   if (data is Map<String, Object?>) {
     return data.map((key, value) {
-      var evaluatedKey =
-          hasExpression(key) ? evaluate<String>(key, scopeContext: context)! : key;
+      var evaluatedKey = evaluate<String>(key, scopeContext: context) ?? key;
       var evaluatedValue = evaluateNestedExpressions(value, context);
       return MapEntry(evaluatedKey, evaluatedValue);
     });
