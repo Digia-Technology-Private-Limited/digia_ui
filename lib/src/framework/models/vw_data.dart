@@ -86,7 +86,7 @@ class VWStateData extends VWData {
         ['children', 'composites', 'childGroups'],
         parse: _parseVWNodeDataMap,
       ),
-      refName: as$<String>(json['refName']),
+      refName: tryKeys<String>(json, ['varName', 'refName']),
     );
   }
 }

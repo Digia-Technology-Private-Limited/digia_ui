@@ -60,7 +60,7 @@ class DUIComponent extends StatelessWidget {
         messageHandler: messageHandler,
         navigatorKey: navigatorKey,
         child: StatefulScopeWidget(
-          namespace: 'component',
+          namespace: id,
           initialState: resolvedState ?? {},
           childBuilder: (context, state) {
             return _buildContent(

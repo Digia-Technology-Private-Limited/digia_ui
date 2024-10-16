@@ -70,7 +70,7 @@ class DUIPage extends StatelessWidget {
         messageHandler: messageHandler,
         navigatorKey: navigatorKey,
         child: StatefulScopeWidget(
-          namespace: 'page',
+          namespace: pageId,
           initialState: resolvedState ?? {},
           childBuilder: (context, state) {
             return _DUIPageContent(
