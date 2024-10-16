@@ -28,13 +28,17 @@ class ControlObjectAction extends Action {
       };
 
   factory ControlObjectAction.fromJson(Map<String, Object?> json) {
+    final complexObject = json['controller'] as Map<String, Object?>?;
     return ControlObjectAction(
       stateContextName: as<String>(json['stateContextName']),
-      objectName: as<String>(json['objectName']),
-      method: as<String>(json['method']),
-      args: as$<List>(json['args'])
-          ?.map((e) => ExprOr.fromJson<Object>(e))
-          .toList(),
+      objectName: as<String>(complexObject?['type']),
+      method: as<String>(complexObject?['method']),
+      args: as$<Map<String, dynamic>>(complexObject?['args'])?.values.map(
+        (e) {
+          final map = e as Map<String, dynamic>?;
+          return ExprOr.fromJson<Object>(map?['data']);
+        },
+      ).toList(),
     );
   }
 }
