@@ -40,7 +40,6 @@ class ShowBottomSheetProcessor
     ShowBottomSheetAction action,
     ScopeContext? scopeContext,
   ) async {
-    final pageId = action.viewId;
     final JsonLike style = action.style ?? {};
     final provider = ResourceProvider.maybeOf(context);
     final navigatorKey = provider?.navigatorKey;

@@ -33,8 +33,8 @@ class _InternalPaginatedSliverListState
   @override
   void initState() {
     _pagingController = PagingController.fromValue(
-      PagingState(itemList: widget.items, nextPageKey: 1),
-      firstPageKey: 0,
+      PagingState(itemList: widget.items, nextPageKey: 2),
+      firstPageKey: 1,
     );
     super.initState();
 

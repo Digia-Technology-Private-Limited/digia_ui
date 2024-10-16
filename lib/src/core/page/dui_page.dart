@@ -13,7 +13,7 @@ class DUIPage extends StatelessWidget {
   final DUIIconDataProvider? iconDataProvider;
   final DUIImageProviderFn? imageProviderFn;
   final DUITextStyleBuilder? textStyleBuilder;
-  final DUIMessageHandler? onMessageReceived;
+  final DUIMessageHandler2? onMessageReceived;
   final DUIConfig _config;
   final GlobalKey<NavigatorState>? navigatorKey;
   DUIPage({
