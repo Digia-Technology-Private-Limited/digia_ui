@@ -9,6 +9,7 @@ import '../models/props.dart';
 import '../render_payload.dart';
 import '../utils/flutter_type_converters.dart';
 import '../utils/functional_util.dart';
+import '../utils/types.dart';
 
 class VWContainer extends VirtualStatelessWidget<Props> {
   VWContainer({
@@ -39,42 +40,6 @@ class VWContainer extends VirtualStatelessWidget<Props> {
         evalColor: (it) => payload.evalColor(it));
     final elevation = props.getDouble('elevation') ?? 0.0;
 
-    List<BoxShadow>? getShadowList(RenderPayload payload, Props props) {
-      if (props.getList('shadow').isNullOrEmpty) return null;
-
-      List<Map<String, dynamic>> tempShadowList =
-          props.getList('shadow')!.cast<Map<String, dynamic>>();
-
-      BlurStyle getBlurStyle(String style) {
-        switch (style) {
-          case 'inner':
-            return BlurStyle.inner;
-          case 'outer':
-            return BlurStyle.outer;
-          case 'solid':
-            return BlurStyle.solid;
-          case 'normal':
-          default:
-            return BlurStyle.normal;
-        }
-      }
-
-      List<BoxShadow> shadowList = tempShadowList.map((element) {
-        return BoxShadow(
-          blurStyle: getBlurStyle((element['blurStyle']) ?? 'normal'),
-          blurRadius: payload.eval<double>(element['blur']) ?? 0,
-          spreadRadius: payload.eval<double>(element['spreadRadius']) ?? 0,
-          color: payload.evalColor(element['color']) ?? Colors.black,
-          offset: Offset(
-            payload.eval<double>(element['offset']['x']) ?? 0,
-            payload.eval<double>(element['offset']['y']) ?? 0,
-          ),
-        );
-      }).toList();
-
-      return shadowList;
-    }
-
     Widget container = Container(
         width: width,
         height: height,
@@ -82,7 +47,7 @@ class VWContainer extends VirtualStatelessWidget<Props> {
         padding: padding,
         decoration: BoxDecoration(
             gradient: gradiant,
-            boxShadow: getShadowList(payload, props),
+            boxShadow: _toShadowList(payload, props.getList('shadow')),
             color: color,
             border: _toBorderWithPattern(
                 payload, props.toProps('border') ?? Props.empty()),
@@ -118,6 +83,23 @@ class VWContainer extends VirtualStatelessWidget<Props> {
       child: container,
     );
   }
+}
+
+List<BoxShadow>? _toShadowList(
+    RenderPayload payload, List<Object?>? shadowProps) {
+  return shadowProps?.cast<JsonLike>().nonNulls.map((e) {
+    final dx = payload.eval<double>(e.valueFor(keyPath: 'offset.x'));
+    final dy = payload.eval<double>(e.valueFor(keyPath: 'offset.y'));
+    final offset = (dx, dy).maybe((p0, p1) => Offset(p0, p1));
+
+    return BoxShadow(
+      blurStyle: To.blurStyle(e['blurStyle']) ?? BlurStyle.normal,
+      blurRadius: payload.eval<double>(e['blur']) ?? 0,
+      spreadRadius: payload.eval<double>(e['spreadRadius']) ?? 0,
+      color: payload.evalColor(e['color']) ?? Colors.black,
+      offset: offset ?? Offset.zero,
+    );
+  }).toList();
 }
 
 DecorationImage? _toDecorationImage(RenderPayload payload, Props? props) {
