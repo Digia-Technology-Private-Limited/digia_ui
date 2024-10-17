@@ -50,7 +50,7 @@ TextStyle? makeTextStyle(
 
   if (fontToken is String) {
     final textStyle =
-        ResourceProvider.maybeOf(context)?.getTextStyle(fontToken);
+        ResourceProvider.maybeOf(context)?.getFontFromToken(fontToken);
 
     return (textStyle ?? _defaultTextStyle).copyWith(
       color: textColor,
@@ -64,40 +64,35 @@ TextStyle? makeTextStyle(
   // This means json['fontToken'] is a map
   fontToken = fontToken as JsonLike;
 
-  final textStyle = ResourceProvider.maybeOf(context)
-      ?.getTextStyle(fontToken['value'] as String);
-  // TODO: To be fixed. Not sure if fontFamilyFallback is right for us.
-  // final fontFamily = fontToken.valueFor('font.fontFamily') as String? ??
-  //     textStyle?.fontFamilyFallback?.firstOrNull ??
-  //     _defaultTextStyle.fontFamilyFallback!.first;
-  final fontFamily = 'Work Sans';
+  final fontTokenValue = as$<String>(fontToken['value']);
+  final overridingFontFamily = fontToken.valueFor('font.fontFamily') as String?;
+  final overridingFontStyle =
+      eval<String>(fontToken.valueFor('font.style')).maybe(To.fontStyle);
+  final overridingFontWeight =
+      eval<String>(fontToken.valueFor('font.weight')).maybe(To.fontWeight);
+  final overridingFontSize = eval<double>(fontToken.valueFor('font.size'));
+  final overridingFontHeight = eval<double>(fontToken.valueFor('font.height'));
 
-  final fontWeight =
-      eval<String>(fontToken.valueFor('font.weight')).maybe(To.fontWeight) ??
-          textStyle?.fontWeight ??
-          _defaultTextStyle.fontWeight;
-  final fontStyle =
-      eval<String>(fontToken.valueFor('font.style')).maybe(To.fontStyle) ??
-          textStyle?.fontStyle ??
-          _defaultTextStyle.fontStyle;
-  final fontSize = eval<double>(fontToken.valueFor('font.size')) ??
-      textStyle?.fontSize ??
-      _defaultTextStyle.fontSize;
-  final height = eval<double>(fontToken.valueFor('font.height')) ??
-      textStyle?.height ??
-      _defaultTextStyle.height;
-  return GoogleFonts.getFont(
-    fontFamily,
-    fontWeight: fontWeight,
-    fontStyle: fontStyle,
-    fontSize: fontSize,
-    height: height,
+  final fontFromToken = fontTokenValue
+      .maybe((it) => ResourceProvider.maybeOf(context)?.getFontFromToken(it));
+
+  final textStyle = (fontFromToken ?? _defaultTextStyle).copyWith(
+    fontWeight: overridingFontWeight,
+    fontStyle: overridingFontStyle,
+    fontSize: overridingFontSize,
+    height: overridingFontHeight,
     color: textColor,
     backgroundColor: textBgColor,
     decoration: textDecoration,
     decorationColor: textDecorationColor,
     decorationStyle: textDecorationStyle,
   );
+
+  if (overridingFontFamily == null) {
+    return textStyle;
+  }
+
+  return GoogleFonts.getFont(overridingFontFamily, textStyle: textStyle);
 }
 
 TextStyle? convertToTextStyle(Object? value) {

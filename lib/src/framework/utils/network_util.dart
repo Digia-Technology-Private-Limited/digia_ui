@@ -34,7 +34,11 @@ Future<Response<Object?>> executeApiAction(
         'error': null,
       };
 
-      final isSuccess = successCondition?.evaluate(scopeContext) ?? true;
+      final isSuccess = successCondition?.evaluate(DefaultScopeContext(
+            variables: {'response': respObj},
+            enclosing: scopeContext,
+          )) ??
+          true;
       if (isSuccess) {
         await onSuccess?.call(respObj);
       } else {

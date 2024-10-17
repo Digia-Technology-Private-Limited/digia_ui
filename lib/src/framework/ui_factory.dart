@@ -164,6 +164,7 @@ class DUIFactory {
               overrideImages: overrideImages,
               overrideTextStyles: overrideTextStyles,
               overrideColorTokens: overrideColorTokens,
+              navigatorKey: navigatorKey,
               messageHandler: messageHandler,
             ));
   }
