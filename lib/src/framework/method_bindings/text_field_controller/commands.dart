@@ -4,16 +4,16 @@ import '../base.dart';
 class TextFieldControllerSetValueCommand
     implements MethodCommand<TextEditingController> {
   @override
-  void run(TextEditingController instance, List<Object?> args) {
-    dynamic offset = args[0];
-    instance.value = offset;
+  void run(TextEditingController instance, Map<String, Object?> args) {
+    dynamic value = args['value'];
+    instance.value = value;
   }
 }
 
 class TextFieldControllerClearCommand
     implements MethodCommand<TextEditingController> {
   @override
-  void run(TextEditingController instance, List<Object?> args) {
+  void run(TextEditingController instance, Map<String, Object?> args) {
     instance.clear();
   }
 }

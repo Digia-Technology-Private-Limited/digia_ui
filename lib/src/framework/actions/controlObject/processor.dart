@@ -34,7 +34,8 @@ class ControlObjectProcessor extends ActionProcessor<ControlObjectAction> {
     }
 
     final evaluatedArgs =
-        action.args?.map((e) => e?.evaluate(scopeContext)).toList() ?? [];
+        action.args?.map((k, v) => MapEntry(k, v?.evaluate(scopeContext))) ??
+            {};
 
     registry.execute(object, action.method, evaluatedArgs);
 

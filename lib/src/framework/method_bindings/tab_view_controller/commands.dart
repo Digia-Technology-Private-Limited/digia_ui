@@ -5,8 +5,8 @@ import '../base.dart';
 class TabViewControllerAnimateToCommand
     implements MethodCommand<TabViewController> {
   @override
-  void run(TabViewController instance, List<Object?> args) {
-    int value = args[0]?.to<int>() ?? 0;
-    instance.animateTo(value);
+  void run(TabViewController instance, Map<String, Object?> args) {
+    int index = args['index']?.to<int>() ?? 0;
+    instance.animateTo(index);
   }
 }
