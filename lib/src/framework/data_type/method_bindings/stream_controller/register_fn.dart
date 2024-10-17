@@ -4,9 +4,9 @@ import '../method_binding_registry.dart';
 import 'commands.dart';
 
 registerMethodCommandsForStreamController(MethodBindingRegistry registry) {
-  registry.registerMethods<StreamController>({
+  registry.registerMethods<StreamController<Object?>>({
     'add': StreamControllerAddCommand(),
-    'addError': StreamControllerAddErrorCommand(),
+    // 'addError': StreamControllerAddErrorCommand(),
     'close': StreamControllerCloseCommand(),
   });
 }

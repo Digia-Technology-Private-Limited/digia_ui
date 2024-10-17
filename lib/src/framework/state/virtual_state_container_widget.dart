@@ -1,16 +1,16 @@
 import 'package:flutter/widgets.dart';
 
-import '../../models/variable_def.dart';
 import '../base/virtual_widget.dart';
+import '../data_type/data_type_creator.dart';
+import '../data_type/variable.dart';
 import '../expr/scope_context.dart';
-import '../page/type_creator.dart';
 import '../render_payload.dart';
 import 'state_context.dart';
 import 'state_scope_context.dart';
 import 'stateful_scope_widget.dart';
 
 class VirtualStateContainerWidget extends VirtualWidget {
-  final Map<String, VariableDef?> initStateDefs;
+  final Map<String, Variable> initStateDefs;
   VirtualWidget? child;
 
   VirtualStateContainerWidget({
@@ -23,8 +23,13 @@ class VirtualStateContainerWidget extends VirtualWidget {
   @override
   Widget render(RenderPayload payload) {
     if (child == null) return empty();
-    final resolvedState =
-        initStateDefs.map((k, v) => MapEntry(k, TypeCreator.create(v)));
+
+    final resolvedState = initStateDefs.map((k, v) => MapEntry(
+        k,
+        DataTypeCreator.create(
+          v,
+          scopeContext: payload.scopeContext,
+        )));
 
     return StatefulScopeWidget(
       namespace: refName,

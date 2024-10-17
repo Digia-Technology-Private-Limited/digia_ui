@@ -1,12 +1,12 @@
 import 'package:flutter/widgets.dart';
+import '../../../utils/functional_util.dart';
 import '../base.dart';
 
 class TextFieldControllerSetValueCommand
     implements MethodCommand<TextEditingController> {
   @override
   void run(TextEditingController instance, Map<String, Object?> args) {
-    dynamic value = args['value'];
-    instance.value = value;
+    instance.text = as$<String>(args['text']) ?? '';
   }
 }
 

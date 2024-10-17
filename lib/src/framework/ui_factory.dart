@@ -5,9 +5,8 @@ import 'actions/action_executor.dart';
 import 'base/message_handler.dart';
 import 'base/virtual_widget.dart';
 import 'component/component.dart';
+import 'data_type/method_bindings/method_binding_registry.dart';
 import 'expr/default_scope_context.dart';
-import 'method_bindings/method_binding_registry.dart';
-import 'method_bindings/register_bindings.dart';
 import 'page/config_provider.dart';
 import 'page/page.dart';
 import 'page/page_route.dart';
@@ -63,7 +62,6 @@ class DUIFactory {
       componentBuilder: (id, args) => createComponent(id, args),
     );
     bindingRegistry = MethodBindingRegistry();
-    registerBindings(bindingRegistry);
 
     configProvider =
         pageConfigProvider ?? DUIConfigProvider(DigiaUIClient.instance.config);

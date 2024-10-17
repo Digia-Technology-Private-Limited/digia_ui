@@ -4,14 +4,15 @@ import 'package:flutter/widgets.dart';
 
 import 'base.dart';
 
-class TextFieldControllerAdapter implements TypeAdapter<TextEditingController> {
+class TextEditingControllerAdapter
+    implements TypeAdapter<TextEditingController> {
   @override
   ExprClassInstance wrap(TextEditingController instance) {
     return ExprClassInstance(
         klass: ExprClass(
       name: 'TextFieldController',
       fields: {
-        'value': instance.text,
+        'text': instance.text,
       },
       methods: {},
     ));

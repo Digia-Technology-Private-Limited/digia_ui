@@ -1,8 +1,7 @@
 import 'package:flutter/widgets.dart';
 
+import '../../data_type/method_bindings/method_binding_registry.dart';
 import '../../expr/scope_context.dart';
-
-import '../../method_bindings/method_binding_registry.dart';
 import '../../state/state_context_provider.dart';
 import '../base/processor.dart';
 import 'action.dart';

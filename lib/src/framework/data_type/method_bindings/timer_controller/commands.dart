@@ -1,4 +1,4 @@
-import '../../internal_widgets/timer/controller.dart';
+import '../../../internal_widgets/timer/controller.dart';
 import '../base.dart';
 
 class TimerControllerStartCommand implements MethodCommand<TimerController> {

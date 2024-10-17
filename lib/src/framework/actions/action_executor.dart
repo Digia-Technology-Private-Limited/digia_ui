@@ -2,8 +2,8 @@ import 'package:flutter/widgets.dart';
 
 import '../../core/analytics_handler.dart';
 import '../../dui_logger.dart';
+import '../data_type/method_bindings/method_binding_registry.dart';
 import '../expr/scope_context.dart';
-import '../method_bindings/method_binding_registry.dart';
 import '../utils/types.dart';
 import 'action_processor_factory.dart';
 import 'base/action_flow.dart';

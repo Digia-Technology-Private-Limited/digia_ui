@@ -1,9 +1,9 @@
 import 'package:digia_expr/digia_expr.dart';
 
-import '../internal_widgets/timer/controller.dart';
+import '../../internal_widgets/timer/controller.dart';
 import 'base.dart';
 
-class TimerControllerAdapter implements TypeAdapter<TimerController> {
+class TimerControllerAdaptor implements TypeAdapter<TimerController> {
   @override
   ExprClassInstance wrap(TimerController instance) {
     return ExprClassInstance(

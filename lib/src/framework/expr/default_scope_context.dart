@@ -1,6 +1,6 @@
 import 'package:digia_expr/src/expr_context.dart';
 
-import '../type_adaptors/adaptor_registry.dart';
+import '../data_type/adaptors/adaptor_registry.dart';
 
 import 'scope_context.dart';
 

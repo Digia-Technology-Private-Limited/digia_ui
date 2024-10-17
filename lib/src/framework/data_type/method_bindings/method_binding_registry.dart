@@ -1,9 +1,12 @@
 import 'base.dart';
+import 'register_bindings.dart';
 
 class MethodBindingRegistry {
   final Map<Type, Map<String, MethodCommand>> _bindings = {};
 
-  MethodBindingRegistry();
+  MethodBindingRegistry() {
+    registerBindings(this);
+  }
 
   // Registers a command for a given method name
   void registerMethods<T>(Map<String, MethodCommand<T>> commands) {

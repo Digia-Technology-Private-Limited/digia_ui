@@ -2,12 +2,12 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
-import '../../models/variable_def.dart';
 import '../../network/api_request/api_request.dart';
 import '../actions/base/action_flow.dart';
 import '../base/message_handler.dart';
+import '../data_type/data_type_creator.dart';
+import '../data_type/variable.dart';
 import '../expr/default_scope_context.dart';
-import '../expr/expression_util.dart';
 import '../expr/scope_context.dart';
 import '../internal_widgets/async_builder/controller.dart';
 import '../internal_widgets/async_builder/widget.dart';
@@ -24,7 +24,6 @@ import '../utils/functional_util.dart';
 import '../utils/network_util.dart';
 import '../utils/types.dart';
 import '../virtual_widget_registry.dart';
-import 'type_creator.dart';
 
 class DUIPage extends StatelessWidget {
   final String pageId;
@@ -54,9 +53,13 @@ class DUIPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final resolvePageArgs = pageDef.pageArgDefs
         ?.map((k, v) => MapEntry(k, pageArgs?[k] ?? v.defaultValue));
-    TypeCreator.initialize(resolvePageArgs);
-    final resolvedState = pageDef.initStateDefs
-        ?.map((k, v) => MapEntry(k, TypeCreator.create(v)));
+    final resolvedState = pageDef.initStateDefs?.map((k, v) => MapEntry(
+        k,
+        DataTypeCreator.create(v,
+            scopeContext: DefaultScopeContext(
+              variables: {...?resolvePageArgs},
+              enclosing: scope,
+            ))));
 
     return ResourceProvider(
         icons: resources?.icons ?? {},
@@ -95,8 +98,8 @@ class DUIPage extends StatelessWidget {
     final pageVariables = {
       // Backward Compat
       'pageParams': pageParams,
-      // New Naming Convention,
-      'params': pageParams,
+      // New Convention,
+      ...?pageParams,
     };
     if (stateContext == null) {
       return DefaultScopeContext(
@@ -116,7 +119,7 @@ class DUIPage extends StatelessWidget {
 class _DUIPageContent extends StatefulWidget {
   final String pageId;
   final Map<String, Object?>? args;
-  final Map<String, VariableDef?>? initialStateDef;
+  final Map<String, Variable?>? initialStateDef;
   final ({VWData? root})? layout;
   final VirtualWidgetRegistry registry;
   final ScopeContext? scope;

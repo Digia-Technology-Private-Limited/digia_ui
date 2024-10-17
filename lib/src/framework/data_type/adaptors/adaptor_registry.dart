@@ -1,11 +1,24 @@
-import 'package:digia_expr/digia_expr.dart';
+import 'dart:async';
 
+import 'package:digia_expr/digia_expr.dart';
+import 'package:flutter/widgets.dart';
+
+import '../../internal_widgets/timer/controller.dart';
 import 'base.dart';
+import 'scroll_controller_adaptor.dart';
+import 'stream_controller_adaptor.dart';
+import 'text_field_controller_adapter.dart';
+import 'timer_controller_adaptor.dart';
 
 class AdapterRegistry {
   static final AdapterRegistry _instance = AdapterRegistry._internal();
   factory AdapterRegistry() => _instance;
-  AdapterRegistry._internal();
+  AdapterRegistry._internal() {
+    registerAdapter<ScrollController>(ScrollControllerAdapter());
+    registerAdapter<StreamController>(StreamControllerAdapter());
+    registerAdapter<TextEditingController>(TextEditingControllerAdapter());
+    registerAdapter<TimerController>(TimerControllerAdaptor());
+  }
 
   final Map<Type, TypeAdapter> _adapterMap = {};
 

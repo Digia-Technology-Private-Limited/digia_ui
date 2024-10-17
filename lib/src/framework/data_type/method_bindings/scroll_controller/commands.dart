@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 
-import '../../utils/flutter_type_converters.dart';
-import '../../utils/object_util.dart';
+import '../../../utils/flutter_type_converters.dart';
+import '../../../utils/object_util.dart';
 import '../base.dart';
 
 class ScrollControllerJumpToCommand implements MethodCommand<ScrollController> {
