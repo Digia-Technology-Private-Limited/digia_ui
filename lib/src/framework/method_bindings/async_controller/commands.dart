@@ -5,7 +5,7 @@ import '../base.dart';
 class AsyncControllerInvalidateCommand
     implements MethodCommand<AsyncController> {
   @override
-  void run(AsyncController instance, List<Object?> args) {
+  void run(AsyncController instance, Map<String, Object?> args) {
     instance.invalidate();
   }
 }
