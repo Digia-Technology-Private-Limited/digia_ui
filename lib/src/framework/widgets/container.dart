@@ -1,14 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
+import '../../Utils/extensions.dart';
 import '../../components/border/box_border_with_pattern/border_with_pattern.dart';
 import '../base/virtual_stateless_widget.dart';
 import '../models/custom_flutter_types.dart';
 import '../models/props.dart';
 import '../render_payload.dart';
-import '../utils/flutter_extensions.dart';
 import '../utils/flutter_type_converters.dart';
 import '../utils/functional_util.dart';
+import '../utils/types.dart';
 
 class VWContainer extends VirtualStatelessWidget<Props> {
   VWContainer({
@@ -46,6 +47,7 @@ class VWContainer extends VirtualStatelessWidget<Props> {
         padding: padding,
         decoration: BoxDecoration(
             gradient: gradiant,
+            boxShadow: _toShadowList(payload, props.getList('shadow')),
             color: color,
             border: _toBorderWithPattern(
                 payload, props.toProps('border') ?? Props.empty()),
@@ -81,6 +83,23 @@ class VWContainer extends VirtualStatelessWidget<Props> {
       child: container,
     );
   }
+}
+
+List<BoxShadow>? _toShadowList(
+    RenderPayload payload, List<Object?>? shadowProps) {
+  return shadowProps?.cast<JsonLike>().nonNulls.map((e) {
+    final dx = payload.eval<double>(e.valueFor(keyPath: 'offset.x'));
+    final dy = payload.eval<double>(e.valueFor(keyPath: 'offset.y'));
+    final offset = (dx, dy).maybe((p0, p1) => Offset(p0, p1));
+
+    return BoxShadow(
+      blurStyle: To.blurStyle(e['blurStyle']) ?? BlurStyle.normal,
+      blurRadius: payload.eval<double>(e['blur']) ?? 0,
+      spreadRadius: payload.eval<double>(e['spreadRadius']) ?? 0,
+      color: payload.evalColor(e['color']) ?? Colors.black,
+      offset: offset ?? Offset.zero,
+    );
+  }).toList();
 }
 
 DecorationImage? _toDecorationImage(RenderPayload payload, Props? props) {
