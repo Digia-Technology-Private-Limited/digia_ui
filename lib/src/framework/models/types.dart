@@ -41,11 +41,7 @@ class ExprOr<T extends Object> {
   ///
   /// Returns the deeply evaluated result.
   Object? deepEvaluate(ScopeContext? scopeContext) {
-    if (isExpr) {
-      return expr.evaluateNestedExpressions(_value, scopeContext);
-    } else {
-      return _value;
-    }
+    return expr.evaluateNestedExpressions(_value, scopeContext);
   }
 
   // Creates an ExprOr instance from a JSON representation

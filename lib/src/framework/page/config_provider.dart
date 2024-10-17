@@ -36,7 +36,7 @@ class DUIConfigProvider implements ConfigProvider {
     final componentDef = config.components?[componentId]?.as$<JsonLike>();
 
     if (componentDef == null) {
-      throw 'Page definition for $componentId not found';
+      throw 'Component definition for $componentId not found';
     }
 
     return DUIComponentDefinition.fromJson(componentDef);

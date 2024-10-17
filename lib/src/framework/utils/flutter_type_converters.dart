@@ -606,4 +606,12 @@ abstract class To {
         'label' => TabBarIndicatorSize.label,
         _ => null
       };
+
+  static BlurStyle? blurStyle(dynamic value) => switch (value) {
+        'normal' => BlurStyle.normal,
+        'inner' => BlurStyle.inner,
+        'outer' => BlurStyle.outer,
+        'solid' => BlurStyle.solid,
+        _ => null
+      };
 }

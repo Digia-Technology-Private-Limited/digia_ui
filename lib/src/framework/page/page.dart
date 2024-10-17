@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
-import '../../core/action/api_handler.dart';
 import '../../models/variable_def.dart';
 import '../../network/api_request/api_request.dart';
 import '../actions/base/action_flow.dart';
@@ -13,6 +12,7 @@ import '../expr/scope_context.dart';
 import '../internal_widgets/async_builder/controller.dart';
 import '../internal_widgets/async_builder/widget.dart';
 import '../models/page_definition.dart';
+import '../models/types.dart';
 import '../models/vw_data.dart';
 import '../render_payload.dart';
 import '../resource_provider.dart';
@@ -21,6 +21,7 @@ import '../state/state_scope_context.dart';
 import '../state/stateful_scope_widget.dart';
 import '../ui_factory.dart';
 import '../utils/functional_util.dart';
+import '../utils/network_util.dart';
 import '../utils/types.dart';
 import '../virtual_widget_registry.dart';
 
@@ -69,7 +70,7 @@ class DUIPage extends StatelessWidget {
         messageHandler: messageHandler,
         navigatorKey: navigatorKey,
         child: StatefulScopeWidget(
-          namespace: 'page',
+          namespace: pageId,
           initialState: resolvedState ?? {},
           childBuilder: (context, state) {
             return _DUIPageContent(
@@ -221,48 +222,6 @@ class _DUIPageContentState extends State<_DUIPageContent> {
   bool _shouldExecuteDataSource() =>
       widget.pageDataSource?['type'] == 'Action.loadPage';
 
-  Future<void> _executeDataSourceActions(Response<Object?> response) async {
-    final action = as$<JsonLike>(widget.pageDataSource!['data']);
-    if (action == null) {
-      return Future.error('Unreachable state. data is corrupt');
-    }
-
-    final respObj = {
-      'body': response.data,
-      'statusCode': response.statusCode,
-      'headers': response.headers,
-      'requestObj': _requestObjToMap(response.requestOptions),
-      'error': null,
-    };
-    final successCondition = as$<String>(action['successCondition']);
-
-    final isSuccess = successCondition.maybe((p0) => evaluate<bool>(p0,
-            scopeContext: DefaultScopeContext(
-              variables: {'response': respObj},
-            ))) ??
-        successCondition == null || successCondition.isEmpty;
-
-    if (isSuccess) {
-      final successAction = ActionFlow.fromJson(action['onSuccess']);
-      if (successAction != null) {
-        await _executeAction(
-          context,
-          successAction,
-          DefaultScopeContext(variables: {'response': respObj}),
-        );
-      }
-    } else {
-      final errorAction = ActionFlow.fromJson(action['onError']);
-      if (errorAction != null) {
-        await _executeAction(
-          context,
-          errorAction,
-          DefaultScopeContext(variables: {'response': respObj}),
-        );
-      }
-    }
-  }
-
   AsyncController<Response<Object?>> _makeController() {
     if (!_shouldExecuteDataSource()) {
       return AsyncController();
@@ -273,24 +232,47 @@ class _DUIPageContentState extends State<_DUIPageContent> {
       if (action == null) return Future.error('Unconfigured data');
 
       final apiDataSourceId = as$<String>(action['dataSourceId']);
-      JsonLike? apiDataSourceArgs = as$<JsonLike>(action['args']);
 
       final apiModel =
           ResourceProvider.maybeOf(context)?.apiModels[apiDataSourceId];
 
-      if (apiModel == null) return Future.error('API model not found');
+      if (apiModel == null) {
+        return Future.error('No API Selected');
+      }
 
-      final args = apiDataSourceArgs?.map((key, value) => MapEntry(
-          key, evaluateNestedExpressions(value, _createExprContext(null))));
+      final result = executeApiAction(
+        widget.scope,
+        apiModel,
+        as$<JsonLike>(action['args'])?.map((key, value) => MapEntry(
+              key,
+              ExprOr.fromJson<Object>(value),
+            )),
+        successCondition: ExprOr.fromJson<bool>(action['successCondition']),
+        onSuccess: (response) async {
+          final actionFlow = ActionFlow.fromJson(action['onSuccess']);
+          if (actionFlow != null) {
+            _executeAction(
+              context,
+              actionFlow,
+              DefaultScopeContext(
+                  variables: {'response': response}, enclosing: widget.scope),
+            );
+          }
+        },
+        onError: (response) async {
+          final actionFlow = ActionFlow.fromJson(action['onError']);
+          if (actionFlow != null) {
+            _executeAction(
+              context,
+              actionFlow,
+              DefaultScopeContext(
+                  variables: {'response': response}, enclosing: widget.scope),
+            );
+          }
+        },
+      );
 
-      final response = ApiHandler.instance
-          .execute(apiModel: apiModel, args: args)
-          .then((value) {
-        _executeDataSourceActions(value);
-        return value;
-      });
-
-      return response;
+      return result;
     });
   }
 
@@ -304,15 +286,5 @@ class _DUIPageContentState extends State<_DUIPageContent> {
       actionFlow,
       scopeContext,
     );
-  }
-
-  _requestObjToMap(RequestOptions request) {
-    return {
-      'url': request.path,
-      'method': request.method,
-      'headers': request.headers,
-      'data': request.data,
-      'queryParameters': request.queryParameters,
-    };
   }
 }
