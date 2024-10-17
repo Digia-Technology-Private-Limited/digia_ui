@@ -11,7 +11,7 @@ class MethodBindingRegistry {
   }
 
   // Executes the command by name, passing the instance and arguments
-  void execute<T>(T instance, String methodName, List<Object?> args) {
+  void execute<T>(T instance, String methodName, Map<String, Object?> args) {
     if (_bindings.containsKey(T) && _bindings[T]!.containsKey(methodName)) {
       final command = _bindings[T]![methodName];
       command?.run(instance, args);

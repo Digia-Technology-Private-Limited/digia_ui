@@ -6,7 +6,7 @@ class ControlObjectAction extends Action {
   final String stateContextName;
   final String objectName;
   final String method;
-  final List<ExprOr<Object>?>? args;
+  final Map<String, ExprOr<Object>?>? args;
 
   ControlObjectAction({
     required this.stateContextName,
@@ -24,17 +24,21 @@ class ControlObjectAction extends Action {
         'stateContextName': stateContextName,
         'objectName': objectName,
         'method': method,
-        'args': args?.map((e) => e?.toJson()).toList(),
+        'args': args?.map((k, v) => MapEntry(k, v?.toJson())),
       };
 
   factory ControlObjectAction.fromJson(Map<String, Object?> json) {
+    final complexObject = json['controller'] as Map<String, Object?>?;
     return ControlObjectAction(
       stateContextName: as<String>(json['stateContextName']),
-      objectName: as<String>(json['objectName']),
-      method: as<String>(json['method']),
-      args: as$<List>(json['args'])
-          ?.map((e) => ExprOr.fromJson<Object>(e))
-          .toList(),
+      objectName: as<String>(complexObject?['type']),
+      method: as<String>(complexObject?['method']),
+      args: as$<Map<String, dynamic>>(complexObject?['args'])?.map(
+        (k, v) {
+          final map = v as Map<String, dynamic>?;
+          return MapEntry(k, ExprOr.fromJson<Object>(map?['data']));
+        },
+      ),
     );
   }
 }

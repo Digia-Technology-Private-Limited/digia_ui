@@ -6,8 +6,8 @@ import '../base.dart';
 
 class ScrollControllerJumpToCommand implements MethodCommand<ScrollController> {
   @override
-  void run(ScrollController instance, List<Object?> args) {
-    double offset = args[0]?.to<double>() ?? 0.0;
+  void run(ScrollController instance, Map<String, Object?> args) {
+    double offset = args['offset']?.to<double>() ?? 0.0;
     instance.jumpTo(offset);
   }
 }
@@ -15,10 +15,10 @@ class ScrollControllerJumpToCommand implements MethodCommand<ScrollController> {
 class ScrollControllerAnimateToCommand
     implements MethodCommand<ScrollController> {
   @override
-  void run(ScrollController instance, List<Object?> args) {
-    double offset = args[0]?.to<double>() ?? 0.0;
-    final durationInMs = args[1]?.to<int>() ?? 300;
-    final curve = To.curve(args[2]) ?? Curves.easeIn;
+  void run(ScrollController instance, Map<String, Object?> args) {
+    double offset = args['offset']?.to<double>() ?? 0.0;
+    final durationInMs = args['durationInMs']?.to<int>() ?? 300;
+    final curve = To.curve(args['curve']) ?? Curves.easeIn;
 
     instance.animateTo(
       offset,
