@@ -9,6 +9,7 @@ import '../render_payload.dart';
 import '../utils/date_util.dart';
 import '../utils/flutter_type_converters.dart';
 import '../utils/functional_util.dart';
+import '../widget_props/icon_props.dart';
 import 'icon.dart';
 
 class VWCalendar extends VirtualLeafStatelessWidget<Props> {
@@ -143,14 +144,16 @@ class VWCalendar extends VirtualLeafStatelessWidget<Props> {
             const TextStyle(fontSize: 17.0);
     EdgeInsets? headerPadding = To.edgeInsets(headerStyle.get('headerPadding'));
     Widget? leftChevronIcon = VWIcon(
-      props: headerStyle.toProps('leftChevronIcon') ?? Props.empty(),
+      props: IconProps.fromJson(headerStyle.getMap('leftChevronIcon')) ??
+          IconProps.empty(),
       commonProps: null,
       parent: null,
     ).toWidget(payload);
     EdgeInsets? leftChevronPadding =
         To.edgeInsets(headerStyle.get('leftChevronPadding'));
     Widget? rightChevronIcon = VWIcon(
-      props: headerStyle.toProps('rightChevronIcon') ?? Props.empty(),
+      props: IconProps.fromJson(headerStyle.getMap('rightChevronIcon')) ??
+          IconProps.empty(),
       commonProps: null,
       parent: null,
     ).toWidget(payload);
