@@ -13,17 +13,18 @@ class InternalListView extends StatefulWidget {
   final Widget Function(BuildContext context, int index)? itemBuilder;
   final List<Widget> children;
 
-  const InternalListView(
-      {super.key,
-      this.scrollDirection = Axis.vertical,
-      this.controller,
-      this.reverse = false,
-      this.physics,
-      this.shrinkWrap = false,
-      this.initialScrollPosition,
-      this.itemCount = -1,
-      this.itemBuilder,
-      this.children = const []});
+  const InternalListView({
+    super.key,
+    this.scrollDirection = Axis.vertical,
+    this.controller,
+    this.reverse = false,
+    this.physics,
+    this.shrinkWrap = false,
+    this.initialScrollPosition,
+    this.itemCount = -1,
+    this.itemBuilder,
+    this.children = const [],
+  });
 
   @override
   State<InternalListView> createState() => _InternalListViewState();
@@ -31,11 +32,21 @@ class InternalListView extends StatefulWidget {
 
 class _InternalListViewState extends State<InternalListView>
     with ScrollablePositionMixin {
+  late ScrollController _controller;
+
+  @override
+  void initState() {
+    _controller = widget.controller ?? ScrollController();
+    super.initState();
+
+    setInitialScrollPosition(_controller, widget.initialScrollPosition);
+  }
+
   @override
   Widget build(BuildContext context) {
     if (widget.itemBuilder != null) {
       return ListView.builder(
-        controller: widget.controller,
+        controller: _controller,
         reverse: widget.reverse,
         scrollDirection: widget.scrollDirection,
         physics: widget.physics,
@@ -46,7 +57,7 @@ class _InternalListViewState extends State<InternalListView>
     }
 
     return ListView(
-      controller: widget.controller,
+      controller: _controller,
       reverse: widget.reverse,
       scrollDirection: widget.scrollDirection,
       physics: widget.physics,

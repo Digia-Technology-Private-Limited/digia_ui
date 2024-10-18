@@ -24,6 +24,7 @@ import '../utils/functional_util.dart';
 import '../utils/network_util.dart';
 import '../utils/types.dart';
 import '../virtual_widget_registry.dart';
+import 'controller.dart';
 
 class DUIPage extends StatelessWidget {
   final String pageId;
@@ -35,6 +36,7 @@ class DUIPage extends StatelessWidget {
   final Map<String, APIModel>? apiModels;
   final DUIMessageHandler? messageHandler;
   final GlobalKey<NavigatorState>? navigatorKey;
+  final DUIPageController? controller;
 
   const DUIPage({
     super.key,
@@ -47,6 +49,7 @@ class DUIPage extends StatelessWidget {
     this.apiModels,
     this.messageHandler,
     this.navigatorKey,
+    this.controller,
   });
 
   @override
@@ -61,34 +64,44 @@ class DUIPage extends StatelessWidget {
               enclosing: scope,
             ))));
 
+    Widget child = StatefulScopeWidget(
+      namespace: pageId,
+      initialState: resolvedState ?? {},
+      childBuilder: (context, state) {
+        return _DUIPageContent(
+          pageId: pageId,
+          args: resolvePageArgs,
+          initialStateDef: pageDef.initStateDefs,
+          layout: pageDef.layout,
+          registry: registry,
+          scope: _createExprContext(
+            resolvePageArgs,
+            state,
+          ),
+          onPageLoaded: pageDef.onPageLoad,
+          onBackPress: pageDef.onBackPress,
+          pageDataSource: pageDef.pageDataSource,
+        );
+      },
+    );
+
+    if (controller != null) {
+      child = ListenableBuilder(
+        listenable: controller!,
+        builder: (context, _) => child,
+      );
+    }
+
     return ResourceProvider(
-        icons: resources?.icons ?? {},
-        images: resources?.images ?? {},
-        textStyles: resources?.textStyles ?? {},
-        colors: resources?.colors ?? {},
-        apiModels: apiModels ?? {},
-        messageHandler: messageHandler,
-        navigatorKey: navigatorKey,
-        child: StatefulScopeWidget(
-          namespace: pageId,
-          initialState: resolvedState ?? {},
-          childBuilder: (context, state) {
-            return _DUIPageContent(
-              pageId: pageId,
-              args: resolvePageArgs,
-              initialStateDef: pageDef.initStateDefs,
-              layout: pageDef.layout,
-              registry: registry,
-              scope: _createExprContext(
-                resolvePageArgs,
-                state,
-              ),
-              onPageLoaded: pageDef.onPageLoad,
-              onBackPress: pageDef.onBackPress,
-              pageDataSource: pageDef.pageDataSource,
-            );
-          },
-        ));
+      icons: resources?.icons ?? {},
+      images: resources?.images ?? {},
+      textStyles: resources?.textStyles ?? {},
+      colors: resources?.colors ?? {},
+      apiModels: apiModels ?? {},
+      messageHandler: messageHandler,
+      navigatorKey: navigatorKey,
+      child: child,
+    );
   }
 
   ScopeContext _createExprContext(

@@ -16,13 +16,13 @@ import '../render_payload.dart';
 import '../utils/flutter_type_converters.dart';
 
 class VWTextFormField extends VirtualStatelessWidget<Props> {
-  VWTextFormField(
-      {required super.props,
-      required super.commonProps,
-      required super.parent,
-      super.refName,
-      required super.childGroups})
-      : super(repeatData: null);
+  VWTextFormField({
+    required super.props,
+    required super.commonProps,
+    required super.parent,
+    super.refName,
+    required super.childGroups,
+  }) : super(repeatData: null);
 
   @override
   Widget render(RenderPayload payload) {

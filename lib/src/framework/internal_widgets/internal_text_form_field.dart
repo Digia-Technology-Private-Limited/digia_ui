@@ -50,12 +50,15 @@ class _DUITextFieldState extends State<InternalTextFormField> {
 
   @override
   void initState() {
-    widget.controller.addListener(() {
-      widget.onChangedAction
-          ?.call(widget.controller.text, _setErrorText == null ? true : false);
-    });
-
+    widget.controller.addListener(_onChanged);
     super.initState();
+  }
+
+  _onChanged() {
+    widget.onChangedAction?.call(
+      widget.controller.text,
+      _setErrorText == null ? true : false,
+    );
   }
 
   @override
@@ -84,6 +87,12 @@ class _DUITextFieldState extends State<InternalTextFormField> {
         _validateInput(value);
       },
     );
+  }
+
+  @override
+  void dispose() {
+    widget.controller.removeListener(_onChanged);
+    super.dispose();
   }
 
   void _validateInput(String value) {

@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 import '../base/virtual_leaf_stateless_widget.dart';
 import '../base/virtual_widget.dart';
-import '../models/props.dart';
 import '../render_payload.dart';
 import '../utils/functional_util.dart';
 import '../utils/widget_util.dart';
 import '../widget_props/app_bar_props.dart';
+import '../widget_props/icon_props.dart';
 import 'icon.dart';
 import 'text.dart';
 
@@ -49,7 +49,7 @@ class VWAppBar extends VirtualLeafStatelessWidget<AppBarProps> {
       return leadingIcon!.toWidget(payload);
     }
 
-    final leadingIconProps = props.leadingIcon.maybe((it) => Props(it));
+    final leadingIconProps = props.leadingIcon.maybe(IconProps.fromJson);
     if (leadingIconProps == null) return null;
 
     var widget = VWIcon(
@@ -70,7 +70,7 @@ class VWAppBar extends VirtualLeafStatelessWidget<AppBarProps> {
       return [trailingIcon!.toWidget(payload)];
     }
 
-    final trailingIconProps = props.trailingIcon.maybe((it) => Props(it));
+    final trailingIconProps = props.trailingIcon.maybe(IconProps.fromJson);
     if (trailingIconProps == null) return null;
 
     return [
