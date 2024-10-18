@@ -8,6 +8,7 @@ import 'component/component.dart';
 import 'expr/default_scope_context.dart';
 import 'page/config_provider.dart';
 import 'page/page.dart';
+import 'page/page_controller.dart';
 import 'page/page_route.dart';
 import 'utils/color_util.dart';
 import 'utils/functional_util.dart';
@@ -108,6 +109,7 @@ class DUIFactory {
     Map<String, Color?>? overrideColorTokens,
     GlobalKey<NavigatorState>? navigatorKey,
     DUIMessageHandler? messageHandler,
+    DUIPageController? pageController,
   }) {
     // Merge overriding resources with existing resources
     final mergedResources = UIResources(
@@ -137,6 +139,7 @@ class DUIFactory {
         registry: widgetRegistry,
         apiModels: configProvider.getAllApiModels(),
         messageHandler: messageHandler,
+        controller: pageController,
         scope: DefaultScopeContext(
           name: 'global',
           variables: {...DigiaUIClient.instance.jsVars},
@@ -154,6 +157,7 @@ class DUIFactory {
     Map<String, Color?>? overrideColorTokens,
     GlobalKey<NavigatorState>? navigatorKey,
     DUIMessageHandler? messageHandler,
+    DUIPageController? pageController,
   }) {
     return DUIPageRoute<Object>(
         pageId: pageId,
@@ -166,6 +170,7 @@ class DUIFactory {
               overrideColorTokens: overrideColorTokens,
               navigatorKey: navigatorKey,
               messageHandler: messageHandler,
+              pageController: pageController,
             ));
   }
 
