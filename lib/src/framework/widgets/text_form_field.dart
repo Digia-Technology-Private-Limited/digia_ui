@@ -24,7 +24,7 @@ class VWTextFormField extends VirtualStatelessWidget<Props> {
 
   @override
   Widget render(RenderPayload payload) {
-    final initialValue = props.getString('initialValue');
+    final initialValue = payload.eval<String>(props.get('initialValue'));
     final enabled = props.getBool('enabled');
     final keyboardType = To.toKeyBoardType(props.get('keyboardType'));
     final textInputAction = To.toTextInputAction(props.get('textInputAction'));

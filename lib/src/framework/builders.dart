@@ -9,6 +9,7 @@ import 'widget_props/app_bar_props.dart';
 import 'widget_props/condtional_item_props.dart';
 import 'widget_props/custom_scroll_view_props.dart';
 import 'widget_props/flex_fit_props.dart';
+import 'widget_props/icon_props.dart';
 import 'widget_props/nested_scroll_view_props.dart';
 import 'widget_props/paginated_list_view_props.dart';
 import 'widget_props/paginated_sliver_list_props.dart';
@@ -152,7 +153,7 @@ VWContainer containerBuilder(
 
 VWIcon iconBuilder(VWNodeData data, VirtualWidget? parent, _) {
   return VWIcon(
-    props: data.props,
+    props: IconProps.fromJson(data.props.value) ?? IconProps.empty(),
     commonProps: data.commonProps,
     parent: parent,
     refName: data.refName,
