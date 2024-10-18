@@ -31,11 +31,11 @@ class ControlObjectAction extends Action {
     final complexObject = json['controller'] as Map<String, Object?>?;
     return ControlObjectAction(
       stateContextName: as<String>(json['stateContextName']),
-      objectName: as<String>(complexObject?['type']),
+      objectName: as<String>(complexObject?['complexObject']),
       method: as<String>(complexObject?['method']),
-      args: as$<Map<String, dynamic>>(complexObject?['args'])?.map(
+      args: as$<Map<String, Object?>>(complexObject?['args'])?.map(
         (k, v) {
-          final map = v as Map<String, dynamic>?;
+          final map = v as Map<String, Object>?;
           return MapEntry(k, ExprOr.fromJson<Object>(map?['data']));
         },
       ),

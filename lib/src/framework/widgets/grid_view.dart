@@ -2,6 +2,8 @@ import 'package:flutter/widgets.dart';
 
 import '../base/extensions.dart';
 import '../base/virtual_stateless_widget.dart';
+import '../data_type/compex_object.dart';
+import '../data_type/data_type.dart';
 import '../expr/default_scope_context.dart';
 import '../expr/scope_context.dart';
 import '../internal_widgets/internal_grid_view.dart';
@@ -24,6 +26,10 @@ class VWGridView extends VirtualStatelessWidget<Props> {
   @override
   Widget render(RenderPayload payload) {
     if (children == null || children!.isEmpty) return empty();
+    final dataType = DataTypeFetch.dataType<ScrollController>(
+        EitherRefOrValue.fromJson(props.getMap('dataType')),
+        payload,
+        DataType.scrollController);
 
     final physics = To.scrollPhysics(props.get('allowScroll'));
     final shrinkWrap = props.getBool('shrinkWrap') ?? false;
@@ -38,6 +44,7 @@ class VWGridView extends VirtualStatelessWidget<Props> {
       final childToRepeat = children!.first;
       final items = payload.evalRepeatData(repeatData!);
       return InternalGridView(
+        controller: dataType,
         physics: physics,
         shrinkWrap: shrinkWrap,
         gridDelegate: gridDelegate,
@@ -51,6 +58,7 @@ class VWGridView extends VirtualStatelessWidget<Props> {
     }
 
     return InternalGridView(
+      controller: dataType,
       physics: physics,
       shrinkWrap: shrinkWrap,
       gridDelegate: gridDelegate,

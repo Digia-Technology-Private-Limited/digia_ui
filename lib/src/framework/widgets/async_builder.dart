@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 
 import '../actions/base/action_flow.dart';
 import '../base/virtual_stateless_widget.dart';
+import '../data_type/compex_object.dart';
+import '../data_type/data_type.dart';
 import '../expr/default_scope_context.dart';
 import '../expr/scope_context.dart';
 import '../internal_widgets/async_builder/controller.dart';
@@ -33,10 +35,19 @@ class VWAsyncBuilder extends VirtualStatelessWidget<Props> {
     final futureProps = props.toProps('future');
     if (futureProps == null) return empty();
 
+    final dataType = DataTypeFetch.dataType<AsyncController<Response<Object?>>>(
+        EitherRefOrValue.fromJson(props.getMap('dataType')),
+        payload,
+        DataType.asyncController);
+
+    if (dataType == null) return empty();
+
+    dataType.setFutureBuilder(
+      () => _makeFuture(futureProps, payload),
+    );
+
     return AsyncBuilder<Response<Object?>>(
-        controller: AsyncController<Response<Object?>>(
-          futureBuilder: () => _makeFuture(futureProps, payload),
-        ),
+        controller: dataType,
         builder: (innerCtx, snapshot) {
           final updatedPayload = payload.copyWithChainedContext(
               _createExprContext(snapshot.data, snapshot.error),

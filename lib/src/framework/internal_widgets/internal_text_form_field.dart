@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class InternalTextFormField extends StatefulWidget {
-  final String? initialValue;
+  final TextEditingController controller;
   final bool? enabled;
   final TextInputType? keyboardType;
   final TextInputAction? textInputAction;
@@ -27,6 +27,7 @@ class InternalTextFormField extends StatefulWidget {
     this.textInputAction,
     this.style,
     this.onChangedAction,
+    required this.controller,
     required this.textAlign,
     required this.readOnly,
     required this.obscureText,
@@ -36,7 +37,6 @@ class InternalTextFormField extends StatefulWidget {
     this.cursorColor,
     this.regex,
     this.errorText,
-    this.initialValue,
     this.inputDecoration = const InputDecoration(),
     // this.onChanged,
   });
@@ -46,15 +46,13 @@ class InternalTextFormField extends StatefulWidget {
 }
 
 class _DUITextFieldState extends State<InternalTextFormField> {
-  late TextEditingController _controller;
   String? _setErrorText;
 
   @override
   void initState() {
-    _controller = TextEditingController(text: widget.initialValue);
-    _controller.addListener(() {
+    widget.controller.addListener(() {
       widget.onChangedAction
-          ?.call(_controller.text, _setErrorText == null ? true : false);
+          ?.call(widget.controller.text, _setErrorText == null ? true : false);
     });
 
     super.initState();
@@ -63,7 +61,7 @@ class _DUITextFieldState extends State<InternalTextFormField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      controller: _controller,
+      controller: widget.controller,
       enabled: widget.enabled,
       keyboardType: widget.keyboardType,
       textInputAction: widget.textInputAction,

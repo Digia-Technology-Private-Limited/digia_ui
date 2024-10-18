@@ -1,6 +1,8 @@
 import 'package:flutter/widgets.dart';
 
 import '../base/virtual_stateless_widget.dart';
+import '../data_type/compex_object.dart';
+import '../data_type/data_type.dart';
 import '../expr/default_scope_context.dart';
 import '../expr/scope_context.dart';
 import '../render_payload.dart';
@@ -36,6 +38,9 @@ class VWNestedScrollView extends VirtualStatelessWidget<NestedScrollViewProps> {
 
   @override
   Widget render(RenderPayload payload) {
+    final dataType = DataTypeFetch.dataType<ScrollController>(
+        props.dataType, payload, DataType.scrollController);
+
     final enableOverlapAbsorption =
         props.enableOverlapAbsorber?.evaluate(payload.scopeContext) ?? true;
 
@@ -43,6 +48,7 @@ class VWNestedScrollView extends VirtualStatelessWidget<NestedScrollViewProps> {
     final body = childOf('bodyWidget');
 
     return NestedScrollView(
+        controller: dataType,
         headerSliverBuilder: (innerCtx, innerBoxIsScrolled) {
           final updatedPayload = payload.copyWithChainedContext(
             _createExprContext(innerBoxIsScrolled),

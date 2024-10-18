@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../base/virtual_stateless_widget.dart';
+import '../data_type/compex_object.dart';
+import '../data_type/data_type.dart';
 import '../expr/default_scope_context.dart';
 import '../expr/scope_context.dart';
 import '../render_payload.dart';
@@ -19,11 +21,11 @@ class VWStreamBuilder extends VirtualStatelessWidget<StreamBuilderProps> {
 
   @override
   Widget render(RenderPayload payload) {
-    final streamDef = payload.evalExpr(props.streamRef);
-    if (streamDef == null) return empty();
+    final dataType = DataTypeFetch.dataType<StreamController>(
+        props.dataType, payload, DataType.streamController);
 
     return StreamBuilder(
-      stream: _makeStream(streamDef).stream,
+      stream: _makeStream(dataType).stream,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return childOf('loadingWidget')?.toWidget(payload) ??

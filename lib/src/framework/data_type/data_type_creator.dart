@@ -32,10 +32,10 @@ class DataTypeCreator {
         return ScrollController();
 
       case DataType.streamController:
-        return StreamController();
+        return StreamController<Object?>();
 
       case DataType.asyncController:
-        return AsyncController();
+        return AsyncController<Object?>();
 
       case DataType.textEditingController:
         final value = as$<JsonLike>(def.defaultValue) ?? {};

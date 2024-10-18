@@ -6,6 +6,8 @@ import '../../components/border/dashed_input_border/dashed_underline_input_borde
 import '../../components/utils/DUIBorder/dui_border.dart';
 import '../actions/base/action_flow.dart';
 import '../base/virtual_stateless_widget.dart';
+import '../data_type/compex_object.dart';
+import '../data_type/data_type.dart';
 import '../expr/default_scope_context.dart';
 import '../expr/scope_context.dart';
 import '../internal_widgets/internal_text_form_field.dart';
@@ -24,7 +26,11 @@ class VWTextFormField extends VirtualStatelessWidget<Props> {
 
   @override
   Widget render(RenderPayload payload) {
-    final initialValue = props.getString('initialValue');
+    final dataType = DataTypeFetch.dataType<TextEditingController>(
+        EitherRefOrValue.fromJson(props.getMap('dataType')),
+        payload,
+        DataType.textEditingController);
+
     final enabled = props.getBool('enabled');
     final keyboardType = To.toKeyBoardType(props.get('keyboardType'));
     final textInputAction = To.toTextInputAction(props.get('textInputAction'));
@@ -53,7 +59,7 @@ class VWTextFormField extends VirtualStatelessWidget<Props> {
     final focusedErrorBorder = _toInputBorder(props.get('focusedErrorBorder'));
     final errorBorder = _toInputBorder(props.get('errorBorder'));
     return InternalTextFormField(
-      initialValue: initialValue,
+      controller: dataType ?? TextEditingController(),
       onChangedAction: (p0, p1) async {
         final actionFlow = ActionFlow.fromJson(props.get('onChanged'));
         await payload.executeAction(actionFlow,
