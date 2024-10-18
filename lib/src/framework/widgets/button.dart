@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
 import '../actions/base/action_flow.dart';
@@ -84,7 +86,8 @@ class VWButton extends VirtualLeafStatelessWidget<Props> {
     Widget? leadingIcon;
     Widget? trailingIcon;
 
-    final localProps = JsonLike.from(props.value);
+    final JsonLike localProps =
+        jsonDecode(jsonEncode(props.value)) as JsonLike? ?? {};
 
     if (overrideColor) {
       localProps.setValueFor('text.textStyle.textColor', disabledTextColor);

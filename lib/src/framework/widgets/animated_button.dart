@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
 import '../../components/dui_button_bounce_animation.dart';
@@ -89,7 +91,8 @@ class VWAnimatedButton extends VirtualLeafStatelessWidget<Props> {
     Widget? leadingIcon;
     Widget? trailingIcon;
 
-    final localProps = JsonLike.from(props.value);
+    final JsonLike localProps =
+        jsonDecode(jsonEncode(props.value)) as JsonLike? ?? {};
 
     if (overrideColor) {
       localProps.setValueFor('text.textStyle.textColor', disabledTextColor);
