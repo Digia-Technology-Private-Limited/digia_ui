@@ -27,9 +27,7 @@ class VWTextFormField extends VirtualStatelessWidget<Props> {
   @override
   Widget render(RenderPayload payload) {
     final dataType = DataTypeFetch.dataType<TextEditingController>(
-        EitherRefOrValue.fromJson(props.getMap('dataType')),
-        payload,
-        DataType.textEditingController);
+        EitherRefOrValue.fromJson(props.getMap('dataType')), payload);
 
     final enabled = props.getBool('enabled');
     final keyboardType = To.toKeyBoardType(props.get('keyboardType'));

@@ -23,8 +23,8 @@ class VWTimer extends VirtualStatelessWidget<TimerProps> {
   Widget render(RenderPayload payload) {
     if (child == null) return empty();
 
-    final dataType = DataTypeFetch.dataType<TimerController>(
-        props.dataType, payload, DataType.timerController);
+    final dataType =
+        DataTypeFetch.dataType<TimerController>(props.dataType, payload);
 
     if (dataType == null) return empty();
 

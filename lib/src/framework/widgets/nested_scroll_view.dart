@@ -38,8 +38,8 @@ class VWNestedScrollView extends VirtualStatelessWidget<NestedScrollViewProps> {
 
   @override
   Widget render(RenderPayload payload) {
-    final dataType = DataTypeFetch.dataType<ScrollController>(
-        props.dataType, payload, DataType.scrollController);
+    final dataType =
+        DataTypeFetch.dataType<ScrollController>(props.dataType, payload);
 
     final enableOverlapAbsorption =
         props.enableOverlapAbsorber?.evaluate(payload.scopeContext) ?? true;

@@ -41,42 +41,66 @@ class StateVariable {
 class EitherRefOrValue {
   StateVariable? stateVariable;
   Map<String, Object?>? value;
+  String? type;
   EitherRefOrValue({
     this.stateVariable,
     this.value,
+    this.type,
   });
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'stateVariable': stateVariable?.toMap(),
       'value': value,
+      'type': type,
     };
   }
 
   factory EitherRefOrValue.fromJson(Object? map) {
     if (map is! JsonLike) return EitherRefOrValue();
     return EitherRefOrValue(
-      stateVariable: StateVariable.fromJson(map),
-      value: as$<Map<String, Object?>>(map['value']),
-    );
+        stateVariable: StateVariable.fromJson(map),
+        value: as$<Map<String, Object?>>(map['value']),
+        type: as$<String>(map['type']));
   }
 
   String toJson() => json.encode(toMap());
 }
 
 class DataTypeFetch {
-  static T? dataType<T>(
-      EitherRefOrValue value, RenderPayload payload, DataType dataEnum) {
+  static T? dataType<T>(EitherRefOrValue value, RenderPayload payload) {
+    T? dataType;
     if (value.stateVariable != null) {
       final context = StateContextProvider.findStateByName(
           payload.buildContext, value.stateVariable!.stateContextName);
-      final dataType = context?.getValue(value.stateVariable!.stateName) as T?;
-      return dataType;
+      dataType = context?.getValue(value.stateVariable!.stateName) as T?;
     } else if (value.value != null) {
-      return DataTypeCreator.create(
-          Variable(name: '', type: dataEnum, defaultValue: value.value),
+      dataType = DataTypeCreator.create(
+          Variable(
+              name: '',
+              type: DataType.fromString(value.type) ?? DataType.unknown,
+              defaultValue: value.value),
           scopeContext: payload.scopeContext) as T?;
     }
-    return null;
+    return dataType;
   }
+
+  // static dynamic _castToType(dynamic value, DataType? type) {
+  //   if (type == null || value == null) return value;
+
+  //   switch (type) {
+  //     case DataType.timerController:
+  //       return value as TimerController;
+  //     case DataType.scrollController:
+  //       return value as ScrollController;
+  //     case DataType.asyncController:
+  //       return value as AsyncController;
+  //     case DataType.streamController:
+  //       return value as StreamController;
+  //     case DataType.textEditingController:
+  //       return value as TextEditingController;
+  //     default:
+  //       return value;
+  //   }
+  // }
 }

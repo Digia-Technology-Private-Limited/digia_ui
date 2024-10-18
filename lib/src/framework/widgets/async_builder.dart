@@ -36,9 +36,9 @@ class VWAsyncBuilder extends VirtualStatelessWidget<Props> {
     if (futureProps == null) return empty();
 
     final dataType = DataTypeFetch.dataType<AsyncController<Response<Object?>>>(
-        EitherRefOrValue.fromJson(props.getMap('dataType')),
-        payload,
-        DataType.asyncController);
+      EitherRefOrValue.fromJson(props.getMap('dataType')),
+      payload,
+    );
 
     if (dataType == null) return empty();
 

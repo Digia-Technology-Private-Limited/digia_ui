@@ -27,9 +27,7 @@ class VWGridView extends VirtualStatelessWidget<Props> {
   Widget render(RenderPayload payload) {
     if (children == null || children!.isEmpty) return empty();
     final dataType = DataTypeFetch.dataType<ScrollController>(
-        EitherRefOrValue.fromJson(props.getMap('dataType')),
-        payload,
-        DataType.scrollController);
+        EitherRefOrValue.fromJson(props.getMap('dataType')), payload);
 
     final physics = To.scrollPhysics(props.get('allowScroll'));
     final shrinkWrap = props.getBool('shrinkWrap') ?? false;

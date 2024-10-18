@@ -21,8 +21,8 @@ class VWStreamBuilder extends VirtualStatelessWidget<StreamBuilderProps> {
 
   @override
   Widget render(RenderPayload payload) {
-    final dataType = DataTypeFetch.dataType<StreamController>(
-        props.dataType, payload, DataType.streamController);
+    final dataType =
+        DataTypeFetch.dataType<StreamController>(props.dataType, payload);
 
     return StreamBuilder(
       stream: _makeStream(dataType).stream,
