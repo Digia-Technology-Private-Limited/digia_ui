@@ -19,7 +19,7 @@ class VWText extends VirtualLeafStatelessWidget<TextProps> {
     final text = payload.evalExpr(props.text);
     final style = payload.getTextStyle(props.textStyle);
     final maxLines = payload.evalExpr(props.maxLines);
-    final alignment = To.textAlign(props.alignment);
+    final alignment = To.textAlign(payload.evalExpr(props.alignment));
 
     final overflow = payload.evalExpr(props.overflow);
 
