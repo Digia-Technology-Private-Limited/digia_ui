@@ -37,6 +37,8 @@ class _InternalListViewState extends State<InternalListView>
       keepScrollOffset: true,
     );
     super.initState();
+
+    setInitialScrollPosition(_controller, widget.initialScrollPosition);
   }
 
   @override
