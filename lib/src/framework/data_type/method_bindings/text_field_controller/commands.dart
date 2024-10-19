@@ -1,9 +1,10 @@
 import 'package:flutter/widgets.dart';
 import '../../../utils/functional_util.dart';
+import '../../adapted_types/text_editing_controller.dart';
 import '../base.dart';
 
 class TextFieldControllerSetValueCommand
-    implements MethodCommand<TextEditingController> {
+    implements MethodCommand<AdaptedTextEditingController> {
   @override
   void run(TextEditingController instance, Map<String, Object?> args) {
     instance.text = as$<String>(args['text']) ?? '';
@@ -11,7 +12,7 @@ class TextFieldControllerSetValueCommand
 }
 
 class TextFieldControllerClearCommand
-    implements MethodCommand<TextEditingController> {
+    implements MethodCommand<AdaptedTextEditingController> {
   @override
   void run(TextEditingController instance, Map<String, Object?> args) {
     instance.clear();

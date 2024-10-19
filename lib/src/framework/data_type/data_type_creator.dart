@@ -1,14 +1,13 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-
 import '../expr/expression_util.dart';
 import '../expr/scope_context.dart';
 import '../internal_widgets/async_builder/controller.dart';
 import '../internal_widgets/timer/controller.dart';
 import '../utils/functional_util.dart';
 import '../utils/types.dart';
+import 'adapted_types/scroll_controller.dart';
+import 'adapted_types/text_editing_controller.dart';
 import 'data_type.dart';
 import 'variable.dart';
 
@@ -29,17 +28,17 @@ class DataTypeCreator {
         return evaluateNestedExpressions(def.defaultValue, scopeContext);
 
       case DataType.scrollController:
-        return ScrollController();
+        return AdaptedScrollController();
 
       case DataType.streamController:
-        return StreamController();
+        return StreamController<Object?>();
 
       case DataType.asyncController:
-        return AsyncController();
+        return AsyncController<Object?>();
 
       case DataType.textEditingController:
         final value = as$<JsonLike>(def.defaultValue) ?? {};
-        return TextEditingController(
+        return AdaptedTextEditingController(
           text: evaluate<String>(value['text'], scopeContext: scopeContext),
         );
 
@@ -55,8 +54,8 @@ class DataTypeCreator {
           duration: evaluate<int>(value['duration']) ?? 0,
         );
 
-      default:
-        throw Exception('Unknown type: ${def.type}');
+      // default:
+      // throw Exception('Unknown type: ${def.type}');
     }
   }
 }

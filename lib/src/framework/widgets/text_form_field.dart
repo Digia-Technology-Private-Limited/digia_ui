@@ -6,6 +6,7 @@ import '../../components/border/dashed_input_border/dashed_underline_input_borde
 import '../../components/utils/DUIBorder/dui_border.dart';
 import '../actions/base/action_flow.dart';
 import '../base/virtual_stateless_widget.dart';
+import '../data_type/adapted_types/text_editing_controller.dart';
 import '../expr/default_scope_context.dart';
 import '../expr/scope_context.dart';
 import '../internal_widgets/internal_text_form_field.dart';
@@ -14,17 +15,22 @@ import '../render_payload.dart';
 import '../utils/flutter_type_converters.dart';
 
 class VWTextFormField extends VirtualStatelessWidget<Props> {
-  VWTextFormField(
-      {required super.props,
-      required super.commonProps,
-      required super.parent,
-      super.refName,
-      required super.childGroups})
-      : super(repeatData: null);
+  VWTextFormField({
+    required super.props,
+    required super.commonProps,
+    required super.parent,
+    super.refName,
+    required super.childGroups,
+  }) : super(repeatData: null);
 
   @override
   Widget render(RenderPayload payload) {
-    final initialValue = payload.eval<String>(props.get('initialValue'));
+    final controller =
+        payload.eval<AdaptedTextEditingController>(props.get('controller')) ??
+            AdaptedTextEditingController(
+              text: payload.eval<String>(props.get('initialValue')),
+            );
+
     final enabled = props.getBool('enabled');
     final keyboardType = To.toKeyBoardType(props.get('keyboardType'));
     final textInputAction = To.toTextInputAction(props.get('textInputAction'));
@@ -53,7 +59,7 @@ class VWTextFormField extends VirtualStatelessWidget<Props> {
     final focusedErrorBorder = _toInputBorder(props.get('focusedErrorBorder'));
     final errorBorder = _toInputBorder(props.get('errorBorder'));
     return InternalTextFormField(
-      initialValue: initialValue,
+      controller: controller,
       onChangedAction: (p0, p1) async {
         final actionFlow = ActionFlow.fromJson(props.get('onChanged'));
         await payload.executeAction(actionFlow,

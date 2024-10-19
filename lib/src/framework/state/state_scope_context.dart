@@ -18,12 +18,14 @@ class StateScopeContext extends DefaultScopeContext {
     if (key == 'state' || key == name) {
       return (
         found: true,
-        value: adaptValue(_stateContext.stateVariables),
+        // value: adaptValue(_stateContext.stateVariables),
+        value: _stateContext.stateVariables,
       );
     }
 
     if (_stateContext.hasKey(key)) {
-      return (found: true, value: adaptValue(_stateContext.getValue(key)));
+      // return (found: true, value: adaptValue(_stateContext.getValue(key)));
+      return (found: true, value: _stateContext.getValue(key));
     }
 
     return super.getValue(key);

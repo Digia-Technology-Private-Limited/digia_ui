@@ -2,9 +2,11 @@ import 'package:flutter/widgets.dart';
 
 import '../../../utils/flutter_type_converters.dart';
 import '../../../utils/object_util.dart';
+import '../../adapted_types/scroll_controller.dart';
 import '../base.dart';
 
-class ScrollControllerJumpToCommand implements MethodCommand<ScrollController> {
+class ScrollControllerJumpToCommand
+    implements MethodCommand<AdaptedScrollController> {
   @override
   void run(ScrollController instance, Map<String, Object?> args) {
     double offset = args['offset']?.to<double>() ?? 0.0;
@@ -13,7 +15,7 @@ class ScrollControllerJumpToCommand implements MethodCommand<ScrollController> {
 }
 
 class ScrollControllerAnimateToCommand
-    implements MethodCommand<ScrollController> {
+    implements MethodCommand<AdaptedScrollController> {
   @override
   void run(ScrollController instance, Map<String, Object?> args) {
     double offset = args['offset']?.to<double>() ?? 0.0;

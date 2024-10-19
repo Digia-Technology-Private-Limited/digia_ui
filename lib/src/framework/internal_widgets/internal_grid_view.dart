@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 
 class InternalGridView extends StatefulWidget {
+  final ScrollController? controller;
   final ScrollPhysics? physics;
   final bool shrinkWrap;
   final SliverGridDelegate gridDelegate;
@@ -11,6 +12,7 @@ class InternalGridView extends StatefulWidget {
   const InternalGridView({
     super.key,
     this.physics,
+    this.controller,
     this.shrinkWrap = false,
     this.itemCount = -1,
     this.itemBuilder,
@@ -27,6 +29,7 @@ class _InternalGridViewState extends State<InternalGridView> {
   Widget build(BuildContext context) {
     if (widget.itemBuilder != null) {
       return GridView.builder(
+        controller: widget.controller,
         physics: widget.physics,
         shrinkWrap: widget.shrinkWrap,
         itemCount: widget.itemCount,
@@ -36,6 +39,7 @@ class _InternalGridViewState extends State<InternalGridView> {
     }
 
     return GridView(
+      controller: widget.controller,
       physics: widget.physics,
       shrinkWrap: widget.shrinkWrap,
       gridDelegate: widget.gridDelegate,
