@@ -3,8 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../base/virtual_stateless_widget.dart';
-import '../data_type/compex_object.dart';
-import '../data_type/data_type.dart';
 import '../expr/default_scope_context.dart';
 import '../expr/scope_context.dart';
 import '../render_payload.dart';
@@ -21,11 +19,13 @@ class VWStreamBuilder extends VirtualStatelessWidget<StreamBuilderProps> {
 
   @override
   Widget render(RenderPayload payload) {
-    final dataType =
-        DataTypeFetch.dataType<StreamController>(props.dataType, payload);
+    final controller =
+        payload.evalExpr(props.controller) as StreamController<Object>?;
+
+    if (controller == null) return empty();
 
     return StreamBuilder(
-      stream: _makeStream(dataType).stream,
+      stream: controller.stream,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return childOf('loadingWidget')?.toWidget(payload) ??
@@ -61,19 +61,6 @@ class VWStreamBuilder extends VirtualStatelessWidget<StreamBuilderProps> {
         return empty();
       },
     );
-  }
-
-  StreamController<Object?> _makeStream(Object? stream) {
-    if (stream is Stream<Object>) {
-      return StreamController<Object>()..addStream(stream);
-    }
-
-    if (stream is StreamController<Object>) {
-      return stream;
-    }
-
-    return StreamController<Object>()
-      ..addStream(Stream.error('No Stream provided'));
   }
 
   ScopeContext _createExprContext(Object? streamValue) {

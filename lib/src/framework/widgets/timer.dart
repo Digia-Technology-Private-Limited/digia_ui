@@ -1,8 +1,6 @@
 import 'package:flutter/widgets.dart';
 
 import '../base/virtual_stateless_widget.dart';
-import '../data_type/compex_object.dart';
-import '../data_type/data_type.dart';
 import '../expr/default_scope_context.dart';
 import '../expr/scope_context.dart';
 import '../internal_widgets/timer/controller.dart';
@@ -23,13 +21,26 @@ class VWTimer extends VirtualStatelessWidget<TimerProps> {
   Widget render(RenderPayload payload) {
     if (child == null) return empty();
 
-    final dataType =
-        DataTypeFetch.dataType<TimerController>(props.dataType, payload);
+    TimerController controller = payload.evalExpr(props.controller) ??
+        TimerController(
+          duration: payload.evalExpr(props.duration) ?? 0,
+          initialValue: payload.evalExpr(props.initialValue) ?? 0,
+          updateInterval: Duration(
+            seconds: payload.evalExpr(props.updateInterval) ?? 1,
+          ),
+          isCountDown: props.isCountDown,
+        );
 
-    if (dataType == null) return empty();
+    if (controller.duration < 0) {
+      return child!.toWidget(
+        payload.copyWithChainedContext(
+          _createExprContext(controller.initialValue),
+        ),
+      );
+    }
 
     return TimerWidget(
-      controller: dataType,
+      controller: controller,
       builder: (innerCtx, snapshot) {
         final updatedPayload = payload.copyWithChainedContext(
           _createExprContext(snapshot.data),

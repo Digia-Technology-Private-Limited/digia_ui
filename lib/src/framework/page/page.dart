@@ -24,7 +24,7 @@ import '../utils/functional_util.dart';
 import '../utils/network_util.dart';
 import '../utils/types.dart';
 import '../virtual_widget_registry.dart';
-import 'controller.dart';
+import 'page_controller.dart';
 
 class DUIPage extends StatelessWidget {
   final String pageId;

@@ -1,6 +1,8 @@
 import 'dart:async';
 
-class TimerController {
+import 'package:digia_expr/digia_expr.dart';
+
+class TimerController implements ExprInstance {
   final int initialValue;
   final Duration updateInterval;
   final bool isCountDown;
@@ -61,4 +63,10 @@ class TimerController {
     _subscription?.cancel();
     _controller.close();
   }
+
+  @override
+  Object? getField(String name) => switch (name) {
+        'currentValue' => currentValue,
+        _ => null,
+      };
 }

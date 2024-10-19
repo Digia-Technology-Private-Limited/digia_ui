@@ -2,8 +2,7 @@ import 'package:flutter/widgets.dart';
 
 import '../base/extensions.dart';
 import '../base/virtual_stateless_widget.dart';
-import '../data_type/compex_object.dart';
-import '../data_type/data_type.dart';
+import '../data_type/adapted_types/scroll_controller.dart';
 import '../expr/default_scope_context.dart';
 import '../expr/scope_context.dart';
 import '../internal_widgets/internal_list_view.dart';
@@ -26,8 +25,9 @@ class VWListView extends VirtualStatelessWidget<Props> {
   @override
   Widget render(RenderPayload payload) {
     if (children == null || children!.isEmpty) return empty();
-    final dataType = DataTypeFetch.dataType<ScrollController>(
-        EitherRefOrValue.fromJson(props.getMap('dataType')), payload);
+
+    final controller =
+        payload.eval<AdaptedScrollController>(props.get('controller'));
 
     final reverse = payload.eval<bool>(props.get('reverse')) ?? false;
     final scrollDirection =
@@ -42,7 +42,7 @@ class VWListView extends VirtualStatelessWidget<Props> {
       final childToRepeat = children!.first;
       final items = payload.evalRepeatData(repeatData!);
       return InternalListView(
-        controller: dataType,
+        controller: controller,
         reverse: reverse,
         scrollDirection: scrollDirection,
         physics: physics,
@@ -59,7 +59,7 @@ class VWListView extends VirtualStatelessWidget<Props> {
     }
 
     return InternalListView(
-      controller: dataType,
+      controller: controller,
       reverse: reverse,
       scrollDirection: scrollDirection,
       physics: physics,

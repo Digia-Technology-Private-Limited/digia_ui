@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 
 import '../actions/base/action_flow.dart';
 import '../base/virtual_stateless_widget.dart';
-import '../data_type/compex_object.dart';
-import '../data_type/data_type.dart';
 import '../expr/default_scope_context.dart';
 import '../expr/scope_context.dart';
 import '../internal_widgets/async_builder/controller.dart';
@@ -35,22 +33,19 @@ class VWAsyncBuilder extends VirtualStatelessWidget<Props> {
     final futureProps = props.toProps('future');
     if (futureProps == null) return empty();
 
-    final dataType = DataTypeFetch.dataType<AsyncController<Response<Object?>>>(
-      EitherRefOrValue.fromJson(props.getMap('dataType')),
-      payload,
-    );
+    final controller = payload.eval<AsyncController>(props.get('controller')) ??
+        AsyncController<Object?>();
 
-    if (dataType == null) return empty();
-
-    dataType.setFutureBuilder(
+    controller.setFutureBuilder(
       () => _makeFuture(futureProps, payload),
     );
 
-    return AsyncBuilder<Response<Object?>>(
-        controller: dataType,
+    return AsyncBuilder<Object?>(
+        controller: controller,
         builder: (innerCtx, snapshot) {
           final updatedPayload = payload.copyWithChainedContext(
-              _createExprContext(snapshot.data, snapshot.error),
+              _createExprContext(
+                  snapshot.data as Response<Object?>?, snapshot.error),
               buildContext: innerCtx);
 
           if (snapshot.connectionState == ConnectionState.waiting) {

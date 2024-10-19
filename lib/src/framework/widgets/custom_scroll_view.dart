@@ -22,8 +22,7 @@ class VWCustomScrollView extends VirtualStatelessWidget<CustomScrollViewProps> {
 
   @override
   Widget render(RenderPayload payload) {
-    final dataType = DataTypeFetch.dataType<ScrollController>(
-        EitherRefOrValue.fromJson(props.dataType), payload);
+    final controller = payload.evalExpr(props.controller);
 
     final bool isReverse = payload.evalExpr<bool>(props.isReverse) ?? false;
     final bool enableOverlapInjector =
@@ -32,7 +31,7 @@ class VWCustomScrollView extends VirtualStatelessWidget<CustomScrollViewProps> {
             true;
 
     return CustomScrollView(
-        controller: dataType,
+        controller: controller,
         reverse: isReverse,
         scrollDirection: To.axis(props.scrollDirection) ?? Axis.vertical,
         physics: To.scrollPhysics(props.allowScroll),

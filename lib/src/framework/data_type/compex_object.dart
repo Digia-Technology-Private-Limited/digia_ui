@@ -67,23 +67,23 @@ class EitherRefOrValue {
   String toJson() => json.encode(toMap());
 }
 
-class DataTypeFetch {
-  static T? dataType<T>(EitherRefOrValue value, RenderPayload payload) {
-    T? dataType;
-    if (value.stateVariable != null) {
-      final context = StateContextProvider.findStateByName(
-          payload.buildContext, value.stateVariable!.stateContextName);
-      dataType = context?.getValue(value.stateVariable!.stateName) as T?;
-    } else if (value.value != null) {
-      dataType = DataTypeCreator.create(
-          Variable(
-              name: '',
-              type: DataType.fromString(value.type) ?? DataType.unknown,
-              defaultValue: value.value),
-          scopeContext: payload.scopeContext) as T?;
-    }
-    return dataType;
-  }
+// class DataTypeFetch {
+//   static T? dataType<T>(EitherRefOrValue value, RenderPayload payload) {
+//     T? dataType;
+//     if (value.stateVariable != null) {
+//       final context = StateContextProvider.findStateByName(
+//           payload.buildContext, value.stateVariable!.stateContextName);
+//       dataType = context?.getValue(value.stateVariable!.stateName) as T?;
+//     } else if (value.value != null) {
+//       dataType = DataTypeCreator.create(
+//           Variable(
+//               name: '',
+//               type: DataType.fromString(value.type),
+//               defaultValue: value.value),
+//           scopeContext: payload.scopeContext) as T?;
+//     }
+//     return dataType;
+//   }
 
   // static dynamic _castToType(dynamic value, DataType? type) {
   //   if (type == null || value == null) return value;
@@ -103,4 +103,4 @@ class DataTypeFetch {
   //       return value;
   //   }
   // }
-}
+// }

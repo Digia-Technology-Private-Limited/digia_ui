@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../base/virtual_stateless_widget.dart';
-import '../data_type/compex_object.dart';
 import '../models/props.dart';
 import '../render_payload.dart';
 
@@ -18,10 +17,8 @@ class VWAnimatedBuilder extends VirtualStatelessWidget<Props> {
   Widget render(RenderPayload payload) {
     if (child == null) return empty();
 
-    final ChangeNotifier? notifier = DataTypeFetch.dataType<ScrollController>(
-      EitherRefOrValue.fromJson(props.getMap('dataType')),
-      payload,
-    );
+    final ChangeNotifier? notifier =
+        payload.eval<ChangeNotifier>(props.get('notifier'));
 
     if (notifier == null) return empty();
 
