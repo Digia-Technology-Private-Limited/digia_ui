@@ -2,7 +2,6 @@ import 'package:flutter/widgets.dart';
 
 import '../../data_type/method_bindings/method_binding_registry.dart';
 import '../../expr/scope_context.dart';
-import '../../state/state_context_provider.dart';
 import '../base/processor.dart';
 import 'action.dart';
 
@@ -19,17 +18,10 @@ class ControlObjectProcessor extends ActionProcessor<ControlObjectAction> {
     ControlObjectAction action,
     ScopeContext? scopeContext,
   ) {
-    final stateContext =
-        StateContextProvider.findStateByName(context, action.stateContextName);
-
-    if (stateContext == null) {
-      throw 'Action.controlObject called on a widget which is not wrapped in StateContextProvider';
-    }
-
-    final object = stateContext.stateVariables[action.objectName];
+    final Object? object = action.dataType?.evaluate(scopeContext);
 
     if (object == null) {
-      throw 'Object not found in state: ${action.stateContextName}';
+      throw 'Object of type ${action.dataType} not found';
     }
 
     final evaluatedArgs =
