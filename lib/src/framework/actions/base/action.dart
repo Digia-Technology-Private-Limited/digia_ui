@@ -5,6 +5,7 @@ import '../../models/types.dart';
 enum ActionType {
   callRestApi('Action.callRestApi'),
   controlDrawer('Action.controlDrawer'),
+  controlObject('Action.controlObject'),
   copyToClipBoard('Action.copyToClipBoard'),
   delay('Action.delay'),
   imagePicker('Action.imagePicker'),

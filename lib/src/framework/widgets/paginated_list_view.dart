@@ -92,6 +92,7 @@ class VWPaginatedListView
     }
 
     return InternalListView(
+      controller: ScrollController(),
       reverse: isReverse,
       initialScrollPosition: initialScrollPosition,
       itemCount: children?.length ?? 0,

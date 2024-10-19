@@ -369,7 +369,7 @@ abstract class To {
     return null;
   }
 
-  static Curve? toCurve(String? curveString) => switch (curveString) {
+  static Curve? curve(dynamic curveString) => switch (curveString) {
         'easeInCubic' => Curves.easeInCubic,
         'easeInExpo' => Curves.easeInExpo,
         'easeOutBack' => Curves.easeOutBack,

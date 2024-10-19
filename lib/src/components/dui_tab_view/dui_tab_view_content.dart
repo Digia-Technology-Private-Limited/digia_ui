@@ -63,8 +63,7 @@ class DUITabViewContent extends StatelessWidget {
 }
 
 class _KeepAliveWrapper extends StatefulWidget {
-  const _KeepAliveWrapper(
-      {super.key, required this.child, this.keepTabsAlive = false});
+  const _KeepAliveWrapper({required this.child, this.keepTabsAlive = false});
   final Widget child;
   final bool? keepTabsAlive;
 

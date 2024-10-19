@@ -43,7 +43,7 @@ class SetStateAction extends Action {
 
   @override
   Map<String, dynamic> toJson() => {
-        'stateContextName': actionType.toString(),
+        'stateContextName': stateContextName,
         'updates': updates,
         'rebuild': rebuild?.toJson(),
       };

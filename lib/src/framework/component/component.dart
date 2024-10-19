@@ -2,8 +2,8 @@ import 'package:flutter/widgets.dart';
 
 import '../../network/api_request/api_request.dart';
 import '../base/message_handler.dart';
+import '../data_type/data_type_creator.dart';
 import '../expr/default_scope_context.dart';
-import '../expr/expression_util.dart';
 import '../expr/scope_context.dart';
 import '../models/component_definition.dart';
 import '../render_payload.dart';
@@ -43,14 +43,13 @@ class DUIComponent extends StatelessWidget {
   Widget build(BuildContext context) {
     final resolvedArgs = definition.argDefs
         ?.map((k, v) => MapEntry(k, args?[k] ?? v.defaultValue));
-    final resolvedState =
-        definition.initStateDefs?.map((key, value) => MapEntry(
-              key,
-              evaluateNestedExpressions(
-                value.defaultValue,
-                _createExprContext(resolvedArgs, null),
-              ),
-            ));
+    final resolvedState = definition.initStateDefs?.map((k, v) => MapEntry(
+        k,
+        DataTypeCreator.create(v,
+            scopeContext: DefaultScopeContext(
+              variables: {...?resolvedArgs},
+              enclosing: scope,
+            ))));
     return ResourceProvider(
         icons: resources?.icons ?? {},
         images: resources?.images ?? {},
@@ -97,14 +96,14 @@ class DUIComponent extends StatelessWidget {
   ) {
     if (stateContext == null) {
       return DefaultScopeContext(
-        variables: {...params ?? {}},
+        variables: {...?params},
         enclosing: scope,
       );
     }
 
     return StateScopeContext(
       stateContext: stateContext,
-      variables: {...params ?? {}},
+      variables: {...?params},
       enclosing: scope,
     );
   }
