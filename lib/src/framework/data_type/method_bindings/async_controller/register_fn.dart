@@ -3,7 +3,7 @@ import '../method_binding_registry.dart';
 import 'commands.dart';
 
 registerMethodCommandsForAsyncController(MethodBindingRegistry registry) {
-  registry.registerMethods<AsyncController>({
+  registry.registerMethods<AsyncController<Object?>>({
     'invalidate': AsyncControllerInvalidateCommand(),
   });
 }

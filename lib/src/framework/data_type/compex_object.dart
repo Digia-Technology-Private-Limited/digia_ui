@@ -1,12 +1,7 @@
 import 'dart:convert';
 
-import '../render_payload.dart';
-import '../state/state_context_provider.dart';
 import '../utils/functional_util.dart';
 import '../utils/types.dart';
-import 'data_type.dart';
-import 'data_type_creator.dart';
-import 'variable.dart';
 
 class StateVariable {
   String stateContextName;
