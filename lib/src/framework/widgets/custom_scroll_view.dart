@@ -2,6 +2,8 @@ import 'package:flutter/widgets.dart';
 import '../base/extensions.dart';
 import '../base/virtual_sliver.dart';
 import '../base/virtual_stateless_widget.dart';
+import '../data_type/compex_object.dart';
+import '../data_type/data_type.dart';
 import '../render_payload.dart';
 import '../utils/flutter_type_converters.dart';
 import '../widget_props/custom_scroll_view_props.dart';
@@ -20,6 +22,8 @@ class VWCustomScrollView extends VirtualStatelessWidget<CustomScrollViewProps> {
 
   @override
   Widget render(RenderPayload payload) {
+    final controller = payload.evalExpr(props.controller);
+
     final bool isReverse = payload.evalExpr<bool>(props.isReverse) ?? false;
     final bool enableOverlapInjector =
         NestedScrollViewData.maybeOf(payload.buildContext)
@@ -27,6 +31,7 @@ class VWCustomScrollView extends VirtualStatelessWidget<CustomScrollViewProps> {
             true;
 
     return CustomScrollView(
+        controller: controller,
         reverse: isReverse,
         scrollDirection: To.axis(props.scrollDirection) ?? Axis.vertical,
         physics: To.scrollPhysics(props.allowScroll),

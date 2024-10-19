@@ -41,8 +41,8 @@ class _PaginatedListViewState extends State<PaginatedListView>
   void initState() {
     _scrollController = ScrollController();
     _pagingController = PagingController.fromValue(
-      PagingState(itemList: widget.items, nextPageKey: 1),
-      firstPageKey: 0,
+      PagingState(itemList: widget.items, nextPageKey: 2),
+      firstPageKey: 1,
     );
     super.initState();
 

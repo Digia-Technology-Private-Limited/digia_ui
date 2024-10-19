@@ -5,12 +5,15 @@ import 'actions/action_executor.dart';
 import 'base/message_handler.dart';
 import 'base/virtual_widget.dart';
 import 'component/component.dart';
+import 'data_type/method_bindings/method_binding_registry.dart';
 import 'expr/default_scope_context.dart';
 import 'page/config_provider.dart';
 import 'page/page.dart';
+import 'page/page_controller.dart';
 import 'page/page_route.dart';
 import 'utils/color_util.dart';
 import 'utils/functional_util.dart';
+import 'utils/navigation_util.dart';
 import 'utils/textstyle_util.dart';
 import 'utils/types.dart';
 import 'virtual_widget_registry.dart';
@@ -46,6 +49,7 @@ class DUIFactory {
   late ConfigProvider configProvider;
   late UIResources resources;
   late VirtualWidgetRegistry widgetRegistry;
+  late MethodBindingRegistry bindingRegistry;
 
   DUIFactory._internal();
 
@@ -58,6 +62,8 @@ class DUIFactory {
     widgetRegistry = DefaultVirtualWidgetRegistry(
       componentBuilder: (id, args) => createComponent(id, args),
     );
+    bindingRegistry = MethodBindingRegistry();
+
     configProvider =
         pageConfigProvider ?? DUIConfigProvider(DigiaUIClient.instance.config);
     resources = UIResources(
@@ -107,6 +113,7 @@ class DUIFactory {
     Map<String, Color?>? overrideColorTokens,
     GlobalKey<NavigatorState>? navigatorKey,
     DUIMessageHandler? messageHandler,
+    DUIPageController? pageController,
   }) {
     // Merge overriding resources with existing resources
     final mergedResources = UIResources(
@@ -116,15 +123,16 @@ class DUIFactory {
       colors: {...?resources.colors, ...?overrideColorTokens},
     );
 
+    final handler =
+        messageHandler?.propagateHandler == true ? messageHandler : null;
+
     return DefaultActionExecutor(
       actionExecutor: ActionExecutor(
-        viewBuilder: _buildView,
-        pageRouteBuilder: (context, id, args) => createPageRoute(
-          id,
-          args,
-          messageHandler:
-              messageHandler?.propagateHandler == true ? messageHandler : null,
-        ),
+        viewBuilder: (context, id, args) =>
+            _buildView(context, id, args, handler),
+        pageRouteBuilder: (context, id, args) =>
+            createPageRoute(id, args, messageHandler: handler),
+        bindingRegistry: bindingRegistry,
         logger: DigiaUIClient.instance.developerConfig?.logger,
       ),
       child: DUIPage(
@@ -136,6 +144,7 @@ class DUIFactory {
         registry: widgetRegistry,
         apiModels: configProvider.getAllApiModels(),
         messageHandler: messageHandler,
+        controller: pageController,
         scope: DefaultScopeContext(
           name: 'global',
           variables: {...DigiaUIClient.instance.jsVars},
@@ -153,6 +162,7 @@ class DUIFactory {
     Map<String, Color?>? overrideColorTokens,
     GlobalKey<NavigatorState>? navigatorKey,
     DUIMessageHandler? messageHandler,
+    DUIPageController? pageController,
   }) {
     return DUIPageRoute<Object>(
         pageId: pageId,
@@ -163,7 +173,9 @@ class DUIFactory {
               overrideImages: overrideImages,
               overrideTextStyles: overrideTextStyles,
               overrideColorTokens: overrideColorTokens,
+              navigatorKey: navigatorKey,
               messageHandler: messageHandler,
+              pageController: pageController,
             ));
   }
 
@@ -183,12 +195,17 @@ class DUIFactory {
     );
   }
 
-  Widget _buildView(BuildContext context, String viewId, JsonLike? args) {
+  Widget _buildView(
+    BuildContext context,
+    String viewId,
+    JsonLike? args,
+    DUIMessageHandler? messageHandler,
+  ) {
     if (configProvider.isPage(viewId)) {
-      return createPage(viewId, args);
+      return createPage(viewId, args, messageHandler: messageHandler);
     }
 
-    return createComponent(viewId, args);
+    return createComponent(viewId, args, messageHandler: messageHandler);
   }
 
   // TODO: What should be done about MessageHandler here?
@@ -201,6 +218,7 @@ class DUIFactory {
     Map<String, TextStyle>? overrideTextStyles,
     Map<String, Color?>? overrideColorTokens,
     GlobalKey<NavigatorState>? navigatorKey,
+    DUIMessageHandler? messageHandler,
   }) {
     // Merge overriding resources with existing resources
     final mergedResources = UIResources(
@@ -212,8 +230,11 @@ class DUIFactory {
 
     return DefaultActionExecutor(
       actionExecutor: ActionExecutor(
-        viewBuilder: _buildView,
-        pageRouteBuilder: (context, id, args) => createPageRoute(id, args),
+        viewBuilder: (context, id, args) =>
+            _buildView(context, id, args, messageHandler),
+        pageRouteBuilder: (context, id, args) =>
+            createPageRoute(id, args, messageHandler: messageHandler),
+        bindingRegistry: bindingRegistry,
         logger: DigiaUIClient.instance.developerConfig?.logger,
       ),
       child: DUIComponent(
@@ -224,11 +245,38 @@ class DUIFactory {
         definition: configProvider.getComponentDefinition(componentid),
         registry: widgetRegistry,
         apiModels: configProvider.getAllApiModels(),
+        messageHandler: messageHandler,
         scope: DefaultScopeContext(
           name: 'global',
           variables: {...DigiaUIClient.instance.jsVars},
         ),
       ),
+    );
+  }
+
+  Future<T?> showBottomSheet<T>(
+    BuildContext context,
+    String viewId,
+    JsonLike? args, {
+    double scrollControlDisabledMaxHeightRatio = 1,
+    Color? backgroundColor,
+    Color? barrierColor,
+    BoxBorder? border,
+    BorderRadius? borderRadius,
+    WidgetBuilder? iconBuilder,
+    GlobalKey<NavigatorState>? navigatorKey,
+    DUIMessageHandler? messageHandler,
+  }) {
+    return presentBottomSheet(
+      context: context,
+      builder: (innerCtx) => _buildView(innerCtx, viewId, args, messageHandler),
+      scrollControlDisabledMaxHeightRatio: scrollControlDisabledMaxHeightRatio,
+      backgroundColor: backgroundColor,
+      barrierColor: barrierColor,
+      border: border,
+      borderRadius: borderRadius,
+      iconBuilder: iconBuilder,
+      navigatorKey: navigatorKey,
     );
   }
 }

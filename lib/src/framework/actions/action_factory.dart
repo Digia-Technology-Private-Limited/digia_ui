@@ -5,6 +5,7 @@ import '../utils/types.dart';
 import 'base/action.dart';
 import 'callRestApi/action.dart';
 import 'controlDrawer/action.dart';
+import 'controlObject/action.dart';
 import 'copyToClipBoard/action.dart';
 import 'delay/action.dart';
 import 'filePicker/action.dart';
@@ -38,6 +39,8 @@ class ActionFactory {
         action = CopyToClipBoardAction.fromJson(actionData);
       case ActionType.controlDrawer:
         action = ControlDrawerAction.fromJson(actionData);
+      case ActionType.controlObject:
+        action = ControlObjectAction.fromJson(actionData);
       case ActionType.delay:
         action = DelayAction.fromJson(actionData);
       case ActionType.imagePicker:

@@ -369,7 +369,7 @@ abstract class To {
     return null;
   }
 
-  static Curve? toCurve(String? curveString) => switch (curveString) {
+  static Curve? curve(dynamic curveString) => switch (curveString) {
         'easeInCubic' => Curves.easeInCubic,
         'easeInExpo' => Curves.easeInExpo,
         'easeOutBack' => Curves.easeOutBack,
@@ -604,6 +604,14 @@ abstract class To {
       switch (value) {
         'tab' => TabBarIndicatorSize.tab,
         'label' => TabBarIndicatorSize.label,
+        _ => null
+      };
+
+  static BlurStyle? blurStyle(dynamic value) => switch (value) {
+        'normal' => BlurStyle.normal,
+        'inner' => BlurStyle.inner,
+        'outer' => BlurStyle.outer,
+        'solid' => BlurStyle.solid,
         _ => null
       };
 }

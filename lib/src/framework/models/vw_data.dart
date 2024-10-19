@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 
-import '../../models/variable_def.dart';
+import '../data_type/variable.dart';
+import '../data_type/variable_json_converter.dart';
 import '../utils/functional_util.dart';
 import '../utils/json_util.dart';
 import '../utils/types.dart';
@@ -61,13 +62,13 @@ class VWComponentData extends VWData {
       id: json['componentId'] as String,
       args: as$<JsonLike>(json['componentArgs'])
           ?.map((k, v) => MapEntry(k, ExprOr.fromJson<Object>(v))),
-      refName: as$<String>(json['refName']),
+      refName: tryKeys<String>(json, ['varName', 'refName']),
     );
   }
 }
 
 class VWStateData extends VWData {
-  final Map<String, VariableDef> initStateDefs;
+  final Map<String, Variable> initStateDefs;
   final Map<String, List<VWData>>? childGroups;
 
   VWStateData({
@@ -79,14 +80,14 @@ class VWStateData extends VWData {
   factory VWStateData.fromJson(JsonLike json) {
     return VWStateData(
       initStateDefs: as$<JsonLike>(json['initStateDefs'])
-              .maybe(const VariablesJsonConverter().fromJson) ??
+              .maybe(const VariableJsonConverter().fromJson) ??
           {},
       childGroups: tryKeys(
         json,
         ['children', 'composites', 'childGroups'],
         parse: _parseVWNodeDataMap,
       ),
-      refName: as$<String>(json['refName']),
+      refName: tryKeys<String>(json, ['varName', 'refName']),
     );
   }
 }

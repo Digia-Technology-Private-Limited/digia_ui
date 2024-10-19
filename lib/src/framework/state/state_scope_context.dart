@@ -16,10 +16,15 @@ class StateScopeContext extends DefaultScopeContext {
   @override
   ({bool found, Object? value}) getValue(String key) {
     if (key == 'state' || key == name) {
-      return (found: true, value: _stateContext.stateVariables);
+      return (
+        found: true,
+        // value: adaptValue(_stateContext.stateVariables),
+        value: _stateContext.stateVariables,
+      );
     }
 
     if (_stateContext.hasKey(key)) {
+      // return (found: true, value: adaptValue(_stateContext.getValue(key)));
       return (found: true, value: _stateContext.getValue(key));
     }
 

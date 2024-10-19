@@ -1,13 +1,17 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
 import '../actions/base/action_flow.dart';
 import '../base/virtual_leaf_stateless_widget.dart';
 import '../models/props.dart';
+import '../models/types.dart';
 import '../render_payload.dart';
 import '../utils/flutter_type_converters.dart';
 import '../utils/functional_util.dart';
 import '../utils/json_util.dart';
 import '../utils/types.dart';
+import '../widget_props/icon_props.dart';
 import '../widget_props/text_props.dart';
 import 'icon.dart';
 import 'text.dart';
@@ -84,7 +88,8 @@ class VWButton extends VirtualLeafStatelessWidget<Props> {
     Widget? leadingIcon;
     Widget? trailingIcon;
 
-    final localProps = JsonLike.from(props.value);
+    final JsonLike localProps =
+        jsonDecode(jsonEncode(props.value)) as JsonLike? ?? {};
 
     if (overrideColor) {
       localProps.setValueFor('text.textStyle.textColor', disabledTextColor);
@@ -100,32 +105,35 @@ class VWButton extends VirtualLeafStatelessWidget<Props> {
       parent: this,
     ).toWidget(payload);
 
-    final leadingIconProps = localProps['leadingIcon'] as Map<String, Object?>?;
-    if (overrideColor) {
-      leadingIconProps?['iconColor'] = disabledIconColor;
-    } else {
-      leadingIconProps?['iconColor'] = props.get('leadingIcon.iconColor');
-    }
+    final leadingIconProps =
+        (localProps['leadingIcon'] as Map<String, Object?>?)
+            .maybe(IconProps.fromJson)
+            ?.copyWith(
+              color: ExprOr.fromJson<String>(overrideColor
+                  ? disabledIconColor
+                  : props.get('leadingIcon.iconColor')),
+            );
 
     if (leadingIconProps != null) {
       leadingIcon = VWIcon(
-        props: Props(leadingIconProps),
+        props: leadingIconProps,
         commonProps: null,
         parent: this,
       ).toWidget(payload);
     }
 
     final trailingIconProps =
-        localProps['trailingIcon'] as Map<String, Object?>?;
-    if (overrideColor) {
-      trailingIconProps?['iconColor'] = disabledIconColor;
-    } else {
-      trailingIconProps?['iconColor'] = props.get('trailingIcon.iconColor');
-    }
+        (localProps['trailingIcon'] as Map<String, Object?>?)
+            .maybe(IconProps.fromJson)
+            ?.copyWith(
+              color: ExprOr.fromJson<String>(overrideColor
+                  ? disabledIconColor
+                  : props.get('trailingIcon.iconColor')),
+            );
 
     if (trailingIconProps != null) {
       trailingIcon = VWIcon(
-        props: Props(trailingIconProps),
+        props: trailingIconProps,
         commonProps: null,
         parent: this,
       ).toWidget(payload);

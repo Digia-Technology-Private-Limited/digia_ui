@@ -51,7 +51,7 @@ class _AsyncBuilderState<T> extends State<AsyncBuilder<T>> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<T>(
-      future: _controller.future,
+      future: _controller.getFuture(),
       builder: widget.builder,
     );
   }

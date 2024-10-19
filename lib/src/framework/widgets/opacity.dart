@@ -1,9 +1,9 @@
 import 'package:flutter/widgets.dart';
 import '../base/virtual_stateless_widget.dart';
-import '../models/props.dart';
 import '../render_payload.dart';
+import '../widget_props/opacity_props.dart';
 
-class VWOpacity extends VirtualStatelessWidget<Props> {
+class VWOpacity extends VirtualStatelessWidget<OpacityProps> {
   VWOpacity({
     required super.props,
     required super.commonProps,
@@ -15,9 +15,9 @@ class VWOpacity extends VirtualStatelessWidget<Props> {
 
   @override
   Widget render(RenderPayload payload) {
-    final opacity = payload.eval<double>(props.get('opacity')) ?? 1.0;
+    final opacity = payload.evalExpr<double>(props.opacity) ?? 1.0;
     final alwaysIncludeSemantics =
-        payload.eval<bool>(props.get('alwaysIncludeSemantics')) ?? false;
+        payload.evalExpr<bool>(props.alwaysIncludeSemantics) ?? false;
 
     return Opacity(
       opacity: opacity,

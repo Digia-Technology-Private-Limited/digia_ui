@@ -38,11 +38,14 @@ class DUITabViewContent extends StatelessWidget {
           : const NeverScrollableScrollPhysics(),
       viewportFraction: duiTabView1Props.viewportFraction ?? 1.0,
       children: List.generate(dataList.length, (index) {
-        return BracketScope(
-          variables: [('index', index), ('currentItem', dataList[index])],
-          builder: DUIJsonWidgetBuilder(
-            data: child!,
-            registry: registry ?? DUIWidgetRegistry.shared,
+        return _KeepAliveWrapper(
+          keepTabsAlive: duiTabView1Props.keepTabsAlive,
+          child: BracketScope(
+            variables: [('index', index), ('currentItem', dataList[index])],
+            builder: DUIJsonWidgetBuilder(
+              data: child!,
+              registry: registry ?? DUIWidgetRegistry.shared,
+            ),
           ),
         );
       }),
@@ -56,5 +59,26 @@ class DUITabViewContent extends StatelessWidget {
         textAlign: TextAlign.center,
       ),
     );
+  }
+}
+
+class _KeepAliveWrapper extends StatefulWidget {
+  const _KeepAliveWrapper({required this.child, this.keepTabsAlive = false});
+  final Widget child;
+  final bool? keepTabsAlive;
+
+  @override
+  State<_KeepAliveWrapper> createState() => _KeepAliveWrapperState();
+}
+
+class _KeepAliveWrapperState extends State<_KeepAliveWrapper>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => widget.keepTabsAlive ?? false;
+
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+    return widget.child;
   }
 }

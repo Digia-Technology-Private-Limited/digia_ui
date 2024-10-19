@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 
 import '../base/extensions.dart';
 import '../base/virtual_stateless_widget.dart';
+import '../data_type/adapted_types/scroll_controller.dart';
 import '../expr/default_scope_context.dart';
 import '../expr/scope_context.dart';
 import '../internal_widgets/internal_grid_view.dart';
@@ -25,6 +26,9 @@ class VWGridView extends VirtualStatelessWidget<Props> {
   Widget render(RenderPayload payload) {
     if (children == null || children!.isEmpty) return empty();
 
+    final controller =
+        payload.eval<AdaptedScrollController>(props.get('controller'));
+
     final physics = To.scrollPhysics(props.get('allowScroll'));
     final shrinkWrap = props.getBool('shrinkWrap') ?? false;
     final gridDelegate = SliverGridDelegateWithFixedCrossAxisCount(
@@ -38,6 +42,7 @@ class VWGridView extends VirtualStatelessWidget<Props> {
       final childToRepeat = children!.first;
       final items = payload.evalRepeatData(repeatData!);
       return InternalGridView(
+        controller: controller,
         physics: physics,
         shrinkWrap: shrinkWrap,
         gridDelegate: gridDelegate,
@@ -51,6 +56,7 @@ class VWGridView extends VirtualStatelessWidget<Props> {
     }
 
     return InternalGridView(
+      controller: controller,
       physics: physics,
       shrinkWrap: shrinkWrap,
       gridDelegate: gridDelegate,

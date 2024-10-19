@@ -19,11 +19,13 @@ class VWStreamBuilder extends VirtualStatelessWidget<StreamBuilderProps> {
 
   @override
   Widget render(RenderPayload payload) {
-    final streamDef = payload.evalExpr(props.streamRef);
-    if (streamDef == null) return empty();
+    final controller =
+        payload.evalExpr(props.controller) as StreamController<Object>?;
+
+    if (controller == null) return empty();
 
     return StreamBuilder(
-      stream: _makeStream(streamDef).stream,
+      stream: controller.stream,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return childOf('loadingWidget')?.toWidget(payload) ??
@@ -59,30 +61,6 @@ class VWStreamBuilder extends VirtualStatelessWidget<StreamBuilderProps> {
         return empty();
       },
     );
-  }
-
-  // StreamController<Object?> _makeStream(Object? stream) {
-  //   if (stream is Stream<Object>) {
-  //     return StreamController<Object>()..addStream(stream);
-  //   }
-
-  //   if (stream is StreamController<Object>) {
-  //     return stream;
-  //   }
-
-  //   return StreamController<Object>()
-  //     ..addStream(Stream.error('No Stream provided'));
-  // }
-  StreamController<Object?> _makeStream(Object? stream) {
-    if (stream is Stream) {
-      return StreamController<Object?>()..addStream(stream);
-    }
-
-    if (stream is StreamController) {
-      return stream as StreamController<Object?>;
-    }
-
-    return StreamController<Object?>()..addError('No Stream provided');
   }
 
   ScopeContext _createExprContext(Object? streamValue) {

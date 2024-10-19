@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 
+import '../data_type/method_bindings/method_binding_registry.dart';
 import '../expr/scope_context.dart';
 import '../utils/types.dart';
 import 'base/action.dart' as an;
@@ -7,6 +8,7 @@ import 'base/action_flow.dart';
 import 'base/processor.dart';
 import 'callRestApi/processor.dart';
 import 'controlDrawer/processor.dart';
+import 'controlObject/processor.dart';
 import 'copyToClipBoard/processor.dart';
 import 'delay/processor.dart';
 import 'filePicker/processor.dart';
@@ -36,12 +38,14 @@ class ActionProcDependencies {
     ActionFlow actionFlow,
     ScopeContext? scopeContext,
   ) executeActionFlow;
+  final MethodBindingRegistry bindingRegistry;
   // Add other shared dependencies here
 
   ActionProcDependencies({
     required this.viewBuilder,
     required this.executeActionFlow,
     required this.pageRouteBuilder,
+    required this.bindingRegistry,
   });
 }
 
@@ -58,6 +62,10 @@ class ActionProcessorFactory {
         );
       case an.ActionType.controlDrawer:
         return ControlDrawerProcessor();
+      case an.ActionType.controlObject:
+        return ControlObjectProcessor(
+          registry: dependencies.bindingRegistry,
+        );
       case an.ActionType.copyToClipBoard:
         return CopyToClipBoardProcessor();
       case an.ActionType.delay:

@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
+import '../actions/base/action_flow.dart';
 import '../base/virtual_leaf_stateless_widget.dart';
+import '../expr/default_scope_context.dart';
 import '../internal_widgets/internal_calendar.dart';
 import '../models/props.dart';
 import '../render_payload.dart';
 import '../utils/date_util.dart';
 import '../utils/flutter_type_converters.dart';
 import '../utils/functional_util.dart';
+import '../widget_props/icon_props.dart';
 import 'icon.dart';
 
 class VWCalendar extends VirtualLeafStatelessWidget<Props> {
@@ -70,6 +73,11 @@ class VWCalendar extends VirtualLeafStatelessWidget<Props> {
       focusedDay = selectedDate ?? DateTime.now();
     }
 
+    final ActionFlow? onDateSelected =
+        ActionFlow.fromJson(props.get('rangeSelectionMode.onDateSelected'));
+    final ActionFlow? onRangeSelected =
+        ActionFlow.fromJson(props.get('rangeSelectionMode.onRangeSelected'));
+
     return InternalCalendar(
       focusedDay: focusedDay,
       firstDay: firstDay,
@@ -93,6 +101,22 @@ class VWCalendar extends VirtualLeafStatelessWidget<Props> {
       selectedDate: selectedDate,
       selectedRangeStart: selectedRangeStart,
       selectedRangeEnd: selectedRangeEnd,
+      onDateSelected: (selectedDay, focusedDay) async {
+        await payload.executeAction(onDateSelected,
+            scopeContext: DefaultScopeContext(variables: {
+              'selectedDate': selectedDay,
+              'focusedDay': focusedDay,
+            }));
+      },
+      onRangeSelected:
+          (selectedRangeStart, selectedRangeEnd, focusedDay) async {
+        await payload.executeAction(onRangeSelected,
+            scopeContext: DefaultScopeContext(variables: {
+              'selectedRangeStart': selectedRangeStart,
+              'selectedRangeEnd': selectedRangeEnd,
+              'focusedDay': focusedDay,
+            }));
+      },
     );
   }
 
@@ -120,14 +144,16 @@ class VWCalendar extends VirtualLeafStatelessWidget<Props> {
             const TextStyle(fontSize: 17.0);
     EdgeInsets? headerPadding = To.edgeInsets(headerStyle.get('headerPadding'));
     Widget? leftChevronIcon = VWIcon(
-      props: headerStyle.toProps('leftChevronIcon') ?? Props.empty(),
+      props: IconProps.fromJson(headerStyle.getMap('leftChevronIcon')) ??
+          IconProps.empty(),
       commonProps: null,
       parent: null,
     ).toWidget(payload);
     EdgeInsets? leftChevronPadding =
         To.edgeInsets(headerStyle.get('leftChevronPadding'));
     Widget? rightChevronIcon = VWIcon(
-      props: headerStyle.toProps('rightChevronIcon') ?? Props.empty(),
+      props: IconProps.fromJson(headerStyle.getMap('rightChevronIcon')) ??
+          IconProps.empty(),
       commonProps: null,
       parent: null,
     ).toWidget(payload);
