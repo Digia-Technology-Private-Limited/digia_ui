@@ -6,6 +6,7 @@ import '../base/virtual_widget.dart';
 import '../models/props.dart';
 import '../render_payload.dart';
 import '../utils/functional_util.dart';
+import '../widget_props/icon_props.dart';
 import 'app_bar.dart';
 import 'drawer.dart';
 import 'icon.dart';
@@ -94,7 +95,11 @@ class VWScaffold extends VirtualStatelessWidget<Props> {
     }
 
     return child.props.getMap('drawerIcon').maybe((p0) {
-      return VWIcon(props: Props(p0), commonProps: null, parent: null);
+      return VWIcon(
+        props: IconProps.fromJson(p0) ?? IconProps.empty(),
+        commonProps: null,
+        parent: null,
+      );
     });
   }
 
@@ -106,7 +111,11 @@ class VWScaffold extends VirtualStatelessWidget<Props> {
     }
 
     return child.props.getMap('drawerIcon').maybe((p0) {
-      return VWIcon(props: Props(p0), commonProps: null, parent: null);
+      return VWIcon(
+        props: IconProps.fromJson(p0) ?? IconProps.empty(),
+        commonProps: null,
+        parent: null,
+      );
     });
   }
 }

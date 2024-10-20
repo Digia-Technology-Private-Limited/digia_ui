@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 
-import '../../models/variable_def.dart';
+import '../data_type/variable.dart';
+import '../data_type/variable_json_converter.dart';
 import '../utils/functional_util.dart';
 import '../utils/json_util.dart';
 import '../utils/types.dart';
@@ -67,7 +68,7 @@ class VWComponentData extends VWData {
 }
 
 class VWStateData extends VWData {
-  final Map<String, VariableDef> initStateDefs;
+  final Map<String, Variable> initStateDefs;
   final Map<String, List<VWData>>? childGroups;
 
   VWStateData({
@@ -79,7 +80,7 @@ class VWStateData extends VWData {
   factory VWStateData.fromJson(JsonLike json) {
     return VWStateData(
       initStateDefs: as$<JsonLike>(json['initStateDefs'])
-              .maybe(const VariablesJsonConverter().fromJson) ??
+              .maybe(const VariableJsonConverter().fromJson) ??
           {},
       childGroups: tryKeys(
         json,

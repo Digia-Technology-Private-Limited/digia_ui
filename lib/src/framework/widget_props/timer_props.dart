@@ -1,4 +1,5 @@
 import '../actions/base/action_flow.dart';
+import '../internal_widgets/timer/controller.dart';
 import '../models/types.dart';
 import '../utils/functional_util.dart';
 import '../utils/types.dart';
@@ -6,6 +7,7 @@ import '../utils/types.dart';
 const String _countDownTimerTypeValue = 'countDown';
 
 class TimerProps {
+  final ExprOr<TimerController>? controller;
   final ExprOr<int>? duration;
   final ExprOr<int>? updateInterval;
   final String _timerType;
@@ -16,6 +18,7 @@ class TimerProps {
   bool get isCountDown => _timerType == _countDownTimerTypeValue;
 
   const TimerProps({
+    this.controller,
     this.duration,
     this.updateInterval,
     String? timerType,
@@ -26,6 +29,7 @@ class TimerProps {
 
   factory TimerProps.fromJson(JsonLike json) {
     return TimerProps(
+      controller: ExprOr.fromJson<TimerController>(json['controller']),
       duration: ExprOr.fromJson<int>(json['duration']),
       updateInterval: ExprOr.fromJson<int>(json['updateInterval']),
       timerType: as$<String>(json['timerType']),

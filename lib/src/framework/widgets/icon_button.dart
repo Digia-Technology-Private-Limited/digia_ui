@@ -8,6 +8,7 @@ import '../utils/flutter_extensions.dart';
 import '../utils/flutter_type_converters.dart';
 import '../utils/functional_util.dart';
 import '../utils/object_util.dart';
+import '../widget_props/icon_props.dart';
 import 'icon.dart';
 
 class VWIconButton extends VirtualLeafStatelessWidget<Props> {
@@ -21,7 +22,8 @@ class VWIconButton extends VirtualLeafStatelessWidget<Props> {
   @override
   Widget render(RenderPayload payload) {
     final icon = VWIcon(
-      props: props.toProps('icon') ?? Props.empty(),
+      props:
+          props.getMap('icon').maybe(IconProps.fromJson) ?? IconProps.empty(),
       commonProps: commonProps,
       parent: this,
     ).toWidget(payload);

@@ -32,7 +32,7 @@ class ResourceProvider extends InheritedWidget {
     return context.getInheritedWidgetOfExactType<ResourceProvider>();
   }
 
-  TextStyle? getTextStyle(String key) => _textStyles[key];
+  TextStyle? getFontFromToken(String token) => _textStyles[token];
 
   ImageProvider? getImageProvider(String key) => images[key];
 

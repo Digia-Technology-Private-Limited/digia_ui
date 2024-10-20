@@ -5,11 +5,14 @@ import 'models/types.dart';
 import 'models/vw_data.dart';
 import 'state/virtual_state_container_widget.dart';
 import 'virtual_widget_registry.dart';
+import 'widget_props/animated_switcher_props.dart';
 import 'widget_props/app_bar_props.dart';
 import 'widget_props/condtional_item_props.dart';
 import 'widget_props/custom_scroll_view_props.dart';
 import 'widget_props/flex_fit_props.dart';
+import 'widget_props/icon_props.dart';
 import 'widget_props/nested_scroll_view_props.dart';
+import 'widget_props/opacity_props.dart';
 import 'widget_props/paginated_list_view_props.dart';
 import 'widget_props/paginated_sliver_list_props.dart';
 import 'widget_props/pin_field_props.dart';
@@ -24,7 +27,9 @@ import 'widget_props/tab_view_content_props.dart';
 import 'widget_props/tab_view_controller_props.dart';
 import 'widget_props/text_props.dart';
 import 'widget_props/timer_props.dart';
+import 'widgets/animated_builder.dart';
 import 'widgets/animated_button.dart';
+import 'widgets/animated_switcher.dart';
 import 'widgets/app_bar.dart';
 import 'widgets/async_builder.dart';
 import 'widgets/avatar.dart';
@@ -152,7 +157,7 @@ VWContainer containerBuilder(
 
 VWIcon iconBuilder(VWNodeData data, VirtualWidget? parent, _) {
   return VWIcon(
-    props: data.props,
+    props: IconProps.fromJson(data.props.value) ?? IconProps.empty(),
     commonProps: data.commonProps,
     parent: parent,
     refName: data.refName,
@@ -654,7 +659,7 @@ VWOpacity opacityBuilder(
   VirtualWidgetRegistry registry,
 ) {
   return VWOpacity(
-    props: data.props,
+    props: OpacityProps.fromJson(data.props.value),
     commonProps: data.commonProps,
     parent: parent,
     refName: data.refName,
@@ -792,6 +797,34 @@ VWSliverList sliverListBuilder(
     parent: parent,
     refName: data.refName,
     repeatData: data.repeatData,
+    childGroups: createChildGroups(data.childGroups, parent, registry),
+  );
+}
+
+VWAnimatedBuilder animationBuilder(
+  VWNodeData data,
+  VirtualWidget? parent,
+  VirtualWidgetRegistry registry,
+) {
+  return VWAnimatedBuilder(
+    props: data.props,
+    commonProps: data.commonProps,
+    parent: parent,
+    refName: data.refName,
+    childGroups: createChildGroups(data.childGroups, parent, registry),
+  );
+}
+
+VWAnimatedSwitcher animatedSwitcher(
+  VWNodeData data,
+  VirtualWidget? parent,
+  VirtualWidgetRegistry registry,
+) {
+  return VWAnimatedSwitcher(
+    props: AnimatedSwitcherProps.fromJson(data.props.value),
+    commonProps: data.commonProps,
+    parent: parent,
+    refName: data.refName,
     childGroups: createChildGroups(data.childGroups, parent, registry),
   );
 }

@@ -36,6 +36,8 @@ class VWNestedScrollView extends VirtualStatelessWidget<NestedScrollViewProps> {
 
   @override
   Widget render(RenderPayload payload) {
+    final controller = payload.evalExpr(props.controller);
+
     final enableOverlapAbsorption =
         props.enableOverlapAbsorber?.evaluate(payload.scopeContext) ?? true;
 
@@ -43,6 +45,7 @@ class VWNestedScrollView extends VirtualStatelessWidget<NestedScrollViewProps> {
     final body = childOf('bodyWidget');
 
     return NestedScrollView(
+        controller: controller,
         headerSliverBuilder: (innerCtx, innerBoxIsScrolled) {
           final updatedPayload = payload.copyWithChainedContext(
             _createExprContext(innerBoxIsScrolled),

@@ -28,10 +28,20 @@ class DefaultScopeContext extends ScopeContext {
   @override
   ({bool found, Object? value}) getValue(String key) {
     if (_variables.containsKey(key)) {
-      return (found: true, value: _variables[key]);
+      return (
+        found: true,
+        // value: adaptValue(_variables[key]),
+        value: _variables[key],
+      );
     }
     return _enclosing?.getValue(key) ?? (found: false, value: null);
   }
+
+  // Object? adaptValue(Object? value) {
+  //   if (value == null) return null;
+
+  //   return _adaptor.adaptValue(value) ?? value;
+  // }
 
   @override
   ScopeContext copyAndExtend({required Map<String, Object?> newVariables}) {
