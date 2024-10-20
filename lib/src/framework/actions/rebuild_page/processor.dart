@@ -12,8 +12,16 @@ class RebuildPageProcessor implements ActionProcessor<RebuildPageAction> {
     RebuildPageAction action,
     ScopeContext? scopeContext,
   ) {
-    final originState = StateContextProvider.getOriginState(context);
-    originState.triggerListeners();
+    // Backwards compatibility
+    if (action.stateContextName == null) {
+      final originState = StateContextProvider.getOriginState(context);
+      originState.triggerListeners();
+      return null;
+    }
+
+    final stateContext =
+        StateContextProvider.findStateByName(context, action.stateContextName!);
+    stateContext?.triggerListeners();
     return null;
   }
 }
