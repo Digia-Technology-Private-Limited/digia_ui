@@ -5,14 +5,13 @@ import '../../state/state_context_provider.dart';
 import '../base/processor.dart';
 import 'action.dart';
 
-class RebuildPageProcessor implements ActionProcessor<RebuildPageAction> {
+class RebuildStateProcessor implements ActionProcessor<RebuildStateAction> {
   @override
   Future<Object?>? execute(
     BuildContext context,
-    RebuildPageAction action,
+    RebuildStateAction action,
     ScopeContext? scopeContext,
   ) {
-    // Backwards compatibility
     if (action.stateContextName == null) {
       final originState = StateContextProvider.getOriginState(context);
       originState.triggerListeners();

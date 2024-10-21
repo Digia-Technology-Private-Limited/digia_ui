@@ -1,23 +1,22 @@
 import '../../utils/json_util.dart';
 import '../base/action.dart';
 
-class RebuildPageAction extends Action {
+class RebuildStateAction extends Action {
   final String? stateContextName;
-  RebuildPageAction({
+  RebuildStateAction({
     super.disableActionIf,
     required this.stateContextName,
   });
 
   @override
-  ActionType get actionType => ActionType.rebuildPage;
+  ActionType get actionType => ActionType.rebuildState;
 
   @override
   Map<String, dynamic> toJson() =>
       {'type': actionType.toString(), 'stateContextName': stateContextName};
 
-  factory RebuildPageAction.fromJson(Map<String, Object?> json) {
-    return RebuildPageAction(
-        stateContextName:
-            tryKeys<String>(json, ['pageId', 'stateContextName']));
+  factory RebuildStateAction.fromJson(Map<String, Object?> json) {
+    return RebuildStateAction(
+        stateContextName: tryKeys<String>(json, ['stateContextName']));
   }
 }

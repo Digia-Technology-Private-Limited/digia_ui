@@ -13,7 +13,7 @@ import 'navigateBackUntil/action.dart';
 import 'navigateToPage/action.dart';
 import 'openUrl/action.dart';
 import 'postMessage/action.dart';
-import 'rebuild_page/action.dart';
+import 'rebuild_state/action.dart';
 import 'setState/action.dart';
 import 'share/action.dart';
 import 'showBottomSheet/action.dart';
@@ -59,8 +59,8 @@ class ActionFactory {
         action = OpenUrlAction.fromJson(actionData);
       case ActionType.postMessage:
         action = PostMessageAction.fromJson(actionData);
-      case ActionType.rebuildPage:
-        action = RebuildPageAction.fromJson(actionData);
+      case ActionType.rebuildState:
+        action = RebuildStateAction.fromJson(actionData);
       case ActionType.setPageState:
         action = SetStateAction(
           stateContextName: 'page',

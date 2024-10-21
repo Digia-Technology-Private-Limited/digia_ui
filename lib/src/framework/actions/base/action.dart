@@ -14,7 +14,7 @@ enum ActionType {
   navigateToPage('Action.navigateToPage'),
   openUrl('Action.openUrl'),
   postMessage('Action.handleDigiaMessage'),
-  rebuildPage('Action.rebuildPage'),
+  rebuildState('Action.rebuildState'),
   // setAppState('Action.setAppState'),
   // For Backward Compatibility, to be removed in future
   setPageState('Action.setPageState'),
