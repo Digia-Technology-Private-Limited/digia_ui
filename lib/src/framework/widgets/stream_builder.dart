@@ -19,8 +19,7 @@ class VWStreamBuilder extends VirtualStatelessWidget<StreamBuilderProps> {
 
   @override
   Widget render(RenderPayload payload) {
-    final controller =
-        payload.evalExpr(props.controller) as StreamController<Object>?;
+    final controller = payload.evalExpr(props.controller);
 
     if (controller == null) return empty();
 

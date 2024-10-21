@@ -67,7 +67,7 @@ class _DUIPaginatedSliverListState
               DigiaUIClient.getConfigResolver())
           .getApiDataSource(apiDataSourceId);
 
-      final args = apiDataSourceArgs?.map((key, value) {
+      final args = apiDataSourceArgs.map((key, value) {
         final evalue = eval(value,
             context: context,
             enclosing: DefaultScopeContext(variables: {'offset': pageKey}));

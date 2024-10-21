@@ -2,9 +2,8 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-import '../../../models/dui_file.dart';
+import '../../data_type/adapted_types/file.dart';
 import '../../expr/scope_context.dart';
-import '../../state/state_context_provider.dart';
 import '../base/processor.dart';
 import 'action.dart';
 
@@ -15,19 +14,17 @@ class FilePickerProcessor extends ActionProcessor<FilePickerAction> {
     FilePickerAction action,
     ScopeContext? scopeContext,
   ) async {
-    final stateContext = StateContextProvider.getOriginState(context);
-
+    final file =
+        action.selectedPageState?.evaluate(scopeContext) as AdaptedFile?;
     final fileType = action.fileType;
     final sizeLimit = action.sizeLimit?.evaluate(scopeContext);
     final showToast = action.showToast ?? true;
     final isMultiSelect = action.isMultiSelected ?? false;
-    final selectedPageState = action.selectedPageState;
-    final rebuildPage = action.rebuildPage ?? false;
 
     final type = toFileType(fileType);
 
     List<PlatformFile>? platformFiles;
-    bool isSinglePick;
+    // bool isSinglePick;
     try {
       // Compression has to be set to 0, because of this issue:
       // https://github.com/miguelpruivo/flutter_file_picker/issues/1534
@@ -37,7 +34,7 @@ class FilePickerProcessor extends ActionProcessor<FilePickerAction> {
           allowedExtensions: type == FileType.custom ? ['pdf'] : null,
           compressionQuality: 0);
 
-      isSinglePick = pickedFile?.isSinglePick ?? true;
+      // isSinglePick = pickedFile?.isSinglePick ?? true;
 
       if (pickedFile == null) {
         // User canceled the picker
@@ -64,22 +61,22 @@ class FilePickerProcessor extends ActionProcessor<FilePickerAction> {
 
     if (platformFiles.isNotEmpty) {
       try {
-        List<DUIFile> finalFiles = platformFiles.map((platformFile) {
-          return DUIFile.fromPlatformFile(platformFile);
+        List<AdaptedFile> finalFiles = platformFiles.map((platformFile) {
+          return AdaptedFile.fromPlatformFile(platformFile);
         }).toList();
 
-        final variables = stateContext.stateVariables;
+        final files = finalFiles.first;
 
-        if (selectedPageState != null) {
-          final updatesMap = variables.map((key, value) {
-            if (key == selectedPageState) {
-              return MapEntry(
-                  key, isSinglePick ? finalFiles.first : finalFiles);
-            } else {
-              return MapEntry(key, value);
-            }
-          });
-          stateContext.setValues(updatesMap, notify: rebuildPage);
+        if (file != null) {
+          file.setData(
+            path: files.path,
+            name: files.name,
+            size: files.size,
+            bytes: files.bytes,
+            readStream: files.readStream,
+            identifier: files.identifier,
+            xFile: files.xFile,
+          );
         }
       } catch (e) {
         print('Error: $e');
@@ -90,15 +87,11 @@ class FilePickerProcessor extends ActionProcessor<FilePickerAction> {
   }
 }
 
-toFileType(String? fileType) {
+FileType toFileType(String? fileType) {
   if (fileType == null) {
     return FileType.any;
   }
   switch (fileType.toLowerCase()) {
-    case 'image':
-      return FileType.image;
-    case 'video':
-      return FileType.video;
     case 'audio':
       return FileType.audio;
     case 'pdf':

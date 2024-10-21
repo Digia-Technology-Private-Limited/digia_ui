@@ -7,7 +7,6 @@ import '../../../core/action/api_handler.dart';
 import '../../expr/default_scope_context.dart';
 import '../../expr/scope_context.dart';
 import '../../resource_provider.dart';
-import '../../state/state_context_provider.dart';
 import '../base/action_flow.dart';
 import '../base/processor.dart';
 import 'action.dart';
@@ -29,32 +28,17 @@ class UploadProcessor extends ActionProcessor<UploadAction> {
     UploadAction action,
     ScopeContext? scopeContext,
   ) async {
-    final stateContext = StateContextProvider.getOriginState(context);
     final apiModel = ResourceProvider.maybeOf(context)?.apiModels[action.apiId];
-    final selectedPageState = action.selectedPageStream;
+    final progressStreamController = action.streamController
+        ?.evaluate(scopeContext) as StreamController<Object?>?;
     final args = action.args?.map((k, v) => MapEntry(
           k,
           v?.evaluate(scopeContext),
         ));
 
+    // final args = {'file': generateDummyFile(10)};
     if (apiModel == null) {
       return Future.error('No API Selected');
-    }
-
-    final StreamController<Object?> progressStreamController =
-        StreamController<Object?>();
-
-    final variables = stateContext.stateVariables;
-
-    if (selectedPageState != null) {
-      final updatesMap = variables.map((key, value) {
-        if (key == selectedPageState) {
-          return MapEntry(key, progressStreamController);
-        } else {
-          return MapEntry(key, value);
-        }
-      });
-      stateContext.setValues(updatesMap, notify: true);
     }
 
     final result = ApiHandler.instance
@@ -124,3 +108,8 @@ class UploadProcessor extends ActionProcessor<UploadAction> {
     };
   }
 }
+
+// Uint8List generateDummyFile(int sizeInMB) {
+//   int fileSize = sizeInMB * 1024 * 1024;
+//   return Uint8List.fromList(List<int>.generate(fileSize, (i) => i % 256));
+// }

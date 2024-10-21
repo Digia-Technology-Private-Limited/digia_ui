@@ -7,7 +7,7 @@ class FilePickerAction extends Action {
   final ExprOr<double>? sizeLimit;
   final bool? showToast;
   final bool? rebuildPage;
-  final String? selectedPageState;
+  final ExprOr<Object>? selectedPageState;
   final bool? isMultiSelected;
 
   FilePickerAction({
@@ -29,7 +29,7 @@ class FilePickerAction extends Action {
       showToast: as$<bool>(json['showToast']),
       rebuildPage: as$<bool>(json['rebuildPage']),
       isMultiSelected: as$<bool>(json['isMultiSelected']),
-      selectedPageState: as$<String>(json['selectedPageState']),
+      selectedPageState: ExprOr.fromJson<Object>(json['selectedPageState']),
     );
   }
 
@@ -42,7 +42,7 @@ class FilePickerAction extends Action {
       'showToast': showToast,
       'rebuildPage': rebuildPage,
       'isMultiSelected': isMultiSelected,
-      'selectedPageState': selectedPageState,
+      'selectedPageState': selectedPageState?.toJson(),
     };
   }
 }

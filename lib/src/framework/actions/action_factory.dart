@@ -102,6 +102,6 @@ class ActionFactory {
     }
 
     // TODO: Remove force cast
-    return action!..disableActionIf = disableActionIf;
+    return action..disableActionIf = disableActionIf;
   }
 }

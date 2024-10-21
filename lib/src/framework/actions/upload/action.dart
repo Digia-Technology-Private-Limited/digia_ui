@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import '../../models/types.dart';
 import '../../utils/functional_util.dart';
 import '../../utils/types.dart';
@@ -7,7 +9,8 @@ import '../base/action_flow.dart';
 class UploadAction extends Action {
   final String apiId;
   final Map<String, ExprOr<Object>?>? args;
-  final String? selectedPageStream;
+  // final String? selectedPageStream;
+  ExprOr<StreamController>? streamController;
   final ExprOr<bool>? successCondition;
   final ActionFlow? onSuccess;
   final ActionFlow? onError;
@@ -15,7 +18,8 @@ class UploadAction extends Action {
   UploadAction({
     required this.apiId,
     required this.args,
-    this.selectedPageStream,
+    // this.selectedPageStream,
+    this.streamController,
     this.successCondition,
     this.onSuccess,
     this.onError,
@@ -34,7 +38,7 @@ class UploadAction extends Action {
       successCondition: ExprOr.fromJson<bool>(json['successCondition']),
       onSuccess: ActionFlow.fromJson(json['onSuccess']),
       onError: ActionFlow.fromJson(json['onError']),
-      selectedPageStream: as$<String>(json['selectedPageStream']),
+      streamController: ExprOr.fromJson(json['streamController']),
     );
   }
 
@@ -47,7 +51,8 @@ class UploadAction extends Action {
       'successCondition': successCondition?.toJson(),
       'onSuccess': onSuccess?.toJson(),
       'onError': onError?.toJson(),
-      'selectedPageStream': selectedPageStream,
+      // 'selectedPageStream': selectedPageStream,
+      'streamController': streamController?.toJson()
     };
   }
 }

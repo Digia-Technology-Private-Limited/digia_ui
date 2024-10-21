@@ -305,14 +305,14 @@ Map<String, ActionHandlerFn> _actionsMap = {
     final evaluatedArgs =
         evalDynamic(filteredArgs, context, enclosing) as Map<String, dynamic>?;
     final barrierDismissible =
-        eval<bool>(action?.data['barrierDismissible'], context: context);
+        eval<bool>(action.data['barrierDismissible'], context: context);
     final barrierColor = eval<String>(action.data['barrierColor'],
         context: context, enclosing: enclosing);
 
     final widgetScope = DUIWidgetScope.maybeOf(context);
 
     final waitForResult =
-        NumDecoder.toBool(action?.data['waitForResult']) ?? false;
+        NumDecoder.toBool(action.data['waitForResult']) ?? false;
 
     logger?.log(ActionLog(getPageName(context), 'Action.openDialog', {
       'pageId': pageUId,

@@ -104,6 +104,7 @@ class DUIScaffoldBuilder extends DUIWidgetBuilder {
           if (root.type != 'digia/floatingActionButton') {
             return null;
           }
+          return null;
         });
         final bottomNavigationBar =
             (data.children['bottomNavigationBar']?.firstOrNull).let((root) {
