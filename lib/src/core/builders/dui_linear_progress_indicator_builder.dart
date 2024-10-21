@@ -19,7 +19,7 @@ class DUILinearProgressBarBuilder extends DUIWidgetBuilder {
         eval<double>(data.props['progressValue'], context: context);
     final isReverse =
         eval<bool>(data.props['isReverse'], context: context) ?? false;
-    final String? type = data.props['type'] ?? 'indeterminate';
+    final String? type = (data.props['type'] ?? 'indeterminate') as String?;
 
     return RotatedBox(
         quarterTurns: isReverse ? 2 : 0, child: _getChild(progressValue, type));

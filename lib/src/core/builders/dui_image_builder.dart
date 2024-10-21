@@ -70,7 +70,7 @@ class DUIImageBuilder extends DUIWidgetBuilder {
       color: Colors.transparent,
     );
 
-    final placeHolderValue = data.props['placeHolder'];
+    final String? placeHolderValue = data.props['placeHolder'] as String?;
 
     if (placeHolderValue != null && placeHolderValue.isNotEmpty) {
       widget = switch (placeHolderValue.split('/').first) {
@@ -88,7 +88,7 @@ class DUIImageBuilder extends DUIWidgetBuilder {
     return (context) => _mayWrapInAspectRatio(widget);
   }
 
-  _mayWrapInAspectRatio(Widget child) =>
+  Widget _mayWrapInAspectRatio(Widget child) =>
       DUIAspectRatio(value: data.props['aspectRatio'], child: child);
 
   @override
@@ -114,7 +114,7 @@ class DUIImageBuilder extends DUIWidgetBuilder {
                 return _mayWrapInAspectRatio(widget);
               },
               errorBuilder: (context, error, stackTrace) {
-                final errorImage = data.props['errorImage'];
+                final String? errorImage = data.props['errorImage'] as String?;
                 if (errorImage == null) {
                   return const Center(
                     child: Icon(

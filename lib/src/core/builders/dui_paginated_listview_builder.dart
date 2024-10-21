@@ -59,10 +59,10 @@ class _DUIPaginatedListViewState extends DUIWidgetState<DUIPaginatedListView> {
   void initState() {
     super.initState();
     _pagingController.addPageRequestListener((pageKey) {
-      final apiDataSourceId =
-          widget.data.props.valueFor(keyPath: 'dataSource.id');
-      Map<String, dynamic>? apiDataSourceArgs =
-          widget.data.props.valueFor(keyPath: 'dataSource.args');
+      final String apiDataSourceId =
+          widget.data.props.valueFor(keyPath: 'dataSource.id') as String;
+      Map<String, dynamic>? apiDataSourceArgs = widget.data.props
+          .valueFor(keyPath: 'dataSource.args') as Map<String, dynamic>?;
 
       final apiModel = (context.tryRead<DUIPageBloc>()?.config ??
               DigiaUIClient.getConfigResolver())

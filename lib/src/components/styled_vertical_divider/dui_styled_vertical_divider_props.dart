@@ -20,7 +20,7 @@ class DUIStyledVerticalDividerProps {
     this.borderPattern,
   });
 
-  factory DUIStyledVerticalDividerProps.fromJson(dynamic json) =>
+  factory DUIStyledVerticalDividerProps.fromJson(Map<String, dynamic> json) =>
       _$DUIStyledVerticalDividerPropsFromJson(json);
 
   Map<String, dynamic> toJson() => _$DUIStyledVerticalDividerPropsToJson(this);

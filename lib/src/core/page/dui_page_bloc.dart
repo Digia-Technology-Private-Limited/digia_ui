@@ -7,6 +7,7 @@ import '../../../digia_ui.dart';
 import '../../Utils/basic_shared_utils/lodash.dart';
 import '../../Utils/expr.dart';
 import '../../framework/expr/default_scope_context.dart';
+import '../../framework/utils/functional_util.dart';
 import '../action/action_handler.dart';
 import '../action/action_prop.dart';
 import '../action/api_handler.dart';
@@ -91,9 +92,10 @@ class DUIPageBloc extends Bloc<DUIPageEvent, DUIPageState> {
       Emitter<DUIPageState> emit) async {
     emit(state.copyWith(isLoading: true));
     final apiDataSourceId = action.data['dataSourceId'];
-    Map<String, dynamic>? apiDataSourceArgs = action.data['args'];
+    Map<String, dynamic>? apiDataSourceArgs =
+        as$<Map<String, dynamic>>(action.data['args']);
 
-    final apiModel = config.getApiDataSource(apiDataSourceId);
+    final apiModel = config.getApiDataSource(as<String>(apiDataSourceId));
 
     final args = apiDataSourceArgs
         ?.map((key, value) => MapEntry(key, eval(value, context: context)));

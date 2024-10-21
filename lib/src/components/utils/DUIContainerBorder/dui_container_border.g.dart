@@ -17,7 +17,8 @@ DUIContainerBorder _$DUIContainerBorderFromJson(Map<String, dynamic> json) =>
       ..borderGradiant = json['borderGradiant'] as Map<String, dynamic>?
       ..borderType = json['borderType'] == null
           ? null
-          : BorderPatternClass.fromJson(json['borderType'])
+          : BorderPatternClass.fromJson(
+              json['borderType'] as Map<String, dynamic>)
       ..strokeAlign =
           $enumDecodeNullable(_$StrokeAlignEnumMap, json['strokeAlign']);
 

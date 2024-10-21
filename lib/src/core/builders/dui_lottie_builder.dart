@@ -15,12 +15,13 @@ class DUILottieBuilder extends DUIWidgetBuilder {
 
   @override
   Widget build(BuildContext context) {
-    final (repeat, reverse) = getAnimationType(data.props['animationType']);
+    final (repeat, reverse) =
+        getAnimationType(data.props['animationType'] as String?);
     final alignment = DUIDecoder.toAlignment(data.props['alignment']);
     final height = DUIDecoder.getHeight(context, data.props['height']);
     final width = DUIDecoder.getWidth(context, data.props['width']);
     final animate = eval<bool>(data.props['animate'], context: context) ?? true;
-    final frameRate = FrameRate(data.props['frameRate'] ?? 60);
+    final frameRate = FrameRate(data.props['frameRate'] as double? ?? 60);
     final fit = DUIDecoder.toBoxFit(data.props['fit']);
 
     final lottiePath = eval<String>(data.props['lottiePath'], context: context);

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
 import '../../Utils/util_functions.dart';
+import '../../framework/utils/functional_util.dart';
 import '../evaluator.dart';
 import '../json_widget_builder.dart';
 import '../page/props/dui_widget_json_data.dart';
@@ -23,7 +24,8 @@ class DUIAvatarBuilder extends DUIWidgetBuilder {
 
   @override
   Widget build(BuildContext context) {
-    final shape = data.props['shape'];
+    final Map<String, dynamic> shape =
+        as<Map<String, dynamic>>(data.props['shape']);
 
     return switch (shape['value']) {
       'circle' => _getCircleAvatar(shape, context),
@@ -51,7 +53,7 @@ class DUIAvatarBuilder extends DUIWidgetBuilder {
   Widget _getSquareAvatar(Map<String, dynamic> shape, BuildContext context) {
     final String? bgColor =
         eval<String>(data.props['bgColor'], context: context);
-    final String? cornerRadius = shape['cornerRadius'];
+    final String? cornerRadius = as$<String>(shape['cornerRadius']);
     final double? side = eval<double>(shape['side'], context: context);
 
     return Container(

@@ -9,6 +9,7 @@ import '../../Utils/extensions.dart';
 import '../../Utils/util_functions.dart';
 import '../../core/builders/dui_icon_builder.dart';
 import '../../core/evaluator.dart';
+import '../../framework/utils/functional_util.dart';
 import '../DUIText/dui_text_style.dart';
 import '../dui_base_stateful_widget.dart';
 
@@ -78,9 +79,10 @@ class _DUICalendarState extends DUIWidgetState<DUICalendar> {
         NumDecoder.toBool(widget.props['weekNumbersVisible']) ??
             weekNumbersVisible;
 
-    headerStyle = widget.props['headerStyle'];
-    daysOfWeekStyle = widget.props['daysOfWeekStyle'];
-    calendarStyle = widget.props['calendarStyle'];
+    headerStyle = as$<Map<String, dynamic>>(widget.props['headerStyle']);
+    daysOfWeekStyle =
+        as$<Map<String, dynamic>>(widget.props['daysOfWeekStyle']);
+    calendarStyle = as$<Map<String, dynamic>>(widget.props['calendarStyle']);
 
     rangeSelectionMode =
         _toRangeSelectionMode(widget.props['rangeSelectionMode']) ??

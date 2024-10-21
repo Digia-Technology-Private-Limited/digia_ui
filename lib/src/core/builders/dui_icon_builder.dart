@@ -36,9 +36,11 @@ class DUIIconBuilder extends DUIWidgetBuilder {
     }
 
     final scope = DUIWidgetScope.maybeOf(context);
-    var iconData = scope?.iconDataProvider?.call(props['iconData']);
+    var iconData = scope?.iconDataProvider
+        ?.call(props['iconData'] as Map<String, Object?>);
 
-    iconData ??= getIconData(icondataMap: props['iconData']);
+    iconData ??=
+        getIconData(icondataMap: props['iconData'] as Map<String, dynamic>);
 
     return Icon(
       iconData,

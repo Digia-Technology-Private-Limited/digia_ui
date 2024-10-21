@@ -19,7 +19,8 @@ class DUIStreamBuilder extends DUIWidgetBuilder {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-        stream: _makeStream(data.props['streamVariable'], context),
+        stream: _makeStream(
+            data.props['streamVariable'] as Map<String, dynamic>, context),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return data

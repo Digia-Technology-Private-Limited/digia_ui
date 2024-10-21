@@ -122,7 +122,8 @@ class NetworkClient {
           await _execute(path, method, data: data, headers: headers);
 
       if (response.statusCode == 200) {
-        return BaseResponse.fromJson(response.data, fromJsonT);
+        return BaseResponse.fromJson(
+            response.data as Map<String, Object?>, fromJsonT);
       } else {
         return BaseResponse(
             isSuccess: false, data: null, error: {'code': response.statusCode});

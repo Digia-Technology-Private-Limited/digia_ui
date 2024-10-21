@@ -10,6 +10,7 @@ import '../../core/builders/common.dart';
 import '../../core/builders/dui_icon_builder.dart';
 import '../../core/builders/dui_json_widget_builder.dart';
 import '../../core/evaluator.dart';
+import '../../framework/utils/functional_util.dart';
 import '../dui_base_stateful_widget.dart';
 import 'DashLineConnector.dart';
 
@@ -68,8 +69,8 @@ class _DUIStepperState extends DUIWidgetState<DUIStepper>
       'dashed' => CustomDashedLineConnector(
           color: color,
           thickness: thickness,
-          dash: value?['dash'] ?? thickness * 3,
-          gap: value?['gap'] ?? thickness * 2,
+          dash: as$<double>(value?['dash']) ?? thickness * 3,
+          gap: as$<double>(value?['gap']) ?? thickness * 2,
           strokeCap: toStrokeCap(value?['strokeCap']),
         ),
       _ => Connector.solidLine(

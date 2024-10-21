@@ -31,8 +31,9 @@ class DUIHtmlViewBuilder extends DUIWidgetBuilder {
   }
 }
 
-Style _makeStyle(BuildContext context, Map<String, dynamic>? styleMap) {
+Style _makeStyle(BuildContext context, Object? styleMap) {
   if (styleMap == null) return Style();
+  if (styleMap is! Map<String, dynamic>) return Style();
 
   final maxLines = eval<int>(styleMap['maxLines'], context: context);
   final textOverflow = DUIDecoder.toTextOverflow(

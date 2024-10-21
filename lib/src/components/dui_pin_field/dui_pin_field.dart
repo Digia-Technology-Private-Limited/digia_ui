@@ -7,6 +7,7 @@ import '../../Utils/util_functions.dart';
 import '../../core/action/action_handler.dart';
 import '../../core/action/action_prop.dart';
 import '../../core/evaluator.dart';
+import '../../framework/utils/functional_util.dart';
 import '../DUIText/dui_text_style.dart';
 import '../dui_base_stateful_widget.dart';
 
@@ -63,7 +64,8 @@ class _DUIPinFieldState extends DUIWidgetState<DUIPinField> {
     autoFocus =
         eval<bool>(widget.props['autoFocus'], context: context) ?? false;
     enabled = eval<bool>(widget.props['enabled'], context: context) ?? true;
-    defaultPinTheme = widget.props['defaultPinTheme'];
+    defaultPinTheme =
+        as$<Map<String, dynamic>>(widget.props['defaultPinTheme']);
     obscureText =
         eval<bool>(widget.props['obscureText'], context: context) ?? false;
     smsRetrieverImpl = SmsRetrieverImpl(SmartAuth());

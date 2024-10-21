@@ -15,7 +15,7 @@ class MobileJsFunctions implements JSFunctions {
     try {
       switch (strategy) {
         case PreferRemote(remotePath: String remotePath, version: int? version):
-          var fileName = JSFunctions.getFunctionsFileName(version);
+          String fileName = JSFunctions.getFunctionsFileName(version);
           final fileExists =
               version == null ? false : await doesFileExist(fileName);
           if (!fileExists) {

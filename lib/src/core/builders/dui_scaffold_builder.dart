@@ -99,7 +99,7 @@ class DUIScaffoldBuilder extends DUIWidgetBuilder {
           return DUIFloatingActionButton.floatingActionButton(
               root.props, context, data);
         });
-        final floatingActionButtonProps =
+        final DUIFloatingActionButtonProps? floatingActionButtonProps =
             (data.children['floatingActionButton']?.firstOrNull).let((root) {
           if (root.type != 'digia/floatingActionButton') {
             return null;
@@ -161,7 +161,7 @@ class DUIScaffoldBuilder extends DUIWidgetBuilder {
                             (index) => data
                                 .children['bottomNavigationBar']![0]
                                 .children['children']![index]
-                                .props['pageId'])[bottomNavBarIndex],
+                                .props['pageId'])[bottomNavBarIndex] as String,
                       );
                       if (enableSafeArea == false) return widget;
 

@@ -8,6 +8,7 @@ import 'Utils/file_operations.dart';
 import 'core/functions/download.dart';
 import 'core/functions/js_functions.dart';
 import 'core/page/props/dui_page_props.dart';
+import 'framework/utils/functional_util.dart';
 import 'models/variable_def.dart';
 import 'network/api_request/api_request.dart';
 import 'network/core/types.dart';
@@ -20,7 +21,7 @@ class AppConfigResolver {
   Future<Map<String, dynamic>?> _getAppConfigFromNetwork(path) async {
     var resp = await DigiaUIClient.instance.networkClient.requestInternal(
       HttpMethod.post,
-      path,
+      path as String,
       (json) => json as dynamic,
     );
     final data = resp.data['response'] as Map<String, dynamic>?;
@@ -246,31 +247,35 @@ class DUIConfig {
   final Map<String, dynamic>? _environment;
 
   DUIConfig(dynamic data)
-      : _themeConfig = data['theme'],
-        pages = data['pages'],
-        components = data['components'],
-        restConfig = data['rest'],
-        initialRoute = data['appSettings']['initialRoute'],
-        appState = data['appState'],
-        version = data['version'],
-        versionUpdated = data['versionUpdated'],
-        functionsFilePath = data['functionsFilePath'],
-        _environment = data['environment'];
+      : _themeConfig = as<Map<String, dynamic>>(data['theme']),
+        pages = as<Map<String, Object?>>(data['pages']),
+        components = as$<Map<String, Object?>>(data['components']),
+        restConfig = as<Map<String, dynamic>>(data['rest']),
+        initialRoute = as<String>(data['appSettings']['initialRoute']),
+        appState = as$<Map<String, dynamic>>(data['appState']),
+        version = as$<int>(data['version']),
+        versionUpdated = as$<bool>(data['versionUpdated']),
+        functionsFilePath = as$<String>(data['functionsFilePath']),
+        _environment = as$<Map<String, dynamic>>(data['environment']);
 
   // TODO: @tushar - Add support for light / dark theme
-  Map<String, dynamic> get _colors => _themeConfig['colors']['light'];
-  Map<String, dynamic> get _fonts => _themeConfig['fonts'];
+  Map<String, dynamic> get _colors =>
+      as<Map<String, dynamic>>(_themeConfig['colors']['light']);
+  Map<String, dynamic> get _fonts =>
+      as<Map<String, dynamic>>(_themeConfig['fonts']);
 
-  Map<String, Object?> get colorTokens => _themeConfig['colors']['light'];
-  Map<String, Object?> get fontTokens => _themeConfig['fonts'];
+  Map<String, Object?> get colorTokens =>
+      as<Map<String, Object?>>(_themeConfig['colors']['light']);
+  Map<String, Object?> get fontTokens =>
+      as<Map<String, Object?>>(_themeConfig['fonts']);
 
   String? getColorValue(String colorToken) {
-    return _colors[colorToken];
+    return as$<String>(_colors[colorToken]);
   }
 
   DUIFont getFont(String fontToken) {
     var fontsJson = (_fonts[fontToken]);
-    return DUIFont.fromJson(fontsJson);
+    return DUIFont.fromJson(as<Map<String, dynamic>>(fontsJson));
   }
 
   // Map<String, dynamic>? getPageConfig(String uid) {
@@ -295,14 +300,16 @@ class DUIConfig {
   }
 
   Map<String, dynamic>? getDefaultHeaders() {
-    return restConfig['defaultHeaders'];
+    return as$<Map<String, dynamic>>(restConfig['defaultHeaders']);
   }
 
   Map<String, VariableDef> getEnvironmentVariables() {
-    return const VariablesJsonConverter().fromJson(_environment?['variables']);
+    return const VariablesJsonConverter()
+        .fromJson(as$<Map<String, dynamic>>(_environment?['variables']));
   }
 
   APIModel getApiDataSource(String id) {
-    return APIModel.fromJson(restConfig['resources'][id]);
+    return APIModel.fromJson(
+        as<Map<String, dynamic>>(restConfig['resources'][id]));
   }
 }

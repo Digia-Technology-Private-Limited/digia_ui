@@ -6,6 +6,7 @@ import 'package:http_parser/http_parser.dart';
 import 'package:mime_type/mime_type.dart';
 
 import '../../../digia_ui.dart';
+import '../../framework/data_type/adapted_types/file.dart';
 import '../../models/dui_file.dart';
 import '../../network/api_request/api_request.dart';
 import '../../network/core/types.dart';
@@ -41,7 +42,8 @@ class ApiHandler {
 
     final url = _hydrateTemplate(apiModel.url, finalArgs);
     final headers = apiModel.headers?.map((key, value) => MapEntry(
-        _hydrateTemplate(key, finalArgs), _hydrateTemplate(value, finalArgs)));
+        _hydrateTemplate(key, finalArgs),
+        _hydrateTemplate(value as String, finalArgs)));
     final body = apiModel.method != HttpMethod.get
         ? _hydrateTemplateInDynamic(apiModel.body, args)
         : null;
@@ -110,37 +112,51 @@ class ApiHandler {
     return body;
   }
 
-  Future<FormData> _createFormData(dynamic data) async {
+  Future<FormData> _createFormData(dynamic finalData) async {
     FormData formData = FormData();
-
+    final data = finalData as Map;
     for (var entry in data.entries) {
+      final key = entry.key as String;
       if (entry.value is DUIFile) {
         final duiFile = entry.value as DUIFile;
         if (duiFile.isWeb && duiFile.bytes != null) {
           formData.files.add(MapEntry(
-            entry.key,
-            await _createMultipartFileFromBytes(duiFile.bytes!, entry.key),
+            key,
+            await _createMultipartFileFromBytes(duiFile.bytes!, key),
           ));
         } else if (duiFile.isMobile && duiFile.path != null) {
           formData.files.add(MapEntry(
-            entry.key,
+            key,
             await _createMultipartFile(File(duiFile.path!)),
           ));
         }
       } else if (entry.value is File) {
         formData.files.add(MapEntry(
-          entry.key,
-          await _createMultipartFile(entry.value),
+          key,
+          await _createMultipartFile(entry.value as File),
         ));
+      } else if (entry.value is AdaptedFile) {
+        final adaptedFile = entry.value as AdaptedFile;
+        if (adaptedFile.isWeb && adaptedFile.bytes != null) {
+          formData.files.add(MapEntry(
+            key,
+            await _createMultipartFileFromBytes(adaptedFile.bytes!, key),
+          ));
+        } else if (adaptedFile.isMobile && adaptedFile.path != null) {
+          formData.files.add(MapEntry(
+            key,
+            await _createMultipartFile(File(adaptedFile.path!)),
+          ));
+        }
       } else if (entry.value is List<int>) {
         formData.files.add(MapEntry(
-          entry.key,
-          await _createMultipartFileFromBytes(entry.value, entry.key),
+          key,
+          await _createMultipartFileFromBytes(entry.value as List<int>, key),
         ));
       } else if (entry.value is List) {
-        await _handleListValue(formData, entry.key, entry.value);
+        await _handleListValue(formData, key, entry.value as List);
       } else {
-        formData.fields.add(MapEntry(entry.key, entry.value.toString()));
+        formData.fields.add(MapEntry(key, entry.value.toString()));
       }
     }
 
@@ -166,8 +182,8 @@ class ApiHandler {
       ));
     } else if (values.first is List<int>) {
       formData.files.addAll(await Future.wait(
-        values.map((bytes) async =>
-            MapEntry(key, await _createMultipartFileFromBytes(bytes, key))),
+        values.map((bytes) async => MapEntry(
+            key, await _createMultipartFileFromBytes(bytes as List<int>, key))),
       ));
     } else {
       formData.fields.add(MapEntry(key, values.toString()));

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../Utils/dui_widget_registry.dart';
 import '../core/builders/dui_json_widget_builder.dart';
 import '../core/page/props/dui_widget_json_data.dart';
+import '../framework/utils/functional_util.dart';
 
 class DUIWidget extends StatelessWidget {
   final DUIWidgetJsonData data;
@@ -17,11 +18,12 @@ class DUIWidget extends StatelessWidget {
 
   factory DUIWidget.fromJson(dynamic json, {Key? key}) {
     if (json is String) {
-      final data = DUIWidgetJsonData.fromJson(jsonDecode(json));
+      final data = DUIWidgetJsonData.fromJson(
+          as<Map<String, dynamic>>(jsonDecode(json)));
       return DUIWidget(key: key, data: data);
     }
 
-    final data = DUIWidgetJsonData.fromJson(json);
+    final data = DUIWidgetJsonData.fromJson(as<Map<String, dynamic>>(json));
     return DUIWidget(key: key, data: data);
   }
 

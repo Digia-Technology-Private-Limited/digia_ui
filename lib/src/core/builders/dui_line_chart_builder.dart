@@ -31,8 +31,9 @@ class DUILineChartBuilder extends DUIWidgetBuilder {
       extraLinesData: _toExtraLinesData(
           context, tryCast<Map<String, dynamic>>(data.props['extraLines'])),
       titlesData: const FlTitlesData(show: false),
-      lineBarsData:
-          _toLineBarsData(context, tryCast<List>(data.props['lines'])) ?? [],
+      lineBarsData: _toLineBarsData(
+              context, tryCast<List<dynamic>>(data.props['lines'])) ??
+          [],
     );
 
     return LineChart(chartData);
@@ -46,7 +47,8 @@ List<dynamic>? _getSpots(BuildContext context, dynamic input) {
 
   if (input is! String) return null;
 
-  return tryJsonDecode(input) ?? eval<List>(input, context: context);
+  return tryJsonDecode(input) as List<dynamic>? ??
+      eval<List<dynamic>>(input, context: context);
 }
 
 List<LineChartBarData>? _toLineBarsData(
@@ -97,23 +99,25 @@ ExtraLinesData? _toExtraLinesData(
         eval<int>(dashArray['gap'], context: context)!, (p0, p1) => [p0, p1]);
   }
 
-  List<HorizontalLine>? horizontalLines = props['horizontalLines']?.map((e) {
+  List<HorizontalLine>? horizontalLines =
+      props['horizontalLines']?.map((Map<String, dynamic> e) {
     return HorizontalLine(
       y: eval<double>(e['linePoint'], context: context) ?? 0,
       color: makeColor(eval<String>(e['color'], context: context)),
       strokeWidth: eval<double>(e['strokeWidth'], context: context) ?? 2,
       dashArray: toDashArray(e['dashArray']),
     );
-  }).toList();
+  }).toList() as List<HorizontalLine>?;
 
-  List<VerticalLine>? verticalLines = props['verticalLines']?.map((e) {
+  List<VerticalLine>? verticalLines =
+      props['verticalLines']?.map((Map<String, dynamic> e) {
     return VerticalLine(
       x: eval<double>(e['linePoint'], context: context) ?? 0,
       color: makeColor(eval<String>(e['color'], context: context)),
       strokeWidth: eval<double>(e['strokeWidth'], context: context) ?? 2,
       dashArray: toDashArray(e['dashArray']),
     );
-  }).toList();
+  }).toList() as List<VerticalLine>?;
 
   return ExtraLinesData(
       horizontalLines: horizontalLines ?? [],

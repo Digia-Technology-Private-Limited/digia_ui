@@ -14,7 +14,7 @@ class BorderPatternClass {
 
   BorderPatternClass();
 
-  factory BorderPatternClass.fromJson(dynamic json) =>
+  factory BorderPatternClass.fromJson(Map<String, dynamic> json) =>
       _$BorderPatternClassFromJson(json);
 
   Map<String, dynamic> toJson() => _$BorderPatternClassToJson(this);

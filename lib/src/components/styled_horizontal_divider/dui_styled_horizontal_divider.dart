@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../Utils/basic_shared_utils/dui_decoder.dart';
 import '../../Utils/util_functions.dart';
 import '../../framework/models/custom_flutter_types.dart';
+import '../../framework/utils/functional_util.dart';
 import '../border/divider_with_pattern/divider_with_pattern.dart';
 import 'dui_styled_horizontal_divider_props.dart';
 
@@ -27,7 +28,8 @@ class DUIStyledHorizontalDivider extends StatelessWidget {
           DUIDecoder.toDashPattern(props.borderPattern?['dashPattern']) ??
               [3, 3],
       color: makeColor(props.colorType?['color']),
-      gradient: toGradient(props.colorType?['gradiant'], context),
+      gradient: toGradient(
+          as$<Map<String, Object?>>(props.colorType?['gradiant']), context),
     );
   }
 }

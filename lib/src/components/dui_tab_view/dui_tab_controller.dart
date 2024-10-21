@@ -5,6 +5,7 @@ import '../../Utils/dui_widget_registry.dart';
 import '../../Utils/extensions.dart';
 import '../../core/builders/dui_json_widget_builder.dart';
 import '../../core/evaluator.dart';
+import '../../framework/utils/functional_util.dart';
 import 'dui_custom_tab_controller.dart';
 import 'dui_tab_controller_props.dart';
 
@@ -48,7 +49,7 @@ class DUITabController extends StatelessWidget {
       dynamicList,
       context: context,
       decoder: (p0) {
-        final parsed = tryJsonDecode(dynamicList);
+        final parsed = tryJsonDecode(as<String>(dynamicList));
         if (parsed is List) return parsed;
 
         return null;
