@@ -22,15 +22,17 @@ class ActionFlow {
 
     final inkwell = NumUtil.toBool(json['inkwell']) ?? true;
 
-    final actions = as$<List>(json['steps'])
-            ?.where((e) => e != null)
-            .map((e) => ActionFactory.fromJson(e))
+    final actions = as$<List<dynamic>>(json['steps'])
+            ?.where((e) => e != null || e is! JsonLike)
+            .map((e) => ActionFactory.fromJson(e as JsonLike))
             .toList() ??
         [];
 
-    final analyticsData =
-        as$<List>(json['analyticsData'])?.nonNulls.cast<JsonLike>().toList() ??
-            [];
+    final analyticsData = as$<List<dynamic>>(json['analyticsData'])
+            ?.nonNulls
+            .cast<JsonLike>()
+            .toList() ??
+        [];
 
     // It's possible that events need to be sent, regardless of
     // whether actions are present or not.

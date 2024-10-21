@@ -86,7 +86,7 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
     return (context) => _mayWrapInAspectRatio(widget);
   }
 
-  _mayWrapInAspectRatio(Widget child) =>
+  Widget _mayWrapInAspectRatio(Widget child) =>
       wrapInAspectRatio(value: props.get('aspectRatio'), child: child);
 
   @override

@@ -14,7 +14,7 @@ class DelayProcessor implements ActionProcessor<DelayAction> {
     final durationInMs = action.durationInMs?.evaluate(scopeContext);
 
     if (durationInMs != null) {
-      await Future.delayed(Duration(milliseconds: durationInMs));
+      await Future<void>.delayed(Duration(milliseconds: durationInMs));
     } else {
       // log('Wait Duration is null');
     }

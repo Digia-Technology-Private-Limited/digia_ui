@@ -21,9 +21,10 @@ class StreamControllerAddCommand
 //   }
 // }
 
-class StreamControllerCloseCommand implements MethodCommand<StreamController> {
+class StreamControllerCloseCommand
+    implements MethodCommand<StreamController<Object?>> {
   @override
-  void run(StreamController instance, Map<String, Object?> args) {
+  void run(StreamController<Object?> instance, Map<String, Object?> args) {
     instance.close();
   }
 }
