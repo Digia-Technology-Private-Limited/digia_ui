@@ -2,8 +2,6 @@ import 'package:flutter/widgets.dart';
 import '../base/extensions.dart';
 import '../base/virtual_sliver.dart';
 import '../base/virtual_stateless_widget.dart';
-import '../data_type/compex_object.dart';
-import '../data_type/data_type.dart';
 import '../render_payload.dart';
 import '../utils/flutter_type_converters.dart';
 import '../widget_props/custom_scroll_view_props.dart';

@@ -31,7 +31,7 @@ class _InternalSwitchState extends State<InternalSwitch> {
     super.initState();
   }
 
-  _setState(bool value) {
+  void _setState(bool value) {
     setState(() {
       _value = value;
     });

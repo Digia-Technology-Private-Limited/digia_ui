@@ -46,7 +46,7 @@ Future<Response<Object?>> executeApiAction(
       }
       return value;
     },
-    onError: (error) async {
+    onError: (Object? error) async {
       if (error is DioException && onError != null) {
         final respObj = {
           'body': error.response?.data,
@@ -61,7 +61,7 @@ Future<Response<Object?>> executeApiAction(
   );
 }
 
-_requestObjToMap(RequestOptions request) {
+JsonLike _requestObjToMap(RequestOptions request) {
   return {
     'url': request.path,
     'method': request.method,

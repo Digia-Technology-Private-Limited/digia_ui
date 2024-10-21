@@ -91,7 +91,7 @@ class _InternalCalendarState extends State<InternalCalendar> {
 
   @override
   Widget build(BuildContext context) {
-    return TableCalendar(
+    return TableCalendar<void>(
       focusedDay: _focusedDay,
       firstDay: widget.firstDay,
       lastDay: widget.lastDay,

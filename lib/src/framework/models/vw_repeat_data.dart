@@ -1,3 +1,5 @@
+import '../utils/functional_util.dart';
+
 class VWRepeatData {
   final String type;
   final Object? datum;
@@ -11,6 +13,6 @@ class VWRepeatData {
 
     if (json['kind'] == null || json['datum'] == null) return null;
 
-    return VWRepeatData(type: json['kind'], datum: json['datum']);
+    return VWRepeatData(type: as<String>(json['kind']), datum: json['datum']);
   }
 }

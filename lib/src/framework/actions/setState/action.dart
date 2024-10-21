@@ -52,7 +52,7 @@ class SetStateAction extends Action {
     return SetStateAction(
       // fallback to 'page' if not set for backward compatibility.
       stateContextName: as<String>(json['stateContextName']),
-      updates: as$<List>(json['updates'])
+      updates: as$<List<dynamic>>(json['updates'])
               ?.map((it) => as$<JsonLike>(it))
               .nonNulls
               .map(StateUpdate.fromJson)

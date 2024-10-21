@@ -141,7 +141,7 @@ Map<String, List<VWData>>? _parseVWNodeDataMap(Object? json) {
   return Map.fromEntries(
     jsonMap.entries.map((entry) {
       final key = entry.key;
-      final value = as$<List>(entry.value);
+      final value = as$<List<dynamic>>(entry.value);
       final nodeDataList = value
           ?.map((item) => as$<JsonLike>(item))
           .whereType<JsonLike>()

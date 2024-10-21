@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 
 mixin ScrollablePositionMixin<T extends StatefulWidget> on State<T> {
-  setInitialScrollPosition(
+  void setInitialScrollPosition(
     ScrollController? controller,
     String? initialScrollPosition,
   ) {
