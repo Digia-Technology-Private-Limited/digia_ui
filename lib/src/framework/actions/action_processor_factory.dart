@@ -83,6 +83,7 @@ class ActionProcessorFactory {
         return OpenUrlProcessor();
       case an.ActionType.postMessage:
         return PostMessageProcessor();
+      case an.ActionType.rebuildPage:
       case an.ActionType.rebuildState:
         return RebuildStateProcessor();
       // case an.ActionType.setAppState:

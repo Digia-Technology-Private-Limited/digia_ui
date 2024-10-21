@@ -59,6 +59,7 @@ class ActionFactory {
         action = OpenUrlAction.fromJson(actionData);
       case ActionType.postMessage:
         action = PostMessageAction.fromJson(actionData);
+      case ActionType.rebuildPage:
       case ActionType.rebuildState:
         action = RebuildStateAction.fromJson(actionData);
       case ActionType.setPageState:

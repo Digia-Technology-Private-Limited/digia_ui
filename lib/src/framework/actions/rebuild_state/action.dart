@@ -9,11 +9,10 @@ class RebuildStateAction extends Action {
   });
 
   @override
-  ActionType get actionType => ActionType.rebuildState;
+  ActionType get actionType => ActionType.rebuildPage;
 
   @override
-  Map<String, dynamic> toJson() =>
-      {'type': actionType.toString(), 'stateContextName': stateContextName};
+  Map<String, dynamic> toJson() => {'stateContextName': stateContextName};
 
   factory RebuildStateAction.fromJson(Map<String, Object?> json) {
     return RebuildStateAction(
