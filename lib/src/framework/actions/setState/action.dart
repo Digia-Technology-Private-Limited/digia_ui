@@ -39,7 +39,7 @@ class SetStateAction extends Action {
   });
 
   @override
-  ActionType get actionType => ActionType.setPageState;
+  ActionType get actionType => ActionType.setState;
 
   @override
   Map<String, dynamic> toJson() => {
