@@ -12,6 +12,7 @@ import '../models/types.dart';
 import '../render_payload.dart';
 import '../utils/functional_util.dart';
 import '../utils/network_util.dart';
+import '../utils/types.dart';
 
 class VWAsyncBuilder extends VirtualStatelessWidget<Props> {
   VWAsyncBuilder({
@@ -147,7 +148,7 @@ Future<Response<Object?>> _makeFuture(
   return Future.error('No future type selected.');
 }
 
-_requestObjToMap(RequestOptions? requestOptions) {
+JsonLike? _requestObjToMap(RequestOptions? requestOptions) {
   if (requestOptions == null) return null;
 
   return {

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../Utils/extensions.dart';
+
 import '../../../Utils/util_functions.dart';
 import '../../base/virtual_stateless_widget.dart';
 import '../../expr/default_scope_context.dart';
@@ -31,8 +31,7 @@ class VWTabBar extends VirtualStatelessWidget<Props> {
 
     final indicatorSize = To.tabBarIndicatorSize(props.get('indicatorSize')) ??
         TabBarIndicatorSize.tab;
-    final isScrollable =
-        props.getMap('tabBarScrollable')?.valueFor(keyPath: 'value') ?? false;
+    final isScrollable = props.getBool('tabBarScrollable.value') ?? false;
     final alignment =
         To.alignment(props.getString('tabBarScrollable.tabAlignment')) ??
             Alignment.center;

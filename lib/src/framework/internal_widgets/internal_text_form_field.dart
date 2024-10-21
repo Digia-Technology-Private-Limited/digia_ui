@@ -16,7 +16,7 @@ class InternalTextFormField extends StatefulWidget {
   final Color? cursorColor;
   final String? regex;
   final String? errorText;
-  final Function(String, bool)? onChangedAction;
+  final void Function(String, bool)? onChangedAction;
   // final Function(String, bool)? onChanged;
   final InputDecoration? inputDecoration;
 
@@ -54,7 +54,7 @@ class _DUITextFieldState extends State<InternalTextFormField> {
     super.initState();
   }
 
-  _onChanged() {
+  void _onChanged() {
     widget.onChangedAction?.call(
       widget.controller.text,
       _setErrorText == null ? true : false,

@@ -29,7 +29,7 @@ class ShareProcessor implements ActionProcessor<ShareAction> {
   }
 
   void _showWebDialog(BuildContext context, String message) {
-    showDialog(
+    showDialog<void>(
       context: context,
       useRootNavigator: false,
       builder: (cntxt) {

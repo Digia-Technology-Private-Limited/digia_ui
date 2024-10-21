@@ -64,7 +64,7 @@ class ActionFactory {
       case ActionType.setPageState:
         action = SetStateAction(
           stateContextName: 'page',
-          updates: as$<List>(actionData['events'])
+          updates: as$<List<dynamic>>(actionData['events'])
                   ?.map((e) {
                     final event = as$<JsonLike>(e);
                     if (event == null ||
