@@ -9,7 +9,7 @@ class RebuildStateAction extends Action {
   });
 
   @override
-  ActionType get actionType => ActionType.rebuildPage;
+  ActionType get actionType => ActionType.rebuildState;
 
   @override
   Map<String, dynamic> toJson() => {'stateContextName': stateContextName};

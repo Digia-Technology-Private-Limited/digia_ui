@@ -59,31 +59,8 @@ class ActionFactory {
         action = OpenUrlAction.fromJson(actionData);
       case ActionType.postMessage:
         action = PostMessageAction.fromJson(actionData);
-      case ActionType.rebuildPage:
       case ActionType.rebuildState:
         action = RebuildStateAction.fromJson(actionData);
-      case ActionType.setPageState:
-        action = SetStateAction(
-          stateContextName: 'page',
-          updates: as$<List<dynamic>>(actionData['events'])
-                  ?.map((e) {
-                    final event = as$<JsonLike>(e);
-                    if (event == null ||
-                        event['variableName'] == null ||
-                        event['variableName'] is! String) {
-                      return null;
-                    }
-
-                    return StateUpdate(
-                      stateName: event['variableName'] as String,
-                      newValue: ExprOr.fromJson<Object>(event['value']),
-                    );
-                  })
-                  .nonNulls
-                  .toList() ??
-              [],
-          rebuild: ExprOr.fromJson<bool>(actionData['rebuildPage']),
-        );
       case ActionType.setState:
         action = SetStateAction.fromJson(actionData);
       case ActionType.shareContent:
