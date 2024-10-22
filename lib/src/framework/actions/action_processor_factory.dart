@@ -17,7 +17,7 @@ import 'navigateBackUntil/processor.dart';
 import 'navigateToPage/processor.dart';
 import 'openUrl/processor.dart';
 import 'postMessage/processor.dart';
-import 'rebuild_page/processor.dart';
+import 'rebuild_state/processor.dart';
 import 'setState/processor.dart';
 import 'share/processor.dart';
 import 'showBottomSheet/processor.dart';
@@ -85,11 +85,10 @@ class ActionProcessorFactory {
         return OpenUrlProcessor();
       case an.ActionType.postMessage:
         return PostMessageProcessor();
-      case an.ActionType.rebuildPage:
-        return RebuildPageProcessor();
+      case an.ActionType.rebuildState:
+        return RebuildStateProcessor();
       // case an.ActionType.setAppState:
       // return SetAppStateProcessor();
-      case an.ActionType.setPageState:
       case an.ActionType.setState:
         return SetStateProcessor();
       case an.ActionType.shareContent:

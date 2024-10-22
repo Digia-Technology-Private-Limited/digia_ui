@@ -34,15 +34,14 @@ class VWAsyncBuilder extends VirtualStatelessWidget<Props> {
     final futureProps = props.toProps('future');
     if (futureProps == null) return empty();
 
-    final controller = payload.eval<AsyncController>(props.get('controller')) ??
-        AsyncController<Object?>();
-
-    controller.setFutureBuilder(
-      () => _makeFuture(futureProps, payload),
-    );
+    final controller = payload.eval<AsyncController>(props.get('controller'))
+      ?..setFutureCreator(
+        () => _makeFuture(futureProps, payload),
+      );
 
     return AsyncBuilder<Object?>(
         controller: controller,
+        futureFactory: () => _makeFuture(futureProps, payload),
         builder: (innerCtx, snapshot) {
           final updatedPayload = payload.copyWithChainedContext(
               _createExprContext(

@@ -1,25 +1,21 @@
 import 'package:flutter/foundation.dart';
 
 class AsyncController<T> extends ChangeNotifier {
-  Future<T> Function()? _futureBuilder;
+  Future<T> Function()? _futureCreator;
 
   bool _isDirty = false;
   Future<T>? _currentFuture;
 
-  AsyncController({Future<T> Function()? futureBuilder}) {
-    _futureBuilder = futureBuilder;
-    _currentFuture = _futureBuilder?.call();
+  AsyncController({Future<T> Function()? futureCreator}) {
+    _futureCreator = futureCreator;
+    _currentFuture = _futureCreator?.call();
   }
 
   // Ideally we should be invalidating when futureBuilder is set,
   // but we can't for now.
-  void setFutureBuilder(Future<T> Function() futureBuilder) {
-    _futureBuilder = futureBuilder;
-    // if (refresh) {
-    //   invalidateAndNotify();
-    // } else {
-    //   invalidate();
-    // }
+  void setFutureCreator(Future<T> Function() futureCreator) {
+    _futureCreator = futureCreator;
+    invalidate();
   }
 
   /// Invalidates the current future and creates a new one
@@ -36,7 +32,7 @@ class AsyncController<T> extends ChangeNotifier {
 
   Future<T>? getFuture() {
     if (_isDirty) {
-      _currentFuture = _futureBuilder?.call();
+      _currentFuture = _futureCreator?.call();
       _isDirty = false;
       return _currentFuture;
     }

@@ -240,7 +240,7 @@ class _DUIPageContentState extends State<_DUIPageContent> {
       return AsyncController();
     }
 
-    return AsyncController(futureBuilder: () {
+    return AsyncController(futureCreator: () {
       final action = as$<JsonLike>(widget.pageDataSource!['data']);
       if (action == null) return Future.error('Unconfigured data');
 
