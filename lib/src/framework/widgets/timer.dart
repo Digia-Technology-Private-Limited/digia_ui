@@ -3,7 +3,6 @@ import 'package:flutter/widgets.dart';
 import '../base/virtual_stateless_widget.dart';
 import '../expr/default_scope_context.dart';
 import '../expr/scope_context.dart';
-import '../internal_widgets/timer/controller.dart';
 import '../internal_widgets/timer/widget.dart';
 import '../render_payload.dart';
 import '../widget_props/timer_props.dart';
@@ -21,26 +20,27 @@ class VWTimer extends VirtualStatelessWidget<TimerProps> {
   Widget render(RenderPayload payload) {
     if (child == null) return empty();
 
-    TimerController controller = payload.evalExpr(props.controller) ??
-        TimerController(
-          duration: payload.evalExpr(props.duration) ?? 0,
-          initialValue: payload.evalExpr(props.initialValue) ?? 0,
-          updateInterval: Duration(
-            seconds: payload.evalExpr(props.updateInterval) ?? 1,
-          ),
-          isCountDown: props.isCountDown,
-        );
+    final duration = payload.evalExpr(props.duration) ?? 0;
+    final initialValue = payload.evalExpr(props.duration) ?? 0;
 
-    if (controller.duration < 0) {
+    final controller = payload.evalExpr(props.controller);
+
+    if (duration < 0) {
       return child!.toWidget(
         payload.copyWithChainedContext(
-          _createExprContext(controller.initialValue),
+          _createExprContext(initialValue),
         ),
       );
     }
 
     return TimerWidget(
       controller: controller,
+      initialValue: payload.evalExpr(props.duration) ?? 0,
+      updateInterval: Duration(
+        seconds: payload.evalExpr(props.updateInterval) ?? 1,
+      ),
+      duration: payload.evalExpr(props.duration) ?? 0,
+      isCountDown: props.isCountDown,
       builder: (innerCtx, snapshot) {
         final updatedPayload = payload.copyWithChainedContext(
           _createExprContext(snapshot.data),

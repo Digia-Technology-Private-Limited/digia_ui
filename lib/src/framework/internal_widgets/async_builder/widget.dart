@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 import 'controller.dart';
 
 class AsyncBuilder<T> extends StatefulWidget {
-  final AsyncController<T> controller;
+  final AsyncController<T>? controller;
+  final Future<T> Function()? futureFactory;
   final AsyncWidgetBuilder<T> builder;
 
   const AsyncBuilder({
     super.key,
-    required this.controller,
+    this.controller,
+    this.futureFactory,
     required this.builder,
   });
 
@@ -28,19 +30,26 @@ class _AsyncBuilderState<T> extends State<AsyncBuilder<T>> {
   @override
   void didUpdateWidget(AsyncBuilder<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.controller != oldWidget.controller) {
+    if (widget.controller != oldWidget.controller ||
+        widget.futureFactory != oldWidget.futureFactory) {
+      _tearDownController();
       _setupController();
     }
   }
 
   void _setupController() {
-    _controller = widget.controller;
+    _controller = widget.controller ??
+        AsyncController<T>(futureCreator: widget.futureFactory);
     _controller.addListener(_rebuild);
+  }
+
+  void _tearDownController() {
+    _controller.removeListener(_rebuild);
   }
 
   @override
   void dispose() {
-    _controller.removeListener(_rebuild);
+    _tearDownController();
     super.dispose();
   }
 

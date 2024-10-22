@@ -26,10 +26,7 @@ class VWTextFormField extends VirtualStatelessWidget<Props> {
   @override
   Widget render(RenderPayload payload) {
     final controller =
-        payload.eval<AdaptedTextEditingController>(props.get('controller')) ??
-            AdaptedTextEditingController(
-              text: payload.eval<String>(props.get('initialValue')),
-            );
+        payload.eval<AdaptedTextEditingController>(props.get('controller'));
 
     final enabled = props.getBool('enabled');
     final keyboardType = To.toKeyBoardType(props.get('keyboardType'));
@@ -60,12 +57,14 @@ class VWTextFormField extends VirtualStatelessWidget<Props> {
     final errorBorder = _toInputBorder(props.get('errorBorder'));
     return InternalTextFormField(
       controller: controller,
-      onChangedAction: (p0, p1) async {
+      initialValue: payload.eval<String>(props.get('initialValue')),
+      onChanged: (p0) async {
         final actionFlow = ActionFlow.fromJson(props.get('onChanged'));
-        await payload.executeAction(actionFlow,
-            scopeContext: _createExprContext(p0, p1));
+        await payload.executeAction(
+          actionFlow,
+          scopeContext: _createExprContext(p0),
+        );
       },
-      // onChanged: (p0, p1) => _createExprContext(p0, p1),
       textAlign: textAlign,
       readOnly: readOnly,
       obscureText: obscureText,
@@ -150,10 +149,9 @@ class VWTextFormField extends VirtualStatelessWidget<Props> {
     }
   }
 
-  ScopeContext _createExprContext(String text, bool isValid) {
+  ScopeContext _createExprContext(String text) {
     return DefaultScopeContext(variables: {
       'text': text,
-      'isValid': isValid,
     });
   }
 }

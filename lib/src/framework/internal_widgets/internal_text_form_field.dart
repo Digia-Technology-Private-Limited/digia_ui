@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class InternalTextFormField extends StatefulWidget {
-  final TextEditingController controller;
+  final TextEditingController? controller;
+  final String? initialValue;
   final bool? enabled;
   final TextInputType? keyboardType;
   final TextInputAction? textInputAction;
@@ -16,8 +17,7 @@ class InternalTextFormField extends StatefulWidget {
   final Color? cursorColor;
   final String? regex;
   final String? errorText;
-  final void Function(String, bool)? onChangedAction;
-  // final Function(String, bool)? onChanged;
+  final void Function(String)? onChanged;
   final InputDecoration? inputDecoration;
 
   const InternalTextFormField({
@@ -26,7 +26,8 @@ class InternalTextFormField extends StatefulWidget {
     this.keyboardType,
     this.textInputAction,
     this.style,
-    this.onChangedAction,
+    this.onChanged,
+    this.initialValue,
     required this.controller,
     required this.textAlign,
     required this.readOnly,
@@ -46,24 +47,44 @@ class InternalTextFormField extends StatefulWidget {
 }
 
 class _DUITextFieldState extends State<InternalTextFormField> {
-  String? _setErrorText;
+  late TextEditingController _controller;
 
   @override
   void initState() {
-    widget.controller.addListener(_onChanged);
     super.initState();
+    _setupController();
+  }
+
+  void _setupController() {
+    _controller =
+        widget.controller ?? TextEditingController(text: widget.initialValue);
+    _controller.addListener(_onChanged);
+  }
+
+  void _tearDownController() {
+    // Don't dispose the _controller. It may be an external controller.
+    _controller.removeListener(_onChanged);
   }
 
   void _onChanged() {
-    widget.onChangedAction?.call(
-      widget.controller.text,
-      _setErrorText == null ? true : false,
-    );
+    widget.onChanged?.call(_controller.text);
+  }
+
+  @override
+  void didUpdateWidget(covariant InternalTextFormField oldWidget) {
+    if (widget.controller != oldWidget.controller ||
+        widget.initialValue != oldWidget.initialValue) {
+      _tearDownController();
+      _setupController();
+    }
+
+    super.didUpdateWidget(oldWidget);
   }
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      initialValue: widget.initialValue,
       controller: widget.controller,
       enabled: widget.enabled,
       keyboardType: widget.keyboardType,
@@ -76,43 +97,14 @@ class _DUITextFieldState extends State<InternalTextFormField> {
       minLines: widget.minLines,
       maxLength: widget.maxLength,
       cursorColor: widget.cursorColor,
-      buildCounter: (context,
-              {required currentLength,
-              required isFocused,
-              required maxLength}) =>
-          null,
       onTapOutside: (event) => FocusScope.of(context).unfocus(),
-      decoration: widget.inputDecoration?..copyWith(errorText: _setErrorText),
-      onChanged: (value) {
-        _validateInput(value);
-      },
+      decoration: widget.inputDecoration,
     );
   }
 
   @override
   void dispose() {
-    widget.controller.removeListener(_onChanged);
+    _tearDownController();
     super.dispose();
-  }
-
-  void _validateInput(String value) {
-    if (value.isEmpty) {
-      setState(() {
-        _setErrorText = null;
-      });
-      return;
-    }
-    if (widget.regex != null && widget.regex!.isNotEmpty) {
-      RegExp regex = RegExp(widget.regex!);
-      if (!regex.hasMatch(value)) {
-        setState(() {
-          _setErrorText = widget.errorText;
-        });
-      } else {
-        setState(() {
-          _setErrorText = null;
-        });
-      }
-    }
   }
 }
