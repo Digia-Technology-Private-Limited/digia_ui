@@ -50,7 +50,6 @@ import 'widgets/html_view.dart';
 import 'widgets/icon.dart';
 import 'widgets/icon_button.dart';
 import 'widgets/image.dart';
-import 'widgets/line_chart.dart';
 import 'widgets/linear_progress_bar.dart';
 import 'widgets/list_view.dart';
 import 'widgets/lottie.dart';
@@ -827,15 +826,5 @@ VWAnimatedSwitcher animatedSwitcher(
     parent: parent,
     refName: data.refName,
     childGroups: createChildGroups(data.childGroups, parent, registry),
-  );
-}
-
-VWLineChart lineChartBuilder(
-    VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
-  return VWLineChart(
-    props: data.props,
-    commonProps: data.commonProps,
-    parent: parent,
-    refName: data.refName,
   );
 }
