@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:uuid/uuid.dart';
 
@@ -117,11 +116,6 @@ class DigiaUIClient {
     _instance.config = await appConfigResolver.getConfig();
 
     // _instance.appState = DUIAppState.fromJson(_instance.config.appState ?? {});
-
-    if (developerConfig?.inspector?.blocObserver != null) {
-      Bloc.observer = developerConfig!.inspector!.blocObserver!;
-    }
-
     _instance._isInitialized = true;
   }
 
