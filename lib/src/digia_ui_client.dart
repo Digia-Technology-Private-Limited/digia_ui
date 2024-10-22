@@ -60,7 +60,7 @@ class DigiaUIClient {
     DigiaUIClient.instance.uuid = uuid;
   }
 
-  static initializeFromData(
+  static Future<void> initializeFromData(
       {required String accessKey,
       required String baseUrl,
       required dynamic data,
@@ -81,7 +81,7 @@ class DigiaUIClient {
     _instance._isInitialized = true;
   }
 
-  static init(
+  static Future<void> init(
       {required String accessKey,
       required FlavorInfo flavorInfo,
       required String environment,

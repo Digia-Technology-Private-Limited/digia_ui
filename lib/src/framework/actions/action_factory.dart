@@ -8,6 +8,7 @@ import 'controlDrawer/action.dart';
 import 'controlObject/action.dart';
 import 'copyToClipBoard/action.dart';
 import 'delay/action.dart';
+import 'filePicker/action.dart';
 import 'navigateBack/action.dart';
 import 'navigateBackUntil/action.dart';
 import 'navigateToPage/action.dart';
@@ -19,6 +20,7 @@ import 'share/action.dart';
 import 'showBottomSheet/action.dart';
 import 'showDialog/action.dart';
 import 'showToast/action.dart';
+import 'upload/action.dart';
 
 class ActionFactory {
   static Action fromJson(JsonLike json) {
@@ -71,11 +73,13 @@ class ActionFactory {
         action = ShowDialogAction.fromJson(actionData);
       case ActionType.showToast:
         action = ShowToastAction.fromJson(actionData);
+      case ActionType.filePicker:
+        action = FilePickerAction.fromJson(actionData);
       case ActionType.uploadFile:
-      // action = UploadFileAction.fromJson(actionData);
+        action = UploadAction.fromJson(actionData);
     }
 
     // TODO: Remove force cast
-    return action!..disableActionIf = disableActionIf;
+    return action..disableActionIf = disableActionIf;
   }
 }

@@ -1,3 +1,4 @@
+import '../../framework/utils/functional_util.dart';
 part 'dui_text_style.json.dart';
 
 class DUIFontToken {

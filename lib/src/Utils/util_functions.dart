@@ -8,6 +8,7 @@ import '../components/DUIText/DUI_text_span/dui_text_span.dart';
 import '../components/DUIText/dui_text_style.dart';
 import '../components/utils/DUIBorder/dui_border.dart';
 import '../core/evaluator.dart';
+import '../framework/utils/functional_util.dart';
 import 'basic_shared_utils/color_decoder.dart';
 import 'basic_shared_utils/dui_decoder.dart';
 import 'basic_shared_utils/lodash.dart';
@@ -35,7 +36,8 @@ DUIFont _mergeFontValues(
           font.height,
       style: eval<String>(fontAttributes?['style'], context: context) ??
           font.style,
-      fontFamily: fontAttributes?['fontFamily'] ?? font.fontFamily);
+      fontFamily:
+          as$<String>(fontAttributes?['fontFamily'] ?? font.fontFamily));
 }
 
 TextStyle? toTextStyle(DUITextStyle? textStyle, BuildContext context) {

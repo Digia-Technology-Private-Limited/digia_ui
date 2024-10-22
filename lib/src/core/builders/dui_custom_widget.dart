@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../Utils/basic_shared_utils/color_decoder.dart';
+import '../../framework/utils/functional_util.dart';
 
 class DUICustomWidget extends StatefulWidget {
   final dynamic json;
@@ -53,7 +54,7 @@ class _DUICustomWidgetState extends State<DUICustomWidget> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text((widget.json as Map<String, dynamic>)['title'],
+              Text((widget.json as Map<String, dynamic>)['title'] as String,
                   style: GoogleFonts.inter().copyWith(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
@@ -74,7 +75,8 @@ class _DUICustomWidgetState extends State<DUICustomWidget> {
                         color: Color(0xFFE7E6E2),
                       ),
                       Text(
-                        widget.json['toggleItems'][tagIndex]['title'],
+                        as<String>(
+                            widget.json['toggleItems'][tagIndex]['title']),
                         style: GoogleFonts.inter().copyWith(
                           fontSize: 14,
                           fontWeight: FontWeight.w400,
@@ -107,8 +109,8 @@ class _DUICustomWidgetState extends State<DUICustomWidget> {
                       border: Border.all(color: Colors.grey.shade300),
                     ),
                     child: Text(
-                      (widget.json['toggleItems'][tagIndex]['items'][index]
-                          as Map<String, dynamic>)['timeframe'],
+                      as<String>((widget.json['toggleItems'][tagIndex]['items']
+                          [index] as Map<String, dynamic>)['timeframe']),
                       style: GoogleFonts.inter().copyWith(
                         fontSize: 14,
                         fontWeight: FontWeight.w400,
@@ -124,8 +126,8 @@ class _DUICustomWidgetState extends State<DUICustomWidget> {
             height: 32,
           ),
           Text(
-            (widget.json['toggleItems'][tagIndex]['items'][itemIndex]
-                as Map<String, dynamic>)['graphData'][0]['name'],
+            as<String>((widget.json['toggleItems'][tagIndex]['items'][itemIndex]
+                as Map<String, dynamic>)['graphData'][0]['name']),
             style: GoogleFonts.inter().copyWith(
               fontSize: 14,
               fontWeight: FontWeight.w400,
@@ -143,11 +145,11 @@ class _DUICustomWidgetState extends State<DUICustomWidget> {
                       height: 50,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(4),
-                          color: ColorDecoder.fromHexString(
+                          color: ColorDecoder.fromHexString(as<String>(
                                   (widget.json['toggleItems'][tagIndex]['items']
                                               [itemIndex]
                                           as Map<String, dynamic>)['graphData']
-                                      [0]['color'])
+                                      [0]['color']))
                               .withOpacity(0)),
                     ),
                     Container(
@@ -155,19 +157,19 @@ class _DUICustomWidgetState extends State<DUICustomWidget> {
                       height: 50,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(4),
-                          color: ColorDecoder.fromHexString(
+                          color: ColorDecoder.fromHexString(as<String>(
                               (widget.json['toggleItems'][tagIndex]
                                               ['items']
                                           [itemIndex]
                                       as Map<String, dynamic>)['graphData'][0]
-                                  ['valueColor'])),
+                                  ['valueColor']))),
                       width: MediaQuery.sizeOf(context).width *
-                          (((widget.json['toggleItems'][tagIndex]['items']
-                                              [itemIndex]
+                          as<double>((((widget.json['toggleItems'][tagIndex]
+                                              ['items'][itemIndex]
                                           as Map<String, dynamic>)['graphData']
                                       [0]['barWidth'] /
                                   ((tagIndex == 0) ? 1000000 : 1)) /
-                              100),
+                              100)),
                     ),
                   ],
                 ),
@@ -186,8 +188,8 @@ class _DUICustomWidgetState extends State<DUICustomWidget> {
             ],
           ),
           Text(
-            (widget.json['toggleItems'][tagIndex]['items'][itemIndex]
-                as Map<String, dynamic>)['graphData'][1]['name'],
+            as<String>((widget.json['toggleItems'][tagIndex]['items'][itemIndex]
+                as Map<String, dynamic>)['graphData'][1]['name']),
             style: GoogleFonts.inter().copyWith(
               fontSize: 14,
               fontWeight: FontWeight.w400,
@@ -207,11 +209,11 @@ class _DUICustomWidgetState extends State<DUICustomWidget> {
                       margin: const EdgeInsets.only(right: 8, bottom: 12),
                       height: 50,
                       decoration: BoxDecoration(
-                          color: ColorDecoder.fromHexString(
+                          color: ColorDecoder.fromHexString(as<String>(
                                   (widget.json['toggleItems'][tagIndex]['items']
                                               [itemIndex]
                                           as Map<String, dynamic>)['graphData']
-                                      [1]['color'])
+                                      [1]['color']))
                               .withOpacity(0),
                           borderRadius: BorderRadius.circular(4)),
                     ),
@@ -219,19 +221,19 @@ class _DUICustomWidgetState extends State<DUICustomWidget> {
                       margin: const EdgeInsets.only(right: 8, bottom: 12),
                       height: 50,
                       width: MediaQuery.sizeOf(context).width *
-                          (((widget.json['toggleItems'][tagIndex]['items']
-                                              [itemIndex]
+                          as<double>((((widget.json['toggleItems'][tagIndex]
+                                              ['items'][itemIndex]
                                           as Map<String, dynamic>)['graphData']
                                       [1]['barWidth'] /
                                   ((tagIndex == 0) ? 1000000 : 1)) /
-                              100),
+                              100)),
                       decoration: BoxDecoration(
-                          color: ColorDecoder.fromHexString(
+                          color: ColorDecoder.fromHexString(as<String>(
                               (widget.json['toggleItems'][tagIndex]
                                               ['items']
                                           [itemIndex]
                                       as Map<String, dynamic>)['graphData'][1]
-                                  ['valueColor']),
+                                  ['valueColor'])),
                           borderRadius: BorderRadius.circular(4)),
                     ),
                   ],
@@ -269,9 +271,10 @@ class _DUICustomWidgetState extends State<DUICustomWidget> {
                         color: Color(0xFF4EB3A9),
                       ),
                       Text(
-                        ((widget.json['toggleItems'][tagIndex]['items']
-                                [itemIndex] as Map<String, dynamic>)['note']
-                            as Map<String, dynamic>)['title'],
+                        as<String>(((widget.json['toggleItems'][tagIndex]
+                                    ['items'][itemIndex]
+                                as Map<String, dynamic>)['note']
+                            as Map<String, dynamic>)['title']),
                         textAlign: TextAlign.center,
                         style: GoogleFonts.inter().copyWith(
                           fontSize: 14,
@@ -286,9 +289,9 @@ class _DUICustomWidgetState extends State<DUICustomWidget> {
                   height: 4,
                 ),
                 Text(
-                  ((widget.json['toggleItems'][tagIndex]['items'][itemIndex]
-                          as Map<String, dynamic>)['note']
-                      as Map<String, dynamic>)['subtitle'],
+                  as<String>(((widget.json['toggleItems'][tagIndex]['items']
+                          [itemIndex] as Map<String, dynamic>)['note']
+                      as Map<String, dynamic>)['subtitle']),
                   textAlign: TextAlign.center,
                   style: GoogleFonts.inter().copyWith(
                     height: 1.5,

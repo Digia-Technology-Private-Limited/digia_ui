@@ -22,17 +22,17 @@ class ActionFlow {
     // Backward compatibility
     if (_isActionProp(json)) {
       return ActionFlow(
-          actions: [ActionProp.fromJson(json)],
+          actions: [ActionProp.fromJson(json as Map<String, dynamic>)],
           inkwell: inkwell,
-          analyticsData: json['analyticsData']);
+          analyticsData: json['analyticsData'] as List<Map<String, dynamic>>?);
     }
 
     if (json['steps'] is List) {
-      final steps = json['steps']
-          .where((e) => e != null)
-          .map((e) => ActionProp.fromJson(e))
+      final List<ActionProp> steps = json['steps']
+          .where((Map<String, dynamic>? e) => e != null)
+          .map((Map<String, dynamic> e) => ActionProp.fromJson(e))
           .cast<ActionProp>()
-          .toList();
+          .toList() as List<ActionProp>;
       final analyticsDataJson = (json['analyticsData'] as List?);
 
       final ad = analyticsDataJson
@@ -51,7 +51,8 @@ class ActionFlow {
 
   Map<String, dynamic> toJson() => {'actions': actions.map((e) => e.toJson())};
 
-  static _isActionProp(dynamic json) => json is Map && json['type'] != null;
+  static bool _isActionProp(dynamic json) =>
+      json is Map && json['type'] != null;
 }
 
 @JsonSerializable()

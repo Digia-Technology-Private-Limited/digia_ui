@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../digia_ui.dart';
 import '../Utils/expr.dart';
 import '../framework/expr/scope_context.dart';
+import '../framework/utils/functional_util.dart';
 
 class AnalyticsHandler {
   static final AnalyticsHandler _instance = AnalyticsHandler._();
@@ -26,7 +27,7 @@ class AnalyticsHandler {
 
     final analyticEvents = data
         .where((e) => e != null && e is Map<String, dynamic>)
-        .map((e) => AnalyticEvent.fromJson(e))
+        .map((e) => AnalyticEvent.fromJson(as<Map<String, dynamic>>(e)))
         .toList();
 
     if (analyticEvents.isNotEmpty) {
@@ -40,9 +41,9 @@ void _logAnalytics(DUILogger? logger, List<Map<String, dynamic>>? events,
   if (events == null) return;
 
   for (var event in events) {
-    String eventName = event['name'] ?? 'Unknown Event';
-    Map<String, dynamic> eventPayload =
-        evalDynamic(event['payload'] ?? {}, context, enclosing);
+    String eventName = as$<String>(event['name']) ?? 'Unknown Event';
+    Map<String, dynamic> eventPayload = as<Map<String, dynamic>>(
+        evalDynamic(event['payload'] ?? {}, context, enclosing));
     logger?.log(EventLog(eventName, eventPayload));
   }
 }

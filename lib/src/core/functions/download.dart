@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import '../../Utils/file_operations.dart';
+import '../../framework/utils/functional_util.dart';
 import '../../network/core/types.dart';
 
 Future<bool> downloadFunctionsFile(String url, String fileName,
@@ -15,7 +16,8 @@ Future<bool> downloadFunctionsFile(String url, String fileName,
 
     if (response.statusCode == 200) {
       // Write the response body to a file
-      var status = await writeBytesToFile(response.data, fileName);
+      var status =
+          await writeBytesToFile(as<List<int>>(response.data), fileName);
       if (status != 0) {
         print('Failed to write file: functions.js');
         return await retryDownload(url, fileName, retry);

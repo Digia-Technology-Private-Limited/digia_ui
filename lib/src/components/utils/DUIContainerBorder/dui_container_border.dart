@@ -15,7 +15,7 @@ class DUIContainerBorder extends DUIBorder {
 
   DUIContainerBorder();
 
-  factory DUIContainerBorder.fromJson(dynamic json) =>
+  factory DUIContainerBorder.fromJson(Map<String, dynamic> json) =>
       _$DUIContainerBorderFromJson(json);
 
   @override

@@ -6,6 +6,7 @@ import '../../Utils/dui_widget_registry.dart';
 // import '../../Utils/util_functions.dart';
 import '../../core/builders/dui_text_builder.dart';
 import '../../core/evaluator.dart';
+import '../../framework/utils/functional_util.dart';
 import '../DUIText/dui_text.dart';
 // import '../dui_icons/icon_helpers/icon_data_serialization.dart';
 import 'dezerv_stepper_props.dart';
@@ -289,7 +290,7 @@ class _DZStepperState extends State<DZStepper> {
   double _getContentHeight(DUIText title, DUIText? subTitle) {
     final double titleHeight = getTextHeight(
       context: context,
-      text: title.props.textSpans![0].text,
+      text: as<String>(title.props.textSpans![0].text),
       textStyle: TextStyle(
           fontSize: eval<double>(
                   title.props.textStyle?.fontToken?.font?['size'],
@@ -307,7 +308,7 @@ class _DZStepperState extends State<DZStepper> {
       subTitleHeight = _V_TEXT_IN_BETWEEN_PADDING;
       subTitleHeight += getTextHeight(
         context: context,
-        text: removeAllHtmlTags(subTitle.props.textSpans![0].text),
+        text: removeAllHtmlTags(as<String>(subTitle.props.textSpans![0].text)),
         textStyle: TextStyle(
             fontSize: eval<double>(
                     title.props.textStyle?.fontToken?.font?['size'],

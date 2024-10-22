@@ -48,8 +48,9 @@ class DUITabBar extends StatelessWidget {
     //     getTransitionBuilder(widget.tabBarProps.animationType);
     _indicatorSize = _toTabBarIndicatorSize(tabBarProps.indicatorSize) ??
         TabBarIndicatorSize.tab;
-    final isScrollable =
-        tabBarProps.tabBarScrollable?.valueFor(keyPath: 'value') ?? false;
+    final bool isScrollable =
+        tabBarProps.tabBarScrollable?.valueFor(keyPath: 'value') as bool? ??
+            false;
     final alignment = DUIDecoder.toAlignment(
             tabBarProps.tabBarScrollable?.valueFor(keyPath: 'tabAlignment')) ??
         Alignment.center;

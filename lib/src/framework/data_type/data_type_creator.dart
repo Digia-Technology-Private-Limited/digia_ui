@@ -6,6 +6,7 @@ import '../internal_widgets/async_builder/controller.dart';
 import '../internal_widgets/timer/controller.dart';
 import '../utils/functional_util.dart';
 import '../utils/types.dart';
+import 'adapted_types/file.dart';
 import 'adapted_types/scroll_controller.dart';
 import 'adapted_types/text_editing_controller.dart';
 import 'data_type.dart';
@@ -29,6 +30,9 @@ class DataTypeCreator {
 
       case DataType.scrollController:
         return AdaptedScrollController();
+
+      case DataType.file:
+        return AdaptedFile();
 
       case DataType.streamController:
         return StreamController<Object?>();
@@ -54,8 +58,8 @@ class DataTypeCreator {
           duration: evaluate<int>(value['duration']) ?? 0,
         );
 
-      // default:
-      // throw Exception('Unknown type: ${def.type}');
+      default:
+        throw Exception('Unknown type: ${def.type}');
     }
   }
 }

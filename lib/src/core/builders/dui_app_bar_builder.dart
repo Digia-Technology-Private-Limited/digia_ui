@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../Utils/basic_shared_utils/lodash.dart';
 import '../../Utils/util_functions.dart';
 import '../../components/dui_widget_creator_fn.dart';
+import '../../framework/utils/functional_util.dart';
 import '../action/action_prop.dart';
 import '../evaluator.dart';
 import '../json_widget_builder.dart';
@@ -25,8 +26,9 @@ class DUIAppBarBuilder extends DUIWidgetBuilder {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title:
-          DUITextBuilder.fromProps(props: data.props['title']).build(context),
+      title: DUITextBuilder.fromProps(
+              props: as$<Map<String, dynamic>>(data.props['title']))
+          .build(context),
       elevation: eval<double>(data.props['elevation'], context: context),
       shadowColor: (data.props['shadowColor'] as String?).letIfTrue(toColor),
       backgroundColor:

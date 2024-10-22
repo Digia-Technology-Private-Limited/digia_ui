@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
 import '../../../Utils/extensions.dart';
+import '../../../framework/utils/functional_util.dart';
 import '../../evaluator.dart';
 import '../../page/dui_page_bloc.dart';
 import '../dui_animated_button_builder.dart';
@@ -122,7 +123,7 @@ class _DezervDialPadState extends State<DezervDialPad> {
         SizedBox(
           height: 56,
           child: DUIAnimatedButtonBuilder.fromProps({
-            ...widget.props['confirmButton'],
+            ...as<Map<String, dynamic>>(widget.props['confirmButton']),
             'isDisabled': !_isValidAmount
           }).build(context),
         )

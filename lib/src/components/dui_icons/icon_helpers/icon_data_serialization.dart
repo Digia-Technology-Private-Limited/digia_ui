@@ -72,10 +72,10 @@ IconData? deserializeIcon(Map<String, dynamic> iconMap) {
       case 'custom':
         final iconData = iconMap['iconData'];
         return IconData(
-          iconData['codePoint'],
-          fontFamily: iconData['fontFamily'],
-          fontPackage: iconData['fontPackage'],
-          matchTextDirection: iconData['matchTextDirection'],
+          iconData['codePoint'] as int,
+          fontFamily: iconData['fontFamily'] as String?,
+          fontPackage: iconData['fontPackage'] as String?,
+          matchTextDirection: iconData['matchTextDirection'] as bool,
         );
       default:
         return null;

@@ -1,3 +1,4 @@
+import '../framework/utils/functional_util.dart';
 import 'variable_def.dart';
 
 class DUIAppState {
@@ -7,6 +8,7 @@ class DUIAppState {
 
   factory DUIAppState.fromJson(Map<String, dynamic> json) {
     return DUIAppState(
-        variables: const VariablesJsonConverter().fromJson(json['variables']));
+        variables: const VariablesJsonConverter()
+            .fromJson(as$<Map<String, dynamic>>(json['variables'])));
   }
 }

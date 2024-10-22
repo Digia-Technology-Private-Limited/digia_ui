@@ -5,6 +5,7 @@ import '../../Utils/basic_shared_utils/lodash.dart';
 import '../../Utils/util_functions.dart';
 import '../../core/action/action_handler.dart';
 import '../../core/action/action_prop.dart';
+import '../../framework/utils/functional_util.dart';
 import '../DUIText/dui_text.dart';
 import '../dui_icons/icon_helpers/icon_data_serialization.dart';
 import 'floating_action_button_props.dart';
@@ -31,7 +32,9 @@ class DUIFloatingActionButton {
               visible: props.leadingIcon?['iconData'] != null,
               child: Icon(
                 getIconData(
-                  icondataMap: props.leadingIcon?['iconData'] ?? {},
+                  icondataMap: as$<Map<String, dynamic>>(
+                          props.leadingIcon?['iconData']) ??
+                      {},
                 ),
               ),
             ),
@@ -56,7 +59,9 @@ class DUIFloatingActionButton {
               visible: props.trailingIcon?['iconData'] != null,
               child: Icon(
                 getIconData(
-                  icondataMap: props.trailingIcon?['iconData'] ?? {},
+                  icondataMap: as$<Map<String, dynamic>>(
+                          props.trailingIcon?['iconData']) ??
+                      {},
                 ),
               ),
             )

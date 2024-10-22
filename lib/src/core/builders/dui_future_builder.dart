@@ -7,6 +7,7 @@ import '../../Utils/basic_shared_utils/lodash.dart';
 import '../../Utils/dui_widget_registry.dart';
 import '../../Utils/extensions.dart';
 import '../../framework/expr/default_scope_context.dart';
+import '../../framework/utils/functional_util.dart';
 import '../action/action_handler.dart';
 import '../action/action_prop.dart';
 import '../action/api_handler.dart';
@@ -20,7 +21,8 @@ class DUIFutureBuilder extends DUIWidgetBuilder {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: _makeFuture(data.props['future'], context),
+        future: _makeFuture(
+            as<Map<String, dynamic>>(data.props['future']), context),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return data
@@ -66,9 +68,10 @@ Future<Object?> _makeFuture(
 
   switch (type) {
     case 'api':
-      final apiDataSourceId = future.valueFor(keyPath: 'dataSource.id');
-      Map<String, dynamic>? apiDataSourceArgs =
-          future.valueFor(keyPath: 'dataSource.args');
+      final String apiDataSourceId =
+          future.valueFor(keyPath: 'dataSource.id') as String;
+      Map<String, dynamic>? apiDataSourceArgs = as$<Map<String, dynamic>>(
+          future.valueFor(keyPath: 'dataSource.args'));
 
       final apiModel = (context.tryRead<DUIPageBloc>()?.config ??
               DigiaUIClient.getConfigResolver())
@@ -89,7 +92,7 @@ Future<Object?> _makeFuture(
             actionFlow: successAction,
             enclosing:
                 DefaultScopeContext(variables: {'response': value.data}));
-      }, onError: (e) async {
+      }, onError: (Object e) async {
         final errorAction =
             ActionFlow.fromJson(future.valueFor(keyPath: 'onFailure'));
         await ActionHandler.instance.execute(
@@ -100,7 +103,11 @@ Future<Object?> _makeFuture(
       });
 
     case 'delay':
-      return Future.delayed(Duration(milliseconds: future['durationInMs']));
+      return Future.delayed(Duration(
+          milliseconds: as<int>(
+        future['durationInMs'],
+        orElse: () => 0,
+      )));
   }
   return Future.error('No future type selected.');
 }

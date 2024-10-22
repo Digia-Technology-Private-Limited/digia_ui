@@ -10,7 +10,8 @@ enum DataType {
   timerController('timerController'),
   streamController('streamController'),
   asyncController('asyncController'),
-  textEditingController('textFieldController');
+  textEditingController('textFieldController'),
+  file('file');
 
   final String id;
 

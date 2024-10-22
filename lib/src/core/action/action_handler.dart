@@ -22,6 +22,7 @@ import '../../digia_ui_client.dart';
 import '../../dui_logger.dart';
 import '../../framework/expr/default_scope_context.dart';
 import '../../framework/expr/scope_context.dart';
+import '../../framework/utils/functional_util.dart';
 import '../../models/dui_file.dart';
 import '../../types.dart';
 import '../analytics_handler.dart';
@@ -67,18 +68,21 @@ Map<String, ActionHandlerFn> _actionsMap = {
   },
   'Action.navigateToPage': (
       {required action, required context, enclosing, logger}) async {
-    final String? pageUId = action.data['pageUid'] ?? action.data['pageId'];
+    final String? pageUId =
+        (action.data['pageUid'] ?? action.data['pageId']) as String?;
 
     if (pageUId == null) {
       throw ArgumentError('Null value', 'pageId');
     }
 
-    final String openAs =
-        action.data['openAs'] ?? action.data['pageType'] ?? 'fullPage';
-    final Map<String, dynamic> bottomSheetStyling = action.data['style'] ?? {};
+    final String openAs = (action.data['openAs'] ??
+        action.data['pageType'] ??
+        'fullPage') as String;
+    final Map<String, dynamic> bottomSheetStyling =
+        action.data['style'] as Map<String, dynamic>? ?? {};
 
-    Map<String, dynamic>? pageArgs =
-        action.data['pageArgs'] ?? action.data['args'];
+    Map<String, dynamic>? pageArgs = (action.data['pageArgs'] ??
+        action.data['args']) as Map<String, dynamic>?;
 
     final pageProps =
         context.tryRead<DUIPageBloc>()?.config.getPageData(pageUId);
@@ -88,7 +92,8 @@ Map<String, ActionHandlerFn> _actionsMap = {
             .cast<MapEntry<String, dynamic>>(),
         Map<String, dynamic>.fromEntries);
 
-    final evaluatedArgs = evalDynamic(filteredArgs, context, enclosing);
+    final evaluatedArgs =
+        evalDynamic(filteredArgs, context, enclosing) as Map<String, dynamic>?;
 
     final widgetScope = DUIWidgetScope.maybeOf(context);
 
@@ -207,7 +212,8 @@ Map<String, ActionHandlerFn> _actionsMap = {
     }));
     if (canOpenUrl) {
       return launchUrl(url,
-          mode: DUIDecoder.toUriLaunchMode(action.data['launchMode']));
+          mode:
+              DUIDecoder.toUriLaunchMode(action.data['launchMode'] as String?));
     } else {
       throw 'Not allowed to open url: $url';
     }
@@ -235,7 +241,8 @@ Map<String, ActionHandlerFn> _actionsMap = {
         context: context, enclosing: enclosing);
     final duration = eval<int>(action.data['duration'],
         context: context, enclosing: enclosing);
-    final Map<String, dynamic>? style = action.data['style'] ?? {};
+    final Map<String, dynamic>? style =
+        action.data['style'] as Map<String, dynamic>? ?? {};
     final Color? bgColor = makeColor(style?['bgColor']);
     final borderRadius =
         DUIDecoder.toBorderRadius(style?['borderRadius'] ?? '12, 12, 12, 12');
@@ -277,14 +284,15 @@ Map<String, ActionHandlerFn> _actionsMap = {
   },
   'Action.openDialog': (
       {required action, required context, enclosing, logger}) async {
-    final String? pageUId = action.data['pageUid'] ?? action.data['pageId'];
+    final String? pageUId =
+        (action.data['pageUid'] ?? action.data['pageId']) as String?;
 
     if (pageUId == null) {
       throw ArgumentError('Null value', 'pageId');
     }
 
-    Map<String, dynamic>? pageArgs =
-        action.data['pageArgs'] ?? action.data['args'];
+    Map<String, dynamic>? pageArgs = (action.data['pageArgs'] ??
+        action.data['args']) as Map<String, dynamic>?;
 
     final pageProps =
         context.tryRead<DUIPageBloc>()?.config.getPageData(pageUId);
@@ -294,7 +302,8 @@ Map<String, ActionHandlerFn> _actionsMap = {
             .cast<MapEntry<String, dynamic>>(),
         Map<String, dynamic>.fromEntries);
 
-    final evaluatedArgs = evalDynamic(filteredArgs, context, enclosing);
+    final evaluatedArgs =
+        evalDynamic(filteredArgs, context, enclosing) as Map<String, dynamic>?;
     final barrierDismissible =
         eval<bool>(action.data['barrierDismissible'], context: context);
     final barrierColor = eval<String>(action.data['barrierColor'],
@@ -339,8 +348,9 @@ Map<String, ActionHandlerFn> _actionsMap = {
   },
   'Action.callRestApi': (
       {required action, required context, enclosing, logger}) async {
-    final dataSourceId = action.data['dataSourceId'];
-    Map<String, dynamic>? apiDataSourceArgs = action.data['args'];
+    final String dataSourceId = action.data['dataSourceId'] as String;
+    Map<String, dynamic>? apiDataSourceArgs =
+        action.data['args'] as Map<String, dynamic>?;
     final apiModel = (context.tryRead<DUIPageBloc>()?.config)
         ?.getApiDataSource(dataSourceId);
 
@@ -412,9 +422,10 @@ Map<String, ActionHandlerFn> _actionsMap = {
   },
   'Action.handleDigiaMessage': (
       {required action, required context, enclosing, logger}) {
-    final name = action.data['name'];
-    final body = action.data['body'];
-    final payload = evalDynamic(body, context, enclosing);
+    final String name = as<String>(action.data['name']);
+    final Map<String, Object?>? body =
+        as$<Map<String, Object?>>(action.data['body']);
+    final Object? payload = evalDynamic(body, context, enclosing);
 
     print('Message Handled: $name');
     print('Message Body: $payload');
@@ -429,7 +440,7 @@ Map<String, ActionHandlerFn> _actionsMap = {
     handler(MessagePayload(
       context: context,
       name: name,
-      body: payload,
+      body: payload as Map<String, Object?>?,
       dispatchAction: (p0) async {
         final actionFlow =
             ActionFlow(actions: [ActionProp(type: p0.type, data: p0.data)]);
@@ -464,7 +475,7 @@ Map<String, ActionHandlerFn> _actionsMap = {
               enclosing,
             );
             return SingleSetStateEvent(
-                variableName: e['variableName'],
+                variableName: as<String>(e['variableName']),
                 context: context,
                 value: evalDynamic(
                   e['value'],
@@ -479,7 +490,7 @@ Map<String, ActionHandlerFn> _actionsMap = {
       getPageName(context),
       'Action.setPageState',
       {
-        ...pageStateMap,
+        ...as<Map<String, dynamic>>(pageStateMap),
         'rebuildPage': rebuildPage,
       },
     ));
@@ -505,7 +516,8 @@ Map<String, ActionHandlerFn> _actionsMap = {
           enclosing: enclosing,
           decoder: (p0) => p0,
         );
-        AppStateProvider.maybeOf(context)?.setState(e['variableName'], value);
+        AppStateProvider.maybeOf(context)
+            ?.setState(e['variableName'] as String, value);
       }
 
       context
@@ -516,7 +528,7 @@ Map<String, ActionHandlerFn> _actionsMap = {
         getPageName(context),
         'Action.setAppState',
         {
-          ...appStateMap,
+          ...as<Map<String, dynamic>>(appStateMap),
         },
       ));
 
@@ -655,7 +667,7 @@ Map<String, ActionHandlerFn> _actionsMap = {
             events: events
                 .where((e) => variables?[e['variableName']] != null)
                 .map((e) => SingleSetStateEvent(
-                      variableName: e['variableName'],
+                      variableName: as<String>(e['variableName']),
                       context: context,
                       value: e['value'],
                     ))
@@ -755,7 +767,7 @@ Map<String, ActionHandlerFn> _actionsMap = {
           events: events
               .where((e) => variables?[e['variableName']] != null)
               .map((e) => SingleSetStateEvent(
-                    variableName: e['variableName'],
+                    variableName: e['variableName'] as String,
                     context: context,
                     value: e['value'],
                   ))
@@ -771,8 +783,9 @@ Map<String, ActionHandlerFn> _actionsMap = {
   },
   'Action.upload': (
       {required action, required context, enclosing, logger}) async {
-    final dataSourceId = action.data['dataSourceId'];
-    Map<String, dynamic>? apiDataSourceArgs = action.data['args'];
+    final String dataSourceId = action.data['dataSourceId'] as String;
+    Map<String, dynamic>? apiDataSourceArgs =
+        action.data['args'] as Map<String, dynamic>?;
     final apiModel = (context.tryRead<DUIPageBloc>()?.config)
         ?.getApiDataSource(dataSourceId);
 
@@ -998,7 +1011,7 @@ abstract class NavigatorHelper {
   }
 }
 
-requestObjToMap(dynamic request) {
+Map<String, Object?> requestObjToMap(dynamic request) {
   return {
     'url': request.path,
     'method': request.method,
@@ -1008,7 +1021,7 @@ requestObjToMap(dynamic request) {
   };
 }
 
-toFileType(String? fileType) {
+FileType toFileType(String? fileType) {
   switch (fileType!.toLowerCase()) {
     case 'image':
       return FileType.image;

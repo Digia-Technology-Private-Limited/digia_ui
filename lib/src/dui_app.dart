@@ -38,7 +38,7 @@ class DUIApp extends StatelessWidget {
       this.analytics,
       this.data});
 
-  _makeFuture() async {
+  Future<void> _makeFuture() async {
     if (data != null) {
       return DigiaUIClient.initializeFromData(
           accessKey: digiaAccessKey,

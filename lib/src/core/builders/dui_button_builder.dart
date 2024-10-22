@@ -7,6 +7,7 @@ import '../../Utils/basic_shared_utils/lodash.dart';
 import '../../Utils/basic_shared_utils/num_decoder.dart';
 import '../../Utils/extensions.dart';
 import '../../Utils/util_functions.dart';
+import '../../framework/utils/functional_util.dart';
 import '../action/action_handler.dart';
 import '../action/action_prop.dart';
 import '../evaluator.dart';
@@ -42,7 +43,8 @@ class DUIButtonBuilder extends DUIWidgetBuilder {
             or: const EdgeInsets.symmetric(horizontal: 12, vertical: 4))),
         elevation: WidgetStateProperty.all(
             NumDecoder.toDouble(defaultStyleJson['elevation'])),
-        shadowColor: WidgetStateProperty.all(defaultStyleJson['shadowColor']),
+        shadowColor: WidgetStateProperty.all(
+            as$<Color>(defaultStyleJson['shadowColor'])),
         alignment: DUIDecoder.toAlignment(defaultStyleJson['alignment']),
         backgroundColor: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.disabled)) {
