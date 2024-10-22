@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 
 import 'analytics/dui_analytics.dart';
-import 'core/app_state_provider.dart';
 import 'digia_ui_client.dart';
 import 'dui_dev_config.dart';
 import 'environment.dart';
@@ -114,9 +113,7 @@ class DUIApp extends StatelessWidget {
           }
 
           DUIFactory().initialize();
-          return AppStateProvider(
-              state: DigiaUIClient.instance.appState.variables,
-              child: DUIFactory().createInitialPage());
+          return DUIFactory().createInitialPage();
         },
       ),
     );

@@ -5,7 +5,7 @@ import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../models/custom_flutter_types.dart';
+import '../custom/custom_flutter_types.dart';
 import 'color_util.dart';
 import 'functional_util.dart';
 import 'json_util.dart';
@@ -614,4 +614,18 @@ abstract class To {
         'solid' => BlurStyle.solid,
         _ => null
       };
+
+  static BorderSide? borderSide(
+    dynamic value, {
+    required Color? Function(Object?) evalColor,
+  }) {
+    if (value == null || value is! Map<String, Object?>) return null;
+
+    if (value['borderStyle'] != 'solid') return BorderSide.none;
+
+    return BorderSide(
+        style: BorderStyle.solid,
+        width: NumUtil.toDouble(value['borderWidth']) ?? 1.0,
+        color: evalColor(value['borderColor']) ?? Colors.black);
+  }
 }

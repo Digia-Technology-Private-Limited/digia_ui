@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../Utils/util_functions.dart';
-import '../../components/border/dashed_input_border/dashed_outline_input_border.dart';
-import '../../components/border/dashed_input_border/dashed_underline_input_border.dart';
-import '../../components/utils/DUIBorder/dui_border.dart';
 import '../actions/base/action_flow.dart';
 import '../base/virtual_stateless_widget.dart';
+import '../custom/dashed_outline_input_border.dart';
+import '../custom/dashed_underline_input_border.dart';
 import '../data_type/adapted_types/text_editing_controller.dart';
 import '../expr/default_scope_context.dart';
 import '../expr/scope_context.dart';
@@ -50,11 +48,12 @@ class VWTextFormField extends VirtualStatelessWidget<Props> {
     final regex = payload.eval<String>(props.getString('regex'));
     final errorText = props.getString('errorText');
     final errorStyle = payload.getTextStyle(props.getMap('errorStyle'));
-    final enabledBorder = _toInputBorder(props.get('enabledBorder'));
-    final disabledBorder = _toInputBorder(props.get('disabledBorder'));
-    final focusedBorder = _toInputBorder(props.get('focusedBorder'));
-    final focusedErrorBorder = _toInputBorder(props.get('focusedErrorBorder'));
-    final errorBorder = _toInputBorder(props.get('errorBorder'));
+    final enabledBorder = _toInputBorder(payload, props.get('enabledBorder'));
+    final disabledBorder = _toInputBorder(payload, props.get('disabledBorder'));
+    final focusedBorder = _toInputBorder(payload, props.get('focusedBorder'));
+    final focusedErrorBorder =
+        _toInputBorder(payload, props.get('focusedErrorBorder'));
+    final errorBorder = _toInputBorder(payload, props.get('errorBorder'));
     return InternalTextFormField(
       controller: controller,
       initialValue: payload.eval<String>(props.get('initialValue')),
@@ -101,17 +100,13 @@ class VWTextFormField extends VirtualStatelessWidget<Props> {
     );
   }
 
-  InputBorder? _toInputBorder(dynamic border) {
+  InputBorder? _toInputBorder(RenderPayload payload, dynamic border) {
     if (border == null || border is! Map) return null;
 
     BorderRadius borderRadius = To.borderRadius(border['borderRadius']);
 
-    BorderSide borderSide = toBorderSide(DUIBorder.fromJson({
-      'borderStyle': border['borderStyle'],
-      'borderWidth': border['borderWidth'],
-      'borderColor': border['borderColor'],
-      'borderRadius': border['borderRadius'],
-    }));
+    BorderSide borderSide =
+        To.borderSide(border, evalColor: payload.evalColor) ?? BorderSide.none;
 
     final borderType = border['borderType']['value'];
 

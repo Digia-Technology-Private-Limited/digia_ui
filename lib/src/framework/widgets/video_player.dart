@@ -4,8 +4,8 @@ import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
-import '../../models/dui_file.dart';
 import '../base/virtual_leaf_stateless_widget.dart';
+import '../data_type/adapted_types/file.dart';
 import '../models/props.dart';
 import '../render_payload.dart';
 
@@ -20,7 +20,7 @@ class VWVideoPlayer extends VirtualLeafStatelessWidget<Props> {
   VideoPlayerController _createController(RenderPayload payload) {
     final videoSource = payload.eval(props.get('videoUrl'));
 
-    if (videoSource is List<DUIFile> && videoSource.isNotEmpty) {
+    if (videoSource is List<AdaptedFile> && videoSource.isNotEmpty) {
       final firstFile = videoSource.first;
       if (firstFile.isMobile) {
         return VideoPlayerController.file(File(firstFile.path!));
@@ -28,10 +28,10 @@ class VWVideoPlayer extends VirtualLeafStatelessWidget<Props> {
         return VideoPlayerController.networkUrl(
             Uri.parse(firstFile.xFile!.path));
       }
-      throw Exception('Invalid DUIFile source in list');
+      throw Exception('Invalid File source in list');
     }
 
-    if (videoSource is DUIFile) {
+    if (videoSource is AdaptedFile) {
       return VideoPlayerController.networkUrl(
           Uri.parse(videoSource.xFile!.path));
     }

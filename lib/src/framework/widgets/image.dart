@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_blurhash/flutter_blurhash.dart';
 import 'package:octo_image/octo_image.dart';
 
-import '../../models/dui_file.dart';
 import '../base/virtual_leaf_stateless_widget.dart';
+import '../data_type/adapted_types/file.dart';
 import '../models/props.dart';
 import '../render_payload.dart';
 import '../resource_provider.dart';
@@ -34,23 +34,23 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
 
   ImageProvider _createImageProvider(
       RenderPayload payload, Object? imageSource) {
-    if (imageSource is List<DUIFile> && imageSource.isNotEmpty) {
+    if (imageSource is List<AdaptedFile> && imageSource.isNotEmpty) {
       final firstFile = imageSource.first;
       if (firstFile.isWeb && firstFile.xFile?.path != null) {
         return CachedNetworkImageProvider(firstFile.xFile!.path);
       } else if (firstFile.isMobile && firstFile.path != null) {
         return FileImage(File(firstFile.path!));
       }
-      throw Exception('Invalid DUIFile source in list');
+      throw Exception('Invalid File source in list');
     }
 
-    if (imageSource is DUIFile) {
+    if (imageSource is AdaptedFile) {
       if (imageSource.isWeb && imageSource.xFile?.path != null) {
         return CachedNetworkImageProvider(imageSource.xFile!.path);
       } else if (imageSource.isMobile && imageSource.path != null) {
         return FileImage(File(imageSource.path!));
       }
-      throw Exception('Invalid DUIFile source');
+      throw Exception('Invalid File source');
     }
 
     if (imageSource is String) {

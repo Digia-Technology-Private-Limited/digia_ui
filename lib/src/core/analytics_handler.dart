@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../digia_ui.dart';
-import '../Utils/expr.dart';
+import '../framework/expr/expression_util.dart';
 import '../framework/expr/scope_context.dart';
 import '../framework/utils/functional_util.dart';
 
@@ -21,7 +21,7 @@ class AnalyticsHandler {
 
     _logAnalytics(logger, events, context, enclosing);
 
-    final data = evalDynamic(events, context, enclosing);
+    final data = evaluateNestedExpressions(events, enclosing);
 
     if (data is! List || data.isEmpty) return;
 
@@ -43,7 +43,8 @@ void _logAnalytics(DUILogger? logger, List<Map<String, dynamic>>? events,
   for (var event in events) {
     String eventName = as$<String>(event['name']) ?? 'Unknown Event';
     Map<String, dynamic> eventPayload = as<Map<String, dynamic>>(
-        evalDynamic(event['payload'] ?? {}, context, enclosing));
-    logger?.log(EventLog(eventName, eventPayload));
+        evaluateNestedExpressions(event['payload'] ?? {}, enclosing));
+    // TODO: Choubey
+    // logger?.log(EventLog(eventName, eventPayload));
   }
 }

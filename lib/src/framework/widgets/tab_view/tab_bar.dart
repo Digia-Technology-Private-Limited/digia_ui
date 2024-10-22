@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../Utils/util_functions.dart';
 import '../../base/virtual_stateless_widget.dart';
 import '../../expr/default_scope_context.dart';
 import '../../expr/scope_context.dart';
@@ -48,10 +47,10 @@ class VWTabBar extends VirtualStatelessWidget<Props> {
       overlayColor: WidgetStateProperty.all(Colors.transparent),
       padding: To.edgeInsets(props.get('tabBarPadding')),
       labelPadding: To.edgeInsets(props.get('labelPadding')),
-      dividerColor: makeColor(props.get('dividerColor')),
+      dividerColor: payload.evalColor(props.get('dividerColor')),
       dividerHeight: props.getDouble('dividerHeight'),
       indicatorWeight: props.getDouble('indicatorWeight') ?? 2.0,
-      indicatorColor: makeColor(props.get('indicatorColor')),
+      indicatorColor: payload.evalColor(props.get('indicatorColor')),
       tabs: List.generate(controller.length, (index) {
         return AnimatedBuilder(
           animation: controller.animation!,

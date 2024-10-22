@@ -3,13 +3,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 import '../digia_ui.dart';
-import 'Utils/dui_font.dart';
 import 'Utils/file_operations.dart';
 import 'core/functions/download.dart';
 import 'core/functions/js_functions.dart';
-import 'core/page/props/dui_page_props.dart';
+import 'framework/data_type/variable.dart';
+import 'framework/data_type/variable_json_converter.dart';
 import 'framework/utils/functional_util.dart';
-import 'models/variable_def.dart';
 import 'network/api_request/api_request.dart';
 import 'network/core/types.dart';
 
@@ -273,38 +272,12 @@ class DUIConfig {
     return as$<String>(_colors[colorToken]);
   }
 
-  DUIFont getFont(String fontToken) {
-    var fontsJson = (_fonts[fontToken]);
-    return DUIFont.fromJson(as<Map<String, dynamic>>(fontsJson));
-  }
-
-  // Map<String, dynamic>? getPageConfig(String uid) {
-  //   return _pages[uid];
-  // }
-
-  DUIPageProps getPageData(String pageUid) {
-    final pageConfig = pages[pageUid];
-    if (pageConfig == null) {
-      throw 'Config for Page: $pageUid not found';
-    }
-    return DUIPageProps.fromJson(pageConfig as Map<String, dynamic>);
-  }
-
-  DUIPageProps getfirstPageData() {
-    final firstPageConfig = pages[initialRoute] as Map<String, dynamic>?;
-    if (firstPageConfig == null || firstPageConfig['uid'] == null) {
-      throw 'Config for First Page not found.';
-    }
-
-    return DUIPageProps.fromJson(firstPageConfig);
-  }
-
   Map<String, dynamic>? getDefaultHeaders() {
     return as$<Map<String, dynamic>>(restConfig['defaultHeaders']);
   }
 
-  Map<String, VariableDef> getEnvironmentVariables() {
-    return const VariablesJsonConverter()
+  Map<String, Variable> getEnvironmentVariables() {
+    return const VariableJsonConverter()
         .fromJson(as$<Map<String, dynamic>>(_environment?['variables']));
   }
 

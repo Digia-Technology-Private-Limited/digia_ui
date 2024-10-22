@@ -2,9 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
-import '../../components/dui_button_bounce_animation.dart';
 import '../actions/base/action_flow.dart';
 import '../base/virtual_leaf_stateless_widget.dart';
+import '../custom/button_bounce_animation.dart';
 import '../models/props.dart';
 import '../models/types.dart';
 import '../render_payload.dart';

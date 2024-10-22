@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../Utils/extensions.dart';
 import '../base/virtual_sliver.dart';
 import '../render_payload.dart';
+import '../utils/flutter_extensions.dart';
 import '../widget_props/sliver_app_bar_props.dart';
 
 class VWSliverAppBar extends VirtualSliver<SliverAppBarProps> {

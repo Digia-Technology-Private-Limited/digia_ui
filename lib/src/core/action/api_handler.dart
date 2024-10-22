@@ -7,7 +7,6 @@ import 'package:mime_type/mime_type.dart';
 
 import '../../../digia_ui.dart';
 import '../../framework/data_type/adapted_types/file.dart';
-import '../../models/dui_file.dart';
 import '../../network/api_request/api_request.dart';
 import '../../network/core/types.dart';
 
@@ -117,20 +116,7 @@ class ApiHandler {
     final data = finalData as Map;
     for (var entry in data.entries) {
       final key = entry.key as String;
-      if (entry.value is DUIFile) {
-        final duiFile = entry.value as DUIFile;
-        if (duiFile.isWeb && duiFile.bytes != null) {
-          formData.files.add(MapEntry(
-            key,
-            await _createMultipartFileFromBytes(duiFile.bytes!, key),
-          ));
-        } else if (duiFile.isMobile && duiFile.path != null) {
-          formData.files.add(MapEntry(
-            key,
-            await _createMultipartFile(File(duiFile.path!)),
-          ));
-        }
-      } else if (entry.value is File) {
+      if (entry.value is File) {
         formData.files.add(MapEntry(
           key,
           await _createMultipartFile(entry.value as File),
@@ -170,12 +156,7 @@ class ApiHandler {
       return;
     }
 
-    if (values.first is DUIFile) {
-      formData.files.addAll(await Future.wait(
-        values.map((file) async =>
-            MapEntry(key, await _createMultipartFile(file as File))),
-      ));
-    } else if (values.first is File) {
+    if (values.first is File) {
       formData.files.addAll(await Future.wait(
         values.map((file) async =>
             MapEntry(key, await _createMultipartFile(file as File))),
