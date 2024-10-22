@@ -29,7 +29,9 @@ class _AsyncBuilderState<T> extends State<AsyncBuilder<T>> {
 
   @override
   void didUpdateWidget(AsyncBuilder<T> oldWidget) {
-    if (widget.controller != oldWidget.controller) {
+    if ((widget.controller != oldWidget.controller) ||
+        // Case where setup is always required.
+        (widget.controller == null && oldWidget.controller == null)) {
       _tearDownController();
       _setupController();
     }
