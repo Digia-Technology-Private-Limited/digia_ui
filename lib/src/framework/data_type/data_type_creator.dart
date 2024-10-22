@@ -31,7 +31,7 @@ class DataTypeCreator {
       case DataType.scrollController:
         return AdaptedScrollController();
 
-      case DataType.File:
+      case DataType.file:
         return AdaptedFile();
 
       case DataType.streamController:

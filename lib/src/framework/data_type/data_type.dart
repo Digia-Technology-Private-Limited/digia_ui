@@ -11,7 +11,7 @@ enum DataType {
   streamController('streamController'),
   asyncController('asyncController'),
   textEditingController('textFieldController'),
-  File('file');
+  file('file');
 
   final String id;
 
