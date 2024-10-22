@@ -29,12 +29,11 @@ class _AsyncBuilderState<T> extends State<AsyncBuilder<T>> {
 
   @override
   void didUpdateWidget(AsyncBuilder<T> oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget.controller != oldWidget.controller ||
-        widget.futureFactory != oldWidget.futureFactory) {
+    if (widget.controller != oldWidget.controller) {
       _tearDownController();
       _setupController();
     }
+    super.didUpdateWidget(oldWidget);
   }
 
   void _setupController() {

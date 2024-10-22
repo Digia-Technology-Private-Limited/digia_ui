@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 class AsyncController<T> extends ChangeNotifier {
   Future<T> Function()? _futureCreator;
 
-  bool _isDirty = false;
+  bool _isDirty = true;
   Future<T>? _currentFuture;
 
   AsyncController({Future<T> Function()? futureCreator}) {
@@ -15,7 +15,6 @@ class AsyncController<T> extends ChangeNotifier {
   // but we can't for now.
   void setFutureCreator(Future<T> Function() futureCreator) {
     _futureCreator = futureCreator;
-    invalidate();
   }
 
   /// Invalidates the current future and creates a new one
