@@ -1,4 +1,5 @@
 import 'async_controller/register_fn.dart';
+import 'file/register_fn.dart';
 import 'method_binding_registry.dart';
 import 'scroll_controller/register_fn.dart';
 import 'stream_controller/register_fn.dart';
@@ -11,4 +12,5 @@ void registerBindings(MethodBindingRegistry registry) {
   registerMethodCommandsForTimerController(registry);
   registerMethodCommandsForAsyncController(registry);
   registerMethodCommandsForTextFieldController(registry);
+  registerMethodCommandsForFile(registry);
 }

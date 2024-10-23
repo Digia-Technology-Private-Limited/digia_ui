@@ -12,6 +12,7 @@ import 'controlObject/processor.dart';
 import 'copyToClipBoard/processor.dart';
 import 'delay/processor.dart';
 import 'filePicker/processor.dart';
+import 'imagePicker/processor.dart';
 import 'navigateBack/processor.dart';
 import 'navigateBackUntil/processor.dart';
 import 'navigateToPage/processor.dart';
@@ -70,8 +71,8 @@ class ActionProcessorFactory {
         return CopyToClipBoardProcessor();
       case an.ActionType.delay:
         return DelayProcessor();
-      // case an.ActionType.imagePicker:
-      // return ImagePickerProcessor();
+      case an.ActionType.imagePicker:
+        return ImagePickerProcessor();
       case an.ActionType.navigateBack:
         return NavigateBackProcessor();
       case an.ActionType.navigateBackUntil:
