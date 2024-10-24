@@ -33,7 +33,7 @@ class TimerProps {
       duration: ExprOr.fromJson<int>(json['duration']),
       updateInterval: ExprOr.fromJson<int>(json['updateInterval']),
       timerType: as$<String>(json['timerType']),
-      initialValue: ExprOr.fromJson<int>(json['startingPoint']),
+      initialValue: ExprOr.fromJson<int>(json['initialValue']),
       onTick: ActionFlow.fromJson(json['onTick']),
       onTimerEnd: ActionFlow.fromJson(json['onTimerEnd']),
     );
