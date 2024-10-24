@@ -124,7 +124,7 @@ Future<Response<Object?>> _makeFuture(
             )),
         onSuccess: (response) async {
           final actionFlow = ActionFlow.fromJson(futureProps.get('onSuccess'));
-          payload.executeAction(
+          await payload.executeAction(
             actionFlow,
             scopeContext:
                 DefaultScopeContext(variables: {'response': response}),
@@ -132,7 +132,7 @@ Future<Response<Object?>> _makeFuture(
         },
         onError: (response) async {
           final actionFlow = ActionFlow.fromJson(futureProps.get('onError'));
-          payload.executeAction(
+          await payload.executeAction(
             actionFlow,
             scopeContext:
                 DefaultScopeContext(variables: {'response': response}),

@@ -36,6 +36,7 @@ class VWTabBar extends VirtualStatelessWidget<Props> {
             Alignment.center;
 
     return TabBar(
+      automaticIndicatorColorAdjustment: false,
       isScrollable: isScrollable,
       tabAlignment: isScrollable
           ? alignment == Alignment.centerLeft

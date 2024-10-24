@@ -21,7 +21,8 @@ class VWTimer extends VirtualStatelessWidget<TimerProps> {
     if (child == null) return empty();
 
     final duration = payload.evalExpr(props.duration) ?? 0;
-    final initialValue = payload.evalExpr(props.initialValue) ?? 0;
+    final initialValue = payload.evalExpr(props.initialValue) ??
+        (props.isCountDown ? duration : 0);
 
     final controller = payload.evalExpr(props.controller);
 
