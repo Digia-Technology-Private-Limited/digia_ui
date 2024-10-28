@@ -25,7 +25,8 @@ class ApiHandler {
   Future<Response<Object?>> execute(
       {required APIModel apiModel,
       required Map<String, dynamic>? args,
-      StreamController<Object?>? progressStreamController}) async {
+      StreamController<Object?>? progressStreamController,
+      CancelToken? cancelToken}) async {
     final stopwatch = Stopwatch();
     final envVariables =
         DigiaUIClient.instance.config.getEnvironmentVariables();
@@ -60,6 +61,7 @@ class ApiHandler {
           method: apiModel.method,
           additionalHeaders: headers,
           data: preparedData,
+          cancelToken: cancelToken,
           uploadProgress: (p0, p1) {
             progressStreamController?.sink.add({
               'count': p0,
@@ -74,6 +76,7 @@ class ApiHandler {
             url: url,
             method: apiModel.method,
             additionalHeaders: headers,
+            cancelToken: cancelToken,
             data: preparedData);
       }
       stopwatch.stop();
