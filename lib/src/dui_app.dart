@@ -62,7 +62,6 @@ class DUIApp extends StatelessWidget {
       // navigatorObservers: [ChuckerFlutter.navigatorObserver],
       theme: theme ??
           ThemeData(
-            fontFamily: 'Poppins',
             scaffoldBackgroundColor: Colors.white,
             brightness: Brightness.light,
           ),
