@@ -5,13 +5,23 @@ import '../../state/state_context_provider.dart';
 import '../base/processor.dart';
 import 'action.dart';
 
-class RebuildStateProcessor implements ActionProcessor<RebuildStateAction> {
+class RebuildStateProcessor extends ActionProcessor<RebuildStateAction> {
+  RebuildStateProcessor({super.logger});
+
   @override
   Future<Object?>? execute(
     BuildContext context,
     RebuildStateAction action,
     ScopeContext? scopeContext,
   ) {
+    logger?.logAction(
+      entitySlug: scopeContext!.name,
+      actionType: action.actionType.value,
+      actionData: {
+        'stateContextName': action.stateContextName,
+      },
+    );
+
     if (action.stateContextName == null) {
       final originState = StateContextProvider.getOriginState(context);
       originState.triggerListeners();

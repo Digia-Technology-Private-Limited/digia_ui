@@ -24,7 +24,6 @@ class VWSliverAppBar extends VirtualSliver<SliverAppBarProps> {
     final backgroundColor = props.backgroundColor;
     final leadingWidth = props.leadingWidth;
     final titleSpacing = props.titleSpacing;
-    final toolbarHeight = props.toolbarHeight;
 
     return SliverAppBar(
       leading: childOf('leading')?.toWidget(payload) ?? empty(),

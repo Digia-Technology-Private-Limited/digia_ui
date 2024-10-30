@@ -10,6 +10,7 @@ class ControlObjectProcessor extends ActionProcessor<ControlObjectAction> {
 
   ControlObjectProcessor({
     required this.registry,
+    super.logger,
   });
 
   @override
@@ -27,6 +28,16 @@ class ControlObjectProcessor extends ActionProcessor<ControlObjectAction> {
     final evaluatedArgs =
         action.args?.map((k, v) => MapEntry(k, v?.evaluate(scopeContext))) ??
             {};
+
+    logger?.logAction(
+      entitySlug: scopeContext!.name,
+      actionType: action.actionType.value,
+      actionData: {
+        'object': object,
+        'args': evaluatedArgs,
+        'method': action.method,
+      },
+    );
 
     registry.execute(object, action.method, evaluatedArgs);
 

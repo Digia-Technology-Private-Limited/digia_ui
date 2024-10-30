@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 
+import '../../dui_logger.dart';
 import '../data_type/method_bindings/method_binding_registry.dart';
 import '../expr/scope_context.dart';
 import '../utils/types.dart';
@@ -51,68 +52,102 @@ class ActionProcDependencies {
 
 class ActionProcessorFactory {
   final ActionProcDependencies dependencies;
+  final DUILogger? logger;
 
-  ActionProcessorFactory(this.dependencies);
+  ActionProcessorFactory(this.dependencies, this.logger);
 
   ActionProcessor getProcessor(an.Action action) {
     switch (action.actionType) {
       case an.ActionType.callRestApi:
         return CallRestApiProcessor(
           executeActionFlow: dependencies.executeActionFlow,
+          logger: logger,
         );
       case an.ActionType.controlDrawer:
-        return ControlDrawerProcessor();
+        return ControlDrawerProcessor(
+          logger: logger,
+        );
       case an.ActionType.controlObject:
         return ControlObjectProcessor(
           registry: dependencies.bindingRegistry,
+          logger: logger,
         );
       case an.ActionType.copyToClipBoard:
-        return CopyToClipBoardProcessor();
+        return CopyToClipBoardProcessor(
+          logger: logger,
+        );
       case an.ActionType.delay:
-        return DelayProcessor();
+        return DelayProcessor(
+          logger: logger,
+        );
       // case an.ActionType.imagePicker:
       // return ImagePickerProcessor();
       case an.ActionType.navigateBack:
-        return NavigateBackProcessor();
+        return NavigateBackProcessor(
+          logger: logger,
+        );
       case an.ActionType.navigateBackUntil:
-        return NavigateBackUntilProcessor();
+        return NavigateBackUntilProcessor(
+          logger: logger,
+        );
       case an.ActionType.navigateToPage:
         return NavigateToPageProcessor(
           executeActionFlow: dependencies.executeActionFlow,
           pageRouteBuilder: dependencies.pageRouteBuilder,
+          logger: logger,
         );
       case an.ActionType.openUrl:
-        return OpenUrlProcessor();
+        return OpenUrlProcessor(
+          logger: logger,
+        );
       case an.ActionType.postMessage:
-        return PostMessageProcessor();
+        return PostMessageProcessor(
+          logger: logger,
+        );
       case an.ActionType.rebuildState:
-        return RebuildStateProcessor();
+        return RebuildStateProcessor(
+          logger: logger,
+        );
       // case an.ActionType.setAppState:
       // return SetAppStateProcessor();
       case an.ActionType.setState:
-        return SetStateProcessor();
+        return SetStateProcessor(
+          logger: logger,
+        );
       case an.ActionType.shareContent:
-        return ShareProcessor();
+        return ShareProcessor(
+          logger: logger,
+        );
       case an.ActionType.showDialog:
         return ShowDialogProcessor(
           viewBuilder: dependencies.viewBuilder,
           executeActionFlow: dependencies.executeActionFlow,
+          logger: logger,
         );
       case an.ActionType.showToast:
-        return ShowToastProcessor();
+        return ShowToastProcessor(
+          logger: logger,
+        );
       case an.ActionType.showBottomSheet:
         return ShowBottomSheetProcessor(
           executeActionFlow: dependencies.executeActionFlow,
           viewBuilder: dependencies.viewBuilder,
+          logger: logger,
         );
       case an.ActionType.filePicker:
-        return FilePickerProcessor();
+        return FilePickerProcessor(
+          logger: logger,
+        );
       case an.ActionType.uploadFile:
         return UploadProcessor(
-            executeActionFlow: dependencies.executeActionFlow);
+          executeActionFlow: dependencies.executeActionFlow,
+          logger: logger,
+        );
       case an.ActionType.imagePicker:
     }
     // TODO: Remove later
-    return ShowToastProcessor();
+    return ShowToastProcessor(
+      logger: logger,
+    );
   }
 }

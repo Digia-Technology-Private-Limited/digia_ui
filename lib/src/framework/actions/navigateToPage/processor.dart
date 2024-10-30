@@ -10,7 +10,7 @@ import '../base/action_flow.dart';
 import '../base/processor.dart';
 import 'action.dart';
 
-class NavigateToPageProcessor implements ActionProcessor<NavigateToPageAction> {
+class NavigateToPageProcessor extends ActionProcessor<NavigateToPageAction> {
   final Future<Object?>? Function(
     BuildContext context,
     ActionFlow actionFlow,
@@ -26,6 +26,7 @@ class NavigateToPageProcessor implements ActionProcessor<NavigateToPageAction> {
   NavigateToPageProcessor({
     required this.executeActionFlow,
     required this.pageRouteBuilder,
+    super.logger,
   });
 
   @override
@@ -43,6 +44,19 @@ class NavigateToPageProcessor implements ActionProcessor<NavigateToPageAction> {
         action.shouldRemovePreviousScreensInStack;
     final routeNametoRemoveUntil =
         action.routeNametoRemoveUntil?.evaluate(scopeContext);
+
+    logger?.logAction(
+      entitySlug: scopeContext!.name,
+      actionType: action.actionType.value,
+      actionData: {
+        'pageId': pageId,
+        'pageArgs': action.pageArgs,
+        'waitForResult': action.waitForResult,
+        'shouldRemovePreviousScreensInStack': removePreviousScreensInStack,
+        'routeNametoRemoveUntil': routeNametoRemoveUntil,
+        'onResult': action.onResult,
+      },
+    );
 
     final navigatorKey = ResourceProvider.maybeOf(context)?.navigatorKey;
     Object? result = await NavigatorHelper.push(

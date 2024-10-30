@@ -44,7 +44,6 @@ void _logAnalytics(DUILogger? logger, List<Map<String, dynamic>>? events,
     String eventName = as$<String>(event['name']) ?? 'Unknown Event';
     Map<String, dynamic> eventPayload = as<Map<String, dynamic>>(
         evaluateNestedExpressions(event['payload'] ?? {}, enclosing));
-    // TODO: Choubey
-    // logger?.log(EventLog(eventName, eventPayload));
+    logger?.logEvent(eventName: eventName, eventPayload: eventPayload);
   }
 }

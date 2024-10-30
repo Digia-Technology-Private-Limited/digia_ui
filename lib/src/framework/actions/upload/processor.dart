@@ -20,6 +20,7 @@ class UploadProcessor extends ActionProcessor<UploadAction> {
 
   UploadProcessor({
     required this.executeActionFlow,
+    super.logger,
   });
 
   @override
@@ -40,6 +41,15 @@ class UploadProcessor extends ActionProcessor<UploadAction> {
     if (apiModel == null) {
       return Future.error('No API Selected');
     }
+
+    logger?.logAction(
+      entitySlug: scopeContext!.name,
+      actionType: action.actionType.value,
+      actionData: {
+        'apiId': action.apiId,
+        'args': args,
+      },
+    );
 
     final result = ApiHandler.instance
         .execute(

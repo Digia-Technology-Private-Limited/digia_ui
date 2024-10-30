@@ -17,6 +17,7 @@ class CallRestApiProcessor extends ActionProcessor<CallRestApiAction> {
 
   CallRestApiProcessor({
     required this.executeActionFlow,
+    super.logger,
   });
 
   @override
@@ -30,6 +31,14 @@ class CallRestApiProcessor extends ActionProcessor<CallRestApiAction> {
     if (apiModel == null) {
       return Future.error('No API Selected');
     }
+
+    logger?.logAction(
+        entitySlug: scopeContext!.name,
+        actionType: action.actionType.value,
+        actionData: {
+          'apiId': action.apiId,
+          'args': action.args,
+        });
 
     return executeApiAction(
       scopeContext,

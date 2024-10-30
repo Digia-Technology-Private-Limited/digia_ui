@@ -56,6 +56,7 @@ class ActionExecutor {
           pageRouteBuilder: pageRouteBuilder,
           bindingRegistry: bindingRegistry,
         ),
+        logger,
       ).getProcessor(action);
       await processor.execute(context, action, scopeContext);
     }

@@ -8,6 +8,8 @@ import '../base/processor.dart';
 import 'action.dart';
 
 class FilePickerProcessor extends ActionProcessor<FilePickerAction> {
+  FilePickerProcessor({super.logger});
+
   @override
   Future<Object?>? execute(
     BuildContext context,
@@ -40,6 +42,18 @@ class FilePickerProcessor extends ActionProcessor<FilePickerAction> {
         // User canceled the picker
         return null;
       }
+
+      logger?.logAction(
+        entitySlug: scopeContext!.name,
+        actionType: action.actionType.value,
+        actionData: {
+          'fileType': fileType,
+          'sizeLimit': sizeLimit,
+          'isMultiSelect': isMultiSelect,
+          'showToast': showToast,
+          'pickedFile': pickedFile,
+        },
+      );
 
       final toast = FToast().init(context);
 

@@ -5,7 +5,9 @@ import '../../state/state_context_provider.dart';
 import '../base/processor.dart';
 import 'action.dart';
 
-class SetStateProcessor implements ActionProcessor<SetStateAction> {
+class SetStateProcessor extends ActionProcessor<SetStateAction> {
+  SetStateProcessor({super.logger});
+
   @override
   Future<Object?>? execute(
     BuildContext context,
@@ -26,6 +28,15 @@ class SetStateProcessor implements ActionProcessor<SetStateAction> {
         (update) =>
             MapEntry(update.stateName, update.newValue?.evaluate(scopeContext)),
       ));
+      logger?.logAction(
+        entitySlug: scopeContext!.name,
+        actionType: action.actionType.value,
+        actionData: {
+          'stateContextName': action.stateContextName,
+          'rebuild': rebuildPage,
+          ...updatesMap,
+        },
+      );
       stateContext.setValues(updatesMap, notify: rebuildPage);
     }
 

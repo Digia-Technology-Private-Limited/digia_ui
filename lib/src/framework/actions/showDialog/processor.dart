@@ -10,7 +10,7 @@ import '../base/action_flow.dart';
 import '../base/processor.dart';
 import 'action.dart';
 
-class ShowDialogProcessor implements ActionProcessor<ShowDialogAction> {
+class ShowDialogProcessor extends ActionProcessor<ShowDialogAction> {
   final Widget Function(BuildContext context, String id, JsonLike? args)
       viewBuilder;
   final Future<Object?>? Function(
@@ -22,6 +22,7 @@ class ShowDialogProcessor implements ActionProcessor<ShowDialogAction> {
   ShowDialogProcessor({
     required this.viewBuilder,
     required this.executeActionFlow,
+    super.logger,
   });
 
   @override
@@ -38,6 +39,18 @@ class ShowDialogProcessor implements ActionProcessor<ShowDialogAction> {
         ?.evaluate(scopeContext)
         .maybe((p0) => provider?.getColor(p0));
     final waitForResult = action.waitForResult;
+
+    logger?.logAction(
+      entitySlug: scopeContext!.name,
+      actionType: action.actionType.value,
+      actionData: {
+        'viewId': action.viewId,
+        'args': action.args,
+        'barrierDismissible': barrierDismissible,
+        'barrierColor': barrierColor,
+        'waitForResult': waitForResult,
+      },
+    );
 
     Object? result = await presentDialog(
       context: context,

@@ -1,7 +1,11 @@
 import 'package:flutter/widgets.dart';
+import 'state_observer.dart';
 
 /// Manages state for a specific namespace and provides access to enclosing contexts.
 class StateContext extends ChangeNotifier {
+  /// The global state observer, if any.
+  static StateObserver? observer;
+
   /// The unique identifier for this state context.
   final String? namespace;
 
@@ -16,7 +20,15 @@ class StateContext extends ChangeNotifier {
     required Map<String, Object?> initialState,
     StateContext? ancestorContext,
   })  : _stateVariables = Map.from(initialState),
-        _ancestorContext = ancestorContext;
+        _ancestorContext = ancestorContext {
+    observer?.onCreate(this.namespace ?? '');
+  }
+
+  @override
+  void dispose() {
+    observer?.onDispose();
+    super.dispose();
+  }
 
   /// Traverses the StateContext hierarchy to find the Origin context.
   ///
@@ -50,6 +62,17 @@ class StateContext extends ChangeNotifier {
   /// Returns true if the update was successful, false otherwise.
   bool setValue(String key, Object? value, {bool notify = true}) {
     if (_stateVariables.containsKey(key)) {
+      final nextState = Map<String, Object?>.from(_stateVariables);
+      nextState[key] = value;
+
+      if (namespace != null) {
+        observer?.onStateChange(
+          namespace!,
+          nextState,
+          Map<String, Object?>.from(_stateVariables),
+        );
+      }
+
       _stateVariables[key] = value;
       if (notify) notifyListeners();
       return true;
@@ -65,8 +88,12 @@ class StateContext extends ChangeNotifier {
     Map<String, bool> results = {};
     bool anyUpdated = false;
 
+    final currentState = Map<String, Object?>.from(_stateVariables);
+    final nextState = Map<String, Object?>.from(_stateVariables);
+
     updates.forEach((key, value) {
       if (hasKey(key)) {
+        nextState[key] = value;
         _stateVariables[key] = value;
         results[key] = true;
         anyUpdated = true;
@@ -76,6 +103,7 @@ class StateContext extends ChangeNotifier {
     });
 
     if (notify && anyUpdated) {
+      observer?.onStateChange(namespace!, nextState, currentState);
       notifyListeners();
     }
 
