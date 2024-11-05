@@ -7,6 +7,7 @@ import 'base/virtual_widget.dart';
 import 'component/component.dart';
 import 'data_type/method_bindings/method_binding_registry.dart';
 import 'expr/default_scope_context.dart';
+import 'font_factory.dart';
 import 'page/config_provider.dart';
 import 'page/page.dart';
 import 'page/page_controller.dart';
@@ -58,6 +59,7 @@ class DUIFactory {
     ConfigProvider? pageConfigProvider,
     Map<String, IconData>? icons,
     Map<String, ImageProvider>? images,
+    DUIFontFactory? fontFactory,
   }) {
     widgetRegistry = DefaultVirtualWidgetRegistry(
       componentBuilder: (id, args) => createComponent(id, args),
@@ -69,8 +71,12 @@ class DUIFactory {
     resources = UIResources(
       icons: icons,
       images: images,
-      textStyles: DigiaUIClient.instance.config.fontTokens
-          .map((key, value) => MapEntry(key, convertToTextStyle(value))),
+      textStyles:
+          DigiaUIClient.instance.config.fontTokens.map((key, value) => MapEntry(
+                key,
+                convertToTextStyle(value, fontFactory),
+              )),
+      fontFactory: fontFactory,
       colors: DigiaUIClient.instance.config.colorTokens.map(
         (key, value) => MapEntry(
           key,
@@ -121,6 +127,7 @@ class DUIFactory {
       images: {...?resources.images, ...?overrideImages},
       textStyles: {...?resources.textStyles, ...?overrideTextStyles},
       colors: {...?resources.colors, ...?overrideColorTokens},
+      fontFactory: resources.fontFactory,
     );
 
     final handler =
@@ -226,6 +233,7 @@ class DUIFactory {
       images: {...?resources.images, ...?overrideImages},
       textStyles: {...?resources.textStyles, ...?overrideTextStyles},
       colors: {...?resources.colors, ...?overrideColorTokens},
+      fontFactory: resources.fontFactory,
     );
 
     return DefaultActionExecutor(
@@ -286,11 +294,13 @@ class UIResources {
   final Map<String, ImageProvider>? images;
   final Map<String, TextStyle?>? textStyles;
   final Map<String, Color?>? colors;
+  final DUIFontFactory? fontFactory;
 
   UIResources({
     required this.icons,
     required this.images,
     required this.textStyles,
     required this.colors,
+    this.fontFactory,
   });
 }

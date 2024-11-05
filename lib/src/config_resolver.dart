@@ -17,10 +17,10 @@ class AppConfigResolver {
 
   AppConfigResolver(this._flavorInfo);
 
-  Future<Map<String, dynamic>?> _getAppConfigFromNetwork(path) async {
+  Future<Map<String, dynamic>?> _getAppConfigFromNetwork(String path) async {
     var resp = await DigiaUIClient.instance.networkClient.requestInternal(
       HttpMethod.post,
-      path as String,
+      path,
       (json) => json as dynamic,
     );
     final data = resp.data['response'] as Map<String, dynamic>?;
@@ -151,7 +151,7 @@ class AppConfigResolver {
             //try to fetch appConfig and functions from network
             try {
               var result = await Future.any([
-                Future.delayed(Duration(seconds: timeout)),
+                Future<Object?>.delayed(Duration(seconds: timeout)),
                 _getAppConfigFromNetworkAndWriteToFile(
                     '/config/getAppConfigProduction')
               ]);
@@ -260,8 +260,6 @@ class DUIConfig {
   // TODO: @tushar - Add support for light / dark theme
   Map<String, dynamic> get _colors =>
       as<Map<String, dynamic>>(_themeConfig['colors']['light']);
-  Map<String, dynamic> get _fonts =>
-      as<Map<String, dynamic>>(_themeConfig['fonts']);
 
   Map<String, Object?> get colorTokens =>
       as<Map<String, Object?>>(_themeConfig['colors']['light']);

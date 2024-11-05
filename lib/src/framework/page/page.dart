@@ -96,6 +96,7 @@ class DUIPage extends StatelessWidget {
       icons: resources?.icons ?? {},
       images: resources?.images ?? {},
       textStyles: resources?.textStyles ?? {},
+      fontFactory: resources?.fontFactory,
       colors: resources?.colors ?? {},
       apiModels: apiModels ?? {},
       messageHandler: messageHandler,

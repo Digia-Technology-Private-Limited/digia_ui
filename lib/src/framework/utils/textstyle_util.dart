@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'package:google_fonts/google_fonts.dart';
 
+import '../font_factory.dart';
 import '../resource_provider.dart';
 import 'flutter_type_converters.dart';
 import 'functional_util.dart';
@@ -8,7 +8,7 @@ import 'json_util.dart';
 import 'num_util.dart';
 import 'types.dart';
 
-final _defaultTextStyle = GoogleFonts.poppins(
+const _defaultTextStyle = TextStyle(
   fontSize: 14,
   height: 1.5,
   fontWeight: FontWeight.normal,
@@ -88,14 +88,19 @@ TextStyle? makeTextStyle(
     decorationStyle: textDecorationStyle,
   );
 
-  if (overridingFontFamily == null) {
+  final fontFactory = ResourceProvider.maybeOf(context)?.getFontFactory();
+
+  if (overridingFontFamily == null || fontFactory == null) {
     return textStyle;
   }
 
-  return GoogleFonts.getFont(overridingFontFamily, textStyle: textStyle);
+  return fontFactory.getFont(overridingFontFamily, textStyle: textStyle);
 }
 
-TextStyle? convertToTextStyle(Object? value) {
+TextStyle? convertToTextStyle(
+  Object? value,
+  DUIFontFactory? fontFactory,
+) {
   if (value == null || value is! JsonLike) return null;
 
   FontWeight fontWeight = To.fontWeight(value['weight']);
@@ -104,11 +109,20 @@ TextStyle? convertToTextStyle(Object? value) {
   double fontHeight = NumUtil.toDouble(value['height']) ?? 1.5;
   // Below is done purposely. tryKeys doesn't check the type before casting.
   // Hence moved casting outside of tryKeys.
-  String fontFamily =
-      as$<String>(tryKeys(value, ['font-family', 'fontFamily'])) ?? 'Poppins';
+  String? fontFamily =
+      as$<String>(tryKeys(value, ['font-family', 'fontFamily']));
 
-  return GoogleFonts.getFont(
-    fontFamily,
+  if (fontFactory != null && fontFamily != null) {
+    return fontFactory.getFont(
+      fontFamily,
+      fontWeight: fontWeight,
+      fontStyle: fontStyle,
+      fontSize: fontSize,
+      height: fontHeight,
+    );
+  }
+
+  return TextStyle(
     fontWeight: fontWeight,
     fontStyle: fontStyle,
     fontSize: fontSize,

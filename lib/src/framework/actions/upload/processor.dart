@@ -31,8 +31,7 @@ class UploadProcessor extends ActionProcessor<UploadAction> {
     final apiModel = ResourceProvider.maybeOf(context)?.apiModels[action.apiId];
     final progressStreamController = action.streamController
         ?.evaluate(scopeContext) as StreamController<Object?>?;
-    final apiCancelToken =
-        action.cancelToken?.evaluate(scopeContext) as CancelToken?;
+    final apiCancelToken = action.cancelToken?.evaluate(scopeContext);
     final args = action.args?.map((k, v) => MapEntry(
           k,
           v?.evaluate(scopeContext),
