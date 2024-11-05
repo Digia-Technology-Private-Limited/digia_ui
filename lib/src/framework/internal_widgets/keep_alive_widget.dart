@@ -15,6 +15,8 @@ class _KeepAliveWrapperState extends State<KeepAliveWrapper>
   @override
   bool get wantKeepAlive => widget.keepTabsAlive ?? false;
 
+  // Subclasses must call super.build.
+  // https://api.flutter.dev/flutter/widgets/AutomaticKeepAliveClientMixin-mixin.html
   @override
   Widget build(BuildContext context) {
     super.build(context);
