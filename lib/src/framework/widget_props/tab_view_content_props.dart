@@ -1,18 +1,22 @@
-import '../utils/functional_util.dart';
+import '../utils/object_util.dart';
+import '../utils/types.dart';
 
 class TabViewContentProps {
   final bool? isScrollable;
   final double viewportFraction;
+  final bool? keepTabsAlive;
 
   TabViewContentProps({
     required this.isScrollable,
     required this.viewportFraction,
+    this.keepTabsAlive,
   });
 
-  factory TabViewContentProps.fromJson(Map<String, dynamic> json) {
+  factory TabViewContentProps.fromJson(JsonLike json) {
     return TabViewContentProps(
-      isScrollable: as$<bool>(json['isScrollable']),
-      viewportFraction: as$<double>(json['viewportFraction']) ?? 1.0,
+      isScrollable: json['isScrollable']?.to<bool>(),
+      viewportFraction: json['viewportFraction']?.to<double>() ?? 1.0,
+      keepTabsAlive: json['keepTabsAlive']?.to<bool>(),
     );
   }
 }
