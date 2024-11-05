@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:dio/dio.dart';
+
 import '../../models/types.dart';
 import '../../utils/functional_util.dart';
 import '../../utils/types.dart';
@@ -11,6 +13,8 @@ class UploadAction extends Action {
   final Map<String, ExprOr<Object>?>? args;
   // final String? selectedPageStream;
   ExprOr<StreamController>? streamController;
+
+  ExprOr<CancelToken>? cancelToken;
   final ExprOr<bool>? successCondition;
   final ActionFlow? onSuccess;
   final ActionFlow? onError;
@@ -20,6 +24,7 @@ class UploadAction extends Action {
     required this.args,
     // this.selectedPageStream,
     this.streamController,
+    this.cancelToken,
     this.successCondition,
     this.onSuccess,
     this.onError,
@@ -39,6 +44,7 @@ class UploadAction extends Action {
       onSuccess: ActionFlow.fromJson(json['onSuccess']),
       onError: ActionFlow.fromJson(json['onError']),
       streamController: ExprOr.fromJson(json['streamController']),
+      cancelToken: ExprOr.fromJson(json['cancelToken']),
     );
   }
 
@@ -52,7 +58,8 @@ class UploadAction extends Action {
       'onSuccess': onSuccess?.toJson(),
       'onError': onError?.toJson(),
       // 'selectedPageStream': selectedPageStream,
-      'streamController': streamController?.toJson()
+      'streamController': streamController?.toJson(),
+      'cancelToken': cancelToken?.toJson()
     };
   }
 }

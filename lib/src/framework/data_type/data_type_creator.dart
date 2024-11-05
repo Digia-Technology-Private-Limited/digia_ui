@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:dio/dio.dart';
+
 import '../expr/expression_util.dart';
 import '../expr/scope_context.dart';
 import '../internal_widgets/async_builder/controller.dart';
@@ -57,6 +59,9 @@ class DataTypeCreator {
           isCountDown: value['timerType'] == 'countDown',
           duration: evaluate<int>(value['duration']) ?? 0,
         );
+
+      case DataType.apiCancelToken:
+        return CancelToken();
 
       default:
         throw Exception('Unknown type: ${def.type}');
