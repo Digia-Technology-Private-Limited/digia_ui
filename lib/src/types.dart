@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-typedef DUIIconDataProvider = IconData Function(Map<String, dynamic> map);
+typedef DUIIconDataProvider = IconData Function(Map<String, Object?> map);
 typedef DUIImageProviderFn = ImageProvider Function(String identifier);
 typedef DUITextStyleBuilder = TextStyle Function(String identifier);
 
@@ -30,4 +30,4 @@ class MessagePayload {
       required this.dispatchAction});
 }
 
-typedef DUIMessageHandler = void Function(MessagePayload);
+typedef DUIMessageHandler2 = void Function(MessagePayload);

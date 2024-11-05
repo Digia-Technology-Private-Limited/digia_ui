@@ -3,12 +3,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 import '../digia_ui.dart';
-import 'Utils/dui_font.dart';
 import 'Utils/file_operations.dart';
 import 'core/functions/download.dart';
 import 'core/functions/js_functions.dart';
-import 'core/page/props/dui_page_props.dart';
-import 'models/variable_def.dart';
+import 'framework/data_type/variable.dart';
+import 'framework/data_type/variable_json_converter.dart';
+import 'framework/utils/functional_util.dart';
 import 'network/api_request/api_request.dart';
 import 'network/core/types.dart';
 
@@ -17,7 +17,7 @@ class AppConfigResolver {
 
   AppConfigResolver(this._flavorInfo);
 
-  Future<Map<String, dynamic>?> _getAppConfigFromNetwork(path) async {
+  Future<Map<String, dynamic>?> _getAppConfigFromNetwork(String path) async {
     var resp = await DigiaUIClient.instance.networkClient.requestInternal(
       HttpMethod.post,
       path,
@@ -151,7 +151,7 @@ class AppConfigResolver {
             //try to fetch appConfig and functions from network
             try {
               var result = await Future.any([
-                Future.delayed(Duration(seconds: timeout)),
+                Future<Object?>.delayed(Duration(seconds: timeout)),
                 _getAppConfigFromNetworkAndWriteToFile(
                     '/config/getAppConfigProduction')
               ]);
@@ -235,69 +235,52 @@ class AppConfigResolver {
 
 class DUIConfig {
   final Map<String, dynamic> _themeConfig;
-  final Map<String, dynamic> _pages;
-  final Map<String, dynamic> _restConfig;
-  final String _initialRoute;
+  final Map<String, Object?> pages;
+  final Map<String, Object?>? components;
+  final Map<String, dynamic> restConfig;
+  final String initialRoute;
   final String? functionsFilePath;
   final Map<String, dynamic>? appState;
   final bool? versionUpdated;
   final int? version;
-  final  Map<String, dynamic>? _environment;
+  final Map<String, dynamic>? _environment;
 
   DUIConfig(dynamic data)
-      : _themeConfig = data['theme'],
-        _pages = data['pages'],
-        _restConfig = data['rest'],
-        _initialRoute = data['appSettings']['initialRoute'],
-        appState = data['appState'],
-        version = data['version'],
-        versionUpdated = data['versionUpdated'],
-        functionsFilePath = data['functionsFilePath'],
-        _environment = data['environment'];
+      : _themeConfig = as<Map<String, dynamic>>(data['theme']),
+        pages = as<Map<String, Object?>>(data['pages']),
+        components = as$<Map<String, Object?>>(data['components']),
+        restConfig = as<Map<String, dynamic>>(data['rest']),
+        initialRoute = as<String>(data['appSettings']['initialRoute']),
+        appState = as$<Map<String, dynamic>>(data['appState']),
+        version = as$<int>(data['version']),
+        versionUpdated = as$<bool>(data['versionUpdated']),
+        functionsFilePath = as$<String>(data['functionsFilePath']),
+        _environment = as$<Map<String, dynamic>>(data['environment']);
 
   // TODO: @tushar - Add support for light / dark theme
-  Map<String, dynamic> get _colors => _themeConfig['colors']['light'];
-  Map<String, dynamic> get _fonts => _themeConfig['fonts'];
+  Map<String, dynamic> get _colors =>
+      as<Map<String, dynamic>>(_themeConfig['colors']['light']);
+
+  Map<String, Object?> get colorTokens =>
+      as<Map<String, Object?>>(_themeConfig['colors']['light']);
+  Map<String, Object?> get fontTokens =>
+      as<Map<String, Object?>>(_themeConfig['fonts']);
 
   String? getColorValue(String colorToken) {
-    return _colors[colorToken];
-  }
-
-  DUIFont getFont(String fontToken) {
-    var fontsJson = (_fonts[fontToken]);
-    return DUIFont.fromJson(fontsJson);
-  }
-
-  // Map<String, dynamic>? getPageConfig(String uid) {
-  //   return _pages[uid];
-  // }
-
-  DUIPageProps getPageData(String pageUid) {
-    final pageConfig = _pages[pageUid];
-    if (pageConfig == null) {
-      throw 'Config for Page: $pageUid not found';
-    }
-    return DUIPageProps.fromJson(pageConfig);
-  }
-
-  DUIPageProps getfirstPageData() {
-    final firstPageConfig = _pages[_initialRoute];
-    if (firstPageConfig == null || firstPageConfig['uid'] == null) {
-      throw 'Config for First Page not found.';
-    }
-
-    return DUIPageProps.fromJson(firstPageConfig);
+    return as$<String>(_colors[colorToken]);
   }
 
   Map<String, dynamic>? getDefaultHeaders() {
-    return _restConfig['defaultHeaders'];
+    return as$<Map<String, dynamic>>(restConfig['defaultHeaders']);
   }
 
-   Map<String, VariableDef> getEnvironmentVariables() {
-    return const VariablesJsonConverter().fromJson(_environment?['variables']);
+  Map<String, Variable> getEnvironmentVariables() {
+    return const VariableJsonConverter()
+        .fromJson(as$<Map<String, dynamic>>(_environment?['variables']));
   }
 
   APIModel getApiDataSource(String id) {
-    return APIModel.fromJson(_restConfig['resources'][id]);
+    return APIModel.fromJson(
+        as<Map<String, dynamic>>(restConfig['resources'][id]));
   }
 }
