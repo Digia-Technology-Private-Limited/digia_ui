@@ -2,7 +2,7 @@ import '../models/types.dart';
 import '../utils/types.dart';
 
 class ImageView360Props {
-  final ExprOr<List<String>>? imageUrlList;
+  final ExprOr<List>? imageUrlList;
   final ExprOr<String>? rotationDirection;
   final ExprOr<int>? frameChangeDuration;
   final ExprOr<int>? swipeSensitivity;
@@ -20,7 +20,7 @@ class ImageView360Props {
 
   factory ImageView360Props.fromJson(JsonLike json) {
     return ImageView360Props(
-      imageUrlList: ExprOr.fromJson<List<String>>(json['imageUrl']),
+      imageUrlList: ExprOr.fromJson<List>(json['imageUrlList']),
       rotationDirection: ExprOr.fromJson<String>(json['rotationDirection']),
       swipeSensitivity: ExprOr.fromJson<int>(json['swipeSensitivity']),
       frameChangeDuration: ExprOr.fromJson<int>(json['frameChangeDuration']),

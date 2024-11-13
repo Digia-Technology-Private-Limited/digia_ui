@@ -27,11 +27,11 @@ class VWImageView360 extends VirtualStatelessWidget<ImageView360Props> {
       }
     }
 
-    final imageUrlList =
-        payload.evalExpr<List<String>>(props.imageUrlList)?.map((e) {
-              return NetworkImage(e);
-            }).toList() ??
-            [];
+    final imageUrlList = payload.evalExpr<List>(props.imageUrlList)?.map((e) {
+          return NetworkImage(e.toString());
+        }).toList() ??
+        [];
+
     return ImageView360(
       key: UniqueKey(),
       imageList: imageUrlList,
