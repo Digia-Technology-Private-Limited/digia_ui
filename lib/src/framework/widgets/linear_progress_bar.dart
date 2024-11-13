@@ -29,6 +29,7 @@ class VWLinearProgressBar extends VirtualLeafStatelessWidget<Props> {
     if (type == 'indeterminate') {
       return SizedBox(
         width: props.getDouble('width'),
+        height: props.getDouble('thickness') ?? 5.0,
         child: LinearProgressIndicator(
           color: payload.evalColor(props.get('indicatorColor')) ?? Colors.blue,
           backgroundColor:
@@ -40,22 +41,49 @@ class VWLinearProgressBar extends VirtualLeafStatelessWidget<Props> {
         ),
       );
     } else {
-      return LinearPercentIndicator(
-        barRadius: Radius.circular(
-          props.getDouble('borderRadius') ?? 0.0,
-        ),
+      return SizedBox(
         width: props.getDouble('width'),
-        lineHeight: props.getDouble('thickness') ?? 5.0,
-        percent: progressValue != null ? progressValue / 100.0 : 0,
-        animation: props.getBool('animation') ?? false,
-        animateFromLastPercent:
-            props.getBool('animateFromLastPercent') ?? false,
-        backgroundColor:
-            payload.evalColor(props.get('bgColor')) ?? Colors.transparent,
-        progressColor:
-            payload.evalColor(props.get('indicatorColor')) ?? Colors.blue,
-        padding: EdgeInsets.zero,
+        height: props.getDouble('thickness') ?? 5.0,
+        child: TweenAnimationBuilder<double>(
+          tween: Tween(
+            begin: 0.0,
+            end: progressValue != null ? progressValue / 100.0 : 0,
+          ),
+          duration: const Duration(milliseconds: 500),
+          builder: (context, value, child) {
+            return LinearProgressIndicator(
+              minHeight: props.getDouble('thickness') ?? 5.0,
+              borderRadius: BorderRadius.all(
+                Radius.circular(
+                  props.getDouble('borderRadius') ?? 0.0,
+                ),
+              ),
+              value: value,
+              color:
+                  payload.evalColor(props.get('indicatorColor')) ?? Colors.blue,
+              backgroundColor:
+                  payload.evalColor(props.get('bgColor')) ?? Colors.transparent,
+            );
+          },
+        ),
       );
+
+      // return LinearPercentIndicator(
+      //   barRadius: Radius.circular(
+      //     props.getDouble('borderRadius') ?? 0.0,
+      //   ),
+      //   width: props.getDouble('width'),
+      //   lineHeight: props.getDouble('thickness') ?? 5.0,
+      //   percent: progressValue != null ? progressValue / 100.0 : 0,
+      //   animation: props.getBool('animation') ?? false,
+      //   animateFromLastPercent:
+      //       props.getBool('animateFromLastPercent') ?? false,
+      //   backgroundColor:
+      //       payload.evalColor(props.get('bgColor')) ?? Colors.transparent,
+      //   progressColor:
+      //       payload.evalColor(props.get('indicatorColor')) ?? Colors.blue,
+      //   padding: EdgeInsets.zero,
+      // );
     }
   }
 }

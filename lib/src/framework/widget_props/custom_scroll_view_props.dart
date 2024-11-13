@@ -9,9 +9,11 @@ class CustomScrollViewProps {
   final ExprOr<bool>? isReverse;
   final String? scrollDirection;
   final bool? allowScroll;
+  final ExprOr<bool>? enableOverlapInjector;
 
   const CustomScrollViewProps({
     this.controller,
+    this.enableOverlapInjector,
     this.isReverse,
     this.scrollDirection,
     this.allowScroll,
@@ -23,6 +25,8 @@ class CustomScrollViewProps {
       isReverse: ExprOr.fromJson<bool>(json['isReverse']),
       scrollDirection: as$<String>(json['scrollDirection']),
       allowScroll: as$<bool>(json['scrollPhysics']),
+      enableOverlapInjector:
+          ExprOr.fromJson<bool>(json['enableOverlapInjector']),
     );
   }
 }

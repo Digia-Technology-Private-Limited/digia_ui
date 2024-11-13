@@ -24,9 +24,12 @@ class VWCustomScrollView extends VirtualStatelessWidget<CustomScrollViewProps> {
 
     final bool isReverse = payload.evalExpr<bool>(props.isReverse) ?? false;
     final bool enableOverlapInjector =
-        NestedScrollViewData.maybeOf(payload.buildContext)
+        payload.evalExpr<bool>(props.enableOverlapInjector) ?? false;
+    final bool addOverlapInjector = enableOverlapInjector
+        ? (NestedScrollViewData.maybeOf(payload.buildContext)
                 ?.enableOverlapAbsorption ??
-            true;
+            false)
+        : false;
 
     return CustomScrollView(
         controller: controller,
@@ -34,7 +37,7 @@ class VWCustomScrollView extends VirtualStatelessWidget<CustomScrollViewProps> {
         scrollDirection: To.axis(props.scrollDirection) ?? Axis.vertical,
         physics: To.scrollPhysics(props.allowScroll),
         slivers: [
-          if (enableOverlapInjector)
+          if (addOverlapInjector)
             SliverOverlapInjector(
               handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
                 payload.buildContext,
