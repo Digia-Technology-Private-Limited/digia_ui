@@ -7,6 +7,7 @@ import 'state/virtual_state_container_widget.dart';
 import 'virtual_widget_registry.dart';
 import 'widget_props/animated_switcher_props.dart';
 import 'widget_props/app_bar_props.dart';
+import 'widget_props/before_after_slider_props.dart';
 import 'widget_props/condtional_item_props.dart';
 import 'widget_props/custom_scroll_view_props.dart';
 import 'widget_props/flex_fit_props.dart';
@@ -15,6 +16,7 @@ import 'widget_props/nested_scroll_view_props.dart';
 import 'widget_props/opacity_props.dart';
 import 'widget_props/paginated_list_view_props.dart';
 import 'widget_props/paginated_sliver_list_props.dart';
+import 'widget_props/image_view_360_props.dart';
 import 'widget_props/pin_field_props.dart';
 import 'widget_props/safe_area_props.dart';
 import 'widget_props/sized_box_props.dart';
@@ -33,6 +35,7 @@ import 'widgets/animated_switcher.dart';
 import 'widgets/app_bar.dart';
 import 'widgets/async_builder.dart';
 import 'widgets/avatar.dart';
+import 'widgets/before_after_slider.dart';
 import 'widgets/button.dart';
 import 'widgets/calendar.dart';
 import 'widgets/checkbox.dart';
@@ -57,6 +60,7 @@ import 'widgets/nested_scroll_view.dart';
 import 'widgets/opacity.dart';
 import 'widgets/paginated_list_view.dart';
 import 'widgets/paginated_sliver_list.dart';
+import 'widgets/imageView360.dart';
 import 'widgets/pin_field.dart';
 import 'widgets/refresh_indicator.dart';
 import 'widgets/rich_text.dart';
@@ -651,6 +655,34 @@ VWRefreshIndicator refreshIndicatorBuilder(
     childGroups: createChildGroups(data.childGroups, parent, registry),
     repeatData: data.repeatData,
   );
+}
+
+VWBeforeAfterSlider beforeAfterSliderBuilder(
+  VWNodeData data,
+  VirtualWidget? parent,
+  VirtualWidgetRegistry registry,
+) {
+  return VWBeforeAfterSlider(
+    props: BeforeAfterSliderProps.fromJson(data.props.value),
+    commonProps: data.commonProps,
+    parent: parent,
+    refName: data.refName,
+    childGroups: createChildGroups(data.childGroups, parent, registry),
+    repeatData: data.repeatData,
+  );
+}
+
+VWImageView360 imageView360Builder(
+  VWNodeData data,
+  VirtualWidget? parent,
+  VirtualWidgetRegistry registry,
+) {
+  return VWImageView360(
+      props: ImageView360Props.fromJson(data.props.value),
+      commonProps: data.commonProps,
+      parent: parent,
+      refName: data.refName,
+      childGroups: createChildGroups(data.childGroups, parent, registry));
 }
 
 VWOpacity opacityBuilder(
