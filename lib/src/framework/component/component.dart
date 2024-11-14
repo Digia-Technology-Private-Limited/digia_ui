@@ -50,6 +50,7 @@ class DUIComponent extends StatelessWidget {
               variables: {...?resolvedArgs},
               enclosing: scope,
             ))));
+
     final inhertiedResources = ResourceProvider.maybeOf(context);
     return ResourceProvider(
         icons: resources?.icons ?? {},
