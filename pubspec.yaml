@@ -92,7 +92,6 @@ dependencies:
   http_parser: ^4.0.2
   file_picker: ^8.0.5
   talker: ^4.3.4
-  percent_indicator: ^4.2.3
   cross_file: ^0.3.4+2
   image_picker: ^1.1.2
 
