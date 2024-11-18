@@ -1,10 +1,12 @@
+import '../models/types.dart';
+
 import '../utils/object_util.dart';
 import '../utils/types.dart';
 
 class TabViewContentProps {
   final bool? isScrollable;
   final double viewportFraction;
-  final bool? keepTabsAlive;
+  final ExprOr<bool>? keepTabsAlive;
 
   TabViewContentProps({
     required this.isScrollable,
@@ -16,7 +18,7 @@ class TabViewContentProps {
     return TabViewContentProps(
       isScrollable: json['isScrollable']?.to<bool>(),
       viewportFraction: json['viewportFraction']?.to<double>() ?? 1.0,
-      keepTabsAlive: json['keepTabsAlive']?.to<bool>(),
+      keepTabsAlive: ExprOr.fromJson(json['keepTabsAlive']),
     );
   }
 }
