@@ -65,23 +65,6 @@ class VWLinearProgressBar extends VirtualLeafStatelessWidget<Props> {
           },
         ),
       );
-
-      // return LinearPercentIndicator(
-      //   barRadius: Radius.circular(
-      //     props.getDouble('borderRadius') ?? 0.0,
-      //   ),
-      //   width: props.getDouble('width'),
-      //   lineHeight: props.getDouble('thickness') ?? 5.0,
-      //   percent: progressValue != null ? progressValue / 100.0 : 0,
-      //   animation: props.getBool('animation') ?? false,
-      //   animateFromLastPercent:
-      //       props.getBool('animateFromLastPercent') ?? false,
-      //   backgroundColor:
-      //       payload.evalColor(props.get('bgColor')) ?? Colors.transparent,
-      //   progressColor:
-      //       payload.evalColor(props.get('indicatorColor')) ?? Colors.blue,
-      //   padding: EdgeInsets.zero,
-      // );
     }
   }
 }
