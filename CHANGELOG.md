@@ -2,6 +2,10 @@
 
 Digia Ui Sdk.
 
+## [0.0.7] - 2024-11-12
+
+- 1) Introduction of Virtual Widgets 2) State Containers  3) Components
+
 ## [0.0.6-beta.35] - 2024-10-10
 
 - Tab reload fix
