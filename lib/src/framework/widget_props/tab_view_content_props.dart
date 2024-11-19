@@ -18,7 +18,7 @@ class TabViewContentProps {
     return TabViewContentProps(
       isScrollable: json['isScrollable']?.to<bool>(),
       viewportFraction: json['viewportFraction']?.to<double>() ?? 1.0,
-      keepTabsAlive: ExprOr.fromJson(json['keepTabsAlive']),
+      keepTabsAlive: ExprOr.fromJson<bool>(json['keepTabsAlive']),
     );
   }
 }
