@@ -11,7 +11,7 @@ class CarouselProps {
   final double aspectRatio;
   final int initialPage;
   final bool enlargeCenterPage;
-  final double viewPortFraction;
+  final double viewportFraction;
   final bool autoPlay;
   final int animationDuration;
   final int autoPlayInterval;
@@ -23,10 +23,10 @@ class CarouselProps {
     this.width,
     this.height,
     this.direction = Axis.horizontal, // Default value for `direction`
-    this.aspectRatio = 1.78,
+    this.aspectRatio = 0.25,
     this.initialPage = 1,
     this.enlargeCenterPage = false, // Default value for `enlargeCenterPage`
-    this.viewPortFraction = 0.8,
+    this.viewportFraction = 0.8,
     this.autoPlay = false,
     this.animationDuration = 800,
     this.autoPlayInterval = 1600,
@@ -41,10 +41,10 @@ class CarouselProps {
       width: as$<String>(json['width']),
       height: as$<String>(json['height']),
       direction: To.axis(as$<String>(json['direction'])) ?? Axis.horizontal,
-      aspectRatio: as$<double>(json['aspectRatio']) ?? 1.78,
+      aspectRatio: as$<double>(json['aspectRatio']) ?? 0.25,
       initialPage: as$<int>(json['initialPage']) ?? 1,
       enlargeCenterPage: as$<bool>(json['enlargeCenterPage']) ?? false,
-      viewPortFraction: as$<double>(json['viewPortFraction']) ?? 0.8,
+      viewportFraction: as$<double>(json['viewportFraction']) ?? 0.8,
       autoPlay: as$<bool>(json['autoPlay']) ?? false,
       animationDuration: as$<int>(json['animationDuration']) ?? 800,
       autoPlayInterval: as$<int>(json['autoPlayInterval']) ?? 1600,
