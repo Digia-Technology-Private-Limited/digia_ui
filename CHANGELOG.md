@@ -2,6 +2,10 @@
 
 Digia Ui Sdk.
 
+## [0.1.2] - 2024-11-26
+
+- Bug Fixes in TimerController
+
 ## [0.1.1] - 2024-11-26
 
 - Bug fixes
