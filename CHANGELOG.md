@@ -2,6 +2,10 @@
 
 Digia Ui Sdk.
 
+## [0.2.0] - 2024-11-26
+
+- Bug fixes
+
 ## [0.1.0] - 2024-11-19
 
 - 1. SDK Revamp - Introduction of State Containers & Components
