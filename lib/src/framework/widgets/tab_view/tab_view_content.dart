@@ -34,14 +34,15 @@ class VWTabViewContent extends VirtualStatelessWidget<TabViewContentProps> {
         physics: props.isScrollable.maybe(To.scrollPhysics),
         viewportFraction: props.viewportFraction,
         children: List.generate(controller.length, (index) {
+          final updatedPayload = payload.copyWithChainedContext(
+            _createExprContext(
+              controller.tabs[index],
+              index,
+            ),
+          );
           return KeepAliveWrapper(
-            keepTabsAlive: props.keepTabsAlive,
-            child: child!.toWidget(payload.copyWithChainedContext(
-              _createExprContext(
-                controller.tabs[index],
-                index,
-              ),
-            )),
+            keepTabsAlive: updatedPayload.evalExpr<bool>(props.keepTabsAlive),
+            child: child!.toWidget(updatedPayload),
           );
         }));
   }
