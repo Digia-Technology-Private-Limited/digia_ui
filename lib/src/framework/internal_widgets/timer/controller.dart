@@ -18,7 +18,9 @@ class TimerController implements ExprInstance {
     required this.isCountDown,
     required this.duration,
   })  : _currentValue = initialValue,
-        _controller = StreamController<int>();
+        _controller = StreamController<int>.broadcast();
+
+  bool _isRunning = false;
 
   Stream<int> get stream => _controller.stream;
 
@@ -26,6 +28,9 @@ class TimerController implements ExprInstance {
   int get currentValue => _currentValue;
 
   void start() {
+    if (_isRunning) return;
+    _isRunning = true;
+
     final periodicStream = Stream<int>.periodic(updateInterval, (count) {
       if (isCountDown) {
         return initialValue - count;
@@ -40,6 +45,7 @@ class TimerController implements ExprInstance {
         _controller.add(value);
       },
       onDone: () {
+        _isRunning = false;
         _controller.close();
       },
     );
@@ -48,6 +54,7 @@ class TimerController implements ExprInstance {
   void reset() {
     _subscription?.cancel();
     _currentValue = initialValue;
+    _isRunning = false;
     start();
   }
 
@@ -60,8 +67,11 @@ class TimerController implements ExprInstance {
   }
 
   void dispose() {
-    _subscription?.cancel();
-    _controller.close();
+    if (!_controller.hasListener) {
+      _subscription?.cancel();
+      _isRunning = false;
+      _controller.close();
+    }
   }
 
   @override
