@@ -2,6 +2,10 @@
 
 Digia Ui Sdk.
 
+## [0.1.3] - 2024-11-28
+
+- BugFix: Rebuild Page was not working.
+
 ## [0.1.2] - 2024-11-26
 
 - Bug Fixes in TimerController
