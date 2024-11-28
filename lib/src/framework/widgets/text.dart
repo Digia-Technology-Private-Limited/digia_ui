@@ -16,7 +16,7 @@ class VWText extends VirtualLeafStatelessWidget<TextProps> {
 
   @override
   Widget render(RenderPayload payload) {
-    final text = payload.evalExpr(props.text);
+    final text = payload.evalExpr(props.text) ?? 'Default text';
     final style = payload.getTextStyle(props.textStyle);
     final maxLines = payload.evalExpr(props.maxLines);
     final alignment = To.textAlign(payload.evalExpr(props.alignment));
