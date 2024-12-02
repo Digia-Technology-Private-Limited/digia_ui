@@ -2,6 +2,10 @@
 
 Digia Ui Sdk.
 
+## [0.1.4] - 2024-12-02
+
+- Added missing export in Digia UI client
+
 ## [0.1.3] - 2024-11-28
 
 - BugFix: Rebuild Page was not working.
