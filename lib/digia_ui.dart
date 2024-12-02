@@ -7,6 +7,7 @@ export 'package:digia_ui/src/dui_app.dart';
 export 'package:digia_ui/src/dui_dev_config.dart';
 export 'package:digia_ui/src/dui_logger.dart';
 export 'package:digia_ui/src/environment.dart';
+export 'package:digia_ui/src/framework/actions/base/action_flow.dart';
 export 'package:digia_ui/src/framework/base/message_handler.dart';
 export 'package:digia_ui/src/framework/base/virtual_leaf_stateless_widget.dart';
 export 'package:digia_ui/src/framework/font_factory.dart';
