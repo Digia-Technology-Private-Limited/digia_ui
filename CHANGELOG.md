@@ -2,6 +2,11 @@
 
 Digia Ui Sdk.
 
+## [0.1.5] - 2024-12-09
+
+- - Gridview padding removed
+- - typo fix in File.
+
 ## [0.1.4] - 2024-12-02
 
 - Added missing export in Digia UI client
