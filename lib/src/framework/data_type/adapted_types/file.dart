@@ -55,7 +55,7 @@ class AdaptedFile implements ExprInstance {
   }
 
   @override
-  Object? getField(String name) => switch (name) {
+  Object? getField(String data) => switch (data) {
         'name' => name,
         'size' => size,
         'identifier' => identifier,

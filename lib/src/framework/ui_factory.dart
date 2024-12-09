@@ -106,7 +106,7 @@ class DUIFactory {
       Map<String, List<VirtualWidget>>? childGroups,
     ) builder,
   ) {
-    widgetRegistry.registerJsonWidget(type, builder);
+   widgetRegistry.registerJsonWidget(type, builder);
   }
 
   // Create a page with optional overriding UI resources
