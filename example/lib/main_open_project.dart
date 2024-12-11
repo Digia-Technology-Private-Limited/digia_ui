@@ -10,11 +10,10 @@ void main() async {
   runApp(DUIApp(
       digiaAccessKey: "665ae4e5c625f442b6c5515e",
       baseUrl: baseUrl,
-      flavorInfo: Staging(),
+      // flavorInfo: Staging(),
       // environmentInfo: Versioned(19),
       // environmentInfo: Production(PrioritizeNetwork(5), 'assets/prodAppConfig.json','assets/functions.js'),
-      // flavorInfo: Release(PrioritizeCache(),
-      //     'assets/prodAppConfig.json', 'assets/functions.js'),
+      flavorInfo: Release(initPriority: PrioritizeNetwork(3000)),
       environment: Environment.development.name,
       // environmentInfo: Production(PrioritizeLocal(), 'assets/prodAppConfig.json','assets/functions.js'),
       navigatorKey: null,
@@ -23,6 +22,7 @@ void main() async {
       networkConfiguration:
           NetworkConfiguration(defaultHeaders: {}, timeout: 30),
       analytics: MyAnalytics()));
+  print("hello world");
 }
 
 class MyAnalytics extends DUIAnalytics {

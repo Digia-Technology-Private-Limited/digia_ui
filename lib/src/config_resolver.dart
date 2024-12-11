@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_js/extensions/fetch.dart';
 
 import '../digia_ui.dart';
 import 'Utils/file_operations.dart';
+import 'core/functions/config_file.dart';
 import 'core/functions/download.dart';
 import 'core/functions/js_functions.dart';
 import 'framework/data_type/variable.dart';
@@ -30,12 +32,29 @@ class AppConfigResolver {
   Future<Map<String, dynamic>?> _getAppConfigFromNetworkAndWriteToFile(
       String path) async {
     try {
+      // Fetch the app config data from the network
       final data = await _getAppConfigFromNetwork(path);
-      if (data != null && data.isNotEmpty && data['versionUpdated'] == true) {
-        await writeStringToFile(json.encode(data), 'appConfig.json');
+
+      // Check if the data is not null
+      if (data != null) {
+        // Download the app config file if the URL is available
+        if (data['appConfigFileUrl'] != null && data['version'] != null) {
+          await downloadAppConfigFile(
+            data['appConfigFileUrl'],
+            ConfigFile.getConfigFileName(data['version']),
+          );
+        }
+
+        // Write the data to a file if `versionUpdated` is true
+        if (data['versionUpdated'] == true) {
+          await writeStringToFile(json.encode(data), 'appConfig.json');
+        }
       }
+
       return data;
     } catch (e) {
+      // Log the error for debugging purposes
+      print('Error fetching or processing app config: $e');
       return null;
     }
   }
@@ -67,13 +86,39 @@ class AppConfigResolver {
     }
   }
 
+  Future<void> _initAppConfig(
+      {String? remotePath, String? localPath, int? version}) async {
+    print(version);
+    if (remotePath != null) {
+      var appConfig = ConfigFile();
+      var res = await appConfig
+          .initAppConfig(PreferConfigRemote(remotePath, version));
+      if (!res) {
+        throw _buildInitException('Functions not initialized');
+      }
+      DigiaUIClient.instance.config = DUIConfig(appConfig);
+    }
+    if (localPath != null) {
+      var appConfig = ConfigFile();
+      var res = await appConfig.initAppConfig(PreferConfigLocal(localPath));
+      if (!res) {
+        throw _buildInitException('Functions not initialized');
+      }
+      DigiaUIClient.instance.config = DUIConfig(appConfig);
+    }
+  }
+
   void _fetchAndCacheProductionAppConfigAndFunctions() async {
     try {
       var config = DUIConfig(await _getAppConfigFromNetworkAndWriteToFile(
-          '/config/getAppConfigProduction'));
+          '/config/getAppConfigRelase'));
       if (config.functionsFilePath != null) {
         downloadFunctionsFile(config.functionsFilePath!,
             JSFunctions.getFunctionsFileName(config.version));
+      }
+      if (config.appConfigFileUrl != null) {
+        downloadAppConfigFile(config.appConfigFileUrl!,
+            ConfigFile.getConfigFileName(config.version));
       }
     } catch (e) {
       print(
@@ -110,20 +155,27 @@ class AppConfigResolver {
           initPriority: InitPriority initPriority,
           appConfigPath: String appConfigPath,
           functionsPath: String functionsPath
+          //
         ):
+
         // If Web priority doesnt matter. Always fetch from network
         if (kIsWeb) {
           try {
-            appConfig = DUIConfig(await _getAppConfigFromNetwork(
-                '/config/getAppConfigProduction'));
+            appConfig = DUIConfig(
+                await _getAppConfigFromNetwork('/config/getAppConfigRelease'));
           } catch (e) {
             throw _buildInitException('Invalid AppConfig or fetch failed');
           }
           await _initFunctions(
               remotePath: appConfig.functionsFilePath,
               version: appConfig.version);
+          await _initAppConfig(
+              remotePath: appConfig.appConfigFileUrl,
+              version: appConfig.version);
+
           return appConfig;
         }
+
         try {
           var cachedAppConfigJson = await readFileString('appConfig.json');
           cachedAppConfig = DUIConfig(
@@ -153,7 +205,7 @@ class AppConfigResolver {
               var result = await Future.any([
                 Future<Object?>.delayed(Duration(seconds: timeout)),
                 _getAppConfigFromNetworkAndWriteToFile(
-                    '/config/getAppConfigProduction')
+                    '/config/getAppConfigRelease')
               ]);
               if (result == null) {
                 throw _buildInitException('Invalid AppConfig or fetch failed');
@@ -161,6 +213,9 @@ class AppConfigResolver {
                 appConfig = DUIConfig(result);
                 await _initFunctions(
                     remotePath: appConfig.functionsFilePath,
+                    version: appConfig.version);
+                await _initAppConfig(
+                    remotePath: appConfig.appConfigFileUrl,
                     version: appConfig.version);
                 return appConfig;
               }
@@ -216,6 +271,15 @@ class AppConfigResolver {
             remotePath: appConfig.functionsFilePath,
             version: appConfig.version);
         return appConfig;
+      default:
+        try {
+          appConfig =
+              DUIConfig(await _getAppConfigFromNetwork('/config/getAppConfig'));
+        } catch (e) {
+          throw _buildInitException('Invalid AppConfig or fetch failed');
+        }
+        await _initFunctions(remotePath: appConfig.functionsFilePath);
+        return appConfig;
     }
   }
 
@@ -240,6 +304,7 @@ class DUIConfig {
   final Map<String, dynamic> restConfig;
   final String initialRoute;
   final String? functionsFilePath;
+  final String? appConfigFileUrl;
   final Map<String, dynamic>? appState;
   final bool? versionUpdated;
   final int? version;
@@ -255,6 +320,7 @@ class DUIConfig {
         version = as$<int>(data['version']),
         versionUpdated = as$<bool>(data['versionUpdated']),
         functionsFilePath = as$<String>(data['functionsFilePath']),
+        appConfigFileUrl = as$<String>(data['appConfigFileUrl']),
         _environment = as$<Map<String, dynamic>>(data['environment']);
 
   // TODO: @tushar - Add support for light / dark theme

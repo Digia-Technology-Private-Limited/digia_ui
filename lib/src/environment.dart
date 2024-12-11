@@ -17,9 +17,9 @@ class Debug extends FlavorInfo {
 
 class Release extends FlavorInfo {
   InitPriority initPriority;
-  String appConfigPath;
-  String functionsPath;
-  Release(this.initPriority, this.appConfigPath, this.functionsPath)
+  String? appConfigPath;
+  String? functionsPath;
+  Release({required this.initPriority, this.appConfigPath, this.functionsPath})
       : super(Flavor.release);
 }
 
