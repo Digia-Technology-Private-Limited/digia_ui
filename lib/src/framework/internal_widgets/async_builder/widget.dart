@@ -15,7 +15,7 @@ class AsyncBuilder<T> extends StatefulWidget {
   });
 
   @override
-  _AsyncBuilderState<T> createState() => _AsyncBuilderState<T>();
+  State<AsyncBuilder> createState() => _AsyncBuilderState<T>();
 }
 
 class _AsyncBuilderState<T> extends State<AsyncBuilder<T>> {
