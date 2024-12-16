@@ -2,6 +2,10 @@
 
 Digia Ui Sdk.
 
+## [0.1.6] - 2024-12-16
+
+- Prepared for flutter 3.24
+
 ## [0.1.5] - 2024-12-09
 
 - - Gridview padding removed
