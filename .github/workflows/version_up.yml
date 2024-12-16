@@ -52,4 +52,4 @@ jobs:
           flutter: true
           skipTests: true
           force: true
-          flutterBranch: 3.19.0
+          flutterBranch: 3.24.0
