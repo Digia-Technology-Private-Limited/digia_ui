@@ -56,98 +56,63 @@ class ActionProcessorFactory {
 
   ActionProcessorFactory(this.dependencies, this.logger);
 
+  ActionProcessor? actionProcessor;
   ActionProcessor getProcessor(an.Action action) {
     switch (action.actionType) {
       case an.ActionType.callRestApi:
-        return CallRestApiProcessor(
+        actionProcessor = CallRestApiProcessor(
           executeActionFlow: dependencies.executeActionFlow,
-          logger: logger,
         );
       case an.ActionType.controlDrawer:
-        return ControlDrawerProcessor(
-          logger: logger,
-        );
+        actionProcessor = ControlDrawerProcessor();
       case an.ActionType.controlObject:
-        return ControlObjectProcessor(
+        actionProcessor = ControlObjectProcessor(
           registry: dependencies.bindingRegistry,
-          logger: logger,
         );
       case an.ActionType.copyToClipBoard:
-        return CopyToClipBoardProcessor(
-          logger: logger,
-        );
+        actionProcessor = CopyToClipBoardProcessor();
       case an.ActionType.delay:
-        return DelayProcessor(
-          logger: logger,
-        );
-      // case an.ActionType.imagePicker:
-      // return ImagePickerProcessor();
+        actionProcessor = DelayProcessor();
       case an.ActionType.navigateBack:
-        return NavigateBackProcessor(
-          logger: logger,
-        );
+        actionProcessor = NavigateBackProcessor();
       case an.ActionType.navigateBackUntil:
-        return NavigateBackUntilProcessor(
-          logger: logger,
-        );
+        actionProcessor = NavigateBackUntilProcessor();
       case an.ActionType.navigateToPage:
-        return NavigateToPageProcessor(
+        actionProcessor = NavigateToPageProcessor(
           executeActionFlow: dependencies.executeActionFlow,
           pageRouteBuilder: dependencies.pageRouteBuilder,
-          logger: logger,
         );
       case an.ActionType.openUrl:
-        return OpenUrlProcessor(
-          logger: logger,
-        );
+        actionProcessor = OpenUrlProcessor();
       case an.ActionType.postMessage:
-        return PostMessageProcessor(
-          logger: logger,
-        );
+        actionProcessor = PostMessageProcessor();
       case an.ActionType.rebuildState:
-        return RebuildStateProcessor(
-          logger: logger,
-        );
-      // case an.ActionType.setAppState:
-      // return SetAppStateProcessor();
+        actionProcessor = RebuildStateProcessor();
       case an.ActionType.setState:
-        return SetStateProcessor(
-          logger: logger,
-        );
+        actionProcessor = SetStateProcessor();
       case an.ActionType.shareContent:
-        return ShareProcessor(
-          logger: logger,
-        );
+        actionProcessor = ShareProcessor();
       case an.ActionType.showDialog:
-        return ShowDialogProcessor(
+        actionProcessor = ShowDialogProcessor(
           viewBuilder: dependencies.viewBuilder,
           executeActionFlow: dependencies.executeActionFlow,
-          logger: logger,
         );
       case an.ActionType.showToast:
-        return ShowToastProcessor(
-          logger: logger,
-        );
+        actionProcessor = ShowToastProcessor();
       case an.ActionType.showBottomSheet:
-        return ShowBottomSheetProcessor(
+        actionProcessor = ShowBottomSheetProcessor(
           executeActionFlow: dependencies.executeActionFlow,
           viewBuilder: dependencies.viewBuilder,
-          logger: logger,
         );
       case an.ActionType.filePicker:
-        return FilePickerProcessor(
-          logger: logger,
-        );
+        actionProcessor = FilePickerProcessor();
       case an.ActionType.uploadFile:
-        return UploadProcessor(
+        actionProcessor = UploadProcessor(
           executeActionFlow: dependencies.executeActionFlow,
-          logger: logger,
         );
       case an.ActionType.imagePicker:
     }
     // TODO: Remove later
-    return ShowToastProcessor(
-      logger: logger,
-    );
+    return (actionProcessor ?? ShowToastProcessor())..logger = logger;
   }
 }

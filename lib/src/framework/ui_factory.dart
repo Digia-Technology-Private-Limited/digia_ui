@@ -132,7 +132,6 @@ class DUIFactory {
 
     final handler =
         messageHandler?.propagateHandler == true ? messageHandler : null;
-    final pageDef = configProvider.getPageDefinition(pageId);
 
     return DefaultActionExecutor(
       actionExecutor: ActionExecutor(
@@ -148,7 +147,7 @@ class DUIFactory {
         pageArgs: pageArgs,
         resources: mergedResources,
         navigatorKey: navigatorKey,
-        pageDef: pageDef,
+        pageDef: configProvider.getPageDefinition(pageId),
         registry: widgetRegistry,
         apiModels: configProvider.getAllApiModels(),
         messageHandler: messageHandler,
@@ -237,8 +236,6 @@ class DUIFactory {
       fontFactory: resources.fontFactory,
     );
 
-    final componentDef = configProvider.getComponentDefinition(componentid);
-
     return DefaultActionExecutor(
       actionExecutor: ActionExecutor(
         viewBuilder: (context, id, args) =>
@@ -253,7 +250,7 @@ class DUIFactory {
         args: args,
         resources: mergedResources,
         navigatorKey: navigatorKey,
-        definition: componentDef,
+        definition: configProvider.getComponentDefinition(componentid),
         registry: widgetRegistry,
         apiModels: configProvider.getAllApiModels(),
         messageHandler: messageHandler,
