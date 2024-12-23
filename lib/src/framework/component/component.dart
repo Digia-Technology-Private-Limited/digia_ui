@@ -50,14 +50,19 @@ class DUIComponent extends StatelessWidget {
               variables: {...?resolvedArgs},
               enclosing: scope,
             ))));
+
+    final inhertiedResources = ResourceProvider.maybeOf(context);
     return ResourceProvider(
         icons: resources?.icons ?? {},
         images: resources?.images ?? {},
         textStyles: resources?.textStyles ?? {},
+        fontFactory: resources?.fontFactory,
         colors: resources?.colors ?? {},
         apiModels: apiModels ?? {},
-        messageHandler: messageHandler,
-        navigatorKey: navigatorKey,
+        // Only these two need to be passed. Rest all values are
+        // configured at initialization time.
+        messageHandler: messageHandler ?? inhertiedResources?.messageHandler,
+        navigatorKey: navigatorKey ?? inhertiedResources?.navigatorKey,
         child: StatefulScopeWidget(
           namespace: id,
           initialState: resolvedState ?? {},

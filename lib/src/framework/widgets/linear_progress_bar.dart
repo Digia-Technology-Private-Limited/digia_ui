@@ -41,6 +41,7 @@ class VWLinearProgressBar extends VirtualLeafStatelessWidget<Props> {
       );
     } else {
       return LinearPercentIndicator(
+        addAutomaticKeepAlive: false,
         barRadius: Radius.circular(
           props.getDouble('borderRadius') ?? 0.0,
         ),

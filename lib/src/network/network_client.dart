@@ -89,6 +89,7 @@ class NetworkClient {
     required HttpMethod method,
     //these headers get appended to baseHeaders, a default Dio behavior
     Map<String, dynamic>? additionalHeaders,
+    CancelToken? cancelToken,
     Object? data,
   }) {
     //Remove headers already passed in baseHeaders
@@ -103,6 +104,7 @@ class NetworkClient {
 
     return projectDioInstance.request(url,
         data: data,
+        cancelToken: cancelToken,
         options:
             Options(method: method.stringValue, headers: additionalHeaders));
   }
@@ -170,6 +172,7 @@ class NetworkClient {
     Map<String, dynamic>? additionalHeaders,
     Object? data,
     required void Function(int, int) uploadProgress,
+    CancelToken? cancelToken,
   }) {
     //Remove headers already passed in baseHeaders
     if (additionalHeaders != null) {
@@ -186,6 +189,7 @@ class NetworkClient {
     return projectDioInstance.request(
       url,
       data: data,
+      cancelToken: cancelToken,
       options: Options(
         method: method.stringValue,
         headers: additionalHeaders,

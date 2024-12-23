@@ -26,7 +26,7 @@ class VWCustomScrollView extends VirtualStatelessWidget<CustomScrollViewProps> {
     final bool enableOverlapInjector =
         NestedScrollViewData.maybeOf(payload.buildContext)
                 ?.enableOverlapAbsorption ??
-            true;
+            false;
 
     return CustomScrollView(
         controller: controller,

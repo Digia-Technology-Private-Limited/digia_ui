@@ -7,7 +7,7 @@ import 'base/virtual_widget.dart';
 import 'component/component.dart';
 import 'data_type/method_bindings/method_binding_registry.dart';
 import 'expr/default_scope_context.dart';
-import 'models/vw_data.dart';
+import 'font_factory.dart';
 import 'page/config_provider.dart';
 import 'page/page.dart';
 import 'page/page_controller.dart';
@@ -40,7 +40,7 @@ class DefaultActionExecutor extends InheritedWidget {
   bool updateShouldNotify(DefaultActionExecutor oldWidget) => false;
 }
 
-class DUIFactory with StateContainerAnalyzer {
+class DUIFactory {
   static final DUIFactory _instance = DUIFactory._internal();
 
   factory DUIFactory() {
@@ -59,6 +59,7 @@ class DUIFactory with StateContainerAnalyzer {
     ConfigProvider? pageConfigProvider,
     Map<String, IconData>? icons,
     Map<String, ImageProvider>? images,
+    DUIFontFactory? fontFactory,
   }) {
     widgetRegistry = DefaultVirtualWidgetRegistry(
       componentBuilder: (id, args) => createComponent(id, args),
@@ -70,8 +71,12 @@ class DUIFactory with StateContainerAnalyzer {
     resources = UIResources(
       icons: icons,
       images: images,
-      textStyles: DigiaUIClient.instance.config.fontTokens
-          .map((key, value) => MapEntry(key, convertToTextStyle(value))),
+      textStyles:
+          DigiaUIClient.instance.config.fontTokens.map((key, value) => MapEntry(
+                key,
+                convertToTextStyle(value, fontFactory),
+              )),
+      fontFactory: fontFactory,
       colors: DigiaUIClient.instance.config.colorTokens.map(
         (key, value) => MapEntry(
           key,
@@ -122,19 +127,12 @@ class DUIFactory with StateContainerAnalyzer {
       images: {...?resources.images, ...?overrideImages},
       textStyles: {...?resources.textStyles, ...?overrideTextStyles},
       colors: {...?resources.colors, ...?overrideColorTokens},
+      fontFactory: resources.fontFactory,
     );
 
     final handler =
         messageHandler?.propagateHandler == true ? messageHandler : null;
     final pageDef = configProvider.getPageDefinition(pageId);
-
-    DigiaUIClient.instance.developerConfig?.logger?.logEntity(
-      entitySlug: pageId,
-      eventName: 'INITIALIZATION',
-      argDefs: pageDef.pageArgDefs ?? {},
-      initStateDefs: pageDef.initStateDefs ?? {},
-      stateContainerVariables: analyzeStateContainers(pageDef.layout?.root),
-    );
 
     return DefaultActionExecutor(
       actionExecutor: ActionExecutor(
@@ -236,18 +234,10 @@ class DUIFactory with StateContainerAnalyzer {
       images: {...?resources.images, ...?overrideImages},
       textStyles: {...?resources.textStyles, ...?overrideTextStyles},
       colors: {...?resources.colors, ...?overrideColorTokens},
+      fontFactory: resources.fontFactory,
     );
 
     final componentDef = configProvider.getComponentDefinition(componentid);
-
-    DigiaUIClient.instance.developerConfig?.logger?.logEntity(
-      entitySlug: componentid,
-      eventName: 'INITIALIZATION',
-      argDefs: componentDef.argDefs ?? {},
-      initStateDefs: componentDef.initStateDefs ?? {},
-      stateContainerVariables:
-          analyzeStateContainers(componentDef.layout?.root),
-    );
 
     return DefaultActionExecutor(
       actionExecutor: ActionExecutor(
@@ -307,49 +297,13 @@ class UIResources {
   final Map<String, ImageProvider>? images;
   final Map<String, TextStyle?>? textStyles;
   final Map<String, Color?>? colors;
+  final DUIFontFactory? fontFactory;
 
   UIResources({
     required this.icons,
     required this.images,
     required this.textStyles,
     required this.colors,
+    this.fontFactory,
   });
-}
-
-mixin StateContainerAnalyzer {
-  Map<String, Object?> analyzeStateContainers(VWData? root) {
-    final containers = <String, Object?>{};
-
-    void traverse(VWData? node) {
-      if (node == null) return;
-
-      if (node is VWStateData) {
-        final containerName =
-            node.refName ?? 'anonymous_state_${containers.length}';
-        containers[containerName] = Map.fromEntries(node.initStateDefs.entries
-            .map((e) => MapEntry(e.key, e.value.defaultValue)));
-      }
-
-      // Traverse children
-      Map<String, List<VWData>>? childGroups;
-      if (node is VWStateData) {
-        childGroups = node.childGroups;
-      } else if (node is VWNodeData) {
-        childGroups = node.childGroups;
-      } else {
-        childGroups = null;
-      }
-
-      if (childGroups != null) {
-        for (var children in childGroups.values) {
-          for (var child in children) {
-            traverse(child);
-          }
-        }
-      }
-    }
-
-    traverse(root);
-    return containers;
-  }
 }

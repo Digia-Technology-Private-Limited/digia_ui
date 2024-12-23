@@ -8,7 +8,6 @@
 # The following line activates a set of recommended lints for Flutter apps,
 # packages, and plugins designed to encourage good coding practices.
 include: package:flutter_lints/flutter.yaml
-  package:lints/recommended.yaml
 
 linter:
   # The lint rules applied to this project can be customized in the
@@ -30,8 +29,3 @@ linter:
 # Additional information about this file can be found at
 # https://dart.dev/guides/language/analysis-options
 
-# analyzer:
-#   language:
-#     strict-casts: true
-#     strict-inference: true
-#     strict-raw-types: true

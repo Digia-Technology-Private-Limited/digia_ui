@@ -29,6 +29,7 @@ class _InternalGridViewState extends State<InternalGridView> {
   Widget build(BuildContext context) {
     if (widget.itemBuilder != null) {
       return GridView.builder(
+        padding: EdgeInsets.zero,
         controller: widget.controller,
         physics: widget.physics,
         shrinkWrap: widget.shrinkWrap,

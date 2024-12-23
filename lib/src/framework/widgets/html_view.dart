@@ -1,6 +1,5 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_html/flutter_html.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import '../base/virtual_leaf_stateless_widget.dart';
 import '../models/props.dart';
@@ -42,7 +41,7 @@ Style _makeStyle(RenderPayload payload, Props styleMap) {
       To.textOverflow(payload.eval<String>(styleMap.get('textOverflow')));
 
   final googleFont = (styleMap.getString('fontFamily')).maybe(
-    (p0) => GoogleFonts.getFont(p0,
+    (p0) => payload.getFontFactory()?.getFont(p0,
         fontSize: payload.eval<double>(styleMap.get('fontSize')),
         fontStyle:
             To.fontStyle(payload.eval<String>(styleMap.get('fontStyle'))),

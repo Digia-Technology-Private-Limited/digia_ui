@@ -11,7 +11,6 @@ class DUIPageDefinition {
   final Map<String, Variable>? pageArgDefs;
   final Map<String, Variable>? initStateDefs;
   final ({VWData? root})? layout;
-  final JsonLike? pageDataSource;
   final ActionFlow? onPageLoad;
   final ActionFlow? onBackPress;
 
@@ -20,7 +19,6 @@ class DUIPageDefinition {
     required this.pageArgDefs,
     required this.initStateDefs,
     required this.layout,
-    required this.pageDataSource,
     required this.onPageLoad,
     required this.onBackPress,
   });
@@ -43,7 +41,6 @@ class DUIPageDefinition {
       layout: as$<JsonLike>(json.valueFor('layout.root')).maybe(
         (p0) => (root: VWData.fromJson(p0)),
       ),
-      pageDataSource: as$<JsonLike>(json.valueFor('actions.onPageLoad')),
       onPageLoad: as$<JsonLike>(json.valueFor('actions.onPageLoadAction'))
           .maybe(ActionFlow.fromJson),
       onBackPress: as$<JsonLike>(json.valueFor('actions.onBackPress'))
