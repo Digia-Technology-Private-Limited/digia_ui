@@ -47,6 +47,10 @@ class ShowDialogProcessor extends ActionProcessor<ShowDialogAction> {
         'barrierDismissible': barrierDismissible,
         'barrierColor': barrierColor.toString(),
         'waitForResult': waitForResult,
+        'onResult': action.onResult?.actions
+            .map((a) => a.actionType.value)
+            .toList()
+            .toString(),
       },
     );
 
@@ -67,6 +71,13 @@ class ShowDialogProcessor extends ActionProcessor<ShowDialogAction> {
     );
 
     if (waitForResult && context.mounted) {
+      logAction(
+        '${action.actionType.value} - Result',
+        {
+          'viewId': action.viewId,
+          'result': result,
+        },
+      );
       await executeActionFlow(
         context,
         action.onResult ?? ActionFlow.empty(),

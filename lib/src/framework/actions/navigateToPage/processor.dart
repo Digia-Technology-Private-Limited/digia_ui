@@ -52,7 +52,10 @@ class NavigateToPageProcessor extends ActionProcessor<NavigateToPageAction> {
         'waitForResult': action.waitForResult,
         'shouldRemovePreviousScreensInStack': removePreviousScreensInStack,
         'routeNametoRemoveUntil': routeNametoRemoveUntil,
-        'onResult': action.onResult,
+        'onResult': action.onResult?.actions
+            .map((a) => a.actionType.value)
+            .toList()
+            .toString(),
       },
     );
 
@@ -76,6 +79,13 @@ class NavigateToPageProcessor extends ActionProcessor<NavigateToPageAction> {
     );
 
     if (action.waitForResult && context.mounted) {
+      logAction(
+        '${action.actionType.value} - Result',
+        {
+          'pageId': pageId,
+          'result': result,
+        },
+      );
       await executeActionFlow(
         context,
         action.onResult ?? ActionFlow.empty(),

@@ -63,6 +63,10 @@ class ShowBottomSheetProcessor extends ActionProcessor<ShowBottomSheetAction> {
         'viewId': action.viewId,
         'args': action.args,
         'style': style,
+        'onResult': action.onResult?.actions
+            .map((a) => a.actionType.value)
+            .toList()
+            .toString(),
       },
     );
 
@@ -105,6 +109,13 @@ class ShowBottomSheetProcessor extends ActionProcessor<ShowBottomSheetAction> {
         }));
 
     if (action.waitForResult && context.mounted) {
+      logAction(
+        '${action.actionType.value} - Result',
+        {
+          'viewId': action.viewId,
+          'result': result,
+        },
+      );
       await executeActionFlow(
         context,
         action.onResult ?? ActionFlow.empty(),
