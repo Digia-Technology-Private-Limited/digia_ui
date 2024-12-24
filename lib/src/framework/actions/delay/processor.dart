@@ -5,8 +5,6 @@ import '../base/processor.dart';
 import 'action.dart';
 
 class DelayProcessor extends ActionProcessor<DelayAction> {
-  DelayProcessor({super.logger});
-
   @override
   Future<Object?>? execute(
     BuildContext context,
@@ -15,10 +13,9 @@ class DelayProcessor extends ActionProcessor<DelayAction> {
   ) async {
     final durationInMs = action.durationInMs?.evaluate(scopeContext);
 
-    logger?.logAction(
-      entitySlug: scopeContext!.name,
-      actionType: action.actionType.value,
-      actionData: {
+    logAction(
+      action.actionType.value,
+      {
         'durationInMs': durationInMs,
       },
     );

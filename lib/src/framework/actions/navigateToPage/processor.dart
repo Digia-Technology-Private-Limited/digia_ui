@@ -26,7 +26,6 @@ class NavigateToPageProcessor extends ActionProcessor<NavigateToPageAction> {
   NavigateToPageProcessor({
     required this.executeActionFlow,
     required this.pageRouteBuilder,
-    super.logger,
   });
 
   @override
@@ -45,10 +44,9 @@ class NavigateToPageProcessor extends ActionProcessor<NavigateToPageAction> {
     final routeNametoRemoveUntil =
         action.routeNametoRemoveUntil?.evaluate(scopeContext);
 
-    logger?.logAction(
-      entitySlug: scopeContext!.name,
-      actionType: action.actionType.value,
-      actionData: {
+    logAction(
+      action.actionType.value,
+      {
         'pageId': pageId,
         'pageArgs': action.pageArgs,
         'waitForResult': action.waitForResult,

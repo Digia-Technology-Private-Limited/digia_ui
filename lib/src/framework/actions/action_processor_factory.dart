@@ -53,8 +53,9 @@ class ActionProcDependencies {
 class ActionProcessorFactory {
   final ActionProcDependencies dependencies;
   final DUILogger? logger;
+  final Map<String, Object?>? metaData;
 
-  ActionProcessorFactory(this.dependencies, this.logger);
+  ActionProcessorFactory(this.dependencies, this.logger, this.metaData);
 
   ActionProcessor? actionProcessor;
   ActionProcessor getProcessor(an.Action action) {
@@ -112,6 +113,7 @@ class ActionProcessorFactory {
         );
       case an.ActionType.imagePicker:
     }
+    actionProcessor?.metaData = metaData;
     // TODO: Remove later
     return (actionProcessor ?? ShowToastProcessor())..logger = logger;
   }

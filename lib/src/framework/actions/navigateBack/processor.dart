@@ -5,8 +5,6 @@ import '../base/processor.dart';
 import 'action.dart';
 
 class NavigateBackProcessor extends ActionProcessor<NavigateBackAction> {
-  NavigateBackProcessor({super.logger});
-
   @override
   Future<Object?>? execute(
     BuildContext context,
@@ -18,10 +16,9 @@ class NavigateBackProcessor extends ActionProcessor<NavigateBackAction> {
       'data': action.result?.deepEvaluate(scopeContext),
     };
 
-    logger?.logAction(
-      entitySlug: scopeContext!.name,
-      actionType: action.actionType.value,
-      actionData: {
+    logAction(
+      action.actionType.value,
+      {
         'maybe': maybe,
         'result': result,
       },

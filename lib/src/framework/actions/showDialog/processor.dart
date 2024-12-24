@@ -22,7 +22,6 @@ class ShowDialogProcessor extends ActionProcessor<ShowDialogAction> {
   ShowDialogProcessor({
     required this.viewBuilder,
     required this.executeActionFlow,
-    super.logger,
   });
 
   @override
@@ -40,14 +39,13 @@ class ShowDialogProcessor extends ActionProcessor<ShowDialogAction> {
         .maybe((p0) => provider?.getColor(p0));
     final waitForResult = action.waitForResult;
 
-    logger?.logAction(
-      entitySlug: scopeContext!.name,
-      actionType: action.actionType.value,
-      actionData: {
+    logAction(
+      action.actionType.value,
+      {
         'viewId': action.viewId,
         'args': action.args,
         'barrierDismissible': barrierDismissible,
-        'barrierColor': barrierColor,
+        'barrierColor': barrierColor.toString(),
         'waitForResult': waitForResult,
       },
     );

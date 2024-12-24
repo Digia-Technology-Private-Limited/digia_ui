@@ -20,7 +20,6 @@ class UploadProcessor extends ActionProcessor<UploadAction> {
 
   UploadProcessor({
     required this.executeActionFlow,
-    super.logger,
   });
 
   @override
@@ -43,10 +42,9 @@ class UploadProcessor extends ActionProcessor<UploadAction> {
       return Future.error('No API Selected');
     }
 
-    logger?.logAction(
-      entitySlug: scopeContext!.name,
-      actionType: action.actionType.value,
-      actionData: {
+    logAction(
+      action.actionType.value,
+      {
         'apiId': action.apiId,
         'args': args,
       },

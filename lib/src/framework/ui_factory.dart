@@ -141,6 +141,9 @@ class DUIFactory {
             createPageRoute(id, args, messageHandler: handler),
         bindingRegistry: bindingRegistry,
         logger: DigiaUIClient.instance.developerConfig?.logger,
+        metaData: {
+          'entitySlug': pageId,
+        },
       ),
       child: DUIPage(
         pageId: pageId,
@@ -244,6 +247,9 @@ class DUIFactory {
             createPageRoute(id, args, messageHandler: messageHandler),
         bindingRegistry: bindingRegistry,
         logger: DigiaUIClient.instance.developerConfig?.logger,
+        metaData: {
+          'entitySlug': componentid,
+        },
       ),
       child: DUIComponent(
         id: componentid,

@@ -7,8 +7,6 @@ import '../base/processor.dart';
 import 'action.dart';
 
 class ShareProcessor extends ActionProcessor<ShareAction> {
-  ShareProcessor({super.logger});
-
   @override
   Future<Object?>? execute(
     BuildContext context,
@@ -18,10 +16,9 @@ class ShareProcessor extends ActionProcessor<ShareAction> {
     final message = action.message?.evaluate(scopeContext);
     final subject = action.subject?.evaluate(scopeContext);
 
-    logger?.logAction(
-      entitySlug: scopeContext!.name,
-      actionType: action.actionType.value,
-      actionData: {
+    logAction(
+      action.actionType.value,
+      {
         'message': message,
         'subject': subject,
       },

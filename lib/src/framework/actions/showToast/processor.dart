@@ -12,8 +12,6 @@ import '../base/processor.dart';
 import 'action.dart';
 
 class ShowToastProcessor extends ActionProcessor<ShowToastAction> {
-  ShowToastProcessor({super.logger});
-
   @override
   Future<Object?>? execute(
     BuildContext context,
@@ -46,10 +44,9 @@ class ShowToastProcessor extends ActionProcessor<ShowToastAction> {
     final margin = To.edgeInsets(style['margin']);
     final alignment = To.alignment(style['alignment']);
 
-    logger?.logAction(
-      entitySlug: scopeContext!.name,
-      actionType: action.actionType.value,
-      actionData: {
+    logAction(
+      action.actionType.value,
+      {
         'message': message,
         'duration': duration,
         'style': style,

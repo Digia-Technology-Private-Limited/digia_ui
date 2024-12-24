@@ -5,8 +5,6 @@ import '../base/processor.dart';
 import 'action.dart';
 
 class ControlDrawerProcessor extends ActionProcessor<ControlDrawerAction> {
-  ControlDrawerProcessor({super.logger});
-
   @override
   Future<Object?>? execute(
     BuildContext context,
@@ -16,10 +14,9 @@ class ControlDrawerProcessor extends ActionProcessor<ControlDrawerAction> {
     final choice = action.choice?.evaluate(scopeContext);
     final scaffold = Scaffold.maybeOf(context);
 
-    logger?.logAction(
-      entitySlug: scopeContext!.name,
-      actionType: action.actionType.value,
-      actionData: {
+    logAction(
+      action.actionType.value,
+      {
         'choice': choice,
       },
     );

@@ -6,18 +6,15 @@ import '../base/processor.dart';
 import 'action.dart';
 
 class RebuildStateProcessor extends ActionProcessor<RebuildStateAction> {
-  RebuildStateProcessor({super.logger});
-
   @override
   Future<Object?>? execute(
     BuildContext context,
     RebuildStateAction action,
     ScopeContext? scopeContext,
   ) {
-    logger?.logAction(
-      entitySlug: scopeContext!.name,
-      actionType: action.actionType.value,
-      actionData: {
+    logAction(
+      action.actionType.value,
+      {
         'stateContextName': action.stateContextName,
       },
     );

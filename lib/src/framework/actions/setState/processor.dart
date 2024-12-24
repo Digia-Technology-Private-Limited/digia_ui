@@ -6,8 +6,6 @@ import '../base/processor.dart';
 import 'action.dart';
 
 class SetStateProcessor extends ActionProcessor<SetStateAction> {
-  SetStateProcessor({super.logger});
-
   @override
   Future<Object?>? execute(
     BuildContext context,
@@ -28,10 +26,9 @@ class SetStateProcessor extends ActionProcessor<SetStateAction> {
         (update) =>
             MapEntry(update.stateName, update.newValue?.evaluate(scopeContext)),
       ));
-      logger?.logAction(
-        entitySlug: scopeContext!.name,
-        actionType: action.actionType.value,
-        actionData: {
+      logAction(
+        action.actionType.value,
+        {
           'stateContextName': action.stateContextName,
           'rebuild': rebuildPage,
           ...updatesMap,

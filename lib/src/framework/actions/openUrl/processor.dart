@@ -7,8 +7,6 @@ import '../base/processor.dart';
 import 'action.dart';
 
 class OpenUrlProcessor extends ActionProcessor<OpenUrlAction> {
-  OpenUrlProcessor({super.logger});
-
   @override
   Future<Object?>? execute(
     BuildContext context,
@@ -22,10 +20,9 @@ class OpenUrlProcessor extends ActionProcessor<OpenUrlAction> {
       throw ArgumentError('URL is null');
     }
 
-    logger?.logAction(
-      entitySlug: scopeContext!.name,
-      actionType: action.actionType.value,
-      actionData: {
+    logAction(
+      action.actionType.value,
+      {
         'url': urlString,
         'launchMode': action.launchMode,
       },

@@ -6,8 +6,6 @@ import 'action.dart';
 
 class NavigateBackUntilProcessor
     extends ActionProcessor<NavigateBackUntilAction> {
-  NavigateBackUntilProcessor({super.logger});
-
   @override
   Future<Object?>? execute(
     BuildContext context,
@@ -17,10 +15,9 @@ class NavigateBackUntilProcessor
     final routeNameToPopUntil =
         action.routeNameToPopUntil?.evaluate(scopeContext);
 
-    logger?.logAction(
-      entitySlug: scopeContext!.name,
-      actionType: action.actionType.value,
-      actionData: {
+    logAction(
+      action.actionType.value,
+      {
         'routeNameToPopUntil': routeNameToPopUntil,
       },
     );

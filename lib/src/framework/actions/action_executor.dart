@@ -22,12 +22,14 @@ class ActionExecutor {
   final MethodBindingRegistry bindingRegistry;
 
   final DUILogger? logger;
+  final Map<String, Object?>? metaData;
 
   ActionExecutor({
     required this.viewBuilder,
     required this.pageRouteBuilder,
     required this.bindingRegistry,
     this.logger,
+    this.metaData,
   });
 
   Future<Object?>? execute(
@@ -57,6 +59,7 @@ class ActionExecutor {
           bindingRegistry: bindingRegistry,
         ),
         logger,
+        metaData,
       ).getProcessor(action);
       await processor.execute(context, action, scopeContext);
     }

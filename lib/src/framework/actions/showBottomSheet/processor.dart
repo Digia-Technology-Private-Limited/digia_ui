@@ -31,7 +31,6 @@ class ShowBottomSheetProcessor extends ActionProcessor<ShowBottomSheetAction> {
   ShowBottomSheetProcessor({
     required this.executeActionFlow,
     required this.viewBuilder,
-    super.logger,
   });
 
   @override
@@ -58,10 +57,9 @@ class ShowBottomSheetProcessor extends ActionProcessor<ShowBottomSheetAction> {
 
     final iconProps = as$<JsonLike>(style['icon']).maybe(IconProps.fromJson);
 
-    logger?.logAction(
-      entitySlug: scopeContext!.name,
-      actionType: action.actionType.value,
-      actionData: {
+    logAction(
+      action.actionType.value,
+      {
         'viewId': action.viewId,
         'args': action.args,
         'style': style,

@@ -7,8 +7,6 @@ import '../base/processor.dart';
 import 'action.dart';
 
 class CopyToClipBoardProcessor extends ActionProcessor<CopyToClipBoardAction> {
-  CopyToClipBoardProcessor({super.logger});
-
   @override
   Future<Object?>? execute(
     BuildContext context,
@@ -17,10 +15,9 @@ class CopyToClipBoardProcessor extends ActionProcessor<CopyToClipBoardAction> {
   ) async {
     final message = action.message?.evaluate(scopeContext);
 
-    logger?.logAction(
-      entitySlug: scopeContext!.name,
-      actionType: action.actionType.value,
-      actionData: {
+    logAction(
+      action.actionType.value,
+      {
         'message': message,
       },
     );
