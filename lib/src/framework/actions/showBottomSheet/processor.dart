@@ -15,8 +15,7 @@ import '../base/action_flow.dart';
 import '../base/processor.dart';
 import 'action.dart';
 
-class ShowBottomSheetProcessor
-    implements ActionProcessor<ShowBottomSheetAction> {
+class ShowBottomSheetProcessor extends ActionProcessor<ShowBottomSheetAction> {
   final Future<Object?>? Function(
     BuildContext context,
     ActionFlow actionFlow,
@@ -58,6 +57,19 @@ class ShowBottomSheetProcessor
 
     final iconProps = as$<JsonLike>(style['icon']).maybe(IconProps.fromJson);
 
+    logAction(
+      action.actionType.value,
+      {
+        'viewId': action.viewId,
+        'args': action.args,
+        'style': style,
+        'onResult': action.onResult?.actions
+            .map((a) => a.actionType.value)
+            .toList()
+            .toString(),
+      },
+    );
+
     Object? result = await presentBottomSheet(
         context: navigatorKey?.currentContext ?? context,
         builder: (innerCtx) {
@@ -97,6 +109,13 @@ class ShowBottomSheetProcessor
         }));
 
     if (action.waitForResult && context.mounted) {
+      logAction(
+        '${action.actionType.value} - Result',
+        {
+          'viewId': action.viewId,
+          'result': result,
+        },
+      );
       await executeActionFlow(
         context,
         action.onResult ?? ActionFlow.empty(),

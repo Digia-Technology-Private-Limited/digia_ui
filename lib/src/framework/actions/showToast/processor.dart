@@ -11,7 +11,7 @@ import '../../utils/types.dart';
 import '../base/processor.dart';
 import 'action.dart';
 
-class ShowToastProcessor implements ActionProcessor<ShowToastAction> {
+class ShowToastProcessor extends ActionProcessor<ShowToastAction> {
   @override
   Future<Object?>? execute(
     BuildContext context,
@@ -43,6 +43,15 @@ class ShowToastProcessor implements ActionProcessor<ShowToastAction> {
     final padding = To.edgeInsets(style['padding'] ?? '24, 12, 24, 12');
     final margin = To.edgeInsets(style['margin']);
     final alignment = To.alignment(style['alignment']);
+
+    logAction(
+      action.actionType.value,
+      {
+        'message': message,
+        'duration': duration,
+        'style': style,
+      },
+    );
 
     final toast = FToast().init(context);
     toast.showToast(

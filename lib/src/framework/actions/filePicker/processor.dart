@@ -41,6 +41,18 @@ class FilePickerProcessor extends ActionProcessor<FilePickerAction> {
         return null;
       }
 
+      logAction(
+        action.actionType.value,
+        {
+          'fileType': fileType,
+          'sizeLimit': sizeLimit,
+          'isMultiSelect': isMultiSelect,
+          'showToast': showToast,
+          'pickedFileCount': pickedFile.count,
+          'pickedFile(s)': pickedFile.names,
+        },
+      );
+
       final toast = FToast().init(context);
 
       if (sizeLimit != null && showToast) {

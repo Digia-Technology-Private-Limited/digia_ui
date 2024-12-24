@@ -13,6 +13,7 @@ export 'package:digia_ui/src/framework/base/virtual_leaf_stateless_widget.dart';
 export 'package:digia_ui/src/framework/font_factory.dart';
 export 'package:digia_ui/src/framework/page/page_controller.dart';
 export 'package:digia_ui/src/framework/render_payload.dart';
+export 'package:digia_ui/src/framework/state/state_observer.dart';
 export 'package:digia_ui/src/framework/ui_factory.dart';
 export 'package:digia_ui/src/framework/utils/flutter_type_converters.dart';
 export 'package:digia_ui/src/framework/utils/navigation_util.dart';

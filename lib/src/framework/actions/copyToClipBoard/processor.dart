@@ -6,8 +6,7 @@ import '../../expr/scope_context.dart';
 import '../base/processor.dart';
 import 'action.dart';
 
-class CopyToClipBoardProcessor
-    implements ActionProcessor<CopyToClipBoardAction> {
+class CopyToClipBoardProcessor extends ActionProcessor<CopyToClipBoardAction> {
   @override
   Future<Object?>? execute(
     BuildContext context,
@@ -15,6 +14,13 @@ class CopyToClipBoardProcessor
     ScopeContext? scopeContext,
   ) async {
     final message = action.message?.evaluate(scopeContext);
+
+    logAction(
+      action.actionType.value,
+      {
+        'message': message,
+      },
+    );
 
     final toast = FToast().init(context);
 

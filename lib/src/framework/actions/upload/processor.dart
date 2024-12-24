@@ -42,6 +42,14 @@ class UploadProcessor extends ActionProcessor<UploadAction> {
       return Future.error('No API Selected');
     }
 
+    logAction(
+      action.actionType.value,
+      {
+        'apiId': action.apiId,
+        'args': args,
+      },
+    );
+
     final result = ApiHandler.instance
         .execute(
       apiModel: apiModel,

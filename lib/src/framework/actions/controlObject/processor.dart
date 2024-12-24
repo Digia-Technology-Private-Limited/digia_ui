@@ -28,6 +28,15 @@ class ControlObjectProcessor extends ActionProcessor<ControlObjectAction> {
         action.args?.map((k, v) => MapEntry(k, v?.evaluate(scopeContext))) ??
             {};
 
+    logAction(
+      action.actionType.value,
+      {
+        'dataType': object.toString(),
+        'args': evaluatedArgs,
+        'method': action.method,
+      },
+    );
+
     registry.execute(object, action.method, evaluatedArgs);
 
     return null;
