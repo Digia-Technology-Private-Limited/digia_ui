@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:dio/dio.dart';
 
+import 'framework/utils/types.dart';
+
 enum LogType {
   network,
   action,
@@ -10,16 +12,15 @@ enum LogType {
 }
 
 class DUILogger {
-  final StreamController<Map<String, Object?>> _logController;
+  final StreamController<JsonLike> _logController;
 
-  DUILogger()
-      : _logController = StreamController<Map<String, Object?>>.broadcast();
+  DUILogger() : _logController = StreamController<JsonLike>.broadcast();
 
-  Stream<Map<String, Object?>> get logStream => _logController.stream;
+  Stream<JsonLike> get logStream => _logController.stream;
 
   void log({
     required LogType type,
-    required Map<String, Object?> data,
+    required JsonLike data,
     DateTime? timestamp,
   }) {
     final logEntry = {
@@ -54,9 +55,9 @@ class DUILogger {
   void logEntity({
     required String entitySlug,
     required String eventName,
-    required Map<String, Object?> argDefs,
-    required Map<String, Object?> initStateDefs,
-    required Map<String, Object?> stateContainerVariables,
+    required JsonLike argDefs,
+    required JsonLike initStateDefs,
+    required JsonLike stateContainerVariables,
   }) {
     log(
       type: LogType.entity,
@@ -73,7 +74,7 @@ class DUILogger {
   void logAction({
     required String entitySlug,
     required String actionType,
-    required Map<String, Object?> actionData,
+    required JsonLike actionData,
   }) {
     log(
       type: LogType.action,
@@ -87,7 +88,7 @@ class DUILogger {
 
   void logEvent({
     required String eventName,
-    required Map<String, Object?> eventPayload,
+    required JsonLike eventPayload,
   }) {
     log(
       type: LogType.event,
