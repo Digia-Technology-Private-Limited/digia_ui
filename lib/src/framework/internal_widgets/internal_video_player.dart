@@ -4,6 +4,8 @@ import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
+import '../../digia_ui_client.dart';
+import '../../dui_dev_config.dart';
 import '../data_type/adapted_types/file.dart';
 
 class InternalVideoPlayer extends StatefulWidget {
@@ -113,7 +115,18 @@ class _InternalVideoPlayerState extends State<InternalVideoPlayer> {
 
     if (videoSource is String) {
       if (videoSource.startsWith('http')) {
-        return VideoPlayerController.networkUrl(Uri.parse(videoSource));
+        final bool isDashboard =
+            DigiaUIClient.instance.developerConfig?.environment ==
+                DigiaUIEnvironment.dashboard;
+
+        final String finalUrl;
+        if (isDashboard) {
+          finalUrl =
+              'https://asia-east2-digia-proxy-server.cloudfunctions.net/proxy?url=$videoSource';
+        } else {
+          finalUrl = videoSource;
+        }
+        return VideoPlayerController.networkUrl(Uri.parse(finalUrl));
       }
     }
     // Additional source handling if needed

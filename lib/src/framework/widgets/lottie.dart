@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
+import '../../digia_ui_client.dart';
+import '../../dui_dev_config.dart';
 import '../base/virtual_leaf_stateless_widget.dart';
 import '../models/props.dart';
 import '../render_payload.dart';
@@ -49,8 +51,19 @@ class VWLottie extends VirtualLeafStatelessWidget<Props> {
     }
 
     if (lottiePath.startsWith('http')) {
+      final bool isDashboard =
+          DigiaUIClient.instance.developerConfig?.environment ==
+              DigiaUIEnvironment.dashboard;
+
+      final String finalUrl;
+      if (isDashboard) {
+        finalUrl =
+            'https://asia-east2-digia-proxy-server.cloudfunctions.net/proxy?url=$lottiePath';
+      } else {
+        finalUrl = lottiePath;
+      }
       return LottieBuilder.network(
-        lottiePath,
+        finalUrl,
         alignment: alignment,
         height: height,
         width: width,
