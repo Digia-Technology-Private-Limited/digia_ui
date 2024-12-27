@@ -116,9 +116,8 @@ class _InternalVideoPlayerState extends State<InternalVideoPlayer> {
 
     if (videoSource is String) {
       if (videoSource.startsWith('http')) {
-        final bool isDashboard =
-            DigiaUIClient.instance.developerConfig?.environment ==
-                DigiaUIEnvironment.dashboard;
+        final bool isDashboard = DigiaUIClient.instance.developerConfig?.host ==
+            DigiaUIHost.dashboard;
 
         final String finalUrl;
         if (isDashboard) {

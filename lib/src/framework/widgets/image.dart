@@ -58,9 +58,8 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
 
     if (imageSource is String) {
       if (imageSource.startsWith('http')) {
-        final bool isDashboard =
-            DigiaUIClient.instance.developerConfig?.environment ==
-                DigiaUIEnvironment.dashboard;
+        final bool isDashboard = DigiaUIClient.instance.developerConfig?.host ==
+            DigiaUIHost.dashboard;
 
         final String finalUrl;
         if (isDashboard) {

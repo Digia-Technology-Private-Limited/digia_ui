@@ -53,8 +53,7 @@ class VWLottie extends VirtualLeafStatelessWidget<Props> {
 
     if (lottiePath.startsWith('http')) {
       final bool isDashboard =
-          DigiaUIClient.instance.developerConfig?.environment ==
-              DigiaUIEnvironment.dashboard;
+          DigiaUIClient.instance.developerConfig?.host == DigiaUIHost.dashboard;
 
       final String finalUrl;
       if (isDashboard) {
