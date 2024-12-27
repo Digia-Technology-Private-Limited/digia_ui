@@ -7,6 +7,7 @@ import 'package:octo_image/octo_image.dart';
 
 import '../../digia_ui_client.dart';
 import '../../dui_dev_config.dart';
+import '../../proxy_url.dart';
 import '../base/virtual_leaf_stateless_widget.dart';
 import '../data_type/adapted_types/file.dart';
 import '../models/props.dart';
@@ -63,8 +64,7 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
 
         final String finalUrl;
         if (isDashboard) {
-          finalUrl =
-              'https://asia-east2-digia-proxy-server.cloudfunctions.net/proxy?url=$imageSource';
+          finalUrl = '$proxyUrl$imageSource';
         } else {
           finalUrl = imageSource;
         }

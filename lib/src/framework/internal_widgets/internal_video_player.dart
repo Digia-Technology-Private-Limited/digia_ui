@@ -6,6 +6,7 @@ import 'package:video_player/video_player.dart';
 
 import '../../digia_ui_client.dart';
 import '../../dui_dev_config.dart';
+import '../../proxy_url.dart';
 import '../data_type/adapted_types/file.dart';
 
 class InternalVideoPlayer extends StatefulWidget {
@@ -121,8 +122,7 @@ class _InternalVideoPlayerState extends State<InternalVideoPlayer> {
 
         final String finalUrl;
         if (isDashboard) {
-          finalUrl =
-              'https://asia-east2-digia-proxy-server.cloudfunctions.net/proxy?url=$videoSource';
+          finalUrl = '$proxyUrl$videoSource';
         } else {
           finalUrl = videoSource;
         }

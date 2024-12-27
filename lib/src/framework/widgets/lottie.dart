@@ -3,6 +3,7 @@ import 'package:lottie/lottie.dart';
 
 import '../../digia_ui_client.dart';
 import '../../dui_dev_config.dart';
+import '../../proxy_url.dart';
 import '../base/virtual_leaf_stateless_widget.dart';
 import '../models/props.dart';
 import '../render_payload.dart';
@@ -57,8 +58,7 @@ class VWLottie extends VirtualLeafStatelessWidget<Props> {
 
       final String finalUrl;
       if (isDashboard) {
-        finalUrl =
-            'https://asia-east2-digia-proxy-server.cloudfunctions.net/proxy?url=$lottiePath';
+        finalUrl = '$proxyUrl$lottiePath';
       } else {
         finalUrl = lottiePath;
       }
