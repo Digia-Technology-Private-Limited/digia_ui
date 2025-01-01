@@ -7,7 +7,6 @@ import 'package:octo_image/octo_image.dart';
 
 import '../../digia_ui_client.dart';
 import '../../dui_dev_config.dart';
-import '../../proxy_url.dart';
 import '../base/virtual_leaf_stateless_widget.dart';
 import '../data_type/adapted_types/file.dart';
 import '../models/props.dart';
@@ -60,9 +59,11 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
       if (imageSource.startsWith('http')) {
         final bool isDashboard = DigiaUIClient.instance.developerConfig?.host ==
             DigiaUIHost.dashboard;
+        final String? proxyUrl =
+            DigiaUIClient.instance.developerConfig?.proxyUrl;
 
         final String finalUrl;
-        if (isDashboard) {
+        if (isDashboard && proxyUrl != null) {
           finalUrl = '$proxyUrl$imageSource';
         } else {
           finalUrl = imageSource;

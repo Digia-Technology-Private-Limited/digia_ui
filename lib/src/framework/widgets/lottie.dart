@@ -3,7 +3,6 @@ import 'package:lottie/lottie.dart';
 
 import '../../digia_ui_client.dart';
 import '../../dui_dev_config.dart';
-import '../../proxy_url.dart';
 import '../base/virtual_leaf_stateless_widget.dart';
 import '../models/props.dart';
 import '../render_payload.dart';
@@ -54,9 +53,10 @@ class VWLottie extends VirtualLeafStatelessWidget<Props> {
     if (lottiePath.startsWith('http')) {
       final bool isDashboard =
           DigiaUIClient.instance.developerConfig?.host == DigiaUIHost.dashboard;
+      final String? proxyUrl = DigiaUIClient.instance.developerConfig?.proxyUrl;
 
       final String finalUrl;
-      if (isDashboard) {
+      if (isDashboard && proxyUrl != null) {
         finalUrl = '$proxyUrl$lottiePath';
       } else {
         finalUrl = lottiePath;
