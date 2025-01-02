@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 
 import '../digia_ui.dart';
 import 'Utils/file_operations.dart';
-import 'core/functions/download.dart';
+import 'Utils/download.dart';
 import 'core/functions/js_functions.dart';
 import 'framework/data_type/variable.dart';
 import 'framework/data_type/variable_json_converter.dart';

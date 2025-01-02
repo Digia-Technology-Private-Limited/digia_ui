@@ -1,7 +1,8 @@
 import 'package:dio/dio.dart';
-import '../../Utils/file_operations.dart';
-import '../../framework/utils/functional_util.dart';
-import '../../network/core/types.dart';
+
+import '../framework/utils/functional_util.dart';
+import '../network/core/types.dart';
+import 'file_operations.dart';
 
 Future<Response?> downloadFile(String url, String fileName,
     {int retry = 0}) async {
