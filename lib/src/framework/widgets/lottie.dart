@@ -53,8 +53,8 @@ class VWLottie extends VirtualLeafStatelessWidget<Props> {
     if (lottiePath.startsWith('http')) {
       final DigiaUIHost? host = DigiaUIClient.instance.developerConfig?.host;
       final String finalUrl;
-      if (host is DashboardHost && host.resourceUrl != null) {
-        finalUrl = '${host.resourceUrl}$lottiePath';
+      if (host is DashboardHost && host.resourceProxyUrl != null) {
+        finalUrl = '${host.resourceProxyUrl}$lottiePath';
       } else {
         finalUrl = lottiePath;
       }

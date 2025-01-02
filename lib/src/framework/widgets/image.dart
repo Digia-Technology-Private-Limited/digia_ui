@@ -59,8 +59,8 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
       if (imageSource.startsWith('http')) {
         final DigiaUIHost? host = DigiaUIClient.instance.developerConfig?.host;
         final String finalUrl;
-        if (host is DashboardHost && host.resourceUrl != null) {
-          finalUrl = '${host.resourceUrl}$imageSource';
+        if (host is DashboardHost && host.resourceProxyUrl != null) {
+          finalUrl = '${host.resourceProxyUrl}$imageSource';
         } else {
           finalUrl = imageSource;
         }
