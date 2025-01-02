@@ -23,6 +23,4 @@ class DeveloperConfig {
     this.logger,
     this.host,
   });
-
-  String? get resourceUrl => host?.resourceUrl;
 }
