@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_blurhash/flutter_blurhash.dart';
 import 'package:octo_image/octo_image.dart';
 
+import '../../digia_ui_client.dart';
+import '../../dui_dev_config.dart';
 import '../base/virtual_leaf_stateless_widget.dart';
 import '../data_type/adapted_types/file.dart';
 import '../models/props.dart';
@@ -55,7 +57,14 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
 
     if (imageSource is String) {
       if (imageSource.startsWith('http')) {
-        return CachedNetworkImageProvider(imageSource);
+        final DigiaUIHost? host = DigiaUIClient.instance.developerConfig?.host;
+        final String finalUrl;
+        if (host is DashboardHost && host.resourceProxyUrl != null) {
+          finalUrl = '${host.resourceProxyUrl}$imageSource';
+        } else {
+          finalUrl = imageSource;
+        }
+        return CachedNetworkImageProvider(finalUrl);
       } else {
         return ResourceProvider.maybeOf(payload.buildContext)
                 ?.getImageProvider(imageSource) ??
@@ -86,6 +95,19 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
     return (context) => _mayWrapInAspectRatio(widget);
   }
 
+  Widget _buildErrorWidget(Object error) {
+    final errorImage = props.getString('errorImage');
+    if (errorImage == null) {
+      return Center(
+        child: Text(
+          error.toString(),
+          style: const TextStyle(color: Colors.red),
+        ),
+      );
+    }
+    return Image.asset(errorImage);
+  }
+
   Widget _mayWrapInAspectRatio(Widget child) =>
       wrapInAspectRatio(value: props.get('aspectRatio'), child: child);
 
@@ -99,7 +121,12 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
     return Opacity(
       opacity: opacity,
       child: imageProvider is MemoryImage || imageProvider is FileImage
-          ? Image(image: imageProvider)
+          ? Image(
+              image: imageProvider,
+              errorBuilder: (context, error, stackTrace) {
+                return _buildErrorWidget(error);
+              },
+            )
           : OctoImage(
               fadeInDuration: const Duration(microseconds: 0),
               fadeOutDuration: const Duration(microseconds: 0),
@@ -111,16 +138,7 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
                 return _mayWrapInAspectRatio(widget);
               },
               errorBuilder: (context, error, stackTrace) {
-                final errorImage = props.getString('errorImage');
-                if (errorImage == null) {
-                  return Center(
-                    child: Text(
-                      error.toString(),
-                      style: const TextStyle(color: Colors.red),
-                    ),
-                  );
-                }
-                return Image.asset(errorImage);
+                return _buildErrorWidget(error);
               },
             ),
     );
