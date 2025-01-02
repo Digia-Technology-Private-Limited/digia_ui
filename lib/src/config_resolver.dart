@@ -27,14 +27,19 @@ class AppConfigResolver {
     return data;
   }
 
-  Future<Map<String, dynamic>?> _getAppConfigFromNetworkAndWriteToFile(
+  Future<Map<String, dynamic>?> _getAppConfigFileFromNetwork(
       String path) async {
     try {
       final data = await _getAppConfigFromNetwork(path);
-      if (data != null && data.isNotEmpty && data['versionUpdated'] == true) {
-        await writeStringToFile(json.encode(data), 'appConfig.json');
+      if (data != null && data.isNotEmpty && data['version'] != null) {
+        var file = await downloadAppConfigFile(
+            data['appConfigFileUrl'], 'appConfig.json');
+
+        String fileString = utf8.decode(file?.data);
+        await writeStringToFile(fileString, 'appConfig.json');
+        return jsonDecode(fileString);
       }
-      return data;
+      return null;
     } catch (e) {
       return null;
     }
@@ -69,8 +74,8 @@ class AppConfigResolver {
 
   void _fetchAndCacheProductionAppConfigAndFunctions() async {
     try {
-      var config = DUIConfig(await _getAppConfigFromNetworkAndWriteToFile(
-          '/config/getAppConfigProduction'));
+      var config = DUIConfig(
+          await _getAppConfigFileFromNetwork('/config/getAppConfigRelease'));
       if (config.functionsFilePath != null) {
         downloadFunctionsFile(config.functionsFilePath!,
             JSFunctions.getFunctionsFileName(config.version));
@@ -152,8 +157,7 @@ class AppConfigResolver {
             try {
               var result = await Future.any([
                 Future<Object?>.delayed(Duration(seconds: timeout)),
-                _getAppConfigFromNetworkAndWriteToFile(
-                    '/config/getAppConfigProduction')
+                _getAppConfigFileFromNetwork('/config/getAppConfigRelease')
               ]);
               if (result == null) {
                 throw _buildInitException('Invalid AppConfig or fetch failed');
