@@ -32,8 +32,8 @@ class AppConfigResolver {
     try {
       final data = await _getAppConfigFromNetwork(path);
       if (data != null && data.isNotEmpty && data['version'] != null) {
-        var file = await downloadAppConfigFile(
-            data['appConfigFileUrl'], 'appConfig.json');
+        var file =
+            await downloadFile(data['appConfigFileUrl'], 'appConfig.json');
 
         String fileString = utf8.decode(file?.data);
         await writeStringToFile(fileString, 'appConfig.json');
@@ -77,7 +77,7 @@ class AppConfigResolver {
       var config = DUIConfig(
           await _getAppConfigFileFromNetwork('/config/getAppConfigRelease'));
       if (config.functionsFilePath != null) {
-        downloadFunctionsFile(config.functionsFilePath!,
+        downloadFile(config.functionsFilePath!,
             JSFunctions.getFunctionsFileName(config.version));
       }
     } catch (e) {

@@ -19,8 +19,8 @@ class MobileJsFunctions implements JSFunctions {
           final fileExists =
               version == null ? false : await doesFileExist(fileName);
           if (!fileExists) {
-            var res = await downloadFunctionsFile(remotePath, fileName);
-            if (!res) return false;
+            var res = await downloadFile(remotePath, fileName);
+            if (res == null) return false;
           }
           jsFile = await readFileString(fileName) ?? '';
           return true;
