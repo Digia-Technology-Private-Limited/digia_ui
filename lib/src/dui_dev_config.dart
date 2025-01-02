@@ -8,12 +8,14 @@ class DeveloperConfig {
   final String? proxyUrl;
   DUIInspector? inspector;
   DUILogger? logger;
+  final String? digiaProxy;
   final DigiaUIHost? host;
 
   DeveloperConfig({
     this.proxyUrl,
     this.inspector,
     this.logger,
+    this.digiaProxy,
     this.host,
   });
 }

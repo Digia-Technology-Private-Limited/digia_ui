@@ -60,7 +60,7 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
         final bool isDashboard = DigiaUIClient.instance.developerConfig?.host ==
             DigiaUIHost.dashboard;
         final String? proxyUrl =
-            DigiaUIClient.instance.developerConfig?.proxyUrl;
+            DigiaUIClient.instance.developerConfig?.digiaProxy;
 
         final String finalUrl;
         if (isDashboard && proxyUrl != null) {
