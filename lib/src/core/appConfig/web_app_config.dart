@@ -22,9 +22,8 @@ class WebAppConfig implements AppConfig {
     try {
       final data = await getAppConfigFromNetwork(path);
       if (data != null && data.isNotEmpty && data['version'] != null) {
-        var file = await downloadFile(
-            'https://asia-south2-digia-proxy-server.cloudfunctions.net/proxy?url=${data['appConfigFileUrl']}',
-            'appConfig.json');
+        var file =
+            await downloadFile(data['appConfigFileUrl'], 'appConfig.json');
 
         String fileString = utf8.decode(file?.data);
         return jsonDecode(fileString);

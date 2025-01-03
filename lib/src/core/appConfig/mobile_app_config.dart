@@ -22,7 +22,7 @@ class MobileAppConfig implements AppConfig {
   Future<Map<String, dynamic>?> getAppConfigFileFromNetwork(String path) async {
     try {
       final data = await getAppConfigFromNetwork(path);
-      if (data != null && data.isNotEmpty && data['version'] != null) {
+      if (data != null && data.isNotEmpty && data['versionUpdated'] != false) {
         var file =
             await downloadFile(data['appConfigFileUrl'], 'appConfig.json');
 
