@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 
 import '../framework/utils/functional_util.dart';
 import '../network/core/types.dart';
@@ -17,11 +18,13 @@ Future<Response?> downloadFile(String url, String fileName,
 
     if (response.statusCode == 200) {
       // Write the response body to a file
-      var status =
-          await writeBytesToFile(as<List<int>>(response.data), fileName);
-      if (status != 0) {
-        print('Failed to write file: $fileName');
-        await retryFileDownload(url, fileName, retry);
+      if (!kIsWeb) {
+        var status =
+            await writeBytesToFile(as<List<int>>(response.data), fileName);
+        if (status != 0) {
+          print('Failed to write file: $fileName');
+          await retryFileDownload(url, fileName, retry);
+        }
       }
       return response;
     } else {

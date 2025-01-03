@@ -3,47 +3,19 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 import '../digia_ui.dart';
-import 'Utils/file_operations.dart';
 import 'Utils/download.dart';
+import 'Utils/file_operations.dart';
+import 'core/appConfig/app_config.dart';
 import 'core/functions/js_functions.dart';
 import 'framework/data_type/variable.dart';
 import 'framework/data_type/variable_json_converter.dart';
 import 'framework/utils/functional_util.dart';
 import 'network/api_request/api_request.dart';
-import 'network/core/types.dart';
 
 class AppConfigResolver {
   final FlavorInfo _flavorInfo;
 
   AppConfigResolver(this._flavorInfo);
-
-  Future<Map<String, dynamic>?> _getAppConfigFromNetwork(String path) async {
-    var resp = await DigiaUIClient.instance.networkClient.requestInternal(
-      HttpMethod.post,
-      path,
-      (json) => json as dynamic,
-    );
-    final data = resp.data['response'] as Map<String, dynamic>?;
-    return data;
-  }
-
-  Future<Map<String, dynamic>?> _getAppConfigFileFromNetwork(
-      String path) async {
-    try {
-      final data = await _getAppConfigFromNetwork(path);
-      if (data != null && data.isNotEmpty && data['version'] != null) {
-        var file =
-            await downloadFile(data['appConfigFileUrl'], 'appConfig.json');
-
-        String fileString = utf8.decode(file?.data);
-        await writeStringToFile(fileString, 'appConfig.json');
-        return jsonDecode(fileString);
-      }
-      return null;
-    } catch (e) {
-      return null;
-    }
-  }
 
   Exception _buildInitException(String reason) {
     print(reason);
@@ -73,12 +45,13 @@ class AppConfigResolver {
   }
 
   void _fetchAndCacheProductionAppConfigAndFunctions() async {
+    AppConfig config = AppConfig();
     try {
-      var config = DUIConfig(
-          await _getAppConfigFileFromNetwork('/config/getAppConfigRelease'));
-      if (config.functionsFilePath != null) {
-        downloadFile(config.functionsFilePath!,
-            JSFunctions.getFunctionsFileName(config.version));
+      var appConfig = DUIConfig(await config
+          .getAppConfigFileFromNetwork('/config/getAppConfigRelease'));
+      if (appConfig.functionsFilePath != null) {
+        downloadFile(appConfig.functionsFilePath!,
+            JSFunctions.getFunctionsFileName(appConfig.version));
       }
     } catch (e) {
       print(
@@ -87,14 +60,15 @@ class AppConfigResolver {
   }
 
   Future<DUIConfig> getConfig() async {
+    AppConfig config = AppConfig();
     DUIConfig appConfig;
     DUIConfig? cachedAppConfig, burnedAppConfig;
     int? version;
     switch (_flavorInfo) {
       case Debug():
         try {
-          appConfig =
-              DUIConfig(await _getAppConfigFromNetwork('/config/getAppConfig'));
+          appConfig = DUIConfig(
+              await config.getAppConfigFromNetwork('/config/getAppConfig'));
         } catch (e) {
           throw _buildInitException('Invalid AppConfig or fetch failed');
         }
@@ -102,8 +76,8 @@ class AppConfigResolver {
         return appConfig;
       case Staging():
         try {
-          appConfig = DUIConfig(
-              await _getAppConfigFromNetwork('/config/getAppConfigStaging'));
+          appConfig = DUIConfig(await config
+              .getAppConfigFromNetwork('/config/getAppConfigStaging'));
         } catch (e) {
           throw _buildInitException('Invalid AppConfig or fetch failed');
         }
@@ -119,8 +93,8 @@ class AppConfigResolver {
         // If Web priority doesnt matter. Always fetch from network
         if (kIsWeb) {
           try {
-            appConfig = DUIConfig(await _getAppConfigFromNetwork(
-                '/config/getAppConfigProduction'));
+            appConfig = DUIConfig(await config
+                .getAppConfigFileFromNetwork('/config/getAppConfigRelease'));
           } catch (e) {
             throw _buildInitException('Invalid AppConfig or fetch failed');
           }
@@ -153,11 +127,13 @@ class AppConfigResolver {
 
         switch (initPriority) {
           case PrioritizeNetwork(timeout: int timeout):
+
             //try to fetch appConfig and functions from network
             try {
               var result = await Future.any([
                 Future<Object?>.delayed(Duration(seconds: timeout)),
-                _getAppConfigFileFromNetwork('/config/getAppConfigRelease')
+                config
+                    .getAppConfigFileFromNetwork('/config/getAppConfigRelease')
               ]);
               if (result == null) {
                 throw _buildInitException('Invalid AppConfig or fetch failed');
@@ -211,8 +187,8 @@ class AppConfigResolver {
       case Versioned(version: int version):
         try {
           DigiaUIClient.instance.networkClient.addVersionHeader(version);
-          appConfig = DUIConfig(
-              await _getAppConfigFromNetwork('/config/getAppConfigForVersion'));
+          appConfig = DUIConfig(await config
+              .getAppConfigFromNetwork('/config/getAppConfigForVersion'));
         } catch (e) {
           throw _buildInitException('Invalid AppConfig or fetch failed');
         }
