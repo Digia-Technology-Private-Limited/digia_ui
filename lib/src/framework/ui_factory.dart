@@ -132,6 +132,19 @@ class DUIFactory {
 
     final handler =
         messageHandler?.propagateHandler == true ? messageHandler : null;
+    final pageDef = configProvider.getPageDefinition(pageId);
+
+    DigiaUIClient.instance.developerConfig?.logger?.logEntity(
+      entitySlug: pageId,
+      eventName: 'INITIALIZATION',
+      argDefs: pageDef.pageArgDefs
+              ?.map((k, v) => MapEntry(k, pageArgs?[k] ?? v.defaultValue)) ??
+          {},
+      initStateDefs:
+          pageDef.initStateDefs?.map((k, v) => MapEntry(k, v.defaultValue)) ??
+              {},
+      stateContainerVariables: {},
+    );
 
     return DefaultActionExecutor(
       actionExecutor: ActionExecutor(
@@ -150,7 +163,7 @@ class DUIFactory {
         pageArgs: pageArgs,
         resources: mergedResources,
         navigatorKey: navigatorKey,
-        pageDef: configProvider.getPageDefinition(pageId),
+        pageDef: pageDef,
         registry: widgetRegistry,
         apiModels: configProvider.getAllApiModels(),
         messageHandler: messageHandler,
@@ -239,6 +252,20 @@ class DUIFactory {
       fontFactory: resources.fontFactory,
     );
 
+    final componentDef = configProvider.getComponentDefinition(componentid);
+
+    DigiaUIClient.instance.developerConfig?.logger?.logEntity(
+      entitySlug: componentid,
+      eventName: 'INITIALIZATION',
+      argDefs: componentDef.argDefs
+              ?.map((key, value) => MapEntry(key, value.defaultValue)) ??
+          {},
+      initStateDefs: componentDef.initStateDefs
+              ?.map((key, value) => MapEntry(key, value.defaultValue)) ??
+          {},
+      stateContainerVariables: {},
+    );
+
     return DefaultActionExecutor(
       actionExecutor: ActionExecutor(
         viewBuilder: (context, id, args) =>
@@ -256,7 +283,7 @@ class DUIFactory {
         args: args,
         resources: mergedResources,
         navigatorKey: navigatorKey,
-        definition: configProvider.getComponentDefinition(componentid),
+        definition: componentDef,
         registry: widgetRegistry,
         apiModels: configProvider.getAllApiModels(),
         messageHandler: messageHandler,
