@@ -1,3 +1,4 @@
+import '../../../digia_ui.dart';
 import '../expr/expression_util.dart' as expr;
 import '../expr/scope_context.dart';
 import '../utils/object_util.dart';

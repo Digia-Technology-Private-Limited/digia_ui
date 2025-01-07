@@ -1,6 +1,8 @@
 import 'package:digia_expr/digia_expr.dart';
 
+import '../../../digia_ui.dart';
 import '../utils/object_util.dart';
+import '../utils/types.dart';
 import 'scope_context.dart';
 
 /// Evaluates a string expression and converts the result to the specified type.
@@ -16,7 +18,18 @@ T? evaluateExpression<T extends Object>(
   String expression,
   ScopeContext? scopeContext,
 ) {
-  return Expression.eval(expression, scopeContext)?.to<T>();
+  try {
+    return Expression.eval(expression, scopeContext)?.to<T>();
+  } catch (error) {
+    var errorString = '<!-- $error --!>';
+    if (DigiaUIClient.instance.developerConfig?.host is DashboardHost) {
+      DigiaUIClient.instance.developerConfig?.logger?.logError(
+          error: error.toString(), metaData: {'expression': expression});
+      return errorString.to<T>();
+    } else {
+      rethrow;
+    }
+  }
 }
 
 T? evaluate<T extends Object>(
@@ -29,8 +42,18 @@ T? evaluate<T extends Object>(
   if (!hasExpression(expression)) {
     return decoder?.call(expression) ?? expression.to<T>();
   }
-
-  return Expression.eval(expression as String, scopeContext)?.to<T>();
+  try {
+    return Expression.eval(expression as String, scopeContext)?.to<T>();
+  } catch (error) {
+    var errorString = '<!-- $error --!>';
+    if (DigiaUIClient.instance.developerConfig?.host is DashboardHost) {
+      DigiaUIClient.instance.developerConfig?.logger?.logError(
+          error: error.toString(), metaData: {'expression': expression});
+      return errorString.to<T>();
+    } else {
+      rethrow;
+    }
+  }
 }
 
 bool hasExpression(Object? expression) {

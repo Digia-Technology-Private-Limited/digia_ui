@@ -9,6 +9,7 @@ enum LogType {
   action,
   event,
   entity,
+  error,
 }
 
 class DUILogger {
@@ -95,6 +96,19 @@ class DUILogger {
       data: {
         'eventName': eventName,
         'eventPayload': eventPayload,
+      },
+    );
+  }
+
+  void logError({
+    required String error,
+    required JsonLike metaData,
+  }) {
+    log(
+      type: LogType.error,
+      data: {
+        'error': error,
+        'metaData': metaData,
       },
     );
   }
