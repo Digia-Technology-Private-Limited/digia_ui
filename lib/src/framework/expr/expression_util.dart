@@ -18,18 +18,7 @@ T? evaluateExpression<T extends Object>(
   String expression,
   ScopeContext? scopeContext,
 ) {
-  try {
-    return Expression.eval(expression, scopeContext)?.to<T>();
-  } catch (error) {
-    var errorString = '<!-- $error --!>';
-    if (DigiaUIClient.instance.developerConfig?.host is DashboardHost) {
-      DigiaUIClient.instance.developerConfig?.logger?.logError(
-          error: error.toString(), metaData: {'expression': expression});
-      return errorString.to<T>();
-    } else {
-      rethrow;
-    }
-  }
+  return Expression.eval(expression, scopeContext)?.to<T>();
 }
 
 T? evaluate<T extends Object>(
@@ -42,18 +31,7 @@ T? evaluate<T extends Object>(
   if (!hasExpression(expression)) {
     return decoder?.call(expression) ?? expression.to<T>();
   }
-  try {
-    return Expression.eval(expression as String, scopeContext)?.to<T>();
-  } catch (error) {
-    var errorString = '<!-- $error --!>';
-    if (DigiaUIClient.instance.developerConfig?.host is DashboardHost) {
-      DigiaUIClient.instance.developerConfig?.logger?.logError(
-          error: error.toString(), metaData: {'expression': expression});
-      return errorString.to<T>();
-    } else {
-      rethrow;
-    }
-  }
+  return Expression.eval(expression as String, scopeContext)?.to<T>();
 }
 
 bool hasExpression(Object? expression) {
