@@ -7,7 +7,7 @@ import 'package:uuid/uuid.dart';
 
 import '../digia_ui.dart';
 import 'core/functions/js_functions.dart';
-// import 'framework/state/state_context.dart';
+import 'framework/state/state_context.dart';
 import 'network/network_client.dart';
 import 'preferences.dart';
 import 'version.dart';
@@ -118,9 +118,9 @@ class DigiaUIClient {
 
     // _instance.appState = DUIAppState.fromJson(_instance.config.appState ?? {});
 
-    // if (developerConfig?.inspector?.stateObserver != null) {
-    //   StateContext.observer = developerConfig?.inspector?.stateObserver;
-    // }
+    if (developerConfig?.inspector?.stateObserver != null) {
+      StateContext.observer = developerConfig?.inspector?.stateObserver;
+    }
 
     _instance._isInitialized = true;
   }
