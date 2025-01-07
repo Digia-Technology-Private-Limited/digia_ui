@@ -46,7 +46,7 @@ scripts:
 dependencies:
   cached_network_image: ^3.3.0
   carousel_slider: ^5.0.0
-  chewie: ^1.8.1
+  chewie: 1.8.5
   collection: ^1.17.1
   copy_with_extension: ^6.0.0
   copy_with_extension_gen: ^6.0.0
