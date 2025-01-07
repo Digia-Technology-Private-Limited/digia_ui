@@ -51,9 +51,10 @@ abstract class VirtualWidgetRegistry {
     'digia/tabController': tabControllerBuilder,
     'digia/tabBar': tabBarBuilder,
     'digia/tabViewContent': tabViewContentBuilder,
+    'digia/navigationBar': navigationBarBuilder,
+    'digia/navigationBarItem': navigationBarItemBuilder,
     // 'digia/tabView': tabViewBuilder,
     // 'digia/tabViewItem': tabViewItemBuilder,
-    // 'digia/navigationBarItem': navigationBarItemBuilder,
 
     // Dividers and Decorative Elements
     'digia/horizontalDivider': horizontalDividerBuilder,
