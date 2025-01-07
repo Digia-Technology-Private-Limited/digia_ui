@@ -19,9 +19,13 @@ class VWBottomNavigationBarItem extends VirtualLeafStatelessWidget {
     final iconProps = props.toProps('icon');
     final icon = VWIcon(
             props: IconProps(
-              iconData: iconProps.get('iconData'),
-              size: iconProps.getDouble('size'),
-              color: iconProps.getString('color'),
+              iconData: iconProps?.get('iconData') ??
+                  {
+                    'pack': 'material',
+                    'key': 'home',
+                  },
+              size: iconProps?.getDouble('size'),
+              color: iconProps?.getString('color'),
             ),
             commonProps: commonProps,
             parent: this)
@@ -30,9 +34,13 @@ class VWBottomNavigationBarItem extends VirtualLeafStatelessWidget {
     final selectedIconProps = props.toProps('selectedIcon');
     final selectedIcon = VWIcon(
             props: IconProps(
-              iconData: selectedIconProps.get('iconData'),
-              size: selectedIconProps.getDouble('size'),
-              color: selectedIconProps.getString('color'),
+              iconData: selectedIconProps?.get('iconData') ??
+                  {
+                    'pack': 'material',
+                    'key': 'home',
+                  },
+              size: selectedIconProps?.getDouble('size'),
+              color: selectedIconProps?.getString('color'),
             ),
             commonProps: commonProps,
             parent: this)
@@ -44,13 +52,13 @@ class VWBottomNavigationBarItem extends VirtualLeafStatelessWidget {
       data: ThemeData(
         navigationBarTheme: NavigationBarThemeData(
           labelTextStyle: WidgetStateProperty.all(
-            payload.getTextStyle(labelTextProps.get('textStyle')),
+            payload.getTextStyle(labelTextProps?.get('textStyle')),
           ),
         ),
       ),
       child: NavigationDestination(
         icon: icon,
-        label: labelTextProps.getString('text') ?? '',
+        label: labelTextProps?.getString('text') ?? '',
         selectedIcon: selectedIcon,
       ),
     );

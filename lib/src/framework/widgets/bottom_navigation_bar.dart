@@ -43,11 +43,9 @@ class VWBottomNavigationBar extends VirtualStatelessWidget<Props> {
     final indicatorColor = payload.evalColor(props.get('indicatorColor'));
     final indicatorShape =
         To.buttonShape((props.get('indicatorShape')), payload.getColor);
-    final showLabels = (props.get('showLabels') == null ||
-            props.get('showLabels').toString().isEmpty ||
-            payload.eval<bool>(props.get('showLabels')) == false)
-        ? NavigationDestinationLabelBehavior.alwaysHide
-        : NavigationDestinationLabelBehavior.alwaysShow;
+    final showLabels = payload.eval<bool>(props.get('showLabels')) ?? true
+        ? NavigationDestinationLabelBehavior.alwaysShow
+        : NavigationDestinationLabelBehavior.alwaysHide;
 
     final destinations = children?.whereType<VWBottomNavigationBarItem>();
 
@@ -63,7 +61,6 @@ class VWBottomNavigationBar extends VirtualStatelessWidget<Props> {
       labelBehavior: showLabels,
       destinations:
           destinations?.map((e) => e.toWidget(payload)).toList() ?? [],
-      // onDestinationSelected: onDestinationSelected,
       onDestinationSelected: (value) {
         handleDestinationSelected(value, payload);
       },

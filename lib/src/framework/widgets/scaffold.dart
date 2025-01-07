@@ -145,15 +145,32 @@ class VWScaffold extends VirtualStatelessWidget<Props> {
     final children = bottomNavBar.children;
     if (children == null || children.isEmpty) return null;
 
-    final pageIds = children
-        .whereType<VWBottomNavigationBarItem>()
-        .map((item) => item.props.getString('pageId'))
-        .whereType<String>()
-        .toList();
+    final entities = children.whereType<VWBottomNavigationBarItem>();
+    final entityIds =
+        entities.map((item) => item.props?.getMap('entity')?['id']).toList();
 
-    if (pageIds.isEmpty) return null;
+    if (entityIds.isEmpty) return null;
 
-    final currentPageId = pageIds[bottomNavBarIndex];
-    return DUIFactory().createPage(currentPageId, {});
+    final currentEntityId = entityIds[bottomNavBarIndex];
+    final currentEntityArgDefs = entities
+        .where((item) => item.props?.getMap('entity')?['id'] == currentEntityId)
+        .first
+        .props
+        ?.getMap('entity')?['args'];
+
+    final enableSafeArea =
+        payload.eval<bool>(props.get('enableSafeArea')) ?? true;
+
+    Widget? content;
+    if (currentEntityId == null) return null;
+    if (DUIFactory().configProvider.isPage(currentEntityId)) {
+      content = DUIFactory().createPage(currentEntityId, currentEntityArgDefs);
+    } else {
+      content =
+          DUIFactory().createComponent(currentEntityId, currentEntityArgDefs);
+    }
+
+    if (enableSafeArea == false) return content;
+    return SafeArea(child: content);
   }
 }
