@@ -15,7 +15,10 @@ class MobileJsFunctions implements JSFunctions {
   Future<bool> initFunctions(FunctionInitStrategy strategy) async {
     try {
       switch (strategy) {
-        case PreferRemote(remotePath: String remotePath, version: int? version):
+        case PreferRemote(
+            remotePath: String remotePath,
+            version: int? version,
+          ):
           String fileName = JSFunctions.getFunctionsFileName(version);
           final fileExists =
               version == null ? false : await doesFileExist(fileName);
