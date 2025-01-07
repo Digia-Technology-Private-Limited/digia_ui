@@ -86,7 +86,8 @@ class VWScaffold extends VirtualStatelessWidget<Props> {
                     drawer: drawer,
                     endDrawer: endDrawer,
                     bottomNavigationBar: buildBottomNavigationBar(payload),
-                    body: _buildBodyWithNavBar(payload, bottomNavBarIndex),
+                    body: _buildBodyWithNavBar(
+                        payload, bottomNavBarIndex, enableSafeArea),
                     persistentFooterButtons: persistentFooterButtons,
                   );
                 },
@@ -138,39 +139,36 @@ class VWScaffold extends VirtualStatelessWidget<Props> {
     });
   }
 
-  Widget? _buildBodyWithNavBar(RenderPayload payload, int bottomNavBarIndex) {
+  Widget? _buildBodyWithNavBar(
+      RenderPayload payload, int bottomNavBarIndex, bool enableSafeArea) {
     final bottomNavBar = childOf('bottomNavigationBar');
     if (bottomNavBar is! VWBottomNavigationBar) return null;
 
-    final children = bottomNavBar.children;
-    if (children == null || children.isEmpty) return null;
+    final navigationItems =
+        bottomNavBar.children?.whereType<VWBottomNavigationBarItem>().toList();
+    if (navigationItems == null || navigationItems.isEmpty) return null;
 
-    final entities = children.whereType<VWBottomNavigationBarItem>();
-    final entityIds =
-        entities.map((item) => item.props?.getMap('entity')?['id']).toList();
-
-    if (entityIds.isEmpty) return null;
+    final entityIds = navigationItems
+        .map((item) => item.props?.getMap('entity')?['id'])
+        .toList();
+    if (entityIds.isEmpty || bottomNavBarIndex >= entityIds.length) return null;
 
     final currentEntityId = entityIds[bottomNavBarIndex];
-    final currentEntityArgDefs = entities
-        .where((item) => item.props?.getMap('entity')?['id'] == currentEntityId)
-        .first
+    if (currentEntityId == null) return null;
+
+    final currentEntityArgs = navigationItems
+        .firstWhere(
+            (item) => item.props?.getMap('entity')?['id'] == currentEntityId)
         .props
         ?.getMap('entity')?['args'];
 
-    final enableSafeArea =
-        payload.eval<bool>(props.get('enableSafeArea')) ?? true;
-
-    Widget? content;
-    if (currentEntityId == null) return null;
+    final Widget? entity;
     if (DUIFactory().configProvider.isPage(currentEntityId)) {
-      content = DUIFactory().createPage(currentEntityId, currentEntityArgDefs);
+      entity = DUIFactory().createPage(currentEntityId, currentEntityArgs);
     } else {
-      content =
-          DUIFactory().createComponent(currentEntityId, currentEntityArgDefs);
+      entity = DUIFactory().createComponent(currentEntityId, currentEntityArgs);
     }
 
-    if (enableSafeArea == false) return content;
-    return SafeArea(child: content);
+    return enableSafeArea ? SafeArea(child: entity) : entity;
   }
 }
