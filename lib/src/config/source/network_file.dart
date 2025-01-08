@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import '../../Utils/download.dart';
-import '../../file_operations.dart';
+import '../../Utils/download_operations.dart';
+import '../../Utils/file_operations.dart';
 import '../../framework/utils/types.dart';
 import '../exception.dart';
 import '../model.dart';
@@ -14,6 +14,7 @@ class NetworkFileConfigSource implements ConfigSource {
   final String cacheFilePath;
   final Duration? timeout;
   final FileOperations fileOps;
+  final DownloadOperations downloadOps = DownloadOperationsImpl();
 
   NetworkFileConfigSource(
     this.provider,
@@ -75,7 +76,7 @@ class NetworkFileConfigSource implements ConfigSource {
   Future<DUIConfig> _downloadAndCacheConfig(String fileUrl) async {
     // Download file with timeout
     final file = await Future.any([
-      downloadFile(fileUrl, cacheFilePath),
+      downloadOps.downloadFile(fileUrl, cacheFilePath),
       if (timeout != null) Future.delayed(timeout!).then((_) => null),
     ]);
     if (file == null || file.data == null) {

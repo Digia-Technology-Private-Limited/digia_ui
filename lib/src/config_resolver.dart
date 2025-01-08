@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 import '../digia_ui.dart';
-import 'Utils/download.dart';
+import 'Utils/download_operations.dart';
 import 'Utils/file_operations.dart';
 import 'config/model.dart';
 import 'core/appConfig/app_config.dart';
@@ -11,6 +11,8 @@ import 'core/functions/js_functions.dart';
 
 class AppConfigResolver {
   final FlavorInfo _flavorInfo;
+  final FileOperations fileOps = const FileOperationsImpl();
+  final DownloadOperations downloadOps = DownloadOperationsImpl();
 
   AppConfigResolver(this._flavorInfo);
 
@@ -47,7 +49,7 @@ class AppConfigResolver {
       var appConfig = DUIConfig(await config
           .getAppConfigFileFromNetwork('/config/getAppConfigRelease'));
       if (appConfig.functionsFilePath != null) {
-        downloadFile(appConfig.functionsFilePath!,
+        downloadOps.downloadFile(appConfig.functionsFilePath!,
             JSFunctions.getFunctionsFileName(appConfig.version));
       }
     } catch (e) {
@@ -101,7 +103,7 @@ class AppConfigResolver {
           return appConfig;
         }
         try {
-          var cachedAppConfigJson = await readFileString('appConfig.json');
+          var cachedAppConfigJson = await fileOps.readString('appConfig.json');
           cachedAppConfig = DUIConfig(
               (json.decode(cachedAppConfigJson!) as Map<String, dynamic>));
           version = cachedAppConfig.version;

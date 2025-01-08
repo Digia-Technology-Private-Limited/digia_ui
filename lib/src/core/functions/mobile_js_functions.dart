@@ -3,11 +3,14 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:flutter_js/flutter_js.dart';
 
-import '../../Utils/download.dart';
+import '../../Utils/download_operations.dart';
 import '../../Utils/file_operations.dart';
 import './js_functions.dart';
 
 class MobileJsFunctions implements JSFunctions {
+  final FileOperations fileOps = const FileOperationsImpl();
+  final DownloadOperations downloadOps = DownloadOperationsImpl();
+
   JavascriptRuntime runtime = getJavascriptRuntime();
   late String jsFile;
 
@@ -21,12 +24,12 @@ class MobileJsFunctions implements JSFunctions {
           ):
           String fileName = JSFunctions.getFunctionsFileName(version);
           final fileExists =
-              version == null ? false : await doesFileExist(fileName);
+              version == null ? false : await fileOps.exists(fileName);
           if (!fileExists) {
-            var res = await downloadFile(remotePath, fileName);
+            var res = await downloadOps.downloadFile(remotePath, fileName);
             if (res == null) return false;
           }
-          jsFile = await readFileString(fileName) ?? '';
+          jsFile = await fileOps.readString(fileName) ?? '';
           return true;
         case PreferLocal(localPath: String localPath):
           jsFile = await rootBundle.loadString(localPath);
