@@ -3,17 +3,26 @@ import 'package:digia_ui/src/config/factory.dart';
 import 'package:digia_ui/src/config/source/base.dart';
 import 'package:digia_ui/src/environment.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
-import '../mocks.dart';
 import '../config_data.dart';
+import '../mocks.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   late MockConfigProvider mockProvider;
   late MockFileOperations mockFileOps;
   late MockDownloadOperations mockDownloadOps;
   late MockAssetBundleOperations mockAssetOps;
+
+  TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+      .setMockMethodCallHandler(
+    const MethodChannel('plugins.flutter.io/path_provider'),
+    (MethodCall methodCall) async => 'test',
+  );
 
   setUp(() {
     mockProvider = MockConfigProvider();
@@ -22,6 +31,11 @@ void main() {
     mockAssetOps = MockAssetBundleOperations();
 
     when(() => mockFileOps.exists(any())).thenAnswer((_) async => true);
+    when(() => mockProvider.initFunctions(
+          remotePath: any(named: 'remotePath'),
+          localPath: any(named: 'localPath'),
+          version: any(named: 'version'),
+        )).thenAnswer((_) async {});
   });
 
   ConfigSource createReleaseStrategy(InitPriority priority) {

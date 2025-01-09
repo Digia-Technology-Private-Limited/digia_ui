@@ -6,8 +6,8 @@ import 'package:digia_ui/src/environment.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
-import '../mocks.dart';
 import '../config_data.dart';
+import '../mocks.dart';
 
 void main() {
   late MockConfigProvider mockProvider;
@@ -31,7 +31,7 @@ void main() {
         when(() => mockProvider.initFunctions(
             remotePath: any(named: 'remotePath'))).thenAnswer((_) async {});
 
-        final config = await createVersionedStrategy(2).getConfig();
+        final DUIConfig config = await createVersionedStrategy(2).getConfig();
 
         expect(config, isA<DUIConfig>());
         expect(config.version, equals(2));
@@ -40,14 +40,16 @@ void main() {
 
       test('fetch config with different versions', () async {
         for (final version in [1, 5, 10]) {
-          when(() => mockProvider
-                  .getAppConfigFromNetwork('/config/getAppConfigForVersion'))
-              .thenAnswer((_) async => {
-                    ...validConfigData,
-                    'version': version,
-                  });
+          when(() => mockProvider.getAppConfigFromNetwork(
+              '/config/getAppConfigForVersion')).thenAnswer((_) async {
+            validConfigData['version'] = version;
+            return validConfigData;
+          });
 
-          await createVersionedStrategy(version).getConfig();
+          final DUIConfig config =
+              await createVersionedStrategy(version).getConfig();
+          expect(config, isA<DUIConfig>());
+          expect(config.version, equals(version));
           verify(() => mockProvider.addVersionHeader(version)).called(1);
         }
       });
@@ -82,12 +84,11 @@ void main() {
       });
 
       test('missing version in response', () async {
-        when(() => mockProvider
-                .getAppConfigFromNetwork('/config/getAppConfigForVersion'))
-            .thenAnswer((_) async => {
-                  ...validConfigData,
-                  'version': null,
-                });
+        when(() => mockProvider.getAppConfigFromNetwork(
+            '/config/getAppConfigForVersion')).thenAnswer((_) async {
+          validConfigData.remove('version');
+          return validConfigData;
+        });
 
         expect(
           () => createVersionedStrategy(1).getConfig(),
@@ -101,8 +102,9 @@ void main() {
                 .getAppConfigFromNetwork('/config/getAppConfigForVersion'))
             .thenAnswer((_) async => validConfigData);
         when(() => mockProvider.initFunctions(
-                remotePath: any(named: 'remotePath')))
-            .thenThrow(ConfigException('Function init failed'));
+            remotePath: 'path/to/functions',
+            localPath: null,
+            version: null)).thenThrow(ConfigException('Function init failed'));
 
         expect(
           () => createVersionedStrategy(1).getConfig(),

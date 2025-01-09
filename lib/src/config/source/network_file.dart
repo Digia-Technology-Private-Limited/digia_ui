@@ -14,7 +14,7 @@ class NetworkFileConfigSource implements ConfigSource {
   final String cacheFilePath;
   final Duration? timeout;
   final FileOperations fileOps;
-  final DownloadOperations downloadOps = DownloadOperationsImpl();
+  final DownloadOperations downloadOps;
 
   NetworkFileConfigSource(
     this.provider,
@@ -22,7 +22,8 @@ class NetworkFileConfigSource implements ConfigSource {
     this.cacheFilePath = 'appConfig.json',
     this.timeout,
     this.fileOps = const FileOperationsImpl(),
-  });
+    DownloadOperations? downloadOps,
+  }) : downloadOps = downloadOps ?? DownloadOperationsImpl();
 
   @override
   Future<DUIConfig> getConfig() async {

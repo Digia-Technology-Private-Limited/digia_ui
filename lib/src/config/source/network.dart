@@ -18,21 +18,18 @@ class NetworkConfigSource implements ConfigSource {
   Future<DUIConfig> getConfig() async {
     try {
       final networkData = await provider.getAppConfigFromNetwork(networkPath);
-      if (networkData == null) {
+      if (networkData == null || networkData.isEmpty) {
         throw ConfigException(
           'Network response is null',
           type: ConfigErrorType.network,
-          originalError: 'Network response is null',
-          stackTrace: StackTrace.current,
         );
       }
-
-      late final DUIConfig appConfig;
+      DUIConfig appConfig;
       try {
         appConfig = DUIConfig(networkData);
       } catch (e, stackTrace) {
         throw ConfigException(
-          'Failed to parse network config',
+          'Failed to parse network config data',
           type: ConfigErrorType.invalidData,
           originalError: e,
           stackTrace: stackTrace,

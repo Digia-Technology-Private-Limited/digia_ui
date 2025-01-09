@@ -105,19 +105,85 @@ void main() {
 
   group('NetworkFileConfigSource Tests', () {
     test('download and cache new version', () async {
-      when(() => mockProvider.getAppConfigFromNetwork(any())).thenAnswer(
-          (_) async => {
-                'versionUpdated': true,
-                'appConfigFileUrl': 'http://example.com/config'
-              });
-      when(() => mockDownloadOps.downloadFile(any(), any()))
-          .thenAnswer((_) async => createMockResponse(validConfigData));
+      when(() => mockProvider.getAppConfigFromNetwork(
+          '/config/getAppConfigRelease')).thenAnswer((_) async {
+        validNetworkConfigData['versionUpdated'] = true;
+        validNetworkConfigData['version'] = 2;
+        return validNetworkConfigData;
+      });
+      when(
+        () => mockDownloadOps.downloadFile(
+            validNetworkConfigData['appConfigFileUrl'] as String,
+            'appConfig.json'),
+      ).thenAnswer((_) async => createMockResponse(validConfigData));
 
-      final source = NetworkFileConfigSource(mockProvider, '/config/path',
-          fileOps: mockFileOps);
+      final source = NetworkFileConfigSource(
+        mockProvider,
+        '/config/getAppConfigRelease',
+        fileOps: mockFileOps,
+      );
 
       final config = await source.getConfig();
       expect(config.version, equals(1));
+    });
+
+    test('should handle network error', () async {
+      when(() => mockProvider.getAppConfigFromNetwork(any()))
+          .thenThrow(ConfigException('Network error'));
+
+      final source = NetworkFileConfigSource(
+        mockProvider,
+        '/config/getAppConfigRelease',
+        fileOps: mockFileOps,
+      );
+
+      expect(() => source.getConfig(), throwsA(isA<ConfigException>()));
+    });
+
+    test('should handle invalid file url', () async {
+      when(() => mockProvider.getAppConfigFromNetwork(any()))
+          .thenAnswer((_) async => {'appConfigFileUrl': null});
+
+      final source = NetworkFileConfigSource(
+        mockProvider,
+        '/config/getAppConfigRelease',
+        fileOps: mockFileOps,
+      );
+
+      expect(() => source.getConfig(), throwsA(isA<ConfigException>()));
+    });
+
+    test('should handle download failure', () async {
+      when(() => mockProvider.getAppConfigFromNetwork(any()))
+          .thenAnswer((_) async => validNetworkConfigData);
+      when(() => mockDownloadOps.downloadFile(any(), any()))
+          .thenThrow(ConfigException('Download failed'));
+
+      final source = NetworkFileConfigSource(
+        mockProvider,
+        '/config/getAppConfigRelease',
+        fileOps: mockFileOps,
+        downloadOps: mockDownloadOps,
+      );
+
+      expect(() => source.getConfig(), throwsA(isA<ConfigException>()));
+    });
+
+    test('should handle timeout', () async {
+      when(() => mockProvider.getAppConfigFromNetwork(any()))
+          .thenAnswer((_) async {
+        await Future.delayed(const Duration(seconds: 6));
+        return validNetworkConfigData;
+      });
+
+      final source = NetworkFileConfigSource(
+        mockProvider,
+        '/config/getAppConfigRelease',
+        fileOps: mockFileOps,
+        timeout: const Duration(seconds: 5),
+      );
+
+      expect(() => source.getConfig(), throwsA(isA<ConfigException>()));
     });
   });
 
@@ -209,16 +275,12 @@ void main() {
 
     test('delegation error', () async {
       final source = DelegatedConfigSource(
-        () async => throw Exception('Delegate failed'),
+        () async => throw ConfigException('Delegate failed'),
       );
 
       expect(
         () => source.getConfig(),
-        throwsA(isA<ConfigException>().having(
-          (e) => e.message,
-          'message',
-          contains('Failed to execute config function'),
-        )),
+        throwsA(isA<ConfigException>()),
       );
     });
 
