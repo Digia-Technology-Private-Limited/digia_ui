@@ -10,6 +10,7 @@ import 'widget_props/app_bar_props.dart';
 import 'widget_props/before_after_slider_props.dart';
 import 'widget_props/bottom_navigation_bar_item_props.dart';
 import 'widget_props/bottom_navigation_bar_props.dart';
+import 'widget_props/carousel_props.dart';
 import 'widget_props/condtional_item_props.dart';
 import 'widget_props/custom_scroll_view_props.dart';
 import 'widget_props/flex_fit_props.dart';
@@ -43,6 +44,7 @@ import 'widgets/bottom_navigation_bar.dart';
 import 'widgets/bottom_navigation_bar_item.dart';
 import 'widgets/button.dart';
 import 'widgets/calendar.dart';
+import 'widgets/carousel.dart';
 import 'widgets/checkbox.dart';
 import 'widgets/circular_progress_bar.dart';
 import 'widgets/conditional_builder.dart';
@@ -889,6 +891,21 @@ VWBottomNavigationBarItem navigationBarItemBuilder(
 ) {
   return VWBottomNavigationBarItem(
     props: BottomNavigationBarItemProps.fromJson(data.props.value),
+    refName: data.refName,
+  );
+}
+
+VWCarousel carouselBuilder(
+  VWNodeData data,
+  VirtualWidget? parent,
+  VirtualWidgetRegistry registry,
+) {
+  return VWCarousel(
+    props: CarouselProps.fromJson(data.props.value),
+    commonProps: data.commonProps,
+    parent: parent,
+    repeatData: data.repeatData,
+    childGroups: createChildGroups(data.childGroups, parent, registry),
     refName: data.refName,
   );
 }

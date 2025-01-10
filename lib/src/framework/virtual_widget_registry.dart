@@ -82,7 +82,7 @@ abstract class VirtualWidgetRegistry {
     'digia/webView': webViewBuilder,
 
     // Data Display
-    // 'digia/carousel': carouselBuilder,
+    'digia/carousel': carouselBuilder,
     'digia/circularProgressBar': circularProgressBarBuilder,
     'digia/linearProgressBar': linearProgressBarBuilder,
     'digia/paginatedListView': paginatedListViewBuilder,
