@@ -51,9 +51,10 @@ abstract class VirtualWidgetRegistry {
     'digia/tabController': tabControllerBuilder,
     'digia/tabBar': tabBarBuilder,
     'digia/tabViewContent': tabViewContentBuilder,
+    'digia/navigationBar': navigationBarBuilder,
+    'digia/navigationBarItem': navigationBarItemBuilder,
     // 'digia/tabView': tabViewBuilder,
     // 'digia/tabViewItem': tabViewItemBuilder,
-    // 'digia/navigationBarItem': navigationBarItemBuilder,
 
     // Dividers and Decorative Elements
     'digia/horizontalDivider': horizontalDividerBuilder,
@@ -125,8 +126,11 @@ abstract class VirtualWidgetRegistry {
     ) builder,
   );
 
+  Widget Function(String viewId, JsonLike? args) get scaffoldBuilderFn;
+
   factory VirtualWidgetRegistry({
     required Widget Function(String id, JsonLike? args) componentBuilder,
+    required Widget Function(String viewId, JsonLike? args) scaffoldBuilderFn,
   }) = DefaultVirtualWidgetRegistry;
 
   VirtualWidget createWidget(VWData data, VirtualWidget? parent);
@@ -134,10 +138,13 @@ abstract class VirtualWidgetRegistry {
 
 class DefaultVirtualWidgetRegistry implements VirtualWidgetRegistry {
   final Widget Function(String id, JsonLike? args) componentBuilder;
+  @override
+  final Widget Function(String viewId, JsonLike? args) scaffoldBuilderFn;
   final Map<String, VirtualWidgetBuilder> builders;
 
   DefaultVirtualWidgetRegistry({
     required this.componentBuilder,
+    required this.scaffoldBuilderFn,
   }) : builders = Map.from(VirtualWidgetRegistry._defaultBuilders);
 
   @override

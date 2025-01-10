@@ -8,17 +8,20 @@ import 'virtual_widget_registry.dart';
 import 'widget_props/animated_switcher_props.dart';
 import 'widget_props/app_bar_props.dart';
 import 'widget_props/before_after_slider_props.dart';
+import 'widget_props/bottom_navigation_bar_item_props.dart';
+import 'widget_props/bottom_navigation_bar_props.dart';
 import 'widget_props/condtional_item_props.dart';
 import 'widget_props/custom_scroll_view_props.dart';
 import 'widget_props/flex_fit_props.dart';
 import 'widget_props/icon_props.dart';
+import 'widget_props/image_view_360_props.dart';
 import 'widget_props/nested_scroll_view_props.dart';
 import 'widget_props/opacity_props.dart';
 import 'widget_props/paginated_list_view_props.dart';
 import 'widget_props/paginated_sliver_list_props.dart';
-import 'widget_props/image_view_360_props.dart';
 import 'widget_props/pin_field_props.dart';
 import 'widget_props/safe_area_props.dart';
+import 'widget_props/scaffold_props.dart';
 import 'widget_props/sized_box_props.dart';
 import 'widget_props/sliver_app_bar_props.dart';
 import 'widget_props/spacer_props.dart';
@@ -36,6 +39,8 @@ import 'widgets/app_bar.dart';
 import 'widgets/async_builder.dart';
 import 'widgets/avatar.dart';
 import 'widgets/before_after_slider.dart';
+import 'widgets/bottom_navigation_bar.dart';
+import 'widgets/bottom_navigation_bar_item.dart';
 import 'widgets/button.dart';
 import 'widgets/calendar.dart';
 import 'widgets/checkbox.dart';
@@ -53,6 +58,7 @@ import 'widgets/html_view.dart';
 import 'widgets/icon.dart';
 import 'widgets/icon_button.dart';
 import 'widgets/image.dart';
+import 'widgets/imageView360.dart';
 import 'widgets/linear_progress_bar.dart';
 import 'widgets/list_view.dart';
 import 'widgets/lottie.dart';
@@ -60,7 +66,6 @@ import 'widgets/nested_scroll_view.dart';
 import 'widgets/opacity.dart';
 import 'widgets/paginated_list_view.dart';
 import 'widgets/paginated_sliver_list.dart';
-import 'widgets/imageView360.dart';
 import 'widgets/pin_field.dart';
 import 'widgets/refresh_indicator.dart';
 import 'widgets/rich_text.dart';
@@ -474,10 +479,12 @@ VWScaffold scaffoldBuilder(
   VirtualWidgetRegistry registry,
 ) {
   return VWScaffold(
-    props: data.props,
+    props: ScaffoldProps.fromJson(data.props.value),
     commonProps: data.commonProps,
     parent: parent,
     childGroups: createChildGroups(data.childGroups, parent, registry),
+    refName: data.refName,
+    scaffoldBuilderFn: registry.scaffoldBuilderFn,
   );
 }
 
@@ -858,5 +865,30 @@ VWAnimatedSwitcher animatedSwitcher(
     parent: parent,
     refName: data.refName,
     childGroups: createChildGroups(data.childGroups, parent, registry),
+  );
+}
+
+VWBottomNavigationBar navigationBarBuilder(
+  VWNodeData data,
+  VirtualWidget? parent,
+  VirtualWidgetRegistry registry,
+) {
+  return VWBottomNavigationBar(
+    props: BottomNavigationBarProps.fromJson(data.props.value),
+    commonProps: data.commonProps,
+    parent: parent,
+    childGroups: createChildGroups(data.childGroups, parent, registry),
+    refName: data.refName,
+  );
+}
+
+VWBottomNavigationBarItem navigationBarItemBuilder(
+  VWNodeData data,
+  VirtualWidget? parent,
+  VirtualWidgetRegistry registry,
+) {
+  return VWBottomNavigationBarItem(
+    props: BottomNavigationBarItemProps.fromJson(data.props.value),
+    refName: data.refName,
   );
 }
