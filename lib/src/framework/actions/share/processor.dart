@@ -6,7 +6,7 @@ import '../../expr/scope_context.dart';
 import '../base/processor.dart';
 import 'action.dart';
 
-class ShareProcessor implements ActionProcessor<ShareAction> {
+class ShareProcessor extends ActionProcessor<ShareAction> {
   @override
   Future<Object?>? execute(
     BuildContext context,
@@ -15,6 +15,14 @@ class ShareProcessor implements ActionProcessor<ShareAction> {
   ) async {
     final message = action.message?.evaluate(scopeContext);
     final subject = action.subject?.evaluate(scopeContext);
+
+    logAction(
+      action.actionType.value,
+      {
+        'message': message,
+        'subject': subject,
+      },
+    );
 
     if (message != null && message.isNotEmpty) {
       if (kIsWeb) {

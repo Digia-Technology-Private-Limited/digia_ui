@@ -10,7 +10,7 @@ import '../base/action_flow.dart';
 import '../base/processor.dart';
 import 'action.dart';
 
-class ShowDialogProcessor implements ActionProcessor<ShowDialogAction> {
+class ShowDialogProcessor extends ActionProcessor<ShowDialogAction> {
   final Widget Function(BuildContext context, String id, JsonLike? args)
       viewBuilder;
   final Future<Object?>? Function(
@@ -39,6 +39,21 @@ class ShowDialogProcessor implements ActionProcessor<ShowDialogAction> {
         .maybe((p0) => provider?.getColor(p0));
     final waitForResult = action.waitForResult;
 
+    logAction(
+      action.actionType.value,
+      {
+        'viewId': action.viewId,
+        'args': action.args,
+        'barrierDismissible': barrierDismissible,
+        'barrierColor': barrierColor.toString(),
+        'waitForResult': waitForResult,
+        'onResult': action.onResult?.actions
+            .map((a) => a.actionType.value)
+            .toList()
+            .toString(),
+      },
+    );
+
     Object? result = await presentDialog(
       context: context,
       builder: (innerCtx) {
@@ -56,6 +71,13 @@ class ShowDialogProcessor implements ActionProcessor<ShowDialogAction> {
     );
 
     if (waitForResult && context.mounted) {
+      logAction(
+        '${action.actionType.value} - Result',
+        {
+          'viewId': action.viewId,
+          'result': result,
+        },
+      );
       await executeActionFlow(
         context,
         action.onResult ?? ActionFlow.empty(),

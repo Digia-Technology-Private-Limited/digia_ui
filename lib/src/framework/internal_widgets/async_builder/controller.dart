@@ -8,7 +8,8 @@ class AsyncController<T> extends ChangeNotifier {
 
   AsyncController({Future<T> Function()? futureCreator}) {
     _futureCreator = futureCreator;
-    _currentFuture = _futureCreator?.call();
+    // Commenting this out, since this causes double API Calls whenever a Controller is not provided
+    // _currentFuture = _futureCreator?.call();
   }
 
   // Ideally we should be invalidating when futureBuilder is set,

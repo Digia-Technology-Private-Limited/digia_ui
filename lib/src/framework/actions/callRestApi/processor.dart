@@ -31,6 +31,14 @@ class CallRestApiProcessor extends ActionProcessor<CallRestApiAction> {
       return Future.error('No API Selected');
     }
 
+    logAction(
+      action.actionType.value,
+      {
+        'apiId': action.apiId,
+        'args': action.args,
+      },
+    );
+
     return executeApiAction(
       scopeContext,
       apiModel,

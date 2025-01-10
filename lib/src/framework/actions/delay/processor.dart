@@ -4,7 +4,7 @@ import '../../expr/scope_context.dart';
 import '../base/processor.dart';
 import 'action.dart';
 
-class DelayProcessor implements ActionProcessor<DelayAction> {
+class DelayProcessor extends ActionProcessor<DelayAction> {
   @override
   Future<Object?>? execute(
     BuildContext context,
@@ -12,6 +12,13 @@ class DelayProcessor implements ActionProcessor<DelayAction> {
     ScopeContext? scopeContext,
   ) async {
     final durationInMs = action.durationInMs?.evaluate(scopeContext);
+
+    logAction(
+      action.actionType.value,
+      {
+        'durationInMs': durationInMs,
+      },
+    );
 
     if (durationInMs != null) {
       await Future<void>.delayed(Duration(milliseconds: durationInMs));

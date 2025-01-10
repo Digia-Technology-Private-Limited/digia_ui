@@ -4,7 +4,7 @@ import '../../expr/scope_context.dart';
 import '../base/processor.dart';
 import 'action.dart';
 
-class ControlDrawerProcessor implements ActionProcessor<ControlDrawerAction> {
+class ControlDrawerProcessor extends ActionProcessor<ControlDrawerAction> {
   @override
   Future<Object?>? execute(
     BuildContext context,
@@ -13,6 +13,13 @@ class ControlDrawerProcessor implements ActionProcessor<ControlDrawerAction> {
   ) async {
     final choice = action.choice?.evaluate(scopeContext);
     final scaffold = Scaffold.maybeOf(context);
+
+    logAction(
+      action.actionType.value,
+      {
+        'choice': choice,
+      },
+    );
 
     switch (choice) {
       case 'openDrawer':

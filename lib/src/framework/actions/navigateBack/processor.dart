@@ -4,7 +4,7 @@ import '../../expr/scope_context.dart';
 import '../base/processor.dart';
 import 'action.dart';
 
-class NavigateBackProcessor implements ActionProcessor<NavigateBackAction> {
+class NavigateBackProcessor extends ActionProcessor<NavigateBackAction> {
   @override
   Future<Object?>? execute(
     BuildContext context,
@@ -15,6 +15,14 @@ class NavigateBackProcessor implements ActionProcessor<NavigateBackAction> {
     final result = {
       'data': action.result?.deepEvaluate(scopeContext),
     };
+
+    logAction(
+      action.actionType.value,
+      {
+        'maybe': maybe,
+        'result': result,
+      },
+    );
 
     if (maybe) {
       return Navigator.of(context).maybePop(result);

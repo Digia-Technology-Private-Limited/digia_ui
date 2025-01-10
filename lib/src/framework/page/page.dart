@@ -72,18 +72,12 @@ class DUIPage extends StatelessWidget {
             resolvePageArgs,
             state,
           ),
+          controller: controller,
           onPageLoaded: pageDef.onPageLoad,
           onBackPress: pageDef.onBackPress,
         );
       },
     );
-
-    if (controller != null) {
-      child = ListenableBuilder(
-        listenable: controller!,
-        builder: (context, _) => child,
-      );
-    }
 
     return ResourceProvider(
       icons: resources?.icons ?? {},
@@ -132,6 +126,7 @@ class _DUIPageContent extends StatefulWidget {
   final ScopeContext scope;
   final ActionFlow? onPageLoaded;
   final ActionFlow? onBackPress;
+  final DUIPageController? controller;
 
   const _DUIPageContent({
     required this.pageId,
@@ -140,6 +135,7 @@ class _DUIPageContent extends StatefulWidget {
     required this.layout,
     required this.registry,
     required this.scope,
+    this.controller,
     this.onPageLoaded,
     this.onBackPress,
   });
@@ -159,9 +155,17 @@ class _DUIPageContentState extends State<_DUIPageContent> {
 
   @override
   Widget build(BuildContext context) {
+    Widget child;
+    if (widget.controller != null) {
+      child = ListenableBuilder(
+          listenable: widget.controller!,
+          builder: (context, _) => _buildContent(context));
+    } else {
+      child = _buildContent(context);
+    }
     return PopScope(
       onPopInvoked: _handleBackPress,
-      child: _buildContent(context),
+      child: child,
     );
   }
 

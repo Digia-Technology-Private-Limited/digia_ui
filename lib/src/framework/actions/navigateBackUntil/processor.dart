@@ -5,7 +5,7 @@ import '../base/processor.dart';
 import 'action.dart';
 
 class NavigateBackUntilProcessor
-    implements ActionProcessor<NavigateBackUntilAction> {
+    extends ActionProcessor<NavigateBackUntilAction> {
   @override
   Future<Object?>? execute(
     BuildContext context,
@@ -14,6 +14,13 @@ class NavigateBackUntilProcessor
   ) async {
     final routeNameToPopUntil =
         action.routeNameToPopUntil?.evaluate(scopeContext);
+
+    logAction(
+      action.actionType.value,
+      {
+        'routeNameToPopUntil': routeNameToPopUntil,
+      },
+    );
 
     if (routeNameToPopUntil == null) {
       Navigator.of(context).pop();
