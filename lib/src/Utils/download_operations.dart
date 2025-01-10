@@ -5,15 +5,15 @@ import '../framework/utils/functional_util.dart';
 import '../network/core/types.dart';
 import 'file_operations.dart';
 
-abstract class DownloadOperations {
+abstract class FileDownloader {
   Future<Response?> downloadFile(String url, String fileName, {int retry = 0});
 }
 
-class DownloadOperationsImpl implements DownloadOperations {
+class FileDownloaderImpl implements FileDownloader {
   final FileOperations fileOps;
   final Dio client;
 
-  DownloadOperationsImpl({
+  FileDownloaderImpl({
     this.fileOps = const FileOperationsImpl(),
     Dio? client,
   }) : client = client ?? Dio();

@@ -9,7 +9,7 @@ import './js_functions.dart';
 
 class MobileJsFunctions implements JSFunctions {
   final FileOperations fileOps = const FileOperationsImpl();
-  final DownloadOperations downloadOps = DownloadOperationsImpl();
+  final FileDownloader downloadOps = FileDownloaderImpl();
 
   JavascriptRuntime runtime = getJavascriptRuntime();
   late String jsFile;

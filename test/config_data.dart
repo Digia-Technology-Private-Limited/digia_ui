@@ -413,12 +413,15 @@ final minimalConfigData = {
     'colors': {'light': {}},
     'fonts': {}
   },
-  'rest': <String, dynamic>{'defaultHeaders': {}}
+  'rest': <String, dynamic>{'defaultHeaders': {}},
+  'functionsFilePath': 'testPathToFunctionFile',
+  'version': 1
 };
 
-final Map<String, Object?> validNetworkConfigData = {
-  'appConfigFileUrl': 'path/to/config',
-  'functionsFilePath': 'path/to/functions',
+final Map<String, dynamic> validNetworkConfigData = {
+  'appConfigFileUrl': 'testPathToConfigFile',
+  'functionsFilePath': 'updatedFunctionPath',
+  'version': 2
 };
 
 final invalidConfigData = {

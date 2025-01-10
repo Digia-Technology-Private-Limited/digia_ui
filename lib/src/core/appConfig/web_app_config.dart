@@ -6,7 +6,7 @@ import '../../network/core/types.dart';
 import 'app_config.dart';
 
 class WebAppConfig implements AppConfig {
-  final DownloadOperations downloadOps = DownloadOperationsImpl();
+  final FileDownloader downloadOps = FileDownloaderImpl();
 
   @override
   Future<Map<String, dynamic>?> getAppConfigFromNetwork(String path) async {

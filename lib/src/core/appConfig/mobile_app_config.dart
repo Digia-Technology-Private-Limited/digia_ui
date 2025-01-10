@@ -8,7 +8,7 @@ import 'app_config.dart';
 
 class MobileAppConfig implements AppConfig {
   final FileOperations fileOps = const FileOperationsImpl();
-  final DownloadOperations downloadOps = DownloadOperationsImpl();
+  final FileDownloader downloadOps = FileDownloaderImpl();
 
   @override
   Future<Map<String, dynamic>?> getAppConfigFromNetwork(String path) async {

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 
 import '../environment.dart';
@@ -66,16 +68,20 @@ ConfigSource _createReleaseFlavorConfigSource(
 
         return config;
       }),
-    PrioritizeCache() => FallbackConfigSource(
-        primary: CachedConfigSource(provider, 'appConfig.json'),
-        fallback: [
-          NetworkFileConfigSource(
-            provider,
-            '/config/getAppConfigRelease',
-          ),
-          AssetConfigSource(provider, appConfigPath, functionsPath),
-        ],
-      ),
+    PrioritizeCache() => DelegatedConfigSource(() async {
+        unawaited(NetworkFileConfigSource(
+          provider,
+          '/config/getAppConfigRelease',
+        ).getConfig());
+
+        final source = FallbackConfigSource(
+            primary: CachedConfigSource(provider, 'appConfig.json'),
+            fallback: [
+              AssetConfigSource(provider, appConfigPath, functionsPath),
+            ]);
+
+        return source.getConfig();
+      }),
     PrioritizeLocal() =>
       AssetConfigSource(provider, appConfigPath, functionsPath),
   };

@@ -12,7 +12,7 @@ import 'core/functions/js_functions.dart';
 class AppConfigResolver {
   final FlavorInfo _flavorInfo;
   final FileOperations fileOps = const FileOperationsImpl();
-  final DownloadOperations downloadOps = DownloadOperationsImpl();
+  final FileDownloader downloadOps = FileDownloaderImpl();
 
   AppConfigResolver(this._flavorInfo);
 

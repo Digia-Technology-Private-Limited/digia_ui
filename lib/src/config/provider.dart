@@ -1,3 +1,6 @@
+import '../Utils/asset_bundle_operations.dart';
+import '../Utils/download_operations.dart';
+import '../Utils/file_operations.dart';
 import '../framework/utils/types.dart';
 
 /// Pending: addVersion to headers.
@@ -11,4 +14,7 @@ abstract class ConfigProvider {
     int? version,
   });
   void addVersionHeader(int version);
+  FileOperations get fileOps;
+  AssetBundleOperations get bundleOps;
+  FileDownloader get downloadOps;
 }

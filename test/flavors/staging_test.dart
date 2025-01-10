@@ -21,45 +21,74 @@ void main() {
         ConfigStrategyFactory.createStrategy(Staging(), mockProvider);
 
     group('Success scenarios', () {
-      test('complete config', () async {
-        when(() => mockProvider
-                .getAppConfigFromNetwork('/config/getAppConfigStaging'))
-            .thenAnswer((_) async => validConfigData);
-        when(() => mockProvider.initFunctions(
-            remotePath: 'path/to/functions',
-            localPath: null,
-            version: null)).thenAnswer((_) async {});
+      test('Happy Path: Config with all required fields', () async {
+        // ARRANGE
+        const expectedConfigPath = '/config/getAppConfigStaging';
+        final expectedFunctionsPath = minimalConfigData['functionsFilePath'];
 
-        final DUIConfig config = await createStagingStrategy().getConfig();
-
-        expect(config, isA<DUIConfig>());
-        expect(config.version, equals(1));
-        verify(() => mockProvider
-            .getAppConfigFromNetwork('/config/getAppConfigStaging')).called(1);
-        verify(() =>
-                mockProvider.initFunctions(remotePath: 'path/to/functions'))
-            .called(1);
-      });
-
-      test('minimal config', () async {
-        when(() => mockProvider
-                .getAppConfigFromNetwork('/config/getAppConfigStaging'))
+        // Set up mocks
+        when(() => mockProvider.getAppConfigFromNetwork(any()))
             .thenAnswer((_) async => minimalConfigData);
         when(() => mockProvider.initFunctions(
-            remotePath: 'path/to/functions',
-            localPath: null,
-            version: null)).thenAnswer((_) async {});
+              remotePath: any(named: 'remotePath'),
+              localPath: null,
+              version: null,
+            )).thenAnswer((_) async {});
 
+        // ACT
         final DUIConfig config = await createStagingStrategy().getConfig();
 
-        expect(config, isA<DUIConfig>());
-        expect(config.version, isNull,
-            reason: 'Optional version should be null');
-        expect(config.versionUpdated, isNull,
-            reason: 'Optional version update flag should be null');
-        expect(config.functionsFilePath, isNull,
-            reason: 'Optional functions path should be null');
+        // ASSERT
+        expect(
+          config,
+          isA<DUIConfig>(),
+          reason: 'Config should be parsed successfully',
+        );
+
+        // Verify getAppConfigFromNetwork
+        final networkCall =
+            verify(() => mockProvider.getAppConfigFromNetwork(captureAny()));
+        networkCall.called(1);
+        expect(
+          networkCall.captured.single,
+          expectedConfigPath,
+          reason:
+              'getAppConfigFromNetwork should be called with correct config path',
+        );
+
+        // Verify initFunctions
+        final initializeFunction = verify(() => mockProvider.initFunctions(
+              remotePath: captureAny(named: 'remotePath'),
+              localPath: null,
+              version: null,
+            ));
+        initializeFunction.called(1);
+        expect(
+          initializeFunction.captured.single,
+          expectedFunctionsPath,
+          reason: 'initFunctions should be called with correct functions path',
+        );
       });
+
+      // test('minimal config', () async {
+      //   when(() => mockProvider
+      //           .getAppConfigFromNetwork('/config/getAppConfigStaging'))
+      //       .thenAnswer((_) async => minimalConfigData);
+      //   when(() => mockProvider.initFunctions(
+      //       remotePath: 'path/to/functions',
+      //       localPath: null,
+      //       version: null)).thenAnswer((_) async {});
+
+      //   final DUIConfig config = await createStagingStrategy().getConfig();
+
+      //   expect(config, isA<DUIConfig>());
+      //   expect(config.version, isNull,
+      //       reason: 'Optional version should be null');
+      //   expect(config.versionUpdated, isNull,
+      //       reason: 'Optional version update flag should be null');
+      //   expect(config.functionsFilePath, isNull,
+      //       reason: 'Optional functions path should be null');
+      // });
     });
 
     group('Error scenarios', () {

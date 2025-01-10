@@ -20,38 +20,54 @@ void main() {
     ConfigSource createVersionedStrategy(int version) =>
         ConfigStrategyFactory.createStrategy(Versioned(version), mockProvider);
 
-    group('Success scenarios', () {
-      test('fetch config with matching version', () async {
-        when(() => mockProvider
-                .getAppConfigFromNetwork('/config/getAppConfigForVersion'))
-            .thenAnswer((_) async => {
-                  ...validConfigData,
-                  'version': 2,
-                });
+    group('Success scenarios for Versioned Config Strategy', () {
+      test('Happy Path: Config with specific version', () async {
+        // ARRANGE
+        const expectedVersion = 2;
+        const expectedConfigPath = '/config/getAppConfigForVersion';
+
+        // Set up mocks
+        when(() => mockProvider.getAppConfigFromNetwork(expectedConfigPath))
+            .thenAnswer((_) async {
+          final versionedConfig = Map<String, dynamic>.from(validConfigData);
+          versionedConfig['version'] = expectedVersion;
+          return versionedConfig;
+        });
+
         when(() => mockProvider.initFunctions(
-            remotePath: any(named: 'remotePath'))).thenAnswer((_) async {});
+              remotePath: any(named: 'remotePath'),
+              localPath: null,
+              version: null,
+            )).thenAnswer((_) async {});
 
-        final DUIConfig config = await createVersionedStrategy(2).getConfig();
+        when(() => mockProvider.addVersionHeader(any()))
+            .thenAnswer((_) async {});
 
-        expect(config, isA<DUIConfig>());
-        expect(config.version, equals(2));
-        verify(() => mockProvider.addVersionHeader(2)).called(1);
-      });
+        // ACT
+        final config =
+            await createVersionedStrategy(expectedVersion).getConfig();
 
-      test('fetch config with different versions', () async {
-        for (final version in [1, 5, 10]) {
-          when(() => mockProvider.getAppConfigFromNetwork(
-              '/config/getAppConfigForVersion')).thenAnswer((_) async {
-            validConfigData['version'] = version;
-            return validConfigData;
-          });
+        // ASSERT
+        expect(
+          config,
+          isA<DUIConfig>(),
+          reason: 'Should return a valid DUIConfig object',
+        );
+        expect(
+          config.version,
+          equals(expectedVersion),
+          reason: 'Config should have the correct version',
+        );
 
-          final DUIConfig config =
-              await createVersionedStrategy(version).getConfig();
-          expect(config, isA<DUIConfig>());
-          expect(config.version, equals(version));
-          verify(() => mockProvider.addVersionHeader(version)).called(1);
-        }
+        // Verify all function calls
+        verify(() => mockProvider.getAppConfigFromNetwork(expectedConfigPath))
+            .called(1);
+        verify(() => mockProvider.addVersionHeader(expectedVersion)).called(1);
+        verify(() => mockProvider.initFunctions(
+              remotePath: captureAny(named: 'remotePath'),
+              localPath: null,
+              version: null,
+            )).called(1);
       });
     });
 

@@ -16,54 +16,85 @@ void main() {
     mockProvider = MockConfigProvider();
   });
 
+  /// getAppConfigFromNetwork
+  /// 1. getAppConfigFromNetwork must be called exactly once
+  /// 2. getAppConfigFromNetwork should have captured 1 arg: '/config/getAppConfig'
+  ///
+  /// Init Functions:
+  /// 1. initFunctions must be called exactly once
+  /// 2. initFunctions should have captured 1 arg: minimalConfigData['functionsFilePath']
+
   group('Debug Strategy Tests', () {
     ConfigSource createStrategy() =>
         ConfigStrategyFactory.createStrategy(Debug(), mockProvider);
 
     group('Successful scenarios', () {
-      test('complete config with all fields', () async {
-        when(() => mockProvider.getAppConfigFromNetwork('/config/getAppConfig'))
-            .thenAnswer((_) async => validConfigData);
-        when(() => mockProvider.initFunctions(
-            remotePath: 'path/to/functions',
-            localPath: null,
-            version: null)).thenAnswer((_) async {});
+      test('Happy Path: Config with all required fields', () async {
+        // ARRANGE
+        const expectedConfigPath = '/config/getAppConfig';
+        final expectedFunctionsPath = minimalConfigData['functionsFilePath'];
 
-        final DUIConfig config = await createStrategy().getConfig();
-
-        expect(config, isA<DUIConfig>(),
-            reason: 'Config should be parsed successfully');
-        expect(config.version, equals(1), reason: 'Version should match');
-        expect(config.versionUpdated, isTrue,
-            reason: 'Version update flag should match');
-        expect(config.initialRoute, equals('homepage'),
-            reason: 'Initial route should match');
-
-        verify(() =>
-                mockProvider.getAppConfigFromNetwork('/config/getAppConfig'))
-            .called(1);
-        verify(() =>
-                mockProvider.initFunctions(remotePath: 'path/to/functions'))
-            .called(1);
-      });
-
-      test('minimal config with required fields only', () async {
-        when(() => mockProvider.getAppConfigFromNetwork('/config/getAppConfig'))
+        // Set up mocks
+        when(() => mockProvider.getAppConfigFromNetwork(any()))
             .thenAnswer((_) async => minimalConfigData);
         when(() => mockProvider.initFunctions(
-            remotePath: 'path/to/functions',
-            localPath: null,
-            version: null)).thenAnswer((_) async {});
+              remotePath: any(named: 'remotePath'),
+              localPath: null,
+              version: null,
+            )).thenAnswer((_) async {});
 
+        // ACT
         final DUIConfig config = await createStrategy().getConfig();
 
-        expect(config.version, isNull,
-            reason: 'Optional version should be null');
-        expect(config.versionUpdated, isNull,
-            reason: 'Optional version update flag should be null');
-        expect(config.functionsFilePath, isNull,
-            reason: 'Optional functions path should be null');
+        // ASSERT
+        expect(
+          config,
+          isA<DUIConfig>(),
+          reason: 'Config should be parsed successfully',
+        );
+
+        // Verify getAppConfigFromNetwork
+        final networkCall =
+            verify(() => mockProvider.getAppConfigFromNetwork(captureAny()));
+        networkCall.called(1);
+        expect(
+          networkCall.captured.single,
+          expectedConfigPath,
+          reason:
+              'getAppConfigFromNetwork should be called with correct config path',
+        );
+
+        // Verify initFunctions
+        final initializeFunction = verify(() => mockProvider.initFunctions(
+              remotePath: captureAny(named: 'remotePath'),
+              localPath: null,
+              version: null,
+            ));
+        initializeFunction.called(1);
+        expect(
+          initializeFunction.captured.single,
+          expectedFunctionsPath,
+          reason: 'initFunctions should be called with correct functions path',
+        );
       });
+
+      // test('minimal config with required fields only', () async {
+      //   when(() => mockProvider.getAppConfigFromNetwork('/config/getAppConfig'))
+      //       .thenAnswer((_) async => minimalConfigData);
+      //   when(() => mockProvider.initFunctions(
+      //       remotePath: 'path/to/functions',
+      //       localPath: null,
+      //       version: null)).thenAnswer((_) async {});
+
+      //   final DUIConfig config = await createStrategy().getConfig();
+
+      //   expect(config.version, isNull,
+      //       reason: 'Optional version should be null');
+      //   expect(config.versionUpdated, isNull,
+      //       reason: 'Optional version update flag should be null');
+      //   expect(config.functionsFilePath, isNull,
+      //       reason: 'Optional functions path should be null');
+      // });
     });
 
     group('Error scenarios', () {

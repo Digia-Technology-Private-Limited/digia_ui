@@ -17,13 +17,13 @@ import '../mocks.dart';
 void main() {
   late MockConfigProvider mockProvider;
   late MockFileOperations mockFileOps;
-  late MockDownloadOperations mockDownloadOps;
+  late MockFileDownloader mockDownloadOps;
   late MockAssetBundleOperations mockAssetOps;
 
   setUp(() {
     mockProvider = MockConfigProvider();
     mockFileOps = MockFileOperations();
-    mockDownloadOps = MockDownloadOperations();
+    mockDownloadOps = MockFileDownloader();
     mockAssetOps = MockAssetBundleOperations();
   });
 
