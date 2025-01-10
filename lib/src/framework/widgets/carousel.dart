@@ -32,7 +32,7 @@ class VWCarousel extends VirtualStatelessWidget<CarouselProps> {
           itemBuilder: (context, index, realIndex) {
             return childToRepeat.toWidget(
               payload.copyWithChainedContext(
-                _createExprContext(items[index], index),
+                _createExprContext(items[realIndex], index),
               ),
             );
           },
@@ -60,7 +60,7 @@ class VWCarousel extends VirtualStatelessWidget<CarouselProps> {
         child: CarouselSlider.builder(
           itemCount: children?.length,
           itemBuilder: (context, index, realIndex) {
-            return children![index].toWidget(payload);
+            return children![realIndex].toWidget(payload);
           },
           options: CarouselOptions(
             scrollDirection: props.direction,
