@@ -4,8 +4,8 @@ import '../base/virtual_stateless_widget.dart';
 import '../base/virtual_widget.dart';
 import '../models/props.dart';
 import '../render_payload.dart';
-import '../ui_factory.dart';
 import '../utils/functional_util.dart';
+import '../utils/types.dart';
 import '../widget_props/icon_props.dart';
 import 'app_bar.dart';
 import 'bottom_navigation_bar.dart';
@@ -15,12 +15,15 @@ import 'icon.dart';
 import 'safe_area.dart';
 
 class VWScaffold extends VirtualStatelessWidget<Props> {
+  final Widget Function(String viewId, JsonLike? args) scaffoldBuilderFn;
+
   VWScaffold({
     required super.props,
     required super.commonProps,
     required super.parent,
     required super.childGroups,
     super.refName,
+    required this.scaffoldBuilderFn,
   }) : super(repeatData: null);
 
   @override
@@ -162,13 +165,7 @@ class VWScaffold extends VirtualStatelessWidget<Props> {
         .props
         ?.getMap('entity')?['args'];
 
-    final Widget? entity;
-    if (DUIFactory().configProvider.isPage(currentEntityId)) {
-      entity = DUIFactory().createPage(currentEntityId, currentEntityArgs);
-    } else {
-      entity = DUIFactory().createComponent(currentEntityId, currentEntityArgs);
-    }
-
+    final Widget entity = scaffoldBuilderFn(currentEntityId, currentEntityArgs);
     return enableSafeArea ? SafeArea(child: entity) : entity;
   }
 }

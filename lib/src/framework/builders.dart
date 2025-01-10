@@ -480,6 +480,8 @@ VWScaffold scaffoldBuilder(
     commonProps: data.commonProps,
     parent: parent,
     childGroups: createChildGroups(data.childGroups, parent, registry),
+    refName: data.refName,
+    scaffoldBuilderFn: registry.scaffoldBuilderFn,
   );
 }
 
