@@ -32,7 +32,7 @@ class VWCarousel extends VirtualStatelessWidget<CarouselProps> {
           itemBuilder: (context, index, realIndex) {
             return childToRepeat.toWidget(
               payload.copyWithChainedContext(
-                _createExprContext(items[realIndex], index),
+                _createExprContext(items[realIndex], realIndex),
               ),
             );
           },
