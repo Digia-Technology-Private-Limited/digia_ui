@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 
 import '../base/virtual_leaf_stateless_widget.dart';
 import '../render_payload.dart';
+import '../utils/functional_util.dart';
+import '../widget_props/bottom_navigation_bar_item_props.dart';
 import '../widget_props/icon_props.dart';
 import 'icon.dart';
 
-class VWBottomNavigationBarItem extends VirtualLeafStatelessWidget {
+class VWBottomNavigationBarItem
+    extends VirtualLeafStatelessWidget<BottomNavigationBarItemProps> {
   VWBottomNavigationBarItem({
     required super.props,
     super.refName,
@@ -16,49 +19,45 @@ class VWBottomNavigationBarItem extends VirtualLeafStatelessWidget {
 
   @override
   Widget render(RenderPayload payload) {
-    final iconProps = props.toProps('icon');
+    final iconProps = props.icon.maybe(IconProps.fromJson);
     final icon = VWIcon(
-            props: IconProps(
-              iconData: iconProps?.get('iconData') ??
-                  {
-                    'pack': 'material',
-                    'key': 'home',
-                  },
-              size: iconProps?.getDouble('size'),
-              color: iconProps?.getString('color'),
-            ),
-            commonProps: commonProps,
-            parent: this)
-        .toWidget(payload);
+      props: iconProps ??
+          IconProps(
+            iconData: {
+              'pack': 'material',
+              'key': 'home',
+            },
+          ),
+      commonProps: commonProps,
+      parent: this,
+    ).toWidget(payload);
 
-    final selectedIconProps = props.toProps('selectedIcon');
+    final selectedIconProps = props.selectedIcon.maybe(IconProps.fromJson);
     final selectedIcon = VWIcon(
-            props: IconProps(
-              iconData: selectedIconProps?.get('iconData') ??
-                  {
-                    'pack': 'material',
-                    'key': 'home',
-                  },
-              size: selectedIconProps?.getDouble('size'),
-              color: selectedIconProps?.getString('color'),
-            ),
-            commonProps: commonProps,
-            parent: this)
-        .toWidget(payload);
+      props: selectedIconProps ??
+          IconProps(
+            iconData: {
+              'pack': 'material',
+              'key': 'home',
+            },
+          ),
+      commonProps: commonProps,
+      parent: this,
+    ).toWidget(payload);
 
-    final labelTextProps = props.toProps('labelText');
+    final labelTextProps = props.labelText;
 
     return Theme(
       data: ThemeData(
         navigationBarTheme: NavigationBarThemeData(
           labelTextStyle: WidgetStateProperty.all(
-            payload.getTextStyle(labelTextProps?.get('textStyle')),
+            payload.getTextStyle(labelTextProps?.textStyle),
           ),
         ),
       ),
       child: NavigationDestination(
         icon: icon,
-        label: labelTextProps?.getString('text') ?? '',
+        label: payload.evalExpr(labelTextProps?.text) ?? '',
         selectedIcon: selectedIcon,
       ),
     );

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
-import '../actions/base/action_flow.dart';
 import '../base/virtual_stateless_widget.dart';
 import '../internal_widgets/bottom_navigation_bar.dart' as internal;
-import '../models/props.dart';
 import '../render_payload.dart';
 import '../utils/flutter_type_converters.dart';
+import '../widget_props/bottom_navigation_bar_props.dart';
 import 'bottom_navigation_bar_item.dart';
 
-class VWBottomNavigationBar extends VirtualStatelessWidget<Props> {
+class VWBottomNavigationBar
+    extends VirtualStatelessWidget<BottomNavigationBarProps> {
   void Function(int)? onDestinationSelected;
 
   VWBottomNavigationBar({
@@ -23,44 +23,34 @@ class VWBottomNavigationBar extends VirtualStatelessWidget<Props> {
   void handleDestinationSelected(int index, RenderPayload payload) {
     final selectedChild = children?.elementAt(index);
     if (selectedChild is VWBottomNavigationBarItem) {
-      final actionValue = selectedChild.props.get('onPageSelected');
-      final onClick = ActionFlow.fromJson(actionValue);
-      payload.executeAction(onClick);
+      final onPageSelected = selectedChild.props.onPageSelected;
+      payload.executeAction(onPageSelected);
     }
     onDestinationSelected?.call(index);
   }
 
   @override
   Widget render(RenderPayload payload) {
-    final backgroundColor = payload.evalColor(props.get('backgroundColor'));
-    final animationDuration = Duration(
-        milliseconds: payload.eval<int>(props.get('animationDuration')) ?? 0);
-    final elevation = payload.eval<double>(props.get('elevation'));
-    final height = payload.eval<double>(props.get('height'));
-    final surfaceTintColor = payload.evalColor(props.get('surfaceTintColor'));
-    final overlayColor =
-        WidgetStateProperty.all(payload.evalColor(props.get('overlayColor')));
-    final indicatorColor = payload.evalColor(props.get('indicatorColor'));
-    final indicatorShape =
-        To.buttonShape((props.get('indicatorShape')), payload.getColor);
-    final showLabels = payload.eval<bool>(props.get('showLabels')) ?? true
-        ? NavigationDestinationLabelBehavior.alwaysShow
-        : NavigationDestinationLabelBehavior.alwaysHide;
-
-    final destinations = children?.whereType<VWBottomNavigationBarItem>();
-
     return internal.BottomNavigationBar(
-      backgroundColor: backgroundColor,
-      animationDuration: animationDuration,
-      elevation: elevation,
-      height: height,
-      surfaceTintColor: surfaceTintColor,
-      overlayColor: overlayColor,
-      indicatorColor: indicatorColor,
-      indicatorShape: indicatorShape,
-      labelBehavior: showLabels,
-      destinations:
-          destinations?.map((e) => e.toWidget(payload)).toList() ?? [],
+      backgroundColor: payload.evalColorExpr(props.backgroundColor),
+      animationDuration: Duration(
+          milliseconds: payload.evalExpr(props.animationDuration) ?? 0),
+      elevation: payload.evalExpr(props.elevation),
+      height: payload.evalExpr(props.height),
+      surfaceTintColor: payload.evalColorExpr(props.surfaceTintColor),
+      overlayColor:
+          WidgetStateProperty.all(payload.evalColorExpr(props.overlayColor)),
+      indicatorColor: payload.evalColorExpr(props.indicatorColor),
+      indicatorShape: To.buttonShape(
+          payload.evalExpr(props.indicatorShape), payload.getColor),
+      labelBehavior: payload.evalExpr(props.showLabels) ?? true
+          ? NavigationDestinationLabelBehavior.alwaysShow
+          : NavigationDestinationLabelBehavior.alwaysHide,
+      destinations: children
+              ?.whereType<VWBottomNavigationBarItem>()
+              .map((e) => e.toWidget(payload))
+              .toList() ??
+          [],
       onDestinationSelected: (value) {
         handleDestinationSelected(value, payload);
       },

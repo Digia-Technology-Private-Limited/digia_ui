@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import '../base/extensions.dart';
 import '../base/virtual_stateless_widget.dart';
 import '../base/virtual_widget.dart';
-import '../models/props.dart';
 import '../render_payload.dart';
 import '../utils/functional_util.dart';
 import '../utils/types.dart';
 import '../widget_props/icon_props.dart';
+import '../widget_props/scaffold_props.dart';
 import 'app_bar.dart';
 import 'bottom_navigation_bar.dart';
 import 'bottom_navigation_bar_item.dart';
@@ -14,7 +14,7 @@ import 'drawer.dart';
 import 'icon.dart';
 import 'safe_area.dart';
 
-class VWScaffold extends VirtualStatelessWidget<Props> {
+class VWScaffold extends VirtualStatelessWidget<ScaffoldProps> {
   final Widget Function(String viewId, JsonLike? args) scaffoldBuilderFn;
 
   VWScaffold({
@@ -40,10 +40,9 @@ class VWScaffold extends VirtualStatelessWidget<Props> {
     final themeData = Theme.of(payload.buildContext).copyWith(
       dividerTheme: const DividerThemeData(color: Colors.transparent),
       scaffoldBackgroundColor:
-          payload.evalColor(props.get('scaffoldBackgroundColor')),
+          payload.evalColorExpr(props.scaffoldBackgroundColor),
     );
-    final enableSafeArea =
-        payload.eval<bool>(props.get('enableSafeArea')) ?? true;
+    final enableSafeArea = payload.evalExpr(props.enableSafeArea) ?? true;
 
     return Theme(
         data: themeData,
@@ -152,18 +151,19 @@ class VWScaffold extends VirtualStatelessWidget<Props> {
     if (navigationItems == null || navigationItems.isEmpty) return null;
 
     final entityIds = navigationItems
-        .map((item) => item.props?.getMap('entity')?['id'])
+        .map(
+          (item) => as$<String?>(item.props.entity?['id']),
+        )
         .toList();
     if (entityIds.isEmpty || bottomNavBarIndex >= entityIds.length) return null;
 
     final currentEntityId = entityIds[bottomNavBarIndex];
     if (currentEntityId == null) return null;
 
-    final currentEntityArgs = navigationItems
-        .firstWhere(
-            (item) => item.props?.getMap('entity')?['id'] == currentEntityId)
+    final currentEntityArgs = as$<JsonLike?>(navigationItems
+        .firstWhere((item) => item.props.entity?['id'] == currentEntityId)
         .props
-        ?.getMap('entity')?['args'];
+        .entity?['args']);
 
     final Widget entity = scaffoldBuilderFn(currentEntityId, currentEntityArgs);
     return enableSafeArea ? SafeArea(child: entity) : entity;

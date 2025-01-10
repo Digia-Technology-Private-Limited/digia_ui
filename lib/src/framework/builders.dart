@@ -8,6 +8,8 @@ import 'virtual_widget_registry.dart';
 import 'widget_props/animated_switcher_props.dart';
 import 'widget_props/app_bar_props.dart';
 import 'widget_props/before_after_slider_props.dart';
+import 'widget_props/bottom_navigation_bar_item_props.dart';
+import 'widget_props/bottom_navigation_bar_props.dart';
 import 'widget_props/condtional_item_props.dart';
 import 'widget_props/custom_scroll_view_props.dart';
 import 'widget_props/flex_fit_props.dart';
@@ -19,6 +21,7 @@ import 'widget_props/paginated_list_view_props.dart';
 import 'widget_props/paginated_sliver_list_props.dart';
 import 'widget_props/pin_field_props.dart';
 import 'widget_props/safe_area_props.dart';
+import 'widget_props/scaffold_props.dart';
 import 'widget_props/sized_box_props.dart';
 import 'widget_props/sliver_app_bar_props.dart';
 import 'widget_props/spacer_props.dart';
@@ -476,7 +479,7 @@ VWScaffold scaffoldBuilder(
   VirtualWidgetRegistry registry,
 ) {
   return VWScaffold(
-    props: data.props,
+    props: ScaffoldProps.fromJson(data.props.value),
     commonProps: data.commonProps,
     parent: parent,
     childGroups: createChildGroups(data.childGroups, parent, registry),
@@ -871,7 +874,7 @@ VWBottomNavigationBar navigationBarBuilder(
   VirtualWidgetRegistry registry,
 ) {
   return VWBottomNavigationBar(
-    props: data.props,
+    props: BottomNavigationBarProps.fromJson(data.props.value),
     commonProps: data.commonProps,
     parent: parent,
     childGroups: createChildGroups(data.childGroups, parent, registry),
@@ -885,7 +888,7 @@ VWBottomNavigationBarItem navigationBarItemBuilder(
   VirtualWidgetRegistry registry,
 ) {
   return VWBottomNavigationBarItem(
-    props: data.props,
+    props: BottomNavigationBarItemProps.fromJson(data.props.value),
     refName: data.refName,
   );
 }
