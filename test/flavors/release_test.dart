@@ -46,6 +46,10 @@ void main() {
   group('Release Strategy - PrioritizeNetwork', () {
     test('PrioritizeNetwork - Happy Path2 sad', () async {
       // ARRANGE
+      final Map<String, dynamic> newConfigData = Map.from(validConfigData)
+        ..['version'] = 2
+        ..['functionsFilePath'] = 'updatedFunctionPath';
+
       // Mock cache read to return initial config (version 1)
       when(() => mockFileOps.readString('appConfig.json'))
           .thenAnswer((_) async => json.encode(validConfigData));
@@ -60,7 +64,7 @@ void main() {
 
       // Mock file download - this should return the actual bytes of the new config
       final Uint8List mockDownloadedBytes =
-          utf8.encode(json.encode(validNetworkConfigData));
+          utf8.encode(json.encode(newConfigData));
       when(() => mockDownloadOps.downloadFile(
             validNetworkConfigData['appConfigFileUrl'] as String,
             'appConfig.json',
@@ -79,6 +83,8 @@ void main() {
       final config = await strategy.getConfig();
 
       // ASSERT
+
+      // TODO: Use verifyInOrder instead of verify
       // First, cache is checked
       verify(() => mockFileOps.readString('appConfig.json')).called(1);
 
@@ -97,64 +103,64 @@ void main() {
           ));
 
       // Write the new config to cache
-      verify(() => mockFileOps.writeBytesToFile(captureAny(), 'appConfig.json'))
-          .called(1);
-
-      // verifyInOrder([
-      //   // First, cache is checked
-      //   () => mockFileOps.readString('appConfig.json'),
-
-      //   // Then version header is set from cached config
-      //   () => mockProvider.addVersionHeader(1),
-
-      //   // Network call is made with the version header
-      //   () =>
-      //       mockProvider.getAppConfigFromNetwork('/config/getAppConfigRelease'),
-
-      //   // Download the new config
-      //   () => mockDownloadOps.downloadFile(
-      //       validNetworkConfigData['appConfigFileUrl'] as String,
-      //       'appConfig.json'),
-
-      //   // Write the new config to cache
-      //   () =>
-      //       mockFileOps.writeBytesToFile(mockDownloadedBytes, 'appConfig.json'),
-      // ]);
+      verify(() => mockProvider.fileOps
+          .writeBytesToFile(captureAny(), 'appConfig.json')).called(1);
 
       // Verify final config values
       expect(config.version, equals(2));
-      expect(config.functionsFilePath,
-          equals('updatedFunctionPath')); // Note this change
+      expect(config.functionsFilePath, equals('updatedFunctionPath'));
     });
 
     test('PrioritizeCache - Happy Path', () async {
       // ARRANGE
+      final burnedConfig = Map<String, dynamic>.from(validConfigData)
+        ..['version'] = 3
+        ..['functionsFilePath'] = 'burnedPath';
+
       final cacheConfig = Map<String, dynamic>.from(validConfigData)
-        ..['version'] = 1
+        ..['version'] = 2
         ..['functionsFilePath'] = 'cachedPath';
 
       final networkConfig = Map<String, dynamic>.from(validNetworkConfigData)
-        ..['version'] = 2
-        ..['functionsFilePath'] = 'newPath'
+        ..['version'] = 3
+        ..['functionsFilePath'] = 'networkPath'
         ..['appConfigFileUrl'] = 'downloadUrl';
 
-      // 1. Mock cache exists and read
-      when(() => mockProvider.fileOps.exists('appConfig.json'))
+      final donwloadedConfig = Map<String, dynamic>.from(validConfigData)
+        ..['version'] = 3
+        ..['functionsFilePath'] = 'networkPath';
+
+      // Mock burned config
+      when(() => mockAssetOps.readString('appConfig.json'))
+          .thenAnswer((_) async => json.encode({
+                'isSuccess': true,
+                'data': {'response': burnedConfig}
+              }));
+
+      // Mock cache operations
+      when(() => mockFileOps.exists('appConfig.json'))
           .thenAnswer((_) async => true);
       when(() => mockFileOps.readString('appConfig.json'))
           .thenAnswer((_) async => json.encode(cacheConfig));
 
-      // 2. Mock network call and download
+      // Mock network operations
       when(() => mockProvider
               .getAppConfigFromNetwork('/config/getAppConfigRelease'))
           .thenAnswer((_) async => networkConfig);
-      when(() => mockDownloadOps.downloadFile('downloadUrl', 'appConfig.json'))
-          .thenAnswer((_) async => Response(
-                data: utf8.encode(json.encode(networkConfig)),
-                requestOptions: RequestOptions(path: 'downloadUrl'),
-              ));
 
-      // 3. Mock cache write
+      // Mock download operations
+      final Uint8List mockDownloadedBytes =
+          utf8.encode(json.encode(donwloadedConfig));
+      when(() => mockDownloadOps.downloadFile(
+            networkConfig['appConfigFileUrl'] as String,
+            'appConfig.json',
+            retry: 0,
+          )).thenAnswer((_) async => Response(
+            data: mockDownloadedBytes,
+            requestOptions: RequestOptions(),
+          ));
+
+      // Mock cache write
       when(() => mockFileOps.writeStringToFile(any(), 'appConfig.json'))
           .thenAnswer((_) async => true);
 
@@ -162,27 +168,27 @@ void main() {
       final strategy = createReleaseStrategy(PrioritizeCache());
       final config = await strategy.getConfig();
 
-      // ASSERT
-      // Verify immediate cache read
-      verify(() => mockFileOps.readString('appConfig.json')).called(1);
-
-      // Verify background network call happens
+      // ASSERT - Immediate Operations
+      // Version comparison
+      verify(() => mockAssetOps.readString('appConfig.json')).called(1);
+      verify(() => mockFileOps.readString('appConfig.json')).called(2);
+      // Network call started
       verify(() => mockProvider
           .getAppConfigFromNetwork('/config/getAppConfigRelease')).called(1);
 
-      // Verify config matches cache values (not network)
-      expect(config.version, equals(1));
+      // Verify immediate config return
+      expect(config.version, equals(2));
       expect(config.functionsFilePath, equals('cachedPath'));
 
-      // Allow async operations to complete
+      // ASSERT - Background Operations
       await Future.delayed(Duration.zero);
 
-      // Verify download and cache update happened
       verify(() =>
               mockDownloadOps.downloadFile('downloadUrl', 'appConfig.json'))
           .called(1);
-      verify(() => mockFileOps.writeStringToFile(any(), 'appConfig.json'))
-          .called(1);
+      verify(() =>
+              mockProvider.fileOps.writeStringToFile(any(), 'appConfig.json'))
+          .called(3);
     });
 
     test('PrioritizeLocal - Happy Path2', () async {

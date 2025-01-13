@@ -69,16 +69,28 @@ ConfigSource _createReleaseFlavorConfigSource(
         return config;
       }),
     PrioritizeCache() => DelegatedConfigSource(() async {
+        final burnedSource =
+            AssetConfigSource(provider, appConfigPath, functionsPath);
+        final burnedConfig = await burnedSource.getConfig();
+
+        try {
+          final cachedSource = CachedConfigSource(provider, 'appConfig.json');
+          final cachedConfig = await cachedSource.getConfig();
+
+          if (cachedConfig.version != burnedConfig.version) {
+            await provider.fileOps.delete('appConfig.json');
+          }
+        } catch (_) {}
+
         unawaited(NetworkFileConfigSource(
           provider,
           '/config/getAppConfigRelease',
         ).getConfig());
 
         final source = FallbackConfigSource(
-            primary: CachedConfigSource(provider, 'appConfig.json'),
-            fallback: [
-              AssetConfigSource(provider, appConfigPath, functionsPath),
-            ]);
+          primary: CachedConfigSource(provider, 'appConfig.json'),
+          fallback: [burnedSource],
+        );
 
         return source.getConfig();
       }),
