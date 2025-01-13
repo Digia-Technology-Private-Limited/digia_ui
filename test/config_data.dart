@@ -402,7 +402,7 @@ final Map<String, Object?> validConfigData = {
   },
   'version': 1,
   'versionUpdated': true,
-  'functionsFilePath': 'path/to/functions',
+  'functionsFilePath': 'testPathToFunctionFile',
   'appState': <String, dynamic>{},
 };
 
@@ -410,8 +410,8 @@ final minimalConfigData = {
   'appSettings': <String, String>{'initialRoute': 'home'},
   'pages': <String, Object?>{},
   'theme': <String, dynamic>{
-    'colors': {'light': {}},
-    'fonts': {}
+    'colors': <String, dynamic>{'light': {}},
+    'fonts': <String, dynamic>{}
   },
   'rest': <String, dynamic>{'defaultHeaders': {}},
   'functionsFilePath': 'testPathToFunctionFile',

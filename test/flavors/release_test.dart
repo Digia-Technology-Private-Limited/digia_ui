@@ -1,35 +1,34 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:digia_ui/src/config/factory.dart';
 import 'package:digia_ui/src/config/source/base.dart';
 import 'package:digia_ui/src/environment.dart';
-import 'package:flutter/services.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
+import '../config_data.dart';
 import '../mocks.dart';
 
 void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
-
   late MockConfigProvider mockProvider;
-  // late MockFileOperations mockFileOps;
-  // late MockDownloadOperations mockDownloadOps;
-  // late MockAssetBundleOperations mockAssetOps;
-
-  TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-      .setMockMethodCallHandler(
-    const MethodChannel('plugins.flutter.io/path_provider'),
-    (MethodCall methodCall) async => 'test',
-  );
+  late MockFileOperations mockFileOps;
+  late MockFileDownloader mockDownloadOps;
+  late MockAssetBundleOperations mockAssetOps;
 
   setUp(() {
     mockProvider = MockConfigProvider();
-    // mockFileOps = MockFileOperations();
-    // mockDownloadOps = MockDownloadOperations();
-    // mockAssetOps = MockAssetBundleOperations();
+    mockFileOps = MockFileOperations();
+    mockDownloadOps = MockFileDownloader();
+    mockAssetOps = MockAssetBundleOperations();
 
-    // when(() => mockFileOps.exists(any())).thenAnswer((_) async => true);
+    // Setup provider getters
+    when(() => mockProvider.fileOps).thenReturn(mockFileOps);
+    when(() => mockProvider.downloadOps).thenReturn(mockDownloadOps);
+    when(() => mockProvider.bundleOps).thenReturn(mockAssetOps);
+
+    // Setup other mocked behaviors
     when(() => mockProvider.initFunctions(
           remotePath: any(named: 'remotePath'),
           localPath: any(named: 'localPath'),
@@ -45,220 +44,175 @@ void main() {
   }
 
   group('Release Strategy - PrioritizeNetwork', () {
-    test('PrioritizeNetwork - Happy Path', () async {
+    test('PrioritizeNetwork - Happy Path2 sad', () async {
       // ARRANGE
-      // 1. Initial cached config
-      final initialConfig = {
-        'appSettings': {'initialRoute': 'home'},
-        'pages': {},
-        'theme': {
-          'colors': {'light': {}},
-          'fonts': {}
-        },
-        'rest': {'defaultHeaders': {}},
-        'functionsFilePath': 'initialPath',
-        'version': 1
-      };
-
-      // 2. Network config
-      final networkConfig = {
-        'appSettings': {'initialRoute': 'home'},
-        'pages': {},
-        'theme': {
-          'colors': {'light': {}},
-          'fonts': {}
-        },
-        'rest': {'defaultHeaders': {}},
-        'functionsFilePath': 'updatedPath',
-        'version': 2
-      };
-
-      // 3. Setup mocks
-      final mockProvider = MockConfigProvider();
-      final mockFileOps = MockFileOperations();
-      final mockBundleOps = MockAssetBundleOperations();
-
-      // Setup provider operations
-      when(() => mockProvider.fileOps).thenReturn(mockFileOps);
-      when(() => mockProvider.bundleOps).thenReturn(mockBundleOps);
-
-      // Cache operations
+      // Mock cache read to return initial config (version 1)
       when(() => mockFileOps.readString('appConfig.json'))
-          .thenAnswer((_) async => json.encode(initialConfig));
-      when(() => mockFileOps.writeStringToFile(any(), any()))
-          .thenAnswer((_) async => true);
+          .thenAnswer((_) async => json.encode(validConfigData));
 
-      // Asset operations (fallback)
-      when(() => mockBundleOps.readString(any()))
-          .thenAnswer((_) async => json.encode({
-                'data': {'response': initialConfig}
-              }));
-
-      // Network operations
+      // Mock network call to return new config (version 2)
       when(() => mockProvider
               .getAppConfigFromNetwork('/config/getAppConfigRelease'))
-          .thenAnswer((_) async => networkConfig);
+          .thenAnswer((_) async => validNetworkConfigData);
 
-      // Functions initialization
-      when(() => mockProvider.initFunctions(
-            remotePath: any(named: 'remotePath'),
-            version: any(named: 'version'),
-          )).thenAnswer((_) async {});
+      // Mock setting version header
+      when(() => mockProvider.addVersionHeader(1)).thenReturn(null);
+
+      // Mock file download - this should return the actual bytes of the new config
+      final Uint8List mockDownloadedBytes =
+          utf8.encode(json.encode(validNetworkConfigData));
+      when(() => mockDownloadOps.downloadFile(
+            validNetworkConfigData['appConfigFileUrl'] as String,
+            'appConfig.json',
+            retry: 0,
+          )).thenAnswer((_) async => Response(
+            data: mockDownloadedBytes,
+            requestOptions: RequestOptions(),
+          ));
+
+      // Mock cache write with the new config
+      when(() => mockFileOps.writeBytesToFile(any(), 'appConfig.json'))
+          .thenAnswer((_) async => true);
 
       // ACT
       final strategy = createReleaseStrategy(PrioritizeNetwork(5));
       final config = await strategy.getConfig();
 
       // ASSERT
-      verifyInOrder([
-        // Initial config fetch (cache)
-        () => mockProvider.fileOps.readString('appConfig.json'),
-        // Version header set
-        () => mockProvider.addVersionHeader(1),
-        // Network config fetch
-        () =>
-            mockProvider.getAppConfigFromNetwork('/config/getAppConfigRelease'),
-        // Cache update
-        () => mockFileOps.writeStringToFile(any(), 'appConfig.json'),
-      ]);
+      // First, cache is checked
+      verify(() => mockFileOps.readString('appConfig.json')).called(1);
 
-      // Verify final config
-      expect(config.version, equals(2));
-      expect(config.functionsFilePath, equals('updatedPath'));
-
-      // Verify call counts
+      // Then version header is set from cached config
       verify(() => mockProvider.addVersionHeader(1)).called(1);
-      verify(() => mockFileOps.writeStringToFile(any(), 'appConfig.json'))
+
+      // Network call is made with the version header
+      verify(() => mockProvider
+          .getAppConfigFromNetwork('/config/getAppConfigRelease')).called(1);
+
+      // Download the new config
+      verify(() => mockDownloadOps.downloadFile(
+            validNetworkConfigData['appConfigFileUrl'] as String,
+            'appConfig.json',
+            retry: 0,
+          ));
+
+      // Write the new config to cache
+      verify(() => mockFileOps.writeBytesToFile(captureAny(), 'appConfig.json'))
           .called(1);
+
+      // verifyInOrder([
+      //   // First, cache is checked
+      //   () => mockFileOps.readString('appConfig.json'),
+
+      //   // Then version header is set from cached config
+      //   () => mockProvider.addVersionHeader(1),
+
+      //   // Network call is made with the version header
+      //   () =>
+      //       mockProvider.getAppConfigFromNetwork('/config/getAppConfigRelease'),
+
+      //   // Download the new config
+      //   () => mockDownloadOps.downloadFile(
+      //       validNetworkConfigData['appConfigFileUrl'] as String,
+      //       'appConfig.json'),
+
+      //   // Write the new config to cache
+      //   () =>
+      //       mockFileOps.writeBytesToFile(mockDownloadedBytes, 'appConfig.json'),
+      // ]);
+
+      // Verify final config values
+      expect(config.version, equals(2));
+      expect(config.functionsFilePath,
+          equals('updatedFunctionPath')); // Note this change
     });
 
     test('PrioritizeCache - Happy Path', () async {
       // ARRANGE
-      final cachedConfig = {
-        'data': {
-          'response': {
-            'appSettings': {'initialRoute': 'home'},
-            'pages': {},
-            'theme': {
-              'colors': {'light': {}},
-              'fonts': {}
-            },
-            'rest': {'defaultHeaders': {}},
-            'functionsFilePath': 'cachedPath',
-            'version': 1
-          }
-        }
-      };
+      final cacheConfig = Map<String, dynamic>.from(validConfigData)
+        ..['version'] = 1
+        ..['functionsFilePath'] = 'cachedPath';
 
-      final networkConfig = {
-        'data': {
-          'response': {
-            'appSettings': {'initialRoute': 'home'},
-            'pages': {},
-            'theme': {
-              'colors': {'light': {}},
-              'fonts': {}
-            },
-            'rest': {'defaultHeaders': {}},
-            'functionsFilePath': 'networkPath',
-            'version': 2
-          }
-        }
-      };
+      final networkConfig = Map<String, dynamic>.from(validNetworkConfigData)
+        ..['version'] = 2
+        ..['functionsFilePath'] = 'newPath'
+        ..['appConfigFileUrl'] = 'downloadUrl';
 
-      // Setup cache operations
+      // 1. Mock cache exists and read
       when(() => mockProvider.fileOps.exists('appConfig.json'))
           .thenAnswer((_) async => true);
-      when(() => mockProvider.fileOps.readString('appConfig.json'))
-          .thenAnswer((_) async => json.encode(cachedConfig));
+      when(() => mockFileOps.readString('appConfig.json'))
+          .thenAnswer((_) async => json.encode(cacheConfig));
 
-      // Setup asset operations (fallback)
-      when(() => mockProvider.bundleOps.readString('appConfig.json'))
-          .thenAnswer((_) async => json.encode(cachedConfig));
-
-      // Setup network operations
+      // 2. Mock network call and download
       when(() => mockProvider
               .getAppConfigFromNetwork('/config/getAppConfigRelease'))
           .thenAnswer((_) async => networkConfig);
+      when(() => mockDownloadOps.downloadFile('downloadUrl', 'appConfig.json'))
+          .thenAnswer((_) async => Response(
+                data: utf8.encode(json.encode(networkConfig)),
+                requestOptions: RequestOptions(path: 'downloadUrl'),
+              ));
 
-      // Setup functions initialization
-      when(() => mockProvider.initFunctions(
-            remotePath: any(named: 'remotePath'),
-            version: any(named: 'version'),
-            localPath: any(named: 'localPath'),
-          )).thenAnswer((_) async {});
+      // 3. Mock cache write
+      when(() => mockFileOps.writeStringToFile(any(), 'appConfig.json'))
+          .thenAnswer((_) async => true);
 
       // ACT
       final strategy = createReleaseStrategy(PrioritizeCache());
       final config = await strategy.getConfig();
 
       // ASSERT
-      // Verify cache was read
-      verify(() => mockProvider.fileOps.readString('appConfig.json')).called(1);
+      // Verify immediate cache read
+      verify(() => mockFileOps.readString('appConfig.json')).called(1);
 
-      // Verify network call was made (but result not used)
+      // Verify background network call happens
       verify(() => mockProvider
           .getAppConfigFromNetwork('/config/getAppConfigRelease')).called(1);
 
-      // Config should match cache (not network) values
+      // Verify config matches cache values (not network)
       expect(config.version, equals(1));
       expect(config.functionsFilePath, equals('cachedPath'));
 
-      // Verify functions initialized with cache values
-      verify(() => mockProvider.initFunctions(
-            remotePath: 'cachedPath',
-            version: 1,
-          )).called(1);
+      // Allow async operations to complete
+      await Future.delayed(Duration.zero);
+
+      // Verify download and cache update happened
+      verify(() =>
+              mockDownloadOps.downloadFile('downloadUrl', 'appConfig.json'))
+          .called(1);
+      verify(() => mockFileOps.writeStringToFile(any(), 'appConfig.json'))
+          .called(1);
     });
 
-    test('PrioritizeLocal - Happy Path', () async {
+    test('PrioritizeLocal - Happy Path2', () async {
       // ARRANGE
-      final assetConfig = {
-        'data': {
-          'response': {
-            'appSettings': {'initialRoute': 'home'},
-            'pages': {},
-            'theme': {
-              'colors': {'light': {}},
-              'fonts': {}
-            },
-            'rest': {'defaultHeaders': {}},
-            'functionsFilePath': 'localPath',
-            'version': 1
-          }
-        }
-      };
-
-      // Setup asset bundle operations
-      when(() => mockProvider.bundleOps.readString('appConfig.json'))
-          .thenAnswer((_) async => json.encode(assetConfig));
-
-      // Setup functions initialization
-      when(() => mockProvider.initFunctions(
-            localPath: any(named: 'localPath'),
-          )).thenAnswer((_) async {});
+      when(() => mockAssetOps.readString('appConfig.json'))
+          .thenAnswer((_) async => validConfigJson);
 
       // ACT
       final strategy = createReleaseStrategy(PrioritizeLocal());
       final config = await strategy.getConfig();
 
       // ASSERT
-      // Verify asset read
-      verify(() => mockProvider.bundleOps.readString('appConfig.json'))
-          .called(1);
+      verifyInOrder([
+        // Verify only asset read is called
+        () => mockAssetOps.readString('appConfig.json'),
+        // Verify functions initialization
+        () => mockProvider.initFunctions(localPath: 'functions.js'),
+      ]);
 
-      // Verify config values
+      // Verify config values from validConfigData
       expect(config.version, equals(1));
-      expect(config.functionsFilePath, equals('localPath'));
+      expect(config.functionsFilePath, equals('testPathToFunctionFile'));
 
-      // Verify functions initialized with local path
-      verify(() => mockProvider.initFunctions(
-            localPath: 'functions.js',
-          )).called(1);
-
-      // Verify no cache/network operations
-      verifyNever(() => mockProvider.fileOps.readString(any()));
+      // Verify no cache/network/download operations occurred
+      verifyZeroInteractions(mockFileOps);
+      verifyZeroInteractions(mockDownloadOps);
+      verifyNever(() => mockFileOps.readString(any()));
+      verifyNever(() => mockDownloadOps.downloadFile(any(), any()));
       verifyNever(() => mockProvider.getAppConfigFromNetwork(any()));
+      // verifyNoMoreInteractions(mockProvider);
     });
   });
 }

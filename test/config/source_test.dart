@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:digia_ui/src/config/exception.dart';
 import 'package:digia_ui/src/config/model.dart';
@@ -25,6 +26,15 @@ void main() {
     mockFileOps = MockFileOperations();
     mockDownloadOps = MockFileDownloader();
     mockAssetOps = MockAssetBundleOperations();
+
+    when(() => mockProvider.bundleOps).thenReturn(mockAssetOps);
+    when(() => mockProvider.fileOps).thenReturn(mockFileOps);
+    when(() => mockProvider.downloadOps).thenReturn(mockDownloadOps);
+    when(() => mockProvider.initFunctions(
+          remotePath: any(named: 'remotePath'),
+          localPath: any(named: 'localPath'),
+          version: any(named: 'version'),
+        )).thenAnswer((_) async {});
   });
 
   group('NetworkConfigSource Tests', () {
@@ -58,10 +68,9 @@ void main() {
   group('CachedConfigSource Tests', () {
     test('cache hit with valid data', () async {
       when(() => mockFileOps.readString('config.json'))
-          .thenAnswer((_) async => validConfigJson);
+          .thenAnswer((_) async => json.encode(validConfigData));
 
-      final source =
-          CachedConfigSource(mockProvider, 'config.json', fileOps: mockFileOps);
+      final source = CachedConfigSource(mockProvider, 'config.json');
       final config = await source.getConfig();
 
       expect(config.version, equals(1));
@@ -71,8 +80,7 @@ void main() {
       when(() => mockFileOps.readString('config.json'))
           .thenAnswer((_) async => 'invalid json');
 
-      final source =
-          CachedConfigSource(mockProvider, 'config.json', fileOps: mockFileOps);
+      final source = CachedConfigSource(mockProvider, 'config.json');
 
       expect(() => source.getConfig(), throwsA(isA<ConfigException>()));
     });
@@ -84,8 +92,10 @@ void main() {
           .thenAnswer((_) async => validConfigJson);
 
       final source = AssetConfigSource(
-          mockProvider, 'assets/config.json', 'assets/functions.js',
-          bundleOps: mockAssetOps);
+        mockProvider,
+        'assets/config.json',
+        'assets/functions.js',
+      );
 
       final config = await source.getConfig();
       expect(config.version, equals(1));
@@ -96,8 +106,10 @@ void main() {
           .thenThrow(Exception('Asset not found'));
 
       final source = AssetConfigSource(
-          mockProvider, 'assets/config.json', 'assets/functions.js',
-          bundleOps: mockAssetOps);
+        mockProvider,
+        'assets/config.json',
+        'assets/functions.js',
+      );
 
       expect(() => source.getConfig(), throwsA(isA<ConfigException>()));
     });
@@ -120,7 +132,6 @@ void main() {
       final source = NetworkFileConfigSource(
         mockProvider,
         '/config/getAppConfigRelease',
-        fileOps: mockFileOps,
       );
 
       final config = await source.getConfig();
@@ -134,7 +145,6 @@ void main() {
       final source = NetworkFileConfigSource(
         mockProvider,
         '/config/getAppConfigRelease',
-        fileOps: mockFileOps,
       );
 
       expect(() => source.getConfig(), throwsA(isA<ConfigException>()));
@@ -147,7 +157,6 @@ void main() {
       final source = NetworkFileConfigSource(
         mockProvider,
         '/config/getAppConfigRelease',
-        fileOps: mockFileOps,
       );
 
       expect(() => source.getConfig(), throwsA(isA<ConfigException>()));
@@ -162,8 +171,6 @@ void main() {
       final source = NetworkFileConfigSource(
         mockProvider,
         '/config/getAppConfigRelease',
-        fileOps: mockFileOps,
-        downloadOps: mockDownloadOps,
       );
 
       expect(() => source.getConfig(), throwsA(isA<ConfigException>()));
@@ -179,7 +186,6 @@ void main() {
       final source = NetworkFileConfigSource(
         mockProvider,
         '/config/getAppConfigRelease',
-        fileOps: mockFileOps,
         timeout: const Duration(seconds: 5),
       );
 
