@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 
+import '../models/types.dart';
 import '../utils/flutter_type_converters.dart';
 import '../utils/functional_util.dart';
 import '../utils/types.dart';
@@ -18,14 +19,21 @@ class CarouselProps {
   final bool infiniteScroll;
   final bool reverseScroll;
   final double enlargeFactor;
+  final bool showIndicator;
+  final double offset;
+  final double dotHeight;
+  final double dotWidth;
+  final double spacing;
+  final ExprOr<String>? dotColor;
+  final ExprOr<String>? activeDotColor;
 
   CarouselProps({
     this.width,
     this.height,
-    this.direction = Axis.horizontal, // Default value for `direction`
+    this.direction = Axis.horizontal,
     this.aspectRatio = 0.25,
     this.initialPage = 1,
-    this.enlargeCenterPage = false, // Default value for `enlargeCenterPage`
+    this.enlargeCenterPage = false,
     this.viewportFraction = 0.8,
     this.autoPlay = false,
     this.animationDuration = 800,
@@ -33,10 +41,19 @@ class CarouselProps {
     this.infiniteScroll = false,
     this.reverseScroll = false,
     this.enlargeFactor = 0.3,
+    this.showIndicator = false,
+    this.offset = 16.0,
+    this.dotHeight = 8.0,
+    this.dotWidth = 8.0,
+    this.spacing = 16.0,
+    this.dotColor,
+    this.activeDotColor,
   });
 
   /// Factory constructor to create an instance from JSON
   factory CarouselProps.fromJson(JsonLike json) {
+    final indicatorJson =
+        (json['indicator'] as Map?)?['indicatorAvailable'] ?? {};
     return CarouselProps(
       width: as$<String>(json['width']),
       height: as$<String>(json['height']),
@@ -51,6 +68,13 @@ class CarouselProps {
       infiniteScroll: as$<bool>(json['infiniteScroll']) ?? false,
       reverseScroll: as$<bool>(json['reverseScroll']) ?? false,
       enlargeFactor: as$<double>(json['enlargeFactor']) ?? 0.3,
+      showIndicator: as$<bool>(indicatorJson['showIndicator']) ?? false,
+      offset: as$<double>(indicatorJson['offset']) ?? 16.0,
+      dotHeight: as$<double>(indicatorJson['dotHeight']) ?? 8.0,
+      dotWidth: as$<double>(indicatorJson['dotWidth']) ?? 8.0,
+      spacing: as$<double>(indicatorJson['spacing']) ?? 16.0,
+      dotColor: ExprOr.fromJson<String>(indicatorJson['dotColor']),
+      activeDotColor: ExprOr.fromJson<String>(indicatorJson['activeDotColor']),
     );
   }
 }
