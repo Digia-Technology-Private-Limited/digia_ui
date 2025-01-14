@@ -66,6 +66,7 @@ import 'widgets/list_view.dart';
 import 'widgets/lottie.dart';
 import 'widgets/nested_scroll_view.dart';
 import 'widgets/opacity.dart';
+import 'widgets/overlay.dart';
 import 'widgets/paginated_list_view.dart';
 import 'widgets/paginated_sliver_list.dart';
 import 'widgets/pin_field.dart';
@@ -81,6 +82,7 @@ import 'widgets/stack.dart';
 import 'widgets/stream_builder.dart';
 import 'widgets/styled_horizontal_divider.dart';
 import 'widgets/styled_vertical_divider.dart';
+import 'widgets/svg.dart';
 import 'widgets/switch.dart';
 import 'widgets/tab_view/tab_bar.dart';
 import 'widgets/tab_view/tab_view_content.dart';
@@ -281,6 +283,15 @@ VWIconButton iconButtonBuilder(VWNodeData data, VirtualWidget? parent, _) {
 
 VWImage imageBuilder(VWNodeData data, VirtualWidget? parent, _) {
   return VWImage(
+    props: data.props,
+    commonProps: data.commonProps,
+    parent: parent,
+    refName: data.refName,
+  );
+}
+
+VWSvgImage svgBuilder(VWNodeData data, VirtualWidget? parent, _) {
+  return VWSvgImage(
     props: data.props,
     commonProps: data.commonProps,
     parent: parent,
@@ -729,6 +740,20 @@ VWTabBar tabBarBuilder(
   VirtualWidgetRegistry registry,
 ) {
   return VWTabBar(
+    props: data.props,
+    commonProps: data.commonProps,
+    parent: parent,
+    childGroups: createChildGroups(data.childGroups, parent, registry),
+    refName: data.refName,
+  );
+}
+
+VWOverlay overlayBuilder(
+  VWNodeData data,
+  VirtualWidget? parent,
+  VirtualWidgetRegistry registry,
+) {
+  return VWOverlay(
     props: data.props,
     commonProps: data.commonProps,
     parent: parent,
