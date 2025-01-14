@@ -30,8 +30,8 @@ class VWOverlay extends VirtualStatelessWidget<Props> {
       popupBuilder: (ctx, controller) =>
           popupWidget?.toWidget(payload) ?? const SizedBox.shrink(),
       childAlignment: childAlignment,
-      offset: Offset(props.getDouble('offser.xAxis') ?? 0,
-          props.getDouble('offser.yAxis') ?? 0),
+      offset: Offset(props.getDouble('offset.xAxis') ?? 0,
+          props.getDouble('offset.yAxis') ?? 0),
       popupAlignment: popupAlignment,
       child: childWidget.toWidget(payload),
     );
