@@ -24,6 +24,7 @@ class CarouselProps {
   final double dotHeight;
   final double dotWidth;
   final double spacing;
+  final bool pageSnapping;
   final ExprOr<String>? dotColor;
   final ExprOr<String>? activeDotColor;
 
@@ -39,6 +40,7 @@ class CarouselProps {
     this.animationDuration = 800,
     this.autoPlayInterval = 1600,
     this.infiniteScroll = false,
+    this.pageSnapping = true,
     this.reverseScroll = false,
     this.enlargeFactor = 0.3,
     this.showIndicator = false,
@@ -67,6 +69,7 @@ class CarouselProps {
       autoPlayInterval: as$<int>(json['autoPlayInterval']) ?? 1600,
       infiniteScroll: as$<bool>(json['infiniteScroll']) ?? false,
       reverseScroll: as$<bool>(json['reverseScroll']) ?? false,
+      pageSnapping: as$<bool>(json['pageSnapping']) ?? true,
       enlargeFactor: as$<double>(json['enlargeFactor']) ?? 0.3,
       showIndicator: as$<bool>(indicatorJson['showIndicator']) ?? false,
       offset: as$<double>(indicatorJson['offset']) ?? 16.0,

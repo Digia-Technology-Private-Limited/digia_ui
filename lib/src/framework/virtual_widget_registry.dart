@@ -34,6 +34,7 @@ abstract class VirtualWidgetRegistry {
     'digia/richText': richTextBuilder,
     'digia/icon': iconBuilder,
     'digia/image': imageBuilder,
+    'digia/svg': svgBuilder,
     'digia/button': buttonBuilder,
     'digia/iconButton': iconButtonBuilder,
     'digia/checkbox': checkboxBuilder,
@@ -53,6 +54,7 @@ abstract class VirtualWidgetRegistry {
     'digia/tabViewContent': tabViewContentBuilder,
     'digia/navigationBar': navigationBarBuilder,
     'digia/navigationBarItem': navigationBarItemBuilder,
+    'digia/overlay': overlayBuilder,
     // 'digia/tabView': tabViewBuilder,
     // 'digia/tabViewItem': tabViewItemBuilder,
 

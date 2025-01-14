@@ -23,6 +23,7 @@ class InternalCarousel extends StatefulWidget {
   final double offset;
   final double dotHeight;
   final double dotWidth;
+  final bool pageSnapping;
   final double spacing;
   final Color? dotColor;
   final Color? activeDotColor;
@@ -49,6 +50,7 @@ class InternalCarousel extends StatefulWidget {
     this.dotHeight = 8.0,
     this.dotWidth = 8.0,
     this.spacing = 16.0,
+    this.pageSnapping = true,
     this.dotColor,
     this.activeDotColor,
   });
@@ -90,6 +92,7 @@ class _InternalCarouselState extends State<InternalCarousel> {
             scrollDirection: widget.direction,
             aspectRatio: widget.aspectRatio,
             autoPlay: widget.autoPlay,
+            pageSnapping: widget.pageSnapping,
             autoPlayAnimationDuration:
                 Duration(milliseconds: widget.animationDuration),
             autoPlayCurve: Curves.linear,
