@@ -22,6 +22,7 @@ class InternalCarousel extends StatefulWidget {
   final bool showIndicator;
   final double offset;
   final double dotHeight;
+  final bool padEnds;
   final double dotWidth;
   final bool pageSnapping;
   final double spacing;
@@ -40,6 +41,7 @@ class InternalCarousel extends StatefulWidget {
     this.enlargeCenterPage = false,
     this.viewportFraction = 0.8,
     this.autoPlay = false,
+    this.padEnds = true,
     this.animationDuration = 800,
     this.autoPlayInterval = 1600,
     this.infiniteScroll = false,
@@ -91,6 +93,8 @@ class _InternalCarouselState extends State<InternalCarousel> {
           options: CarouselOptions(
             scrollDirection: widget.direction,
             aspectRatio: widget.aspectRatio,
+            // disableCenter: true,
+            padEnds: widget.padEnds,
             autoPlay: widget.autoPlay,
             pageSnapping: widget.pageSnapping,
             autoPlayAnimationDuration:
@@ -122,7 +126,10 @@ class _InternalCarouselState extends State<InternalCarousel> {
           options: CarouselOptions(
             scrollDirection: widget.direction,
             aspectRatio: widget.aspectRatio,
+            padEnds: widget.padEnds,
             autoPlay: widget.autoPlay,
+            // disableCenter: true,
+            pageSnapping: widget.pageSnapping,
             autoPlayAnimationDuration:
                 Duration(milliseconds: widget.animationDuration),
             autoPlayCurve: Curves.linear,
