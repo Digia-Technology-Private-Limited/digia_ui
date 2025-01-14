@@ -1,6 +1,5 @@
 import 'dart:convert';
-import 'dart:typed_data';
-
+import 'package:digia_ui/src/config/exception.dart';
 import 'package:digia_ui/src/config/factory.dart';
 import 'package:digia_ui/src/config/source/base.dart';
 import 'package:digia_ui/src/environment.dart';
@@ -8,8 +7,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
-import '../config_data.dart';
-import '../mocks.dart';
+import '../../config_data.dart';
+import '../../mocks.dart';
 
 void main() {
   late MockConfigProvider mockProvider;
@@ -43,8 +42,8 @@ void main() {
     );
   }
 
-  group('Release Strategy - PrioritizeNetwork', () {
-    test('PrioritizeNetwork - Happy Path2 sad', () async {
+  group('PrioritizeNetwork Strategy', () {
+    test('PrioritizeNetwork - Happy Path', () async {
       // ARRANGE
       final Map<String, dynamic> newConfigData = Map.from(validConfigData)
         ..['version'] = 2
@@ -63,14 +62,12 @@ void main() {
       when(() => mockProvider.addVersionHeader(1)).thenReturn(null);
 
       // Mock file download - this should return the actual bytes of the new config
-      final Uint8List mockDownloadedBytes =
-          utf8.encode(json.encode(newConfigData));
       when(() => mockDownloadOps.downloadFile(
             validNetworkConfigData['appConfigFileUrl'] as String,
             'appConfig.json',
             retry: 0,
           )).thenAnswer((_) async => Response(
-            data: mockDownloadedBytes,
+            data: utf8.encode(json.encode(newConfigData)),
             requestOptions: RequestOptions(),
           ));
 
@@ -83,8 +80,6 @@ void main() {
       final config = await strategy.getConfig();
 
       // ASSERT
-
-      // TODO: Use verifyInOrder instead of verify
       // First, cache is checked
       verify(() => mockFileOps.readString('appConfig.json')).called(1);
 
@@ -111,114 +106,113 @@ void main() {
       expect(config.functionsFilePath, equals('updatedFunctionPath'));
     });
 
-    test('PrioritizeCache - Happy Path', () async {
+    test('Network Timeout - Fallback to Cache', () async {
       // ARRANGE
-      final burnedConfig = Map<String, dynamic>.from(validConfigData)
-        ..['version'] = 3
-        ..['functionsFilePath'] = 'burnedPath';
-
-      final cacheConfig = Map<String, dynamic>.from(validConfigData)
-        ..['version'] = 2
-        ..['functionsFilePath'] = 'cachedPath';
-
-      final networkConfig = Map<String, dynamic>.from(validNetworkConfigData)
-        ..['version'] = 3
-        ..['functionsFilePath'] = 'networkPath'
-        ..['appConfigFileUrl'] = 'downloadUrl';
-
-      final donwloadedConfig = Map<String, dynamic>.from(validConfigData)
-        ..['version'] = 3
-        ..['functionsFilePath'] = 'networkPath';
-
-      // Mock burned config
-      when(() => mockAssetOps.readString('appConfig.json'))
-          .thenAnswer((_) async => json.encode({
-                'isSuccess': true,
-                'data': {'response': burnedConfig}
-              }));
-
-      // Mock cache operations
-      when(() => mockFileOps.exists('appConfig.json'))
-          .thenAnswer((_) async => true);
+      // Mock cache read with valid config
       when(() => mockFileOps.readString('appConfig.json'))
-          .thenAnswer((_) async => json.encode(cacheConfig));
+          .thenAnswer((_) async => json.encode(validConfigData));
 
-      // Mock network operations
-      when(() => mockProvider
-              .getAppConfigFromNetwork('/config/getAppConfigRelease'))
-          .thenAnswer((_) async => networkConfig);
-
-      // Mock download operations
-      final Uint8List mockDownloadedBytes =
-          utf8.encode(json.encode(donwloadedConfig));
-      when(() => mockDownloadOps.downloadFile(
-            networkConfig['appConfigFileUrl'] as String,
-            'appConfig.json',
-            retry: 0,
-          )).thenAnswer((_) async => Response(
-            data: mockDownloadedBytes,
-            requestOptions: RequestOptions(),
-          ));
-
-      // Mock cache write
-      when(() => mockFileOps.writeStringToFile(any(), 'appConfig.json'))
-          .thenAnswer((_) async => true);
+      // Mock network timeout
+      when(() => mockProvider.getAppConfigFromNetwork(
+          '/config/getAppConfigRelease')).thenAnswer((_) async {
+        await Future.delayed(const Duration(seconds: 2));
+        return validNetworkConfigData;
+      });
 
       // ACT
-      final strategy = createReleaseStrategy(PrioritizeCache());
+      final strategy = createReleaseStrategy(PrioritizeNetwork(1));
       final config = await strategy.getConfig();
 
-      // ASSERT - Immediate Operations
-      // Version comparison
-      verify(() => mockAssetOps.readString('appConfig.json')).called(1);
-      verify(() => mockFileOps.readString('appConfig.json')).called(2);
-      // Network call started
+      // ASSERT
+      // First tries network (times out)
       verify(() => mockProvider
           .getAppConfigFromNetwork('/config/getAppConfigRelease')).called(1);
+      // Falls back to cache
+      verify(() => mockFileOps.readString('appConfig.json')).called(1);
 
-      // Verify immediate config return
-      expect(config.version, equals(2));
-      expect(config.functionsFilePath, equals('cachedPath'));
+      // Config should match cache values
+      expect(config.version, equals(1));
+      expect(config.functionsFilePath,
+          equals(validConfigData['functionsFilePath']));
 
-      // ASSERT - Background Operations
-      await Future.delayed(Duration.zero);
-
-      verify(() =>
-              mockDownloadOps.downloadFile('downloadUrl', 'appConfig.json'))
-          .called(1);
-      verify(() =>
-              mockProvider.fileOps.writeStringToFile(any(), 'appConfig.json'))
-          .called(3);
+      // Verify no unnecessary operations
+      verifyNever(() => mockAssetOps.readString(any()));
+      // verifyNever(() => mockDownloadOps.downloadFile(any(), any()));
+      verifyNoMoreInteractions(mockProvider.bundleOps);
     });
 
-    test('PrioritizeLocal - Happy Path2', () async {
-      // ARRANGE
+    test('Network Error -> Cache Fallback', () async {
+      // Mock network failure
+      when(() => mockProvider
+              .getAppConfigFromNetwork('/config/getAppConfigRelease'))
+          .thenThrow(ConfigException('Network error'));
+
+      // Mock cache success
+      when(() => mockFileOps.readString('appConfig.json'))
+          .thenAnswer((_) async => json.encode(validConfigData));
+
+      // ACT
+      final strategy = createReleaseStrategy(PrioritizeNetwork(1));
+      final config = await strategy.getConfig();
+
+      verify(() => mockFileOps.readString('appConfig.json')).called(1);
+      expect(config.version, equals(1));
+      expect(config.functionsFilePath,
+          equals(validConfigData['functionsFilePath']));
+
+      // Verify no unnecessary operations
+      verifyNever(() => mockAssetOps.readString(any()));
+      verifyNever(() => mockDownloadOps.downloadFile(any(), any()));
+      verifyNoMoreInteractions(mockProvider.bundleOps);
+    });
+
+    test('Network Error -> Cache Error -> Asset Fallback', () async {
+      // Mock failures
+      when(() => mockProvider
+              .getAppConfigFromNetwork('/config/getAppConfigRelease'))
+          .thenThrow(ConfigException('Network error'));
+      when(() => mockFileOps.readString('appConfig.json'))
+          .thenThrow(ConfigException('Cache error'));
+
+      // Mock asset success
       when(() => mockAssetOps.readString('appConfig.json'))
           .thenAnswer((_) async => validConfigJson);
 
       // ACT
-      final strategy = createReleaseStrategy(PrioritizeLocal());
+      final strategy = createReleaseStrategy(PrioritizeNetwork(5));
       final config = await strategy.getConfig();
 
-      // ASSERT
-      verifyInOrder([
-        // Verify only asset read is called
-        () => mockAssetOps.readString('appConfig.json'),
-        // Verify functions initialization
-        () => mockProvider.initFunctions(localPath: 'functions.js'),
-      ]);
+      verify(() => mockProvider
+          .getAppConfigFromNetwork('/config/getAppConfigRelease')).called(1);
+      verify(() => mockFileOps.readString('appConfig.json')).called(1);
+      verify(() => mockAssetOps.readString('appConfig.json')).called(1);
 
-      // Verify config values from validConfigData
       expect(config.version, equals(1));
-      expect(config.functionsFilePath, equals('testPathToFunctionFile'));
+      expect(config.functionsFilePath,
+          equals(validConfigData['functionsFilePath']));
 
-      // Verify no cache/network/download operations occurred
-      verifyZeroInteractions(mockFileOps);
-      verifyZeroInteractions(mockDownloadOps);
-      verifyNever(() => mockFileOps.readString(any()));
+      // Verify no unnecessary operations
       verifyNever(() => mockDownloadOps.downloadFile(any(), any()));
-      verifyNever(() => mockProvider.getAppConfigFromNetwork(any()));
-      // verifyNoMoreInteractions(mockProvider);
+      verifyNoMoreInteractions(mockProvider.bundleOps);
+    });
+
+    test('All Sources Fail', () async {
+      // Mock all failures
+      when(() => mockProvider
+              .getAppConfigFromNetwork('/config/getAppConfigRelease'))
+          .thenThrow(ConfigException('Network error'));
+      when(() => mockFileOps.readString('appConfig.json'))
+          .thenThrow(ConfigException('Cache error'));
+      when(() => mockAssetOps.readString('appConfig.json'))
+          .thenThrow(ConfigException('Asset error'));
+
+      final strategy = createReleaseStrategy(PrioritizeNetwork(5));
+
+      expect(
+        () => strategy.getConfig(),
+        throwsA(isA<ConfigException>()
+            .having((e) => e.message, 'message', 'All config sources failed')),
+      );
     });
   });
 }

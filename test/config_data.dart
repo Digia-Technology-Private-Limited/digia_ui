@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:dio/dio.dart';
 
 final Map<String, Object?> validConfigData = {
   'appSettings': <String, String>{'initialRoute': 'homepage'},
@@ -424,32 +423,7 @@ final Map<String, dynamic> validNetworkConfigData = {
   'version': 2
 };
 
-final invalidConfigData = {
-  'appSettings': <String, String>{'initialRoute': 'home'},
-  'pages': <String, Object?>{},
-  'theme': 'invalid',
-  'rest': <String, dynamic>{},
-};
-
 final validConfigJson = json.encode({
   'isSuccess': true,
   'data': {'response': validConfigData}
 });
-
-final minimalConfigJson = json.encode({
-  'isSuccess': true,
-  'data': {'response': minimalConfigData}
-});
-
-final invalidConfigJson = json.encode({
-  'isSuccess': true,
-  'data': {'response': invalidConfigData}
-});
-
-Response createMockResponse(Map<String, dynamic> data, {String? path}) =>
-    Response(
-      data: {
-        'data': {'response': data}
-      },
-      requestOptions: RequestOptions(),
-    );
