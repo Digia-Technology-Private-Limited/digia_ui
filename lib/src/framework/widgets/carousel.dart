@@ -43,6 +43,7 @@ class VWCarousel extends VirtualStatelessWidget<CarouselProps> {
         autoPlayInterval: props.autoPlayInterval,
         infiniteScroll: props.infiniteScroll,
         initialPage: props.initialPage,
+        pageSnapping: props.pageSnapping,
         viewportFraction: props.viewportFraction,
         enlargeFactor: props.enlargeFactor,
         enlargeCenterPage: props.enlargeCenterPage,
