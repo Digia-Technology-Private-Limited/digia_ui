@@ -14,7 +14,7 @@ class VWSvgImage extends VirtualLeafStatelessWidget<Props> {
   });
 
   SvgPicture _createSvgPicture(RenderPayload payload, Object? imageSource,
-      double? width, double? height) {
+      double? width, double? height, Color? color) {
     if (imageSource is String) {
       if (imageSource.startsWith('http')) {
         final DigiaUIHost? host = DigiaUIClient.instance.developerConfig?.host;
@@ -28,6 +28,8 @@ class VWSvgImage extends VirtualLeafStatelessWidget<Props> {
           finalUrl,
           width: width,
           height: height,
+          colorFilter:
+              ColorFilter.mode(color ?? Colors.black, BlendMode.srcATop),
           errorBuilder: (context, error, stackTrace) =>
               _buildErrorWidget(error),
           fit: To.boxFit(props.get('fit')),
@@ -37,6 +39,8 @@ class VWSvgImage extends VirtualLeafStatelessWidget<Props> {
           imageSource,
           width: width,
           height: height,
+          colorFilter:
+              ColorFilter.mode(color ?? Colors.black, BlendMode.srcATop),
           errorBuilder: (context, error, stackTrace) =>
               _buildErrorWidget(error),
           fit: To.boxFit(props.get('fit')),
@@ -62,7 +66,8 @@ class VWSvgImage extends VirtualLeafStatelessWidget<Props> {
 
     final height = props.getString('height')?.toHeight(payload.buildContext);
     final imageSource = payload.eval(props.get('svgSrc'));
+    final color = payload.evalColor(props.get('color'));
 
-    return _createSvgPicture(payload, imageSource, width, height);
+    return _createSvgPicture(payload, imageSource, width, height, color);
   }
 }
