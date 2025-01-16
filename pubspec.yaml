@@ -46,6 +46,7 @@ scripts:
 dependencies:
   cached_network_image: ^3.3.0
   carousel_slider: ^5.0.0
+  smooth_page_indicator: ^1.2.0+3
   chewie: 1.8.5
   collection: ^1.17.1
   copy_with_extension: ^6.0.0
@@ -70,6 +71,7 @@ dependencies:
   lottie: ^3.0.0
   octo_image: ^2.0.0
   package_info_plus: ^8.0.0
+  flutter_svg: ^2.0.17
   path_provider: ^2.0.14
   shared_preferences: ^2.2.2
   styled_divider: ^1.0.5
