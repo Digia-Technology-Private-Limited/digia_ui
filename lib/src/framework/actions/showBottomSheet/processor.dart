@@ -99,7 +99,7 @@ class ShowBottomSheetProcessor extends ActionProcessor<ShowBottomSheetAction> {
                 parent: null,
               ).toWidget(
                 RenderPayload(
-                  buildContext: innerCtx,
+                  buildContext: context,
                   scopeContext: DefaultScopeContext(
                     variables: {},
                     enclosing: scopeContext,

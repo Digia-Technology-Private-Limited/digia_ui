@@ -40,6 +40,7 @@ class _InternalGridViewState extends State<InternalGridView> {
     }
 
     return GridView(
+      padding: EdgeInsets.zero,
       controller: widget.controller,
       physics: widget.physics,
       shrinkWrap: widget.shrinkWrap,
