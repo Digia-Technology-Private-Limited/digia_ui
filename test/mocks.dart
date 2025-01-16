@@ -5,16 +5,7 @@ import 'package:digia_ui/src/config/provider.dart';
 import 'package:digia_ui/src/config/source/base.dart';
 import 'package:mocktail/mocktail.dart';
 
-class MockConfigProvider extends Mock implements ConfigProvider {
-  @override
-  MockFileOperations get fileOps;
-
-  @override
-  MockAssetBundleOperations get bundleOps;
-
-  @override
-  MockFileDownloader get downloadOps;
-}
+class MockConfigProvider extends Mock implements ConfigProvider {}
 
 class MockAssetBundleOperations extends Mock implements AssetBundleOperations {}
 

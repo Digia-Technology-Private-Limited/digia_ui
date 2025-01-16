@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:dio/dio.dart';
 
 final Map<String, Object?> validConfigData = {
   'appSettings': <String, String>{'initialRoute': 'homepage'},
@@ -402,7 +401,7 @@ final Map<String, Object?> validConfigData = {
   },
   'version': 1,
   'versionUpdated': true,
-  'functionsFilePath': 'path/to/functions',
+  'functionsFilePath': 'testPathToFunctionFile',
   'appState': <String, dynamic>{},
 };
 
@@ -410,8 +409,8 @@ final minimalConfigData = {
   'appSettings': <String, String>{'initialRoute': 'home'},
   'pages': <String, Object?>{},
   'theme': <String, dynamic>{
-    'colors': {'light': {}},
-    'fonts': {}
+    'colors': <String, dynamic>{'light': {}},
+    'fonts': <String, dynamic>{}
   },
   'rest': <String, dynamic>{'defaultHeaders': {}},
   'functionsFilePath': 'testPathToFunctionFile',
@@ -424,32 +423,7 @@ final Map<String, dynamic> validNetworkConfigData = {
   'version': 2
 };
 
-final invalidConfigData = {
-  'appSettings': <String, String>{'initialRoute': 'home'},
-  'pages': <String, Object?>{},
-  'theme': 'invalid',
-  'rest': <String, dynamic>{},
-};
-
 final validConfigJson = json.encode({
   'isSuccess': true,
   'data': {'response': validConfigData}
 });
-
-final minimalConfigJson = json.encode({
-  'isSuccess': true,
-  'data': {'response': minimalConfigData}
-});
-
-final invalidConfigJson = json.encode({
-  'isSuccess': true,
-  'data': {'response': invalidConfigData}
-});
-
-Response createMockResponse(Map<String, dynamic> data, {String? path}) =>
-    Response(
-      data: {
-        'data': {'response': data}
-      },
-      requestOptions: RequestOptions(),
-    );
