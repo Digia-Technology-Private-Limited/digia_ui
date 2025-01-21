@@ -1,4 +1,4 @@
-import '../../config_resolver.dart';
+import '../../config/model.dart';
 import '../../network/api_request/api_request.dart';
 import '../models/component_definition.dart';
 import '../models/page_definition.dart';
