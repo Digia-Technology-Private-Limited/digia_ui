@@ -1,7 +1,5 @@
 import 'dart:convert';
 
-import '../../Utils/download.dart';
-import '../../file_operations.dart';
 import '../../framework/utils/types.dart';
 import '../exception.dart';
 import '../model.dart';
@@ -13,14 +11,12 @@ class NetworkFileConfigSource implements ConfigSource {
   final String networkPath;
   final String cacheFilePath;
   final Duration? timeout;
-  final FileOperations fileOps;
 
   NetworkFileConfigSource(
     this.provider,
     this.networkPath, {
     this.cacheFilePath = 'appConfig.json',
     this.timeout,
-    this.fileOps = const FileOperationsImpl(),
   });
 
   @override
@@ -65,7 +61,7 @@ class NetworkFileConfigSource implements ConfigSource {
   }
 
   Future<DUIConfig> _loadCachedConfig() async {
-    final cachedJson = await fileOps.readString(cacheFilePath);
+    final cachedJson = await provider.fileOps.readString(cacheFilePath);
     if (cachedJson == null) {
       throw ConfigException('No cached config found');
     }
@@ -75,7 +71,7 @@ class NetworkFileConfigSource implements ConfigSource {
   Future<DUIConfig> _downloadAndCacheConfig(String fileUrl) async {
     // Download file with timeout
     final file = await Future.any([
-      downloadFile(fileUrl, cacheFilePath),
+      provider.downloadOps.downloadFile(fileUrl, cacheFilePath),
       if (timeout != null) Future.delayed(timeout!).then((_) => null),
     ]);
     if (file == null || file.data == null) {

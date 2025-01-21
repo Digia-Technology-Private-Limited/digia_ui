@@ -1,3 +1,6 @@
+import '../Utils/asset_bundle_operations.dart';
+import '../Utils/download_operations.dart';
+import '../Utils/file_operations.dart';
 import '../core/functions/js_functions.dart';
 import '../digia_ui_client.dart';
 import '../environment.dart';
@@ -55,4 +58,13 @@ class ConfigResolver implements ConfigProvider {
   @override
   void addVersionHeader(int version) =>
       DigiaUIClient.instance.networkClient.addVersionHeader(version);
+
+  @override
+  AssetBundleOperations get bundleOps => const AssetBundleOperationsImpl();
+
+  @override
+  FileOperations get fileOps => const FileOperationsImpl();
+
+  @override
+  FileDownloader get downloadOps => FileDownloaderImpl();
 }
