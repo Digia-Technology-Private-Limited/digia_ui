@@ -140,6 +140,7 @@ class DUIFactory {
     final handler =
         messageHandler?.propagateHandler == true ? messageHandler : null;
     final pageDef = configProvider.getPageDefinition(pageId);
+    final isInitialRoute = pageId == configProvider.getInitialRoute();
 
     DigiaUIClient.instance.developerConfig?.logger?.logEntity(
       entitySlug: pageId,
@@ -151,6 +152,22 @@ class DUIFactory {
           pageDef.initStateDefs?.map((k, v) => MapEntry(k, v.defaultValue)) ??
               {},
       stateContainerVariables: {},
+    );
+
+    final pageWidget = DUIPage(
+      pageId: pageId,
+      pageArgs: pageArgs,
+      resources: mergedResources,
+      navigatorKey: navigatorKey,
+      pageDef: pageDef,
+      registry: widgetRegistry,
+      apiModels: configProvider.getAllApiModels(),
+      messageHandler: messageHandler,
+      controller: pageController,
+      scope: DefaultScopeContext(
+        name: 'global',
+        variables: {...DigiaUIClient.instance.jsVars},
+      ),
     );
 
     return DefaultActionExecutor(
@@ -165,21 +182,15 @@ class DUIFactory {
           'entitySlug': pageId,
         },
       ),
-      child: DUIPage(
-        pageId: pageId,
-        pageArgs: pageArgs,
-        resources: mergedResources,
-        navigatorKey: navigatorKey,
-        pageDef: pageDef,
-        registry: widgetRegistry,
-        apiModels: configProvider.getAllApiModels(),
-        messageHandler: messageHandler,
-        controller: pageController,
-        scope: DefaultScopeContext(
-          name: 'global',
-          variables: {...DigiaUIClient.instance.jsVars},
-        ),
-      ),
+      child: isInitialRoute
+          ? Navigator(
+              key: navigatorKey,
+              onGenerateRoute: (_) => DUIPageRoute(
+                pageId: pageId,
+                builder: (context) => pageWidget,
+              ),
+            )
+          : pageWidget,
     );
   }
 
