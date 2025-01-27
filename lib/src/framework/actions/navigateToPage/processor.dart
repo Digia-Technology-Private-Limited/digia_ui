@@ -74,7 +74,7 @@ class NavigateToPageProcessor extends ActionProcessor<NavigateToPageAction> {
         ),
       ),
       removeRoutesUntilPredicate: routeNametoRemoveUntil.maybe(
-        (p0) => removePreviousScreensInStack ? null : ModalRoute.withName(p0),
+        (p0) => removePreviousScreensInStack ? ModalRoute.withName(p0) : null,
       ),
     );
 
