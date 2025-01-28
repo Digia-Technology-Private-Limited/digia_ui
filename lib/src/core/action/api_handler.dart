@@ -40,7 +40,13 @@ class ApiHandler {
       finalArgs.addAll(args);
     }
 
-    final url = _hydrateTemplate(apiModel.url, finalArgs);
+    String url = _hydrateTemplate(apiModel.url, finalArgs);
+    final DigiaUIHost? host = DigiaUIClient.instance.developerConfig?.host;
+    if (host is DashboardHost &&
+        host.resourceProxyUrl != null &&
+        url.startsWith('http:')) {
+      url = '${host.resourceProxyUrl}$url';
+    }
     final headers = apiModel.headers?.map((key, value) => MapEntry(
         _hydrateTemplate(key, finalArgs),
         _hydrateTemplate(value as String, finalArgs)));
