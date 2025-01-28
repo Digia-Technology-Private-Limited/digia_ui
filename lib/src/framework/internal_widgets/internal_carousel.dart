@@ -154,6 +154,7 @@ class _InternalCarouselState extends State<InternalCarousel> {
     }
 
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         child,
         Padding(
