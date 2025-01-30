@@ -38,7 +38,8 @@ class VWFlex extends VirtualStatelessWidget<Props> {
       final items = payload.evalRepeatData(repeatData!);
       widget = _buildFlex(
         () => items.mapIndexed((index, item) {
-          return _wrapInFlexFitForBackwardCompat(childToRepeat).toWidget(
+          return _wrapInFlexFitForBackwardCompat(childToRepeat, payload)
+              .toWidget(
             payload.copyWithChainedContext(
               _createExprContext(item, index),
             ),
@@ -48,7 +49,7 @@ class VWFlex extends VirtualStatelessWidget<Props> {
     } else {
       widget = _buildFlex(
         () => children!
-            .map(_wrapInFlexFitForBackwardCompat)
+            .map((child) => _wrapInFlexFitForBackwardCompat(child, payload))
             .toWidgetArray(payload),
       );
     }
@@ -65,7 +66,7 @@ class VWFlex extends VirtualStatelessWidget<Props> {
 
   // This is for backward compatibility:
   VirtualWidget _wrapInFlexFitForBackwardCompat(
-      VirtualWidget childVirtualWidget) {
+      VirtualWidget childVirtualWidget, RenderPayload payload) {
     // Ignore if widget is already wrapped in FlexFit
     if (childVirtualWidget is! VirtualLeafStatelessWidget ||
         childVirtualWidget is VWFlexFit) {
@@ -74,8 +75,9 @@ class VWFlex extends VirtualStatelessWidget<Props> {
 
     final expansionType = childVirtualWidget.commonProps?.parentProps
         ?.getString('expansion.type');
-    final flexValue = childVirtualWidget.commonProps?.parentProps
-        ?.getInt('expansion.flexValue');
+    final flexValue = payload.eval<int>(childVirtualWidget
+        .commonProps?.parentProps
+        ?.get('expansion.flexValue'));
 
     if (expansionType == null) return childVirtualWidget;
 
