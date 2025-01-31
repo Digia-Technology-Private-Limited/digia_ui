@@ -2,6 +2,10 @@
 
 Digia Ui Sdk.
 
+## [0.1.7] - 2025-01-31
+
+- Bug fixes
+
 ## [0.1.6] - 2024-12-16
 
 - Prepared for flutter 3.24
