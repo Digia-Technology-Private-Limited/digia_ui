@@ -103,7 +103,7 @@ Future<Response<Object?>> _makeFuture(
 
   switch (type) {
     case 'api':
-      final apiDataSourceId = futureProps.getString('dataSource.ref');
+      final apiDataSourceId = futureProps.getString('dataSource.id');
 
       if (apiDataSourceId == null) {
         return Future.error('No API Selected');
