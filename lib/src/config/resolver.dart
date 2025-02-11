@@ -14,13 +14,15 @@ import 'provider.dart';
 
 class ConfigResolver implements ConfigProvider {
   final FlavorInfo _flavorInfo;
+  final String branchId;
 
-  ConfigResolver(this._flavorInfo);
+  ConfigResolver(this._flavorInfo, this.branchId);
 
   @override
   Future<JsonLike?> getAppConfigFromNetwork(String path) async {
     var resp = await DigiaUIClient.instance.networkClient.requestInternal(
       HttpMethod.post,
+      data: {'branchId': branchId},
       path,
       (json) => json as dynamic,
     );
