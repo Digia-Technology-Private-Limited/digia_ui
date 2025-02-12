@@ -19,7 +19,7 @@ class ConfigStrategyFactory {
     ConfigProvider provider,
   ) {
     return switch (flavor) {
-      Debug() => NetworkConfigSource(provider, '/config/getAppConfig'),
+      Debug() => _createDebugConfigSource(provider, flavor.branchName),
       Staging() => NetworkConfigSource(provider, '/config/getAppConfigStaging'),
       Versioned() => _createVersionedSource(provider, flavor.version),
       Release() when kIsWeb =>
@@ -37,6 +37,12 @@ class ConfigStrategyFactory {
 ConfigSource _createVersionedSource(ConfigProvider provider, int version) {
   provider.addVersionHeader(version);
   return NetworkConfigSource(provider, '/config/getAppConfigForVersion');
+}
+
+ConfigSource _createDebugConfigSource(
+    ConfigProvider provider, String? branchName) {
+  provider.addBranchName(branchName);
+  return NetworkConfigSource(provider, '/config/getAppConfig');
 }
 
 ConfigSource _createReleaseFlavorConfigSource(
