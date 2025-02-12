@@ -10,7 +10,6 @@ void main() async {
   runApp(DUIApp(
       digiaAccessKey: "665ae4e5c625f442b6c5515e",
       baseUrl: baseUrl,
-      branchId: '',
       flavorInfo: Staging(),
       // environmentInfo: Versioned(19),
       // environmentInfo: Production(PrioritizeNetwork(5), 'assets/prodAppConfig.json','assets/functions.js'),

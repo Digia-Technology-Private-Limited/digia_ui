@@ -23,7 +23,6 @@ class DigiaUIClient {
 
   late String accessKey;
   late String baseUrl;
-  late String branchId;
   late NetworkClient networkClient;
   late DUIConfig config;
   late int version;
@@ -81,7 +80,6 @@ class DigiaUIClient {
 
   static Future<void> init(
       {required String accessKey,
-      required String branchId,
       required FlavorInfo flavorInfo,
       required String environment,
       required String baseUrl,
@@ -92,7 +90,6 @@ class DigiaUIClient {
     setUuid();
     _instance.flavor = flavorInfo.flavor;
     _instance.accessKey = accessKey;
-    _instance.branchId = branchId;
     _instance.baseUrl = baseUrl;
     _instance.duiAnalytics = duiAnalytics;
     _instance.developerConfig = developerConfig;
@@ -115,7 +112,7 @@ class DigiaUIClient {
     _instance.networkClient = NetworkClient(
         _instance.baseUrl, headers, networkConfiguration, developerConfig);
 
-    _instance.config = await ConfigResolver(flavorInfo, branchId).getConfig();
+    _instance.config = await ConfigResolver(flavorInfo).getConfig();
 
     // _instance.appState = DUIAppState.fromJson(_instance.config.appState ?? {});
 

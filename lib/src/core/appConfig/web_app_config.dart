@@ -9,11 +9,9 @@ class WebAppConfig implements AppConfig {
   final FileDownloader downloadOps = FileDownloaderImpl();
 
   @override
-  Future<Map<String, dynamic>?> getAppConfigFromNetwork(String path,
-      {String? branchId}) async {
+  Future<Map<String, dynamic>?> getAppConfigFromNetwork(String path) async {
     var resp = await DigiaUIClient.instance.networkClient.requestInternal(
       HttpMethod.post,
-      data: {'branchId': branchId},
       path,
       (json) => json as dynamic,
     );
@@ -22,10 +20,9 @@ class WebAppConfig implements AppConfig {
   }
 
   @override
-  Future<Map<String, dynamic>?> getAppConfigFileFromNetwork(String path,
-      {String? branchId}) async {
+  Future<Map<String, dynamic>?> getAppConfigFileFromNetwork(String path) async {
     try {
-      final data = await getAppConfigFromNetwork(path, branchId: branchId);
+      final data = await getAppConfigFromNetwork(path);
       if (data != null && data.isNotEmpty && data['version'] != null) {
         var file = await downloadOps.downloadFile(
             data['appConfigFileUrl'], 'appConfig.json');

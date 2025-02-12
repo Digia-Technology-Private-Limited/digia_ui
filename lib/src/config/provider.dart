@@ -13,6 +13,7 @@ abstract class ConfigProvider {
     String? localPath,
     int? version,
   });
+  void addBranchName(String? branchName);
   void addVersionHeader(int version);
   FileOperations get fileOps;
   AssetBundleOperations get bundleOps;

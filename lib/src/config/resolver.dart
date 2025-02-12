@@ -14,15 +14,15 @@ import 'provider.dart';
 
 class ConfigResolver implements ConfigProvider {
   final FlavorInfo _flavorInfo;
-  final String branchId;
+  String? _branchName;
 
-  ConfigResolver(this._flavorInfo, this.branchId);
+  ConfigResolver(this._flavorInfo);
 
   @override
   Future<JsonLike?> getAppConfigFromNetwork(String path) async {
     var resp = await DigiaUIClient.instance.networkClient.requestInternal(
       HttpMethod.post,
-      data: {'branchId': branchId},
+      data: {'branchName': _branchName},
       path,
       (json) => json as dynamic,
     );
@@ -69,4 +69,9 @@ class ConfigResolver implements ConfigProvider {
 
   @override
   FileDownloader get downloadOps => FileDownloaderImpl();
+
+  @override
+  void addBranchName(String? branchName) {
+    _branchName = branchName;
+  }
 }

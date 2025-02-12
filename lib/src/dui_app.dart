@@ -11,7 +11,6 @@ import 'network/netwok_config.dart';
 
 class DUIApp extends StatelessWidget {
   final String digiaAccessKey;
-  final String branchId;
   final ScrollBehavior? scrollBehavior;
   final GlobalKey<NavigatorState>? navigatorKey;
   final ThemeData? theme;
@@ -29,7 +28,6 @@ class DUIApp extends StatelessWidget {
   const DUIApp({
     super.key,
     required this.digiaAccessKey,
-    required this.branchId,
     this.scrollBehavior,
     this.navigatorKey,
     required this.flavorInfo,
@@ -56,7 +54,6 @@ class DUIApp extends StatelessWidget {
     return DigiaUIClient.init(
         accessKey: digiaAccessKey,
         flavorInfo: flavorInfo,
-        branchId: branchId,
         environment: environment,
         baseUrl: baseUrl,
         networkConfiguration: networkConfiguration,
