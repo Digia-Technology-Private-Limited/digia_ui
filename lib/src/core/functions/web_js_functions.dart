@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'dart:html';
@@ -16,14 +17,19 @@ class WebJsFunctions implements JSFunctions {
   }
 
   @override
-  Future<bool> initFunctions(FunctionInitStrategy strategy) {
+  Future<bool> initFunctions(FunctionInitStrategy strategy) async {
     switch (strategy) {
       case PreferRemote(remotePath: String remotePath):
+        // We need a Completer to ensure that we wait till the source is set
+        // This fixes bug where fnNames are not found on first load
+        Completer completer = Completer();
         ScriptElement script = ScriptElement()
+          ..onLoad.listen((_) => completer.complete(true))
+          ..onError.listen((_) => completer.complete(false))
           ..src = '$remotePath?t=${DateTime.now().millisecondsSinceEpoch}'
           ..type = 'text/javascript';
         document.head?.append(script);
-        return Future.value(true);
+        return await completer.future;
       case PreferLocal():
         throw Exception('Local strategy not available for web');
     }
