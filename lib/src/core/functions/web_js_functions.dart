@@ -25,6 +25,7 @@ class WebJsFunctions implements JSFunctions {
         Completer completer = Completer();
         ScriptElement script = ScriptElement()
           ..onLoad.listen((_) => completer.complete(true))
+          ..onError.listen((_) => completer.complete(false))
           ..src = '$remotePath?t=${DateTime.now().millisecondsSinceEpoch}'
           ..type = 'text/javascript';
         document.head?.append(script);
