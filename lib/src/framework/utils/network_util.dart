@@ -22,43 +22,42 @@ Future<Response<Object?>> executeApiAction(
         args?[k]?.evaluate(scopeContext) ?? v.defaultValue,
       ));
 
-  return ApiHandler.instance
-      .execute(apiModel: apiModel, args: evaluatedArgs)
-      .then(
-    (value) async {
-      final respObj = {
-        'body': value.data,
-        'statusCode': value.statusCode,
-        'headers': value.headers.map,
-        'requestObj': _requestObjToMap(value.requestOptions),
-        'error': null,
-      };
+  try {
+    final response = await ApiHandler.instance
+        .execute(apiModel: apiModel, args: evaluatedArgs);
 
-      final isSuccess = successCondition?.evaluate(DefaultScopeContext(
-            variables: {'response': respObj},
-            enclosing: scopeContext,
-          )) ??
-          true;
-      if (isSuccess) {
-        await onSuccess?.call(respObj);
-      } else {
-        await onError?.call(respObj);
-      }
-      return value;
-    },
-    onError: (Object? error) async {
-      if (error is DioException && onError != null) {
-        final respObj = {
-          'body': error.response?.data,
-          'statusCode': error.response?.statusCode,
-          'headers': error.response?.headers.map,
-          'requestObj': _requestObjToMap(error.requestOptions),
-          'error': error.message,
-        };
-        await onError.call(respObj);
-      }
-    },
-  );
+    final respObj = {
+      'body': response.data,
+      'statusCode': response.statusCode,
+      'headers': response.headers.map,
+      'requestObj': _requestObjToMap(response.requestOptions),
+      'error': null,
+    };
+
+    final isSuccess = successCondition?.evaluate(DefaultScopeContext(
+          variables: {'response': respObj},
+          enclosing: scopeContext,
+        )) ??
+        true;
+    if (isSuccess) {
+      await onSuccess?.call(respObj);
+    } else {
+      await onError?.call(respObj);
+    }
+    return response;
+  } catch (error) {
+    if (error is DioException) {
+      final respObj = {
+        'body': error.response?.data,
+        'statusCode': error.response?.statusCode,
+        'headers': error.response?.headers.map,
+        'requestObj': _requestObjToMap(error.requestOptions),
+        'error': error.message,
+      };
+      await onError?.call(respObj);
+    }
+    rethrow;
+  }
 }
 
 JsonLike _requestObjToMap(RequestOptions request) {
