@@ -2,6 +2,10 @@
 
 Digia Ui Sdk.
 
+## [0.2.0] - 2025-02-18
+
+- Added branching
+
 ## [0.1.7] - 2025-01-31
 
 - Bug fixes
