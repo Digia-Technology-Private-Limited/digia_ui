@@ -26,7 +26,7 @@ void main() {
 
   group('Debug Strategy Tests', () {
     ConfigSource createStrategy() =>
-        ConfigStrategyFactory.createStrategy(Debug(), mockProvider);
+        ConfigStrategyFactory.createStrategy(Debug(null), mockProvider);
 
     test('Happy Path', () async {
       // ARRANGE
