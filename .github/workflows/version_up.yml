@@ -38,6 +38,8 @@ jobs:
           git status
           git commit -m "Bump version to ${{ env.new_version }}" || echo "No changes to commit"
           git push
+          git tag "${{ env.new_version }}"
+          git push origin --tags
 
       # - name: Generate code
       #   run: dart run build_runner build --delete-conflicting-outputs
@@ -48,6 +50,5 @@ jobs:
         with:
           credentialJson: ${{ secrets.PUB_DEV_CREDS }}
           flutter: true
-          skipTests: true
           force: true
-          flutterBranch: 3.19.0
+          flutterBranch: 3.24.0

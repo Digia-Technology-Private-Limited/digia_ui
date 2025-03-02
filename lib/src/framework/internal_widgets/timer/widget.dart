@@ -41,6 +41,7 @@ class _TimerWidgetState extends State<TimerWidget> {
           isCountDown: widget.isCountDown,
           duration: widget.duration,
         );
+    _controller.start();
   }
 
   @override

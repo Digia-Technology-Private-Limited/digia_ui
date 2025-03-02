@@ -6,7 +6,7 @@ import '../../resource_provider.dart';
 import '../base/processor.dart';
 import 'action.dart';
 
-class PostMessageProcessor implements ActionProcessor<PostMessageAction> {
+class PostMessageProcessor extends ActionProcessor<PostMessageAction> {
   @override
   Future<Object?>? execute(
     BuildContext context,
@@ -15,6 +15,14 @@ class PostMessageProcessor implements ActionProcessor<PostMessageAction> {
   ) async {
     final name = action.name;
     final payload = action.payload?.deepEvaluate(scopeContext);
+
+    logAction(
+      action.actionType.value,
+      {
+        'name': name,
+        'payload': payload,
+      },
+    );
 
     final handler = ResourceProvider.maybeOf(context)?.messageHandler;
     if (handler == null) return null;

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../base/virtual_stateless_widget.dart';
 import '../../expr/default_scope_context.dart';
 import '../../expr/scope_context.dart';
+import '../../internal_widgets/keep_alive_widget.dart';
 import '../../internal_widgets/tab_view/controller.dart';
 import '../../internal_widgets/tab_view/inherited_tab_view_controller.dart';
 import '../../render_payload.dart';
@@ -33,12 +34,16 @@ class VWTabViewContent extends VirtualStatelessWidget<TabViewContentProps> {
         physics: props.isScrollable.maybe(To.scrollPhysics),
         viewportFraction: props.viewportFraction,
         children: List.generate(controller.length, (index) {
-          return child!.toWidget(payload.copyWithChainedContext(
+          final updatedPayload = payload.copyWithChainedContext(
             _createExprContext(
               controller.tabs[index],
               index,
             ),
-          ));
+          );
+          return KeepAliveWrapper(
+            keepTabsAlive: updatedPayload.evalExpr<bool>(props.keepTabsAlive),
+            child: child!.toWidget(updatedPayload),
+          );
         }));
   }
 

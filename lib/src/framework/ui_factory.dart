@@ -7,6 +7,7 @@ import 'base/virtual_widget.dart';
 import 'component/component.dart';
 import 'data_type/method_bindings/method_binding_registry.dart';
 import 'expr/default_scope_context.dart';
+import 'font_factory.dart';
 import 'page/config_provider.dart';
 import 'page/page.dart';
 import 'page/page_controller.dart';
@@ -58,9 +59,17 @@ class DUIFactory {
     ConfigProvider? pageConfigProvider,
     Map<String, IconData>? icons,
     Map<String, ImageProvider>? images,
+    DUIFontFactory? fontFactory,
   }) {
     widgetRegistry = DefaultVirtualWidgetRegistry(
+      // MessageHandler is not propagated here
       componentBuilder: (id, args) => createComponent(id, args),
+      scaffoldBuilderFn: (viewId, args) {
+        if (configProvider.isPage(viewId)) {
+          return createPage(viewId, args);
+        }
+        return createComponent(viewId, args);
+      },
     );
     bindingRegistry = MethodBindingRegistry();
 
@@ -69,8 +78,12 @@ class DUIFactory {
     resources = UIResources(
       icons: icons,
       images: images,
-      textStyles: DigiaUIClient.instance.config.fontTokens
-          .map((key, value) => MapEntry(key, convertToTextStyle(value))),
+      textStyles:
+          DigiaUIClient.instance.config.fontTokens.map((key, value) => MapEntry(
+                key,
+                convertToTextStyle(value, fontFactory),
+              )),
+      fontFactory: fontFactory,
       colors: DigiaUIClient.instance.config.colorTokens.map(
         (key, value) => MapEntry(
           key,
@@ -121,10 +134,24 @@ class DUIFactory {
       images: {...?resources.images, ...?overrideImages},
       textStyles: {...?resources.textStyles, ...?overrideTextStyles},
       colors: {...?resources.colors, ...?overrideColorTokens},
+      fontFactory: resources.fontFactory,
     );
 
     final handler =
         messageHandler?.propagateHandler == true ? messageHandler : null;
+    final pageDef = configProvider.getPageDefinition(pageId);
+
+    DigiaUIClient.instance.developerConfig?.logger?.logEntity(
+      entitySlug: pageId,
+      eventName: 'INITIALIZATION',
+      argDefs: pageDef.pageArgDefs
+              ?.map((k, v) => MapEntry(k, pageArgs?[k] ?? v.defaultValue)) ??
+          {},
+      initStateDefs:
+          pageDef.initStateDefs?.map((k, v) => MapEntry(k, v.defaultValue)) ??
+              {},
+      stateContainerVariables: {},
+    );
 
     return DefaultActionExecutor(
       actionExecutor: ActionExecutor(
@@ -134,13 +161,16 @@ class DUIFactory {
             createPageRoute(id, args, messageHandler: handler),
         bindingRegistry: bindingRegistry,
         logger: DigiaUIClient.instance.developerConfig?.logger,
+        metaData: {
+          'entitySlug': pageId,
+        },
       ),
       child: DUIPage(
         pageId: pageId,
         pageArgs: pageArgs,
         resources: mergedResources,
         navigatorKey: navigatorKey,
-        pageDef: configProvider.getPageDefinition(pageId),
+        pageDef: pageDef,
         registry: widgetRegistry,
         apiModels: configProvider.getAllApiModels(),
         messageHandler: messageHandler,
@@ -226,6 +256,21 @@ class DUIFactory {
       images: {...?resources.images, ...?overrideImages},
       textStyles: {...?resources.textStyles, ...?overrideTextStyles},
       colors: {...?resources.colors, ...?overrideColorTokens},
+      fontFactory: resources.fontFactory,
+    );
+
+    final componentDef = configProvider.getComponentDefinition(componentid);
+
+    DigiaUIClient.instance.developerConfig?.logger?.logEntity(
+      entitySlug: componentid,
+      eventName: 'INITIALIZATION',
+      argDefs: componentDef.argDefs
+              ?.map((key, value) => MapEntry(key, value.defaultValue)) ??
+          {},
+      initStateDefs: componentDef.initStateDefs
+              ?.map((key, value) => MapEntry(key, value.defaultValue)) ??
+          {},
+      stateContainerVariables: {},
     );
 
     return DefaultActionExecutor(
@@ -236,13 +281,16 @@ class DUIFactory {
             createPageRoute(id, args, messageHandler: messageHandler),
         bindingRegistry: bindingRegistry,
         logger: DigiaUIClient.instance.developerConfig?.logger,
+        metaData: {
+          'entitySlug': componentid,
+        },
       ),
       child: DUIComponent(
         id: componentid,
         args: args,
         resources: mergedResources,
         navigatorKey: navigatorKey,
-        definition: configProvider.getComponentDefinition(componentid),
+        definition: componentDef,
         registry: widgetRegistry,
         apiModels: configProvider.getAllApiModels(),
         messageHandler: messageHandler,
@@ -286,11 +334,13 @@ class UIResources {
   final Map<String, ImageProvider>? images;
   final Map<String, TextStyle?>? textStyles;
   final Map<String, Color?>? colors;
+  final DUIFontFactory? fontFactory;
 
   UIResources({
     required this.icons,
     required this.images,
     required this.textStyles,
     required this.colors,
+    this.fontFactory,
   });
 }

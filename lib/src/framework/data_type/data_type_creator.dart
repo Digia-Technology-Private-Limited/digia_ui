@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:dio/dio.dart';
+
 import '../expr/expression_util.dart';
 import '../expr/scope_context.dart';
 import '../internal_widgets/async_builder/controller.dart';
@@ -52,11 +54,17 @@ class DataTypeCreator {
           initialValue: evaluate<int>(value['initialValue'],
                   scopeContext: scopeContext) ??
               0,
-          updateInterval:
-              Duration(seconds: evaluate<int>(value['updateInterval']) ?? 1),
+          updateInterval: Duration(
+              seconds: evaluate<int>(value['updateInterval'],
+                      scopeContext: scopeContext) ??
+                  1),
           isCountDown: value['timerType'] == 'countDown',
-          duration: evaluate<int>(value['duration']) ?? 0,
+          duration:
+              evaluate<int>(value['duration'], scopeContext: scopeContext) ?? 0,
         );
+
+      case DataType.apiCancelToken:
+        return CancelToken();
 
       default:
         throw Exception('Unknown type: ${def.type}');

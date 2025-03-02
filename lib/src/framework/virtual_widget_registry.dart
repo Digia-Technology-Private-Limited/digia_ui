@@ -34,6 +34,7 @@ abstract class VirtualWidgetRegistry {
     'digia/richText': richTextBuilder,
     'digia/icon': iconBuilder,
     'digia/image': imageBuilder,
+    'digia/svg': svgBuilder,
     'digia/button': buttonBuilder,
     'digia/iconButton': iconButtonBuilder,
     'digia/checkbox': checkboxBuilder,
@@ -51,9 +52,11 @@ abstract class VirtualWidgetRegistry {
     'digia/tabController': tabControllerBuilder,
     'digia/tabBar': tabBarBuilder,
     'digia/tabViewContent': tabViewContentBuilder,
+    'digia/navigationBar': navigationBarBuilder,
+    'digia/navigationBarItem': navigationBarItemBuilder,
+    'digia/overlay': overlayBuilder,
     // 'digia/tabView': tabViewBuilder,
     // 'digia/tabViewItem': tabViewItemBuilder,
-    // 'digia/navigationBarItem': navigationBarItemBuilder,
 
     // Dividers and Decorative Elements
     'digia/horizontalDivider': horizontalDividerBuilder,
@@ -66,6 +69,8 @@ abstract class VirtualWidgetRegistry {
     'digia/animatedButton': animatedButtonBuilder,
     'digia/expandable': expandableBuilder,
     'digia/refreshIndicator': refreshIndicatorBuilder,
+    'digia/beforeAfterSlider': beforeAfterSliderBuilder,
+    'digia/imageView360': imageView360Builder,
     // 'digia/stepper': stepperBuilder,
     // 'digia/flutterStepper': flutterStepperBuilder,
     'digia/pinField': pinFieldBuilder,
@@ -79,7 +84,7 @@ abstract class VirtualWidgetRegistry {
     'digia/webView': webViewBuilder,
 
     // Data Display
-    // 'digia/carousel': carouselBuilder,
+    'digia/carousel': carouselBuilder,
     'digia/circularProgressBar': circularProgressBarBuilder,
     'digia/linearProgressBar': linearProgressBarBuilder,
     'digia/paginatedListView': paginatedListViewBuilder,
@@ -123,8 +128,11 @@ abstract class VirtualWidgetRegistry {
     ) builder,
   );
 
+  Widget Function(String viewId, JsonLike? args) get scaffoldBuilderFn;
+
   factory VirtualWidgetRegistry({
     required Widget Function(String id, JsonLike? args) componentBuilder,
+    required Widget Function(String viewId, JsonLike? args) scaffoldBuilderFn,
   }) = DefaultVirtualWidgetRegistry;
 
   VirtualWidget createWidget(VWData data, VirtualWidget? parent);
@@ -132,10 +140,13 @@ abstract class VirtualWidgetRegistry {
 
 class DefaultVirtualWidgetRegistry implements VirtualWidgetRegistry {
   final Widget Function(String id, JsonLike? args) componentBuilder;
+  @override
+  final Widget Function(String viewId, JsonLike? args) scaffoldBuilderFn;
   final Map<String, VirtualWidgetBuilder> builders;
 
   DefaultVirtualWidgetRegistry({
     required this.componentBuilder,
+    required this.scaffoldBuilderFn,
   }) : builders = Map.from(VirtualWidgetRegistry._defaultBuilders);
 
   @override

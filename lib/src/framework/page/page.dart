@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
@@ -9,10 +8,7 @@ import '../data_type/data_type_creator.dart';
 import '../data_type/variable.dart';
 import '../expr/default_scope_context.dart';
 import '../expr/scope_context.dart';
-import '../internal_widgets/async_builder/controller.dart';
-import '../internal_widgets/async_builder/widget.dart';
 import '../models/page_definition.dart';
-import '../models/types.dart';
 import '../models/vw_data.dart';
 import '../render_payload.dart';
 import '../resource_provider.dart';
@@ -20,8 +16,6 @@ import '../state/state_context.dart';
 import '../state/state_scope_context.dart';
 import '../state/stateful_scope_widget.dart';
 import '../ui_factory.dart';
-import '../utils/functional_util.dart';
-import '../utils/network_util.dart';
 import '../utils/types.dart';
 import '../virtual_widget_registry.dart';
 import 'page_controller.dart';
@@ -78,24 +72,18 @@ class DUIPage extends StatelessWidget {
             resolvePageArgs,
             state,
           ),
+          controller: controller,
           onPageLoaded: pageDef.onPageLoad,
           onBackPress: pageDef.onBackPress,
-          pageDataSource: pageDef.pageDataSource,
         );
       },
     );
-
-    if (controller != null) {
-      child = ListenableBuilder(
-        listenable: controller!,
-        builder: (context, _) => child,
-      );
-    }
 
     return ResourceProvider(
       icons: resources?.icons ?? {},
       images: resources?.images ?? {},
       textStyles: resources?.textStyles ?? {},
+      fontFactory: resources?.fontFactory,
       colors: resources?.colors ?? {},
       apiModels: apiModels ?? {},
       messageHandler: messageHandler,
@@ -135,10 +123,10 @@ class _DUIPageContent extends StatefulWidget {
   final Map<String, Variable?>? initialStateDef;
   final ({VWData? root})? layout;
   final VirtualWidgetRegistry registry;
-  final ScopeContext? scope;
+  final ScopeContext scope;
   final ActionFlow? onPageLoaded;
   final ActionFlow? onBackPress;
-  final JsonLike? pageDataSource;
+  final DUIPageController? controller;
 
   const _DUIPageContent({
     required this.pageId,
@@ -146,10 +134,10 @@ class _DUIPageContent extends StatefulWidget {
     required this.initialStateDef,
     required this.layout,
     required this.registry,
-    this.scope,
+    required this.scope,
+    this.controller,
     this.onPageLoaded,
     this.onBackPress,
-    this.pageDataSource,
   });
 
   @override
@@ -167,26 +155,21 @@ class _DUIPageContentState extends State<_DUIPageContent> {
 
   @override
   Widget build(BuildContext context) {
+    Widget child;
+    if (widget.controller != null) {
+      child = ListenableBuilder(
+          listenable: widget.controller!,
+          builder: (context, _) => _buildContent(context));
+    } else {
+      child = _buildContent(context);
+    }
     return PopScope(
-        onPopInvoked: _handleBackPress,
-        child: AsyncBuilder(
-            controller: _makeController(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Scaffold(
-                    body: SafeArea(
-                        child: Center(
-                  child: SizedBox(
-                    child: CircularProgressIndicator(color: Colors.blue),
-                  ),
-                )));
-              }
-
-              return _buildContent(context, snapshot.data?.data);
-            }));
+      onPopInvoked: _handleBackPress,
+      child: child,
+    );
   }
 
-  Widget _buildContent(BuildContext context, Object? response) {
+  Widget _buildContent(BuildContext context) {
     final rootNode = widget.layout?.root;
     // Blank Layout
     if (rootNode == null) {
@@ -198,95 +181,21 @@ class _DUIPageContentState extends State<_DUIPageContent> {
     return virtualWidget.toWidget(
       RenderPayload(
         buildContext: context,
-        scopeContext: _createExprContext(response),
+        scopeContext: widget.scope,
       ),
-    );
-  }
-
-  ScopeContext _createExprContext(Object? response) {
-    return DefaultScopeContext(
-      variables: {
-        'dataSource': response,
-      },
-      enclosing: widget.scope,
     );
   }
 
   void _onPageLoaded() {
     if (widget.onPageLoaded != null) {
-      DefaultActionExecutor.of(context).execute(
-        context,
-        widget.onPageLoaded!,
-        null,
-      );
+      _executeAction(context, widget.onPageLoaded!, widget.scope);
     }
   }
 
   void _handleBackPress(bool didPop) {
     if (widget.onBackPress != null) {
-      DefaultActionExecutor.of(context).execute(
-        context,
-        widget.onBackPress!,
-        _createExprContext(null),
-      );
+      _executeAction(context, widget.onBackPress!, widget.scope);
     }
-  }
-
-  bool _shouldExecuteDataSource() =>
-      widget.pageDataSource?['type'] == 'Action.loadPage';
-
-  AsyncController<Response<Object?>> _makeController() {
-    if (!_shouldExecuteDataSource()) {
-      return AsyncController();
-    }
-
-    return AsyncController(futureCreator: () {
-      final action = as$<JsonLike>(widget.pageDataSource!['data']);
-      if (action == null) return Future.error('Unconfigured data');
-
-      final apiDataSourceId = as$<String>(action['dataSourceId']);
-
-      final apiModel =
-          ResourceProvider.maybeOf(context)?.apiModels[apiDataSourceId];
-
-      if (apiModel == null) {
-        return Future.error('No API Selected');
-      }
-
-      final result = executeApiAction(
-        widget.scope,
-        apiModel,
-        as$<JsonLike>(action['args'])?.map((key, value) => MapEntry(
-              key,
-              ExprOr.fromJson<Object>(value),
-            )),
-        successCondition: ExprOr.fromJson<bool>(action['successCondition']),
-        onSuccess: (response) async {
-          final actionFlow = ActionFlow.fromJson(action['onSuccess']);
-          if (actionFlow != null) {
-            _executeAction(
-              context,
-              actionFlow,
-              DefaultScopeContext(
-                  variables: {'response': response}, enclosing: widget.scope),
-            );
-          }
-        },
-        onError: (response) async {
-          final actionFlow = ActionFlow.fromJson(action['onError']);
-          if (actionFlow != null) {
-            _executeAction(
-              context,
-              actionFlow,
-              DefaultScopeContext(
-                  variables: {'response': response}, enclosing: widget.scope),
-            );
-          }
-        },
-      );
-
-      return result;
-    });
   }
 
   Future<Object?>? _executeAction(

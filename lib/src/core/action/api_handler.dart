@@ -25,7 +25,8 @@ class ApiHandler {
   Future<Response<Object?>> execute(
       {required APIModel apiModel,
       required Map<String, dynamic>? args,
-      StreamController<Object?>? progressStreamController}) async {
+      StreamController<Object?>? progressStreamController,
+      CancelToken? cancelToken}) async {
     final stopwatch = Stopwatch();
     final envVariables =
         DigiaUIClient.instance.config.getEnvironmentVariables();
@@ -39,7 +40,13 @@ class ApiHandler {
       finalArgs.addAll(args);
     }
 
-    final url = _hydrateTemplate(apiModel.url, finalArgs);
+    String url = _hydrateTemplate(apiModel.url, finalArgs);
+    final DigiaUIHost? host = DigiaUIClient.instance.developerConfig?.host;
+    if (host is DashboardHost &&
+        host.resourceProxyUrl != null &&
+        url.startsWith('http:')) {
+      url = '${host.resourceProxyUrl}$url';
+    }
     final headers = apiModel.headers?.map((key, value) => MapEntry(
         _hydrateTemplate(key, finalArgs),
         _hydrateTemplate(value as String, finalArgs)));
@@ -60,6 +67,7 @@ class ApiHandler {
           method: apiModel.method,
           additionalHeaders: headers,
           data: preparedData,
+          cancelToken: cancelToken,
           uploadProgress: (p0, p1) {
             progressStreamController?.sink.add({
               'count': p0,
@@ -74,6 +82,7 @@ class ApiHandler {
             url: url,
             method: apiModel.method,
             additionalHeaders: headers,
+            cancelToken: cancelToken,
             data: preparedData);
       }
       stopwatch.stop();

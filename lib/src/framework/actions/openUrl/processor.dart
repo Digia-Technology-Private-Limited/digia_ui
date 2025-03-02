@@ -6,7 +6,7 @@ import '../../utils/flutter_type_converters.dart';
 import '../base/processor.dart';
 import 'action.dart';
 
-class OpenUrlProcessor implements ActionProcessor<OpenUrlAction> {
+class OpenUrlProcessor extends ActionProcessor<OpenUrlAction> {
   @override
   Future<Object?>? execute(
     BuildContext context,
@@ -19,6 +19,14 @@ class OpenUrlProcessor implements ActionProcessor<OpenUrlAction> {
     if (urlString == null) {
       throw ArgumentError('URL is null');
     }
+
+    logAction(
+      action.actionType.value,
+      {
+        'url': urlString,
+        'launchMode': action.launchMode,
+      },
+    );
 
     final url = Uri.parse(urlString);
     final canOpenUrl = await canLaunchUrl(url);

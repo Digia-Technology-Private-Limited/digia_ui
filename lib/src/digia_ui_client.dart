@@ -6,12 +6,13 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:uuid/uuid.dart';
 
 import '../digia_ui.dart';
+import 'config/model.dart';
+import 'config/resolver.dart';
 import 'core/functions/js_functions.dart';
+import 'framework/state/state_context.dart';
 import 'network/network_client.dart';
 import 'preferences.dart';
 import 'version.dart';
-
-const defaultUIConfigAssetPath = 'assets/json/dui_config.json';
 
 class DigiaUIClient {
   static final DigiaUIClient _instance = DigiaUIClient._();
@@ -98,8 +99,6 @@ class DigiaUIClient {
     var appVersion = packageInfo.version;
     var appbuildNumber = packageInfo.buildNumber;
 
-    AppConfigResolver appConfigResolver = AppConfigResolver(flavorInfo);
-
     Map<String, dynamic> headers = NetworkClient.getDefaultDigiaHeaders(
         packageVersion,
         accessKey,
@@ -113,9 +112,14 @@ class DigiaUIClient {
     _instance.networkClient = NetworkClient(
         _instance.baseUrl, headers, networkConfiguration, developerConfig);
 
-    _instance.config = await appConfigResolver.getConfig();
+    _instance.config = await ConfigResolver(flavorInfo).getConfig();
 
     // _instance.appState = DUIAppState.fromJson(_instance.config.appState ?? {});
+
+    if (developerConfig?.inspector?.stateObserver != null) {
+      StateContext.observer = developerConfig?.inspector?.stateObserver;
+    }
+
     _instance._isInitialized = true;
   }
 

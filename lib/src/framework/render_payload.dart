@@ -4,6 +4,7 @@ import '../network/api_request/api_request.dart';
 import 'actions/base/action_flow.dart';
 import 'expr/expression_util.dart';
 import 'expr/scope_context.dart';
+import 'font_factory.dart';
 import 'models/types.dart';
 import 'models/vw_repeat_data.dart';
 import 'resource_provider.dart';
@@ -34,6 +35,10 @@ class RenderPayload {
   // Retrieves an API model from the ResourceProvider using an ID
   APIModel? getApiModel(String id) {
     return ResourceProvider.maybeOf(buildContext)?.apiModels[id];
+  }
+
+  DUIFontFactory? getFontFactory() {
+    return ResourceProvider.maybeOf(buildContext)?.getFontFactory();
   }
 
   TextStyle? getTextStyle(JsonLike? json) {

@@ -3,42 +3,18 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 import '../digia_ui.dart';
+import 'Utils/download_operations.dart';
 import 'Utils/file_operations.dart';
-import 'core/functions/download.dart';
+import 'config/model.dart';
+import 'core/appConfig/app_config.dart';
 import 'core/functions/js_functions.dart';
-import 'framework/data_type/variable.dart';
-import 'framework/data_type/variable_json_converter.dart';
-import 'framework/utils/functional_util.dart';
-import 'network/api_request/api_request.dart';
-import 'network/core/types.dart';
 
 class AppConfigResolver {
   final FlavorInfo _flavorInfo;
+  final FileOperations fileOps = const FileOperationsImpl();
+  final FileDownloader downloadOps = FileDownloaderImpl();
 
   AppConfigResolver(this._flavorInfo);
-
-  Future<Map<String, dynamic>?> _getAppConfigFromNetwork(path) async {
-    var resp = await DigiaUIClient.instance.networkClient.requestInternal(
-      HttpMethod.post,
-      path as String,
-      (json) => json as dynamic,
-    );
-    final data = resp.data['response'] as Map<String, dynamic>?;
-    return data;
-  }
-
-  Future<Map<String, dynamic>?> _getAppConfigFromNetworkAndWriteToFile(
-      String path) async {
-    try {
-      final data = await _getAppConfigFromNetwork(path);
-      if (data != null && data.isNotEmpty && data['versionUpdated'] == true) {
-        await writeStringToFile(json.encode(data), 'appConfig.json');
-      }
-      return data;
-    } catch (e) {
-      return null;
-    }
-  }
 
   Exception _buildInitException(String reason) {
     print(reason);
@@ -68,12 +44,13 @@ class AppConfigResolver {
   }
 
   void _fetchAndCacheProductionAppConfigAndFunctions() async {
+    AppConfig config = AppConfig();
     try {
-      var config = DUIConfig(await _getAppConfigFromNetworkAndWriteToFile(
-          '/config/getAppConfigProduction'));
-      if (config.functionsFilePath != null) {
-        downloadFunctionsFile(config.functionsFilePath!,
-            JSFunctions.getFunctionsFileName(config.version));
+      var appConfig = DUIConfig(await config
+          .getAppConfigFileFromNetwork('/config/getAppConfigRelease'));
+      if (appConfig.functionsFilePath != null) {
+        downloadOps.downloadFile(appConfig.functionsFilePath!,
+            JSFunctions.getFunctionsFileName(appConfig.version));
       }
     } catch (e) {
       print(
@@ -82,14 +59,15 @@ class AppConfigResolver {
   }
 
   Future<DUIConfig> getConfig() async {
+    AppConfig config = AppConfig();
     DUIConfig appConfig;
     DUIConfig? cachedAppConfig, burnedAppConfig;
     int? version;
     switch (_flavorInfo) {
       case Debug():
         try {
-          appConfig =
-              DUIConfig(await _getAppConfigFromNetwork('/config/getAppConfig'));
+          appConfig = DUIConfig(
+              await config.getAppConfigFromNetwork('/config/getAppConfig'));
         } catch (e) {
           throw _buildInitException('Invalid AppConfig or fetch failed');
         }
@@ -97,8 +75,8 @@ class AppConfigResolver {
         return appConfig;
       case Staging():
         try {
-          appConfig = DUIConfig(
-              await _getAppConfigFromNetwork('/config/getAppConfigStaging'));
+          appConfig = DUIConfig(await config
+              .getAppConfigFromNetwork('/config/getAppConfigStaging'));
         } catch (e) {
           throw _buildInitException('Invalid AppConfig or fetch failed');
         }
@@ -114,8 +92,8 @@ class AppConfigResolver {
         // If Web priority doesnt matter. Always fetch from network
         if (kIsWeb) {
           try {
-            appConfig = DUIConfig(await _getAppConfigFromNetwork(
-                '/config/getAppConfigProduction'));
+            appConfig = DUIConfig(await config
+                .getAppConfigFileFromNetwork('/config/getAppConfigRelease'));
           } catch (e) {
             throw _buildInitException('Invalid AppConfig or fetch failed');
           }
@@ -125,7 +103,7 @@ class AppConfigResolver {
           return appConfig;
         }
         try {
-          var cachedAppConfigJson = await readFileString('appConfig.json');
+          var cachedAppConfigJson = await fileOps.readString('appConfig.json');
           cachedAppConfig = DUIConfig(
               (json.decode(cachedAppConfigJson!) as Map<String, dynamic>));
           version = cachedAppConfig.version;
@@ -148,12 +126,13 @@ class AppConfigResolver {
 
         switch (initPriority) {
           case PrioritizeNetwork(timeout: int timeout):
+
             //try to fetch appConfig and functions from network
             try {
               var result = await Future.any([
-                Future.delayed(Duration(seconds: timeout)),
-                _getAppConfigFromNetworkAndWriteToFile(
-                    '/config/getAppConfigProduction')
+                Future<Object?>.delayed(Duration(seconds: timeout)),
+                config
+                    .getAppConfigFileFromNetwork('/config/getAppConfigRelease')
               ]);
               if (result == null) {
                 throw _buildInitException('Invalid AppConfig or fetch failed');
@@ -207,8 +186,8 @@ class AppConfigResolver {
       case Versioned(version: int version):
         try {
           DigiaUIClient.instance.networkClient.addVersionHeader(version);
-          appConfig = DUIConfig(
-              await _getAppConfigFromNetwork('/config/getAppConfigForVersion'));
+          appConfig = DUIConfig(await config
+              .getAppConfigFromNetwork('/config/getAppConfigForVersion'));
         } catch (e) {
           throw _buildInitException('Invalid AppConfig or fetch failed');
         }
@@ -230,59 +209,5 @@ class AppConfigResolver {
       DUIConfig burnedAppConfig, String functionsPath) async {
     await _initFunctions(localPath: functionsPath);
     return burnedAppConfig;
-  }
-}
-
-class DUIConfig {
-  final Map<String, dynamic> _themeConfig;
-  final Map<String, Object?> pages;
-  final Map<String, Object?>? components;
-  final Map<String, dynamic> restConfig;
-  final String initialRoute;
-  final String? functionsFilePath;
-  final Map<String, dynamic>? appState;
-  final bool? versionUpdated;
-  final int? version;
-  final Map<String, dynamic>? _environment;
-
-  DUIConfig(dynamic data)
-      : _themeConfig = as<Map<String, dynamic>>(data['theme']),
-        pages = as<Map<String, Object?>>(data['pages']),
-        components = as$<Map<String, Object?>>(data['components']),
-        restConfig = as<Map<String, dynamic>>(data['rest']),
-        initialRoute = as<String>(data['appSettings']['initialRoute']),
-        appState = as$<Map<String, dynamic>>(data['appState']),
-        version = as$<int>(data['version']),
-        versionUpdated = as$<bool>(data['versionUpdated']),
-        functionsFilePath = as$<String>(data['functionsFilePath']),
-        _environment = as$<Map<String, dynamic>>(data['environment']);
-
-  // TODO: @tushar - Add support for light / dark theme
-  Map<String, dynamic> get _colors =>
-      as<Map<String, dynamic>>(_themeConfig['colors']['light']);
-  Map<String, dynamic> get _fonts =>
-      as<Map<String, dynamic>>(_themeConfig['fonts']);
-
-  Map<String, Object?> get colorTokens =>
-      as<Map<String, Object?>>(_themeConfig['colors']['light']);
-  Map<String, Object?> get fontTokens =>
-      as<Map<String, Object?>>(_themeConfig['fonts']);
-
-  String? getColorValue(String colorToken) {
-    return as$<String>(_colors[colorToken]);
-  }
-
-  Map<String, dynamic>? getDefaultHeaders() {
-    return as$<Map<String, dynamic>>(restConfig['defaultHeaders']);
-  }
-
-  Map<String, Variable> getEnvironmentVariables() {
-    return const VariableJsonConverter()
-        .fromJson(as$<Map<String, dynamic>>(_environment?['variables']));
-  }
-
-  APIModel getApiDataSource(String id) {
-    return APIModel.fromJson(
-        as<Map<String, dynamic>>(restConfig['resources'][id]));
   }
 }

@@ -21,7 +21,8 @@ class VWTimer extends VirtualStatelessWidget<TimerProps> {
     if (child == null) return empty();
 
     final duration = payload.evalExpr(props.duration) ?? 0;
-    final initialValue = payload.evalExpr(props.duration) ?? 0;
+    final initialValue = payload.evalExpr(props.initialValue) ??
+        (props.isCountDown ? duration : 0);
 
     final controller = payload.evalExpr(props.controller);
 
@@ -35,11 +36,11 @@ class VWTimer extends VirtualStatelessWidget<TimerProps> {
 
     return TimerWidget(
       controller: controller,
-      initialValue: payload.evalExpr(props.duration) ?? 0,
+      initialValue: initialValue,
       updateInterval: Duration(
         seconds: payload.evalExpr(props.updateInterval) ?? 1,
       ),
-      duration: payload.evalExpr(props.duration) ?? 0,
+      duration: duration,
       isCountDown: props.isCountDown,
       builder: (innerCtx, snapshot) {
         final updatedPayload = payload.copyWithChainedContext(

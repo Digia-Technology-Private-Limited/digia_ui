@@ -1,10 +1,9 @@
 import 'package:flutter/widgets.dart';
 
+import '../../../digia_ui.dart';
 import '../models/common_props.dart';
-import '../render_payload.dart';
-
-import '../utils/flutter_type_converters.dart';
 import '../utils/widget_util.dart';
+import 'default_error_widget.dart';
 import 'virtual_widget.dart';
 
 abstract class VirtualLeafStatelessWidget<T> extends VirtualWidget {
@@ -20,35 +19,42 @@ abstract class VirtualLeafStatelessWidget<T> extends VirtualWidget {
 
   @override
   Widget toWidget(RenderPayload payload) {
-    if (commonProps == null) return render(payload);
+    try {
+      if (commonProps == null) return render(payload);
+      final isVisible =
+          commonProps?.visibility?.evaluate(payload.scopeContext) ?? true;
+      if (!isVisible) return empty();
+      var current = render(payload);
 
-    final isVisible =
-        commonProps?.visibility?.evaluate(payload.scopeContext) ?? true;
-    if (!isVisible) return empty();
+      // Styling
+      current = wrapInContainer(
+        payload: payload,
+        style: commonProps!.style,
+        child: current,
+      );
 
-    var current = render(payload);
+      // Align
+      current = wrapInAlign(
+        value: commonProps!.align,
+        child: current,
+      );
 
-    // Styling
-    current = wrapInContainer(
-      payload: payload,
-      style: commonProps!.style,
-      child: current,
-    );
+      current = wrapInGestureDetector(
+        payload: payload,
+        actionFlow: commonProps?.onClick,
+        child: current,
+        borderRadius:
+            To.borderRadius(commonProps?.style?.border?['borderRadius']),
+      );
 
-    // Align
-    current = wrapInAlign(
-      value: commonProps!.align,
-      child: current,
-    );
-
-    current = wrapInGestureDetector(
-      payload: payload,
-      actionFlow: commonProps?.onClick,
-      child: current,
-      borderRadius:
-          To.borderRadius(commonProps?.style?.border?['borderRadius']),
-    );
-
-    return current;
+      return current;
+    } catch (error) {
+       if (DigiaUIClient.instance.developerConfig?.host is DashboardHost) {
+        return DefaultErrorWidget(
+            refName: refName, errorMessage: error.toString());
+      } else {
+        rethrow;
+      }
+    }
   }
 }

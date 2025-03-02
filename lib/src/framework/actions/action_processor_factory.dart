@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 
+import '../../dui_logger.dart';
 import '../data_type/method_bindings/method_binding_registry.dart';
 import '../expr/scope_context.dart';
 import '../utils/types.dart';
@@ -52,68 +53,71 @@ class ActionProcDependencies {
 
 class ActionProcessorFactory {
   final ActionProcDependencies dependencies;
+  final DUILogger? logger;
+  final Map<String, Object?>? metaData;
 
-  ActionProcessorFactory(this.dependencies);
+  ActionProcessorFactory(this.dependencies, this.logger, this.metaData);
 
+  ActionProcessor? actionProcessor;
   ActionProcessor getProcessor(an.Action action) {
     switch (action.actionType) {
       case an.ActionType.callRestApi:
-        return CallRestApiProcessor(
+        actionProcessor = CallRestApiProcessor(
           executeActionFlow: dependencies.executeActionFlow,
         );
       case an.ActionType.controlDrawer:
-        return ControlDrawerProcessor();
+        actionProcessor = ControlDrawerProcessor();
       case an.ActionType.controlObject:
-        return ControlObjectProcessor(
+        actionProcessor = ControlObjectProcessor(
           registry: dependencies.bindingRegistry,
         );
       case an.ActionType.copyToClipBoard:
-        return CopyToClipBoardProcessor();
+        actionProcessor = CopyToClipBoardProcessor();
       case an.ActionType.delay:
-        return DelayProcessor();
+        actionProcessor = DelayProcessor();
       case an.ActionType.imagePicker:
-        return ImagePickerProcessor();
+        actionProcessor = ImagePickerProcessor();
       case an.ActionType.navigateBack:
-        return NavigateBackProcessor();
+        actionProcessor = NavigateBackProcessor();
       case an.ActionType.navigateBackUntil:
-        return NavigateBackUntilProcessor();
+        actionProcessor = NavigateBackUntilProcessor();
       case an.ActionType.navigateToPage:
-        return NavigateToPageProcessor(
+        actionProcessor = NavigateToPageProcessor(
           executeActionFlow: dependencies.executeActionFlow,
           pageRouteBuilder: dependencies.pageRouteBuilder,
         );
       case an.ActionType.openUrl:
-        return OpenUrlProcessor();
+        actionProcessor = OpenUrlProcessor();
       case an.ActionType.postMessage:
-        return PostMessageProcessor();
+        actionProcessor = PostMessageProcessor();
       case an.ActionType.rebuildState:
-        return RebuildStateProcessor();
-      // case an.ActionType.setAppState:
-      // return SetAppStateProcessor();
+        actionProcessor = RebuildStateProcessor();
       case an.ActionType.setState:
-        return SetStateProcessor();
+        actionProcessor = SetStateProcessor();
       case an.ActionType.shareContent:
-        return ShareProcessor();
+        actionProcessor = ShareProcessor();
       case an.ActionType.showDialog:
-        return ShowDialogProcessor(
+        actionProcessor = ShowDialogProcessor(
           viewBuilder: dependencies.viewBuilder,
           executeActionFlow: dependencies.executeActionFlow,
         );
       case an.ActionType.showToast:
-        return ShowToastProcessor();
+        actionProcessor = ShowToastProcessor();
       case an.ActionType.showBottomSheet:
-        return ShowBottomSheetProcessor(
+        actionProcessor = ShowBottomSheetProcessor(
           executeActionFlow: dependencies.executeActionFlow,
           viewBuilder: dependencies.viewBuilder,
         );
       case an.ActionType.filePicker:
-        return FilePickerProcessor();
+        actionProcessor = FilePickerProcessor();
       case an.ActionType.uploadFile:
-        return UploadProcessor(
-            executeActionFlow: dependencies.executeActionFlow);
+        actionProcessor = UploadProcessor(
+          executeActionFlow: dependencies.executeActionFlow,
+        );
       case an.ActionType.imagePicker:
     }
+    actionProcessor?.metaData = metaData;
     // TODO: Remove later
-    return ShowToastProcessor();
+    return (actionProcessor ?? ShowToastProcessor())..logger = logger;
   }
 }

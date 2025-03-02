@@ -11,7 +11,8 @@ enum DataType {
   streamController('streamController'),
   asyncController('asyncController'),
   textEditingController('textFieldController'),
-  file('file');
+  file('file'),
+  apiCancelToken('apiCancelToken');
 
   final String id;
 
