@@ -7,12 +7,15 @@ class PaginatedSliverListProps {
   final String? apiId;
   final Map<String, ExprOr<Object>?>? args;
   final ExprOr<List>? transformItems;
+  final ExprOr<Object>? firstPageKey;
+  final ExprOr<Object>? nextPageKey;
 
-  PaginatedSliverListProps({
-    this.apiId,
-    this.args,
-    this.transformItems,
-  });
+  PaginatedSliverListProps(
+      {this.apiId,
+      this.args,
+      this.transformItems,
+      this.firstPageKey,
+      this.nextPageKey});
 
   factory PaginatedSliverListProps.fromJson(JsonLike json) {
     return PaginatedSliverListProps(
@@ -23,6 +26,8 @@ class PaginatedSliverListProps {
                 ExprOr.fromJson<Object>(value),
               )),
       transformItems: ExprOr.fromJson<List>(json['newItemsTransformation']),
+      firstPageKey: ExprOr.fromJson<Object>(json['firstPageKey']),
+      nextPageKey: ExprOr.fromJson<Object>(json['nextPageKey']),
     );
   }
 }

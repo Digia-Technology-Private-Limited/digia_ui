@@ -28,9 +28,11 @@ class VWPaginatedSliverList extends VirtualSliver<PaginatedSliverListProps> {
     if (shouldRepeatChild) {
       final childToRepeat = children!.first;
       final items = payload.evalRepeatData(repeatData!);
+      final firstPageKey = payload.evalExpr(props.firstPageKey);
 
       return InternalPaginatedSliverList(
         items: items,
+        firstPageKey: firstPageKey!,
         firstPageLoadingBuilder: childOf('firstPageLoadingWidget').maybe((it) {
           return (innerCtx) {
             return it.toWidget(payload.copyWith(buildContext: innerCtx));
@@ -60,7 +62,7 @@ class VWPaginatedSliverList extends VirtualSliver<PaginatedSliverListProps> {
           if (apiModel == null) return;
 
           final scope = DefaultScopeContext(
-            variables: {'offset': pageKey},
+            variables: {'pageKey': pageKey},
             enclosing: payload.scopeContext,
           );
 
@@ -77,10 +79,18 @@ class VWPaginatedSliverList extends VirtualSliver<PaginatedSliverListProps> {
                   ) ??
                   as$<List>(response['body']);
 
-              if (newItems == null || newItems.isEmpty) {
+              final nextPageKey = props.nextPageKey?.evaluate(
+                DefaultScopeContext(
+                  variables: {'response': response},
+                  enclosing: scope,
+                ),
+              );
+
+              if ((newItems == null || newItems.isEmpty) ||
+                  (nextPageKey == null || nextPageKey == '')) {
                 controller.appendLastPage([]);
               } else {
-                controller.appendPage(newItems.cast<Object>(), pageKey + 1);
+                controller.appendPage(newItems.cast<Object>(), nextPageKey);
               }
             },
           );
