@@ -9,6 +9,7 @@ import 'controlObject/action.dart';
 import 'copyToClipBoard/action.dart';
 import 'delay/action.dart';
 import 'filePicker/action.dart';
+import 'imagePicker/action.dart';
 import 'navigateBack/action.dart';
 import 'navigateBackUntil/action.dart';
 import 'navigateToPage/action.dart';
@@ -44,7 +45,7 @@ class ActionFactory {
       case ActionType.delay:
         action = DelayAction.fromJson(actionData);
       case ActionType.imagePicker:
-      // action = ImagePickerAction.fromJson(actionData);
+        action = ImagePickerAction.fromJson(actionData);
       case ActionType.navigateBack:
         action = NavigateBackAction.fromJson(actionData);
       case ActionType.navigateBackUntil:

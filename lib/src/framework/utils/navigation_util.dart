@@ -8,7 +8,7 @@ Future<T?> presentDialog<T>({
   bool barrierDismissible = true,
   Color? barrierColor,
   bool useSafeArea = true,
-  bool useRootNavigator = true,
+  bool useRootNavigator = false,
   RouteSettings? routeSettings,
   GlobalKey<NavigatorState>? navigatorKey,
 }) {

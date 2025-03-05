@@ -32,6 +32,18 @@ class AdaptedFile implements ExprInstance {
     this.xFile = xFile;
   }
 
+  void setDataFromAdaptedFile(AdaptedFile adaptedFile) {
+    setData(
+      path: adaptedFile.path,
+      name: adaptedFile.name,
+      size: adaptedFile.size,
+      bytes: adaptedFile.bytes,
+      readStream: adaptedFile.readStream,
+      identifier: adaptedFile.identifier,
+      xFile: adaptedFile.xFile,
+    );
+  }
+
   bool get isWeb => kIsWeb;
   bool get isMobile => !kIsWeb;
 

@@ -80,15 +80,7 @@ class FilePickerProcessor extends ActionProcessor<FilePickerAction> {
         final files = finalFiles.first;
 
         if (file != null) {
-          file.setData(
-            path: files.path,
-            name: files.name,
-            size: files.size,
-            bytes: files.bytes,
-            readStream: files.readStream,
-            identifier: files.identifier,
-            xFile: files.xFile,
-          );
+          file.setDataFromAdaptedFile(files);
         }
       } catch (e) {
         print('Error: $e');
