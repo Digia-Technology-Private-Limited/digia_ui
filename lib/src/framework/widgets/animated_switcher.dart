@@ -24,12 +24,15 @@ class VWAnimatedSwitcher extends VirtualStatelessWidget<AnimatedSwitcherProps> {
     final showFirstChild = payload.evalExpr<bool>(props.showFirstChild);
 
     return AnimatedSwitcher(
-      duration: Duration(milliseconds: animationDuration),
-      switchInCurve: props.switchInCurve ?? Curves.linear,
-      switchOutCurve: props.switchOutCurve ?? Curves.linear,
-      child: showFirstChild ?? true
-          ? firstChild.toWidget(payload)
-          : secondChild?.toWidget(payload) ?? firstChild.toWidget(payload),
-    );
+        duration: Duration(milliseconds: animationDuration),
+        switchInCurve: props.switchInCurve ?? Curves.linear,
+        switchOutCurve: props.switchOutCurve ?? Curves.linear,
+        child: KeyedSubtree(
+            key: ValueKey(showFirstChild),
+            child: showFirstChild ?? true
+                ? firstChild.toWidget(payload)
+                : Container(
+                    key: ValueKey<int>(2),
+                    child: secondChild?.toWidget(payload))));
   }
 }
