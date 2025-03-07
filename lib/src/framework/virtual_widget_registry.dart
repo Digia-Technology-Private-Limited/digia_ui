@@ -55,6 +55,7 @@ abstract class VirtualWidgetRegistry {
     'digia/navigationBar': navigationBarBuilder,
     'digia/navigationBarItem': navigationBarItemBuilder,
     'digia/overlay': overlayBuilder,
+    'digia/pageView': pageViewBuilder,
     // 'digia/tabView': tabViewBuilder,
     // 'digia/tabViewItem': tabViewItemBuilder,
 
