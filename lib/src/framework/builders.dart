@@ -67,6 +67,7 @@ import 'widgets/lottie.dart';
 import 'widgets/nested_scroll_view.dart';
 import 'widgets/opacity.dart';
 import 'widgets/overlay.dart';
+import 'widgets/page_view.dart';
 import 'widgets/paginated_list_view.dart';
 import 'widgets/paginated_sliver_list.dart';
 import 'widgets/pin_field.dart';
@@ -775,6 +776,20 @@ VWTabViewContent tabViewContentBuilder(
     childGroups: createChildGroups(data.childGroups, parent, registry),
     refName: data.refName,
   );
+}
+
+VWPageView pageViewBuilder(
+  VWNodeData data,
+  VirtualWidget? parent,
+  VirtualWidgetRegistry registry,
+) {
+  return VWPageView(
+      props: data.props,
+      commonProps: data.commonProps,
+      parent: parent,
+      repeatData: data.repeatData,
+      childGroups: createChildGroups(data.childGroups, parent, registry),
+      refName: data.refName);
 }
 
 VWPaginatedListView paginatedListViewBuilder(
