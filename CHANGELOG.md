@@ -1,6 +1,13 @@
 # ui_sdk
 
-Digia Ui Sdk.
+Digia Ui SDK.
+
+## [0.3.0] - 2025-03-10
+
+- Added support for PageView.
+- PaginatedList has now support for user-defined pageKey.
+- Added support for ImagePicker.
+- Bug-Fix: AnimatedSwitcher will now animate even if first & second child are of same type.
 
 ## [0.3.0] - 2025-02-18
 
