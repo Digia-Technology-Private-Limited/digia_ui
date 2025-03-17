@@ -10,6 +10,7 @@ class InternalPageView extends StatefulWidget {
   final int? initialPage;
   final double? viewportFraction;
   final bool? keepPage;
+  final ValueChanged<int>? onChanged;
 
   final Widget Function(BuildContext context, int index)? itemBuilder;
 
@@ -24,7 +25,8 @@ class InternalPageView extends StatefulWidget {
       this.scrollDirection,
       this.physics,
       this.itemCount = -1,
-      this.itemBuilder});
+      this.itemBuilder,
+      this.onChanged});
 
   @override
   State<InternalPageView> createState() => _InternalPageViewState();
@@ -54,6 +56,7 @@ class _InternalPageViewState extends State<InternalPageView> {
       controller: _pageController,
       itemCount: widget.itemCount,
       itemBuilder: (ctx, i) => widget.itemBuilder?.call(ctx, i),
+      onPageChanged: widget.onChanged,
     );
   }
 }
