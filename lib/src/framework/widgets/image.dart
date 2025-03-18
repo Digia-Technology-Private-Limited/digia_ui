@@ -75,7 +75,7 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
     throw Exception('Unsupported image source type');
   }
 
-  OctoPlaceholderBuilder? _placeHolderBuilderCreater() {
+  OctoPlaceholderBuilder? _placeHolderBuilderCreator() {
     Widget widget = Container(color: Colors.transparent);
 
     final placeHolderValue = props.getString('placeHolder');
@@ -133,7 +133,7 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
               image: imageProvider,
               fit: To.boxFit(props.get('fit')),
               gaplessPlayback: true,
-              placeholderBuilder: _placeHolderBuilderCreater(),
+              placeholderBuilder: _placeHolderBuilderCreator(),
               imageBuilder: (BuildContext context, Widget widget) {
                 return _mayWrapInAspectRatio(widget);
               },
