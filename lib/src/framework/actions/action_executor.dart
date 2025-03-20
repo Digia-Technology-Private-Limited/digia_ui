@@ -1,6 +1,5 @@
 import 'package:flutter/widgets.dart';
 
-import '../../core/analytics_handler.dart';
 import '../../dui_logger.dart';
 import '../data_type/method_bindings/method_binding_registry.dart';
 import '../expr/scope_context.dart';
@@ -37,12 +36,6 @@ class ActionExecutor {
     ActionFlow actionFlow,
     ScopeContext? scopeContext,
   ) async {
-    AnalyticsHandler.instance.execute(
-      context: context,
-      events: actionFlow.analyticsData,
-      enclosing: scopeContext,
-    );
-
     for (final action in actionFlow.actions) {
       if (!context.mounted) continue;
 

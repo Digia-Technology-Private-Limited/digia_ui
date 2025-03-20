@@ -14,9 +14,8 @@ class AnalyticsHandler {
 
   Future<dynamic>? execute(
       {required BuildContext context,
-      required List<Map<String, dynamic>>? events,
+      required List<AnalyticEvent> events,
       ScopeContext? enclosing}) async {
-    if (events == null) return;
     final DUILogger? logger = DigiaUIClient.instance.developerConfig?.logger;
 
     _logAnalytics(logger, events, context, enclosing);
@@ -25,25 +24,20 @@ class AnalyticsHandler {
 
     if (data is! List || data.isEmpty) return;
 
-    final analyticEvents = data
-        .where((e) => e != null && e is Map<String, dynamic>)
-        .map((e) => AnalyticEvent.fromJson(as<Map<String, dynamic>>(e)))
-        .toList();
-
-    if (analyticEvents.isNotEmpty) {
-      DigiaUIClient.instance.duiAnalytics?.onEvent(analyticEvents);
+    if (data.isNotEmpty) {
+      DigiaUIClient.instance.duiAnalytics?.onEvent(data as List<AnalyticEvent>);
     }
   }
 }
 
-void _logAnalytics(DUILogger? logger, List<Map<String, dynamic>>? events,
+void _logAnalytics(DUILogger? logger, List<AnalyticEvent>? events,
     BuildContext context, ScopeContext? enclosing) {
   if (events == null) return;
 
   for (var event in events) {
-    String eventName = as$<String>(event['name']) ?? 'Unknown Event';
+    String eventName = as$<String>(event.name) ?? 'Unknown Event';
     Map<String, dynamic> eventPayload = as<Map<String, dynamic>>(
-        evaluateNestedExpressions(event['payload'] ?? {}, enclosing));
+        evaluateNestedExpressions(event.payload ?? {}, enclosing));
     logger?.logEvent(eventName: eventName, eventPayload: eventPayload);
   }
 }

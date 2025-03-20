@@ -12,6 +12,7 @@ import 'controlDrawer/processor.dart';
 import 'controlObject/processor.dart';
 import 'copyToClipBoard/processor.dart';
 import 'delay/processor.dart';
+import 'event/processor.dart';
 import 'filePicker/processor.dart';
 import 'imagePicker/processor.dart';
 import 'navigateBack/processor.dart';
@@ -114,6 +115,9 @@ class ActionProcessorFactory {
         actionProcessor = UploadProcessor(
           executeActionFlow: dependencies.executeActionFlow,
         );
+      case an.ActionType.fireEvent:
+        actionProcessor = FireEventProcessor(
+            executeActionFlow: dependencies.executeActionFlow);
       case an.ActionType.imagePicker:
     }
     actionProcessor?.metaData = metaData;
