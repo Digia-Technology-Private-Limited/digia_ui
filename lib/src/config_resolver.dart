@@ -16,13 +16,13 @@ class AppConfigResolver {
 
   AppConfigResolver(this._flavorInfo);
 
+
   Exception _buildInitException(String reason) {
     print(reason);
     return Exception('Digia init failed ======> $reason');
   }
 
-  Future<void> _initFunctions(
-      {String? remotePath, String? localPath, int? version}) async {
+  Future<void> _initFunctions({String? remotePath, String? localPath, int? version}) async {
     print(version);
     if (remotePath != null) {
       var jsFunctions = JSFunctions();
@@ -205,8 +205,7 @@ class AppConfigResolver {
     return cachedAppConfig;
   }
 
-  Future<DUIConfig> _initBurnedAppConfig(
-      DUIConfig burnedAppConfig, String functionsPath) async {
+  Future<DUIConfig> _initBurnedAppConfig(DUIConfig burnedAppConfig, String functionsPath) async {
     await _initFunctions(localPath: functionsPath);
     return burnedAppConfig;
   }

@@ -5,7 +5,7 @@ import '../network/api_request/api_request.dart';
 
 class DUIConfig {
   final Map<String, dynamic> _themeConfig;
-  final Map<String, Object?> pages;
+   Map<String, Object?> pages;
   final Map<String, Object?>? components;
   final Map<String, dynamic> restConfig;
   final String initialRoute;

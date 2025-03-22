@@ -54,13 +54,19 @@ class DUIFactory {
 
   DUIFactory._internal();
 
+
+  //  getReloadCentral() async{
+  //  // await reloadCentral.initialize();
+  //   return reloadCentral;
+  // }
+
   // Initialize the singleton with all necessary values
   void initialize({
     ConfigProvider? pageConfigProvider,
     Map<String, IconData>? icons,
     Map<String, ImageProvider>? images,
     DUIFontFactory? fontFactory,
-  }) {
+  }) async{
     widgetRegistry = DefaultVirtualWidgetRegistry(
       // MessageHandler is not propagated here
       componentBuilder: (id, args) => createComponent(id, args),

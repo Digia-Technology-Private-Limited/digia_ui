@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
+import '../../../digia_ui.dart';
 import '../../network/api_request/api_request.dart';
 import '../actions/base/action_flow.dart';
 import '../base/message_handler.dart';
@@ -20,11 +21,11 @@ import '../utils/types.dart';
 import '../virtual_widget_registry.dart';
 import 'page_controller.dart';
 
-class DUIPage extends StatelessWidget {
+class DUIPage extends StatefulWidget {
   final String pageId;
   final JsonLike? pageArgs;
   final UIResources? resources;
-  final DUIPageDefinition pageDef;
+  DUIPageDefinition pageDef;
   final VirtualWidgetRegistry registry;
   final ScopeContext? scope;
   final Map<String, APIModel>? apiModels;
@@ -32,7 +33,7 @@ class DUIPage extends StatelessWidget {
   final GlobalKey<NavigatorState>? navigatorKey;
   final DUIPageController? controller;
 
-  const DUIPage({
+  DUIPage({
     super.key,
     required this.pageId,
     required this.pageArgs,
@@ -47,47 +48,72 @@ class DUIPage extends StatelessWidget {
   });
 
   @override
+  State<DUIPage> createState() => _DUIPageState();
+}
+
+class _DUIPageState extends State<DUIPage> {
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((d) {
+      DigiaUIClient.instance.reloadCentral?.configStream.listen(
+        (data) {
+          setState(() {
+            widget.pageDef = DUIFactory().configProvider.getPageDefinition(widget.pageId);
+          });
+        },
+      );
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    DigiaUIClient.instance.reloadCentral?.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final resolvePageArgs = pageDef.pageArgDefs
-        ?.map((k, v) => MapEntry(k, pageArgs?[k] ?? v.defaultValue));
-    final resolvedState = pageDef.initStateDefs?.map((k, v) => MapEntry(
+    final resolvePageArgs = widget.pageDef.pageArgDefs
+        ?.map((k, v) => MapEntry(k, widget.pageArgs?[k] ?? v.defaultValue));
+    final resolvedState = widget.pageDef.initStateDefs?.map((k, v) => MapEntry(
         k,
         DataTypeCreator.create(v,
             scopeContext: DefaultScopeContext(
               variables: {...?resolvePageArgs},
-              enclosing: scope,
+              enclosing: widget.scope,
             ))));
 
     Widget child = StatefulScopeWidget(
-      namespace: pageId,
+      namespace: widget.pageId,
       initialState: resolvedState ?? {},
       childBuilder: (context, state) {
         return _DUIPageContent(
-          pageId: pageId,
+          pageId: widget.pageId,
           args: resolvePageArgs,
-          initialStateDef: pageDef.initStateDefs,
-          layout: pageDef.layout,
-          registry: registry,
+          initialStateDef: widget.pageDef.initStateDefs,
+          layout: widget.pageDef.layout,
+          registry: widget.registry,
           scope: _createExprContext(
             resolvePageArgs,
             state,
           ),
-          controller: controller,
-          onPageLoaded: pageDef.onPageLoad,
-          onBackPress: pageDef.onBackPress,
+          controller: widget.controller,
+          onPageLoaded: widget.pageDef.onPageLoad,
+          onBackPress: widget.pageDef.onBackPress,
         );
       },
     );
 
     return ResourceProvider(
-      icons: resources?.icons ?? {},
-      images: resources?.images ?? {},
-      textStyles: resources?.textStyles ?? {},
-      fontFactory: resources?.fontFactory,
-      colors: resources?.colors ?? {},
-      apiModels: apiModels ?? {},
-      messageHandler: messageHandler,
-      navigatorKey: navigatorKey,
+      icons: widget.resources?.icons ?? {},
+      images: widget.resources?.images ?? {},
+      textStyles: widget.resources?.textStyles ?? {},
+      fontFactory: widget.resources?.fontFactory,
+      colors: widget.resources?.colors ?? {},
+      apiModels: widget.apiModels ?? {},
+      messageHandler: widget.messageHandler,
+      navigatorKey: widget.navigatorKey,
       child: child,
     );
   }
@@ -105,14 +131,14 @@ class DUIPage extends StatelessWidget {
     if (stateContext == null) {
       return DefaultScopeContext(
         variables: pageVariables,
-        enclosing: scope,
+        enclosing: widget.scope,
       );
     }
 
     return StateScopeContext(
       stateContext: stateContext,
       variables: pageVariables,
-      enclosing: scope,
+      enclosing: widget.scope,
     );
   }
 }

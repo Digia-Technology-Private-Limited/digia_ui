@@ -9,7 +9,9 @@ import '../digia_ui.dart';
 import 'config/model.dart';
 import 'config/resolver.dart';
 import 'core/functions/js_functions.dart';
+import 'framework/page/config_provider.dart';
 import 'framework/state/state_context.dart';
+import 'hot_reload_centeral.dart';
 import 'network/network_client.dart';
 import 'preferences.dart';
 import 'version.dart';
@@ -27,12 +29,13 @@ class DigiaUIClient {
   late DUIConfig config;
   late int version;
   late Environment environment;
-  late Flavor flavor;
+  late FlavorInfo flavorInfo;
   late JSFunctions jsFunctions;
   late DUIAnalytics? duiAnalytics;
   late DeveloperConfig? developerConfig;
   late String? uuid;
   static const appConfigFileName = 'appConfig.json';
+  final HotReloadCentral? reloadCentral = HotReloadCentral();
 
   bool _isInitialized = false;
 
@@ -88,7 +91,7 @@ class DigiaUIClient {
       DUIAnalytics? duiAnalytics}) async {
     await DUIPreferences.initialize();
     setUuid();
-    _instance.flavor = flavorInfo.flavor;
+    _instance.flavorInfo= flavorInfo;
     _instance.accessKey = accessKey;
     _instance.baseUrl = baseUrl;
     _instance.duiAnalytics = duiAnalytics;
@@ -116,11 +119,24 @@ class DigiaUIClient {
 
     // _instance.appState = DUIAppState.fromJson(_instance.config.appState ?? {});
 
+    if (flavorInfo.flavor == Flavor.debug) {
+      await instance.reloadCentral?.initialize();
+    }
+
     if (developerConfig?.inspector?.stateObserver != null) {
       StateContext.observer = developerConfig?.inspector?.stateObserver;
     }
 
     _instance._isInitialized = true;
+  }
+
+  static reloadConfig({required FlavorInfo flavorInfo}) async {
+    _instance.config = await ConfigResolver(flavorInfo).getConfig();
+    //  _instance.config =  DUIConfig(myConfig);
+    DUIFactory().configProvider =
+        DUIConfigProvider(DigiaUIClient.instance.config);
+
+    // DUIFactory().configProvider.initFunctions(remotePath: _instance.config.functionsFilePath);
   }
 
   Map<String, Object?> get jsVars => {

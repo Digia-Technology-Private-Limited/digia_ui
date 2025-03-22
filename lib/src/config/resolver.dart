@@ -18,6 +18,8 @@ class ConfigResolver implements ConfigProvider {
 
   ConfigResolver(this._flavorInfo);
 
+  String? get branchName => _branchName;
+
   @override
   Future<JsonLike?> getAppConfigFromNetwork(String path) async {
     var resp = await DigiaUIClient.instance.networkClient.requestInternal(
