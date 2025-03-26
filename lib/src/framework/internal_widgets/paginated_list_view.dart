@@ -6,12 +6,14 @@ import 'scrollable_position_mixin.dart';
 class PaginatedListView extends StatefulWidget {
   final Widget Function(BuildContext context, int index, List<Object>? data)
       itemBuilder;
-  final void Function(int pageKey, PagingController<int, Object> controller)
+  final void Function(
+          dynamic pageKey, PagingController<Object, Object> controller)
       pageRequestListener;
 
   final List<Object> items;
   final String? initialScrollPosition;
   final bool? isReverse;
+  final Object firstPageKey;
   final WidgetBuilder? firstPageLoadingBuilder;
   final WidgetBuilder? newPageLoadingBuilder;
   final WidgetBuilder? pageErrorBuilder;
@@ -21,6 +23,7 @@ class PaginatedListView extends StatefulWidget {
     required this.items,
     required this.itemBuilder,
     required this.pageRequestListener,
+    required this.firstPageKey,
     this.firstPageLoadingBuilder,
     this.newPageLoadingBuilder,
     this.pageErrorBuilder,
@@ -35,15 +38,15 @@ class PaginatedListView extends StatefulWidget {
 class _PaginatedListViewState extends State<PaginatedListView>
     with ScrollablePositionMixin {
   late ScrollController _scrollController;
-  late PagingController<int, Object> _pagingController;
+  late PagingController<Object, Object> _pagingController;
 
   @override
   void initState() {
     _scrollController = ScrollController();
-    _pagingController = PagingController.fromValue(
-      PagingState(itemList: widget.items, nextPageKey: 2),
-      firstPageKey: 1,
+    _pagingController = PagingController(
+      firstPageKey: widget.firstPageKey,
     );
+
     super.initState();
 
     setInitialScrollPosition(_scrollController, widget.initialScrollPosition);

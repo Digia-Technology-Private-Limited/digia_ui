@@ -5,18 +5,21 @@ class InternalPaginatedSliverList extends StatefulWidget {
   final Widget Function(BuildContext context, int index, List<Object>? data)
       itemBuilder;
 
-  final void Function(int pageKey, PagingController<int, Object> controller)
+  final void Function(
+          dynamic pageKey, PagingController<Object, Object> controller)
       pageRequestListener;
   final WidgetBuilder? firstPageLoadingBuilder;
   final WidgetBuilder? newPageLoadingBuilder;
   final WidgetBuilder? pageErrorBuilder;
   final List<Object> items;
+  final Object firstPageKey;
 
   const InternalPaginatedSliverList({
     super.key,
     required this.itemBuilder,
     required this.items,
     required this.pageRequestListener,
+    required this.firstPageKey,
     this.firstPageLoadingBuilder,
     this.newPageLoadingBuilder,
     this.pageErrorBuilder,
@@ -28,14 +31,11 @@ class InternalPaginatedSliverList extends StatefulWidget {
 
 class _InternalPaginatedSliverListState
     extends State<InternalPaginatedSliverList> {
-  late PagingController<int, Object> _pagingController;
+  late PagingController<Object, Object> _pagingController;
 
   @override
   void initState() {
-    _pagingController = PagingController.fromValue(
-      PagingState(itemList: widget.items, nextPageKey: 2),
-      firstPageKey: 1,
-    );
+    _pagingController = PagingController(firstPageKey: widget.firstPageKey);
     super.initState();
 
     _pagingController.addPageRequestListener(

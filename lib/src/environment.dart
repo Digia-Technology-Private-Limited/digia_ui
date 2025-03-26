@@ -12,7 +12,8 @@ class Staging extends FlavorInfo {
 }
 
 class Debug extends FlavorInfo {
-  Debug() : super(Flavor.debug);
+  final String? branchName;
+  Debug(this.branchName) : super(Flavor.debug);
 }
 
 class Release extends FlavorInfo {

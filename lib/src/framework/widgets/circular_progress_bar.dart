@@ -1,12 +1,9 @@
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 
 import '../base/virtual_leaf_stateless_widget.dart';
 import '../models/props.dart';
 import '../render_payload.dart';
-import '../utils/flutter_type_converters.dart';
-import '../utils/functional_util.dart';
 
 class VWCircularProgressBar extends VirtualLeafStatelessWidget<Props> {
   VWCircularProgressBar({
@@ -18,29 +15,38 @@ class VWCircularProgressBar extends VirtualLeafStatelessWidget<Props> {
 
   @override
   Widget render(RenderPayload payload) {
-    final bgColor = payload.evalColor(props.get('bgColor'));
-
-    final indicatorColor = payload.evalColor(props.get('indicatorColor'));
-
-    final strokeWidth = payload.eval<double>(props.get('strokeWidth'));
-
-    final strokeAlign = payload.eval<double>(props.get('strokeAlign'));
-
     final progressValue = payload.eval<double>(props.get('progressValue'));
+    final String type = props.getString('type') ?? 'indeterminate';
 
-    final rotationInRadians =
-        props.getDouble('angle').maybe((p0) => p0 / 180.0 * math.pi);
+    return _getChild(progressValue, type, payload);
+  }
 
-    return Transform.rotate(
-      angle: rotationInRadians ?? 0.0,
-      child: CircularProgressIndicator(
-        value: progressValue == null ? null : progressValue / 100,
-        backgroundColor: bgColor,
-        color: indicatorColor,
-        strokeWidth: strokeWidth ?? 4.0,
-        strokeAlign: strokeAlign ?? CircularProgressIndicator.strokeAlignCenter,
-        strokeCap: To.strokeCap(props.get('strokeCap')),
-      ),
-    );
+  Widget _getChild(double? progressValue, String? type, RenderPayload payload) {
+    if (type == 'indeterminate') {
+      return SizedBox(
+        width: props.getDouble('size'),
+        height: props.getDouble('size'),
+        child: CircularProgressIndicator(
+          color: payload.evalColor(props.get('indicatorColor')) ?? Colors.blue,
+          backgroundColor:
+          payload.evalColor(props.get('bgColor')) ?? Colors.transparent,
+          strokeWidth: props.getDouble('thickness') ?? 4.0,
+        ),
+      );
+    } else {
+      return CircularPercentIndicator(
+        radius: (props.getDouble('size') ?? 50.0) / 2,
+        lineWidth: props.getDouble('thickness') ?? 5.0,
+        percent: progressValue != null ? progressValue / 100.0 : 0,
+        animation: props.getBool('animation') ?? false,
+        animateFromLastPercent:
+        props.getBool('animateFromLastPercent') ?? false,
+        backgroundColor:
+        payload.evalColor(props.get('bgColor')) ?? Colors.transparent,
+        progressColor:
+        payload.evalColor(props.get('indicatorColor')) ?? Colors.blue,
+        circularStrokeCap: CircularStrokeCap.round,
+      );
+    }
   }
 }

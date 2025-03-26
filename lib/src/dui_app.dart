@@ -11,7 +11,6 @@ import 'network/netwok_config.dart';
 
 class DUIApp extends StatelessWidget {
   final String digiaAccessKey;
-  final ScrollBehavior? scrollBehavior;
   final GlobalKey<NavigatorState>? navigatorKey;
   final ThemeData? theme;
   final String baseUrl;
@@ -28,7 +27,6 @@ class DUIApp extends StatelessWidget {
   const DUIApp({
     super.key,
     required this.digiaAccessKey,
-    this.scrollBehavior,
     this.navigatorKey,
     required this.flavorInfo,
     required this.environment,
@@ -64,7 +62,6 @@ class DUIApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      scrollBehavior: scrollBehavior,
       // key: key,
       debugShowCheckedModeBanner: false,
       // navigatorObservers: [ChuckerFlutter.navigatorObserver],

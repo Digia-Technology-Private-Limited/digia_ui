@@ -1,6 +1,41 @@
 # ui_sdk
 
-Digia Ui Sdk.
+Digia Ui SDK.
+
+## [0.3.4] - 2025-03-26
+
+- Bug fixes
+
+## [0.3.3] - 2025-03-26
+
+- Added support for dismiss on tap inside in overlay.
+- Added support for onChanged in Switch
+- Bug-Fixes.
+
+## [0.3.2] - 2025-03-26
+
+- Added support for PageView's Controller.
+- Support for 'indeterminate' in CircularProgressBar
+- Bug-Fixes.
+
+## [0.3.1] - 2025-03-10
+
+- Added support for PageView.
+- PaginatedList has now support for user-defined pageKey.
+- Added support for ImagePicker.
+- Bug-Fix: AnimatedSwitcher will now animate even if first & second child are of same type.
+
+## [0.3.0] - 2025-02-18
+
+- Added branching
+
+## [0.2.0] - 2025-02-18
+
+- Added branching
+
+## [0.1.7] - 2025-01-31
+
+- Bug fixes
 
 ## [0.1.6] - 2024-12-16
 

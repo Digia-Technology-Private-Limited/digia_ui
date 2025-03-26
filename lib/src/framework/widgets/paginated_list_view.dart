@@ -30,12 +30,14 @@ class VWPaginatedListView
 
     final initialScrollPosition = payload.evalExpr(props.initialScrollPosition);
     final isReverse = payload.evalExpr(props.reverse) ?? false;
+    final firstPageKey = payload.evalExpr(props.firstPageKey);
 
     if (shouldRepeatChild) {
       final childToRepeat = children!.first;
       final items = payload.evalRepeatData(repeatData!);
 
       return PaginatedListView(
+        firstPageKey: firstPageKey!,
         initialScrollPosition: initialScrollPosition ?? 'start',
         isReverse: isReverse,
         items: items,
@@ -63,7 +65,7 @@ class VWPaginatedListView
           if (apiModel == null) return;
 
           final scope = DefaultScopeContext(
-            variables: {'offset': pageKey},
+            variables: {'pageKey': pageKey},
             enclosing: payload.scopeContext,
           );
 
@@ -80,10 +82,18 @@ class VWPaginatedListView
                   ) ??
                   as$<List>(response['body']);
 
-              if (newItems == null || newItems.isEmpty) {
+              final nextPageKey = props.nextPageKey?.evaluate(
+                DefaultScopeContext(
+                  variables: {'response': response},
+                  enclosing: scope,
+                ),
+              );
+
+              if ((newItems == null || newItems.isEmpty) ||
+                  (nextPageKey == null || nextPageKey == '')) {
                 controller.appendLastPage([]);
               } else {
-                controller.appendPage(newItems.cast<Object>(), pageKey + 1);
+                controller.appendPage(newItems.cast<Object>(), nextPageKey);
               }
             },
           );
