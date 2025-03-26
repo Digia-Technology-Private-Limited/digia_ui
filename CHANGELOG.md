@@ -2,6 +2,12 @@
 
 Digia Ui SDK.
 
+## [0.3.3] - 2025-03-26
+
+- Added support for dismiss on tap inside in overlay.
+- Added support for onChanged in Switch
+- Bug-Fixes.
+
 ## [0.3.2] - 2025-03-26
 
 - Added support for PageView's Controller.
