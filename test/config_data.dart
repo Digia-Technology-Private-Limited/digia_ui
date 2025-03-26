@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 final Map<String, Object?> validConfigData = {
   'appSettings': <String, String>{'initialRoute': 'homepage'},
   'pages': <String, Object?>{
@@ -422,8 +420,3 @@ final Map<String, dynamic> validNetworkConfigData = {
   'functionsFilePath': 'updatedFunctionPath',
   'version': 2
 };
-
-final validConfigJson = json.encode({
-  'isSuccess': true,
-  'data': {'response': validConfigData}
-});
