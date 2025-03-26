@@ -32,6 +32,8 @@ class VWOverlay extends VirtualStatelessWidget<Props> {
       childAlignment: childAlignment,
       offset: Offset(props.getDouble('offset.xAxis') ?? 0,
           props.getDouble('offset.yAxis') ?? 0),
+      dismissOnTapOutside: props.getBool('dismissOnTapOutside') ?? true,
+      dismissOnTapInside: props.getBool('dismissOnTapInside') ?? false,
       popupAlignment: popupAlignment,
       child: childWidget.toWidget(payload),
     );

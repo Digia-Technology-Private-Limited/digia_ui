@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import '../../../digia_ui.dart';
 import '../models/types.dart';
 import '../utils/types.dart';
 
@@ -13,6 +14,7 @@ class SwitchProps {
   final ExprOr<Color>? activeTrackColor;
 
   final ExprOr<Color>? inactiveTrackColor;
+  final ActionFlow? onChanged;
 
   const SwitchProps({
     this.enabled,
@@ -21,6 +23,7 @@ class SwitchProps {
     this.inactiveThumbColor,
     this.activeTrackColor,
     this.inactiveTrackColor,
+    this.onChanged,
   });
 
   factory SwitchProps.fromJson(JsonLike json) {
@@ -31,6 +34,7 @@ class SwitchProps {
       inactiveThumbColor: ExprOr.fromJson<Color>(json['inactiveThumbColor']),
       activeTrackColor: ExprOr.fromJson<Color>(json['activeTrackColor']),
       inactiveTrackColor: ExprOr.fromJson<Color>(json['inactiveTrackColor']),
+      onChanged: ActionFlow.fromJson(json['onChanged']),
     );
   }
 }
