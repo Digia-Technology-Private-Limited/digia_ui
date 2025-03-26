@@ -2,6 +2,10 @@
 
 Digia Ui SDK.
 
+## [0.3.4] - 2025-03-26
+
+- Bug fixes
+
 ## [0.3.3] - 2025-03-26
 
 - Added support for dismiss on tap inside in overlay.
