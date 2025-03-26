@@ -2,6 +2,10 @@
 
 Digia Ui SDK.
 
+## [0.3.5] - 2025-03-26
+
+- Bug fix for failing testcase
+
 ## [0.3.4] - 2025-03-26
 
 - Bug fixes
