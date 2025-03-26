@@ -142,8 +142,10 @@ class _OverlayContent extends StatelessWidget {
             targetAnchor: childAlignment,
             followerAnchor: popupAlignment,
             child: dismissOnTapInside
-                ? GestureDetector(
-                    onTap: onDismiss,
+                ? Listener(
+                    onPointerUp: (_) {
+                      onDismiss();
+                    },
                     child: child,
                   )
                 : child,
