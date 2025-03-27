@@ -13,6 +13,7 @@ class InternalPageView extends StatefulWidget {
   final double? verticalOffset;
   final bool? keepPage;
   final ValueChanged<int>? onChanged;
+  final List<Widget> children;
 
   final Widget Function(BuildContext context, int index)? itemBuilder;
 
@@ -30,6 +31,7 @@ class InternalPageView extends StatefulWidget {
       this.physics,
       this.itemCount = -1,
       this.itemBuilder,
+      this.children = const [],
       this.onChanged});
 
   @override
@@ -52,18 +54,30 @@ class _InternalPageViewState extends State<InternalPageView> {
 
   @override
   Widget build(BuildContext context) {
-    return PageView.builder(
+    if (widget.itemBuilder != null) {
+      return PageView.builder(
+        pageSnapping: widget.pageSnapping ?? true,
+        reverse: widget.reverse ?? false,
+        physics: widget.physics,
+        scrollDirection: widget.scrollDirection ?? Axis.horizontal,
+        controller: _pageController,
+        itemCount: widget.itemCount,
+        itemBuilder: (ctx, i) => Transform.translate(
+            offset: Offset(
+                widget.horizontalOffset ?? 0, widget.verticalOffset ?? 0),
+            child: widget.itemBuilder?.call(ctx, i) ?? SizedBox.shrink()),
+        onPageChanged: widget.onChanged,
+      );
+    }
+
+    return PageView(
       pageSnapping: widget.pageSnapping ?? true,
       reverse: widget.reverse ?? false,
       physics: widget.physics,
       scrollDirection: widget.scrollDirection ?? Axis.horizontal,
       controller: _pageController,
-      itemCount: widget.itemCount,
-      itemBuilder: (ctx, i) => Transform.translate(
-          offset:
-              Offset(widget.horizontalOffset ?? 0, widget.verticalOffset ?? 0),
-          child: widget.itemBuilder?.call(ctx, i) ?? SizedBox.shrink()),
       onPageChanged: widget.onChanged,
+      children: widget.children,
     );
   }
 }

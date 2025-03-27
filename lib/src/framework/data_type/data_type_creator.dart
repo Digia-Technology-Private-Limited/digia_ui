@@ -9,6 +9,7 @@ import '../internal_widgets/timer/controller.dart';
 import '../utils/functional_util.dart';
 import '../utils/types.dart';
 import 'adapted_types/file.dart';
+import 'adapted_types/page_controller.dart';
 import 'adapted_types/scroll_controller.dart';
 import 'adapted_types/text_editing_controller.dart';
 import 'data_type.dart';
@@ -65,7 +66,19 @@ class DataTypeCreator {
 
       case DataType.apiCancelToken:
         return CancelToken();
-
+      case DataType.pageController:
+        final value = as$<JsonLike>(def.defaultValue) ?? {};
+        return AdaptedPageController(
+          initialPage:
+              evaluate<int>(value['initialPage'], scopeContext: scopeContext) ??
+                  0,
+          viewportFraction: evaluate<double>(value['viewportFraction'],
+                  scopeContext: scopeContext) ??
+              1,
+          keepPage:
+              evaluate<bool>(value['keepPage'], scopeContext: scopeContext) ??
+                  true,
+        );
       default:
         throw Exception('Unknown type: ${def.type}');
     }

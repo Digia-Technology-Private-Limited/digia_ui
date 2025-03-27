@@ -2,7 +2,27 @@
 
 Digia Ui SDK.
 
-## [0.3.0] - 2025-03-10
+## [0.3.5] - 2025-03-26
+
+- Bug fix for failing testcase
+
+## [0.3.4] - 2025-03-26
+
+- Bug fixes
+
+## [0.3.3] - 2025-03-26
+
+- Added support for dismiss on tap inside in overlay.
+- Added support for onChanged in Switch
+- Bug-Fixes.
+
+## [0.3.2] - 2025-03-26
+
+- Added support for PageView's Controller.
+- Support for 'indeterminate' in CircularProgressBar
+- Bug-Fixes.
+
+## [0.3.1] - 2025-03-10
 
 - Added support for PageView.
 - PaginatedList has now support for user-defined pageKey.
