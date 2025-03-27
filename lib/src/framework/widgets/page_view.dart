@@ -32,6 +32,9 @@ class VWPageView extends VirtualStatelessWidget<Props> {
     final scrollDirection = To.axis(props.get('scrollDirection'));
     final physics = To.scrollPhysics(props.get('allowScroll'));
     final onPageChanged = ActionFlow.fromJson(props.getMap('onPageChanged'));
+    final verticalOffset = payload.eval<double>(props.get('verticalOffset'));
+    final horizontalOffset =
+        payload.eval<double>(props.get('horizontalOffset'));
     return InternalPageView(
       pageSnapping: pageSnapping,
       reverse: isReversed,
@@ -40,6 +43,8 @@ class VWPageView extends VirtualStatelessWidget<Props> {
       keepPage: keepPage,
       viewportFraction: viewportFraction,
       scrollDirection: scrollDirection,
+      horizontalOffset: horizontalOffset,
+      verticalOffset: verticalOffset,
       physics: physics,
       itemCount: items.length,
       itemBuilder: (innerCtx, index) => childToRepeat.toWidget(

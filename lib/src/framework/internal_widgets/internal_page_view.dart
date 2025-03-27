@@ -9,6 +9,8 @@ class InternalPageView extends StatefulWidget {
   final bool? pageSnapping;
   final int? initialPage;
   final double? viewportFraction;
+  final double? horizontalOffset;
+  final double? verticalOffset;
   final bool? keepPage;
   final ValueChanged<int>? onChanged;
 
@@ -21,6 +23,8 @@ class InternalPageView extends StatefulWidget {
       this.keepPage,
       this.pageSnapping,
       this.viewportFraction,
+      this.verticalOffset,
+      this.horizontalOffset,
       this.initialPage,
       this.scrollDirection,
       this.physics,
@@ -55,7 +59,10 @@ class _InternalPageViewState extends State<InternalPageView> {
       scrollDirection: widget.scrollDirection ?? Axis.horizontal,
       controller: _pageController,
       itemCount: widget.itemCount,
-      itemBuilder: (ctx, i) => widget.itemBuilder?.call(ctx, i),
+      itemBuilder: (ctx, i) => Transform.translate(
+          offset:
+              Offset(widget.horizontalOffset ?? 0, widget.verticalOffset ?? 0),
+          child: widget.itemBuilder?.call(ctx, i) ?? SizedBox.shrink()),
       onPageChanged: widget.onChanged,
     );
   }
