@@ -53,9 +53,9 @@ class DUIPage extends StatelessWidget {
     final resolvedState = pageDef.initStateDefs?.map((k, v) => MapEntry(
         k,
         DataTypeCreator.create(v,
-            scopeContext: DefaultScopeContext(
-              variables: {...?resolvePageArgs},
-              enclosing: scope,
+            scopeContext: _createExprContext(
+              resolvePageArgs,
+              null,
             ))));
 
     Widget child = StatefulScopeWidget(
