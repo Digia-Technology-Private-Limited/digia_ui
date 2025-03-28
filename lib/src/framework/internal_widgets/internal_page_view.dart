@@ -10,6 +10,7 @@ class InternalPageView extends StatefulWidget {
   final int? initialPage;
   final double? viewportFraction;
   final bool? keepPage;
+  final bool? padEnds;
   final ValueChanged<int>? onChanged;
   final List<Widget> children;
 
@@ -19,6 +20,7 @@ class InternalPageView extends StatefulWidget {
       {super.key,
       this.controller,
       this.reverse,
+      this.padEnds,
       this.keepPage,
       this.pageSnapping,
       this.viewportFraction,
@@ -52,6 +54,7 @@ class _InternalPageViewState extends State<InternalPageView> {
   Widget build(BuildContext context) {
     if (widget.itemBuilder != null) {
       return PageView.builder(
+        padEnds: widget.padEnds ?? true,
         pageSnapping: widget.pageSnapping ?? true,
         reverse: widget.reverse ?? false,
         physics: widget.physics,
@@ -64,6 +67,7 @@ class _InternalPageViewState extends State<InternalPageView> {
     }
 
     return PageView(
+      padEnds: widget.padEnds ?? true,
       pageSnapping: widget.pageSnapping ?? true,
       reverse: widget.reverse ?? false,
       physics: widget.physics,
