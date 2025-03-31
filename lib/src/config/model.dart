@@ -36,6 +36,11 @@ class DUIConfig {
   Map<String, Object?> get fontTokens =>
       as<Map<String, Object?>>(_themeConfig['fonts']);
 
+  void addEnvironment(Map<String, Variable>? newEnvironment) {
+    _environment?['variables'] =
+        const VariableJsonConverter().toJson(newEnvironment);
+  }
+
   String? getColorValue(String colorToken) {
     return as$<String>(_colors[colorToken]);
   }

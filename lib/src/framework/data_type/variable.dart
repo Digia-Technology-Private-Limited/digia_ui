@@ -30,7 +30,7 @@ class Variable {
 
   Map<String, dynamic> toJson() {
     return {
-      'type': type,
+      'type': type.id,
       'name': name,
       'default': defaultValue,
     };

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_avif/flutter_avif.dart';
 import 'package:flutter_blurhash/flutter_blurhash.dart';
 import 'package:octo_image/octo_image.dart';
 
@@ -117,6 +118,20 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
     final opacity = payload.eval<double>(props.get('opacity')) ?? 1.0;
 
     final imageProvider = _createImageProvider(payload, imageSource);
+
+    if ((imageSource as String).contains('.avif')) {
+      return Opacity(
+        opacity: opacity,
+        child: _mayWrapInAspectRatio(AvifImage(
+          image: imageProvider,
+          fit: To.boxFit(props.get('fit')),
+          gaplessPlayback: true,
+          errorBuilder: (context, error, stackTrace) {
+            return _buildErrorWidget(error);
+          },
+        )),
+      );
+    }
 
     return Opacity(
       opacity: opacity,
