@@ -138,7 +138,7 @@ class NetworkClient {
   }
 
   void setEnvVariable(String varName, Object? value) {
-    DigiaUIClient.instance.config.addEnvironment({
+    DigiaUIClient.instance.config.addOrReplaceEnvironmentVariables({
       varName: Variable(
         name: varName,
         type: DataType.string,

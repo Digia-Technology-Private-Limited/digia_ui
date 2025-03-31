@@ -37,7 +37,7 @@ class DUIConfig {
   Map<String, Object?> get fontTokens =>
       as<Map<String, Object?>>(_themeConfig['fonts']);
 
-  void addEnvironment(Map<String, Variable> newEnvironment) {
+  void addOrReplaceEnvironmentVariables(Map<String, Variable> newEnvironment) {
     final map = DigiaUIClient.instance.config.getEnvironmentVariables();
     map.addAll(newEnvironment);
     _environment?['variables'] = const VariableJsonConverter().toJson(map);
