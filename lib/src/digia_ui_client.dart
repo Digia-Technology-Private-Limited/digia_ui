@@ -9,7 +9,6 @@ import '../digia_ui.dart';
 import 'config/model.dart';
 import 'config/resolver.dart';
 import 'core/functions/js_functions.dart';
-import 'framework/data_type/variable.dart';
 import 'framework/state/state_context.dart';
 import 'network/network_client.dart';
 import 'preferences.dart';
@@ -79,15 +78,15 @@ class DigiaUIClient {
     _instance._isInitialized = true;
   }
 
-  static Future<void> init(
-      {required String accessKey,
-      required FlavorInfo flavorInfo,
-      required String environment,
-      required String baseUrl,
-      required NetworkConfiguration networkConfiguration,
-      DeveloperConfig? developerConfig,
-      DUIAnalytics? duiAnalytics,
-      Map<String, Variable>? overrideEnv}) async {
+  static Future<void> init({
+    required String accessKey,
+    required FlavorInfo flavorInfo,
+    required String environment,
+    required String baseUrl,
+    required NetworkConfiguration networkConfiguration,
+    DeveloperConfig? developerConfig,
+    DUIAnalytics? duiAnalytics,
+  }) async {
     await DUIPreferences.initialize();
     setUuid();
     _instance.flavor = flavorInfo.flavor;
@@ -115,8 +114,6 @@ class DigiaUIClient {
         _instance.baseUrl, headers, networkConfiguration, developerConfig);
 
     _instance.config = await ConfigResolver(flavorInfo).getConfig();
-
-    _instance.config.getEnvironmentVariables().addAll(overrideEnv ?? {});
 
     // _instance.appState = DUIAppState.fromJson(_instance.config.appState ?? {});
 

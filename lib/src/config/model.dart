@@ -1,3 +1,4 @@
+import '../../digia_ui.dart';
 import '../framework/data_type/variable.dart';
 import '../framework/data_type/variable_json_converter.dart';
 import '../framework/utils/functional_util.dart';
@@ -36,9 +37,10 @@ class DUIConfig {
   Map<String, Object?> get fontTokens =>
       as<Map<String, Object?>>(_themeConfig['fonts']);
 
-  void addEnvironment(Map<String, Variable>? newEnvironment) {
-    _environment?['variables'] =
-        const VariableJsonConverter().toJson(newEnvironment);
+  void addEnvironment(Map<String, Variable> newEnvironment) {
+    final map = DigiaUIClient.instance.config.getEnvironmentVariables();
+    map.addAll(newEnvironment);
+    _environment?['variables'] = const VariableJsonConverter().toJson(map);
   }
 
   String? getColorValue(String colorToken) {
