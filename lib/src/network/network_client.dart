@@ -6,6 +6,8 @@ import 'package:dio/io.dart';
 import 'package:flutter/foundation.dart';
 
 import '../../digia_ui.dart';
+import '../framework/data_type/data_type.dart';
+import '../framework/data_type/variable.dart';
 import 'api_response/base_response.dart';
 import 'core/types.dart';
 
@@ -133,6 +135,10 @@ class NetworkClient {
     } catch (e) {
       throw Exception('Error making HTTP request: $e');
     }
+  }
+
+  void setEnvVariable(String varName, Object? value) {
+    DigiaUIClient.instance.config.setEnvVariable(varName, value);
   }
 
   void replaceProjectHeaders(Map<String, String> headers) {

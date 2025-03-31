@@ -78,14 +78,15 @@ class DigiaUIClient {
     _instance._isInitialized = true;
   }
 
-  static Future<void> init(
-      {required String accessKey,
-      required FlavorInfo flavorInfo,
-      required String environment,
-      required String baseUrl,
-      required NetworkConfiguration networkConfiguration,
-      DeveloperConfig? developerConfig,
-      DUIAnalytics? duiAnalytics}) async {
+  static Future<void> init({
+    required String accessKey,
+    required FlavorInfo flavorInfo,
+    required String environment,
+    required String baseUrl,
+    required NetworkConfiguration networkConfiguration,
+    DeveloperConfig? developerConfig,
+    DUIAnalytics? duiAnalytics,
+  }) async {
     await DUIPreferences.initialize();
     setUuid();
     _instance.flavor = flavorInfo.flavor;
