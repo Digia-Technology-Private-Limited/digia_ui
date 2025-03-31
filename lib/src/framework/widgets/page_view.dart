@@ -33,6 +33,7 @@ class VWPageView extends VirtualStatelessWidget<Props> {
     final scrollDirection = To.axis(props.get('scrollDirection'));
     final physics = To.scrollPhysics(props.get('allowScroll'));
     final onPageChanged = ActionFlow.fromJson(props.getMap('onPageChanged'));
+    final padEnds = payload.eval<bool>(props.get('padEnds'));
 
     if (shouldRepeatChild) {
       final childToRepeat = children!.first;
@@ -46,6 +47,7 @@ class VWPageView extends VirtualStatelessWidget<Props> {
         viewportFraction: viewportFraction,
         scrollDirection: scrollDirection,
         physics: physics,
+        padEnds: padEnds,
         itemCount: items.length,
         itemBuilder: (innerCtx, index) => childToRepeat.toWidget(
           payload.copyWithChainedContext(
