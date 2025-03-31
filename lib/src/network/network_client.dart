@@ -138,13 +138,7 @@ class NetworkClient {
   }
 
   void setEnvVariable(String varName, Object? value) {
-    DigiaUIClient.instance.config.addOrReplaceEnvironmentVariables({
-      varName: Variable(
-        name: varName,
-        type: DataType.string,
-        defaultValue: value,
-      ),
-    });
+    DigiaUIClient.instance.config.setEnvVariable(varName, value);
   }
 
   void replaceProjectHeaders(Map<String, String> headers) {
