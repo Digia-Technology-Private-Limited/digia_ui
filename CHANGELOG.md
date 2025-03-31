@@ -2,6 +2,13 @@
 
 Digia Ui SDK.
 
+## [0.3.6] - 2025-03-31
+
+- Set Environment Variables from outside
+- Support for padEnds in PageView
+- Support for AVIF Images
+- Label, Hint, Error texts can now be expressions
+
 ## [0.3.5] - 2025-03-26
 
 - Bug fix for failing testcase
