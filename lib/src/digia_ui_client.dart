@@ -3,9 +3,12 @@ import 'dart:io';
 import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/foundation.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
 import '../digia_ui.dart';
+import 'config/app_state/global_state.dart';
+import 'config/app_state/state_descriptor_parser.dart';
 import 'config/model.dart';
 import 'config/resolver.dart';
 import 'core/functions/js_functions.dart';
@@ -88,6 +91,7 @@ class DigiaUIClient {
     DUIAnalytics? duiAnalytics,
   }) async {
     await DUIPreferences.initialize();
+
     setUuid();
     _instance.flavor = flavorInfo.flavor;
     _instance.accessKey = accessKey;
@@ -115,14 +119,59 @@ class DigiaUIClient {
 
     _instance.config = await ConfigResolver(flavorInfo).getConfig();
 
-    // _instance.appState = DUIAppState.fromJson(_instance.config.appState ?? {});
-
+    await GlobalState().init(
+      [
+            {
+              'type': 'string',
+              'name': 'stringv',
+              'value': 'ssds',
+            },
+            {
+              'type': 'number',
+              'name': 'numberv',
+              'value': 23,
+            },
+            {
+              'type': 'bool',
+              'name': 'boolv',
+              'value': false,
+            },
+            {
+              'type': 'json',
+              'name': 'jsonv',
+              'value': {'hi': 'Hello'},
+            },
+            {
+              'type': 'list',
+              'name': 'listv',
+              'value': ['sds', 'dscds', 'scdsc'],
+            },
+          ]?.map((e) => StateDescriptorFactory().fromJson(e)).toList() ??
+          [],
+      await SharedPreferences.getInstance(),
+    );
     if (developerConfig?.inspector?.stateObserver != null) {
       StateContext.observer = developerConfig?.inspector?.stateObserver;
     }
 
     _instance._isInitialized = true;
   }
+
+  Map<String, Object?> get appStates => {
+        'appState': ExprClassInstance(
+          klass: ExprClass(
+            name: 'appState',
+            fields: {
+              ...GlobalState().value.map((k, v) => MapEntry(k, v.value)),
+              ...GlobalState()
+                  .value
+                  .map((k, v) => MapEntry('${k}changestream', v.controller)),
+              // ...GlobalState().value.map((k, v) => MapEntry('$k.field', v))
+            },
+            methods: {},
+          ),
+        )
+      };
 
   Map<String, Object?> get jsVars => {
         'js': ExprClassInstance(

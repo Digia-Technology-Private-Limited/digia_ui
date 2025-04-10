@@ -177,7 +177,10 @@ class DUIFactory {
         controller: pageController,
         scope: DefaultScopeContext(
           name: 'global',
-          variables: {...DigiaUIClient.instance.jsVars},
+          variables: {
+            ...DigiaUIClient.instance.jsVars,
+            ...DigiaUIClient.instance.appStates
+          },
         ),
       ),
     );
@@ -296,7 +299,10 @@ class DUIFactory {
         messageHandler: messageHandler,
         scope: DefaultScopeContext(
           name: 'global',
-          variables: {...DigiaUIClient.instance.jsVars},
+          variables: {
+            ...DigiaUIClient.instance.jsVars,
+            ...DigiaUIClient.instance.appStates
+          },
         ),
       ),
     );

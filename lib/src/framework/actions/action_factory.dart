@@ -17,6 +17,7 @@ import 'openUrl/action.dart';
 import 'postMessage/action.dart';
 import 'rebuild_state/action.dart';
 import 'setState/action.dart';
+import 'set_app_state/action.dart';
 import 'share/action.dart';
 import 'showBottomSheet/action.dart';
 import 'showDialog/action.dart';
@@ -78,6 +79,8 @@ class ActionFactory {
         action = FilePickerAction.fromJson(actionData);
       case ActionType.uploadFile:
         action = UploadAction.fromJson(actionData);
+      case ActionType.setAppState:
+        action = ControlSetAppStateAction.fromJson(actionData);
     }
 
     // TODO: Remove force cast
