@@ -120,33 +120,9 @@ class DigiaUIClient {
     _instance.config = await ConfigResolver(flavorInfo).getConfig();
 
     await GlobalState().init(
-      [
-            {
-              'type': 'string',
-              'name': 'stringv',
-              'value': 'ssds',
-            },
-            {
-              'type': 'number',
-              'name': 'numberv',
-              'value': 23,
-            },
-            {
-              'type': 'bool',
-              'name': 'boolv',
-              'value': false,
-            },
-            {
-              'type': 'json',
-              'name': 'jsonv',
-              'value': {'hi': 'Hello'},
-            },
-            {
-              'type': 'list',
-              'name': 'listv',
-              'value': ['sds', 'dscds', 'scdsc'],
-            },
-          ]?.map((e) => StateDescriptorFactory().fromJson(e)).toList() ??
+      _instance.config.appState
+              ?.map((e) => StateDescriptorFactory().fromJson(e))
+              .toList() ??
           [],
       await SharedPreferences.getInstance(),
     );
@@ -166,7 +142,6 @@ class DigiaUIClient {
               ...GlobalState()
                   .value
                   .map((k, v) => MapEntry('${k}changestream', v.controller)),
-              // ...GlobalState().value.map((k, v) => MapEntry('$k.field', v))
             },
             methods: {},
           ),

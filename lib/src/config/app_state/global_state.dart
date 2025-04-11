@@ -1,16 +1,15 @@
 import 'dart:async';
 
 import 'package:shared_preferences/shared_preferences.dart';
-
-import 'persisted_reactive_value.dart';
 import 'reactive_value.dart';
+import 'reactive_value_factory.dart';
 
 /// Describes how a state value should behave
 class StateDescriptor<T> {
   final String key;
   final T initialValue;
   final bool shouldPersist;
-  final T Function(String) fromString;
+  final T Function(String) deserialize;
   final String Function(T) serialize;
   final String? description;
 
@@ -18,7 +17,7 @@ class StateDescriptor<T> {
     required this.key,
     required this.initialValue,
     this.shouldPersist = true,
-    required this.fromString,
+    required this.deserialize,
     required this.serialize,
     this.description,
   });
@@ -39,8 +38,8 @@ class GlobalState {
   ///
   /// [descriptors] - List of state descriptors to initialize
   /// [prefs] - SharedPreferences instance
-  Future<void> init(List<StateDescriptor<dynamic>> descriptors,
-      SharedPreferences prefs) async {
+  Future<void> init(
+      List<StateDescriptor> descriptors, SharedPreferences prefs) async {
     if (_isInitialized) {
       dispose();
     }
@@ -53,15 +52,7 @@ class GlobalState {
       }
 
       // Create either PersistedReactiveValue or ReactiveValue based on shouldPersist
-      final value = descriptor.shouldPersist
-          ? PersistedReactiveValue(
-              prefs: prefs,
-              key: descriptor.key,
-              initialValue: descriptor.initialValue,
-              fromString: descriptor.fromString,
-              toString: (i) => descriptor.toString(),
-            )
-          : ReactiveValue(descriptor.initialValue);
+      final value = DefaultReactiveValueFactory().create(descriptor, prefs);
 
       _values[descriptor.key] = value;
     }

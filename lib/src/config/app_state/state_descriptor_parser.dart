@@ -34,9 +34,10 @@ class NumDescriptorParser implements StateDescriptorParser<num> {
       initialValue: json['value'] is num
           ? json['value']
           : num.tryParse(json['value'].toString()) ?? 0,
-      shouldPersist: json['shouldPersist'] ?? true,
-      fromString: (s) => num.tryParse(s) ?? 0,
+      shouldPersist: json['shouldPersist'] ?? false,
+      deserialize: (s) => num.tryParse(s) ?? 0,
       serialize: (v) => v.toString(),
+      description: 'number',
     );
   }
 }
@@ -47,9 +48,10 @@ class StringDescriptorParser implements StateDescriptorParser<String> {
     return StateDescriptor<String>(
       key: json['name'],
       initialValue: json['value']?.toString() ?? '',
-      shouldPersist: json['shouldPersist'] ?? true,
-      fromString: (s) => s,
+      shouldPersist: json['shouldPersist'] ?? false,
+      deserialize: (s) => s,
       serialize: (v) => v,
+      description: 'string',
     );
   }
 }
@@ -67,48 +69,51 @@ class BoolDescriptorParser implements StateDescriptorParser<bool> {
     return StateDescriptor<bool>(
       key: json['name'],
       initialValue: parseBool(json['value']),
-      shouldPersist: json['shouldPersist'] ?? true,
-      fromString: (s) => s.toLowerCase() == 'true',
+      shouldPersist: json['shouldPersist'] ?? false,
+      deserialize: (s) => s.toLowerCase() == 'true',
       serialize: (v) => v.toString(),
+      description: 'bool',
     );
   }
 }
 
-class JsonDescriptorParser implements StateDescriptorParser<JsonLike?> {
+class JsonDescriptorParser implements StateDescriptorParser<JsonLike> {
   @override
-  StateDescriptor<JsonLike?> parse(Map<String, dynamic> json) {
-    JsonLike? parseJson(dynamic value) {
+  StateDescriptor<JsonLike> parse(Map<String, dynamic> json) {
+    JsonLike parseJson(dynamic value) {
       if (value is JsonLike) return value;
 
-      return null;
+      return {};
     }
 
-    return StateDescriptor<JsonLike?>(
+    return StateDescriptor<JsonLike>(
       key: json['name'],
       initialValue: parseJson(json['value']),
       shouldPersist: json['shouldPersist'] ?? true,
-      fromString: (s) => jsonDecode(s),
+      deserialize: (s) => jsonDecode(s),
       serialize: (v) => jsonEncode(v),
+      description: 'json',
     );
   }
 }
 
 class JsonArrayDescriptorParser
-    implements StateDescriptorParser<JsonArrayLike?> {
+    implements StateDescriptorParser<JsonArrayLike> {
   @override
-  StateDescriptor<JsonArrayLike?> parse(Map<String, dynamic> json) {
-    JsonArrayLike? parseJson(dynamic value) {
+  StateDescriptor<JsonArrayLike> parse(Map<String, dynamic> json) {
+    JsonArrayLike parseJson(dynamic value) {
       if (value is JsonArrayLike) return value;
 
-      return null;
+      return [];
     }
 
-    return StateDescriptor<JsonArrayLike?>(
+    return StateDescriptor<JsonArrayLike>(
       key: json['name'],
       initialValue: parseJson(json['value']),
       shouldPersist: json['shouldPersist'] ?? true,
-      fromString: (s) => jsonDecode(s),
+      deserialize: (s) => jsonDecode(s),
       serialize: (v) => jsonEncode(v),
+      description: 'list',
     );
   }
 }
