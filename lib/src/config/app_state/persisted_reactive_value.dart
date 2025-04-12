@@ -39,8 +39,7 @@ class PersistedReactiveValue<T> extends ReactiveValue<T> {
     T initialValue,
     T Function(String) fromString,
   ) {
-    final projectId = DigiaUIClient.instance.accessKey;
-    final stored = prefs.getString('${projectId}appState$key');
+    final stored = prefs.getString(_createPrefKey(key));
     return stored != null ? fromString(stored) : initialValue;
   }
 
@@ -48,10 +47,14 @@ class PersistedReactiveValue<T> extends ReactiveValue<T> {
   bool update(T newValue) {
     final updated = super.update(newValue);
     if (updated && _shouldPersist) {
-      final projectId = DigiaUIClient.instance.accessKey;
       final value = serialize(newValue);
-      _prefs.setString('${projectId}appState$_key', value);
+      _prefs.setString(_createPrefKey(_key), value);
     }
     return updated;
+  }
+
+  static String _createPrefKey(String key) {
+    final projectId = DigiaUIClient.instance.accessKey;
+    return '${projectId}_app_state_$key';
   }
 }
