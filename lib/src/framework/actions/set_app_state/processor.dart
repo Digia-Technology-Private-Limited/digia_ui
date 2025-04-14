@@ -5,14 +5,13 @@ import '../../expr/scope_context.dart';
 import '../base/processor.dart';
 import 'action.dart';
 
-class ControlSetAppStateProcessor
-    extends ActionProcessor<ControlSetAppStateAction> {
-  ControlSetAppStateProcessor();
+class SetAppStateProcessor extends ActionProcessor<SetAppStateAction> {
+  SetAppStateProcessor();
 
   @override
   Future<Object?>? execute(
     BuildContext context,
-    ControlSetAppStateAction action,
+    SetAppStateAction action,
     ScopeContext? scopeContext,
   ) {
     final object = action.value?.evaluate(scopeContext);

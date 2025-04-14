@@ -1,3 +1,5 @@
+import 'object_util.dart';
+
 class NumUtil {
   /// Attempts to parse a dynamic input into a double.
   ///
@@ -83,5 +85,9 @@ class NumUtil {
     }
 
     return null;
+  }
+
+  static num? toNum(Object? value) {
+    return value?.to<int>() ?? value?.to<double>();
   }
 }

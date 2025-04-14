@@ -22,7 +22,7 @@ class DefaultReactiveValueFactory implements ReactiveValueFactory {
       case 'json':
         return _createTyped<JsonLike>(descriptor, prefs);
       case 'list':
-        return _createTyped<JsonArrayLike>(descriptor, prefs);
+        return _createTyped<List>(descriptor, prefs);
       default:
         throw Exception('Unsupported type for key: ${descriptor.key}');
     }

@@ -80,7 +80,7 @@ class ActionFactory {
       case ActionType.uploadFile:
         action = UploadAction.fromJson(actionData);
       case ActionType.setAppState:
-        action = ControlSetAppStateAction.fromJson(actionData);
+        action = SetAppStateAction.fromJson(actionData);
     }
 
     // TODO: Remove force cast

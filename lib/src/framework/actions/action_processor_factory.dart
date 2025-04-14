@@ -116,7 +116,7 @@ class ActionProcessorFactory {
           executeActionFlow: dependencies.executeActionFlow,
         );
       case an.ActionType.setAppState:
-        actionProcessor = ControlSetAppStateProcessor();
+        actionProcessor = SetAppStateProcessor();
     }
     actionProcessor?.metaData = metaData;
     // TODO: Remove later

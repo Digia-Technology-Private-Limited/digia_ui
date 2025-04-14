@@ -60,19 +60,27 @@ class DigiaUIClient {
     DigiaUIClient.instance.uuid = uuid;
   }
 
-  static Future<void> initializeFromData(
-      {required String accessKey,
-      required String baseUrl,
-      required dynamic data,
-      required NetworkConfiguration networkConfiguration,
-      DeveloperConfig? developerConfig}) async {
+  static Future<void> initializeFromData({
+    required String accessKey,
+    required String baseUrl,
+    required dynamic data,
+    required NetworkConfiguration networkConfiguration,
+    DeveloperConfig? developerConfig,
+    SharedPreferences? prefs,
+  }) async {
     _instance.accessKey = accessKey;
     _instance.baseUrl = baseUrl;
     Map<String, dynamic> headers = {'digia_projectId': accessKey};
     _instance.networkClient = NetworkClient(
         _instance.baseUrl, headers, networkConfiguration, developerConfig);
     _instance.config = DUIConfig(data);
-
+    await GlobalState().init(
+      _instance.config.appState
+              ?.map((e) => StateDescriptorFactory().fromJson(e))
+              .toList() ??
+          [],
+      prefs ?? await SharedPreferences.getInstance(),
+    );
     await DUIPreferences.initialize();
     setUuid();
 
@@ -89,6 +97,7 @@ class DigiaUIClient {
     required NetworkConfiguration networkConfiguration,
     DeveloperConfig? developerConfig,
     DUIAnalytics? duiAnalytics,
+    SharedPreferences? prefs,
   }) async {
     await DUIPreferences.initialize();
 
@@ -124,7 +133,7 @@ class DigiaUIClient {
               ?.map((e) => StateDescriptorFactory().fromJson(e))
               .toList() ??
           [],
-      await SharedPreferences.getInstance(),
+      prefs ?? await SharedPreferences.getInstance(),
     );
     if (developerConfig?.inspector?.stateObserver != null) {
       StateContext.observer = developerConfig?.inspector?.stateObserver;
