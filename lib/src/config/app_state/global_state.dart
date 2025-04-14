@@ -24,15 +24,15 @@ class StateDescriptor<T> {
 }
 
 /// Global state manager that holds multiple reactive values
-class GlobalState {
-  static final GlobalState _instance = GlobalState._internal();
-  factory GlobalState() => _instance;
+class DUIAppState {
+  static final DUIAppState _instance = DUIAppState._internal();
+  factory DUIAppState() => _instance;
 
   final Map<String, ReactiveValue<dynamic>> _values = {};
   SharedPreferences? _prefs;
   bool _isInitialized = false;
 
-  GlobalState._internal();
+  DUIAppState._internal();
 
   /// Initialize the global state with SharedPreferences and state descriptors
   ///

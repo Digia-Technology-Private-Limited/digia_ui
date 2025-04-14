@@ -74,7 +74,7 @@ class DigiaUIClient {
     _instance.networkClient = NetworkClient(
         _instance.baseUrl, headers, networkConfiguration, developerConfig);
     _instance.config = DUIConfig(data);
-    await GlobalState().init(
+    await DUIAppState().init(
       _instance.config.appState
               ?.map((e) => StateDescriptorFactory().fromJson(e))
               .toList() ??
@@ -128,7 +128,7 @@ class DigiaUIClient {
 
     _instance.config = await ConfigResolver(flavorInfo).getConfig();
 
-    await GlobalState().init(
+    await DUIAppState().init(
       _instance.config.appState
               ?.map((e) => StateDescriptorFactory().fromJson(e))
               .toList() ??
@@ -147,8 +147,8 @@ class DigiaUIClient {
           klass: ExprClass(
             name: 'appState',
             fields: {
-              ...GlobalState().value.map((k, v) => MapEntry(k, v.value)),
-              ...GlobalState()
+              ...DUIAppState().value.map((k, v) => MapEntry(k, v.value)),
+              ...DUIAppState()
                   .value
                   .map((k, v) => MapEntry('${k}changestream', v.controller)),
             },

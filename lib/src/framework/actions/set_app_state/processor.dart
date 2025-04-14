@@ -23,7 +23,7 @@ class SetAppStateProcessor extends ActionProcessor<SetAppStateAction> {
         'value': object,
       },
     );
-    GlobalState().update(action.name, object);
+    DUIAppState().update(action.name, object);
     return null;
   }
 }
