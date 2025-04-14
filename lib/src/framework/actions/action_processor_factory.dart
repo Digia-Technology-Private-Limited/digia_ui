@@ -21,6 +21,7 @@ import 'openUrl/processor.dart';
 import 'postMessage/processor.dart';
 import 'rebuild_state/processor.dart';
 import 'setState/processor.dart';
+import 'set_app_state/processor.dart';
 import 'share/processor.dart';
 import 'showBottomSheet/processor.dart';
 import 'showDialog/processor.dart';
@@ -114,7 +115,8 @@ class ActionProcessorFactory {
         actionProcessor = UploadProcessor(
           executeActionFlow: dependencies.executeActionFlow,
         );
-      case an.ActionType.imagePicker:
+      case an.ActionType.setAppState:
+        actionProcessor = SetAppStateProcessor();
     }
     actionProcessor?.metaData = metaData;
     // TODO: Remove later

@@ -11,7 +11,7 @@ class DUIConfig {
   final Map<String, dynamic> restConfig;
   final String initialRoute;
   final String? functionsFilePath;
-  final Map<String, dynamic>? appState;
+  final List? appState;
   final bool? versionUpdated;
   final int? version;
   final Map<String, dynamic>? _environment;
@@ -22,7 +22,7 @@ class DUIConfig {
         components = as$<Map<String, Object?>>(data['components']),
         restConfig = as<Map<String, dynamic>>(data['rest']),
         initialRoute = as<String>(data['appSettings']['initialRoute']),
-        appState = as$<Map<String, dynamic>>(data['appState']),
+        appState = as$<List>(data['appState']),
         version = as$<int>(data['version']),
         versionUpdated = as$<bool>(data['versionUpdated']),
         functionsFilePath = as$<String>(data['functionsFilePath']),

@@ -3,9 +3,12 @@ import 'dart:io';
 import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/foundation.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
 import '../digia_ui.dart';
+import 'config/app_state/global_state.dart';
+import 'config/app_state/state_descriptor_parser.dart';
 import 'config/model.dart';
 import 'config/resolver.dart';
 import 'core/functions/js_functions.dart';
@@ -57,19 +60,27 @@ class DigiaUIClient {
     DigiaUIClient.instance.uuid = uuid;
   }
 
-  static Future<void> initializeFromData(
-      {required String accessKey,
-      required String baseUrl,
-      required dynamic data,
-      required NetworkConfiguration networkConfiguration,
-      DeveloperConfig? developerConfig}) async {
+  static Future<void> initializeFromData({
+    required String accessKey,
+    required String baseUrl,
+    required dynamic data,
+    required NetworkConfiguration networkConfiguration,
+    DeveloperConfig? developerConfig,
+    SharedPreferences? prefs,
+  }) async {
     _instance.accessKey = accessKey;
     _instance.baseUrl = baseUrl;
     Map<String, dynamic> headers = {'digia_projectId': accessKey};
     _instance.networkClient = NetworkClient(
         _instance.baseUrl, headers, networkConfiguration, developerConfig);
     _instance.config = DUIConfig(data);
-
+    await DUIAppState().init(
+      _instance.config.appState
+              ?.map((e) => StateDescriptorFactory().fromJson(e))
+              .toList() ??
+          [],
+      prefs ?? await SharedPreferences.getInstance(),
+    );
     await DUIPreferences.initialize();
     setUuid();
 
@@ -86,8 +97,10 @@ class DigiaUIClient {
     required NetworkConfiguration networkConfiguration,
     DeveloperConfig? developerConfig,
     DUIAnalytics? duiAnalytics,
+    SharedPreferences? prefs,
   }) async {
     await DUIPreferences.initialize();
+
     setUuid();
     _instance.flavor = flavorInfo.flavor;
     _instance.accessKey = accessKey;
@@ -115,14 +128,34 @@ class DigiaUIClient {
 
     _instance.config = await ConfigResolver(flavorInfo).getConfig();
 
-    // _instance.appState = DUIAppState.fromJson(_instance.config.appState ?? {});
-
+    await DUIAppState().init(
+      _instance.config.appState
+              ?.map((e) => StateDescriptorFactory().fromJson(e))
+              .toList() ??
+          [],
+      prefs ?? await SharedPreferences.getInstance(),
+    );
     if (developerConfig?.inspector?.stateObserver != null) {
       StateContext.observer = developerConfig?.inspector?.stateObserver;
     }
 
     _instance._isInitialized = true;
   }
+
+  Map<String, Object?> get appStates => {
+        'appState': ExprClassInstance(
+          klass: ExprClass(
+            name: 'appState',
+            fields: {
+              ...DUIAppState().value.map((k, v) => MapEntry(k, v.value)),
+              ...DUIAppState()
+                  .value
+                  .map((k, v) => MapEntry(v.streamName, v.controller)),
+            },
+            methods: {},
+          ),
+        )
+      };
 
   Map<String, Object?> get jsVars => {
         'js': ExprClassInstance(
