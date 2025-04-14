@@ -24,11 +24,12 @@ class PersistedReactiveValue<T> extends ReactiveValue<T> {
     required T initialValue,
     required T Function(String) fromString,
     required String Function(T) toString,
+    required String streamName,
   })  : _prefs = prefs,
         _key = key,
         deserialize = fromString,
         serialize = toString,
-        super(_loadValue(prefs, key, initialValue, fromString));
+        super(_loadValue(prefs, key, initialValue, fromString), streamName);
 
   static T _loadValue<T>(
     SharedPreferences prefs,

@@ -5,6 +5,9 @@ class ReactiveValue<T> {
   /// The current value
   T _value;
 
+  ///Stream Key Name
+  final String streamName;
+
   /// Stream controller for value changes
   final _controller = StreamController<T>.broadcast();
 
@@ -15,7 +18,7 @@ class ReactiveValue<T> {
   T get value => _value;
 
   /// Create a new ReactiveValue with an initial value
-  ReactiveValue(this._value);
+  ReactiveValue(this._value, this.streamName);
 
   /// Update the value and notify listeners
   /// Returns true if the value was actually changed

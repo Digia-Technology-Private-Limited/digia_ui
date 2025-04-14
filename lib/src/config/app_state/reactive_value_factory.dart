@@ -34,14 +34,15 @@ class DefaultReactiveValueFactory implements ReactiveValueFactory {
 
     if (typedDescriptor.shouldPersist) {
       return PersistedReactiveValue<T>(
-        prefs: prefs,
-        key: typedDescriptor.key,
-        initialValue: typedDescriptor.initialValue,
-        fromString: typedDescriptor.deserialize,
-        toString: typedDescriptor.serialize,
-      );
+          prefs: prefs,
+          key: typedDescriptor.key,
+          initialValue: typedDescriptor.initialValue,
+          fromString: typedDescriptor.deserialize,
+          toString: typedDescriptor.serialize,
+          streamName: typedDescriptor.streamName);
     } else {
-      return ReactiveValue<T>(typedDescriptor.initialValue);
+      return ReactiveValue<T>(
+          typedDescriptor.initialValue, typedDescriptor.streamName);
     }
   }
 }

@@ -150,7 +150,7 @@ class DigiaUIClient {
               ...DUIAppState().value.map((k, v) => MapEntry(k, v.value)),
               ...DUIAppState()
                   .value
-                  .map((k, v) => MapEntry('${k}changestream', v.controller)),
+                  .map((k, v) => MapEntry(v.streamName, v.controller)),
             },
             methods: {},
           ),

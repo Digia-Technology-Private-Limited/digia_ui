@@ -39,6 +39,7 @@ class NumDescriptorParser implements StateDescriptorParser<num> {
       deserialize: (s) => s.to<num>() ?? 0,
       serialize: (v) => v.toString(),
       description: 'number',
+      streamName: json['streamName'] as String,
     );
   }
 }
@@ -53,6 +54,7 @@ class StringDescriptorParser implements StateDescriptorParser<String> {
       deserialize: (s) => s,
       serialize: (v) => v,
       description: 'string',
+      streamName: json['streamName'] as String,
     );
   }
 }
@@ -72,6 +74,7 @@ class BoolDescriptorParser implements StateDescriptorParser<bool> {
       deserialize: (s) => s.to<bool>() ?? false,
       serialize: (v) => v.toString(),
       description: 'bool',
+      streamName: json['streamName'] as String,
     );
   }
 }
@@ -90,6 +93,7 @@ class JsonDescriptorParser implements StateDescriptorParser<JsonLike> {
       deserialize: (s) => parseJson(s),
       serialize: (v) => jsonEncode(v),
       description: 'json',
+      streamName: json['streamName'] as String,
     );
   }
 }
@@ -108,6 +112,7 @@ class JsonArrayDescriptorParser implements StateDescriptorParser<List> {
       deserialize: (s) => parseList(s),
       serialize: (v) => jsonEncode(v),
       description: 'list',
+      streamName: json['streamName'] as String,
     );
   }
 }

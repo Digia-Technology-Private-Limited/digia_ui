@@ -12,6 +12,7 @@ class StateDescriptor<T> {
   final T Function(String) deserialize;
   final String Function(T) serialize;
   final String? description;
+  final String streamName;
 
   const StateDescriptor({
     required this.key,
@@ -20,6 +21,7 @@ class StateDescriptor<T> {
     required this.deserialize,
     required this.serialize,
     this.description,
+    required this.streamName,
   });
 }
 
