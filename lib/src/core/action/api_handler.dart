@@ -22,6 +22,8 @@ class ApiHandler {
 
   static ApiHandler get instance => _instance;
 
+  RegExp get apiVariableRegex => RegExp(r'\{\{([\w\.\-]+)\}\}');
+
   Future<Response<Object?>> execute(
       {required APIModel apiModel,
       required Map<String, dynamic>? args,
@@ -210,7 +212,7 @@ class ApiHandler {
   }
 
   String _hydrateTemplate(String template, Map<String, dynamic>? values) {
-    final regex = RegExp(r'\{\{([\w\.]+)\}\}');
+    final regex = apiVariableRegex;
     return template.replaceAllMapped(regex, (match) {
       final variableName = match.group(1);
       return values?[variableName]?.toString() ??
@@ -236,7 +238,7 @@ class ApiHandler {
 
     if (json is! String) return json;
 
-    final regex = RegExp(r'^\{\{([\w\.]+)\}\}$');
+    final regex = apiVariableRegex;
     final match = regex.firstMatch(json);
     if (match != null) {
       final variableName = match.group(1);
@@ -244,7 +246,7 @@ class ApiHandler {
     }
 
     // Checking for case of String interpolation
-    final innerVarRegex = RegExp(r'\{\{([\w\.]+)\}\}');
+    final innerVarRegex = apiVariableRegex;
     final innerVarMatch = innerVarRegex.firstMatch(json);
     if (innerVarMatch == null) return json;
 
