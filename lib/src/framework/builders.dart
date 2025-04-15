@@ -80,6 +80,7 @@ import 'widgets/sliver_app_bar.dart';
 import 'widgets/sliver_list.dart';
 import 'widgets/spacer.dart';
 import 'widgets/stack.dart';
+import 'widgets/stepper.dart';
 import 'widgets/stream_builder.dart';
 import 'widgets/styled_horizontal_divider.dart';
 import 'widgets/styled_vertical_divider.dart';
@@ -942,6 +943,18 @@ VWCarousel carouselBuilder(
 ) {
   return VWCarousel(
     props: CarouselProps.fromJson(data.props.value),
+    commonProps: data.commonProps,
+    parent: parent,
+    repeatData: data.repeatData,
+    childGroups: createChildGroups(data.childGroups, parent, registry),
+    refName: data.refName,
+  );
+}
+
+VWStepper flutterStepperBuilder(
+    VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
+  return VWStepper(
+    props: data.props,
     commonProps: data.commonProps,
     parent: parent,
     repeatData: data.repeatData,
