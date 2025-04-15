@@ -2,18 +2,21 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_avif/flutter_avif.dart';
 import 'package:flutter_blurhash/flutter_blurhash.dart';
 import 'package:octo_image/octo_image.dart';
 
-import '../../Utils/basic_shared_utils/dui_decoder.dart';
-import '../../components/dui_widget_creator_fn.dart';
-import '../../components/dui_widget_scope.dart';
-import '../../models/dui_file.dart';
-import '../core/virtual_leaf_stateless_widget.dart';
+import '../../digia_ui_client.dart';
+import '../../dui_dev_config.dart';
+import '../base/virtual_leaf_stateless_widget.dart';
+import '../data_type/adapted_types/file.dart';
 import '../models/props.dart';
 import '../render_payload.dart';
+import '../resource_provider.dart';
+import '../utils/flutter_type_converters.dart';
+import '../utils/widget_util.dart';
 
-class VWImage extends VirtualLeafStatelessWidget {
+class VWImage extends VirtualLeafStatelessWidget<Props> {
   VWImage({
     required super.props,
     required super.commonProps,
@@ -34,32 +37,38 @@ class VWImage extends VirtualLeafStatelessWidget {
 
   ImageProvider _createImageProvider(
       RenderPayload payload, Object? imageSource) {
-    if (imageSource is List<DUIFile> && imageSource.isNotEmpty) {
+    if (imageSource is List<AdaptedFile> && imageSource.isNotEmpty) {
       final firstFile = imageSource.first;
       if (firstFile.isWeb && firstFile.xFile?.path != null) {
         return CachedNetworkImageProvider(firstFile.xFile!.path);
       } else if (firstFile.isMobile && firstFile.path != null) {
         return FileImage(File(firstFile.path!));
       }
-      throw Exception('Invalid DUIFile source in list');
+      throw Exception('Invalid File source in list');
     }
 
-    if (imageSource is DUIFile) {
+    if (imageSource is AdaptedFile) {
       if (imageSource.isWeb && imageSource.xFile?.path != null) {
         return CachedNetworkImageProvider(imageSource.xFile!.path);
       } else if (imageSource.isMobile && imageSource.path != null) {
         return FileImage(File(imageSource.path!));
       }
-      throw Exception('Invalid DUIFile source');
+      throw Exception('Invalid File source');
     }
 
     if (imageSource is String) {
       if (imageSource.startsWith('http')) {
-        return CachedNetworkImageProvider(imageSource);
+        final DigiaUIHost? host = DigiaUIClient.instance.developerConfig?.host;
+        final String finalUrl;
+        if (host is DashboardHost && host.resourceProxyUrl != null) {
+          finalUrl = '${host.resourceProxyUrl}$imageSource';
+        } else {
+          finalUrl = imageSource;
+        }
+        return CachedNetworkImageProvider(finalUrl);
       } else {
-        return DUIWidgetScope.maybeOf(payload.buildContext)
-                ?.imageProviderFn
-                ?.call(imageSource) ??
+        return ResourceProvider.maybeOf(payload.buildContext)
+                ?.getImageProvider(imageSource) ??
             AssetImage(imageSource);
       }
     }
@@ -67,7 +76,7 @@ class VWImage extends VirtualLeafStatelessWidget {
     throw Exception('Unsupported image source type');
   }
 
-  OctoPlaceholderBuilder? _placeHolderBuilderCreater() {
+  OctoPlaceholderBuilder? _placeHolderBuilderCreator() {
     Widget widget = Container(color: Colors.transparent);
 
     final placeHolderValue = props.getString('placeHolder');
@@ -87,8 +96,21 @@ class VWImage extends VirtualLeafStatelessWidget {
     return (context) => _mayWrapInAspectRatio(widget);
   }
 
-  _mayWrapInAspectRatio(Widget child) =>
-      DUIAspectRatio(value: props.get('aspectRatio'), child: child);
+  Widget _buildErrorWidget(Object error) {
+    final errorImage = props.getString('errorImage');
+    if (errorImage == null) {
+      return Center(
+        child: Text(
+          error.toString(),
+          style: const TextStyle(color: Colors.red),
+        ),
+      );
+    }
+    return Image.asset(errorImage);
+  }
+
+  Widget _mayWrapInAspectRatio(Widget child) =>
+      wrapInAspectRatio(value: props.get('aspectRatio'), child: child);
 
   @override
   Widget render(RenderPayload payload) {
@@ -97,31 +119,41 @@ class VWImage extends VirtualLeafStatelessWidget {
 
     final imageProvider = _createImageProvider(payload, imageSource);
 
+    if ((imageSource as String).contains('.avif')) {
+      return Opacity(
+        opacity: opacity,
+        child: _mayWrapInAspectRatio(AvifImage(
+          image: imageProvider,
+          fit: To.boxFit(props.get('fit')),
+          gaplessPlayback: true,
+          errorBuilder: (context, error, stackTrace) {
+            return _buildErrorWidget(error);
+          },
+        )),
+      );
+    }
+
     return Opacity(
       opacity: opacity,
       child: imageProvider is MemoryImage || imageProvider is FileImage
-          ? Image(image: imageProvider)
+          ? Image(
+              image: imageProvider,
+              errorBuilder: (context, error, stackTrace) {
+                return _buildErrorWidget(error);
+              },
+            )
           : OctoImage(
               fadeInDuration: const Duration(microseconds: 0),
               fadeOutDuration: const Duration(microseconds: 0),
               image: imageProvider,
-              fit: DUIDecoder.toBoxFit(props.get('fit')),
+              fit: To.boxFit(props.get('fit')),
               gaplessPlayback: true,
-              placeholderBuilder: _placeHolderBuilderCreater(),
+              placeholderBuilder: _placeHolderBuilderCreator(),
               imageBuilder: (BuildContext context, Widget widget) {
                 return _mayWrapInAspectRatio(widget);
               },
               errorBuilder: (context, error, stackTrace) {
-                final errorImage = props.getString('errorImage');
-                if (errorImage == null) {
-                  return const Center(
-                    child: Icon(
-                      Icons.error_outline,
-                      color: Colors.red,
-                    ),
-                  );
-                }
-                return Image.asset(errorImage);
+                return _buildErrorWidget(error);
               },
             ),
     );

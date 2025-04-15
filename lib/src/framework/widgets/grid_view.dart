@@ -1,13 +1,16 @@
-import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/widgets.dart';
 
-import '../../Utils/basic_shared_utils/dui_decoder.dart';
-import '../core/extensions.dart';
-import '../core/virtual_stateless_widget.dart';
+import '../base/extensions.dart';
+import '../base/virtual_stateless_widget.dart';
+import '../data_type/adapted_types/scroll_controller.dart';
+import '../expr/default_scope_context.dart';
+import '../expr/scope_context.dart';
 import '../internal_widgets/internal_grid_view.dart';
+import '../models/props.dart';
 import '../render_payload.dart';
+import '../utils/flutter_type_converters.dart';
 
-class VWGridView extends VirtualStatelessWidget {
+class VWGridView extends VirtualStatelessWidget<Props> {
   VWGridView({
     required super.props,
     required super.commonProps,
@@ -23,7 +26,10 @@ class VWGridView extends VirtualStatelessWidget {
   Widget render(RenderPayload payload) {
     if (children == null || children!.isEmpty) return empty();
 
-    final physics = DUIDecoder.toScrollPhysics(props.get('allowScroll'));
+    final controller =
+        payload.eval<AdaptedScrollController>(props.get('controller'));
+
+    final physics = To.scrollPhysics(props.get('allowScroll'));
     final shrinkWrap = props.getBool('shrinkWrap') ?? false;
     final gridDelegate = SliverGridDelegateWithFixedCrossAxisCount(
       crossAxisCount: props.getInt('crossAxisCount') ?? 2,
@@ -36,6 +42,7 @@ class VWGridView extends VirtualStatelessWidget {
       final childToRepeat = children!.first;
       final items = payload.evalRepeatData(repeatData!);
       return InternalGridView(
+        controller: controller,
         physics: physics,
         shrinkWrap: shrinkWrap,
         gridDelegate: gridDelegate,
@@ -49,6 +56,7 @@ class VWGridView extends VirtualStatelessWidget {
     }
 
     return InternalGridView(
+      controller: controller,
       physics: physics,
       shrinkWrap: shrinkWrap,
       gridDelegate: gridDelegate,
@@ -56,8 +64,8 @@ class VWGridView extends VirtualStatelessWidget {
     );
   }
 
-  ExprContext _createExprContext(Object? item, int index) {
-    return ExprContext(variables: {
+  ScopeContext _createExprContext(Object? item, int index) {
+    return DefaultScopeContext(variables: {
       'currentItem': item,
       'index': index
       // TODO: Add class instance using refName

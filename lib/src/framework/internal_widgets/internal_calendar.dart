@@ -25,6 +25,9 @@ class InternalCalendar extends StatefulWidget {
   DateTime? selectedDate;
   DateTime? selectedRangeStart;
   DateTime? selectedRangeEnd;
+  void Function(DateTime selectedDate, DateTime focusedDay)? onDateSelected;
+  void Function(DateTime? start, DateTime? end, DateTime focusedDay)?
+      onRangeSelected;
 
   InternalCalendar({
     super.key,
@@ -50,6 +53,8 @@ class InternalCalendar extends StatefulWidget {
     required this.selectedDate,
     required this.selectedRangeStart,
     required this.selectedRangeEnd,
+    required this.onDateSelected,
+    required this.onRangeSelected,
   });
 
   @override
@@ -57,17 +62,44 @@ class InternalCalendar extends StatefulWidget {
 }
 
 class _InternalCalendarState extends State<InternalCalendar> {
+  late DateTime _focusedDay;
+  late RangeSelectionMode _rangeSelectionMode;
+  DateTime? _selectedDay;
+  DateTime? _rangeStart;
+  DateTime? _rangeEnd;
+
+  @override
+  void initState() {
+    super.initState();
+    _focusedDay = widget.focusedDay;
+    _rangeSelectionMode = widget.rangeSelectionMode;
+    _selectedDay = widget.selectedDate;
+    _rangeStart = widget.selectedRangeStart;
+    _rangeEnd = widget.selectedRangeEnd;
+  }
+
+  @override
+  void didUpdateWidget(covariant InternalCalendar oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (_focusedDay != widget.focusedDay) {
+      _focusedDay = widget.focusedDay;
+    }
+    if (_rangeSelectionMode != widget.rangeSelectionMode) {
+      _rangeSelectionMode = widget.rangeSelectionMode;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return TableCalendar(
-      focusedDay: widget.focusedDay,
+    return TableCalendar<void>(
+      focusedDay: _focusedDay,
       firstDay: widget.firstDay,
       lastDay: widget.lastDay,
       currentDay: widget.currentDay,
-      rangeStartDay: widget.rangeStartDay,
-      rangeEndDay: widget.rangeEndDay,
+      rangeStartDay: _rangeStart,
+      rangeEndDay: _rangeEnd,
       calendarFormat: widget.calendarFormat,
-      rangeSelectionMode: widget.rangeSelectionMode,
+      rangeSelectionMode: _rangeSelectionMode,
       headerVisible: widget.headersVisible,
       daysOfWeekVisible: widget.daysOfWeekVisible,
       rowHeight: widget.rowHeight,
@@ -79,27 +111,29 @@ class _InternalCalendarState extends State<InternalCalendar> {
       headerStyle: widget.headerStyle,
       daysOfWeekStyle: widget.daysOfWeekStyle,
       calendarStyle: widget.calendarStyle,
-      selectedDayPredicate: (day) => isSameDay(widget.selectedDate, day),
+      selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
       onDaySelected: (selectedDay, focusedDay) {
-        if (!isSameDay(widget.selectedDate, selectedDay)) {
+        if (!isSameDay(_selectedDay, selectedDay)) {
           setState(() {
-            widget.selectedDate = selectedDay;
-            widget.focusedDay = focusedDay;
-            widget.selectedRangeStart = null;
-            widget.selectedRangeEnd = null;
+            _selectedDay = selectedDay;
+            _focusedDay = focusedDay;
+            _rangeStart = null;
+            _rangeEnd = null;
           });
+          widget.onDateSelected?.call(selectedDay, focusedDay);
         }
       },
       onRangeSelected: (start, end, focusedDay) {
         setState(() {
-          widget.selectedRangeStart = start;
-          widget.selectedRangeEnd = end;
-          widget.selectedDate = null;
-          widget.focusedDay = focusedDay;
+          _selectedDay = null;
+          _focusedDay = focusedDay;
+          _rangeStart = start;
+          _rangeEnd = end;
         });
+        widget.onRangeSelected?.call(start, end, focusedDay);
       },
       onPageChanged: (focusedDay) {
-        widget.focusedDay = focusedDay;
+        _focusedDay = focusedDay;
       },
     );
   }

@@ -1,15 +1,19 @@
 import 'package:collection/collection.dart';
-import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/widgets.dart';
 
-import '../../Utils/basic_shared_utils/dui_decoder.dart';
-import '../core/extensions.dart';
-import '../core/virtual_stateless_widget.dart';
-import '../core/virtual_widget.dart';
+import '../base/extensions.dart';
+import '../base/virtual_leaf_stateless_widget.dart';
+import '../base/virtual_stateless_widget.dart';
+import '../base/virtual_widget.dart';
+import '../expr/default_scope_context.dart';
+import '../expr/scope_context.dart';
+import '../models/props.dart';
 import '../render_payload.dart';
+import '../utils/flutter_type_converters.dart';
+import '../widget_props/flex_fit_props.dart';
 import 'flex_fit.dart';
 
-class VWFlex extends VirtualStatelessWidget {
+class VWFlex extends VirtualStatelessWidget<Props> {
   final Axis direction;
 
   VWFlex({
@@ -34,7 +38,8 @@ class VWFlex extends VirtualStatelessWidget {
       final items = payload.evalRepeatData(repeatData!);
       widget = _buildFlex(
         () => items.mapIndexed((index, item) {
-          return _wrapInFlexFitForBackwardCompat(childToRepeat).toWidget(
+          return _wrapInFlexFitForBackwardCompat(childToRepeat, payload)
+              .toWidget(
             payload.copyWithChainedContext(
               _createExprContext(item, index),
             ),
@@ -44,7 +49,7 @@ class VWFlex extends VirtualStatelessWidget {
     } else {
       widget = _buildFlex(
         () => children!
-            .map(_wrapInFlexFitForBackwardCompat)
+            .map((child) => _wrapInFlexFitForBackwardCompat(child, payload))
             .toWidgetArray(payload),
       );
     }
@@ -61,49 +66,46 @@ class VWFlex extends VirtualStatelessWidget {
 
   // This is for backward compatibility:
   VirtualWidget _wrapInFlexFitForBackwardCompat(
-      VirtualWidget childVirtualWidget) {
+      VirtualWidget childVirtualWidget, RenderPayload payload) {
     // Ignore if widget is already wrapped in FlexFit
-    if (childVirtualWidget is! VirtualStatelessWidget ||
+    if (childVirtualWidget is! VirtualLeafStatelessWidget ||
         childVirtualWidget is VWFlexFit) {
       return childVirtualWidget;
     }
 
-    final expansionType =
-        childVirtualWidget.commonProps?.getString('expansion.type');
-    final flexValue =
-        childVirtualWidget.commonProps?.getInt('expansion.flexValue') ?? 1;
+    final expansionType = childVirtualWidget.commonProps?.parentProps
+        ?.getString('expansion.type');
+    final flexValue = payload.eval<int>(childVirtualWidget
+        .commonProps?.parentProps
+        ?.get('expansion.flexValue'));
 
     if (expansionType == null) return childVirtualWidget;
 
-    return VWFlexFit.fromValues(
-      flexFitType: expansionType,
-      flexValue: flexValue,
+    return VWFlexFit.withChild(
+      props: FlexFitProps(
+        flexFitType: expansionType,
+        flexValue: flexValue,
+      ),
       child: childVirtualWidget,
-      parent: this,
     );
   }
 
   Widget _buildFlex(List<Widget> Function() childrenBuilder) {
     return Flex(
       direction: direction,
-      mainAxisSize: DUIDecoder.toMainAxisSizeOrDefault(
-        props.get('mainAxisSize'),
-        defaultValue: MainAxisSize.min,
-      ),
-      mainAxisAlignment: DUIDecoder.toMainAxisAlginmentOrDefault(
-        props.get('mainAxisAlignment'),
-        defaultValue: MainAxisAlignment.start,
-      ),
-      crossAxisAlignment: DUIDecoder.toCrossAxisAlignmentOrDefault(
-        props.get('crossAxisAlignment'),
-        defaultValue: CrossAxisAlignment.center,
-      ),
+      mainAxisSize:
+          To.mainAxisSize(props.get('mainAxisSize')) ?? MainAxisSize.min,
+      mainAxisAlignment: To.mainAxisAlginment(props.get('mainAxisAlignment')) ??
+          MainAxisAlignment.start,
+      crossAxisAlignment:
+          To.crossAxisAlignment(props.get('crossAxisAlignment')) ??
+              CrossAxisAlignment.center,
       children: childrenBuilder(),
     );
   }
 
-  ExprContext _createExprContext(Object? item, int index) {
-    return ExprContext(variables: {
+  ScopeContext _createExprContext(Object? item, int index) {
+    return DefaultScopeContext(variables: {
       'currentItem': item,
       'index': index
       // TODO: Add class instance using refName

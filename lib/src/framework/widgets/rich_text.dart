@@ -1,16 +1,16 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
 
-import '../../Utils/basic_shared_utils/dui_decoder.dart';
-import '../../Utils/basic_shared_utils/lodash.dart';
-import '../../Utils/util_functions.dart';
-import '../../components/DUIText/dui_text_style.dart';
-import '../../core/action/action_handler.dart';
-import '../../core/action/action_prop.dart';
-import '../core/virtual_leaf_stateless_widget.dart';
+import '../actions/base/action_flow.dart';
+import '../base/virtual_leaf_stateless_widget.dart';
+import '../models/props.dart';
 import '../render_payload.dart';
+import '../utils/flutter_type_converters.dart';
+import '../utils/functional_util.dart';
+import '../utils/json_util.dart';
+import '../utils/types.dart';
 
-class VWRichText extends VirtualLeafStatelessWidget {
+class VWRichText extends VirtualLeafStatelessWidget<Props> {
   VWRichText({
     required super.props,
     required super.commonProps,
@@ -28,9 +28,9 @@ class VWRichText extends VirtualLeafStatelessWidget {
 
     final maxLines = payload.eval<int>(props.get('maxLines'));
     final overflow =
-        DUIDecoder.toTextOverflow(payload.eval<String>(props.get('overflow')));
+        To.textOverflow(payload.eval<String>(props.get('overflow')));
     final textAlign =
-        DUIDecoder.toTextAlign(payload.eval<String>(props.get('alignment')));
+        To.textAlign(payload.eval<String>(props.get('alignment')));
     final styleJson = props.getMap('textStyle') ?? props.getMap('style');
 
     return RichText(
@@ -38,16 +38,13 @@ class VWRichText extends VirtualLeafStatelessWidget {
       overflow: overflow,
       textAlign: textAlign,
       text: TextSpan(
-        style: ifNotNull(
-            styleJson,
-            (p0) => toTextStyle(
-                DUITextStyle.fromJson(styleJson), payload.buildContext)),
+        style: payload.getTextStyle(styleJson),
         children: spanChildren,
       ),
     );
   }
 
-  List<TextSpan>? _toTextSpan(RenderPayload payload, dynamic textSpan) {
+  List<TextSpan>? _toTextSpan(RenderPayload payload, Object? textSpan) {
     if (textSpan == null) return null;
 
     if (textSpan is String) {
@@ -58,37 +55,33 @@ class VWRichText extends VirtualLeafStatelessWidget {
     if (textSpan is! List) return null;
 
     final spanChildren = textSpan
+        .cast<Object>()
         .map((span) {
-          String? text;
-          TextStyle? style;
-
           if (span is String) {
-            text = payload.eval<String>(span);
-            style = null;
-          } else {
-            text = payload.eval<String>(span['text']);
-            final styleJson =
-                span['spanStyle'] ?? span['textStyle'] ?? span['style'];
-
-            style = ifNotNull(
-                styleJson,
-                (p0) => toTextStyle(
-                    DUITextStyle.fromJson(p0), payload.buildContext));
+            return TextSpan(text: payload.eval<String>(span));
           }
 
-          if (text == null) return null;
+          final spanObject = as$<JsonLike>(span);
+          if (spanObject == null) return null;
+
+          final text = payload.eval<String>(spanObject['text']);
+          final styleJson = tryKeys<JsonLike>(
+            spanObject,
+            ['spanStyle', 'textStyle', 'style'],
+          );
+
+          final style = payload.getTextStyle(styleJson);
 
           return TextSpan(
               text: text,
               style: style,
-              recognizer: ifNotNull(
-                  span['onClick'],
-                  (p0) => TapGestureRecognizer()
-                    ..onTap = () async {
-                      final onClick = ActionFlow.fromJson(span['onClick']);
-                      await ActionHandler.instance.execute(
-                          context: payload.buildContext, actionFlow: onClick);
-                    }));
+              recognizer: spanObject['onClick'].maybe(
+                (p0) => TapGestureRecognizer()
+                  ..onTap = () {
+                    final onClick = ActionFlow.fromJson(p0);
+                    payload.executeAction(onClick);
+                  },
+              ));
         })
         .nonNulls
         .toList();

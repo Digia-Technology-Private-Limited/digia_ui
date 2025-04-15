@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
-import '../../Utils/util_functions.dart';
-import '../core/virtual_leaf_stateless_widget.dart';
+import '../base/virtual_leaf_stateless_widget.dart';
+import '../models/props.dart';
 import '../render_payload.dart';
 
-class VWLinearProgressBar extends VirtualLeafStatelessWidget {
+class VWLinearProgressBar extends VirtualLeafStatelessWidget<Props> {
   VWLinearProgressBar({
     required super.props,
     required super.commonProps,
@@ -30,10 +30,9 @@ class VWLinearProgressBar extends VirtualLeafStatelessWidget {
       return SizedBox(
         width: props.getDouble('width'),
         child: LinearProgressIndicator(
-          color: makeColor(payload.eval(props.get('indicatorColor'))) ??
-              Colors.blue,
-          backgroundColor: makeColor(payload.eval(props.get('bgColor'))) ??
-              Colors.transparent,
+          color: payload.evalColor(props.get('indicatorColor')) ?? Colors.blue,
+          backgroundColor:
+              payload.evalColor(props.get('bgColor')) ?? Colors.transparent,
           minHeight: props.getDouble('thickness'),
           borderRadius: BorderRadius.circular(
             props.getDouble('borderRadius') ?? 0.0,
@@ -42,17 +41,20 @@ class VWLinearProgressBar extends VirtualLeafStatelessWidget {
       );
     } else {
       return LinearPercentIndicator(
+        addAutomaticKeepAlive: false,
         barRadius: Radius.circular(
           props.getDouble('borderRadius') ?? 0.0,
         ),
         width: props.getDouble('width'),
         lineHeight: props.getDouble('thickness') ?? 5.0,
         percent: progressValue != null ? progressValue / 100.0 : 0,
-        animation: true,
+        animation: props.getBool('animation') ?? false,
+        animateFromLastPercent:
+            props.getBool('animateFromLastPercent') ?? false,
         backgroundColor:
-            makeColor(payload.eval(props.get('bgColor'))) ?? Colors.transparent,
+            payload.evalColor(props.get('bgColor')) ?? Colors.transparent,
         progressColor:
-            makeColor(payload.eval(props.get('indicatorColor'))) ?? Colors.blue,
+            payload.evalColor(props.get('indicatorColor')) ?? Colors.blue,
         padding: EdgeInsets.zero,
       );
     }

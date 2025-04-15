@@ -1,26 +1,42 @@
 import 'package:flutter/widgets.dart';
 
-import '../core/virtual_stateless_widget.dart';
+import '../base/virtual_stateless_widget.dart';
+import '../base/virtual_widget.dart';
 import '../render_payload.dart';
+import '../widget_props/safe_area_props.dart';
 
-class VWSafeArea extends VirtualStatelessWidget {
+class VWSafeArea extends VirtualStatelessWidget<SafeAreaProps> {
   VWSafeArea({
-    required super.props,
-    required super.commonProps,
-    required super.parent,
+    SafeAreaProps? props,
     super.refName,
     required super.childGroups,
-    required super.repeatData,
-  });
+  }) : super(
+          props: props ?? const SafeAreaProps(),
+          commonProps: null,
+          repeatData: null,
+          parent: null,
+        );
+
+  VWSafeArea.withChild(
+    VirtualWidget child,
+  ) : this(
+          childGroups: {
+            'child': [child],
+          },
+        );
 
   @override
   Widget render(RenderPayload payload) {
-    final bottom = payload.eval<bool>(props.get('bottom')) ?? true;
-    final top = payload.eval<bool>(props.get('top')) ?? true;
+    final left = payload.evalExpr(props.left) ?? true;
+    final top = payload.evalExpr(props.top) ?? true;
+    final right = payload.evalExpr(props.right) ?? true;
+    final bottom = payload.evalExpr(props.bottom) ?? true;
 
     return SafeArea(
       bottom: bottom,
       top: top,
+      left: left,
+      right: right,
       child: child?.toWidget(payload) ?? empty(),
     );
   }

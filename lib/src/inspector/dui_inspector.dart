@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import '../framework/state/state_observer.dart';
 
 class DUIInspector {
-  BlocObserver? blocObserver;
+  StateObserver? stateObserver;
   List<Interceptor>? dioInterceptors;
 
-  DUIInspector({this.blocObserver, this.dioInterceptors});
+  DUIInspector({this.stateObserver, this.dioInterceptors});
 }

@@ -1,6 +1,8 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import '../../models/variable_def.dart';
+import '../../framework/data_type/variable.dart';
+import '../../framework/data_type/variable_json_converter.dart';
+import '../../framework/utils/types.dart';
 import '../core/types.dart';
 
 part 'api_request.g.dart';
@@ -10,11 +12,11 @@ class APIModel {
   final String id;
   final String url;
   final HttpMethod method;
-  final Map<String, dynamic>? headers;
-  final Map<String, dynamic>? body;
+  final JsonLike? headers;
+  final JsonLike? body;
   final BodyType? bodyType;
-  @VariablesJsonConverter()
-  Map<String, VariableDef>? variables;
+  @VariableJsonConverter()
+  Map<String, Variable>? variables;
 
   APIModel({
     required this.id,

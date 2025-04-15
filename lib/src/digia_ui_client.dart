@@ -2,19 +2,17 @@ import 'dart:io';
 
 import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:uuid/uuid.dart';
 
 import '../digia_ui.dart';
+import 'config/model.dart';
+import 'config/resolver.dart';
 import 'core/functions/js_functions.dart';
-import 'core/pref/dui_preferences.dart';
-import 'digia_ui_service.dart';
-import 'models/dui_app_state.dart';
+import 'framework/state/state_context.dart';
 import 'network/network_client.dart';
+import 'preferences.dart';
 import 'version.dart';
-
-const defaultUIConfigAssetPath = 'assets/json/dui_config.json';
 
 class DigiaUIClient {
   static final DigiaUIClient _instance = DigiaUIClient._();
@@ -27,7 +25,6 @@ class DigiaUIClient {
   late String baseUrl;
   late NetworkClient networkClient;
   late DUIConfig config;
-  late DUIAppState appState;
   late int version;
   late Environment environment;
   late Flavor flavor;
@@ -60,7 +57,7 @@ class DigiaUIClient {
     DigiaUIClient.instance.uuid = uuid;
   }
 
-  static initializeFromData(
+  static Future<void> initializeFromData(
       {required String accessKey,
       required String baseUrl,
       required dynamic data,
@@ -76,19 +73,20 @@ class DigiaUIClient {
     await DUIPreferences.initialize();
     setUuid();
 
-    _instance.appState = DUIAppState.fromJson(_instance.config.appState ?? {});
+    // _instance.appState = DUIAppState.fromJson(_instance.config.appState ?? {});
 
     _instance._isInitialized = true;
   }
 
-  static init(
-      {required String accessKey,
-      required FlavorInfo flavorInfo,
-      required String environment,
-      required String baseUrl,
-      required NetworkConfiguration networkConfiguration,
-      DeveloperConfig? developerConfig,
-      DUIAnalytics? duiAnalytics}) async {
+  static Future<void> init({
+    required String accessKey,
+    required FlavorInfo flavorInfo,
+    required String environment,
+    required String baseUrl,
+    required NetworkConfiguration networkConfiguration,
+    DeveloperConfig? developerConfig,
+    DUIAnalytics? duiAnalytics,
+  }) async {
     await DUIPreferences.initialize();
     setUuid();
     _instance.flavor = flavorInfo.flavor;
@@ -101,8 +99,6 @@ class DigiaUIClient {
     var packageName = packageInfo.packageName;
     var appVersion = packageInfo.version;
     var appbuildNumber = packageInfo.buildNumber;
-
-    AppConfigResolver appConfigResolver = AppConfigResolver(flavorInfo);
 
     Map<String, dynamic> headers = NetworkClient.getDefaultDigiaHeaders(
         packageVersion,
@@ -117,22 +113,15 @@ class DigiaUIClient {
     _instance.networkClient = NetworkClient(
         _instance.baseUrl, headers, networkConfiguration, developerConfig);
 
-    _instance.config = await appConfigResolver.getConfig();
+    _instance.config = await ConfigResolver(flavorInfo).getConfig();
 
-    _instance.appState = DUIAppState.fromJson(_instance.config.appState ?? {});
+    // _instance.appState = DUIAppState.fromJson(_instance.config.appState ?? {});
 
-    if (developerConfig?.inspector?.blocObserver != null) {
-      Bloc.observer = developerConfig!.inspector!.blocObserver!;
+    if (developerConfig?.inspector?.stateObserver != null) {
+      StateContext.observer = developerConfig?.inspector?.stateObserver;
     }
 
     _instance._isInitialized = true;
-  }
-
-  static DigiaUIService createService() {
-    return DigiaUIService(
-        baseUrl: _instance.baseUrl,
-        httpClient: _instance.networkClient,
-        config: _instance.config);
   }
 
   Map<String, Object?> get jsVars => {

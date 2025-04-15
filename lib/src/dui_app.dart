@@ -1,12 +1,16 @@
 // import 'package:chucker_flutter/chucker_flutter.dart';
 import 'package:flutter/material.dart';
 
-import '../digia_ui.dart';
-import 'core/app_state_provider.dart';
+import 'analytics/dui_analytics.dart';
+import 'digia_ui_client.dart';
+import 'dui_dev_config.dart';
+import 'environment.dart';
+import 'framework/font_factory.dart';
+import 'framework/ui_factory.dart';
+import 'network/netwok_config.dart';
 
 class DUIApp extends StatelessWidget {
   final String digiaAccessKey;
-  final ScrollBehavior? scrollBehavior;
   final GlobalKey<NavigatorState>? navigatorKey;
   final ThemeData? theme;
   final String baseUrl;
@@ -16,24 +20,26 @@ class DUIApp extends StatelessWidget {
   final NetworkConfiguration networkConfiguration;
   final DeveloperConfig? developerConfig;
   final DUIAnalytics? analytics;
+  final DUIFontFactory? fontFactory;
 
   // final Map<String, dynamic> initProperties;
 
-  const DUIApp(
-      {super.key,
-      required this.digiaAccessKey,
-      this.scrollBehavior,
-      this.navigatorKey,
-      required this.flavorInfo,
-      required this.environment,
-      this.theme,
-      required this.baseUrl,
-      required this.networkConfiguration,
-      this.developerConfig,
-      this.analytics,
-      this.data});
+  const DUIApp({
+    super.key,
+    required this.digiaAccessKey,
+    this.navigatorKey,
+    required this.flavorInfo,
+    required this.environment,
+    this.theme,
+    required this.baseUrl,
+    required this.networkConfiguration,
+    this.developerConfig,
+    this.analytics,
+    this.fontFactory,
+    this.data,
+  });
 
-  _makeFuture() async {
+  Future<void> _makeFuture() async {
     if (data != null) {
       return DigiaUIClient.initializeFromData(
           accessKey: digiaAccessKey,
@@ -56,13 +62,11 @@ class DUIApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      scrollBehavior: scrollBehavior,
       // key: key,
       debugShowCheckedModeBanner: false,
       // navigatorObservers: [ChuckerFlutter.navigatorObserver],
       theme: theme ??
           ThemeData(
-            fontFamily: 'Poppins',
             scaffoldBackgroundColor: Colors.white,
             brightness: Brightness.light,
           ),
@@ -108,12 +112,8 @@ class DUIApp extends StatelessWidget {
             );
           }
 
-          final initialRouteData =
-              DigiaUIClient.getConfigResolver().getfirstPageData();
-
-          return AppStateProvider(
-              state: DigiaUIClient.instance.appState.variables,
-              child: DUIPage(pageUid: initialRouteData.uid));
+          DUIFactory().initialize(fontFactory: fontFactory);
+          return DUIFactory().createInitialPage();
         },
       ),
     );

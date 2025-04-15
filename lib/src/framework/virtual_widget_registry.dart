@@ -1,46 +1,63 @@
+import 'package:flutter/widgets.dart';
+
+import 'base/virtual_builder_widget.dart';
+import 'base/virtual_widget.dart';
 import 'builders.dart';
-import 'core/virtual_widget.dart';
-import 'models/vw_node_data.dart';
+import 'models/vw_data.dart';
+import 'utils/types.dart';
 
 typedef VirtualWidgetBuilder = VirtualWidget Function(
-    VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry);
+  VWNodeData data,
+  VirtualWidget? parent,
+  VirtualWidgetRegistry registry,
+);
 
-class VirtualWidgetRegistry {
-  final Map<String, VirtualWidgetBuilder> _builders = {
+abstract class VirtualWidgetRegistry {
+  static final Map<String, VirtualWidgetBuilder> _defaultBuilders = {
     // Layout Widgets
     'digia/container': containerBuilder,
     'digia/column': columnBuilder,
     'digia/row': rowBuilder,
     'digia/flexFit': flexFitBuilder,
-    // 'digia/stack': stackBuilder,
+    'digia/stack': stackBuilder,
     'digia/listView': listViewBuilder,
     'digia/gridView': gridViewBuilder,
     'digia/wrap': wrapBuilder,
-    'digia/sizedBox': sizedBoxBuilder,
-    'digia/spacer': spacerBuilder,
+    'fw/sized_box': sizedBoxBuilder,
+    'fw/spacer': spacerBuilder,
     'digia/safeArea': safeAreaBuilder,
-    // 'digia/customScrollView': customScrollViewBuilder,
-    // 'digia/nestedScrollView': nestedScrollViewBuilder,
+    'digia/customScrollView': customScrollViewBuilder,
+    'digia/nestedScrollView': nestedScrollViewBuilder,
 
     // Basic Widgets
     'digia/text': textBuilder,
     'digia/richText': richTextBuilder,
     'digia/icon': iconBuilder,
     'digia/image': imageBuilder,
+    'digia/svg': svgBuilder,
     'digia/button': buttonBuilder,
     'digia/iconButton': iconButtonBuilder,
     'digia/checkbox': checkboxBuilder,
     'digia/switch': switchBuilder,
-    // 'digia/textFormField': textFormFieldBuilder,
+    'digia/textFormField': textFormFieldBuilder,
 
     // Navigation and Structure
-    // 'digia/scaffold': scaffoldBuilder,
-    // 'digia/appBar': appBarBuilder,
-    // 'digia/sliverAppBar': sliverAppBarBuilder,
-    // 'digia/drawer': drawerBuilder,
+    'digia/scaffold': scaffoldBuilder,
+    'fw/scaffold': scaffoldBuilder,
+    'fw/appBar': appBarBuilder,
+    'digia/appBar': appBarBuilder,
+    'digia/sliverAppBar': sliverAppBarBuilder,
+    'digia/sliverList': sliverListBuilder,
+    'digia/drawer': drawerBuilder,
+    'digia/tabController': tabControllerBuilder,
+    'digia/tabBar': tabBarBuilder,
+    'digia/tabViewContent': tabViewContentBuilder,
+    'digia/navigationBar': navigationBarBuilder,
+    'digia/navigationBarItem': navigationBarItemBuilder,
+    'digia/overlay': overlayBuilder,
+    'digia/pageView': pageViewBuilder,
     // 'digia/tabView': tabViewBuilder,
     // 'digia/tabViewItem': tabViewItemBuilder,
-    // 'digia/navigationBarItem': navigationBarItemBuilder,
 
     // Dividers and Decorative Elements
     'digia/horizontalDivider': horizontalDividerBuilder,
@@ -53,9 +70,11 @@ class VirtualWidgetRegistry {
     'digia/animatedButton': animatedButtonBuilder,
     'digia/expandable': expandableBuilder,
     'digia/refreshIndicator': refreshIndicatorBuilder,
+    'digia/beforeAfterSlider': beforeAfterSliderBuilder,
+    'digia/imageView360': imageView360Builder,
     // 'digia/stepper': stepperBuilder,
     'digia/flutterStepper': flutterStepperBuilder,
-    // 'digia/pinField': pinFieldBuilder,
+    'digia/pinField': pinFieldBuilder,
     'digia/calendar': calendarBuilder,
 
     // Media and Web Content
@@ -66,11 +85,11 @@ class VirtualWidgetRegistry {
     'digia/webView': webViewBuilder,
 
     // Data Display
-    // 'digia/carousel': carouselBuilder,
-    // 'digia/lineChart': lineChartBuilder,
+    'digia/carousel': carouselBuilder,
     'digia/circularProgressBar': circularProgressBarBuilder,
     'digia/linearProgressBar': linearProgressBarBuilder,
-    // 'digia/paginatedListView': paginatedListViewBuilder,
+    'digia/paginatedListView': paginatedListViewBuilder,
+    'digia/paginatedSliverList': paginatedSliverListBuilder,
     // 'digia/sliverList': sliverListBuilder,
 
     // Async Widgets
@@ -79,9 +98,11 @@ class VirtualWidgetRegistry {
     'digia/streamBuilder': streamBuilderBuilder,
 
     // Utility Widgets
-    // 'digia/conditionalBuilder': conditionalBuilderBuilder,
+    'digia/conditionalBuilder': conditionalBuilderBuilder,
+    'digia/conditionalItem': conditionalItemBuilder,
     'digia/opacity': opacityBuilder,
-    // 'digia/animationBuilder': animationBuilderBuilder,
+    'digia/animationBuilder': animationBuilder,
+    'digia/animatedSwitcher': animatedSwitcher,
     'digia/timer': timerBuilder,
 
     // Custom and Specialized Widgets
@@ -91,45 +112,102 @@ class VirtualWidgetRegistry {
     // 'digia/probo/animated_fastscore': proboCustomComponentBuilder,
   };
 
-  void registerWidget(String type, VirtualWidgetBuilder builder) {
-    _builders[type] = builder;
-  }
+  void registerWidget<T>(
+    String type,
+    T Function(JsonLike) fromJsonT,
+    VirtualWidget Function(
+      T props,
+      Map<String, List<VirtualWidget>>? childGroups,
+    ) builder,
+  );
 
-  static final VirtualWidgetRegistry instance =
-      VirtualWidgetRegistry._internal();
+  void registerJsonWidget(
+    String type,
+    VirtualWidget Function(
+      JsonLike props,
+      Map<String, List<VirtualWidget>>? childGroups,
+    ) builder,
+  );
 
-  factory VirtualWidgetRegistry() {
-    return instance;
-  }
+  Widget Function(String viewId, JsonLike? args) get scaffoldBuilderFn;
 
-  VirtualWidgetRegistry._internal();
+  factory VirtualWidgetRegistry({
+    required Widget Function(String id, JsonLike? args) componentBuilder,
+    required Widget Function(String viewId, JsonLike? args) scaffoldBuilderFn,
+  }) = DefaultVirtualWidgetRegistry;
 
-  VirtualWidget createWidget(VWNodeData data, VirtualWidget? parent) {
-    String type = data.type;
-    if (!_builders.containsKey(type)) {
-      throw Exception('Unknown widget type: $type');
+  VirtualWidget createWidget(VWData data, VirtualWidget? parent);
+}
+
+class DefaultVirtualWidgetRegistry implements VirtualWidgetRegistry {
+  final Widget Function(String id, JsonLike? args) componentBuilder;
+  @override
+  final Widget Function(String viewId, JsonLike? args) scaffoldBuilderFn;
+  final Map<String, VirtualWidgetBuilder> builders;
+
+  DefaultVirtualWidgetRegistry({
+    required this.componentBuilder,
+    required this.scaffoldBuilderFn,
+  }) : builders = Map.from(VirtualWidgetRegistry._defaultBuilders);
+
+  @override
+  VirtualWidget createWidget(VWData data, VirtualWidget? parent) {
+    VirtualWidget widget;
+
+    switch (data) {
+      case VWNodeData():
+        {
+          String type = data.type;
+          if (!builders.containsKey(type)) {
+            throw Exception('Unknown widget type: $type');
+          }
+          widget = builders[type]!(data, parent, this);
+        }
+        break;
+      case VWStateData():
+        widget = stateContainerBuilder(data, parent, this);
+        break;
+      case VWComponentData():
+        widget = VirtualBuilderWidget((payload) => componentBuilder(
+              data.id,
+              data.args?.map(
+                  (k, v) => MapEntry(k, v?.evaluate(payload.scopeContext))),
+            ));
+        break;
     }
 
-    return _builders[type]!(data, parent, this);
+    return widget;
   }
 
-  VirtualWidget? createChild(
-      {required VWNodeData data, String key = 'child', VirtualWidget? parent}) {
-    final child = data.childGroups?[key]?.firstOrNull;
-
-    if (child == null) return null;
-
-    return createWidget(child, parent);
+  @override
+  void registerWidget<T>(
+      String type,
+      T Function(JsonLike) fromJsonT,
+      VirtualWidget Function(
+        T props,
+        Map<String, List<VirtualWidget>>? childGroups,
+      ) builder) {
+    builders[type] = (data, parent, registry) {
+      return builder(
+        fromJsonT(data.props.value),
+        createChildGroups(data.childGroups, parent, registry),
+      );
+    };
   }
 
-  List<VirtualWidget?>? createChildren(
-      {required VWNodeData data,
-      String key = 'children',
-      VirtualWidget? parent}) {
-    final children = data.childGroups?[key];
-
-    if (children == null || children.isEmpty) return null;
-
-    return children.map((p0) => createChild(data: p0, parent: parent)).toList();
+  @override
+  void registerJsonWidget(
+    String type,
+    VirtualWidget Function(
+      JsonLike props,
+      Map<String, List<VirtualWidget>>? childGroups,
+    ) builder,
+  ) {
+    builders[type] = (data, parent, registry) {
+      return builder(
+        data.props.value,
+        createChildGroups(data.childGroups, parent, registry),
+      );
+    };
   }
 }

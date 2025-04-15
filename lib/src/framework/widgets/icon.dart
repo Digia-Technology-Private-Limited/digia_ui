@@ -1,11 +1,11 @@
 import 'package:flutter/widgets.dart';
 
-import '../../Utils/util_functions.dart';
 import '../../components/dui_icons/icon_helpers/icon_data_serialization.dart';
-import '../core/virtual_leaf_stateless_widget.dart';
+import '../base/virtual_leaf_stateless_widget.dart';
 import '../render_payload.dart';
+import '../widget_props/icon_props.dart';
 
-class VWIcon extends VirtualLeafStatelessWidget {
+class VWIcon extends VirtualLeafStatelessWidget<IconProps> {
   VWIcon({
     required super.props,
     required super.commonProps,
@@ -15,17 +15,12 @@ class VWIcon extends VirtualLeafStatelessWidget {
 
   @override
   Widget render(RenderPayload payload) {
-    final iconConfig = props.getMap('iconData');
-    if (iconConfig == null) return empty();
+    var iconData = payload.getIcon(props.iconData);
 
-    var iconData = payload.getIcon(iconConfig);
+    iconData ??= getIconData(icondataMap: props.iconData);
 
-    iconData ??= getIconData(icondataMap: iconConfig);
-
-    final iconSize = payload.eval<double>(props.get('iconSize'));
-    final iconColor = makeColor(
-      payload.eval<String>(props.get('iconColor')),
-    );
+    final iconSize = payload.evalExpr(props.size);
+    final iconColor = payload.evalColorExpr(props.color);
 
     return Icon(
       iconData,

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:timelines/timelines.dart';
-import '../../components/dui_stepper/DashLineConnector.dart';
 
 enum ConnectorType { solid, dashed }
 
@@ -99,12 +98,12 @@ class _InternalStepperState extends State<InternalStepper>
           color: color,
           thickness: thickness,
         ),
-      ConnectorType.dashed => CustomDashedLineConnector(
+      ConnectorType.dashed => Connector.dashedLine(
           color: color,
           thickness: thickness,
           dash: connectorValue.dash ?? thickness * 3,
           gap: connectorValue.gap ?? thickness * 2,
-          strokeCap: connectorValue.strokeCap ?? StrokeCap.butt,
+          // strokeCap: connectorValue.strokeCap ?? StrokeCap.butt,
         ),
     };
   }

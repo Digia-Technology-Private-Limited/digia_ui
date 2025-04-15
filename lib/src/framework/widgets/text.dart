@@ -1,48 +1,45 @@
 import 'package:flutter/widgets.dart';
 import 'package:widget_marquee/widget_marquee.dart';
 
-import '../../Utils/basic_shared_utils/dui_decoder.dart';
-import '../../Utils/util_functions.dart';
-import '../../components/DUIText/dui_text_style.dart';
-import '../core/virtual_leaf_stateless_widget.dart';
+import '../base/virtual_leaf_stateless_widget.dart';
 import '../render_payload.dart';
+import '../utils/flutter_type_converters.dart';
+import '../widget_props/text_props.dart';
 
-class VWText extends VirtualLeafStatelessWidget {
+class VWText extends VirtualLeafStatelessWidget<TextProps> {
   VWText({
     required super.props,
     required super.commonProps,
-    required super.parent,
+    super.parent,
     super.refName,
   });
 
   @override
   Widget render(RenderPayload payload) {
-    final text = payload.eval<String>(props.get('text'));
-    final style = toTextStyle(
-        DUITextStyle.fromJson(props.get('textStyle')), payload.buildContext);
-    final maxLines = payload.eval<int>(props.get('maxLines'));
-    final textAlign =
-        DUIDecoder.toTextAlign(payload.eval(props.get('alignment')));
+    final text = payload.evalExpr(props.text);
+    final style = payload.getTextStyle(props.textStyle);
+    final maxLines = payload.evalExpr(props.maxLines);
+    final alignment = To.textAlign(payload.evalExpr(props.alignment));
 
-    if (props.get('overflow') == 'marquee') {
+    final overflow = payload.evalExpr(props.overflow);
+
+    if (overflow == 'marquee') {
       return Marquee(
         pause: Duration.zero,
         delay: Duration.zero,
         duration: const Duration(seconds: 11),
         gap: 100,
         child: Text(text.toString(),
-            style: style, maxLines: maxLines, textAlign: textAlign),
+            style: style, maxLines: maxLines, textAlign: alignment),
       );
     }
 
-    final overflow =
-        DUIDecoder.toTextOverflow(payload.eval<String>(props.get('overflow')));
     return Text(
       text.toString(),
       style: style,
       maxLines: maxLines,
-      overflow: overflow,
-      textAlign: textAlign,
+      overflow: To.textOverflow(overflow),
+      textAlign: alignment,
     );
   }
 }

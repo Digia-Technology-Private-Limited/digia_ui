@@ -7,6 +7,7 @@ class InternalSwitch extends StatefulWidget {
   final Color? inactiveThumbColor;
   final Color? activeTrackColor;
   final Color? inactiveTrackColor;
+  final void Function(bool)? onChanged;
 
   const InternalSwitch({
     super.key,
@@ -16,6 +17,7 @@ class InternalSwitch extends StatefulWidget {
     this.inactiveThumbColor,
     this.activeTrackColor,
     this.inactiveTrackColor,
+    this.onChanged,
   });
 
   @override
@@ -31,10 +33,11 @@ class _InternalSwitchState extends State<InternalSwitch> {
     super.initState();
   }
 
-  _setState(bool value) {
+  void _setState(bool value) {
     setState(() {
       _value = value;
     });
+    widget.onChanged?.call(value);
   }
 
   @override

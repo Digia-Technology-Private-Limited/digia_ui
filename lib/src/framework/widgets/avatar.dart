@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 
-import '../../Utils/basic_shared_utils/dui_decoder.dart';
-import '../../Utils/util_functions.dart';
-import '../core/virtual_leaf_stateless_widget.dart';
+import '../base/virtual_leaf_stateless_widget.dart';
 import '../models/props.dart';
 import '../render_payload.dart';
+import '../utils/flutter_type_converters.dart';
+import '../utils/functional_util.dart';
+import '../widget_props/text_props.dart';
 import 'image.dart';
 import 'text.dart';
 
-class VWAvatar extends VirtualLeafStatelessWidget {
+class VWAvatar extends VirtualLeafStatelessWidget<Props> {
   VWAvatar({
     required super.props,
     required super.commonProps,
@@ -20,36 +21,35 @@ class VWAvatar extends VirtualLeafStatelessWidget {
   Widget render(RenderPayload payload) {
     final shapeProps = props.toProps('shape');
 
-    if (shapeProps == null) return empty();
+    // if (shapeProps == null) return empty();
 
-    return switch (shapeProps.get('value')) {
+    return switch (shapeProps?.get('value')) {
       'circle' => _getCircleAvatar(shapeProps, payload),
       'square' => _getSquareAvatar(shapeProps, payload),
       _ => _getCircleAvatar(shapeProps, payload)
     };
   }
 
-  Widget _getCircleAvatar(Props shapeProps, RenderPayload payload) {
-    final bgColor = payload.eval<String>(props.get('bgColor'));
-    final radius = payload.eval<double>(shapeProps.get('radius'));
+  Widget _getCircleAvatar(Props? shapeProps, RenderPayload payload) {
+    final bgColor = payload.evalColor(props.get('bgColor'));
+    final radius = payload.eval<double>(shapeProps?.get('radius'));
     return CircleAvatar(
       radius: radius ?? 16,
-      backgroundColor: makeColor(bgColor) ?? Colors.grey,
+      backgroundColor: bgColor ?? Colors.grey,
       child: _getAvatarChildWidget(payload),
     );
   }
 
-  Widget _getSquareAvatar(Props shapeProps, RenderPayload payload) {
-    final bgColor = payload.eval<String>(props.get('bgColor'));
-    final cornerRadius =
-        DUIDecoder.toBorderRadius(shapeProps.get('cornerRadius'));
-    final side = payload.eval<double>(shapeProps.get('side'));
+  Widget _getSquareAvatar(Props? shapeProps, RenderPayload payload) {
+    final bgColor = payload.evalColor(props.get('bgColor'));
+    final cornerRadius = To.borderRadius(shapeProps?.get('cornerRadius'));
+    final side = payload.eval<double>(shapeProps?.get('side'));
 
     return Container(
       height: side,
       width: side,
       decoration: BoxDecoration(
-          color: makeColor(bgColor) ?? Colors.grey,
+          color: bgColor ?? Colors.grey,
           shape: BoxShape.rectangle,
           borderRadius: cornerRadius),
       clipBehavior: Clip.hardEdge,
@@ -70,7 +70,7 @@ class VWAvatar extends VirtualLeafStatelessWidget {
     return Align(
       alignment: Alignment.center,
       child: VWText(
-        props: props.toProps('text') ?? Props.empty(),
+        props: props.getMap('text').maybe(TextProps.fromJson) ?? TextProps(),
         commonProps: null,
         parent: null,
       ).toWidget(payload),

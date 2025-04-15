@@ -1,16 +1,18 @@
-import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/widgets.dart';
-import '../../Utils/basic_shared_utils/lodash.dart';
-import '../../Utils/extensions.dart';
-import '../../Utils/util_functions.dart';
-import '../core/extensions.dart';
-import '../core/virtual_stateless_widget.dart';
+
+import '../base/extensions.dart';
+import '../base/virtual_stateless_widget.dart';
+import '../expr/default_scope_context.dart';
+import '../expr/scope_context.dart';
 import '../internal_widgets/internal_stepper.dart';
 import '../models/props.dart';
 import '../render_payload.dart';
+import '../utils/functional_util.dart';
+import '../utils/object_util.dart';
+import '../widget_props/icon_props.dart';
 import 'icon.dart';
 
-class VWStepper extends VirtualStatelessWidget {
+class VWStepper extends VirtualStatelessWidget<Props> {
   VWStepper({
     required super.props,
     required super.commonProps,
@@ -39,24 +41,27 @@ class VWStepper extends VirtualStatelessWidget {
         payload.eval<String>(props.get('inCompletedColor'));
     final completedConnector = props.getMap('completedConnector');
     final inCompletedConnector = props.getMap('inCompletedConnector');
-    final completedIcon = props.getMap('completedIcon').isNotNull
+    final completedIcon = props.getMap('completedIcon') != null
         ? VWIcon(
-                props: Props(props.getMap('completedIcon')!),
-                commonProps: commonProps,
+                props: IconProps.fromJson(props.getMap('inCompletedIcon')!) ??
+                    IconProps.empty(),
+                commonProps: null,
                 parent: parent)
             .render(payload)
         : null;
-    final inCompletedIcon = props.getMap('inCompletedIcon').isNotNull
+    final inCompletedIcon = props.getMap('inCompletedIcon') != null
         ? VWIcon(
-                props: Props(props.getMap('inCompletedIcon')!),
-                commonProps: commonProps,
+                props: IconProps.fromJson(props.getMap('inCompletedIcon')!) ??
+                    IconProps.empty(),
+                commonProps: null,
                 parent: parent)
             .render(payload)
         : null;
-    final pendingIcon = props.getMap('pendingIcon').isNotNull
+    final pendingIcon = props.getMap('pendingIcon') != null
         ? VWIcon(
-                props: Props(props.getMap('pendingIcon')!),
-                commonProps: commonProps,
+                props: IconProps.fromJson(props.getMap('pendingIcon')!) ??
+                    IconProps.empty(),
+                commonProps: null,
                 parent: parent)
             .render(payload)
         : null;
@@ -71,32 +76,35 @@ class VWStepper extends VirtualStatelessWidget {
           connectorType: ConnectorValue.toConnectorType(
             completedConnector?['value'],
           ),
-          color: makeColor(completedConnector?['color']),
-          dash: (completedConnector?['dash']).tryCast(),
-          gap: (completedConnector?['gap']).tryCast(),
+          color: (completedConnector?['color']).to<Color>(),
+          dash: (completedConnector?['dash']).to<double>(),
+          gap: (completedConnector?['gap']).to<double>(),
           strokeCap: toStrokeCap(completedConnector?['strokeCap']),
         ),
         inCompletedConnector: ConnectorValue(
           connectorType: ConnectorValue.toConnectorType(
             inCompletedConnector?['value'],
           ),
-          color: makeColor(inCompletedConnector?['color']),
-          dash: (inCompletedConnector?['dash']).tryCast(),
-          gap: (inCompletedConnector?['gap']).tryCast(),
+          color: inCompletedConnector?['color']
+              .to<String>()
+              .maybe(payload.getColor),
+          dash: (inCompletedConnector?['dash']).to<double>(),
+          gap: (inCompletedConnector?['gap']).to<double>(),
           strokeCap: toStrokeCap(inCompletedConnector?['strokeCap']),
         ),
         indicatorPosition: indicatorPosition,
         radius: radius,
         thickness: thickness,
-        completedColor: makeColor(completedColor),
-        inCompletedColor: makeColor(inCompletedColor),
+        completedColor: completedColor.to<String>().maybe(payload.getColor),
+        inCompletedColor: inCompletedColor.to<String>().maybe(payload.getColor),
         completedIcon: completedIcon,
         inCompletedIcon: inCompletedIcon,
         pendingIcon: pendingIcon,
         itemCount: items.length,
-        itemBuilder: (buildContext, index) => childToRepeat.toWidget(
+        itemBuilder: (innerCtx, index) => childToRepeat.toWidget(
           payload.copyWithChainedContext(
             _createExprContext(items[index], index),
+            buildContext: innerCtx,
           ),
         ),
       );
@@ -109,25 +117,27 @@ class VWStepper extends VirtualStatelessWidget {
         connectorType: ConnectorValue.toConnectorType(
           completedConnector?['value'],
         ),
-        color: makeColor(completedConnector?['color']),
-        dash: (completedConnector?['dash']).tryCast(),
-        gap: (completedConnector?['gap']).tryCast(),
+        color:
+            completedConnector?['color'].to<String>().maybe(payload.getColor),
+        dash: (completedConnector?['dash']).to<double>(),
+        gap: (completedConnector?['gap']).to<double>(),
         strokeCap: toStrokeCap(completedConnector?['strokeCap']),
       ),
       inCompletedConnector: ConnectorValue(
         connectorType: ConnectorValue.toConnectorType(
           inCompletedConnector?['value'],
         ),
-        color: makeColor(inCompletedConnector?['color']),
-        dash: (inCompletedConnector?['dash']).tryCast(),
-        gap: (inCompletedConnector?['gap']).tryCast(),
+        color:
+            inCompletedConnector?['color'].to<String>().maybe(payload.getColor),
+        dash: (inCompletedConnector?['dash']).to<double>(),
+        gap: (inCompletedConnector?['gap']).to<double>(),
         strokeCap: toStrokeCap(inCompletedConnector?['strokeCap']),
       ),
       indicatorPosition: indicatorPosition,
       radius: radius,
       thickness: thickness,
-      completedColor: makeColor(completedColor),
-      inCompletedColor: makeColor(inCompletedColor),
+      completedColor: completedColor.to<String>().maybe(payload.getColor),
+      inCompletedColor: inCompletedColor.to<String>().maybe(payload.getColor),
       completedIcon: completedIcon,
       inCompletedIcon: inCompletedIcon,
       pendingIcon: pendingIcon,
@@ -136,7 +146,11 @@ class VWStepper extends VirtualStatelessWidget {
     );
   }
 
-  ExprContext _createExprContext(Object? item, int index) {
-    return ExprContext(variables: {'currentItem': item, 'index': index});
+  ScopeContext _createExprContext(Object? item, int index) {
+    return DefaultScopeContext(variables: {
+      'currentItem': item,
+      'index': index
+      // TODO: Add class instance using refName
+    });
   }
 }

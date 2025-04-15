@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-import '../../Utils/basic_shared_utils/dui_decoder.dart';
-import '../../Utils/util_functions.dart';
-import '../core/virtual_leaf_stateless_widget.dart';
+import '../base/virtual_leaf_stateless_widget.dart';
 import '../models/props.dart';
 import '../render_payload.dart';
+import '../utils/flutter_type_converters.dart';
+import '../widget_props/icon_props.dart';
 import 'icon.dart';
 
-class VWCheckbox extends VirtualLeafStatelessWidget {
+class VWCheckbox extends VirtualLeafStatelessWidget<Props> {
   VWCheckbox({
     required super.props,
     required super.commonProps,
@@ -19,31 +19,29 @@ class VWCheckbox extends VirtualLeafStatelessWidget {
   Widget render(RenderPayload payload) {
     final value = payload.eval<bool>(props.get('value')) ?? false;
     final size = props.getDouble('size') ?? 24;
-    final activeColor =
-        makeColor(payload.eval<String>(props.get('activeColor')));
-    final inactiveColor =
-        makeColor(payload.eval<String>(props.get('inactiveColor')));
+    final activeColor = payload.evalColor(props.get('activeColor'));
+    final inactiveColor = payload.evalColor(props.get('inactiveColor'));
 
     final BoxShape shape = switch (props.getString('shape.value')) {
       'circle' => BoxShape.circle,
       _ => BoxShape.rectangle
     };
-    final borderRadius =
-        DUIDecoder.toBorderRadius(props.get('shape.borderRadius'));
-    final activeBorderColor =
-        makeColor(payload.eval<String>(props.get('activeBorderColor')));
+    final borderRadius = To.borderRadius(props.get('shape.borderRadius'));
+    final activeBorderColor = payload.evalColor(props.get('activeBorderColor'));
     final inactiveBorderColor =
-        makeColor(payload.eval<String>(props.get('inactiveBorderColor')));
+        payload.evalColor(props.get('inactiveBorderColor'));
     final borderWidth = props.getDouble('borderWidth');
 
     final activeIcon = VWIcon(
-      props: props.toProps('activeIcon') ?? Props.empty(),
+      props:
+          IconProps.fromJson(props.getMap('activeIcon')) ?? IconProps.empty(),
       commonProps: null,
       parent: null,
     );
 
     final inactiveIcon = VWIcon(
-      props: props.toProps('inactiveIcon') ?? Props.empty(),
+      props:
+          IconProps.fromJson(props.getMap('inactiveIcon')) ?? IconProps.empty(),
       commonProps: null,
       parent: null,
     );
