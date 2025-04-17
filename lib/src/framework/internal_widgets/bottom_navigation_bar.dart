@@ -6,14 +6,14 @@ class BottomNavigationBar extends StatefulWidget {
   final int selectedIndex;
   final List<Widget> destinations;
   final ValueChanged<int>? onDestinationSelected;
-  final double? elevation;
-  final Color? shadowColor;
   final Color? surfaceTintColor;
   final Color? indicatorColor;
   final ShapeBorder? indicatorShape;
   final double? height;
   final NavigationDestinationLabelBehavior? labelBehavior;
   final WidgetStateProperty<Color?>? overlayColor;
+  final List<BoxShadow>? shadow;
+  final BorderRadius? borderRadius;
 
   const BottomNavigationBar({
     super.key,
@@ -22,8 +22,8 @@ class BottomNavigationBar extends StatefulWidget {
     this.selectedIndex = 0,
     required this.destinations,
     this.onDestinationSelected,
-    this.elevation,
-    this.shadowColor,
+    this.borderRadius,
+    this.shadow,
     this.surfaceTintColor,
     this.indicatorColor,
     this.indicatorShape,
@@ -50,20 +50,24 @@ class _BottomNavigationBarState extends State<BottomNavigationBar> {
 
   @override
   Widget build(BuildContext context) {
-    return NavigationBar(
-      backgroundColor: widget.backgroundColor,
-      animationDuration: widget.animationDuration,
-      selectedIndex: _selectedIndex,
-      onDestinationSelected: _handleDestinationSelected,
-      elevation: widget.elevation,
-      shadowColor: widget.shadowColor,
-      surfaceTintColor: widget.surfaceTintColor,
-      indicatorColor: widget.indicatorColor,
-      indicatorShape: widget.indicatorShape,
-      height: widget.height,
-      labelBehavior: widget.labelBehavior,
-      overlayColor: widget.overlayColor,
-      destinations: widget.destinations,
+    return DecoratedBox(
+      decoration: BoxDecoration(boxShadow: widget.shadow),
+      child: ClipRRect(
+        borderRadius: widget.borderRadius ?? BorderRadius.zero,
+        child: NavigationBar(
+          backgroundColor: widget.backgroundColor,
+          animationDuration: widget.animationDuration,
+          selectedIndex: _selectedIndex,
+          onDestinationSelected: _handleDestinationSelected,
+          surfaceTintColor: widget.surfaceTintColor,
+          indicatorColor: widget.indicatorColor,
+          indicatorShape: widget.indicatorShape,
+          height: widget.height,
+          labelBehavior: widget.labelBehavior,
+          overlayColor: widget.overlayColor,
+          destinations: widget.destinations,
+        ),
+      ),
     );
   }
 }

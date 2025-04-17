@@ -5,6 +5,7 @@ import '../internal_widgets/bottom_navigation_bar.dart' as internal;
 import '../render_payload.dart';
 import '../utils/flutter_type_converters.dart';
 import '../widget_props/bottom_navigation_bar_props.dart';
+import '../widgets/container.dart';
 import 'bottom_navigation_bar_item.dart';
 
 class VWBottomNavigationBar
@@ -32,10 +33,11 @@ class VWBottomNavigationBar
   @override
   Widget render(RenderPayload payload) {
     return internal.BottomNavigationBar(
+      borderRadius: To.borderRadius(props.borderRadius),
+      shadow: toShadowList(payload, props.shadow),
       backgroundColor: payload.evalColorExpr(props.backgroundColor),
       animationDuration: Duration(
           milliseconds: payload.evalExpr(props.animationDuration) ?? 0),
-      elevation: payload.evalExpr(props.elevation),
       height: payload.evalExpr(props.height),
       surfaceTintColor: payload.evalColorExpr(props.surfaceTintColor),
       overlayColor:
