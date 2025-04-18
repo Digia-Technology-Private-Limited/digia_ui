@@ -48,7 +48,7 @@ class VWContainer extends VirtualStatelessWidget<Props> {
         padding: padding,
         decoration: BoxDecoration(
             gradient: gradiant,
-            boxShadow: _toShadowList(payload, props.getList('shadow')),
+            boxShadow: toShadowList(payload, props.getList('shadow')),
             color: color,
             border: _toBorderWithPattern(
                 payload, props.toProps('border') ?? Props.empty()),
@@ -86,7 +86,7 @@ class VWContainer extends VirtualStatelessWidget<Props> {
   }
 }
 
-List<BoxShadow>? _toShadowList(
+List<BoxShadow>? toShadowList(
     RenderPayload payload, List<Object?>? shadowProps) {
   return shadowProps?.cast<JsonLike>().nonNulls.map((e) {
     final dx = payload.eval<double>(e.valueFor('offset.x'));
