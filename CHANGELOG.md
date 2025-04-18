@@ -2,6 +2,14 @@
 
 Digia Ui SDK.
 
+## [0.3.7] - 2025-04-18
+
+- ✅ AppState Support: Introduced AppState with persistent and observable values
+- ✨ Carousel Enhancements: Added new dot-indicator effects
+- 🎨 BottomNav Upgrades: Added support for shadow, corner radius, and image icons
+- 🐞 Bug Fix: Improved stability of Flutter Stepper
+- 🐞 Bug Fix: API variable names now support hyphens (-)
+
 ## [0.3.6] - 2025-03-31
 
 - Set Environment Variables from outside
