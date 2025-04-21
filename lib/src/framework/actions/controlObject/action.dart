@@ -29,10 +29,7 @@ class ControlObjectAction extends Action {
       dataType: ExprOr.fromJson<Object>(json['dataType']),
       method: as<String>(json['method']),
       args: as$<Map<String, Object?>>(json['args'])?.map(
-        (k, v) {
-          final map = v as Map<String, Object?>?;
-          return MapEntry(k, ExprOr.fromJson<Object>(map?['data']));
-        },
+        (k, v) => MapEntry(k, ExprOr.fromJson<Object>(v)),
       ),
     );
   }
