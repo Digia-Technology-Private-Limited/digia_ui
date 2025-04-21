@@ -499,7 +499,6 @@ VWScaffold scaffoldBuilder(
     parent: parent,
     childGroups: createChildGroups(data.childGroups, parent, registry),
     refName: data.refName,
-    scaffoldBuilderFn: registry.scaffoldBuilderFn,
   );
 }
 
