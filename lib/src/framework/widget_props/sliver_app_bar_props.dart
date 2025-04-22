@@ -1,11 +1,12 @@
+import '../models/types.dart';
 import '../utils/functional_util.dart';
 import '../utils/types.dart';
 
 class SliverAppBarProps {
   final String? bottomPreferredWidth;
   final String? bottomPreferredHeight;
-  final String? collapsedHeight;
-  final String? expandedHeight;
+  final ExprOr<String>? collapsedHeight;
+  final ExprOr<String>? expandedHeight;
   final String? backgroundColor;
   final double? leadingWidth;
   final double? titleSpacing;
@@ -30,8 +31,8 @@ class SliverAppBarProps {
     return SliverAppBarProps(
       bottomPreferredWidth: as$<String>(json['bottomPreferredWidth']),
       bottomPreferredHeight: as$<String>(json['bottomPreferredHeight']),
-      collapsedHeight: as$<String>(json['collapsedHeight']),
-      expandedHeight: as$<String>(json['expandedHeight']),
+      collapsedHeight: ExprOr.fromJson<String>(json['collapsedHeight']),
+      expandedHeight: ExprOr.fromJson<String>(json['expandedHeight']),
       backgroundColor: as$<String>(json['backgroundColor']),
       leadingWidth: as$<double>(json['leadingWidth']),
       titleSpacing: as$<double>(json['titleSpacing']),
