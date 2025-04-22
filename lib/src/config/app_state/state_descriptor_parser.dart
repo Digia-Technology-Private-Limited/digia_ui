@@ -62,9 +62,9 @@ class StringDescriptorParser implements StateDescriptorParser<String> {
 class BoolDescriptorParser implements StateDescriptorParser<bool> {
   @override
   StateDescriptor<bool> parse(JsonLike json) {
-    bool parseBool(dynamic value) {
+    bool parseBool(Object? value) {
       if (value is num) return value != 0;
-      return value?.to<bool>();
+      return value?.to<bool>() ?? false;
     }
 
     return StateDescriptor<bool>(
