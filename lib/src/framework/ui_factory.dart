@@ -64,12 +64,6 @@ class DUIFactory {
     widgetRegistry = DefaultVirtualWidgetRegistry(
       // MessageHandler is not propagated here
       componentBuilder: (id, args) => createComponent(id, args),
-      scaffoldBuilderFn: (viewId, args) {
-        if (configProvider.isPage(viewId)) {
-          return createPage(viewId, args);
-        }
-        return createComponent(viewId, args);
-      },
     );
     bindingRegistry = MethodBindingRegistry();
 
