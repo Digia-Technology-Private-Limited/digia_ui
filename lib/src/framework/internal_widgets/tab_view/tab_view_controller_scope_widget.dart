@@ -1,5 +1,4 @@
 import 'package:flutter/widgets.dart';
-
 import 'controller.dart';
 import 'inherited_tab_view_controller.dart';
 
@@ -7,10 +6,12 @@ class TabViewControllerScopeWidget extends StatefulWidget {
   final List<Object?> tabs;
   final int initialIndex;
   final WidgetBuilder childBuilder;
+  final Function(int currentIndex)? onTabChange;
 
   const TabViewControllerScopeWidget({
     super.key,
     required this.tabs,
+    this.onTabChange,
     required this.childBuilder,
     this.initialIndex = 0,
   });
@@ -29,6 +30,13 @@ class _TabViewControllerScopeWidgetState
   void initState() {
     super.initState();
     _initializeTabController();
+    _tabController.addListener(
+      () {
+        if (_tabController.indexIsChanging) {
+          widget.onTabChange?.call(_tabController.index);
+        }
+      },
+    );
   }
 
   void _initializeTabController() {
