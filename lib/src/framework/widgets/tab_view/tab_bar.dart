@@ -35,43 +35,46 @@ class VWTabBar extends VirtualStatelessWidget<Props> {
         To.alignment(props.getString('tabBarScrollable.tabAlignment')) ??
             Alignment.center;
 
-    return TabBar(
-      automaticIndicatorColorAdjustment: false,
-      isScrollable: isScrollable,
-      tabAlignment: isScrollable
-          ? alignment == Alignment.centerLeft
-              ? TabAlignment.start
-              : TabAlignment.center
-          : null,
-      indicatorSize: indicatorSize,
-      controller: controller,
-      overlayColor: WidgetStateProperty.all(Colors.transparent),
-      padding: To.edgeInsets(props.get('tabBarPadding')),
-      labelPadding: To.edgeInsets(props.get('labelPadding')),
-      dividerColor: payload.evalColor(props.get('dividerColor')),
-      dividerHeight: props.getDouble('dividerHeight'),
-      indicatorWeight: props.getDouble('indicatorWeight') ?? 2.0,
-      indicatorColor: payload.evalColor(props.get('indicatorColor')),
-      tabs: List.generate(controller.length, (index) {
-        return AnimatedBuilder(
-          animation: controller.animation!,
-          builder: (innerCtx, child) {
-            final updatedPayload = payload.copyWithChainedContext(
-              _createExprContext(
-                controller.tabs[index],
-                index,
-              ),
-              buildContext: innerCtx,
-            );
+    return ScrollConfiguration(
+      behavior: _NoScrollbarBehavior(),
+      child: TabBar(
+        automaticIndicatorColorAdjustment: false,
+        isScrollable: isScrollable,
+        tabAlignment: isScrollable
+            ? alignment == Alignment.centerLeft
+                ? TabAlignment.start
+                : TabAlignment.center
+            : null,
+        indicatorSize: indicatorSize,
+        controller: controller,
+        overlayColor: WidgetStateProperty.all(Colors.transparent),
+        padding: To.edgeInsets(props.get('tabBarPadding')),
+        labelPadding: To.edgeInsets(props.get('labelPadding')),
+        dividerColor: payload.evalColor(props.get('dividerColor')),
+        dividerHeight: props.getDouble('dividerHeight'),
+        indicatorWeight: props.getDouble('indicatorWeight') ?? 2.0,
+        indicatorColor: payload.evalColor(props.get('indicatorColor')),
+        tabs: List.generate(controller.length, (index) {
+          return AnimatedBuilder(
+            animation: controller.animation!,
+            builder: (innerCtx, child) {
+              final updatedPayload = payload.copyWithChainedContext(
+                _createExprContext(
+                  controller.tabs[index],
+                  index,
+                ),
+                buildContext: innerCtx,
+              );
 
-            final child = controller.index == index
-                ? selectedChild
-                : childOf('unselectedWidget') ?? selectedChild;
+              final child = controller.index == index
+                  ? selectedChild
+                  : childOf('unselectedWidget') ?? selectedChild;
 
-            return child.toWidget(updatedPayload);
-          },
-        );
-      }),
+              return child.toWidget(updatedPayload);
+            },
+          );
+        }),
+      ),
     );
   }
 
@@ -80,5 +83,13 @@ class VWTabBar extends VirtualStatelessWidget<Props> {
       'currentItem': item,
       'index': index,
     });
+  }
+}
+
+class _NoScrollbarBehavior extends ScrollBehavior {
+  @override
+  Widget buildScrollbar(
+      BuildContext context, Widget child, ScrollableDetails details) {
+    return child;
   }
 }
