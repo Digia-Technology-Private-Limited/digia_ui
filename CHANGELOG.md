@@ -2,6 +2,14 @@
 
 Digia Ui SDK.
 
+## [0.3.8] - 2025-04-24
+
+- ✨ Enhancement: Added support for onTabChange callback in TabController
+- ✨ Enhancement: Expressions are now supported in complex data types
+- ✨ Enhancement: SliverAppBar’s expanded and collapsed heights now support expressions
+- 🐞 Bug Fix: Boolean values in AppState were not working properly
+- 🐞 Bug Fix: Message Handler now propagates correctly across pages with BottomNavigation
+
 ## [0.3.7] - 2025-04-18
 
 - ✅ AppState Support: Introduced AppState with persistent and observable values
