@@ -24,13 +24,14 @@ class VWTabViewController
     final tabs = payload.evalExpr<List>(props.tabs) ?? [];
     final initialIndex = payload.evalExpr<int>(props.initialIndex) ?? 0;
 
-    void onTabChange(int currentIndex) {
+    void onTabChange(int currentIndex, Object? currentItem) {
       payload.executeAction(props.onTabChange,
-          scopeContext: _createExprContext(currentIndex));
+          scopeContext: _createExprContext(currentIndex, currentItem));
     }
 
     return TabViewControllerScopeWidget(
-      onTabChange: (currentIndex) => onTabChange(currentIndex),
+      onTabChange: (currentIndex, currentItem) =>
+          onTabChange(currentIndex, currentItem),
       tabs: tabs,
       initialIndex: initialIndex,
       childBuilder: (innerCtx) {
@@ -40,9 +41,8 @@ class VWTabViewController
     );
   }
 
-  ScopeContext _createExprContext(int? currentIndex) {
-    return DefaultScopeContext(variables: {
-      'currentIndex': currentIndex,
-    });
+  ScopeContext _createExprContext(int? currentIndex, Object? currentItem) {
+    return DefaultScopeContext(
+        variables: {'index': currentIndex, 'currentItem': currentItem});
   }
 }

@@ -36,7 +36,7 @@ class VWTabBar extends VirtualStatelessWidget<Props> {
             Alignment.center;
 
     return ScrollConfiguration(
-      behavior: _NoScrollbarBehavior(),
+      behavior: ScrollBehavior().copyWith(scrollbars: false),
       child: TabBar(
         automaticIndicatorColorAdjustment: false,
         isScrollable: isScrollable,
@@ -83,13 +83,5 @@ class VWTabBar extends VirtualStatelessWidget<Props> {
       'currentItem': item,
       'index': index,
     });
-  }
-}
-
-class _NoScrollbarBehavior extends ScrollBehavior {
-  @override
-  Widget buildScrollbar(
-      BuildContext context, Widget child, ScrollableDetails details) {
-    return child;
   }
 }

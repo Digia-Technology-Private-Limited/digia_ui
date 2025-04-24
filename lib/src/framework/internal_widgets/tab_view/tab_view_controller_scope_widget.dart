@@ -6,7 +6,7 @@ class TabViewControllerScopeWidget extends StatefulWidget {
   final List<Object?> tabs;
   final int initialIndex;
   final WidgetBuilder childBuilder;
-  final Function(int currentIndex)? onTabChange;
+  final Function(int currentIndex, Object? currentItem)? onTabChange;
 
   const TabViewControllerScopeWidget({
     super.key,
@@ -32,8 +32,9 @@ class _TabViewControllerScopeWidgetState
     _initializeTabController();
     _tabController.addListener(
       () {
-        if (_tabController.indexIsChanging) {
-          widget.onTabChange?.call(_tabController.index);
+        if (!_tabController.indexIsChanging) {
+          widget.onTabChange?.call(
+              _tabController.index, _tabController.tabs[_tabController.index]);
         }
       },
     );
@@ -57,6 +58,7 @@ class _TabViewControllerScopeWidgetState
   Widget build(BuildContext context) {
     return InheritedTabViewController(
       tabController: _tabController,
+
       // This is important, to insert a layer of BuildContext in between inheritedwidget and its child.
       child: Builder(builder: (innerCtx) => widget.childBuilder(innerCtx)),
     );
