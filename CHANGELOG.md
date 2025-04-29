@@ -2,6 +2,11 @@
 
 Digia Ui SDK.
 
+## [0.3.9] - 2025-04-29
+
+- ⚙️ Enhancement: Improved performance in NestedScrollView
+- 🐞 Bug Fix: Fixed issue where height and width in some widgets broke when using int values
+
 ## [0.3.8] - 2025-04-24
 
 - ✨ Enhancement: Added support for onTabChange callback in TabController
