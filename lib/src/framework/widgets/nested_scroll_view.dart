@@ -1,8 +1,6 @@
 import 'package:flutter/widgets.dart';
 
 import '../base/virtual_stateless_widget.dart';
-import '../expr/default_scope_context.dart';
-import '../expr/scope_context.dart';
 import '../render_payload.dart';
 import '../widget_props/nested_scroll_view_props.dart';
 
@@ -44,16 +42,13 @@ class VWNestedScrollView extends VirtualStatelessWidget<NestedScrollViewProps> {
     final header = childrenOf('headerWidget')?.firstOrNull;
     final body = childOf('bodyWidget');
 
+    final cachedHeaderWidget =
+        header?.toWidget(payload) ?? SliverToBoxAdapter(child: empty());
+
     return NestedScrollView(
         controller: controller,
         headerSliverBuilder: (innerCtx, innerBoxIsScrolled) {
-          final updatedPayload = payload.copyWithChainedContext(
-            _createExprContext(innerBoxIsScrolled),
-            buildContext: innerCtx,
-          );
-
-          var output = header?.toWidget(updatedPayload) ??
-              SliverToBoxAdapter(child: empty());
+          Widget output = cachedHeaderWidget;
 
           if (enableOverlapAbsorption) {
             output = SliverOverlapAbsorber(
@@ -71,11 +66,5 @@ class VWNestedScrollView extends VirtualStatelessWidget<NestedScrollViewProps> {
             return body?.toWidget(updatedPayload) ?? empty();
           }),
         ));
-  }
-
-  ScopeContext _createExprContext(bool? value) {
-    return DefaultScopeContext(variables: {
-      'innerBoxIsScrolled': value,
-    });
   }
 }
