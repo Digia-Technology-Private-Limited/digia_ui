@@ -45,7 +45,8 @@ class VWStreamBuilder extends VirtualStatelessWidget<StreamBuilderProps> {
 
         if (snapshot.connectionState == ConnectionState.active) {
           Future.delayed(const Duration(seconds: 0), () async {
-            await payload.executeAction(props.onSuccess);
+            await payload.executeAction(props.onSuccess,
+                scopeContext: _createExprContext(snapshot.data));
           });
           return childOf('listeningWidget')!.toWidget(
             payload.copyWithChainedContext(
