@@ -57,6 +57,7 @@ class VWTextFormField extends VirtualStatelessWidget<Props> {
     return InternalTextFormField(
       controller: controller,
       initialValue: payload.eval<String>(props.get('initialValue')),
+      debounceValue: props.getInt('debounceValue') ?? 400,
       onChanged: (p0) async {
         final actionFlow = ActionFlow.fromJson(props.get('onChanged'));
         await payload.executeAction(
