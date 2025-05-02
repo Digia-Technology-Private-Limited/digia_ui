@@ -1,6 +1,4 @@
 import 'package:flutter/widgets.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-
 import '../internal_widgets/internal_carousel.dart';
 import '../models/types.dart';
 import '../utils/flutter_type_converters.dart';
@@ -31,6 +29,7 @@ class CarouselProps {
   final ExprOr<String>? dotColor;
   final ExprOr<String>? activeDotColor;
   final String indicatorEffectType;
+  final bool? keepAlive;
 
   const CarouselProps({
     this.width,
@@ -56,6 +55,7 @@ class CarouselProps {
     this.dotColor,
     this.activeDotColor,
     this.indicatorEffectType = 'slide',
+    this.keepAlive = false,
   });
 
   /// Factory constructor to create an instance from JSON
@@ -84,6 +84,7 @@ class CarouselProps {
         dotWidth: as$<double>(indicatorJson['dotWidth']) ?? 8.0,
         spacing: as$<double>(indicatorJson['spacing']) ?? 16.0,
         dotColor: ExprOr.fromJson<String>(indicatorJson['dotColor']),
+        keepAlive: as$<bool>(json['keepAlive']) ?? false,
         activeDotColor:
             ExprOr.fromJson<String>(indicatorJson['activeDotColor']),
         indicatorEffectType:
