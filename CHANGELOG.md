@@ -2,6 +2,13 @@
 
 Digia Ui SDK.
 
+## [0.3.10] - 2025-05-02
+
+- ✨ Enhancement: Added KeepAlive option for Carousel items to improve performance with costly layouts
+- ✨ Enhancement: TextField’s onTextChange is now debounced
+- ✨ Enhancement: Exposed AppState for integrated environments
+- ✨ Enhancement: Stream’s value is now accessible in onSuccess action
+
 ## [0.3.9] - 2025-04-29
 
 - ⚙️ Enhancement: Improved performance in NestedScrollView
