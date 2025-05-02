@@ -2,6 +2,8 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
+import 'keep_alive_widget.dart';
+
 class InternalCarousel extends StatefulWidget {
   final Widget Function(BuildContext context, int index)? itemBuilder;
   final List<Widget> children;
@@ -29,6 +31,7 @@ class InternalCarousel extends StatefulWidget {
   final Color? dotColor;
   final String indicatorEffectType;
   final Color? activeDotColor;
+  final bool? keepAlive;
   const InternalCarousel(
       {super.key,
       this.itemBuilder,
@@ -38,6 +41,7 @@ class InternalCarousel extends StatefulWidget {
       this.height,
       this.direction = Axis.horizontal,
       this.aspectRatio = 0.25,
+      this.keepAlive = false,
       this.initialPage = 1,
       this.enlargeCenterPage = false,
       this.viewportFraction = 0.8,
@@ -89,8 +93,11 @@ class _InternalCarouselState extends State<InternalCarousel> {
         child: CarouselSlider.builder(
           carouselController: _carouselController,
           itemCount: widget.itemCount,
-          itemBuilder: (ctx, index, realIndex) =>
-              widget.itemBuilder!.call(ctx, index),
+          itemBuilder: (ctx, index, realIndex) {
+            return KeepAliveWrapper(
+                keepTabsAlive: widget.keepAlive,
+                child: widget.itemBuilder!.call(ctx, index));
+          },
           options: CarouselOptions(
             scrollDirection: widget.direction,
             aspectRatio: widget.aspectRatio,
@@ -122,7 +129,8 @@ class _InternalCarouselState extends State<InternalCarousel> {
           itemCount: widget.children.length,
           carouselController: _carouselController,
           itemBuilder: (context, index, realIndex) {
-            return widget.children[index];
+            return KeepAliveWrapper(
+                keepTabsAlive: widget.keepAlive, child: widget.children[index]);
           },
           options: CarouselOptions(
             scrollDirection: widget.direction,

@@ -57,6 +57,7 @@ class VWCarousel extends VirtualStatelessWidget<CarouselProps> {
         activeDotColor:
             payload.evalColorExpr(props.activeDotColor) ?? Colors.indigo,
         indicatorEffectType: props.indicatorEffectType,
+        keepAlive: props.keepAlive,
       );
     }
     return InternalCarousel(
@@ -80,6 +81,7 @@ class VWCarousel extends VirtualStatelessWidget<CarouselProps> {
       dotWidth: props.dotWidth,
       spacing: props.spacing,
       showIndicator: props.showIndicator,
+      keepAlive: props.keepAlive,
       dotColor: payload.evalColorExpr(props.dotColor) ?? Colors.grey,
       activeDotColor:
           payload.evalColorExpr(props.activeDotColor) ?? Colors.indigo,
