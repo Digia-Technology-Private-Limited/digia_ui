@@ -142,8 +142,8 @@ class _OverlayContent extends StatelessWidget {
             targetAnchor: childAlignment,
             followerAnchor: popupAlignment,
             child: dismissOnTapInside
-                ? Listener(
-                    onPointerUp: (_) {
+                ? _TapDetector(
+                    onTapUp: () {
                       onDismiss();
                     },
                     child: child,
@@ -152,6 +152,65 @@ class _OverlayContent extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _TapDetector extends StatefulWidget {
+  final VoidCallback onTapUp;
+  final Widget child;
+
+  const _TapDetector({
+    Key? key,
+    required this.onTapUp,
+    required this.child,
+  }) : super(key: key);
+
+  @override
+  _TapDetectorState createState() => _TapDetectorState();
+}
+
+class _TapDetectorState extends State<_TapDetector> {
+  Offset? _touchDownPosition;
+  bool _hasScrolled = false;
+
+  static const double _kTapSlop = 18.0; // Maximum movement allowed for a tap
+
+  void _handlePointerDown(PointerDownEvent event) {
+    _touchDownPosition = event.position;
+    _hasScrolled = false;
+  }
+
+  void _handlePointerMove(PointerMoveEvent event) {
+    if (_touchDownPosition != null) {
+      final distance = (event.position - _touchDownPosition!).distance;
+      if (distance > _kTapSlop) {
+        _hasScrolled = true;
+      }
+    }
+  }
+
+  void _handlePointerUp(PointerUpEvent event) {
+    if (_touchDownPosition != null && !_hasScrolled) {
+      widget.onTapUp();
+    }
+    _touchDownPosition = null;
+    _hasScrolled = false;
+  }
+
+  void _handlePointerCancel(PointerCancelEvent event) {
+    _touchDownPosition = null;
+    _hasScrolled = false;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Listener(
+      onPointerDown: _handlePointerDown,
+      onPointerMove: _handlePointerMove,
+      onPointerUp: _handlePointerUp,
+      onPointerCancel: _handlePointerCancel,
+      child: widget.child,
     );
   }
 }
