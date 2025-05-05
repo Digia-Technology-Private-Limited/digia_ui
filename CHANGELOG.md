@@ -2,6 +2,10 @@
 
 Digia Ui SDK.
 
+## [0.3.11] - 2025-05-05
+
+- 🐞 Bug Fix: Issue fixed where overlays would dismiss when their internal content was scrollable
+
 ## [0.3.10] - 2025-05-02
 
 - ✨ Enhancement: Added KeepAlive option for Carousel items to improve performance with costly layouts
