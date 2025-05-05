@@ -142,21 +142,6 @@ class DigiaUIClient {
     _instance._isInitialized = true;
   }
 
-  Map<String, Object?> get appStates => {
-        'appState': ExprClassInstance(
-          klass: ExprClass(
-            name: 'appState',
-            fields: {
-              ...DUIAppState().value.map((k, v) => MapEntry(k, v.value)),
-              ...DUIAppState()
-                  .value
-                  .map((k, v) => MapEntry(v.streamName, v.controller)),
-            },
-            methods: {},
-          ),
-        )
-      };
-
   Map<String, Object?> get jsVars => {
         'js': ExprClassInstance(
             klass: ExprClass(name: 'js', fields: {}, methods: {
