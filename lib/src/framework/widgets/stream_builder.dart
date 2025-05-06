@@ -24,8 +24,11 @@ class VWStreamBuilder extends VirtualStatelessWidget<StreamBuilderProps> {
 
     if (controller == null) return empty();
 
+    final initialData = payload.evalExpr(props.initialData);
+
     return StreamBuilder(
       stream: controller.stream,
+      initialData: initialData,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return childOf('loadingWidget')?.toWidget(payload) ??

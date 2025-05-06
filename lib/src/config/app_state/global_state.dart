@@ -30,7 +30,7 @@ class DUIAppState {
   static final DUIAppState _instance = DUIAppState._internal();
   factory DUIAppState() => _instance;
 
-  final Map<String, ReactiveValue<dynamic>> _values = {};
+  final Map<String, ReactiveValue<Object?>> _values = {};
   SharedPreferences? _prefs;
   bool _isInitialized = false;
 
@@ -92,7 +92,7 @@ class DUIAppState {
   /// Get the current value by key
   T getValue<T>(String key) => get<T>(key).value;
 
-  Map<String, ReactiveValue<dynamic>> get value => _values;
+  Map<String, ReactiveValue<Object?>> get value => _values;
 
   /// Update a value by key
   bool update<T>(String key, T newValue) => get<T>(key).update(newValue);

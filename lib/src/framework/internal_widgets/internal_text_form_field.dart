@@ -15,6 +15,7 @@ class InternalTextFormField extends StatefulWidget {
   final int? maxLines;
   final int? minLines;
   final int? maxLength;
+  final bool? autoFocus;
 
   final Color? cursorColor;
   final String? regex;
@@ -25,6 +26,7 @@ class InternalTextFormField extends StatefulWidget {
 
   const InternalTextFormField(
       {super.key,
+      this.autoFocus,
       this.enabled,
       this.keyboardType,
       this.textInputAction,
@@ -90,6 +92,7 @@ class _DUITextFieldState extends State<InternalTextFormField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      autofocus: widget.autoFocus ?? false,
       controller: _controller,
       enabled: widget.enabled,
       keyboardType: widget.keyboardType,

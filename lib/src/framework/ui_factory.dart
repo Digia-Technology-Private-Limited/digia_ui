@@ -1,20 +1,16 @@
 import 'package:flutter/widgets.dart';
 
-import '../digia_ui_client.dart';
+import '../../digia_ui.dart';
+import '../config/app_state/app_state_scope_context.dart';
 import 'actions/action_executor.dart';
-import 'base/message_handler.dart';
 import 'base/virtual_widget.dart';
 import 'component/component.dart';
 import 'data_type/method_bindings/method_binding_registry.dart';
-import 'expr/default_scope_context.dart';
-import 'font_factory.dart';
 import 'page/config_provider.dart';
 import 'page/page.dart';
-import 'page/page_controller.dart';
 import 'page/page_route.dart';
 import 'utils/color_util.dart';
 import 'utils/functional_util.dart';
-import 'utils/navigation_util.dart';
 import 'utils/textstyle_util.dart';
 import 'utils/types.dart';
 import 'virtual_widget_registry.dart';
@@ -169,12 +165,9 @@ class DUIFactory {
         apiModels: configProvider.getAllApiModels(),
         messageHandler: messageHandler,
         controller: pageController,
-        scope: DefaultScopeContext(
-          name: 'global',
-          variables: {
-            ...DigiaUIClient.instance.jsVars,
-            ...DigiaUIClient.instance.appStates
-          },
+        scope: AppStateScopeContext(
+          values: DUIAppState().value,
+          variables: DigiaUIClient.instance.jsVars,
         ),
       ),
     );
@@ -291,12 +284,9 @@ class DUIFactory {
         registry: widgetRegistry,
         apiModels: configProvider.getAllApiModels(),
         messageHandler: messageHandler,
-        scope: DefaultScopeContext(
-          name: 'global',
-          variables: {
-            ...DigiaUIClient.instance.jsVars,
-            ...DigiaUIClient.instance.appStates
-          },
+        scope: AppStateScopeContext(
+          values: DUIAppState().value,
+          variables: DigiaUIClient.instance.jsVars,
         ),
       ),
     );
