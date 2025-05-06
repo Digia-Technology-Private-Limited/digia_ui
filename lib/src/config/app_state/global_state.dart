@@ -36,6 +36,15 @@ class DUIAppState {
 
   DUIAppState._internal();
 
+  // Get current values
+  Map<String, dynamic> get currentValues => Map.fromEntries(
+      _values.entries.map((e) => MapEntry(e.key, e.value.value)));
+
+  // Get controllers
+  Map<String, StreamController> get controllers =>
+      Map.fromEntries(_values.entries
+          .map((e) => MapEntry(e.value.streamName, e.value.controller)));
+
   /// Initialize the global state with SharedPreferences and state descriptors
   ///
   /// [descriptors] - List of state descriptors to initialize

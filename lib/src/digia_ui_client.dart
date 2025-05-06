@@ -142,20 +142,7 @@ class DigiaUIClient {
     _instance._isInitialized = true;
   }
 
-  Map<String, Object?> get appStates => {
-        'appState': ExprClassInstance(
-          klass: ExprClass(
-            name: 'appState',
-            fields: {
-              ...DUIAppState().value.map((k, v) => MapEntry(k, v.value)),
-              ...DUIAppState()
-                  .value
-                  .map((k, v) => MapEntry(v.streamName, v.controller)),
-            },
-            methods: {},
-          ),
-        )
-      };
+  Map<String, Object?> get appStates => {'appState': _AppStateProxy()};
 
   Map<String, Object?> get jsVars => {
         'js': ExprClassInstance(
@@ -190,5 +177,35 @@ class DigiaUIClient {
     if (Platform.isAndroid) return 'android';
 
     return 'mobile_web';
+  }
+}
+
+class _AppStateProxy extends ExprClassInstance {
+  _AppStateProxy()
+      : super(
+          klass: ExprClass(
+            name: 'appState',
+            fields: {},
+            methods: {},
+          ),
+        );
+
+  @override
+  dynamic getField(String name) {
+    final appState = DUIAppState().value;
+
+    // Check for direct value access
+    if (appState.containsKey(name)) {
+      return appState[name]!.value;
+    }
+
+    // Check for controller access
+    for (var entry in appState.entries) {
+      if (entry.value.streamName == name) {
+        return entry.value.controller;
+      }
+    }
+
+    return super.getField(name);
   }
 }
