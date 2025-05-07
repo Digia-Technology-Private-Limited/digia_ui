@@ -67,6 +67,13 @@ class VWTextFormField extends VirtualStatelessWidget<Props> {
           scopeContext: _createExprContext(p0),
         );
       },
+      onSubmit: (p0) async {
+        final actionFlow = ActionFlow.fromJson(props.get('onSubmit'));
+        await payload.executeAction(
+          actionFlow,
+          scopeContext: _createExprContext(p0),
+        );
+      },
       textAlign: textAlign,
       readOnly: readOnly,
       obscureText: obscureText,

@@ -16,6 +16,7 @@ class InternalTextFormField extends StatefulWidget {
   final int? minLines;
   final int? maxLength;
   final bool? autoFocus;
+  final void Function(String)? onSubmit;
 
   final Color? cursorColor;
   final String? regex;
@@ -32,6 +33,7 @@ class InternalTextFormField extends StatefulWidget {
       this.textInputAction,
       this.style,
       this.onChanged,
+      this.onSubmit,
       this.initialValue,
       required this.controller,
       required this.textAlign,
@@ -106,6 +108,14 @@ class _DUITextFieldState extends State<InternalTextFormField> {
       maxLength: widget.maxLength,
       cursorColor: widget.cursorColor,
       onChanged: _onChanged,
+      onFieldSubmitted: (value) {
+        widget.onSubmit?.call(value);
+
+        // FocusScopeNode focusScope = FocusScope.of(context);
+        // if (!focusScope.hasPrimaryFocus && focusScope.canRequestFocus) {
+        //   focusScope.nextFocus();
+        // }
+      },
       onTapOutside: (event) => FocusScope.of(context).unfocus(),
       decoration: widget.inputDecoration,
     );
