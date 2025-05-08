@@ -3,56 +3,55 @@ import '../../utils/functional_util.dart';
 import '../../utils/types.dart';
 import '../base/action.dart';
 
-class VariableUpdate {
-  final String actionName;
-  final ExprOr<Object>? value;
+class ArgUpdate {
+  final String argName;
+  final ExprOr<Object>? argValue;
 
-  VariableUpdate({
-    required this.actionName,
-    required this.value,
+  ArgUpdate({
+    required this.argName,
+    required this.argValue,
   });
 
-  factory VariableUpdate.fromJson(Map<String, Object?> json) {
-    return VariableUpdate(
-      actionName: json['actionName'] as String,
-      value: ExprOr.fromJson<Object>(json['value']),
+  factory ArgUpdate.fromJson(Map<String, Object?> json) {
+    return ArgUpdate(
+      argName: json['argName'] as String,
+      argValue: ExprOr.fromJson<Object>(json['argValue']),
     );
   }
 
   Map<String, dynamic> toJson() => {
-    'actionName': actionName,
-    'newValue': value,
+    'argName': argName,
+    'argValue': argValue,
   };
 }
 
 class ExecuteCallbackAction extends Action {
-  final ExprOr actionName;
-  final List<VariableUpdate> updates;
-
+  final ExprOr<Object>? actionName;
+  final List<ArgUpdate> argUpdates;
 
   ExecuteCallbackAction({
     required this.actionName,
-    required this.updates,
+    required this.argUpdates,
     super.disableActionIf,
   });
 
   @override
-  ActionType get actionType => ActionType.setState;
+  ActionType get actionType => ActionType.executeCallback;
 
   @override
   Map<String, dynamic> toJson() => {
     'actionName': actionName,
-    'updates': updates,
+    'argUpdates': argUpdates,
   };
 
   factory ExecuteCallbackAction.fromJson(Map<String, Object?> json) {
     return ExecuteCallbackAction(
       // fallback to 'page' if not set for backward compatibility.
-      actionName: as<dynamic>(json['actionName']),
-      updates: as$<List<dynamic>>(json['updates'])
+      actionName: ExprOr.fromJson(json['actionName']),
+      argUpdates: as$<List<dynamic>>(json['argUpdates'])
           ?.map((it) => as$<JsonLike>(it))
           .nonNulls
-          .map(VariableUpdate.fromJson)
+          .map(ArgUpdate.fromJson)
           .toList() ??
           [],
     );

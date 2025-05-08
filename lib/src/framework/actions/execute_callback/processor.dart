@@ -21,22 +21,19 @@ class ExecuteCallbackProcessor extends ActionProcessor<ExecuteCallbackAction> {
   Future<Object?>? execute(
       BuildContext context, action, ScopeContext? scopeContext) {
     final actionFlow = ActionFlow.fromJson(
-      action.actionName.evaluate(scopeContext),
+      action.actionName?.evaluate(scopeContext),
     );
-
-    DUIFactory().configProvider.getComponentDefinition('componentId').argDefs?[''];
-
     return executeActionFlow(
         context,
         actionFlow!,
         DefaultScopeContext(
-          variables: convertVariableUpdateToMap(action.updates),
+          variables: {'args':convertVariableUpdateToMap(action.argUpdates)},
           enclosing: scopeContext,
         ));
   }
 
   Map<String, Map<String, dynamic>> convertVariableUpdateToMap(
-      List<VariableUpdate> updates) {
-    return {for (var update in updates) update.actionName: update.toJson()};
+      List<ArgUpdate> updates) {
+    return {for (var update in updates) update.argName: update.toJson()};
   }
 }
