@@ -1,14 +1,30 @@
 import 'dart:async';
 
+import 'package:flutter/widgets.dart';
+
 /// Represents an event that can be dispatched through the message bus
-class UIEvent {
+class Message {
   final String name;
   final Object? payload;
 
-  const UIEvent({
+  /// Optional build context that can be used to access widget tree information.
+  /// This is useful for showing dialogs, snackbars, or other UI elements in response to messages.
+  final BuildContext? _context;
+
+  const Message({
     required this.name,
     this.payload,
-  });
+    BuildContext? context,
+  }) : _context = context;
+
+  /// WARNING: This context comes from deep within the SDK and should be used with extreme caution.
+  /// Misusing this context can lead to multiple problems including:
+  /// - Memory leaks if stored improperly
+  /// - Incorrect widget tree traversal
+  /// - Unexpected UI behavior
+  /// Only use when absolutely necessary and ensure proper context lifecycle management.
+  BuildContext? getMountedContext() =>
+      _context?.mounted == true ? _context : null;
 
   @override
   String toString() => 'UIEvent(name: $name, payload: $payload)';
@@ -30,7 +46,7 @@ class MessageBus {
   MessageBus.customController(StreamController controller)
       : _streamController = controller;
 
-  /// Listens for [UIEvent]s with the specified name.
+  /// Listens for [Message]s with the specified name.
   ///
   /// Usage example:
   /// ```dart
@@ -61,13 +77,13 @@ class MessageBus {
   ///
   /// The returned [Stream] is a broadcast stream so multiple subscriptions are
   /// allowed.
-  Stream<UIEvent> on([String? eventName]) {
+  Stream<Message> on([String? eventName]) {
     if (eventName == null) {
-      return streamController.stream.cast<UIEvent>();
+      return streamController.stream.cast<Message>();
     } else {
       return streamController.stream
-          .where((message) => message is UIEvent && message.name == eventName)
-          .cast<UIEvent>();
+          .where((message) => message is Message && message.name == eventName)
+          .cast<Message>();
     }
   }
 
@@ -77,7 +93,7 @@ class MessageBus {
   /// ```dart
   /// messageBus.send(UIEvent(name: 'analytics', data: {'event': 'button_click'}));
   /// ```
-  void send(UIEvent event) {
+  void send(Message event) {
     streamController.add(event);
   }
 
