@@ -26,7 +26,7 @@ class PostMessageProcessor extends ActionProcessor<PostMessageAction> {
 
     final messageBus = DigiaUIScope.of(context).messageBus;
 
-    messageBus.send(UIEvent(name: name, payload: payload));
+    messageBus.send(Message(name: name, payload: payload, context: context));
 
     return null;
   }
