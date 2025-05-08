@@ -17,6 +17,7 @@ enum ActionType {
   rebuildState('Action.rebuildState'),
   // setAppState('Action.setAppState'),
   setState('Action.setState'),
+  executeCallback('Action.executeCallback'),
   shareContent('Action.share'),
   showBottomSheet('Action.showBottomSheet'),
   showDialog('Action.openDialog'),
