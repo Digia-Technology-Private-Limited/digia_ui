@@ -31,6 +31,7 @@ abstract class VirtualWidgetRegistry {
 
     // Basic Widgets
     'digia/text': textBuilder,
+    'digia/markdown': markdownBuilder,
     'digia/richText': richTextBuilder,
     'digia/icon': iconBuilder,
     'digia/image': imageBuilder,

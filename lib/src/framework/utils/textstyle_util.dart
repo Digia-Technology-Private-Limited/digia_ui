@@ -19,6 +19,7 @@ TextStyle? makeTextStyle(
   JsonLike? json, {
   required BuildContext context,
   required T? Function<T extends Object>(Object?) eval,
+  TextStyle? fallback = _defaultTextStyle,
 }) {
   if (json == null) return null;
 
@@ -39,7 +40,7 @@ TextStyle? makeTextStyle(
   var fontToken = json['fontToken'];
 
   if (fontToken == null) {
-    return _defaultTextStyle.copyWith(
+    return fallback?.copyWith(
       color: textColor,
       backgroundColor: textBgColor,
       decoration: textDecoration,

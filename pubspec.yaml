@@ -99,6 +99,8 @@ dependencies:
   image_picker: ^1.1.2
   mocktail: ^1.0.4
   flutter_avif: ^3.0.0
+  markdown_widget: ^2.3.2+8
+  # flutter_math_fork: ^0.7.3
 
 dev_dependencies:
   build_runner: ^2.4.4
