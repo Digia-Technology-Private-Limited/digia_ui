@@ -8,6 +8,7 @@ import '../expr/scope_context.dart';
 import '../internal_widgets/internal_markdown.dart';
 import '../render_payload.dart';
 import '../utils/flutter_type_converters.dart';
+import '../utils/functional_util.dart';
 import '../widget_props/markdown_props.dart';
 
 class VWMarkDown extends VirtualLeafStatelessWidget<MarkDownProps> {
@@ -26,43 +27,29 @@ class VWMarkDown extends VirtualLeafStatelessWidget<MarkDownProps> {
     final MarkdownConfig config = MarkdownConfig(
       configs: [
         HrConfig(
-          height: payload.evalExpr(props.hrHeight) ?? 2,
+          height:
+              payload.evalExpr(props.hrHeight) ?? HrConfig.darkConfig.height,
           color:
-              payload.evalColorExpr(props.hrColor) ?? const Color(0xFFd0d7de),
+              payload.evalColorExpr(props.hrColor) ?? HrConfig.darkConfig.color,
         ),
-        H1Config(
-          style: payload.getTextStyle(props.h1TextStyle, null) ??
-              const TextStyle(
-                  fontSize: 32, height: 40 / 32, fontWeight: FontWeight.bold),
-        ),
-        H2Config(
-          style: payload.getTextStyle(props.h2TextStyle, null) ??
-              const TextStyle(
-                  fontSize: 24, height: 30 / 24, fontWeight: FontWeight.bold),
-        ),
-        H3Config(
-            style: payload.getTextStyle(props.h3TextStyle, null) ??
-                const TextStyle(
-                    fontSize: 20,
-                    height: 25 / 20,
-                    fontWeight: FontWeight.bold)),
-        H4Config(
-          style: payload.getTextStyle(props.h4TextStyle, null) ??
-              const TextStyle(
-                  fontSize: 16, height: 20 / 16, fontWeight: FontWeight.bold),
-        ),
-        H5Config(
-            style: payload.getTextStyle(props.h5TextStyle, null) ??
-                const TextStyle(
-                    fontSize: 16,
-                    height: 20 / 16,
-                    fontWeight: FontWeight.bold)),
-        H6Config(
-            style: payload.getTextStyle(props.h6TextStyle, null) ??
-                const TextStyle(
-                    fontSize: 16,
-                    height: 20 / 16,
-                    fontWeight: FontWeight.bold)),
+        payload
+            .getTextStyle(props.h1TextStyle, null)
+            ?.maybe((style) => H1Config(style: style)),
+        payload
+            .getTextStyle(props.h2TextStyle, null)
+            ?.maybe((style) => H2Config(style: style)),
+        payload
+            .getTextStyle(props.h3TextStyle, null)
+            ?.maybe((style) => H3Config(style: style)),
+        payload
+            .getTextStyle(props.h4TextStyle, null)
+            ?.maybe((style) => H4Config(style: style)),
+        payload
+            .getTextStyle(props.h5TextStyle, null)
+            ?.maybe((style) => H5Config(style: style)),
+        payload
+            .getTextStyle(props.h6TextStyle, null)
+            ?.maybe((style) => H6Config(style: style)),
         PreConfig(
           padding: To.edgeInsets(props.prePadding),
           margin: To.edgeInsets(props.preMargin),
@@ -84,9 +71,9 @@ class VWMarkDown extends VirtualLeafStatelessWidget<MarkDownProps> {
                 scopeContext: _createExprContext(value));
           },
         ),
-        PConfig(
-            textStyle: payload.getTextStyle(props.pTextStyle) ??
-                const TextStyle(fontSize: 16)),
+        payload
+            .getTextStyle(props.pTextStyle, null)
+            ?.maybe((style) => PConfig(textStyle: style)),
         BlockquoteConfig(
           sideColor: payload.evalColorExpr(props.blockSideColor) ??
               const Color(0xffd0d7de),
@@ -100,9 +87,10 @@ class VWMarkDown extends VirtualLeafStatelessWidget<MarkDownProps> {
           marginLeft: payload.evalExpr(props.listMarginLeft) ?? 32,
           marginBottom: payload.evalExpr(props.listMarginBottom) ?? 4,
         ),
-        CodeConfig(
-            style: payload.getTextStyle(props.codeTextStyle) ??
-                const TextStyle(backgroundColor: Color(0xCCeff1f3))),
+        payload
+            .getTextStyle(props.codeTextStyle, null)
+            ?.maybe((style) => CodeConfig(style: style)),
+        //added bcz rendering fails when we enabling animation
         CheckBoxConfig(
           builder: (bool? isChecked) {
             return Container(
@@ -120,7 +108,7 @@ class VWMarkDown extends VirtualLeafStatelessWidget<MarkDownProps> {
             );
           },
         )
-      ],
+      ].whereType<WidgetConfig>().toList(),
     );
 
     if (animationEnabled) {

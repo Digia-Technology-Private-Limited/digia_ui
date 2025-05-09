@@ -42,12 +42,7 @@ class RenderPayload {
   }
 
   TextStyle? getTextStyle(JsonLike? json,
-      [TextStyle? fallback = const TextStyle(
-        fontSize: 14,
-        height: 1.5,
-        fontWeight: FontWeight.normal,
-        fontStyle: FontStyle.normal,
-      )]) {
+      [TextStyle? fallback = defaultTextStyle]) {
     return makeTextStyle(
       json,
       context: buildContext,

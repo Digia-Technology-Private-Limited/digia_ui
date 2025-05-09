@@ -8,7 +8,7 @@ import 'json_util.dart';
 import 'num_util.dart';
 import 'types.dart';
 
-const _defaultTextStyle = TextStyle(
+const defaultTextStyle = TextStyle(
   fontSize: 14,
   height: 1.5,
   fontWeight: FontWeight.normal,
@@ -19,7 +19,7 @@ TextStyle? makeTextStyle(
   JsonLike? json, {
   required BuildContext context,
   required T? Function<T extends Object>(Object?) eval,
-  TextStyle? fallback = _defaultTextStyle,
+  TextStyle? fallback = defaultTextStyle,
 }) {
   if (json == null) return null;
 
@@ -53,7 +53,7 @@ TextStyle? makeTextStyle(
     final textStyle =
         ResourceProvider.maybeOf(context)?.getFontFromToken(fontToken);
 
-    return (textStyle ?? _defaultTextStyle).copyWith(
+    return (textStyle ?? defaultTextStyle).copyWith(
       color: textColor,
       backgroundColor: textBgColor,
       decoration: textDecoration,
@@ -77,7 +77,7 @@ TextStyle? makeTextStyle(
   final fontFromToken = fontTokenValue
       .maybe((it) => ResourceProvider.maybeOf(context)?.getFontFromToken(it));
 
-  final textStyle = (fontFromToken ?? _defaultTextStyle).copyWith(
+  final textStyle = (fontFromToken ?? defaultTextStyle).copyWith(
     fontWeight: overridingFontWeight,
     fontStyle: overridingFontStyle,
     fontSize: overridingFontSize,

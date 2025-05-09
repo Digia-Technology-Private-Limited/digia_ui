@@ -53,7 +53,6 @@ class _AnimatedMarkdownState extends State<AnimatedMarkdown> {
   @override
   Widget build(BuildContext context) {
     return MarkdownWidget(
-      key: ValueKey(_visibleText),
       data: _visibleText,
       shrinkWrap: widget.shrinkWrap,
       selectable: widget.selectable,
