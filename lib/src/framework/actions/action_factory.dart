@@ -8,6 +8,7 @@ import 'controlDrawer/action.dart';
 import 'controlObject/action.dart';
 import 'copyToClipBoard/action.dart';
 import 'delay/action.dart';
+import 'execute_callback/action.dart';
 import 'filePicker/action.dart';
 import 'imagePicker/action.dart';
 import 'navigateBack/action.dart';
@@ -81,6 +82,8 @@ class ActionFactory {
         action = UploadAction.fromJson(actionData);
       case ActionType.setAppState:
         action = SetAppStateAction.fromJson(actionData);
+      case ActionType.executeCallback:
+        action = ExecuteCallbackAction.fromJson(actionData);
     }
 
     // TODO: Remove force cast

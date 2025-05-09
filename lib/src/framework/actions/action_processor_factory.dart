@@ -12,6 +12,7 @@ import 'controlDrawer/processor.dart';
 import 'controlObject/processor.dart';
 import 'copyToClipBoard/processor.dart';
 import 'delay/processor.dart';
+import 'execute_callback/processor.dart';
 import 'filePicker/processor.dart';
 import 'imagePicker/processor.dart';
 import 'navigateBack/processor.dart';
@@ -117,6 +118,10 @@ class ActionProcessorFactory {
         );
       case an.ActionType.setAppState:
         actionProcessor = SetAppStateProcessor();
+      case an.ActionType.executeCallback:
+        actionProcessor = ExecuteCallbackProcessor(
+          executeActionFlow: dependencies.executeActionFlow,
+        );
     }
     actionProcessor?.metaData = metaData;
     // TODO: Remove later
