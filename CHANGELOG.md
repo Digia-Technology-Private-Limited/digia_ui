@@ -2,6 +2,14 @@
 
 Digia Ui SDK.
 
+## [0.3.12] - 2025-05-09
+
+- - 🆕 Feature: Introduced a brand-new Markdown widget — render beautiful, rich text effortlessly
+- - ✨ Enhancement: Components can now execute callbacks
+- - ✨ Enhancement: TextField now supports autofocus and onSubmit action
+- - ✨ Enhancement: Improved performance in the Image widget
+- - 🐞 Bug Fix:Fixed an issue where reading directly from AppState did not return the latest values
+
 ## [0.3.11] - 2025-05-05
 
 - 🐞 Bug Fix: Issue fixed where overlays would dismiss when their internal content was scrollable
