@@ -26,6 +26,7 @@ class VWTextFormField extends VirtualStatelessWidget<Props> {
     final controller =
         payload.eval<AdaptedTextEditingController>(props.get('controller'));
 
+    final autoFocus = payload.eval<bool>(props.get('autoFocus'));
     final enabled = props.getBool('enabled');
     final keyboardType = To.toKeyBoardType(props.get('keyboardType'));
     final textInputAction = To.toTextInputAction(props.get('textInputAction'));
@@ -38,15 +39,15 @@ class VWTextFormField extends VirtualStatelessWidget<Props> {
     final minLines = props.getInt('minLines');
     final maxLength = props.getInt('maxLength');
     final fillColor = payload.evalColor(props.get('fillColor'));
-    final labelText = props.getString('labelText');
+    final labelText = payload.eval<String>(props.get('labelText'));
     final labelStyle = payload.getTextStyle(props.getMap('labelStyle'));
-    final hintText = props.getString('hintText');
+    final hintText = payload.eval<String>(props.get('hintText'));
     final hintStyle = payload.getTextStyle(props.getMap('hintStyle'));
     final contentPadding = To.edgeInsets(props.get('contentPadding'));
     final focusColor = payload.evalColor(props.get('focusColor'));
     final cursorColor = payload.evalColor(props.get('cursorColor'));
-    final regex = payload.eval<String>(props.getString('regex'));
-    final errorText = props.getString('errorText');
+    final regex = payload.eval<String>(props.get('regex'));
+    final errorText = payload.eval<String>(props.get('errorText'));
     final errorStyle = payload.getTextStyle(props.getMap('errorStyle'));
     final enabledBorder = _toInputBorder(payload, props.get('enabledBorder'));
     final disabledBorder = _toInputBorder(payload, props.get('disabledBorder'));
@@ -56,9 +57,18 @@ class VWTextFormField extends VirtualStatelessWidget<Props> {
     final errorBorder = _toInputBorder(payload, props.get('errorBorder'));
     return InternalTextFormField(
       controller: controller,
+      autoFocus: autoFocus,
       initialValue: payload.eval<String>(props.get('initialValue')),
+      debounceValue: props.getInt('debounceValue') ?? 400,
       onChanged: (p0) async {
         final actionFlow = ActionFlow.fromJson(props.get('onChanged'));
+        await payload.executeAction(
+          actionFlow,
+          scopeContext: _createExprContext(p0),
+        );
+      },
+      onSubmit: (p0) async {
+        final actionFlow = ActionFlow.fromJson(props.get('onSubmit'));
         await payload.executeAction(
           actionFlow,
           scopeContext: _createExprContext(p0),

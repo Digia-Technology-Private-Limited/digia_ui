@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_avif/flutter_avif.dart';
 import 'package:flutter_blurhash/flutter_blurhash.dart';
 import 'package:octo_image/octo_image.dart';
 
@@ -34,8 +35,8 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
             commonProps: null,
             parent: null);
 
-  ImageProvider _createImageProvider(
-      RenderPayload payload, Object? imageSource) {
+  ImageProvider _createImageProvider(RenderPayload payload, Object? imageSource,
+      double maxHeight, double maxWidth) {
     if (imageSource is List<AdaptedFile> && imageSource.isNotEmpty) {
       final firstFile = imageSource.first;
       if (firstFile.isWeb && firstFile.xFile?.path != null) {
@@ -64,7 +65,12 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
         } else {
           finalUrl = imageSource;
         }
-        return CachedNetworkImageProvider(finalUrl);
+        return CachedNetworkImageProvider(finalUrl,
+            maxHeight:
+                maxHeight != double.infinity ? (maxHeight * 2).toInt() : null,
+            maxWidth:
+                maxWidth != double.infinity ? (maxWidth * 2).toInt() : null);
+        // maxWidth: screenSize.width.round());
       } else {
         return ResourceProvider.maybeOf(payload.buildContext)
                 ?.getImageProvider(imageSource) ??
@@ -113,34 +119,49 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
 
   @override
   Widget render(RenderPayload payload) {
-    final imageSource = payload.eval(props.get('imageSrc'));
-    final opacity = payload.eval<double>(props.get('opacity')) ?? 1.0;
+    return LayoutBuilder(builder: (context, constraints) {
+      final imageSource = payload.eval(props.get('imageSrc'));
+      final opacity = payload.eval<double>(props.get('opacity')) ?? 1.0;
 
-    final imageProvider = _createImageProvider(payload, imageSource);
+      final imageProvider = _createImageProvider(
+          payload, imageSource, constraints.maxHeight, constraints.maxWidth);
 
-    return Opacity(
-      opacity: opacity,
-      child: imageProvider is MemoryImage || imageProvider is FileImage
-          ? Image(
-              image: imageProvider,
-              errorBuilder: (context, error, stackTrace) {
-                return _buildErrorWidget(error);
-              },
-            )
-          : OctoImage(
-              fadeInDuration: const Duration(microseconds: 0),
-              fadeOutDuration: const Duration(microseconds: 0),
-              image: imageProvider,
-              fit: To.boxFit(props.get('fit')),
-              gaplessPlayback: true,
-              placeholderBuilder: _placeHolderBuilderCreator(),
-              imageBuilder: (BuildContext context, Widget widget) {
-                return _mayWrapInAspectRatio(widget);
-              },
-              errorBuilder: (context, error, stackTrace) {
-                return _buildErrorWidget(error);
-              },
-            ),
-    );
+      if ((imageSource as String).contains('.avif')) {
+        return Opacity(
+          opacity: opacity,
+          child: _mayWrapInAspectRatio(AvifImage(
+            image: imageProvider,
+            fit: To.boxFit(props.get('fit')),
+            gaplessPlayback: true,
+            errorBuilder: (context, error, stackTrace) {
+              return _buildErrorWidget(error);
+            },
+          )),
+        );
+      }
+      return Opacity(
+        opacity: opacity,
+        child: imageProvider is MemoryImage || imageProvider is FileImage
+            ? Image(
+                image: imageProvider,
+                errorBuilder: (context, error, stackTrace) {
+                  return _buildErrorWidget(error);
+                },
+              )
+            : OctoImage(
+                fadeInDuration: const Duration(microseconds: 0),
+                fadeOutDuration: const Duration(microseconds: 0),
+                image: imageProvider,
+                fit: To.boxFit(props.get('fit')),
+                gaplessPlayback: true,
+                placeholderBuilder: _placeHolderBuilderCreator(),
+                imageBuilder: (BuildContext context, Widget widget) {
+                  return _mayWrapInAspectRatio(widget);
+                },
+                errorBuilder: (context, error, stackTrace) {
+                  return _buildErrorWidget(error);
+                }),
+      );
+    });
   }
 }

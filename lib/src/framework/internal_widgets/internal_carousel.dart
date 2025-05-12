@@ -2,6 +2,8 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
+import 'keep_alive_widget.dart';
+
 class InternalCarousel extends StatefulWidget {
   final Widget Function(BuildContext context, int index)? itemBuilder;
   final List<Widget> children;
@@ -27,35 +29,38 @@ class InternalCarousel extends StatefulWidget {
   final bool pageSnapping;
   final double spacing;
   final Color? dotColor;
+  final String indicatorEffectType;
   final Color? activeDotColor;
-  const InternalCarousel({
-    super.key,
-    this.itemBuilder,
-    this.children = const [],
-    this.width,
-    this.itemCount = 0,
-    this.height,
-    this.direction = Axis.horizontal,
-    this.aspectRatio = 0.25,
-    this.initialPage = 1,
-    this.enlargeCenterPage = false,
-    this.viewportFraction = 0.8,
-    this.autoPlay = false,
-    this.padEnds = true,
-    this.animationDuration = 800,
-    this.autoPlayInterval = 1600,
-    this.infiniteScroll = false,
-    this.reverseScroll = false,
-    this.enlargeFactor = 0.3,
-    this.showIndicator = false,
-    this.offset = 16.0,
-    this.dotHeight = 8.0,
-    this.dotWidth = 8.0,
-    this.spacing = 16.0,
-    this.pageSnapping = true,
-    this.dotColor,
-    this.activeDotColor,
-  });
+  final bool? keepAlive;
+  const InternalCarousel(
+      {super.key,
+      this.itemBuilder,
+      this.children = const [],
+      this.width,
+      this.itemCount = 0,
+      this.height,
+      this.direction = Axis.horizontal,
+      this.aspectRatio = 0.25,
+      this.keepAlive = false,
+      this.initialPage = 1,
+      this.enlargeCenterPage = false,
+      this.viewportFraction = 0.8,
+      this.autoPlay = false,
+      this.padEnds = true,
+      this.animationDuration = 800,
+      this.autoPlayInterval = 1600,
+      this.infiniteScroll = false,
+      this.reverseScroll = false,
+      this.enlargeFactor = 0.3,
+      this.showIndicator = false,
+      this.offset = 16.0,
+      this.dotHeight = 8.0,
+      this.dotWidth = 8.0,
+      this.spacing = 16.0,
+      this.pageSnapping = true,
+      this.dotColor,
+      this.activeDotColor,
+      this.indicatorEffectType = 'slide'});
 
   @override
   State<InternalCarousel> createState() => _InternalCarouselState();
@@ -88,8 +93,11 @@ class _InternalCarouselState extends State<InternalCarousel> {
         child: CarouselSlider.builder(
           carouselController: _carouselController,
           itemCount: widget.itemCount,
-          itemBuilder: (ctx, index, realIndex) =>
-              widget.itemBuilder!.call(ctx, index),
+          itemBuilder: (ctx, index, realIndex) {
+            return KeepAliveWrapper(
+                keepTabsAlive: widget.keepAlive,
+                child: widget.itemBuilder!.call(ctx, index));
+          },
           options: CarouselOptions(
             scrollDirection: widget.direction,
             aspectRatio: widget.aspectRatio,
@@ -121,7 +129,8 @@ class _InternalCarouselState extends State<InternalCarousel> {
           itemCount: widget.children.length,
           carouselController: _carouselController,
           itemBuilder: (context, index, realIndex) {
-            return widget.children[index];
+            return KeepAliveWrapper(
+                keepTabsAlive: widget.keepAlive, child: widget.children[index]);
           },
           options: CarouselOptions(
             scrollDirection: widget.direction,
@@ -163,6 +172,7 @@ class _InternalCarouselState extends State<InternalCarousel> {
             valueListenable: _currentPageNotifier,
             builder: (context, value, _) {
               return IndicatorBuilder(
+                indicatorEffect: widget.indicatorEffectType,
                 currentPageNotifier: _currentPageNotifier,
                 itemCount: widget.itemBuilder != null
                     ? widget.itemCount
@@ -193,36 +203,130 @@ class IndicatorBuilder extends StatelessWidget {
   final double spacing;
   final Color? dotColor;
   final Color? activeDotColor;
+  final String indicatorEffect;
 
-  const IndicatorBuilder({
-    super.key,
-    required this.currentPageNotifier,
-    required this.itemCount,
-    required this.carouselController,
-    required this.offset,
-    required this.dotHeight,
-    required this.dotWidth,
-    required this.spacing,
-    this.dotColor,
-    this.activeDotColor,
-  });
+  const IndicatorBuilder(
+      {super.key,
+      required this.currentPageNotifier,
+      required this.itemCount,
+      required this.carouselController,
+      required this.offset,
+      required this.dotHeight,
+      required this.dotWidth,
+      required this.spacing,
+      this.dotColor,
+      this.activeDotColor,
+      required this.indicatorEffect});
 
   @override
   Widget build(BuildContext context) {
-    return SmoothPageIndicator(
-      controller: PageController(initialPage: currentPageNotifier.value),
+    return AnimatedSmoothIndicator(
+      activeIndex: currentPageNotifier.value,
       count: itemCount,
       onDotClicked: (index) {
         carouselController.animateToPage(index);
       },
-      effect: SlideEffect(
-        offset: offset,
-        dotHeight: dotHeight,
-        dotWidth: dotWidth,
-        spacing: spacing,
-        dotColor: dotColor ?? Colors.grey,
-        activeDotColor: activeDotColor ?? Colors.indigo,
-      ),
+      effect: _getIndicatorEffect(
+          indicatorEffect: IndicatorEffectType.values.firstWhere(
+        (element) => element.value == indicatorEffect,
+      )),
     );
   }
+
+  IndicatorEffect _getIndicatorEffect(
+      {required IndicatorEffectType indicatorEffect}) {
+    switch (indicatorEffect) {
+      case IndicatorEffectType.scrolling:
+        return ScrollingDotsEffect(
+          dotHeight: dotHeight,
+          dotWidth: dotWidth,
+          spacing: spacing,
+          dotColor: dotColor ?? Colors.grey,
+          activeDotColor: activeDotColor ?? Colors.indigo,
+        );
+      case IndicatorEffectType.worm:
+        return WormEffect(
+          dotHeight: dotHeight,
+          dotWidth: dotWidth,
+          spacing: spacing,
+          dotColor: dotColor ?? Colors.grey,
+          activeDotColor: activeDotColor ?? Colors.indigo,
+        );
+      case IndicatorEffectType.jumping:
+        return JumpingDotEffect(
+          dotHeight: dotHeight,
+          dotWidth: dotWidth,
+          spacing: spacing,
+          dotColor: dotColor ?? Colors.grey,
+          activeDotColor: activeDotColor ?? Colors.indigo,
+        );
+      case IndicatorEffectType.scale:
+        return ScaleEffect(
+          dotHeight: dotHeight,
+          dotWidth: dotWidth,
+          spacing: spacing,
+          dotColor: dotColor ?? Colors.grey,
+          activeDotColor: activeDotColor ?? Colors.indigo,
+        );
+      case IndicatorEffectType.expanding:
+        return ExpandingDotsEffect(
+          dotHeight: dotHeight,
+          dotWidth: dotWidth,
+          spacing: spacing,
+          dotColor: dotColor ?? Colors.grey,
+          activeDotColor: activeDotColor ?? Colors.indigo,
+        );
+      case IndicatorEffectType.swap:
+        return SwapEffect(
+          dotHeight: dotHeight,
+          dotWidth: dotWidth,
+          spacing: spacing,
+          dotColor: dotColor ?? Colors.grey,
+          activeDotColor: activeDotColor ?? Colors.indigo,
+        );
+      case IndicatorEffectType.circleAroundDot:
+        return CustomizableEffect(
+          spacing: spacing,
+          dotDecoration: DotDecoration(
+            borderRadius: BorderRadius.circular(100),
+            width: dotWidth,
+            height: dotHeight,
+            color: dotColor ?? Colors.grey,
+          ),
+          activeDotDecoration: DotDecoration(
+            borderRadius: BorderRadius.circular(100),
+            width: dotWidth * 0.75,
+            height: dotHeight * 0.75,
+            color: activeDotColor ?? Colors.indigo,
+            dotBorder: DotBorder(
+                padding: dotHeight * 0.75, width: 1, type: DotBorderType.solid),
+          ),
+        );
+      case IndicatorEffectType.slide:
+      default:
+        return SlideEffect(
+          offset: offset,
+          dotHeight: dotHeight,
+          dotWidth: dotWidth,
+          spacing: spacing,
+          dotColor: dotColor ?? Colors.grey,
+          activeDotColor: activeDotColor ?? Colors.indigo,
+        );
+    }
+  }
+}
+
+enum IndicatorEffectType {
+  worm('worm'),
+  slide('slide'),
+  swap('swap'),
+  expanding('expanding'),
+  scale('scale'),
+  jumping('jumping'),
+  scrolling('scrolling'),
+  circleAroundDot('circleAroundDot');
+
+  final String value;
+
+  const IndicatorEffectType(this.value);
 }

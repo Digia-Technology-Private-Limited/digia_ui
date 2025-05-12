@@ -1,6 +1,9 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/widgets.dart';
 import '../base/extensions.dart';
 import '../base/virtual_stateless_widget.dart';
+import '../expr/default_scope_context.dart';
+import '../expr/scope_context.dart';
 import '../models/props.dart';
 import '../render_payload.dart';
 import '../utils/flutter_type_converters.dart';
@@ -15,9 +18,27 @@ class VWWrap extends VirtualStatelessWidget<Props> {
     required super.repeatData,
   });
 
+  bool get shouldRepeatChild => repeatData != null;
+
   @override
   Widget render(RenderPayload payload) {
     if (children == null || children!.isEmpty) return empty();
+
+    List<Widget> wrapChildren;
+
+    if (shouldRepeatChild) {
+      final childToRepeat = children!.first;
+      final items = payload.evalRepeatData(repeatData!);
+      wrapChildren = items.mapIndexed((index, item) {
+        return childToRepeat.toWidget(
+          payload.copyWithChainedContext(
+            _createExprContext(item, index),
+          ),
+        );
+      }).toList();
+    } else {
+      wrapChildren = children!.toWidgetArray(payload);
+    }
 
     return Wrap(
       spacing: payload.eval<double>(props.get('spacing')) ?? 0,
@@ -38,7 +59,14 @@ class VWWrap extends VirtualStatelessWidget<Props> {
           VerticalDirection.down,
       clipBehavior:
           To.clip(payload.eval<String>(props.get('clipBehavior'))) ?? Clip.none,
-      children: children!.toWidgetArray(payload),
+      children: wrapChildren,
     );
+  }
+
+  ScopeContext _createExprContext(Object? item, int index) {
+    return DefaultScopeContext(variables: {
+      'currentItem': item,
+      'index': index,
+    });
   }
 }

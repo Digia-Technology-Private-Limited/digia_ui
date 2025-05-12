@@ -2,7 +2,74 @@
 
 Digia Ui SDK.
 
-## [0.3.0] - 2025-03-10
+## [0.3.12] - 2025-05-09
+
+- - 🆕 Feature: Introduced a brand-new Markdown widget — render beautiful, rich text effortlessly
+- - ✨ Enhancement: Components can now execute callbacks
+- - ✨ Enhancement: TextField now supports autofocus and onSubmit action
+- - ✨ Enhancement: Improved performance in the Image widget
+- - 🐞 Bug Fix:Fixed an issue where reading directly from AppState did not return the latest values
+
+## [0.3.11] - 2025-05-05
+
+- 🐞 Bug Fix: Issue fixed where overlays would dismiss when their internal content was scrollable
+
+## [0.3.10] - 2025-05-02
+
+- ✨ Enhancement: Added KeepAlive option for Carousel items to improve performance with costly layouts
+- ✨ Enhancement: TextField’s onTextChange is now debounced
+- ✨ Enhancement: Exposed AppState for integrated environments
+- ✨ Enhancement: Stream’s value is now accessible in onSuccess action
+
+## [0.3.9] - 2025-04-29
+
+- ⚙️ Enhancement: Improved performance in NestedScrollView
+- 🐞 Bug Fix: Fixed issue where height and width in some widgets broke when using int values
+
+## [0.3.8] - 2025-04-24
+
+- ✨ Enhancement: Added support for onTabChange callback in TabController
+- ✨ Enhancement: Expressions are now supported in complex data types
+- ✨ Enhancement: SliverAppBar’s expanded and collapsed heights now support expressions
+- 🐞 Bug Fix: Boolean values in AppState were not working properly
+- 🐞 Bug Fix: Message Handler now propagates correctly across pages with BottomNavigation
+
+## [0.3.7] - 2025-04-18
+
+- ✅ AppState Support: Introduced AppState with persistent and observable values
+- ✨ Carousel Enhancements: Added new dot-indicator effects
+- 🎨 BottomNav Upgrades: Added support for shadow, corner radius, and image icons
+- 🐞 Bug Fix: Improved stability of Flutter Stepper
+- 🐞 Bug Fix: API variable names now support hyphens (-)
+
+## [0.3.6] - 2025-03-31
+
+- Set Environment Variables from outside
+- Support for padEnds in PageView
+- Support for AVIF Images
+- Label, Hint, Error texts can now be expressions
+
+## [0.3.5] - 2025-03-26
+
+- Bug fix for failing testcase
+
+## [0.3.4] - 2025-03-26
+
+- Bug fixes
+
+## [0.3.3] - 2025-03-26
+
+- Added support for dismiss on tap inside in overlay.
+- Added support for onChanged in Switch
+- Bug-Fixes.
+
+## [0.3.2] - 2025-03-26
+
+- Added support for PageView's Controller.
+- Support for 'indeterminate' in CircularProgressBar
+- Bug-Fixes.
+
+## [0.3.1] - 2025-03-10
 
 - Added support for PageView.
 - PaginatedList has now support for user-defined pageKey.

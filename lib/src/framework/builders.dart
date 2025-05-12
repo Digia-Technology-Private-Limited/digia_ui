@@ -16,6 +16,7 @@ import 'widget_props/custom_scroll_view_props.dart';
 import 'widget_props/flex_fit_props.dart';
 import 'widget_props/icon_props.dart';
 import 'widget_props/image_view_360_props.dart';
+import 'widget_props/markdown_props.dart';
 import 'widget_props/nested_scroll_view_props.dart';
 import 'widget_props/opacity_props.dart';
 import 'widget_props/paginated_list_view_props.dart';
@@ -64,6 +65,7 @@ import 'widgets/imageView360.dart';
 import 'widgets/linear_progress_bar.dart';
 import 'widgets/list_view.dart';
 import 'widgets/lottie.dart';
+import 'widgets/markdown.dart';
 import 'widgets/nested_scroll_view.dart';
 import 'widgets/opacity.dart';
 import 'widgets/overlay.dart';
@@ -80,6 +82,7 @@ import 'widgets/sliver_app_bar.dart';
 import 'widgets/sliver_list.dart';
 import 'widgets/spacer.dart';
 import 'widgets/stack.dart';
+import 'widgets/stepper.dart';
 import 'widgets/stream_builder.dart';
 import 'widgets/styled_horizontal_divider.dart';
 import 'widgets/styled_vertical_divider.dart';
@@ -126,6 +129,15 @@ VirtualStateContainerWidget stateContainerBuilder(
 VWText textBuilder(VWNodeData data, VirtualWidget? parent, _) {
   return VWText(
     props: TextProps.fromJson(data.props.value),
+    commonProps: data.commonProps,
+    parent: parent,
+    refName: data.refName,
+  );
+}
+
+VWMarkDown markdownBuilder(VWNodeData data, VirtualWidget? parent, _) {
+  return VWMarkDown(
+    props: MarkDownProps.fromJson(data.props.value),
     commonProps: data.commonProps,
     parent: parent,
     refName: data.refName,
@@ -498,7 +510,6 @@ VWScaffold scaffoldBuilder(
     parent: parent,
     childGroups: createChildGroups(data.childGroups, parent, registry),
     refName: data.refName,
-    scaffoldBuilderFn: registry.scaffoldBuilderFn,
   );
 }
 
@@ -942,6 +953,18 @@ VWCarousel carouselBuilder(
 ) {
   return VWCarousel(
     props: CarouselProps.fromJson(data.props.value),
+    commonProps: data.commonProps,
+    parent: parent,
+    repeatData: data.repeatData,
+    childGroups: createChildGroups(data.childGroups, parent, registry),
+    refName: data.refName,
+  );
+}
+
+VWStepper flutterStepperBuilder(
+    VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
+  return VWStepper(
+    props: data.props,
     commonProps: data.commonProps,
     parent: parent,
     repeatData: data.repeatData,

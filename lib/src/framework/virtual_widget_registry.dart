@@ -31,6 +31,7 @@ abstract class VirtualWidgetRegistry {
 
     // Basic Widgets
     'digia/text': textBuilder,
+    'digia/markdown': markdownBuilder,
     'digia/richText': richTextBuilder,
     'digia/icon': iconBuilder,
     'digia/image': imageBuilder,
@@ -73,7 +74,7 @@ abstract class VirtualWidgetRegistry {
     'digia/beforeAfterSlider': beforeAfterSliderBuilder,
     'digia/imageView360': imageView360Builder,
     // 'digia/stepper': stepperBuilder,
-    // 'digia/flutterStepper': flutterStepperBuilder,
+    'digia/flutterStepper': flutterStepperBuilder,
     'digia/pinField': pinFieldBuilder,
     'digia/calendar': calendarBuilder,
 
@@ -129,11 +130,8 @@ abstract class VirtualWidgetRegistry {
     ) builder,
   );
 
-  Widget Function(String viewId, JsonLike? args) get scaffoldBuilderFn;
-
   factory VirtualWidgetRegistry({
     required Widget Function(String id, JsonLike? args) componentBuilder,
-    required Widget Function(String viewId, JsonLike? args) scaffoldBuilderFn,
   }) = DefaultVirtualWidgetRegistry;
 
   VirtualWidget createWidget(VWData data, VirtualWidget? parent);
@@ -141,13 +139,11 @@ abstract class VirtualWidgetRegistry {
 
 class DefaultVirtualWidgetRegistry implements VirtualWidgetRegistry {
   final Widget Function(String id, JsonLike? args) componentBuilder;
-  @override
-  final Widget Function(String viewId, JsonLike? args) scaffoldBuilderFn;
+
   final Map<String, VirtualWidgetBuilder> builders;
 
   DefaultVirtualWidgetRegistry({
     required this.componentBuilder,
-    required this.scaffoldBuilderFn,
   }) : builders = Map.from(VirtualWidgetRegistry._defaultBuilders);
 
   @override

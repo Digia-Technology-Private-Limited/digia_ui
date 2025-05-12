@@ -30,9 +30,21 @@ class Variable {
 
   Map<String, dynamic> toJson() {
     return {
-      'type': type,
+      'type': type.id,
       'name': name,
       'default': defaultValue,
     };
+  }
+
+  Variable copyWith({
+    DataType? type,
+    String? name,
+    Object? defaultValue,
+  }) {
+    return Variable(
+      type: type ?? this.type,
+      name: name ?? this.name,
+      defaultValue: defaultValue ?? this.defaultValue,
+    );
   }
 }

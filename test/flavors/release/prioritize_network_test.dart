@@ -176,7 +176,7 @@ void main() {
 
       // Mock asset success
       when(() => mockAssetOps.readString('appConfig.json'))
-          .thenAnswer((_) async => validConfigJson);
+          .thenAnswer((_) async => json.encode(validConfigData));
 
       // ACT
       final strategy = createReleaseStrategy(PrioritizeNetwork(5));

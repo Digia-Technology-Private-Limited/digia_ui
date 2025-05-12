@@ -9,6 +9,7 @@ import 'controlObject/action.dart';
 import 'copyToClipBoard/action.dart';
 import 'delay/action.dart';
 import 'event/action.dart';
+import 'execute_callback/action.dart';
 import 'filePicker/action.dart';
 import 'imagePicker/action.dart';
 import 'navigateBack/action.dart';
@@ -18,6 +19,7 @@ import 'openUrl/action.dart';
 import 'postMessage/action.dart';
 import 'rebuild_state/action.dart';
 import 'setState/action.dart';
+import 'set_app_state/action.dart';
 import 'share/action.dart';
 import 'showBottomSheet/action.dart';
 import 'showDialog/action.dart';
@@ -81,6 +83,10 @@ class ActionFactory {
         action = UploadAction.fromJson(actionData);
       case ActionType.fireEvent:
         action = FireEventAction.fromJson(actionData);
+      case ActionType.setAppState:
+        action = SetAppStateAction.fromJson(actionData);
+      case ActionType.executeCallback:
+        action = ExecuteCallbackAction.fromJson(actionData);
     }
 
     // TODO: Remove force cast

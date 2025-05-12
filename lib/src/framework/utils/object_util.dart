@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 
 import 'json_util.dart';
 import 'num_util.dart';
+import 'types.dart';
 
 /// Extension on Object? to provide a flexible type conversion method.
 extension ObjectExt on Object? {
@@ -34,6 +35,10 @@ extension ObjectExt on Object? {
           const (double) => NumUtil.toDouble(value) as R?,
           // Use NumUtil for boolean conversion
           const (bool) => NumUtil.toBool(value) as R?,
+          // Use NumUtil for num conversion
+          const (num) => NumUtil.toNum(value) as R?,
+          // Map conversion
+          const (JsonLike) => _toJsonLike(value) as R?,
           // List conversion
           const (List) || const (List<Object>) => _toList(value) as R?,
           // For any other type, attempt a safe cast
@@ -41,6 +46,14 @@ extension ObjectExt on Object? {
         } ??
         // If all conversions fail, return the default value
         defaultValue;
+  }
+
+  // Helper method for List conversion
+  JsonLike? _toJsonLike(Object? value) {
+    if (value is JsonLike) return value;
+    if (value is! String) return null;
+    final parsed = tryJsonDecode(value);
+    return parsed is JsonLike ? parsed : null;
   }
 
   // Helper method for List conversion

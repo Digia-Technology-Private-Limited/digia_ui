@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import '../base/extensions.dart';
 import '../base/virtual_stateless_widget.dart';
-import '../base/virtual_widget.dart';
 import '../expr/default_scope_context.dart';
 import '../expr/scope_context.dart';
 import '../internal_widgets/internal_carousel.dart';
@@ -56,10 +56,11 @@ class VWCarousel extends VirtualStatelessWidget<CarouselProps> {
         dotColor: payload.evalColorExpr(props.dotColor) ?? Colors.grey,
         activeDotColor:
             payload.evalColorExpr(props.activeDotColor) ?? Colors.indigo,
+        indicatorEffectType: props.indicatorEffectType,
+        keepAlive: props.keepAlive,
       );
     }
     return InternalCarousel(
-      children: children?.toWidgetArray(payload) ?? [],
       width: props.width?.toWidth(payload.buildContext) ?? double.infinity,
       height: props.height?.toHeight(payload.buildContext),
       direction: props.direction,
@@ -79,9 +80,13 @@ class VWCarousel extends VirtualStatelessWidget<CarouselProps> {
       dotHeight: props.dotHeight,
       dotWidth: props.dotWidth,
       spacing: props.spacing,
+      showIndicator: props.showIndicator,
+      keepAlive: props.keepAlive,
       dotColor: payload.evalColorExpr(props.dotColor) ?? Colors.grey,
       activeDotColor:
           payload.evalColorExpr(props.activeDotColor) ?? Colors.indigo,
+      indicatorEffectType: props.indicatorEffectType,
+      children: children?.toWidgetArray(payload) ?? [],
     );
   }
 
@@ -92,8 +97,4 @@ class VWCarousel extends VirtualStatelessWidget<CarouselProps> {
       // TODO: Add class instance using refName
     });
   }
-}
-
-extension on List<VirtualWidget>? {
-  toWidgetArray(RenderPayload payload) {}
 }

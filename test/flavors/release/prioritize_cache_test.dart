@@ -55,10 +55,7 @@ void main() {
 
       // Mock configs
       when(() => mockAssetOps.readString('appConfig.json'))
-          .thenAnswer((_) async => json.encode({
-                'isSuccess': true,
-                'data': {'response': burnedConfig}
-              }));
+          .thenAnswer((_) async => json.encode(burnedConfig));
       when(() => mockFileOps.readString('appConfig.json'))
           .thenAnswer((_) async => json.encode(cacheConfig));
       when(() => mockProvider
@@ -116,10 +113,7 @@ void main() {
 
       // Mock burned config (asset)
       when(() => mockAssetOps.readString('appConfig.json'))
-          .thenAnswer((_) async => json.encode({
-                'isSuccess': true,
-                'data': {'response': burnedConfig}
-              }));
+          .thenAnswer((_) async => json.encode(burnedConfig));
 
       // Mock cache operations
       when(() => mockFileOps.readString('appConfig.json'))
@@ -181,10 +175,7 @@ void main() {
       when(() => mockFileOps.exists('appConfig.json'))
           .thenAnswer((_) async => false);
       when(() => mockAssetOps.readString('appConfig.json'))
-          .thenAnswer((_) async => json.encode({
-                'isSuccess': true,
-                'data': {'response': burnedConfig}
-              }));
+          .thenAnswer((_) async => json.encode(burnedConfig));
       when(() => mockProvider
               .getAppConfigFromNetwork('/config/getAppConfigRelease'))
           .thenAnswer((_) async => validNetworkConfigData);

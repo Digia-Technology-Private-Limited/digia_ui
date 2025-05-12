@@ -19,8 +19,8 @@ class VWSliverAppBar extends VirtualSliver<SliverAppBarProps> {
   Widget render(RenderPayload payload) {
     final bottomPreferredWidth = props.bottomPreferredWidth;
     final bottomPreferredHeight = props.bottomPreferredHeight;
-    final collapsedHeight = props.collapsedHeight;
-    final expandedHeight = props.expandedHeight;
+    final collapsedHeight = payload.evalExpr(props.collapsedHeight);
+    final expandedHeight = payload.evalExpr(props.expandedHeight);
     final backgroundColor = props.backgroundColor;
     final leadingWidth = props.leadingWidth;
     final titleSpacing = props.titleSpacing;

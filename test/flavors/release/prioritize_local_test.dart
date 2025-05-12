@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:digia_ui/src/config/exception.dart';
 import 'package:digia_ui/src/config/factory.dart';
 import 'package:digia_ui/src/config/source/base.dart';
@@ -37,7 +39,7 @@ void main() {
     test('PrioritizeLocal - Happy Path', () async {
       // ARRANGE
       when(() => mockAssetOps.readString('appConfig.json'))
-          .thenAnswer((_) async => validConfigJson);
+          .thenAnswer((_) async => json.encode(validConfigData));
       when(() => mockProvider.initFunctions(
             localPath: any(named: 'localPath'),
             remotePath: null,

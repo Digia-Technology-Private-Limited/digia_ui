@@ -13,6 +13,7 @@ import 'controlObject/processor.dart';
 import 'copyToClipBoard/processor.dart';
 import 'delay/processor.dart';
 import 'event/processor.dart';
+import 'execute_callback/processor.dart';
 import 'filePicker/processor.dart';
 import 'imagePicker/processor.dart';
 import 'navigateBack/processor.dart';
@@ -22,6 +23,7 @@ import 'openUrl/processor.dart';
 import 'postMessage/processor.dart';
 import 'rebuild_state/processor.dart';
 import 'setState/processor.dart';
+import 'set_app_state/processor.dart';
 import 'share/processor.dart';
 import 'showBottomSheet/processor.dart';
 import 'showDialog/processor.dart';
@@ -118,7 +120,12 @@ class ActionProcessorFactory {
       case an.ActionType.fireEvent:
         actionProcessor = FireEventProcessor(
             executeActionFlow: dependencies.executeActionFlow);
-      case an.ActionType.imagePicker:
+      case an.ActionType.setAppState:
+        actionProcessor = SetAppStateProcessor();
+      case an.ActionType.executeCallback:
+        actionProcessor = ExecuteCallbackProcessor(
+          executeActionFlow: dependencies.executeActionFlow,
+        );
     }
     actionProcessor?.metaData = metaData;
     // TODO: Remove later

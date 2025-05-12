@@ -12,20 +12,24 @@ class AnalyticsHandler {
 
   static AnalyticsHandler get instance => _instance;
 
-  Future<dynamic>? execute(
-      {required BuildContext context,
-      required List<AnalyticEvent> events,
-      ScopeContext? enclosing}) async {
-    final DUILogger? logger = DigiaUIClient.instance.developerConfig?.logger;
+  Future<void> execute({
+    required BuildContext context,
+    required List<AnalyticEvent> events,
+    ScopeContext? enclosing,
+  }) async {
+    final logger = DigiaUIClient.instance.developerConfig?.logger;
 
     _logAnalytics(logger, events, context, enclosing);
 
-    final data = evaluateNestedExpressions(events, enclosing);
+    final evaluatedList = events.map((event) {
+      final payload = as<Map<String, dynamic>>(
+        evaluateNestedExpressions(event.payload ?? {}, enclosing),
+      );
+      return AnalyticEvent(name: event.name, payload: payload);
+    }).toList();
 
-    if (data is! List || data.isEmpty) return;
-
-    if (data.isNotEmpty) {
-      DigiaUIClient.instance.duiAnalytics?.onEvent(data as List<AnalyticEvent>);
+    if (evaluatedList.isNotEmpty) {
+      DigiaUIClient.instance.duiAnalytics?.onEvent(evaluatedList);
     }
   }
 }

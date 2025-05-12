@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import '../../../digia_ui.dart';
 import '../base/extensions.dart';
 import '../base/virtual_stateless_widget.dart';
 import '../base/virtual_widget.dart';
-import '../render_payload.dart';
 import '../utils/functional_util.dart';
 import '../utils/types.dart';
 import '../widget_props/icon_props.dart';
@@ -15,15 +15,12 @@ import 'icon.dart';
 import 'safe_area.dart';
 
 class VWScaffold extends VirtualStatelessWidget<ScaffoldProps> {
-  final Widget Function(String viewId, JsonLike? args) scaffoldBuilderFn;
-
   VWScaffold({
     required super.props,
     required super.commonProps,
     required super.parent,
     required super.childGroups,
     super.refName,
-    required this.scaffoldBuilderFn,
   }) : super(repeatData: null);
 
   @override
@@ -165,7 +162,12 @@ class VWScaffold extends VirtualStatelessWidget<ScaffoldProps> {
         .props
         .entity?['args']);
 
-    final Widget entity = scaffoldBuilderFn(currentEntityId, currentEntityArgs);
+    final Widget entity =
+        DefaultActionExecutor.of(payload.buildContext).viewBuilder(
+      payload.buildContext,
+      currentEntityId,
+      currentEntityArgs,
+    );
     return enableSafeArea ? SafeArea(child: entity) : entity;
   }
 }
