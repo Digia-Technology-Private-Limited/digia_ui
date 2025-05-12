@@ -16,6 +16,7 @@ import 'widget_props/custom_scroll_view_props.dart';
 import 'widget_props/flex_fit_props.dart';
 import 'widget_props/icon_props.dart';
 import 'widget_props/image_view_360_props.dart';
+import 'widget_props/markdown_props.dart';
 import 'widget_props/nested_scroll_view_props.dart';
 import 'widget_props/opacity_props.dart';
 import 'widget_props/paginated_list_view_props.dart';
@@ -64,6 +65,7 @@ import 'widgets/imageView360.dart';
 import 'widgets/linear_progress_bar.dart';
 import 'widgets/list_view.dart';
 import 'widgets/lottie.dart';
+import 'widgets/markdown.dart';
 import 'widgets/nested_scroll_view.dart';
 import 'widgets/opacity.dart';
 import 'widgets/overlay.dart';
@@ -127,6 +129,15 @@ VirtualStateContainerWidget stateContainerBuilder(
 VWText textBuilder(VWNodeData data, VirtualWidget? parent, _) {
   return VWText(
     props: TextProps.fromJson(data.props.value),
+    commonProps: data.commonProps,
+    parent: parent,
+    refName: data.refName,
+  );
+}
+
+VWMarkDown markdownBuilder(VWNodeData data, VirtualWidget? parent, _) {
+  return VWMarkDown(
+    props: MarkDownProps.fromJson(data.props.value),
     commonProps: data.commonProps,
     parent: parent,
     refName: data.refName,

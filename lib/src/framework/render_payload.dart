@@ -41,11 +41,13 @@ class RenderPayload {
     return ResourceProvider.maybeOf(buildContext)?.getFontFactory();
   }
 
-  TextStyle? getTextStyle(JsonLike? json) {
+  TextStyle? getTextStyle(JsonLike? json,
+      [TextStyle? fallback = defaultTextStyle]) {
     return makeTextStyle(
       json,
       context: buildContext,
       eval: eval,
+      fallback: fallback,
     );
   }
 
