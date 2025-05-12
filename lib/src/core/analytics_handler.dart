@@ -22,15 +22,12 @@ class AnalyticsHandler {
     _logAnalytics(logger, events, context, enclosing);
 
     final evaluatedList = events.map((event) {
-      final payload = as<Map<String, dynamic>>(
-        evaluateNestedExpressions(event.payload ?? {}, enclosing),
-      );
+      final payload = as$<Map<String, dynamic>>(
+          evaluateNestedExpressions(event.payload, enclosing));
       return AnalyticEvent(name: event.name, payload: payload);
     }).toList();
 
-    if (evaluatedList.isNotEmpty) {
-      DigiaUIClient.instance.duiAnalytics?.onEvent(evaluatedList);
-    }
+    DigiaUIClient.instance.duiAnalytics?.onEvent(evaluatedList);
   }
 }
 
