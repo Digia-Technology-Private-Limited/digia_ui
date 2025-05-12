@@ -30,9 +30,11 @@ class MobileJsFunctions implements JSFunctions {
             if (res == null) return false;
           }
           jsFile = await fileOps.readString(fileName) ?? '';
+          runtime.evaluate(jsFile);
           return true;
         case PreferLocal(localPath: String localPath):
           jsFile = await rootBundle.loadString(localPath);
+          runtime.evaluate(jsFile);
           return true;
       }
     } catch (e) {
@@ -45,8 +47,7 @@ class MobileJsFunctions implements JSFunctions {
   dynamic callJs(String fnName, dynamic v1) {
     var input = json.encode(v1);
     JsEvalResult jsEvalResult =
-        runtime.evaluate('$jsFile;JSON.stringify($fnName($input))');
-    print('Result() executed in ${jsEvalResult.stringResult}');
+        runtime.evaluate('JSON.stringify($fnName($input))');
     var finalRes = json.decode(jsEvalResult.stringResult);
     return finalRes;
   }
