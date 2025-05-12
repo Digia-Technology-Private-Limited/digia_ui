@@ -24,6 +24,7 @@ enum ActionType {
   showToast('Action.showToast'),
   uploadFile('Action.upload'),
   filePicker('Action.filePicker'),
+  fireEvent('Action.fireEvent'),
   setAppState('Action.setAppState');
 
   final String value;

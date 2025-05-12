@@ -8,6 +8,7 @@ import 'controlDrawer/action.dart';
 import 'controlObject/action.dart';
 import 'copyToClipBoard/action.dart';
 import 'delay/action.dart';
+import 'event/action.dart';
 import 'execute_callback/action.dart';
 import 'filePicker/action.dart';
 import 'imagePicker/action.dart';
@@ -80,6 +81,8 @@ class ActionFactory {
         action = FilePickerAction.fromJson(actionData);
       case ActionType.uploadFile:
         action = UploadAction.fromJson(actionData);
+      case ActionType.fireEvent:
+        action = FireEventAction.fromJson(actionData);
       case ActionType.setAppState:
         action = SetAppStateAction.fromJson(actionData);
       case ActionType.executeCallback:
