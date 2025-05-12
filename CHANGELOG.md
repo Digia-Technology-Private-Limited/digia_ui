@@ -2,6 +2,11 @@
 
 Digia Ui SDK.
 
+## [0.3.13] - 2025-05-12
+
+- 🆕 Deprecated the old way of firing events — FireEvent is now an Action
+- ⚡ Significantly improved performance of JS functions by resolving an intricate issue
+
 ## [0.3.12] - 2025-05-09
 
 - - 🆕 Feature: Introduced a brand-new Markdown widget — render beautiful, rich text effortlessly
