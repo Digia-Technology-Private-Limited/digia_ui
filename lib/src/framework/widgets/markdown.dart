@@ -90,6 +90,18 @@ class VWMarkDown extends VirtualLeafStatelessWidget<MarkDownProps> {
         payload
             .getTextStyle(props.codeTextStyle, null)
             ?.maybe((style) => CodeConfig(style: style)),
+        TableConfig(
+          // headerStyle: payload.getTextStyle(props.tableHeaderTextStyle, null) ??
+          //     MarkdownConfig.defaultConfig.table.headerStyle,
+          // bodyStyle: payload.getTextStyle(props.tableBodyTextStyle, null) ??
+          //     MarkdownConfig.defaultConfig.table.bodyStyle,
+          wrapper: (child) {
+            return SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: child,
+            );
+          },
+        ),
         //added bcz rendering fails when we enabling animation
         CheckBoxConfig(
           builder: (bool? isChecked) {
