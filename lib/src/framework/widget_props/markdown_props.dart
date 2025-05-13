@@ -34,8 +34,16 @@ class MarkDownProps {
   final Object? preBorderRadius;
   final JsonLike? preTextStyle;
   final ExprOr<String>? preLanguage;
+  // final JsonLike? tableHeaderTextStyle;
+  // final JsonLike? tableBodyTextStyle;
+  // final Object? tableHeaderPadding;
+  // final Object? tableBodyPadding;
 
   MarkDownProps({
+    // this.tableHeaderTextStyle,
+    // this.tableBodyTextStyle,
+    // this.tableHeaderPadding,
+    // this.tableBodyPadding,
     this.animationEnabled,
     this.shrinkWrap,
     this.selectable,
@@ -86,12 +94,12 @@ class MarkDownProps {
     final blockQuoteConfig = json['blockQuote'] as JsonLike?;
     final listConfig = json['list'] as JsonLike?;
     final codeConfig = json['code'] as JsonLike?;
+    final tableConfig = json['table'] as JsonLike?;
 
     return MarkDownProps(
       duration: ExprOr.fromJson<int>(json['duration']),
       data: ExprOr.fromJson<String>(json['data']),
       animationEnabled: ExprOr.fromJson<bool>(json['animationEnabled']),
-
       shrinkWrap: as$<bool>(json['shrinkWrap']),
       selectable: as$<bool>(json['selectable']),
       //hrConfig
@@ -132,6 +140,11 @@ class MarkDownProps {
       listMarginBottom: ExprOr.fromJson<double>(listConfig?['marginBottom']),
       //code config
       codeTextStyle: as$<JsonLike>(codeConfig?['textStyle']),
+      //tableConfig
+      // tableBodyTextStyle: as$<JsonLike>(tableConfig?['bodyTextStyle']),
+      // tableHeaderTextStyle: as$<JsonLike>(tableConfig?['headerTextStyle']),
+      // tableBodyPadding: tableConfig?['bodyPadding'],
+      // tableHeaderPadding: tableConfig?['headerPadding'],
     );
   }
 }
