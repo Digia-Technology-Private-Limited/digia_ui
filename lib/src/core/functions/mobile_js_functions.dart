@@ -48,6 +48,12 @@ class MobileJsFunctions implements JSFunctions {
     var input = json.encode(v1);
     JsEvalResult jsEvalResult =
         runtime.evaluate('JSON.stringify($fnName($input))');
+    if (jsEvalResult.isError) {
+      print('--------------ERROR Running Function-----------');
+      print('functionName ---->    $fnName');
+      print('input ----------> $input');
+      print('error -------> ${jsEvalResult.stringResult}');
+    }
     var finalRes = json.decode(jsEvalResult.stringResult);
     return finalRes;
   }
