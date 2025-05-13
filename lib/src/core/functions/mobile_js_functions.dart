@@ -1,8 +1,10 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_js/flutter_js.dart';
 
+import '../../../digia_ui.dart';
 import '../../Utils/download_operations.dart';
 import '../../Utils/file_operations.dart';
 import './js_functions.dart';
@@ -49,10 +51,15 @@ class MobileJsFunctions implements JSFunctions {
     JsEvalResult jsEvalResult =
         runtime.evaluate('JSON.stringify($fnName($input))');
     if (jsEvalResult.isError) {
-      print('--------------ERROR Running Function-----------');
-      print('functionName ---->    $fnName');
-      print('input ----------> $input');
-      print('error -------> ${jsEvalResult.stringResult}');
+      if (DigiaUIClient.instance.developerConfig?.host is DashboardHost ||
+          kDebugMode) {
+        print('--------------ERROR Running Function-----------');
+        print('functionName ---->    $fnName');
+        print('input ----------> $input');
+        print('error -------> ${jsEvalResult.stringResult}');
+      }
+      throw Exception(
+          'Error running function $fnName \n ${jsEvalResult.stringResult}');
     }
     var finalRes = json.decode(jsEvalResult.stringResult);
     return finalRes;
