@@ -2,6 +2,11 @@
 
 Digia Ui SDK.
 
+## [0.3.14] - 2025-05-13
+
+- 🐞 Fixed scrolling issue in Markdown tables
+- 🛠️ Enabled debug logs for JS in development mode
+
 ## [0.3.13] - 2025-05-12
 
 - 🆕 Deprecated the old way of firing events — FireEvent is now an Action
