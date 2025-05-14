@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:scroll_to_index/scroll_to_index.dart';
 
 import '../base/extensions.dart';
 import '../base/virtual_stateless_widget.dart';
@@ -102,7 +103,7 @@ class VWPaginatedListView
     }
 
     return InternalListView(
-      controller: ScrollController(),
+      controller: AutoScrollController(),
       reverse: isReverse,
       initialScrollPosition: initialScrollPosition,
       itemCount: children?.length ?? 0,

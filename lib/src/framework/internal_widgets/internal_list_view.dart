@@ -1,9 +1,10 @@
 import 'package:flutter/widgets.dart';
+import 'package:scroll_to_index/scroll_to_index.dart';
 
 import 'scrollable_position_mixin.dart';
 
 class InternalListView extends StatefulWidget {
-  final ScrollController? controller;
+  final AutoScrollController? controller;
   final Axis scrollDirection;
   final bool reverse;
   final ScrollPhysics? physics;
@@ -32,11 +33,11 @@ class InternalListView extends StatefulWidget {
 
 class _InternalListViewState extends State<InternalListView>
     with ScrollablePositionMixin {
-  late ScrollController _controller;
+  late AutoScrollController _controller;
 
   @override
   void initState() {
-    _controller = widget.controller ?? ScrollController();
+    _controller = widget.controller ?? AutoScrollController();
     super.initState();
 
     setInitialScrollPosition(_controller, widget.initialScrollPosition);
@@ -52,7 +53,14 @@ class _InternalListViewState extends State<InternalListView>
         physics: widget.physics,
         shrinkWrap: widget.shrinkWrap,
         itemCount: widget.itemCount,
-        itemBuilder: (ctx, i) => widget.itemBuilder?.call(ctx, i),
+        itemBuilder: (ctx, i) {
+          return AutoScrollTag(
+            key: ValueKey(i),
+            controller: _controller,
+            index: i,
+            child: widget.itemBuilder?.call(ctx, i),
+          );
+        },
       );
     }
 

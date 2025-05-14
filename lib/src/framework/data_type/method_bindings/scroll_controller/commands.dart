@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:scroll_to_index/scroll_to_index.dart';
 
 import '../../../utils/flutter_type_converters.dart';
 import '../../../utils/object_util.dart';
@@ -26,6 +27,26 @@ class ScrollControllerAnimateToCommand
       offset,
       duration: Duration(milliseconds: durationInMs),
       curve: curve,
+    );
+  }
+}
+
+class ScrollControllerJumpToIndex
+    implements MethodCommand<AdaptedScrollController> {
+  @override
+  void run(AutoScrollController instance, Map<String, Object?> args) {
+    int index = args['index']?.to<int>() ?? 0;
+    final durationInMs = args['durationInMs']?.to<int>() ?? 300;
+    final scrollPosition = switch (args['scrollPosition']?.to<String>()) {
+      'begin' => AutoScrollPosition.begin,
+      'middle' => AutoScrollPosition.middle,
+      'end' => AutoScrollPosition.end,
+      _ => null,
+    };
+    instance.scrollToIndex(
+      index,
+      duration: Duration(milliseconds: durationInMs),
+      preferPosition: scrollPosition,
     );
   }
 }
