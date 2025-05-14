@@ -6,5 +6,6 @@ void registerMethodCommandsForScrollController(MethodBindingRegistry registry) {
   registry.registerMethods<AdaptedScrollController>({
     'jumpTo': ScrollControllerJumpToCommand(),
     'animateTo': ScrollControllerAnimateToCommand(),
+    'scrollToIndex': ScrollControllerScrollToIndex()
   });
 }

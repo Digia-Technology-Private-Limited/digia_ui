@@ -31,7 +31,7 @@ class ScrollControllerAnimateToCommand
   }
 }
 
-class ScrollControllerJumpToIndex
+class ScrollControllerScrollToIndex
     implements MethodCommand<AdaptedScrollController> {
   @override
   void run(AutoScrollController instance, Map<String, Object?> args) {
