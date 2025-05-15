@@ -20,9 +20,9 @@ class ArgUpdate {
   }
 
   Map<String, dynamic> toJson() => {
-    'argName': argName,
-    'argValue': argValue,
-  };
+        'argName': argName,
+        'argValue': argValue,
+      };
 }
 
 class ExecuteCallbackAction extends Action {
@@ -40,19 +40,19 @@ class ExecuteCallbackAction extends Action {
 
   @override
   Map<String, dynamic> toJson() => {
-    'actionName': actionName,
-    'argUpdates': argUpdates,
-  };
+        'actionName': actionName,
+        'argUpdates': argUpdates,
+      };
 
   factory ExecuteCallbackAction.fromJson(Map<String, Object?> json) {
     return ExecuteCallbackAction(
       // fallback to 'page' if not set for backward compatibility.
       actionName: ExprOr.fromJson(json['actionName']),
       argUpdates: as$<List<dynamic>>(json['argUpdates'])
-          ?.map((it) => as$<JsonLike>(it))
-          .nonNulls
-          .map(ArgUpdate.fromJson)
-          .toList() ??
+              ?.map((it) => as$<JsonLike>(it))
+              .nonNulls
+              .map(ArgUpdate.fromJson)
+              .toList() ??
           [],
     );
   }

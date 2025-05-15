@@ -7,7 +7,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
 import '../digia_ui.dart';
-import 'config/app_state/global_state.dart';
 import 'config/app_state/state_descriptor_parser.dart';
 import 'config/model.dart';
 import 'config/resolver.dart';

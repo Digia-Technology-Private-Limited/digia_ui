@@ -12,13 +12,13 @@ class AnimatedMarkdown extends StatefulWidget {
   final Duration duration;
 
   const AnimatedMarkdown({
-    Key? key,
+    super.key,
     required this.data,
     this.duration = const Duration(milliseconds: 20),
     required this.shrinkWrap,
     required this.selectable,
     required this.config,
-  }) : super(key: key);
+  });
 
   @override
   _AnimatedMarkdownState createState() => _AnimatedMarkdownState();

@@ -8,7 +8,7 @@ abstract class StateObserver {
   /// Called when a page/component scope is disposed.
   /// Triggered when navigating away from a page or disposing a component.
   void onDispose() {}
-  
+
   /// Called whenever state values change within a specific page/component scope.
   /// [nameSpace] identifies the page/component where the change occurred.
   /// [nextState] contains the new state values after the change.

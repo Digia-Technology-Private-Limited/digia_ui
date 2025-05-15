@@ -29,7 +29,9 @@ class DefaultErrorWidget extends StatelessWidget {
             children: [
               Icon(Icons.error, color: Colors.red, size: 18),
               const SizedBox(height: 16),
-              Container(width: 10,),
+              Container(
+                width: 10,
+              ),
               Text(
                 'Error Rendering Widget ${refName ?? ''}',
                 style: TextStyle(
