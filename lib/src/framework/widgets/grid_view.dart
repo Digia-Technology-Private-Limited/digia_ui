@@ -36,6 +36,7 @@ class VWGridView extends VirtualStatelessWidget<Props> {
       mainAxisSpacing: props.getDouble('mainAxisSpacing') ?? 0.0,
       crossAxisSpacing: props.getDouble('crossAxisSpacing') ?? 0.0,
       childAspectRatio: props.getDouble('childAspectRatio') ?? 1.0,
+      mainAxisExtent: props.getDouble('mainAxisExtent'),
     );
 
     if (shouldRepeatChild) {
