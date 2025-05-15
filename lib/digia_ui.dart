@@ -1,4 +1,4 @@
-library digia_ui;
+library;
 
 export 'package:digia_ui/src/analytics/dui_analytics.dart';
 export 'package:digia_ui/src/config/app_state/global_state.dart';

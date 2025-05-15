@@ -27,13 +27,20 @@ class ExecuteCallbackProcessor extends ActionProcessor<ExecuteCallbackAction> {
         context,
         actionFlow!,
         DefaultScopeContext(
-          variables: {'args':convertVariableUpdateToMap(action.argUpdates,scopeContext)},
+          variables: {
+            'args': convertVariableUpdateToMap(action.argUpdates, scopeContext)
+          },
           enclosing: scopeContext,
         ));
   }
 
   Map<String, Object> convertVariableUpdateToMap(
-      List<ArgUpdate> updates, ScopeContext? scopeContext,) {
-    return {for (var update in updates) update.argName: update.argValue!.evaluate(scopeContext)!};
+    List<ArgUpdate> updates,
+    ScopeContext? scopeContext,
+  ) {
+    return {
+      for (var update in updates)
+        update.argName: update.argValue!.evaluate(scopeContext)!
+    };
   }
 }

@@ -22,7 +22,7 @@ class InternalOverlay extends StatefulWidget {
   final Alignment popupAlignment;
 
   const InternalOverlay({
-    Key? key,
+    super.key,
     required this.child,
     required this.popupBuilder,
     this.controller,
@@ -32,7 +32,7 @@ class InternalOverlay extends StatefulWidget {
     this.offset = Offset.zero,
     this.childAlignment = Alignment.topLeft,
     this.popupAlignment = Alignment.topLeft,
-  }) : super(key: key);
+  });
 
   @override
   _InternalOverlayState createState() => _InternalOverlayState();
@@ -117,7 +117,6 @@ class _OverlayContent extends StatelessWidget {
   final Widget child;
 
   const _OverlayContent({
-    Key? key,
     required this.link,
     required this.offset,
     required this.childAlignment,
@@ -126,7 +125,7 @@ class _OverlayContent extends StatelessWidget {
     required this.dismissOnTapInside,
     required this.onDismiss,
     required this.child,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -161,10 +160,9 @@ class _TapDetector extends StatefulWidget {
   final Widget child;
 
   const _TapDetector({
-    Key? key,
     required this.onTapUp,
     required this.child,
-  }) : super(key: key);
+  });
 
   @override
   _TapDetectorState createState() => _TapDetectorState();

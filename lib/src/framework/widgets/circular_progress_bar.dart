@@ -29,7 +29,7 @@ class VWCircularProgressBar extends VirtualLeafStatelessWidget<Props> {
         child: CircularProgressIndicator(
           color: payload.evalColor(props.get('indicatorColor')) ?? Colors.blue,
           backgroundColor:
-          payload.evalColor(props.get('bgColor')) ?? Colors.transparent,
+              payload.evalColor(props.get('bgColor')) ?? Colors.transparent,
           strokeWidth: props.getDouble('thickness') ?? 4.0,
         ),
       );
@@ -40,11 +40,11 @@ class VWCircularProgressBar extends VirtualLeafStatelessWidget<Props> {
         percent: progressValue != null ? progressValue / 100.0 : 0,
         animation: props.getBool('animation') ?? false,
         animateFromLastPercent:
-        props.getBool('animateFromLastPercent') ?? false,
+            props.getBool('animateFromLastPercent') ?? false,
         backgroundColor:
-        payload.evalColor(props.get('bgColor')) ?? Colors.transparent,
+            payload.evalColor(props.get('bgColor')) ?? Colors.transparent,
         progressColor:
-        payload.evalColor(props.get('indicatorColor')) ?? Colors.blue,
+            payload.evalColor(props.get('indicatorColor')) ?? Colors.blue,
         circularStrokeCap: CircularStrokeCap.round,
       );
     }
