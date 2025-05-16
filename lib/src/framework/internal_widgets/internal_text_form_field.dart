@@ -1,6 +1,7 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
+
+import '../utils/debouncer.dart';
+import '../utils/functional_util.dart';
 
 class InternalTextFormField extends StatefulWidget {
   final TextEditingController? controller;
@@ -23,7 +24,7 @@ class InternalTextFormField extends StatefulWidget {
   final String? errorText;
   final void Function(String)? onChanged;
   final InputDecoration? inputDecoration;
-  final int debounceValue;
+  final int? debounceValue;
 
   const InternalTextFormField(
       {super.key,
@@ -46,7 +47,7 @@ class InternalTextFormField extends StatefulWidget {
       this.regex,
       this.errorText,
       this.inputDecoration = const InputDecoration(),
-      required this.debounceValue
+      this.debounceValue
       // this.onChanged,
       });
 
@@ -55,47 +56,34 @@ class InternalTextFormField extends StatefulWidget {
 }
 
 class _DUITextFieldState extends State<InternalTextFormField> {
-  late TextEditingController _controller;
-  Timer? _debounce;
+  Debouncer? _debouncer;
 
   @override
   void initState() {
     super.initState();
-    _setupController();
-  }
-
-  void _setupController() {
-    _controller =
-        widget.controller ?? TextEditingController(text: widget.initialValue);
-  }
-
-  void _tearDownController() {
-    // Don't dispose the _controller. It may be an external controller.
-  }
-
-  void _onChanged(String value) {
-    if (_debounce?.isActive ?? false) _debounce!.cancel();
-    _debounce = Timer(Duration(milliseconds: widget.debounceValue), () {
-      widget.onChanged?.call(value);
+    _debouncer = widget.debounceValue.maybe((it) {
+      if (it > 0) {
+        return Debouncer(delay: Duration(milliseconds: it));
+      }
+      return null;
     });
   }
 
-  @override
-  void didUpdateWidget(covariant InternalTextFormField oldWidget) {
-    if (widget.controller != oldWidget.controller ||
-        widget.initialValue != oldWidget.initialValue) {
-      _tearDownController();
-      _setupController();
+  void _onChanged(String value) {
+    if (_debouncer != null) {
+      _debouncer!.call(() {
+        widget.onChanged?.call(value);
+      });
+    } else {
+      widget.onChanged?.call(value);
     }
-
-    super.didUpdateWidget(oldWidget);
   }
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       autofocus: widget.autoFocus ?? false,
-      controller: _controller,
+      controller: widget.controller,
       enabled: widget.enabled,
       keyboardType: widget.keyboardType,
       textInputAction: widget.textInputAction,
@@ -123,8 +111,7 @@ class _DUITextFieldState extends State<InternalTextFormField> {
 
   @override
   void dispose() {
-    _tearDownController();
-    _debounce?.cancel();
+    _debouncer?.cancel();
     super.dispose();
   }
 }
