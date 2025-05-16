@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
-import '../base/extensions.dart';
 import '../base/virtual_stateless_widget.dart';
 import '../data_type/adapted_types/scroll_controller.dart';
 import '../expr/default_scope_context.dart';
@@ -31,12 +31,10 @@ class VWGridView extends VirtualStatelessWidget<Props> {
 
     final physics = To.scrollPhysics(props.get('allowScroll'));
     final shrinkWrap = props.getBool('shrinkWrap') ?? false;
-    final gridDelegate = SliverGridDelegateWithFixedCrossAxisCount(
+    final mainAxisSpacing = props.getDouble('mainAxisSpacing');
+    final crossAxisSpacing = props.getDouble('crossAxisSpacing');
+    final gridDelegate = SliverSimpleGridDelegateWithFixedCrossAxisCount(
       crossAxisCount: props.getInt('crossAxisCount') ?? 2,
-      mainAxisSpacing: props.getDouble('mainAxisSpacing') ?? 0.0,
-      crossAxisSpacing: props.getDouble('crossAxisSpacing') ?? 0.0,
-      childAspectRatio: props.getDouble('childAspectRatio') ?? 1.0,
-      mainAxisExtent: props.getDouble('mainAxisExtent'),
     );
 
     if (shouldRepeatChild) {
@@ -46,11 +44,14 @@ class VWGridView extends VirtualStatelessWidget<Props> {
         controller: controller,
         physics: physics,
         shrinkWrap: shrinkWrap,
+        mainAxisSpacing: mainAxisSpacing,
+        crossAxisSpacing: crossAxisSpacing,
         gridDelegate: gridDelegate,
         itemCount: items.length,
         itemBuilder: (buildContext, index) => childToRepeat.toWidget(
           payload.copyWithChainedContext(
             _createExprContext(items[index], index),
+            buildContext: buildContext,
           ),
         ),
       );
@@ -60,8 +61,12 @@ class VWGridView extends VirtualStatelessWidget<Props> {
       controller: controller,
       physics: physics,
       shrinkWrap: shrinkWrap,
+      mainAxisSpacing: mainAxisSpacing,
+      crossAxisSpacing: crossAxisSpacing,
       gridDelegate: gridDelegate,
-      children: children?.toWidgetArray(payload) ?? [],
+      itemCount: children?.length ?? 0,
+      itemBuilder: (context, index) =>
+          children![index].toWidget(payload.copyWith(buildContext: context)),
     );
   }
 
