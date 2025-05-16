@@ -10,10 +10,12 @@ import '../../digia_ui_client.dart';
 import '../../dui_dev_config.dart';
 import '../base/virtual_leaf_stateless_widget.dart';
 import '../data_type/adapted_types/file.dart';
+import '../expr/default_scope_context.dart';
 import '../models/props.dart';
 import '../render_payload.dart';
 import '../resource_provider.dart';
 import '../utils/flutter_type_converters.dart';
+import '../utils/functional_util.dart';
 import '../utils/widget_util.dart';
 
 class VWImage extends VirtualLeafStatelessWidget<Props> {
@@ -35,8 +37,13 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
             commonProps: null,
             parent: null);
 
-  ImageProvider _createImageProvider(RenderPayload payload, Object? imageSource,
-      double maxHeight, double maxWidth) {
+  ImageProvider _createImageProvider(
+    RenderPayload payload,
+    Object? imageSource,
+    int? maxHeight,
+    int? maxWidth,
+    int dpr,
+  ) {
     if (imageSource is List<AdaptedFile> && imageSource.isNotEmpty) {
       final firstFile = imageSource.first;
       if (firstFile.isWeb && firstFile.xFile?.path != null) {
@@ -65,12 +72,11 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
         } else {
           finalUrl = imageSource;
         }
-        return CachedNetworkImageProvider(finalUrl,
-            maxHeight:
-                maxHeight != double.infinity ? (maxHeight * 2).toInt() : null,
-            maxWidth:
-                maxWidth != double.infinity ? (maxWidth * 2).toInt() : null);
-        // maxWidth: screenSize.width.round());
+        return CachedNetworkImageProvider(
+          finalUrl,
+          maxHeight: maxHeight.maybe((it) => it * dpr),
+          maxWidth: maxWidth.maybe((it) => it * dpr),
+        );
       } else {
         return ResourceProvider.maybeOf(payload.buildContext)
                 ?.getImageProvider(imageSource) ??
@@ -88,7 +94,9 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
 
     if (placeHolderValue != null && placeHolderValue.isNotEmpty) {
       widget = switch (placeHolderValue.split('/').first) {
-        'http' || 'https' => CachedNetworkImage(imageUrl: placeHolderValue),
+        'http' ||
+        'https' =>
+          Image(image: CachedNetworkImageProvider(placeHolderValue)),
         'assets' => Image.asset(placeHolderValue),
         'blurHash' => BlurHash(
             hash: placeHolderValue,
@@ -98,7 +106,7 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
       };
     }
 
-    return (context) => _mayWrapInAspectRatio(widget);
+    return (context) => widget;
   }
 
   Widget _buildErrorWidget(Object error) {
@@ -117,51 +125,74 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
   Widget _mayWrapInAspectRatio(Widget child) =>
       wrapInAspectRatio(value: props.get('aspectRatio'), child: child);
 
+  /// Returns null if the provided value is outside the range of 0 to infinity.
+  /// Otherwise, returns the original value as an integer.
+  int? _validateAndConvertDimension(double? value) {
+    if (value == null || value.isNegative || !value.isFinite) {
+      return null;
+    }
+
+    return value.toInt();
+  }
+
   @override
   Widget render(RenderPayload payload) {
-    return LayoutBuilder(builder: (context, constraints) {
-      final imageSource = payload.eval(props.get('imageSrc'));
-      final opacity = payload.eval<double>(props.get('opacity')) ?? 1.0;
+    return _mayWrapInAspectRatio(
+      LayoutBuilder(builder: (context, constraints) {
+        final maxWidth = _validateAndConvertDimension(constraints.maxWidth);
+        final maxHeight = _validateAndConvertDimension(constraints.maxHeight);
+        final dpr = MediaQuery.devicePixelRatioOf(context).toInt();
 
-      final imageProvider = _createImageProvider(
-          payload, imageSource, constraints.maxHeight, constraints.maxWidth);
+        final imageSource = payload.eval(props.get('imageSrc'),
+            scopeContext: DefaultScopeContext(variables: {
+              'renderWidth': maxWidth,
+              'renderHeight': maxHeight,
+              'dpr': dpr,
+            }));
+        final opacity = payload.eval<double>(props.get('opacity')) ?? 1.0;
 
-      if ((imageSource as String).contains('.avif')) {
+        final imageProvider = _createImageProvider(
+          payload,
+          imageSource,
+          maxHeight,
+          maxWidth,
+          dpr,
+        );
+
+        if ((imageSource as String).contains('.avif')) {
+          return Opacity(
+            opacity: opacity,
+            child: AvifImage(
+              image: imageProvider,
+              fit: To.boxFit(props.get('fit')),
+              gaplessPlayback: true,
+              errorBuilder: (context, error, stackTrace) {
+                return _buildErrorWidget(error);
+              },
+            ),
+          );
+        }
         return Opacity(
           opacity: opacity,
-          child: _mayWrapInAspectRatio(AvifImage(
-            image: imageProvider,
-            fit: To.boxFit(props.get('fit')),
-            gaplessPlayback: true,
-            errorBuilder: (context, error, stackTrace) {
-              return _buildErrorWidget(error);
-            },
-          )),
+          child: imageProvider is MemoryImage || imageProvider is FileImage
+              ? Image(
+                  image: imageProvider,
+                  errorBuilder: (context, error, stackTrace) {
+                    return _buildErrorWidget(error);
+                  },
+                )
+              : OctoImage(
+                  fadeInDuration: const Duration(microseconds: 0),
+                  fadeOutDuration: const Duration(microseconds: 0),
+                  image: imageProvider,
+                  fit: To.boxFit(props.get('fit')),
+                  gaplessPlayback: true,
+                  placeholderBuilder: _placeHolderBuilderCreator(),
+                  errorBuilder: (context, error, stackTrace) {
+                    return _buildErrorWidget(error);
+                  }),
         );
-      }
-      return Opacity(
-        opacity: opacity,
-        child: imageProvider is MemoryImage || imageProvider is FileImage
-            ? Image(
-                image: imageProvider,
-                errorBuilder: (context, error, stackTrace) {
-                  return _buildErrorWidget(error);
-                },
-              )
-            : OctoImage(
-                fadeInDuration: const Duration(microseconds: 0),
-                fadeOutDuration: const Duration(microseconds: 0),
-                image: imageProvider,
-                fit: To.boxFit(props.get('fit')),
-                gaplessPlayback: true,
-                placeholderBuilder: _placeHolderBuilderCreator(),
-                imageBuilder: (BuildContext context, Widget widget) {
-                  return _mayWrapInAspectRatio(widget);
-                },
-                errorBuilder: (context, error, stackTrace) {
-                  return _buildErrorWidget(error);
-                }),
-      );
-    });
+      }),
+    );
   }
 }
