@@ -1,22 +1,25 @@
 import 'package:flutter/widgets.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class InternalGridView extends StatefulWidget {
   final ScrollController? controller;
   final ScrollPhysics? physics;
   final bool shrinkWrap;
-  final SliverGridDelegate gridDelegate;
+  final SliverSimpleGridDelegate gridDelegate;
   final int itemCount;
   final Widget Function(BuildContext context, int index)? itemBuilder;
-  final List<Widget> children;
+  final double? mainAxisSpacing;
+  final double? crossAxisSpacing;
 
   const InternalGridView({
     super.key,
     this.physics,
     this.controller,
     this.shrinkWrap = false,
+    this.mainAxisSpacing,
+    this.crossAxisSpacing,
     this.itemCount = -1,
     this.itemBuilder,
-    this.children = const [],
     required this.gridDelegate,
   });
 
@@ -27,25 +30,16 @@ class InternalGridView extends StatefulWidget {
 class _InternalGridViewState extends State<InternalGridView> {
   @override
   Widget build(BuildContext context) {
-    if (widget.itemBuilder != null) {
-      return GridView.builder(
-        padding: EdgeInsets.zero,
-        controller: widget.controller,
-        physics: widget.physics,
-        shrinkWrap: widget.shrinkWrap,
-        itemCount: widget.itemCount,
-        itemBuilder: (ctx, i) => widget.itemBuilder!.call(ctx, i),
-        gridDelegate: widget.gridDelegate,
-      );
-    }
-
-    return GridView(
-      padding: EdgeInsets.zero,
+    return AlignedGridView.custom(
+      mainAxisSpacing: widget.mainAxisSpacing ?? 0.0,
+      crossAxisSpacing: widget.crossAxisSpacing ?? 0.0,
       controller: widget.controller,
+      padding: EdgeInsets.zero,
       physics: widget.physics,
       shrinkWrap: widget.shrinkWrap,
       gridDelegate: widget.gridDelegate,
-      children: widget.children,
+      itemCount: widget.itemCount,
+      itemBuilder: (ctx, i) => widget.itemBuilder!.call(ctx, i),
     );
   }
 }
