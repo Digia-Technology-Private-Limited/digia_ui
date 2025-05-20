@@ -36,7 +36,9 @@ enum BodyType {
   @JsonValue('JSON')
   json,
   @JsonValue('MULTIPART')
-  multipart
+  multipart,
+  @JsonValue('FORM_URLENCODED')
+  formUrlEncoded, // New enum value
 }
 
 extension BodyTypeProperties on BodyType {
@@ -46,6 +48,20 @@ extension BodyTypeProperties on BodyType {
         return 'JSON';
       case BodyType.multipart:
         return 'MULTIPART';
+      case BodyType.formUrlEncoded:
+        return 'FORM_URLENCODED'; // New case
+    }
+  }
+
+  // Helper method to get the appropriate content type header
+  String? get contentTypeHeader {
+    switch (this) {
+      case BodyType.json:
+        return 'application/json';
+      case BodyType.multipart:
+        return 'multipart/form-data';
+      case BodyType.formUrlEncoded:
+        return 'application/x-www-form-urlencoded';
     }
   }
 }

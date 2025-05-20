@@ -64,20 +64,6 @@ class NetworkClient {
     if (baseUrl.isEmpty) {
       throw 'Invalid BaseUrl';
     }
-    // if (kDebugMode) {
-    //   this.dio.interceptors.addAll([
-    //     PrettyDioLogger(
-    //       requestHeader: true,
-    //       requestBody: true,
-    //       responseBody: true,
-    //       responseHeader: false,
-    //       error: true,
-    //       compact: true,
-    //       // fixme if inFuture have some error related to dio, add maxWidth property and set it >100
-    //     ),
-    //     DioInterceptToCurl(),
-    //   ]);
-    // }
 
     developerConfig?.inspector?.dioInterceptors?.forEach((interceptor) {
       projectDioInstance.interceptors.add(interceptor);
@@ -85,6 +71,7 @@ class NetworkClient {
   }
 
   Future<Response<Object?>> requestProject({
+    required BodyType bodyType,
     required String url,
     required HttpMethod method,
     //these headers get appended to baseHeaders, a default Dio behavior
@@ -102,11 +89,15 @@ class NetworkClient {
       }
     }
 
+    final headers = {
+      ...?additionalHeaders,
+      'Content-Type': bodyType.contentTypeHeader,
+    };
+
     return projectDioInstance.request(url,
         data: data,
         cancelToken: cancelToken,
-        options:
-            Options(method: method.stringValue, headers: additionalHeaders));
+        options: Options(method: method.stringValue, headers: headers));
   }
 
   Future<Response<T>> _execute<T>(String path, HttpMethod method,
@@ -170,6 +161,7 @@ class NetworkClient {
   }
 
   Future<Response<Object?>> multipartRequestProject({
+    required BodyType bodyType,
     required String url,
     required HttpMethod method,
     //these headers get appended to baseHeaders, a default Dio behavior
@@ -188,6 +180,11 @@ class NetworkClient {
       }
     }
 
+    final headers = {
+      ...?additionalHeaders,
+      'Content-Type': bodyType.contentTypeHeader,
+    };
+
     projectDioInstance.options.connectTimeout = null;
 
     return projectDioInstance.request(
@@ -196,7 +193,7 @@ class NetworkClient {
       cancelToken: cancelToken,
       options: Options(
         method: method.stringValue,
-        headers: additionalHeaders,
+        headers: headers,
       ),
       onSendProgress: (count, total) {
         uploadProgress(count, total);
