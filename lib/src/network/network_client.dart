@@ -91,13 +91,19 @@ class NetworkClient {
 
     final headers = {
       ...?additionalHeaders,
-      'Content-Type': bodyType.contentTypeHeader,
+      Headers.contentTypeHeader: bodyType.contentTypeHeader,
     };
 
-    return projectDioInstance.request(url,
-        data: data,
-        cancelToken: cancelToken,
-        options: Options(method: method.stringValue, headers: headers));
+    return projectDioInstance.request(
+      url,
+      data: data,
+      cancelToken: cancelToken,
+      options: Options(
+        method: method.stringValue,
+        headers: headers,
+        contentType: bodyType.contentTypeHeader,
+      ),
+    );
   }
 
   Future<Response<T>> _execute<T>(String path, HttpMethod method,
@@ -194,6 +200,7 @@ class NetworkClient {
       options: Options(
         method: method.stringValue,
         headers: headers,
+        contentType: bodyType.contentTypeHeader,
       ),
       onSendProgress: (count, total) {
         uploadProgress(count, total);

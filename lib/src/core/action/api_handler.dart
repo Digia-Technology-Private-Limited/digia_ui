@@ -114,7 +114,7 @@ class ApiHandler {
 
   Future<dynamic> _prepareRequestData(dynamic body, BodyType? bodyType) async {
     if (bodyType == BodyType.multipart) {
-      return await _createFormData(body);
+      return _createFormData(body);
     } else if (bodyType == BodyType.formUrlEncoded) {
       return _createUrlEncodedData(body);
     }
@@ -122,8 +122,8 @@ class ApiHandler {
   }
 
   Map<String, dynamic> _createUrlEncodedData(dynamic finalData) {
-    if (finalData is Map<String, dynamic>) {
-      return finalData;
+    if (finalData is Map) {
+      return finalData.cast<String, dynamic>();
     }
     return {};
   }
