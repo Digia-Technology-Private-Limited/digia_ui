@@ -53,13 +53,23 @@ ConfigSource _createReleaseFlavorConfigSource(
 ) {
   return switch (priority) {
     PrioritizeNetwork(timeout: var timeout) => DelegatedConfigSource(() async {
-        final source = FallbackConfigSource(
-          primary: CachedConfigSource(provider, 'appConfig.json'),
-          fallback: [
-            AssetConfigSource(provider, appConfigPath, functionsPath),
-          ],
-        );
-        var config = await source.getConfig();
+
+        final burnedSource =
+            AssetConfigSource(provider, appConfigPath, functionsPath);
+        final burnedConfig = await burnedSource.getConfig();
+        DUIConfig config = burnedConfig;
+
+        try {
+          final cachedSource = CachedConfigSource(provider, 'appConfig.json');
+          final cachedConfig = await cachedSource.getConfig();
+
+          if (cachedConfig.version! >= burnedConfig.version!) {
+            config = cachedConfig;
+          } else {
+            await provider.fileOps.delete('appConfig.json');
+          }
+        } catch (_) {}
+        
         if (config.version != null) {
           provider.addVersionHeader(config.version!);
         }

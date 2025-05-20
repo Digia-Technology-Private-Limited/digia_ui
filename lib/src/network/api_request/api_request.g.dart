@@ -41,6 +41,7 @@ const _$HttpMethodEnumMap = {
 const _$BodyTypeEnumMap = {
   BodyType.json: 'JSON',
   BodyType.multipart: 'MULTIPART',
+  BodyType.formUrlEncoded: 'FORM_URLENCODED',
 };
 
 Value? _$JsonConverterFromJson<Json, Value>(
