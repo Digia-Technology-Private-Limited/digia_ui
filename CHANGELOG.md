@@ -2,6 +2,12 @@
 
 Digia Ui SDK.
 
+## [0.3.15] - 2025-05-20
+
+- 🛠️ TextField’s default debounceValue is now 0 — should be configured via Dashboard
+- 🐞 Fixed a bug where unsupported cached config was picked over burned config
+- 🆕 GridView now automatically lays out children based on their sizes
+
 ## [0.3.14] - 2025-05-13
 
 - 🐞 Fixed scrolling issue in Markdown tables
