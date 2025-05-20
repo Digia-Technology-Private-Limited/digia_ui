@@ -10,11 +10,6 @@ import '../../framework/data_type/adapted_types/file.dart';
 import '../../network/api_request/api_request.dart';
 import '../../network/core/types.dart';
 
-const Map<String, String> defaultHeaders = {
-  'Accept': 'application/json',
-  'Content-Type': 'application/json',
-};
-
 class ApiHandler {
   static final ApiHandler _instance = ApiHandler._();
 
@@ -65,6 +60,7 @@ class ApiHandler {
       final preparedData = await _prepareRequestData(body, bodyType);
       if (bodyType == BodyType.multipart) {
         response = await networkClient.multipartRequestProject(
+          bodyType: bodyType ?? BodyType.json,
           url: url,
           method: apiModel.method,
           additionalHeaders: headers,
@@ -81,6 +77,7 @@ class ApiHandler {
         );
       } else {
         response = await networkClient.requestProject(
+            bodyType: bodyType ?? BodyType.json,
             url: url,
             method: apiModel.method,
             additionalHeaders: headers,
@@ -117,9 +114,18 @@ class ApiHandler {
 
   Future<dynamic> _prepareRequestData(dynamic body, BodyType? bodyType) async {
     if (bodyType == BodyType.multipart) {
-      return await _createFormData(body);
+      return _createFormData(body);
+    } else if (bodyType == BodyType.formUrlEncoded) {
+      return _createUrlEncodedData(body);
     }
     return body;
+  }
+
+  Map<String, dynamic> _createUrlEncodedData(dynamic finalData) {
+    if (finalData is Map) {
+      return finalData.cast<String, dynamic>();
+    }
+    return {};
   }
 
   Future<FormData> _createFormData(dynamic finalData) async {
