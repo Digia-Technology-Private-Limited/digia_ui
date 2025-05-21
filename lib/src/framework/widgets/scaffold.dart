@@ -28,8 +28,11 @@ class VWScaffold extends VirtualStatelessWidget<ScaffoldProps> {
     final appBar = _buildAppBar(payload);
     final drawer = childOf('drawer')?.toWidget(payload);
     final endDrawer = childOf('endDrawer')?.toWidget(payload);
-    final persistentFooterButtons =
+    final footerButtons =
         childrenOf('persistentFooterButtons')?.toWidgetArray(payload);
+    final persistentFooterButtons =
+        (footerButtons == null || footerButtons.isEmpty) ? null : footerButtons;
+
     final bottomNavigationBar =
         childOf('bottomNavigationBar')?.toWidget(payload);
 
