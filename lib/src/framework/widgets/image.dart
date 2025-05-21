@@ -182,8 +182,10 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
                   },
                 )
               : OctoImage(
-                  fadeInDuration: const Duration(microseconds: 0),
-                  fadeOutDuration: const Duration(microseconds: 0),
+                  fadeInDuration: const Duration(milliseconds: 200),
+                  fadeInCurve: Curves.easeIn,
+                  fadeOutDuration: const Duration(milliseconds: 200),
+                  fadeOutCurve: Curves.easeOut,
                   image: imageProvider,
                   fit: To.boxFit(props.get('fit')),
                   gaplessPlayback: true,
