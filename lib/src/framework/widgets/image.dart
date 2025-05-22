@@ -74,8 +74,6 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
         }
         return CachedNetworkImageProvider(
           finalUrl,
-          maxHeight: maxHeight.maybe((it) => it * dpr),
-          maxWidth: maxWidth.maybe((it) => it * dpr),
         );
       } else {
         return ResourceProvider.maybeOf(payload.buildContext)
