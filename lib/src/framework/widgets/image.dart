@@ -111,8 +111,8 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
   Widget _buildErrorWidget(Object error) {
     final errorImage = props.getString('errorImage');
     if (errorImage == null &&
-            DigiaUIClient.instance.developerConfig?.host is DashboardHost ||
-        kDebugMode) {
+        (DigiaUIClient.instance.developerConfig?.host is DashboardHost ||
+            kDebugMode)) {
       return Center(
         child: Text(
           error.toString(),
