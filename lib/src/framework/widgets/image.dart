@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_avif/flutter_avif.dart';
 import 'package:flutter_blurhash/flutter_blurhash.dart';
@@ -109,7 +110,9 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
 
   Widget _buildErrorWidget(Object error) {
     final errorImage = props.getString('errorImage');
-    if (errorImage == null) {
+    if (errorImage == null &&
+            DigiaUIClient.instance.developerConfig?.host is DashboardHost ||
+        kDebugMode) {
       return Center(
         child: Text(
           error.toString(),
@@ -117,6 +120,11 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
         ),
       );
     }
+
+    if (errorImage == null) {
+      return SizedBox.shrink();
+    }
+
     return Image.asset(errorImage);
   }
 
