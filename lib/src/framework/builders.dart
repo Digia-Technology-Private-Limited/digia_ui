@@ -7,6 +7,7 @@ import 'state/virtual_state_container_widget.dart';
 import 'virtual_widget_registry.dart';
 import 'widget_props/animated_switcher_props.dart';
 import 'widget_props/app_bar_props.dart';
+import 'widget_props/async_builder_props.dart';
 import 'widget_props/before_after_slider_props.dart';
 import 'widget_props/bottom_navigation_bar_item_props.dart';
 import 'widget_props/bottom_navigation_bar_props.dart';
@@ -630,7 +631,7 @@ VWAsyncBuilder asyncBuilderBuilder(
   VirtualWidgetRegistry registry,
 ) {
   return VWAsyncBuilder(
-    props: data.props,
+    props: AsyncBuilderProps.fromJson(data.props.value),
     commonProps: data.commonProps,
     parent: parent,
     refName: data.refName,

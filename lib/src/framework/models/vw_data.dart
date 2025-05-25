@@ -121,10 +121,14 @@ class VWNodeData extends VWData {
         parse: _parseVWNodeDataMap,
       ),
       repeatData: tryKeys(
-        json,
-        ['dataRef', 'repeatData'],
-        parse: VWRepeatData.fromJson,
-      ),
+            json,
+            ['dataRef', 'repeatData'],
+            parse: VWRepeatData.fromJson,
+          ) ??
+          (json['props'] is Map
+              ? VWRepeatData.fromJson(
+                  as$<JsonLike>(json['props'])?['dataSource'])
+              : null),
       refName: tryKeys<String>(json, ['varName', 'refName']),
     );
   }

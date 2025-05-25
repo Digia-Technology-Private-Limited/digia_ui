@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../expr/default_scope_context.dart';
 import '../../expr/scope_context.dart';
+import '../../models/types.dart';
 import '../../resource_provider.dart';
 import '../../utils/functional_util.dart';
 import '../../utils/navigation_util.dart';
@@ -42,8 +43,7 @@ class ShowDialogProcessor extends ActionProcessor<ShowDialogAction> {
     logAction(
       action.actionType.value,
       {
-        'viewId': action.viewId,
-        'args': action.args,
+        'viewData': action.viewData?.toJson(),
         'barrierDismissible': barrierDismissible,
         'barrierColor': barrierColor.toString(),
         'waitForResult': waitForResult,
@@ -59,11 +59,12 @@ class ShowDialogProcessor extends ActionProcessor<ShowDialogAction> {
       builder: (innerCtx) {
         return viewBuilder(
           innerCtx,
-          action.viewId,
-          action.args?.map((key, value) => MapEntry(
-                key,
-                value?.evaluate(scopeContext),
-              )),
+          as$<String>(as$<JsonLike>(action.viewData)?['viewId']) ?? '',
+          as$<JsonLike>(as$<JsonLike>(action.viewData)?['args'])
+              ?.map((key, value) => MapEntry(
+                    key,
+                    ExprOr.fromJson<Object>(value),
+                  )),
         );
       },
       barrierDismissible: barrierDismissible,
@@ -74,7 +75,7 @@ class ShowDialogProcessor extends ActionProcessor<ShowDialogAction> {
       logAction(
         '${action.actionType.value} - Result',
         {
-          'viewId': action.viewId,
+          'viewData': action.viewData?.toJson(),
           'result': result,
         },
       );

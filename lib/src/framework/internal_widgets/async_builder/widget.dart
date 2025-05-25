@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 import 'controller.dart';
 
 class AsyncBuilder<T> extends StatefulWidget {
+  final T? initialData;
   final AsyncController<T>? controller;
   final Future<T> Function()? futureFactory;
   final AsyncWidgetBuilder<T> builder;
 
   const AsyncBuilder({
     super.key,
+    this.initialData,
     this.controller,
     this.futureFactory,
     required this.builder,
@@ -61,6 +63,7 @@ class _AsyncBuilderState<T> extends State<AsyncBuilder<T>> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<T>(
+      initialData: widget.initialData,
       future: _controller.getFuture(),
       builder: widget.builder,
     );

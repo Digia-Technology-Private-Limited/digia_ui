@@ -7,6 +7,15 @@ import '../internal_widgets/internal_stream_builder.dart';
 import '../render_payload.dart';
 import '../widget_props/stream_builder_props.dart';
 
+enum StreamState {
+  loading,
+  listening,
+  completed,
+  error;
+
+  String get value => name;
+}
+
 class VWStreamBuilder extends VirtualStatelessWidget<StreamBuilderProps> {
   VWStreamBuilder({
     required super.props,
@@ -28,37 +37,19 @@ class VWStreamBuilder extends VirtualStatelessWidget<StreamBuilderProps> {
     return InternalStreamBuilder(
       controller: controller,
       initialData: initialData,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return childOf('loadingWidget')?.toWidget(payload) ??
-              const Center(child: CircularProgressIndicator.adaptive());
-        }
+      builder: (innerCtx, snapshot) {
+        final updatedPayload = payload.copyWithChainedContext(
+            _createExprContext(snapshot, initialData),
+            buildContext: innerCtx);
 
-        if (snapshot.hasError) {
-          return childOf('errorWidget')?.toWidget(payload) ??
-              Text(
-                'Error: ${snapshot.error?.toString()}',
-                style: const TextStyle(color: Colors.red),
-              );
-        }
-
-        if (snapshot.connectionState == ConnectionState.active) {
-          return childOf('listeningWidget')!.toWidget(
-            payload.copyWithChainedContext(
-              _createExprContext(snapshot.data),
-            ),
-          );
-        }
-
-        if (snapshot.connectionState == ConnectionState.done) {
-          return childOf('completeWidget')?.toWidget(payload) ?? empty();
-        }
-
-        return empty();
+        return child?.toWidget(updatedPayload) ?? empty();
       },
       onSuccess: (context, data) {
         final updatedPayload = payload.copyWithChainedContext(
-            _createExprContext(data),
+            _createExprContext(
+              AsyncSnapshot.withData(ConnectionState.active, data),
+              payload.evalExpr(props.initialData),
+            ),
             buildContext: context);
         updatedPayload.executeAction(props.onSuccess);
       },
@@ -69,9 +60,24 @@ class VWStreamBuilder extends VirtualStatelessWidget<StreamBuilderProps> {
     );
   }
 
-  ScopeContext _createExprContext(Object? streamValue) {
-    return DefaultScopeContext(variables: {
-      'streamValue': streamValue,
-    });
+  ScopeContext _createExprContext(
+      AsyncSnapshot<Object?> snapshot, Object? initialData) {
+    final String streamState;
+    if (snapshot.hasError) {
+      streamState = StreamState.error.value;
+    } else if (snapshot.connectionState == ConnectionState.waiting) {
+      streamState = StreamState.loading.value;
+    } else if (snapshot.connectionState == ConnectionState.active) {
+      streamState = StreamState.listening.value;
+    } else {
+      streamState = StreamState.completed.value;
+    }
+
+    return DefaultScopeContext(
+      variables: {
+        'streamState': streamState,
+        'streamValue': snapshot.data,
+      },
+    );
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 
 import '../../expr/default_scope_context.dart';
 import '../../expr/scope_context.dart';
+import '../../models/types.dart';
 import '../../resource_provider.dart';
 import '../../utils/functional_util.dart';
 import '../../utils/navigation_util.dart';
@@ -34,7 +35,7 @@ class NavigateToPageProcessor extends ActionProcessor<NavigateToPageAction> {
     NavigateToPageAction action,
     ScopeContext? scopeContext,
   ) async {
-    final pageId = action.pageId;
+    final pageId = as$<String>(as$<JsonLike>(action.pageData)?['pageId']);
     if (pageId == null) {
       throw ArgumentError('Null value', 'pageId');
     }
@@ -48,7 +49,7 @@ class NavigateToPageProcessor extends ActionProcessor<NavigateToPageAction> {
       action.actionType.value,
       {
         'pageId': pageId,
-        'pageArgs': action.pageArgs,
+        'pageArgs': as$<JsonLike>(action.pageData)?['pageArgs'],
         'waitForResult': action.waitForResult,
         'shouldRemovePreviousScreensInStack': removePreviousScreensInStack,
         'routeNametoRemoveUntil': routeNametoRemoveUntil,
@@ -66,10 +67,10 @@ class NavigateToPageProcessor extends ActionProcessor<NavigateToPageAction> {
       pageRouteBuilder(
         context,
         pageId,
-        action.pageArgs?.map(
+        as$<JsonLike>(as$<JsonLike>(action.pageData)?['pageArgs'])?.map(
           (key, value) => MapEntry(
             key,
-            value?.evaluate(scopeContext),
+            ExprOr.fromJson<Object>(value),
           ),
         ),
       ),

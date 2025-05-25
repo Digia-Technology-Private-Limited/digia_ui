@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../../digia_ui.dart';
-import '../base/extensions.dart';
 import '../base/virtual_stateless_widget.dart';
 import '../data_type/adapted_types/page_controller.dart';
 import '../expr/default_scope_context.dart';
@@ -20,8 +19,6 @@ class VWPageView extends VirtualStatelessWidget<Props> {
   bool get shouldRepeatChild => repeatData != null;
   @override
   Widget render(RenderPayload payload) {
-    if (children == null || children!.isEmpty) return empty();
-
     final isReversed = payload.eval<bool>(props.get('reverse'));
     final initialPage = payload.eval<int>(props.get('initialPage'));
     final viewportFraction =
@@ -36,7 +33,7 @@ class VWPageView extends VirtualStatelessWidget<Props> {
     final padEnds = payload.eval<bool>(props.get('padEnds'));
 
     if (shouldRepeatChild) {
-      final childToRepeat = children!.first;
+      final childToRepeat = child;
       final items = payload.evalRepeatData(repeatData!);
       return InternalPageView(
         pageSnapping: pageSnapping,
@@ -49,12 +46,14 @@ class VWPageView extends VirtualStatelessWidget<Props> {
         physics: physics,
         padEnds: padEnds,
         itemCount: items.length,
-        itemBuilder: (innerCtx, index) => childToRepeat.toWidget(
-          payload.copyWithChainedContext(
-            _createExprContext(items[index], index),
-            buildContext: innerCtx,
-          ),
-        ),
+        itemBuilder: (innerCtx, index) =>
+            childToRepeat?.toWidget(
+              payload.copyWithChainedContext(
+                _createExprContext(items[index], index),
+                buildContext: innerCtx,
+              ),
+            ) ??
+            empty(),
         onChanged: (index) async {
           await payload.executeAction(
             onPageChanged,
@@ -72,7 +71,7 @@ class VWPageView extends VirtualStatelessWidget<Props> {
       viewportFraction: viewportFraction,
       scrollDirection: scrollDirection,
       physics: physics,
-      children: children?.toWidgetArray(payload) ?? [],
+      children: [child?.toWidget(payload) ?? empty()],
       onChanged: (index) async {
         await payload.executeAction(
           onPageChanged,

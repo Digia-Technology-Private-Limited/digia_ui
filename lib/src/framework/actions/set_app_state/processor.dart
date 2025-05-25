@@ -14,16 +14,22 @@ class SetAppStateProcessor extends ActionProcessor<SetAppStateAction> {
     SetAppStateAction action,
     ScopeContext? scopeContext,
   ) {
-    final object = action.value?.evaluate(scopeContext);
+    final updates = action.updates;
+    final updatedValues = <String, dynamic>{};
+
+    for (var update in updates) {
+      final newValue = update.newValue?.evaluate(scopeContext);
+      if (newValue == null) {
+        continue;
+      }
+      DUIAppState().update(update.stateName, newValue);
+      updatedValues[update.stateName] = newValue;
+    }
 
     logAction(
       action.actionType.value,
-      {
-        'name': action.name,
-        'value': object,
-      },
+      updatedValues,
     );
-    DUIAppState().update(action.name, object);
     return null;
   }
 }

@@ -60,8 +60,7 @@ class ShowBottomSheetProcessor extends ActionProcessor<ShowBottomSheetAction> {
     logAction(
       action.actionType.value,
       {
-        'viewId': action.viewId,
-        'args': action.args,
+        'viewData': action.viewData?.toJson(),
         'style': style,
         'onResult': action.onResult?.actions
             .map((a) => a.actionType.value)
@@ -75,11 +74,12 @@ class ShowBottomSheetProcessor extends ActionProcessor<ShowBottomSheetAction> {
         builder: (innerCtx) {
           return viewBuilder(
             innerCtx,
-            action.viewId,
-            action.args?.map((key, value) => MapEntry(
-                  key,
-                  value?.evaluate(scopeContext),
-                )),
+            as$<String>(as$<JsonLike>(action.viewData)?['viewId']) ?? '',
+            as$<JsonLike>(as$<JsonLike>(action.viewData)?['args'])
+                ?.map((key, value) => MapEntry(
+                      key,
+                      ExprOr.fromJson<Object>(value),
+                    )),
           );
         },
         navigatorKey: navigatorKey,
@@ -112,7 +112,7 @@ class ShowBottomSheetProcessor extends ActionProcessor<ShowBottomSheetAction> {
       logAction(
         '${action.actionType.value} - Result',
         {
-          'viewId': action.viewId,
+          'viewData': action.viewData?.toJson(),
           'result': result,
         },
       );
