@@ -15,7 +15,6 @@ class VWSliverToBoxAdaptor extends VirtualStatelessWidget<Props> {
           childGroups: {
             'child': [child]
           },
-          repeatData: null,
         );
 
   @override

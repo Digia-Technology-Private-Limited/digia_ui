@@ -19,10 +19,9 @@ class VWPaginatedListView
     required super.childGroups,
     required super.parent,
     super.refName,
-    required super.repeatData,
   });
 
-  bool get shouldRepeatChild => repeatData != null;
+  bool get shouldRepeatChild => props.dataSource != null;
 
   @override
   Widget render(RenderPayload payload) {
@@ -34,7 +33,9 @@ class VWPaginatedListView
 
     if (shouldRepeatChild) {
       final childToRepeat = children!.first;
-      final items = payload.evalRepeatData(repeatData!);
+      final items = payload.eval<List<Object>>(
+              props.dataSource?.evaluate(payload.scopeContext)) ??
+          [];
 
       return PaginatedListView(
         firstPageKey: firstPageKey!,

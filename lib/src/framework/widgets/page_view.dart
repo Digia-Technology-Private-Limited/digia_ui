@@ -9,14 +9,16 @@ import '../internal_widgets/internal_page_view.dart';
 import '../models/props.dart';
 
 class VWPageView extends VirtualStatelessWidget<Props> {
-  VWPageView(
-      {super.refName,
-      required super.props,
-      required super.commonProps,
-      required super.parent,
-      required super.repeatData,
-      required super.childGroups});
-  bool get shouldRepeatChild => repeatData != null;
+  VWPageView({
+    super.refName,
+    required super.props,
+    required super.commonProps,
+    required super.parent,
+    required super.childGroups,
+  });
+
+  bool get shouldRepeatChild => props.getString('dataSource') != null;
+
   @override
   Widget render(RenderPayload payload) {
     final isReversed = payload.eval<bool>(props.get('reverse'));
@@ -34,7 +36,8 @@ class VWPageView extends VirtualStatelessWidget<Props> {
 
     if (shouldRepeatChild) {
       final childToRepeat = child;
-      final items = payload.evalRepeatData(repeatData!);
+      final items =
+          payload.eval<List<Object>>(props.getString('dataSource')) ?? [];
       return InternalPageView(
         pageSnapping: pageSnapping,
         reverse: isReversed,

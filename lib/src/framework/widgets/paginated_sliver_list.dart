@@ -16,10 +16,9 @@ class VWPaginatedSliverList extends VirtualSliver<PaginatedSliverListProps> {
     required super.childGroups,
     required super.parent,
     super.refName,
-    required super.repeatData,
   });
 
-  bool get shouldRepeatChild => repeatData != null;
+  bool get shouldRepeatChild => props.dataSource != null;
 
   @override
   Widget render(RenderPayload payload) {
@@ -27,7 +26,9 @@ class VWPaginatedSliverList extends VirtualSliver<PaginatedSliverListProps> {
 
     if (shouldRepeatChild) {
       final childToRepeat = children!.first;
-      final items = payload.evalRepeatData(repeatData!);
+      final items = payload.eval<List<Object>>(
+              props.dataSource?.evaluate(payload.scopeContext)) ??
+          [];
       final firstPageKey = payload.evalExpr(props.firstPageKey);
 
       return InternalPaginatedSliverList(

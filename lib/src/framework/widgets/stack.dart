@@ -18,8 +18,7 @@ class VWStack extends VirtualStatelessWidget<Props> {
       required super.commonProps,
       required super.childGroups,
       required super.parent,
-      super.refName})
-      : super(repeatData: null);
+      super.refName});
 
   @override
   Widget render(RenderPayload payload) {

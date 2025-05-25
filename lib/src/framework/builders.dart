@@ -225,7 +225,6 @@ VWFlex flexBuilder(
     props: data.props,
     commonProps: data.commonProps,
     parent: parent,
-    repeatData: data.repeatData,
     childGroups: createChildGroups(data.childGroups, parent, registry),
     refName: data.refName,
   );
@@ -253,7 +252,6 @@ VWListView listViewBuilder(
     props: data.props,
     commonProps: data.commonProps,
     parent: parent,
-    repeatData: data.repeatData,
     childGroups: createChildGroups(data.childGroups, parent, registry),
     refName: data.refName,
   );
@@ -535,7 +533,6 @@ VWGridView gridViewBuilder(
     props: data.props,
     commonProps: data.commonProps,
     parent: parent,
-    repeatData: data.repeatData,
     childGroups: createChildGroups(data.childGroups, parent, registry),
     refName: data.refName,
   );
@@ -579,7 +576,6 @@ VWWrap wrapBuilder(
     parent: parent,
     refName: data.refName,
     childGroups: createChildGroups(data.childGroups, parent, registry),
-    repeatData: data.repeatData,
   );
 }
 
@@ -686,7 +682,6 @@ VWRefreshIndicator refreshIndicatorBuilder(
     parent: parent,
     refName: data.refName,
     childGroups: createChildGroups(data.childGroups, parent, registry),
-    repeatData: data.repeatData,
   );
 }
 
@@ -701,7 +696,6 @@ VWBeforeAfterSlider beforeAfterSliderBuilder(
     parent: parent,
     refName: data.refName,
     childGroups: createChildGroups(data.childGroups, parent, registry),
-    repeatData: data.repeatData,
   );
 }
 
@@ -729,7 +723,6 @@ VWOpacity opacityBuilder(
     parent: parent,
     refName: data.refName,
     childGroups: createChildGroups(data.childGroups, parent, registry),
-    repeatData: data.repeatData,
   );
 }
 
@@ -784,7 +777,7 @@ VWTabViewContent tabViewContentBuilder(
     props: TabViewContentProps.fromJson(data.props.value),
     commonProps: data.commonProps,
     parent: parent,
-    // repeatData: data.repeatData,
+    //
     childGroups: createChildGroups(data.childGroups, parent, registry),
     refName: data.refName,
   );
@@ -796,12 +789,12 @@ VWPageView pageViewBuilder(
   VirtualWidgetRegistry registry,
 ) {
   return VWPageView(
-      props: data.props,
-      commonProps: data.commonProps,
-      parent: parent,
-      repeatData: data.repeatData,
-      childGroups: createChildGroups(data.childGroups, parent, registry),
-      refName: data.refName);
+    props: data.props,
+    commonProps: data.commonProps,
+    parent: parent,
+    childGroups: createChildGroups(data.childGroups, parent, registry),
+    refName: data.refName,
+  );
 }
 
 VWPaginatedListView paginatedListViewBuilder(
@@ -813,7 +806,6 @@ VWPaginatedListView paginatedListViewBuilder(
     props: PaginatedListViewProps.fromJson(data.props.value),
     commonProps: data.commonProps,
     parent: parent,
-    repeatData: data.repeatData,
     childGroups: createChildGroups(data.childGroups, parent, registry),
     refName: data.refName,
   );
@@ -828,7 +820,6 @@ VWPaginatedSliverList paginatedSliverListBuilder(
     props: PaginatedSliverListProps.fromJson(data.props.value),
     commonProps: data.commonProps,
     parent: parent,
-    repeatData: data.repeatData,
     childGroups: createChildGroups(data.childGroups, parent, registry),
     refName: data.refName,
   );
@@ -844,7 +835,6 @@ VWSliverAppBar sliverAppBarBuilder(
     commonProps: data.commonProps,
     parent: parent,
     refName: data.refName,
-    repeatData: data.repeatData,
     childGroups: createChildGroups(data.childGroups, parent, registry),
   );
 }
@@ -859,7 +849,6 @@ VWCustomScrollView customScrollViewBuilder(
     commonProps: data.commonProps,
     parent: parent,
     refName: data.refName,
-    repeatData: data.repeatData,
     childGroups: createChildGroups(data.childGroups, parent, registry),
   );
 }
@@ -874,7 +863,6 @@ VWNestedScrollView nestedScrollViewBuilder(
     commonProps: data.commonProps,
     parent: parent,
     refName: data.refName,
-    repeatData: data.repeatData,
     childGroups: createChildGroups(data.childGroups, parent, registry),
   );
 }
@@ -889,7 +877,6 @@ VWSliverList sliverListBuilder(
     commonProps: data.commonProps,
     parent: parent,
     refName: data.refName,
-    repeatData: data.repeatData,
     childGroups: createChildGroups(data.childGroups, parent, registry),
   );
 }
@@ -956,7 +943,6 @@ VWCarousel carouselBuilder(
     props: CarouselProps.fromJson(data.props.value),
     commonProps: data.commonProps,
     parent: parent,
-    repeatData: data.repeatData,
     childGroups: createChildGroups(data.childGroups, parent, registry),
     refName: data.refName,
   );
@@ -968,7 +954,6 @@ VWStepper flutterStepperBuilder(
     props: data.props,
     commonProps: data.commonProps,
     parent: parent,
-    repeatData: data.repeatData,
     childGroups: createChildGroups(data.childGroups, parent, registry),
     refName: data.refName,
   );

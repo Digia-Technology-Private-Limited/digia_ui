@@ -30,6 +30,7 @@ class CarouselProps {
   final ExprOr<String>? activeDotColor;
   final String indicatorEffectType;
   final bool? keepAlive;
+  final ExprOr<Object>? dataSource;
 
   const CarouselProps({
     this.width,
@@ -56,6 +57,7 @@ class CarouselProps {
     this.activeDotColor,
     this.indicatorEffectType = 'slide',
     this.keepAlive = false,
+    this.dataSource,
   });
 
   /// Factory constructor to create an instance from JSON
@@ -89,6 +91,7 @@ class CarouselProps {
             ExprOr.fromJson<String>(indicatorJson['activeDotColor']),
         indicatorEffectType:
             as$<String>(indicatorJson['indicatorEffectType']) ??
-                IndicatorEffectType.slide.value);
+                IndicatorEffectType.slide.value,
+        dataSource: ExprOr.fromJson<Object>(json['dataSource']));
   }
 }

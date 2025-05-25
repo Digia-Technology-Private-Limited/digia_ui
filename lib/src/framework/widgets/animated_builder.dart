@@ -11,7 +11,7 @@ class VWAnimatedBuilder extends VirtualStatelessWidget<Props> {
     required super.parent,
     super.refName,
     required super.childGroups,
-  }) : super(repeatData: null);
+  });
 
   @override
   Widget render(RenderPayload payload) {

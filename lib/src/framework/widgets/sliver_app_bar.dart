@@ -12,7 +12,6 @@ class VWSliverAppBar extends VirtualSliver<SliverAppBarProps> {
     required super.parent,
     required super.refName,
     required super.childGroups,
-    required super.repeatData,
   });
 
   @override

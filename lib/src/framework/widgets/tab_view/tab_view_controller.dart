@@ -14,7 +14,6 @@ class VWTabViewController
     required super.childGroups,
     required super.parent,
     super.refName,
-    super.repeatData,
   });
 
   @override

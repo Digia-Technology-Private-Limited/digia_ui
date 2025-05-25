@@ -19,10 +19,9 @@ class VWStepper extends VirtualStatelessWidget<Props> {
     required super.childGroups,
     required super.parent,
     super.refName,
-    required super.repeatData,
   });
 
-  bool get shouldRepeatChild => repeatData != null;
+  bool get shouldRepeatChild => props.getString('dataSource') != null;
 
   @override
   Widget render(RenderPayload payload) {
@@ -68,7 +67,8 @@ class VWStepper extends VirtualStatelessWidget<Props> {
 
     if (shouldRepeatChild) {
       final childToRepeat = children!.first;
-      final items = payload.evalRepeatData(repeatData!);
+      final items =
+          payload.eval<List<Object>>(props.getString('dataSource')) ?? [];
       return InternalStepper(
         animationTimeInSeconds: animationTimeInSeconds,
         completedIndex: completedStepIndex,

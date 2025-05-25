@@ -12,7 +12,7 @@ class VWImageView360 extends VirtualStatelessWidget<ImageView360Props> {
     required super.parent,
     super.refName,
     required super.childGroups,
-  }) : super(repeatData: null);
+  });
 
   @override
   Widget render(RenderPayload payload) {

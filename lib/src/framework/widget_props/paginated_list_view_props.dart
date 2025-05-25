@@ -11,6 +11,7 @@ class PaginatedListViewProps {
   final ExprOr<List>? transformItems;
   final ExprOr<Object>? firstPageKey;
   final ExprOr<Object>? nextPageKey;
+  final ExprOr<Object>? dataSource;
 
   PaginatedListViewProps({
     this.initialScrollPosition,
@@ -20,6 +21,7 @@ class PaginatedListViewProps {
     this.firstPageKey,
     this.nextPageKey,
     this.transformItems,
+    this.dataSource,
   });
 
   factory PaginatedListViewProps.fromJson(JsonLike json) {
@@ -36,6 +38,7 @@ class PaginatedListViewProps {
       transformItems: ExprOr.fromJson<List>(json['newItemsTransformation']),
       firstPageKey: ExprOr.fromJson<Object>(json['firstPageKey']),
       nextPageKey: ExprOr.fromJson<Object>(json['nextPageKey']),
+      dataSource: ExprOr.fromJson<Object>(json['dataSource']),
     );
   }
 }

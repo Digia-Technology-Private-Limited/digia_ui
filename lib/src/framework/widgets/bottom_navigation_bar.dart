@@ -19,7 +19,7 @@ class VWBottomNavigationBar
     required super.childGroups,
     super.refName,
     this.onDestinationSelected,
-  }) : super(repeatData: null);
+  });
 
   void handleDestinationSelected(int index, RenderPayload payload) {
     final selectedChild = children?.elementAt(index);

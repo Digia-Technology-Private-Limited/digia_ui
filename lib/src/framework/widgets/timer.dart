@@ -14,7 +14,7 @@ class VWTimer extends VirtualStatelessWidget<TimerProps> {
     required super.childGroups,
     required super.parent,
     super.refName,
-  }) : super(repeatData: null);
+  });
 
   @override
   Widget render(RenderPayload payload) {

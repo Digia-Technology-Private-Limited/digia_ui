@@ -13,7 +13,6 @@ class VWFlexFit extends VirtualStatelessWidget<FlexFitProps> {
     required super.childGroups,
   }) : super(
           commonProps: null,
-          repeatData: null,
         );
 
   VWFlexFit.withChild({

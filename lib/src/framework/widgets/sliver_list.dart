@@ -14,17 +14,17 @@ class VWSliverList extends VirtualSliver<Props> {
     required super.parent,
     required super.refName,
     required super.childGroups,
-    required super.repeatData,
   });
 
-  bool get shouldRepeatChild => repeatData != null;
+  bool get shouldRepeatChild => props.getString('dataSource') != null;
 
   @override
   Widget render(RenderPayload payload) {
     if (children == null || children!.isEmpty) return empty();
 
     if (shouldRepeatChild) {
-      final items = payload.evalRepeatData(repeatData!);
+      final items =
+          payload.eval<List<Object>>(props.getString('dataSource')) ?? [];
 
       final childToRepeat = children!.first;
       return SliverList.builder(

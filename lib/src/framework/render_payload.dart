@@ -6,10 +6,8 @@ import 'expr/expression_util.dart';
 import 'expr/scope_context.dart';
 import 'font_factory.dart';
 import 'models/types.dart';
-import 'models/vw_repeat_data.dart';
 import 'resource_provider.dart';
 import 'ui_factory.dart';
-import 'utils/object_util.dart';
 import 'utils/textstyle_util.dart';
 import 'utils/types.dart';
 
@@ -101,15 +99,6 @@ class RenderPayload {
     if (colorString == null) return null;
 
     return getColor(colorString);
-  }
-
-  // Evaluates and retrieves repeatable data
-  List<Object> evalRepeatData(VWRepeatData data) {
-    if (data.isJson) {
-      return data.datum?.to<List<Object>>() ?? [];
-    }
-
-    return eval<List<Object>>(data.datum) ?? [];
   }
 
   // Chains the incoming expression context with the existing one

@@ -13,7 +13,6 @@ class VWConditionItem extends VirtualStatelessWidget<CondtionalItemProps> {
   }) : super(
           parent: null,
           commonProps: null,
-          repeatData: null,
         );
 
   bool evaluate(ScopeContext scopeContext) {

@@ -29,7 +29,6 @@ class VWNestedScrollView extends VirtualStatelessWidget<NestedScrollViewProps> {
     required super.parent,
     required super.refName,
     required super.childGroups,
-    required super.repeatData,
   });
 
   @override

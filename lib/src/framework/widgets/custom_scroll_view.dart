@@ -15,7 +15,6 @@ class VWCustomScrollView extends VirtualStatelessWidget<CustomScrollViewProps> {
     required super.parent,
     required super.refName,
     required super.childGroups,
-    required super.repeatData,
   });
 
   @override

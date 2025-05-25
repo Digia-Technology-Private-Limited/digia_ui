@@ -12,7 +12,7 @@ class VWDrawer extends VirtualStatelessWidget<Props> {
     required super.parent,
     required super.childGroups,
     super.refName,
-  }) : super(repeatData: null);
+  });
 
   @override
   Widget render(RenderPayload payload) {

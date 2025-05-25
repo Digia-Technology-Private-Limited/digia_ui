@@ -23,10 +23,9 @@ class VWFlex extends VirtualStatelessWidget<Props> {
     required super.parent,
     super.refName,
     required super.childGroups,
-    required super.repeatData,
   });
 
-  bool get shouldRepeatChild => repeatData != null;
+  bool get shouldRepeatChild => props.getString('dataSource') != null;
 
   @override
   Widget render(RenderPayload payload) {
@@ -35,7 +34,8 @@ class VWFlex extends VirtualStatelessWidget<Props> {
     Widget widget;
     if (shouldRepeatChild) {
       final childToRepeat = children!.first;
-      final items = payload.evalRepeatData(repeatData!);
+      final items =
+          payload.eval<List<Object>>(props.getString('dataSource')) ?? [];
       widget = _buildFlex(
         () => items.mapIndexed((index, item) {
           return _wrapInFlexFitForBackwardCompat(childToRepeat, payload)

@@ -9,10 +9,24 @@ class VWRepeatData {
   VWRepeatData({required this.type, required this.datum});
 
   static VWRepeatData? fromJson(Object? json) {
-    if (json is! Map) return null;
+    if (json == null) return null;
 
-    if (json['kind'] == null || json['datum'] == null) return null;
+    if (json is String) {
+      return VWRepeatData(type: 'json', datum: json);
+    }
 
-    return VWRepeatData(type: as<String>(json['kind']), datum: json['datum']);
+    if (json is Map) {
+      if (json['expr'] != null) {
+        return VWRepeatData(type: 'object_path', datum: json['expr']);
+      }
+
+      // Fallback for legacy format
+      if (json['kind'] != null && json['datum'] != null) {
+        return VWRepeatData(
+            type: as<String>(json['kind']), datum: json['datum']);
+      }
+    }
+
+    return null;
   }
 }
