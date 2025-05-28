@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 import '../network/api_request/api_request.dart';
@@ -12,6 +13,8 @@ class ResourceProvider extends InheritedWidget {
   final DUIFontFactory? _fontFactory;
   final Map<String, APIModel> apiModels;
   final Map<String, Color?> _colors;
+  final Map<String, Color?> _darkColors;
+
   final DUIMessageHandler? messageHandler;
   final GlobalKey<NavigatorState>? navigatorKey;
 
@@ -23,14 +26,20 @@ class ResourceProvider extends InheritedWidget {
     required DUIFontFactory? fontFactory,
     required this.apiModels,
     required Map<String, Color?> colors,
+    required Map<String, Color?> darkColors,
     required this.messageHandler,
     this.navigatorKey,
     required super.child,
   })  : _colors = colors,
+        _darkColors = darkColors,
         _textStyles = textStyles,
         _fontFactory = fontFactory;
 
-  Color? getColor(String key) => _colors[key] ?? ColorUtil.fromString(key);
+  Color? getColor(String key, BuildContext context) =>
+      (Theme.of(context).brightness == Brightness.dark
+          ? _darkColors
+          : _colors)[key] ??
+      ColorUtil.fromString(key);
 
   static ResourceProvider? maybeOf(BuildContext context) {
     return context.getInheritedWidgetOfExactType<ResourceProvider>();

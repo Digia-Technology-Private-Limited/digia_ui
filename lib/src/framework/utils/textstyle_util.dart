@@ -25,7 +25,7 @@ TextStyle? makeTextStyle(
 
   Color? evalColor(Object? expr) {
     return eval<String>(expr).maybe(
-      (it) => ResourceProvider.maybeOf(context)?.getColor(it),
+      (it) => ResourceProvider.maybeOf(context)?.getColor(it, context),
     );
   }
 

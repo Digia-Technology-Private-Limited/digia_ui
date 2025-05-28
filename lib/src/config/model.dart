@@ -28,12 +28,14 @@ class DUIConfig {
         functionsFilePath = as$<String>(data['functionsFilePath']),
         _environment = as$<Map<String, dynamic>>(data['environment']);
 
-  // TODO: @tushar - Add support for light / dark theme
   Map<String, dynamic> get _colors =>
       as<Map<String, dynamic>>(_themeConfig['colors']['light']);
 
   Map<String, Object?> get colorTokens =>
       as<Map<String, Object?>>(_themeConfig['colors']['light']);
+
+  Map<String, Object?> get darkColorTokens =>
+      as<Map<String, Object?>>(_themeConfig['colors']['dark']);
   Map<String, Object?> get fontTokens =>
       as<Map<String, Object?>>(_themeConfig['fonts']);
 
