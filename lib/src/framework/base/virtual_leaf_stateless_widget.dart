@@ -34,18 +34,31 @@ abstract class VirtualLeafStatelessWidget<T> extends VirtualWidget {
         child: current,
       );
 
-      // Align
-      current = wrapInAlign(
-        value: commonProps!.align,
-        child: current,
-      );
-
       current = wrapInGestureDetector(
         payload: payload,
         actionFlow: commonProps?.onClick,
         child: current,
         borderRadius:
             To.borderRadius(commonProps?.style?.border?['borderRadius']),
+      );
+      // Apply Color
+      current = applyBgColorAndRadius(
+        payload: payload,
+        style: commonProps!.style,
+        child: current,
+      );
+
+      // Apply Margin
+      current = applyMargin(
+        payload: payload,
+        style: commonProps!.style,
+        child: current,
+      );
+
+      // Align
+      current = wrapInAlign(
+        value: commonProps!.align,
+        child: current,
       );
 
       return current;

@@ -21,20 +21,17 @@ Widget wrapInContainer(
     current = Padding(padding: padding, child: current);
   }
 
-  final bgColor =
-      style.bgColor?.evaluate(payload.scopeContext).maybe(payload.getColor);
   final borderRadius = To.borderRadius(style.border?['borderRadius']);
   final border = To.border((
     style: as$<String>(style.border?['borderStyle']),
     width: as$<double>(style.border?['borderWidth']),
     color: as$<String>(style.border?['borderColor']).maybe(payload.getColor),
   ));
-  if (!(bgColor == null && borderRadius.isZero && border == null)) {
+  if (!(borderRadius.isZero && border == null)) {
     current = ClipRRect(
       borderRadius: borderRadius,
       child: DecoratedBox(
         decoration: BoxDecoration(
-          color: bgColor,
           border: border,
           borderRadius: borderRadius,
         ),
@@ -49,9 +46,25 @@ Widget wrapInContainer(
     current = SizedBox(width: width, height: height, child: current);
   }
 
-  final margin = To.edgeInsets(style.margin);
-  if (!margin.isZero) {
-    current = Padding(padding: margin, child: current);
+  return current;
+}
+
+Widget applyBgColorAndRadius(
+    {required RenderPayload payload,
+    required CommonStyle? style,
+    required Widget child}) {
+  Widget current = child;
+
+  final bgColor =
+      style?.bgColor?.evaluate(payload.scopeContext).maybe(payload.getColor);
+  final borderRadius = To.borderRadius(style?.border?['borderRadius']);
+
+  if (!(bgColor == null && !borderRadius.isZero)) {
+    current = Material(
+      borderRadius: borderRadius,
+      color: bgColor,
+      child: child,
+    );
   }
 
   return current;
@@ -65,13 +78,10 @@ Widget wrapInGestureDetector(
   if (actionFlow == null || actionFlow.actions.isEmpty) return child;
 
   if (actionFlow.inkwell) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: () => payload.executeAction(actionFlow),
-        borderRadius: borderRadius,
-        child: child,
-      ),
+    return InkWell(
+      onTap: () => payload.executeAction(actionFlow),
+      borderRadius: borderRadius,
+      child: child,
     );
   } else {
     return GestureDetector(
@@ -79,6 +89,18 @@ Widget wrapInGestureDetector(
       child: child,
     );
   }
+}
+
+Widget applyMargin(
+    {required RenderPayload payload,
+    required CommonStyle? style,
+    required Widget child}) {
+  Widget current = child;
+  final margin = To.edgeInsets(style?.margin);
+  if (!margin.isZero) {
+    current = Padding(padding: margin, child: current);
+  }
+  return current;
 }
 
 Widget wrapInAlign({
