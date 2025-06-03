@@ -80,6 +80,7 @@ import 'widgets/safe_area.dart';
 import 'widgets/scaffold.dart';
 import 'widgets/sized_box.dart';
 import 'widgets/sliver_app_bar.dart';
+import 'widgets/sliver_grid.dart';
 import 'widgets/sliver_list.dart';
 import 'widgets/spacer.dart';
 import 'widgets/stack.dart';
@@ -873,6 +874,20 @@ VWSliverList sliverListBuilder(
   VirtualWidgetRegistry registry,
 ) {
   return VWSliverList(
+    props: data.props,
+    commonProps: data.commonProps,
+    parent: parent,
+    refName: data.refName,
+    childGroups: createChildGroups(data.childGroups, parent, registry),
+  );
+}
+
+VWSliverGrid sliverGridBuilder(
+  VWNodeData data,
+  VirtualWidget? parent,
+  VirtualWidgetRegistry registry,
+) {
+  return VWSliverGrid(
     props: data.props,
     commonProps: data.commonProps,
     parent: parent,

@@ -49,6 +49,7 @@ abstract class VirtualWidgetRegistry {
     'digia/appBar': appBarBuilder,
     'digia/sliverAppBar': sliverAppBarBuilder,
     'digia/sliverList': sliverListBuilder,
+    'digia/sliverGrid': sliverGridBuilder,
     'digia/drawer': drawerBuilder,
     'digia/tabController': tabControllerBuilder,
     'digia/tabBar': tabBarBuilder,
@@ -91,7 +92,6 @@ abstract class VirtualWidgetRegistry {
     'digia/linearProgressBar': linearProgressBarBuilder,
     'digia/paginatedListView': paginatedListViewBuilder,
     'digia/paginatedSliverList': paginatedSliverListBuilder,
-    // 'digia/sliverList': sliverListBuilder,
 
     // Async Widgets
     'digia/futureBuilder': asyncBuilderBuilder,
