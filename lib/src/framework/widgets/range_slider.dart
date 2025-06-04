@@ -35,9 +35,9 @@ class VWRangeSlider extends VirtualLeafStatelessWidget<RangeSliderProps> {
           scopeContext: _createExprContext(value.start, value.end),
         );
       },
-      activeColor: payload.evalColor(props.activeColor) ?? Colors.blue,
-      inactiveColor: payload.evalColor(props.inactiveColor) ?? Colors.grey,
-      thumbColor: payload.evalColor(props.thumbColor) ?? Colors.white,
+      activeColor: payload.evalColorExpr(props.activeColor) ?? Colors.blue,
+      inactiveColor: payload.evalColorExpr(props.inactiveColor) ?? Colors.grey,
+      thumbColor: payload.evalColorExpr(props.thumbColor) ?? Colors.white,
       thumbRadius: payload.evalExpr(props.thumbRadius)?.toDouble() ?? 10.0,
       trackHeight: payload.evalExpr(props.trackHeight)?.toDouble() ?? 4.0,
       // showLabels: true,
