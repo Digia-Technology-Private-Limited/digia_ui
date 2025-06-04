@@ -53,6 +53,7 @@ class _InternalRangeSliderState extends State<InternalRangeSlider> {
         activeTrackColor: widget.activeColor,
         inactiveTrackColor: widget.inactiveColor,
         thumbColor: widget.thumbColor,
+        disabledThumbColor: widget.thumbColor,
         rangeThumbShape: RoundRangeSliderThumbShape(
           enabledThumbRadius: widget.thumbRadius,
           disabledThumbRadius: widget.thumbRadius,
