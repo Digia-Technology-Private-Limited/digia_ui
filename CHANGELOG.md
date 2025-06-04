@@ -2,6 +2,14 @@
 
 Digia Ui SDK.
 
+## [0.3.16] - 2025-05-23
+
+- ✅ APIs now support application/x-www-form-urlencoded content type
+- 🎨 Images now fade in by default for a smoother experience
+- 🐞 Fixed unnecessary SafeArea padding caused by empty persistent footer buttons in Scaffold
+- 🐞 Stream’s onSuccess and onError callbacks no longer depend on StreamBuilder
+- 🐞 Error texts in Image widget are now hidden in production builds
+
 ## [0.3.15] - 2025-05-20
 
 - 🛠️ TextField’s default debounceValue is now 0 — should be configured via Dashboard
