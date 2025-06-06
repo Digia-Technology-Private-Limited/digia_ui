@@ -1,3 +1,4 @@
+import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/widgets.dart';
 
 import '../../digia_ui.dart';
@@ -167,7 +168,10 @@ class DUIFactory {
         controller: pageController,
         scope: AppStateScopeContext(
           values: DUIAppState().value,
-          variables: DigiaUIClient.instance.jsVars,
+          variables: {
+            ...StdLibFunctions.functions,
+            ...DigiaUIClient.instance.jsVars
+          },
         ),
       ),
     );
@@ -286,7 +290,10 @@ class DUIFactory {
         messageHandler: messageHandler,
         scope: AppStateScopeContext(
           values: DUIAppState().value,
-          variables: DigiaUIClient.instance.jsVars,
+          variables: {
+            ...StdLibFunctions.functions,
+            ...DigiaUIClient.instance.jsVars
+          },
         ),
       ),
     );
