@@ -1,10 +1,12 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide PageView;
+
+import 'page_view.dart';
 
 class InternalPageView extends StatefulWidget {
   final PageController? controller;
   final Axis? scrollDirection;
   final ScrollPhysics? physics;
-  final int itemCount;
+  final int? itemCount;
   final bool? reverse;
   final bool? pageSnapping;
   final int? initialPage;
@@ -27,7 +29,7 @@ class InternalPageView extends StatefulWidget {
       this.initialPage,
       this.scrollDirection,
       this.physics,
-      this.itemCount = -1,
+      this.itemCount,
       this.itemBuilder,
       this.children = const [],
       this.onChanged});
