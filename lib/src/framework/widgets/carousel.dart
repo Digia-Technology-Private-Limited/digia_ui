@@ -58,6 +58,12 @@ class VWCarousel extends VirtualStatelessWidget<CarouselProps> {
             payload.evalColorExpr(props.activeDotColor) ?? Colors.indigo,
         indicatorEffectType: props.indicatorEffectType,
         keepAlive: props.keepAlive,
+        onChanged: (value) async {
+          await payload.executeAction(
+            props.onChanged,
+            scopeContext: _createExprContextForAction(value),
+          );
+        },
       );
     }
     return InternalCarousel(
@@ -87,7 +93,17 @@ class VWCarousel extends VirtualStatelessWidget<CarouselProps> {
           payload.evalColorExpr(props.activeDotColor) ?? Colors.indigo,
       indicatorEffectType: props.indicatorEffectType,
       children: children?.toWidgetArray(payload) ?? [],
+      onChanged: (value) async {
+        await payload.executeAction(
+          props.onChanged,
+          scopeContext: _createExprContextForAction(value),
+        );
+      },
     );
+  }
+
+  ScopeContext _createExprContextForAction(int index) {
+    return DefaultScopeContext(variables: {'index': index});
   }
 
   ScopeContext _createExprContext(Object? item, int index) {
