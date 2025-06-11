@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_avif/flutter_avif.dart';
 import 'package:flutter_blurhash/flutter_blurhash.dart';
+import 'package:lottie/lottie.dart';
 import 'package:octo_image/octo_image.dart';
 
 import '../../digia_ui_client.dart';
@@ -16,7 +17,6 @@ import '../models/props.dart';
 import '../render_payload.dart';
 import '../resource_provider.dart';
 import '../utils/flutter_type_converters.dart';
-import '../utils/functional_util.dart';
 import '../utils/widget_util.dart';
 
 class VWImage extends VirtualLeafStatelessWidget<Props> {
@@ -96,7 +96,9 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
         'http' ||
         'https' =>
           Image(image: CachedNetworkImageProvider(placeHolderValue)),
-        'assets' => Image.asset(placeHolderValue),
+        'assets' => placeHolderValue.toLowerCase().endsWith('.json')
+            ? Lottie.asset(placeHolderValue)
+            : Image.asset(placeHolderValue),
         'blurHash' => BlurHash(
             hash: placeHolderValue,
             duration: const Duration(microseconds: 0),
