@@ -97,7 +97,10 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
         'https' =>
           Image(image: CachedNetworkImageProvider(placeHolderValue)),
         'assets' => placeHolderValue.toLowerCase().endsWith('.json')
-            ? Lottie.asset(placeHolderValue)
+            ? Lottie.asset(
+                placeHolderValue,
+                fit: BoxFit.fill,
+              )
             : Image.asset(placeHolderValue),
         'blurHash' => BlurHash(
             hash: placeHolderValue,
