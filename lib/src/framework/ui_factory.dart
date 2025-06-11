@@ -116,7 +116,6 @@ class DUIFactory {
     Map<String, TextStyle>? overrideTextStyles,
     Map<String, Color?>? overrideColorTokens,
     GlobalKey<NavigatorState>? navigatorKey,
-    DUIMessageHandler? messageHandler,
     DUIPageController? pageController,
   }) {
     // Merge overriding resources with existing resources
@@ -127,9 +126,6 @@ class DUIFactory {
       colors: {...?resources.colors, ...?overrideColorTokens},
       fontFactory: resources.fontFactory,
     );
-
-    final handler =
-        messageHandler?.propagateHandler == true ? messageHandler : null;
     final pageDef = configProvider.getPageDefinition(pageId);
 
     DigiaUIClient.instance.developerConfig?.logger?.logEntity(
@@ -146,10 +142,8 @@ class DUIFactory {
 
     return DefaultActionExecutor(
       actionExecutor: ActionExecutor(
-        viewBuilder: (context, id, args) =>
-            _buildView(context, id, args, handler),
-        pageRouteBuilder: (context, id, args) =>
-            createPageRoute(id, args, messageHandler: handler),
+        viewBuilder: (context, id, args) => _buildView(context, id, args),
+        pageRouteBuilder: (context, id, args) => createPageRoute(id, args),
         bindingRegistry: bindingRegistry,
         logger: DigiaUIClient.instance.developerConfig?.logger,
         metaData: {
@@ -164,7 +158,6 @@ class DUIFactory {
         pageDef: pageDef,
         registry: widgetRegistry,
         apiModels: configProvider.getAllApiModels(),
-        messageHandler: messageHandler,
         controller: pageController,
         scope: AppStateScopeContext(
           values: DUIAppState().value,
@@ -185,7 +178,6 @@ class DUIFactory {
     Map<String, TextStyle>? overrideTextStyles,
     Map<String, Color?>? overrideColorTokens,
     GlobalKey<NavigatorState>? navigatorKey,
-    DUIMessageHandler? messageHandler,
     DUIPageController? pageController,
   }) {
     return DUIPageRoute<Object>(
@@ -198,7 +190,6 @@ class DUIFactory {
               overrideTextStyles: overrideTextStyles,
               overrideColorTokens: overrideColorTokens,
               navigatorKey: navigatorKey,
-              messageHandler: messageHandler,
               pageController: pageController,
             ));
   }
@@ -223,13 +214,12 @@ class DUIFactory {
     BuildContext context,
     String viewId,
     JsonLike? args,
-    DUIMessageHandler? messageHandler,
   ) {
     if (configProvider.isPage(viewId)) {
-      return createPage(viewId, args, messageHandler: messageHandler);
+      return createPage(viewId, args);
     }
 
-    return createComponent(viewId, args, messageHandler: messageHandler);
+    return createComponent(viewId, args);
   }
 
   // TODO: What should be done about MessageHandler here?
@@ -242,7 +232,6 @@ class DUIFactory {
     Map<String, TextStyle>? overrideTextStyles,
     Map<String, Color?>? overrideColorTokens,
     GlobalKey<NavigatorState>? navigatorKey,
-    DUIMessageHandler? messageHandler,
   }) {
     // Merge overriding resources with existing resources
     final mergedResources = UIResources(
@@ -269,10 +258,8 @@ class DUIFactory {
 
     return DefaultActionExecutor(
       actionExecutor: ActionExecutor(
-        viewBuilder: (context, id, args) =>
-            _buildView(context, id, args, messageHandler),
-        pageRouteBuilder: (context, id, args) =>
-            createPageRoute(id, args, messageHandler: messageHandler),
+        viewBuilder: (context, id, args) => _buildView(context, id, args),
+        pageRouteBuilder: (context, id, args) => createPageRoute(id, args),
         bindingRegistry: bindingRegistry,
         logger: DigiaUIClient.instance.developerConfig?.logger,
         metaData: {
@@ -287,7 +274,6 @@ class DUIFactory {
         definition: componentDef,
         registry: widgetRegistry,
         apiModels: configProvider.getAllApiModels(),
-        messageHandler: messageHandler,
         scope: AppStateScopeContext(
           values: DUIAppState().value,
           variables: {
@@ -310,11 +296,10 @@ class DUIFactory {
     BorderRadius? borderRadius,
     WidgetBuilder? iconBuilder,
     GlobalKey<NavigatorState>? navigatorKey,
-    DUIMessageHandler? messageHandler,
   }) {
     return presentBottomSheet(
       context: context,
-      builder: (innerCtx) => _buildView(innerCtx, viewId, args, messageHandler),
+      builder: (innerCtx) => _buildView(innerCtx, viewId, args),
       scrollControlDisabledMaxHeightRatio: scrollControlDisabledMaxHeightRatio,
       backgroundColor: backgroundColor,
       barrierColor: barrierColor,

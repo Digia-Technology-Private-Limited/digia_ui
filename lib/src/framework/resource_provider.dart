@@ -1,7 +1,6 @@
 import 'package:flutter/widgets.dart';
 
 import '../network/api_request/api_request.dart';
-import 'base/message_handler.dart';
 import 'font_factory.dart';
 import 'utils/color_util.dart';
 
@@ -12,7 +11,6 @@ class ResourceProvider extends InheritedWidget {
   final DUIFontFactory? _fontFactory;
   final Map<String, APIModel> apiModels;
   final Map<String, Color?> _colors;
-  final DUIMessageHandler? messageHandler;
   final GlobalKey<NavigatorState>? navigatorKey;
 
   const ResourceProvider({
@@ -23,7 +21,6 @@ class ResourceProvider extends InheritedWidget {
     required DUIFontFactory? fontFactory,
     required this.apiModels,
     required Map<String, Color?> colors,
-    required this.messageHandler,
     this.navigatorKey,
     required super.child,
   })  : _colors = colors,
