@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../../../digia_ui.dart';
@@ -35,9 +36,33 @@ class VWPageView extends VirtualStatelessWidget<Props> {
     final padEnds = payload.eval<bool>(props.get('padEnds'));
 
     if (shouldRepeatChild) {
-      final childToRepeat = child;
+      final childToRepeat = children!.first;
       final items =
           payload.eval<List<Object>>(props.getString('dataSource')) ?? [];
+
+      final preloadPages =
+          payload.eval<bool>(props.get('preloadPages')) ?? false;
+
+      int? itemCount;
+      Widget Function(BuildContext context, int index)? itemBuilder;
+      List<Widget> childPages = [];
+
+      if (preloadPages) {
+        childPages = items.mapIndexed((index, e) {
+          return childToRepeat.toWidget(
+            payload.copyWithChainedContext(_createExprContext(e, index)),
+          );
+        }).toList();
+      } else {
+        itemCount = items.length;
+        itemBuilder = (innerCtx, index) => childToRepeat.toWidget(
+              payload.copyWithChainedContext(
+                _createExprContext(items[index], index),
+                buildContext: innerCtx,
+              ),
+            );
+      }
+
       return InternalPageView(
         pageSnapping: pageSnapping,
         reverse: isReversed,
@@ -48,15 +73,9 @@ class VWPageView extends VirtualStatelessWidget<Props> {
         scrollDirection: scrollDirection,
         physics: physics,
         padEnds: padEnds,
-        itemCount: items.length,
-        itemBuilder: (innerCtx, index) =>
-            childToRepeat?.toWidget(
-              payload.copyWithChainedContext(
-                _createExprContext(items[index], index),
-                buildContext: innerCtx,
-              ),
-            ) ??
-            empty(),
+        itemCount: itemCount,
+        itemBuilder: itemBuilder,
+        children: childPages,
         onChanged: (index) async {
           await payload.executeAction(
             onPageChanged,
@@ -65,6 +84,7 @@ class VWPageView extends VirtualStatelessWidget<Props> {
         },
       );
     }
+
     return InternalPageView(
       pageSnapping: pageSnapping,
       reverse: isReversed,

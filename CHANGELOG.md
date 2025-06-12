@@ -2,6 +2,12 @@
 
 Digia Ui SDK.
 
+## [0.3.17] - 2025-06-10
+
+- 🆕 Introduced RangeSlider widget for selecting a value range with two draggable thumbs
+- 🐞 Fixed a memory leak issue that could cause out-of-memory exceptions on low-end devices
+- 🎯 Added onChange action support to Carousel for better interactivity
+
 ## [0.3.16] - 2025-05-23
 
 - ✅ APIs now support application/x-www-form-urlencoded content type

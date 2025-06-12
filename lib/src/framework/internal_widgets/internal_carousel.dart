@@ -32,6 +32,7 @@ class InternalCarousel extends StatefulWidget {
   final String indicatorEffectType;
   final Color? activeDotColor;
   final bool? keepAlive;
+  final ValueChanged<int>? onChanged;
   const InternalCarousel(
       {super.key,
       this.itemBuilder,
@@ -60,6 +61,7 @@ class InternalCarousel extends StatefulWidget {
       this.pageSnapping = true,
       this.dotColor,
       this.activeDotColor,
+      this.onChanged,
       this.indicatorEffectType = 'slide'});
 
   @override
@@ -117,6 +119,7 @@ class _InternalCarouselState extends State<InternalCarousel> {
             reverse: widget.reverseScroll,
             onPageChanged: (index, reason) {
               _currentPageNotifier.value = index;
+              widget.onChanged?.call(index);
             },
           ),
         ),
@@ -153,6 +156,7 @@ class _InternalCarouselState extends State<InternalCarousel> {
             reverse: widget.reverseScroll,
             onPageChanged: (index, reason) {
               _currentPageNotifier.value = index;
+              widget.onChanged?.call(index);
             },
           ),
         ),

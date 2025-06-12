@@ -20,7 +20,7 @@ class ActionFlow {
   static ActionFlow? fromJson(Object? json) {
     if (json is! JsonLike) return null;
 
-    final inkwell = NumUtil.toBool(json['inkwell']) ?? true;
+    final inkwell = NumUtil.toBool(json['inkWell']) ?? true;
 
     final actions = as$<List<dynamic>>(json['steps'])
             ?.where((e) => e != null || e is! JsonLike)

@@ -80,6 +80,7 @@ abstract class VirtualWidgetRegistry {
     'digia/flutterStepper': flutterStepperBuilder,
     'digia/pinField': pinFieldBuilder,
     'digia/calendar': calendarBuilder,
+    'digia/rangeSlider': rangeSliderBuilder,
 
     // Media and Web Content
     'digia/lottie': lottieBuilder,
