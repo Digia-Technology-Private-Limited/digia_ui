@@ -23,6 +23,7 @@ import 'widget_props/opacity_props.dart';
 import 'widget_props/paginated_list_view_props.dart';
 import 'widget_props/paginated_sliver_list_props.dart';
 import 'widget_props/pin_field_props.dart';
+import 'widget_props/range_slider_props.dart';
 import 'widget_props/safe_area_props.dart';
 import 'widget_props/scaffold_props.dart';
 import 'widget_props/sized_box_props.dart';
@@ -74,6 +75,7 @@ import 'widgets/page_view.dart';
 import 'widgets/paginated_list_view.dart';
 import 'widgets/paginated_sliver_list.dart';
 import 'widgets/pin_field.dart';
+import 'widgets/range_slider.dart';
 import 'widgets/refresh_indicator.dart';
 import 'widgets/rich_text.dart';
 import 'widgets/safe_area.dart';
@@ -139,6 +141,15 @@ VWText textBuilder(VWNodeData data, VirtualWidget? parent, _) {
 VWMarkDown markdownBuilder(VWNodeData data, VirtualWidget? parent, _) {
   return VWMarkDown(
     props: MarkDownProps.fromJson(data.props.value),
+    commonProps: data.commonProps,
+    parent: parent,
+    refName: data.refName,
+  );
+}
+
+VWRangeSlider rangeSliderBuilder(VWNodeData data, VirtualWidget? parent, _) {
+  return VWRangeSlider(
+    props: RangeSliderProps.fromJson(data.props.value),
     commonProps: data.commonProps,
     parent: parent,
     refName: data.refName,

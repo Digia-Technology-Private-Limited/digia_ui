@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import '../actions/base/action_flow.dart';
 import '../internal_widgets/internal_carousel.dart';
 import '../models/types.dart';
 import '../utils/flutter_type_converters.dart';
@@ -30,6 +31,7 @@ class CarouselProps {
   final ExprOr<String>? activeDotColor;
   final String indicatorEffectType;
   final bool? keepAlive;
+  final ActionFlow? onChanged;
   final ExprOr<Object>? dataSource;
 
   const CarouselProps({
@@ -57,6 +59,7 @@ class CarouselProps {
     this.activeDotColor,
     this.indicatorEffectType = 'slide',
     this.keepAlive = false,
+    this.onChanged,
     this.dataSource,
   });
 
@@ -65,33 +68,33 @@ class CarouselProps {
     final indicatorJson =
         (json['indicator'] as Map?)?['indicatorAvailable'] ?? {};
     return CarouselProps(
-        width: as$<String>(json['width']),
-        height: as$<String>(json['height']),
-        direction: To.axis(as$<String>(json['direction'])) ?? Axis.horizontal,
-        aspectRatio: as$<double>(json['aspectRatio']) ?? 0.25,
-        initialPage: as$<int>(json['initialPage']) ?? 1,
-        enlargeCenterPage: as$<bool>(json['enlargeCenterPage']) ?? false,
-        viewportFraction: as$<double>(json['viewportFraction']) ?? 0.8,
-        autoPlay: as$<bool>(json['autoPlay']) ?? false,
-        animationDuration: as$<int>(json['animationDuration']) ?? 800,
-        autoPlayInterval: as$<int>(json['autoPlayInterval']) ?? 1600,
-        infiniteScroll: as$<bool>(json['infiniteScroll']) ?? false,
-        reverseScroll: as$<bool>(json['reverseScroll']) ?? false,
-        pageSnapping: as$<bool>(json['pageSnapping']) ?? true,
-        padEnds: as$<bool>(json['padEnds']) ?? true,
-        enlargeFactor: as$<double>(json['enlargeFactor']) ?? 0.3,
-        showIndicator: as$<bool>(indicatorJson['showIndicator']) ?? false,
-        offset: as$<double>(indicatorJson['offset']) ?? 16.0,
-        dotHeight: as$<double>(indicatorJson['dotHeight']) ?? 8.0,
-        dotWidth: as$<double>(indicatorJson['dotWidth']) ?? 8.0,
-        spacing: as$<double>(indicatorJson['spacing']) ?? 16.0,
-        dotColor: ExprOr.fromJson<String>(indicatorJson['dotColor']),
-        keepAlive: as$<bool>(json['keepAlive']) ?? false,
-        activeDotColor:
-            ExprOr.fromJson<String>(indicatorJson['activeDotColor']),
-        indicatorEffectType:
-            as$<String>(indicatorJson['indicatorEffectType']) ??
-                IndicatorEffectType.slide.value,
-        dataSource: ExprOr.fromJson<Object>(json['dataSource']));
+      width: as$<String>(json['width']),
+      height: as$<String>(json['height']),
+      direction: To.axis(as$<String>(json['direction'])) ?? Axis.horizontal,
+      aspectRatio: as$<double>(json['aspectRatio']) ?? 0.25,
+      initialPage: as$<int>(json['initialPage']) ?? 1,
+      enlargeCenterPage: as$<bool>(json['enlargeCenterPage']) ?? false,
+      viewportFraction: as$<double>(json['viewportFraction']) ?? 0.8,
+      autoPlay: as$<bool>(json['autoPlay']) ?? false,
+      animationDuration: as$<int>(json['animationDuration']) ?? 800,
+      autoPlayInterval: as$<int>(json['autoPlayInterval']) ?? 1600,
+      infiniteScroll: as$<bool>(json['infiniteScroll']) ?? false,
+      reverseScroll: as$<bool>(json['reverseScroll']) ?? false,
+      pageSnapping: as$<bool>(json['pageSnapping']) ?? true,
+      padEnds: as$<bool>(json['padEnds']) ?? true,
+      enlargeFactor: as$<double>(json['enlargeFactor']) ?? 0.3,
+      showIndicator: as$<bool>(indicatorJson['showIndicator']) ?? false,
+      offset: as$<double>(indicatorJson['offset']) ?? 16.0,
+      dotHeight: as$<double>(indicatorJson['dotHeight']) ?? 8.0,
+      dotWidth: as$<double>(indicatorJson['dotWidth']) ?? 8.0,
+      spacing: as$<double>(indicatorJson['spacing']) ?? 16.0,
+      dotColor: ExprOr.fromJson<String>(indicatorJson['dotColor']),
+      keepAlive: as$<bool>(json['keepAlive']) ?? false,
+      activeDotColor: ExprOr.fromJson<String>(indicatorJson['activeDotColor']),
+      indicatorEffectType: as$<String>(indicatorJson['indicatorEffectType']) ??
+          IndicatorEffectType.slide.value,
+      onChanged: ActionFlow.fromJson(json['onChanged']),
+      dataSource: ExprOr.fromJson<Object>(json['dataSource']),
+    );
   }
 }
