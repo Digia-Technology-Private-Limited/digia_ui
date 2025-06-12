@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+
 import '../../../digia_ui.dart';
 import '../base/extensions.dart';
 import '../base/virtual_stateless_widget.dart';
 import '../base/virtual_widget.dart';
+import '../utils/flutter_extensions.dart';
 import '../utils/functional_util.dart';
 import '../utils/types.dart';
 import '../widget_props/icon_props.dart';
@@ -118,12 +120,20 @@ class VWScaffold extends VirtualStatelessWidget<ScaffoldProps> {
 
     if (child == null || child is! VWAppBar) return null;
 
-    return VWAppBar(
-            props: child.props,
-            parent: this,
-            leadingIcon: _drawerIcon(),
-            trailingIcon: _endDrawerIcon())
-        .toWidget(payload) as PreferredSizeWidget;
+    final height = child.props.height != null
+        ? payload.evalExpr(child.props.height)?.toHeight(payload.buildContext)
+        : null;
+
+    return PreferredSize(
+      preferredSize: Size.fromHeight(height ?? 0),
+      child: VWAppBar(
+        props: child.props,
+        parent: this,
+        leadingIcon: _drawerIcon(),
+        trailingIcon: _endDrawerIcon(),
+        childGroups: child.childGroups,
+      ).toWidget(payload) as PreferredSizeWidget,
+    );
   }
 
   Widget _buildCollapsibleAppBarBody(
@@ -141,7 +151,6 @@ class VWScaffold extends VirtualStatelessWidget<ScaffoldProps> {
     // Create SliverAppBarProps from AppBarProps
     final sliverAppBarProps = SliverAppBarProps(
       backgroundColor: payload.eval(appBarProps?.backgroundColor),
-      backgroundImage: payload.eval(appBarProps?.backgroundImage),
       centerTitle: payload.eval(appBarProps?.centerTitle),
       collapsedHeight: payload.eval(appBarProps?.collapsedHeight),
       elevation: payload.eval(appBarProps?.elevation),
@@ -201,6 +210,11 @@ class VWScaffold extends VirtualStatelessWidget<ScaffoldProps> {
                       appBarWidget.childGroups != null &&
                       appBarWidget.childGroups!.containsKey('bottom')
                   ? appBarWidget.childGroups!['bottom']!
+                  : [],
+              'background': appBarWidget is VirtualStatelessWidget &&
+                      appBarWidget.childGroups != null &&
+                      appBarWidget.childGroups!.containsKey('background')
+                  ? appBarWidget.childGroups!['background']!
                   : [],
             },
           ).toWidget(payload),

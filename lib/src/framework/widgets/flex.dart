@@ -25,7 +25,7 @@ class VWFlex extends VirtualStatelessWidget<Props> {
     required super.childGroups,
   });
 
-  bool get shouldRepeatChild => props.getString('dataSource') != 'null';
+  bool get shouldRepeatChild => props.getString('dataSource') != null;
 
   @override
   Widget render(RenderPayload payload) {

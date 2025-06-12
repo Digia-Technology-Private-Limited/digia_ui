@@ -1,6 +1,5 @@
 import 'package:flutter/widgets.dart';
 
-import '../base/extensions.dart';
 import '../base/virtual_sliver.dart';
 import '../expr/default_scope_context.dart';
 import '../expr/scope_context.dart';
@@ -20,17 +19,14 @@ class VWSliverList extends VirtualSliver<Props> {
 
   @override
   Widget render(RenderPayload payload) {
-    if (children == null || children!.isEmpty) return empty();
-
     if (shouldRepeatChild) {
       final items =
           payload.eval<List<Object>>(props.getString('dataSource')) ?? [];
 
-      final childToRepeat = children!.first;
       return SliverList.builder(
         itemCount: items.length,
         itemBuilder: (innerCtx, index) =>
-            childToRepeat.toWidget(payload.copyWithChainedContext(
+            child?.toWidget(payload.copyWithChainedContext(
           _createExprContext(items[index], index),
           buildContext: innerCtx,
         )),
@@ -38,7 +34,7 @@ class VWSliverList extends VirtualSliver<Props> {
     }
     return SliverList(
       delegate: SliverChildListDelegate(
-        children?.toWidgetArray(payload) ?? [],
+        [child?.toWidget(payload) ?? empty()],
       ),
     );
   }

@@ -5,7 +5,6 @@ import '../render_payload.dart';
 import '../utils/flutter_extensions.dart';
 import '../utils/flutter_type_converters.dart';
 import '../widget_props/sliver_app_bar_props.dart';
-import 'image.dart';
 import 'text.dart';
 
 class VWSliverAppBar extends VirtualSliver<SliverAppBarProps> {
@@ -54,13 +53,13 @@ class VWSliverAppBar extends VirtualSliver<SliverAppBarProps> {
         title: childOf('title')?.toWidget(payload),
         centerTitle: centerTitle,
         titlePadding: titlePadding,
-        background: useBackgroundWidget && props.backgroundImage != null
-            ? _buildBackgroundImage(payload)
+        background: useBackgroundWidget && childOf('background') != null
+            ? childOf('background')!.toWidget(payload)
             : null,
       );
-    } else if (useBackgroundWidget && props.backgroundImage != null) {
+    } else if (useBackgroundWidget && childOf('background') != null) {
       flexibleSpaceWidget = FlexibleSpaceBar(
-        background: _buildBackgroundImage(payload),
+        background: childOf('background')!.toWidget(payload),
       );
     }
 
@@ -114,17 +113,5 @@ class VWSliverAppBar extends VirtualSliver<SliverAppBarProps> {
     if (actionWidgets == null || actionWidgets.isEmpty) return null;
 
     return actionWidgets.map((widget) => widget.toWidget(payload)).toList();
-  }
-
-  Widget? _buildBackgroundImage(RenderPayload payload) {
-    if (props.backgroundImage == null) return null;
-
-    final imageSrc = payload.eval<String>(props.backgroundImage!['imageSrc']);
-    final imageFit = payload.eval<String>(props.backgroundImage!['imageFit']);
-
-    return VWImage.fromValues(
-      imageSrc: imageSrc,
-      imageFit: imageFit,
-    ).toWidget(payload);
   }
 }

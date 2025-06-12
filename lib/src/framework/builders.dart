@@ -13,7 +13,6 @@ import 'widget_props/bottom_navigation_bar_item_props.dart';
 import 'widget_props/bottom_navigation_bar_props.dart';
 import 'widget_props/carousel_props.dart';
 import 'widget_props/condtional_item_props.dart';
-import 'widget_props/custom_scroll_view_props.dart';
 import 'widget_props/flex_fit_props.dart';
 import 'widget_props/icon_props.dart';
 import 'widget_props/image_view_360_props.dart';
@@ -27,6 +26,7 @@ import 'widget_props/safe_area_props.dart';
 import 'widget_props/scaffold_props.dart';
 import 'widget_props/sized_box_props.dart';
 import 'widget_props/sliver_app_bar_props.dart';
+import 'widget_props/smart_scroll_view_props.dart';
 import 'widget_props/spacer_props.dart';
 import 'widget_props/stream_builder_props.dart';
 import 'widget_props/styled_divider_props.dart';
@@ -52,7 +52,7 @@ import 'widgets/circular_progress_bar.dart';
 import 'widgets/conditional_builder.dart';
 import 'widgets/condtional_item.dart';
 import 'widgets/container.dart';
-import 'widgets/custom_scroll_view.dart';
+import 'widgets/smart_scroll_view.dart';
 import 'widgets/drawer.dart';
 import 'widgets/expandable.dart';
 import 'widgets/flex.dart';
@@ -82,6 +82,8 @@ import 'widgets/sized_box.dart';
 import 'widgets/sliver_app_bar.dart';
 import 'widgets/sliver_grid.dart';
 import 'widgets/sliver_list.dart';
+import 'widgets/smart_scroll_group.dart';
+import 'widgets/pinned_header.dart';
 import 'widgets/spacer.dart';
 import 'widgets/stack.dart';
 import 'widgets/stepper.dart';
@@ -478,10 +480,13 @@ VWCheckbox checkboxBuilder(VWNodeData data, VirtualWidget? parent, _) {
   );
 }
 
-VWAppBar appBarBuilder(VWNodeData data, VirtualWidget? parent, _) {
+VWAppBar appBarBuilder(
+    VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
   return VWAppBar(
     props: AppBarProps.fromJson(data.props.value),
     parent: parent,
+    refName: data.refName,
+    childGroups: createChildGroups(data.childGroups, parent, registry),
   );
 }
 
@@ -840,13 +845,13 @@ VWSliverAppBar sliverAppBarBuilder(
   );
 }
 
-VWCustomScrollView customScrollViewBuilder(
+VWSmartScrollView smartScrollViewBuilder(
   VWNodeData data,
   VirtualWidget? parent,
   VirtualWidgetRegistry registry,
 ) {
-  return VWCustomScrollView(
-    props: CustomScrollViewProps.fromJson(data.props.value),
+  return VWSmartScrollView(
+    props: SmartScrollViewProps.fromJson(data.props.value),
     commonProps: data.commonProps,
     parent: parent,
     refName: data.refName,
@@ -971,5 +976,33 @@ VWStepper flutterStepperBuilder(
     parent: parent,
     childGroups: createChildGroups(data.childGroups, parent, registry),
     refName: data.refName,
+  );
+}
+
+VWSmartScrollGroup smartScrollGroupBuilder(
+  VWNodeData data,
+  VirtualWidget? parent,
+  VirtualWidgetRegistry registry,
+) {
+  return VWSmartScrollGroup(
+    props: data.props,
+    commonProps: data.commonProps,
+    parent: parent,
+    refName: data.refName,
+    childGroups: createChildGroups(data.childGroups, parent, registry),
+  );
+}
+
+VWPinnedHeader pinnedHeaderBuilder(
+  VWNodeData data,
+  VirtualWidget? parent,
+  VirtualWidgetRegistry registry,
+) {
+  return VWPinnedHeader(
+    props: data.props,
+    commonProps: data.commonProps,
+    parent: parent,
+    refName: data.refName,
+    childGroups: createChildGroups(data.childGroups, parent, registry),
   );
 }

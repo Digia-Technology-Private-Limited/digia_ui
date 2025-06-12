@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../base/virtual_leaf_stateless_widget.dart';
+import '../base/virtual_stateless_widget.dart';
 import '../base/virtual_widget.dart';
 import '../render_payload.dart';
 import '../utils/flutter_extensions.dart';
@@ -10,25 +10,18 @@ import '../utils/widget_util.dart';
 import '../widget_props/app_bar_props.dart';
 import '../widget_props/icon_props.dart';
 import 'icon.dart';
-import 'image.dart';
 import 'text.dart';
 
-class VWAppBar extends VirtualLeafStatelessWidget<AppBarProps> {
+class VWAppBar extends VirtualStatelessWidget<AppBarProps> {
   final VirtualWidget? leadingIcon;
   final VirtualWidget? trailingIcon;
-  final VirtualWidget? titleWidget;
-  final VirtualWidget? bottomWidget;
-  final VirtualWidget? flexibleSpaceWidget;
-
   VWAppBar({
     required super.props,
     required super.parent,
     super.refName,
     this.leadingIcon,
     this.trailingIcon,
-    this.titleWidget,
-    this.bottomWidget,
-    this.flexibleSpaceWidget,
+    required super.childGroups,
   }) :
         // Since this is a PrefferedSizeWidget,
         // we shouldn't wrap any Widget around it.
@@ -39,9 +32,6 @@ class VWAppBar extends VirtualLeafStatelessWidget<AppBarProps> {
     final toolbarHeight = props.toolbarHeight != null
         ? payload.evalExpr(props.toolbarHeight)?.toHeight(payload.buildContext)
         : null;
-    // final height = props.height != null
-    //     ? payload.evalExpr(props.height)?.toHeight(payload.buildContext)
-    //     : null;
     final bottomSectionHeight = props.bottomSectionHeight != null
         ? payload
             .evalExpr(props.bottomSectionHeight)
@@ -68,18 +58,18 @@ class VWAppBar extends VirtualLeafStatelessWidget<AppBarProps> {
 
     Widget? flexibleSpaceWidget;
     if (useFlexibleSpace) {
-      flexibleSpaceWidget = this.flexibleSpaceWidget?.toWidget(payload) ??
+      flexibleSpaceWidget = childOf('flexibleSpace')?.toWidget(payload) ??
           FlexibleSpaceBar(
             title: _buildTitle(payload, useTitleWidget),
             centerTitle: centerTitle,
             titlePadding: titlePadding,
-            background: useBackgroundWidget && props.backgroundImage != null
-                ? _buildBackgroundImage(payload)
+            background: useBackgroundWidget && childOf('background') != null
+                ? childOf('background')!.toWidget(payload)
                 : null,
           );
-    } else if (useBackgroundWidget && props.backgroundImage != null) {
+    } else if (useBackgroundWidget && childOf('background') != null) {
       flexibleSpaceWidget = FlexibleSpaceBar(
-        background: _buildBackgroundImage(payload),
+        background: childOf('background')?.toWidget(payload),
       );
     }
 
@@ -103,15 +93,15 @@ class VWAppBar extends VirtualLeafStatelessWidget<AppBarProps> {
           ? PreferredSize(
               preferredSize:
                   Size(bottomSectionWidth ?? 0, bottomSectionHeight ?? 0),
-              child: bottomWidget?.toWidget(payload) ?? Container(),
+              child: childOf('bottom')?.toWidget(payload) ?? Container(),
             )
           : null,
     );
   }
 
   Widget _buildTitle(RenderPayload payload, bool useTitleWidget) {
-    if (useTitleWidget && titleWidget != null) {
-      return titleWidget!.toWidget(payload);
+    if (useTitleWidget && childOf('title') != null) {
+      return childOf('title')!.toWidget(payload);
     }
     return VWText(
       props: props.title,
@@ -122,8 +112,8 @@ class VWAppBar extends VirtualLeafStatelessWidget<AppBarProps> {
   Widget? _buildLeading(RenderPayload payload) {
     final useLeadingWidget = payload.evalExpr(props.useLeadingWidget) ?? false;
 
-    if (useLeadingWidget && leadingIcon != null) {
-      return leadingIcon!.toWidget(payload);
+    if (useLeadingWidget && childOf('leading') != null) {
+      return childOf('leading')!.toWidget(payload);
     }
 
     final leadingIconProps = props.leadingIcon.maybe(IconProps.fromJson);
@@ -145,8 +135,8 @@ class VWAppBar extends VirtualLeafStatelessWidget<AppBarProps> {
   List<Widget>? _buildActions(RenderPayload payload) {
     final useActionsWidget = payload.evalExpr(props.useActionsWidget) ?? false;
 
-    if (useActionsWidget && trailingIcon != null) {
-      return [trailingIcon!.toWidget(payload)];
+    if (useActionsWidget && childrenOf('actions') != null) {
+      return childrenOf('actions')?.map((e) => e.toWidget(payload)).toList();
     }
 
     final trailingIconProps = props.trailingIcon.maybe(IconProps.fromJson);
@@ -159,17 +149,5 @@ class VWAppBar extends VirtualLeafStatelessWidget<AppBarProps> {
         parent: this,
       ).toWidget(payload),
     ];
-  }
-
-  Widget? _buildBackgroundImage(RenderPayload payload) {
-    if (props.backgroundImage == null) return null;
-
-    final imageSrc = payload.eval<String>(props.backgroundImage!['imageSrc']);
-    final imageFit = payload.eval<String>(props.backgroundImage!['imageFit']);
-
-    return VWImage.fromValues(
-      imageSrc: imageSrc,
-      imageFit: imageFit,
-    ).toWidget(payload);
   }
 }

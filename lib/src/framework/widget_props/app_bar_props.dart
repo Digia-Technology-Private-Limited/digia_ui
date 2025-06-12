@@ -33,7 +33,6 @@ class AppBarProps {
   final ExprOr<bool>? useFlexibleSpace;
   final ExprOr<String>? titlePadding;
   final ExprOr<bool>? useBackgroundWidget;
-  final JsonLike? backgroundImage;
   final JsonLike? shape;
   final ExprOr<bool>? useLeadingWidget;
   final ExprOr<bool>? useActionsWidget;
@@ -59,7 +58,6 @@ class AppBarProps {
     this.useFlexibleSpace,
     this.titlePadding,
     this.useBackgroundWidget,
-    this.backgroundImage,
     this.shape,
     this.useLeadingWidget,
     this.useActionsWidget,
@@ -99,7 +97,6 @@ class AppBarProps {
       useFlexibleSpace: ExprOr.fromJson<bool>(json['useFlexibleSpace']),
       titlePadding: ExprOr.fromJson<String>(json['titlePadding']),
       useBackgroundWidget: ExprOr.fromJson<bool>(json['useBackgroundWidget']),
-      backgroundImage: as$<JsonLike>(json['backgroundImage']),
       shape: as$<JsonLike>(json['shape']),
       useLeadingWidget: ExprOr.fromJson<bool>(json['useLeadingWidget']),
       useActionsWidget: ExprOr.fromJson<bool>(json['useActionsWidget']),

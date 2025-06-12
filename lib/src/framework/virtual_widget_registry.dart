@@ -26,7 +26,7 @@ abstract class VirtualWidgetRegistry {
     'fw/sized_box': sizedBoxBuilder,
     'fw/spacer': spacerBuilder,
     'digia/safeArea': safeAreaBuilder,
-    'digia/customScrollView': customScrollViewBuilder,
+    'digia/smartScrollView': smartScrollViewBuilder,
     'digia/nestedScrollView': nestedScrollViewBuilder,
 
     // Basic Widgets
@@ -58,6 +58,8 @@ abstract class VirtualWidgetRegistry {
     'digia/navigationBarItem': navigationBarItemBuilder,
     'digia/overlay': overlayBuilder,
     'digia/pageView': pageViewBuilder,
+    'digia/smartScrollGroup': smartScrollGroupBuilder,
+    'digia/pinnedHeader': pinnedHeaderBuilder,
     // 'digia/tabView': tabViewBuilder,
     // 'digia/tabViewItem': tabViewItemBuilder,
 
