@@ -587,13 +587,18 @@ abstract class To {
             .nonNulls
             .toList();
 
-        final rotationInRadians = NumUtil.toInt(data['angle'])
-            .maybe((p0) => GradientRotation(p0 / 180.0 * math.pi));
+        // final rotationInRadians = NumUtil.toInt(data['angle'])
+        //     .maybe((p0) => GradientRotation(p0 / 180.0 * math.pi));
+        final begin = To.alignment(data['begin']);
+        final end = To.alignment(data['end']);
 
         return LinearGradient(
-            colors: colors,
-            stops: stops?.length == colors.length ? stops! : null,
-            transform: rotationInRadians);
+          begin: begin ?? Alignment.centerLeft,
+          end: end ?? Alignment.centerRight,
+          colors: colors,
+          stops: stops?.length == colors.length ? stops! : null,
+          // transform: rotationInRadians,
+        );
 
       default:
         return null;

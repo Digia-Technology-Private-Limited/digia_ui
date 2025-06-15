@@ -2,6 +2,12 @@
 
 Digia Ui SDK.
 
+## [0.3.18] - 2025-06-14
+
+- 🆕 Added an option in PageView to prebuild all pages — recommended only for a small number of pages
+- 🎨 Image widget now supports Lottie animations as placeholders
+- 🐞 Fixed gradient angle issue in rectangular boxes by replacing angle with begin and end alignments
+
 ## [0.3.17] - 2025-06-10
 
 - 🆕 Introduced RangeSlider widget for selecting a value range with two draggable thumbs
