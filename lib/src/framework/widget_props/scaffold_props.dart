@@ -11,6 +11,7 @@ class ScaffoldProps {
   final JsonLike? endDrawer;
   final JsonLike? bottomNavigationBar;
   final List<JsonLike>? persistentFooterButtons;
+  final ExprOr<bool>? enableAppBar;
 
   const ScaffoldProps({
     this.scaffoldBackgroundColor,
@@ -21,6 +22,7 @@ class ScaffoldProps {
     this.endDrawer,
     this.bottomNavigationBar,
     this.persistentFooterButtons,
+    this.enableAppBar,
   });
 
   factory ScaffoldProps.fromJson(JsonLike json) {
@@ -39,6 +41,7 @@ class ScaffoldProps {
               .where((e) => e != null)
               .cast<JsonLike>()
               .toList(),
+      enableAppBar: ExprOr.fromJson<bool>(json['enableAppBar']),
     );
   }
 }
