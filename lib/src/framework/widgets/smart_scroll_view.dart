@@ -1,15 +1,13 @@
 import 'package:flutter/widgets.dart';
-import '../base/extensions.dart';
-import '../base/virtual_sliver.dart';
 import '../base/virtual_stateless_widget.dart';
 import '../render_payload.dart';
 import '../utils/flutter_type_converters.dart';
-import '../widget_props/custom_scroll_view_props.dart';
+import '../utils/sliver_util.dart';
+import '../widget_props/smart_scroll_view_props.dart';
 import 'nested_scroll_view.dart';
-import 'sliver_to_box_adaptor.dart';
 
-class VWCustomScrollView extends VirtualStatelessWidget<CustomScrollViewProps> {
-  VWCustomScrollView({
+class VWSmartScrollView extends VirtualStatelessWidget<SmartScrollViewProps> {
+  VWSmartScrollView({
     required super.props,
     required super.commonProps,
     required super.parent,
@@ -39,11 +37,9 @@ class VWCustomScrollView extends VirtualStatelessWidget<CustomScrollViewProps> {
                 payload.buildContext,
               ),
             ),
-          ...?children?.map((e) {
-            if (e is! VirtualSliver) return VWSliverToBoxAdaptor(e);
-
-            return e;
-          }).toWidgetArray(payload)
+          ...?children
+              ?.map((e) => SliverUtil.convertToSliver(e))
+              .map((child) => child.toWidget(payload))
         ]);
   }
 }
