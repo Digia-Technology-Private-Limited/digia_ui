@@ -29,7 +29,8 @@ class ShowToastProcessor extends ActionProcessor<ShowToastAction> {
 
     final Color? bgColor = ExprOr.fromJson<String>(style['bgColor'])
         ?.evaluate(scopeContext)
-        .maybe((p0) => ResourceProvider.maybeOf(context)?.getColor(p0));
+        .maybe(
+            (p0) => ResourceProvider.maybeOf(context)?.getColor(p0, context));
     final borderRadius =
         To.borderRadius(style['borderRadius'] ?? '12, 12, 12, 12');
 

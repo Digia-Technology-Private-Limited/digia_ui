@@ -55,6 +55,7 @@ class DUIComponent extends StatelessWidget {
         textStyles: resources?.textStyles ?? {},
         fontFactory: resources?.fontFactory,
         colors: resources?.colors ?? {},
+        darkColors: resources?.darkColors ?? {},
         apiModels: apiModels ?? {},
         // Only these two need to be passed. Rest all values are
         // configured at initialization time.

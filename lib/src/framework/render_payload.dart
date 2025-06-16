@@ -29,7 +29,7 @@ class RenderPayload {
 
   // Retrieves a color from the ResourceProvider using a key
   Color? getColor(String key) {
-    return ResourceProvider.maybeOf(buildContext)?.getColor(key);
+    return ResourceProvider.maybeOf(buildContext)?.getColor(key, buildContext);
   }
 
   // Retrieves an API model from the ResourceProvider using an ID

@@ -36,7 +36,7 @@ class ShowDialogProcessor extends ActionProcessor<ShowDialogAction> {
         action.barrierDismissible?.evaluate(scopeContext) ?? true;
     final barrierColor = action.barrierColor
         ?.evaluate(scopeContext)
-        .maybe((p0) => provider?.getColor(p0));
+        .maybe((p0) => provider?.getColor(p0, context));
     final waitForResult = action.waitForResult;
 
     logAction(
