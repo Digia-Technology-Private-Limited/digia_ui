@@ -2,6 +2,10 @@
 
 Digia Ui SDK.
 
+## [0.3.19] - 2025-06-16
+
+- 🌗 Added support for both Light and Dark themes for a better adaptive UI experience
+
 ## [0.3.18] - 2025-06-14
 
 - 🆕 Added an option in PageView to prebuild all pages — recommended only for a small number of pages
