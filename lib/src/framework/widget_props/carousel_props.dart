@@ -4,6 +4,7 @@ import '../internal_widgets/internal_carousel.dart';
 import '../models/types.dart';
 import '../utils/flutter_type_converters.dart';
 import '../utils/functional_util.dart';
+import '../utils/num_util.dart';
 import '../utils/types.dart';
 
 class CarouselProps {
@@ -69,10 +70,11 @@ class CarouselProps {
       width: as$<String>(json['width']),
       height: as$<String>(json['height']),
       direction: To.axis(as$<String>(json['direction'])) ?? Axis.horizontal,
-      aspectRatio: as$<double>(json['aspectRatio']) ?? 0.25,
+      aspectRatio: as$<double>(NumUtil.toDouble(json['aspectRatio'])) ?? 0.25,
       initialPage: as$<int>(json['initialPage']) ?? 1,
       enlargeCenterPage: as$<bool>(json['enlargeCenterPage']) ?? false,
-      viewportFraction: as$<double>(json['viewportFraction']) ?? 0.8,
+      viewportFraction:
+          as$<double>(NumUtil.toDouble(json['viewportFraction'])) ?? 0.8,
       autoPlay: as$<bool>(json['autoPlay']) ?? false,
       animationDuration: as$<int>(json['animationDuration']) ?? 800,
       autoPlayInterval: as$<int>(json['autoPlayInterval']) ?? 1600,
@@ -80,12 +82,14 @@ class CarouselProps {
       reverseScroll: as$<bool>(json['reverseScroll']) ?? false,
       pageSnapping: as$<bool>(json['pageSnapping']) ?? true,
       padEnds: as$<bool>(json['padEnds']) ?? true,
-      enlargeFactor: as$<double>(json['enlargeFactor']) ?? 0.3,
+      enlargeFactor:
+          as$<double>(NumUtil.toDouble(json['enlargeFactor'])) ?? 0.3,
       showIndicator: as$<bool>(indicatorJson['showIndicator']) ?? false,
-      offset: as$<double>(indicatorJson['offset']) ?? 16.0,
-      dotHeight: as$<double>(indicatorJson['dotHeight']) ?? 8.0,
-      dotWidth: as$<double>(indicatorJson['dotWidth']) ?? 8.0,
-      spacing: as$<double>(indicatorJson['spacing']) ?? 16.0,
+      offset: as$<double>(NumUtil.toDouble(indicatorJson['offset'])) ?? 16.0,
+      dotHeight:
+          as$<double>(NumUtil.toDouble(indicatorJson['dotHeight'])) ?? 8.0,
+      dotWidth: as$<double>(NumUtil.toDouble(indicatorJson['dotWidth'])) ?? 8.0,
+      spacing: as$<double>(NumUtil.toDouble(indicatorJson['spacing'])) ?? 16.0,
       dotColor: ExprOr.fromJson<String>(indicatorJson['dotColor']),
       keepAlive: as$<bool>(json['keepAlive']) ?? false,
       activeDotColor: ExprOr.fromJson<String>(indicatorJson['activeDotColor']),
