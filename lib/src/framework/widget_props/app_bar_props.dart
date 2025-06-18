@@ -19,7 +19,7 @@ class AppBarProps {
   final ExprOr<bool>? centerTitle;
   final ExprOr<bool>? useTitleWidget;
   final ExprOr<double>? titleSpacing;
-  final ExprOr<bool>? collapsibleAppBar;
+  final ExprOr<bool>? enableCollapsibleAppBar;
   final ExprOr<String>? expandedHeight;
   final ExprOr<String>? collapsedHeight;
   final ExprOr<bool>? pinned;
@@ -32,6 +32,8 @@ class AppBarProps {
   final ExprOr<String>? bottomSectionWidth;
   final ExprOr<bool>? useFlexibleSpace;
   final ExprOr<String>? titlePadding;
+  final ExprOr<String>? collapseMode;
+  final ExprOr<double>? expandedTitleScale;
   final ExprOr<bool>? useBackgroundWidget;
   final JsonLike? shape;
   final ExprOr<bool>? useLeadingWidget;
@@ -48,7 +50,7 @@ class AppBarProps {
     this.trailingIcon,
     this.centerTitle,
     this.titleSpacing,
-    this.collapsibleAppBar,
+    this.enableCollapsibleAppBar,
     this.expandedHeight,
     this.collapsedHeight,
     this.pinned,
@@ -57,6 +59,8 @@ class AppBarProps {
     this.toolbarHeight,
     this.useFlexibleSpace,
     this.titlePadding,
+    this.collapseMode,
+    this.expandedTitleScale,
     this.useBackgroundWidget,
     this.shape,
     this.useLeadingWidget,
@@ -87,7 +91,8 @@ class AppBarProps {
       trailingIcon: as$<JsonLike>(json['trailingIcon']),
       centerTitle: ExprOr.fromJson<bool>(json['centerTitle']),
       titleSpacing: ExprOr.fromJson<double>(json['titleSpacing']),
-      collapsibleAppBar: ExprOr.fromJson<bool>(json['collapsibleAppBar']),
+      enableCollapsibleAppBar:
+          ExprOr.fromJson<bool>(json['enableCollapsibleAppBar']),
       expandedHeight: ExprOr.fromJson<String>(json['expandedHeight']),
       collapsedHeight: ExprOr.fromJson<String>(json['collapsedHeight']),
       pinned: ExprOr.fromJson<bool>(json['pinned']),
@@ -96,6 +101,8 @@ class AppBarProps {
       toolbarHeight: ExprOr.fromJson<String>(json['toolbarHeight']),
       useFlexibleSpace: ExprOr.fromJson<bool>(json['useFlexibleSpace']),
       titlePadding: ExprOr.fromJson<String>(json['titlePadding']),
+      collapseMode: ExprOr.fromJson<String>(json['collapseMode']),
+      expandedTitleScale: ExprOr.fromJson<double>(json['expandedTitleScale']),
       useBackgroundWidget: ExprOr.fromJson<bool>(json['useBackgroundWidget']),
       shape: as$<JsonLike>(json['shape']),
       useLeadingWidget: ExprOr.fromJson<bool>(json['useLeadingWidget']),

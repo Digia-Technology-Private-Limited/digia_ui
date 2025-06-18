@@ -49,21 +49,17 @@ class VWScaffold extends VirtualStatelessWidget<ScaffoldProps> {
     );
     final enableSafeArea = payload.evalExpr(props.enableSafeArea) ?? true;
 
-    final enableAppBar = payload.evalExpr(props.enableAppBar) ?? true;
-
     bool isCollapsibleAppBar = false;
     if (appBarWidget != null && appBarWidget is VWAppBar) {
       isCollapsibleAppBar =
-          payload.evalExpr(appBarWidget.props.collapsibleAppBar) ?? false;
+          payload.evalExpr(appBarWidget.props.enableCollapsibleAppBar) ?? false;
     }
 
     return Theme(
         data: themeData,
         child: bottomNavigationBar == null
             ? Scaffold(
-                appBar: enableAppBar && isCollapsibleAppBar
-                    ? null
-                    : _buildAppBar(payload),
+                appBar: isCollapsibleAppBar ? null : _buildAppBar(payload),
                 drawer: drawer,
                 endDrawer: endDrawer,
                 persistentFooterButtons: persistentFooterButtons,
@@ -97,9 +93,7 @@ class VWScaffold extends VirtualStatelessWidget<ScaffoldProps> {
                   }
 
                   return Scaffold(
-                    appBar: enableAppBar && isCollapsibleAppBar
-                        ? null
-                        : _buildAppBar(payload),
+                    appBar: isCollapsibleAppBar ? null : _buildAppBar(payload),
                     drawer: drawer,
                     endDrawer: endDrawer,
                     bottomNavigationBar: buildBottomNavigationBar(payload),
@@ -165,6 +159,8 @@ class VWScaffold extends VirtualStatelessWidget<ScaffoldProps> {
       shadowColor: payload.eval(appBarProps?.shadowColor),
       useFlexibleSpace: payload.eval(appBarProps?.useFlexibleSpace),
       titlePadding: payload.eval(appBarProps?.titlePadding),
+      collapseMode: payload.eval(appBarProps?.collapseMode),
+      expandedTitleScale: payload.eval(appBarProps?.expandedTitleScale),
       useBackgroundWidget: payload.eval(appBarProps?.useBackgroundWidget),
       shape: payload.eval(appBarProps?.shape),
       useLeadingWidget: payload.eval(appBarProps?.useLeadingWidget),
@@ -175,7 +171,8 @@ class VWScaffold extends VirtualStatelessWidget<ScaffoldProps> {
       automaticallyImplyLeading:
           payload.eval(appBarProps?.automaticallyImplyLeading),
       defaultButtonColor: payload.eval(appBarProps?.defaultButtonColor),
-      collapsibleAppBar: payload.eval(appBarProps?.collapsibleAppBar),
+      enableCollapsibleAppBar:
+          payload.eval(appBarProps?.enableCollapsibleAppBar),
       useTitleWidget: payload.eval(appBarProps?.useTitleWidget),
       height: payload.eval(appBarProps?.height),
       trailingIcon: payload.eval(appBarProps?.trailingIcon),

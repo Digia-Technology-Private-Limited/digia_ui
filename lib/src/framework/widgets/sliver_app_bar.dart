@@ -47,6 +47,11 @@ class VWSliverAppBar extends VirtualSliver<SliverAppBarProps> {
 
     final shape = To.buttonShape(props.shape, payload.getColor);
 
+    final collapseMode = CollapseMode.values
+        .byName(payload.evalExpr(props.collapseMode) ?? 'parallax');
+    final expandedTitleScale =
+        payload.evalExpr(props.expandedTitleScale)?.toDouble() ?? 1.5;
+
     Widget? flexibleSpaceWidget;
     if (useFlexibleSpace) {
       flexibleSpaceWidget = FlexibleSpaceBar(
@@ -56,6 +61,8 @@ class VWSliverAppBar extends VirtualSliver<SliverAppBarProps> {
         background: useBackgroundWidget && childOf('background') != null
             ? childOf('background')!.toWidget(payload)
             : null,
+        collapseMode: collapseMode,
+        expandedTitleScale: expandedTitleScale,
       );
     } else if (useBackgroundWidget && childOf('background') != null) {
       flexibleSpaceWidget = FlexibleSpaceBar(

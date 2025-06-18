@@ -55,6 +55,10 @@ class VWAppBar extends VirtualStatelessWidget<AppBarProps> {
     final automaticallyImplyLeading =
         payload.evalExpr(props.automaticallyImplyLeading) ?? true;
     final defaultButtonColor = payload.evalColorExpr(props.defaultButtonColor);
+    final collapseMode = CollapseMode.values
+        .byName(payload.evalExpr(props.collapseMode) ?? 'parallax');
+    final expandedTitleScale =
+        payload.evalExpr(props.expandedTitleScale)?.toDouble() ?? 1.5;
 
     Widget? flexibleSpaceWidget;
     if (useFlexibleSpace) {
@@ -66,6 +70,8 @@ class VWAppBar extends VirtualStatelessWidget<AppBarProps> {
             background: useBackgroundWidget && childOf('background') != null
                 ? childOf('background')!.toWidget(payload)
                 : null,
+            collapseMode: collapseMode,
+            expandedTitleScale: expandedTitleScale,
           );
     } else if (useBackgroundWidget && childOf('background') != null) {
       flexibleSpaceWidget = FlexibleSpaceBar(
