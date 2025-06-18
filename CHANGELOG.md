@@ -2,6 +2,10 @@
 
 Digia Ui SDK.
 
+## [0.3.20] - 2025-06-18
+
+- 🐞 Fixed a bug in Carousel where numeric values were not properly converted to num type
+
 ## [0.3.19] - 2025-06-16
 
 - 🌗 Added support for both Light and Dark themes for a better adaptive UI experience
