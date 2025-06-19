@@ -17,7 +17,6 @@ class SliverAppBarProps {
   final ActionFlow? onTapLeadingIcon;
   final JsonLike? trailingIcon;
   final ExprOr<bool>? centerTitle;
-  final ExprOr<bool>? useTitleWidget;
   final ExprOr<double>? titleSpacing;
   final ExprOr<bool>? enableCollapsibleAppBar;
   final ExprOr<String>? expandedHeight;
@@ -27,17 +26,13 @@ class SliverAppBarProps {
   final ExprOr<bool>? snap;
   final ExprOr<String>? height;
   final ExprOr<String>? toolbarHeight;
-  final ExprOr<bool>? useBottomWidget;
   final ExprOr<String>? bottomSectionHeight;
   final ExprOr<String>? bottomSectionWidth;
   final ExprOr<bool>? useFlexibleSpace;
   final ExprOr<String>? titlePadding;
   final ExprOr<String>? collapseMode;
   final ExprOr<double>? expandedTitleScale;
-  final ExprOr<bool>? useBackgroundWidget;
   final JsonLike? shape;
-  final ExprOr<bool>? useLeadingWidget;
-  final ExprOr<bool>? useActionsWidget;
 
   const SliverAppBarProps({
     required this.title,
@@ -61,16 +56,11 @@ class SliverAppBarProps {
     this.titlePadding,
     this.collapseMode,
     this.expandedTitleScale,
-    this.useBackgroundWidget,
     this.shape,
-    this.useLeadingWidget,
-    this.useActionsWidget,
-    this.useBottomWidget,
     this.bottomSectionHeight,
     this.bottomSectionWidth,
     this.automaticallyImplyLeading,
     this.defaultButtonColor,
-    this.useTitleWidget,
     this.height,
   });
 
@@ -103,17 +93,12 @@ class SliverAppBarProps {
       titlePadding: ExprOr.fromJson<String>(json['titlePadding']),
       collapseMode: ExprOr.fromJson<String>(json['collapseMode']),
       expandedTitleScale: ExprOr.fromJson<double>(json['expandedTitleScale']),
-      useBackgroundWidget: ExprOr.fromJson<bool>(json['useBackgroundWidget']),
       shape: as$<JsonLike>(json['shape']),
-      useLeadingWidget: ExprOr.fromJson<bool>(json['useLeadingWidget']),
-      useActionsWidget: ExprOr.fromJson<bool>(json['useActionsWidget']),
-      useBottomWidget: ExprOr.fromJson<bool>(json['useBottomWidget']),
       bottomSectionHeight: ExprOr.fromJson<String>(json['bottomSectionHeight']),
       bottomSectionWidth: ExprOr.fromJson<String>(json['bottomSectionWidth']),
       automaticallyImplyLeading:
           ExprOr.fromJson<bool>(json['automaticallyImplyLeading']),
       defaultButtonColor: ExprOr.fromJson<String>(json['defaultButtonColor']),
-      useTitleWidget: ExprOr.fromJson<bool>(json['useTitleWidget']),
       height: ExprOr.fromJson<String>(json['height']),
     );
   }

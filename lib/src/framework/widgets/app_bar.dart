@@ -48,10 +48,6 @@ class VWAppBar extends VirtualStatelessWidget<AppBarProps> {
     final shape = To.buttonShape(props.shape, payload.getColor);
     final useFlexibleSpace = payload.evalExpr(props.useFlexibleSpace) ?? false;
     final titlePadding = To.edgeInsets(props.titlePadding);
-    final useBackgroundWidget =
-        payload.evalExpr(props.useBackgroundWidget) ?? false;
-    final useTitleWidget = payload.evalExpr(props.useTitleWidget) ?? false;
-    final useBottomWidget = payload.evalExpr(props.useBottomWidget) ?? false;
     final automaticallyImplyLeading =
         payload.evalExpr(props.automaticallyImplyLeading) ?? true;
     final defaultButtonColor = payload.evalColorExpr(props.defaultButtonColor);
@@ -62,25 +58,22 @@ class VWAppBar extends VirtualStatelessWidget<AppBarProps> {
 
     Widget? flexibleSpaceWidget;
     if (useFlexibleSpace) {
-      flexibleSpaceWidget = childOf('flexibleSpace')?.toWidget(payload) ??
-          FlexibleSpaceBar(
-            title: _buildTitle(payload, useTitleWidget),
-            centerTitle: centerTitle,
-            titlePadding: titlePadding,
-            background: useBackgroundWidget && childOf('background') != null
-                ? childOf('background')!.toWidget(payload)
-                : null,
-            collapseMode: collapseMode,
-            expandedTitleScale: expandedTitleScale,
-          );
-    } else if (useBackgroundWidget && childOf('background') != null) {
+      flexibleSpaceWidget = FlexibleSpaceBar(
+        title: _buildTitle(payload),
+        centerTitle: centerTitle,
+        titlePadding: titlePadding,
+        background: childOf('background')?.toWidget(payload),
+        collapseMode: collapseMode,
+        expandedTitleScale: expandedTitleScale,
+      );
+    } else if (childOf('background') != null) {
       flexibleSpaceWidget = FlexibleSpaceBar(
         background: childOf('background')?.toWidget(payload),
       );
     }
 
     return AppBar(
-      title: useFlexibleSpace ? null : _buildTitle(payload, useTitleWidget),
+      title: useFlexibleSpace ? null : _buildTitle(payload),
       elevation: payload.evalExpr(props.elevation)?.toDouble(),
       shadowColor: payload.evalColorExpr(props.shadowColor),
       backgroundColor: payload.evalColorExpr(props.backgroundColor),
@@ -95,7 +88,7 @@ class VWAppBar extends VirtualStatelessWidget<AppBarProps> {
       toolbarHeight: toolbarHeight,
       shape: shape,
       flexibleSpace: flexibleSpaceWidget,
-      bottom: useBottomWidget
+      bottom: childOf('bottom') != null
           ? PreferredSize(
               preferredSize:
                   Size(bottomSectionWidth ?? 0, bottomSectionHeight ?? 0),
@@ -105,8 +98,8 @@ class VWAppBar extends VirtualStatelessWidget<AppBarProps> {
     );
   }
 
-  Widget _buildTitle(RenderPayload payload, bool useTitleWidget) {
-    if (useTitleWidget && childOf('title') != null) {
+  Widget _buildTitle(RenderPayload payload) {
+    if (childOf('title') != null) {
       return childOf('title')!.toWidget(payload);
     }
     return VWText(
@@ -116,9 +109,7 @@ class VWAppBar extends VirtualStatelessWidget<AppBarProps> {
   }
 
   Widget? _buildLeading(RenderPayload payload) {
-    final useLeadingWidget = payload.evalExpr(props.useLeadingWidget) ?? false;
-
-    if (useLeadingWidget && childOf('leading') != null) {
+    if (childOf('leading') != null) {
       return childOf('leading')!.toWidget(payload);
     }
 
@@ -139,9 +130,7 @@ class VWAppBar extends VirtualStatelessWidget<AppBarProps> {
   }
 
   List<Widget>? _buildActions(RenderPayload payload) {
-    final useActionsWidget = payload.evalExpr(props.useActionsWidget) ?? false;
-
-    if (useActionsWidget && childrenOf('actions') != null) {
+    if (childrenOf('actions') != null) {
       return childrenOf('actions')?.map((e) => e.toWidget(payload)).toList();
     }
 

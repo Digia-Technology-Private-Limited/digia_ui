@@ -136,11 +136,7 @@ class VWScaffold extends VirtualStatelessWidget<ScaffoldProps> {
       titlePadding: payload.eval(appBarProps?.titlePadding),
       collapseMode: payload.eval(appBarProps?.collapseMode),
       expandedTitleScale: payload.eval(appBarProps?.expandedTitleScale),
-      useBackgroundWidget: payload.eval(appBarProps?.useBackgroundWidget),
       shape: payload.eval(appBarProps?.shape),
-      useLeadingWidget: payload.eval(appBarProps?.useLeadingWidget),
-      useActionsWidget: payload.eval(appBarProps?.useActionsWidget),
-      useBottomWidget: payload.eval(appBarProps?.useBottomWidget),
       bottomSectionHeight: payload.eval(appBarProps?.bottomSectionHeight),
       bottomSectionWidth: payload.eval(appBarProps?.bottomSectionWidth),
       automaticallyImplyLeading:
@@ -148,7 +144,6 @@ class VWScaffold extends VirtualStatelessWidget<ScaffoldProps> {
       defaultButtonColor: payload.eval(appBarProps?.defaultButtonColor),
       enableCollapsibleAppBar:
           payload.eval(appBarProps?.enableCollapsibleAppBar),
-      useTitleWidget: payload.eval(appBarProps?.useTitleWidget),
       height: payload.eval(appBarProps?.height),
       trailingIcon: payload.eval(appBarProps?.trailingIcon),
       onTapLeadingIcon: payload.eval(appBarProps?.onTapLeadingIcon),

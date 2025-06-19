@@ -25,6 +25,7 @@ import 'widget_props/paginated_list_view_props.dart';
 import 'widget_props/paginated_sliver_list_props.dart';
 import 'widget_props/pin_field_props.dart';
 import 'widget_props/range_slider_props.dart';
+import 'widget_props/rich_text_props.dart';
 import 'widget_props/safe_area_props.dart';
 import 'widget_props/scaffold_props.dart';
 import 'widget_props/sized_box_props.dart';
@@ -165,7 +166,7 @@ VWRangeSlider rangeSliderBuilder(VWNodeData data, VirtualWidget? parent, _) {
 
 VWRichText richTextBuilder(VWNodeData data, VirtualWidget? parent, _) {
   return VWRichText(
-    props: data.props,
+    props: RichTextProps.fromJson(data.props.value),
     commonProps: data.commonProps,
     parent: parent,
     refName: data.refName,
