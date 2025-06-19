@@ -9,6 +9,7 @@ import 'base/action_flow.dart';
 import 'base/processor.dart';
 import 'callRestApi/processor.dart';
 import 'controlDrawer/processor.dart';
+import 'controlNavBar/processor.dart';
 import 'controlObject/processor.dart';
 import 'copyToClipBoard/processor.dart';
 import 'delay/processor.dart';
@@ -70,6 +71,8 @@ class ActionProcessorFactory {
         );
       case an.ActionType.controlDrawer:
         actionProcessor = ControlDrawerProcessor();
+      case an.ActionType.controlNavBar:
+        actionProcessor = ControlNavBarProcessor();
       case an.ActionType.controlObject:
         actionProcessor = ControlObjectProcessor(
           registry: dependencies.bindingRegistry,

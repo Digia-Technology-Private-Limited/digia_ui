@@ -1,31 +1,36 @@
 import 'package:flutter/material.dart';
 
+import '../actions/base/action_flow.dart';
 import '../base/virtual_stateless_widget.dart';
 import '../internal_widgets/bottom_navigation_bar.dart' as internal;
 import '../render_payload.dart';
 import '../utils/flutter_type_converters.dart';
-import '../widget_props/bottom_navigation_bar_props.dart';
-import '../widgets/container.dart';
-import 'bottom_navigation_bar_item.dart';
+import '../widget_props/navigation_bar_props.dart';
+import 'container.dart';
+import 'nav_bar_item_default.dart';
 
-class VWBottomNavigationBar
-    extends VirtualStatelessWidget<BottomNavigationBarProps> {
+class VWNavigationBar extends VirtualStatelessWidget<NavigationBarProps> {
   void Function(int)? onDestinationSelected;
+  final int selectedIndex;
 
-  VWBottomNavigationBar({
+  VWNavigationBar({
     required super.props,
     required super.commonProps,
     required super.parent,
     required super.childGroups,
     super.refName,
     this.onDestinationSelected,
+    this.selectedIndex = 0,
   });
 
   void handleDestinationSelected(int index, RenderPayload payload) {
     final selectedChild = children?.elementAt(index);
-    if (selectedChild is VWBottomNavigationBarItem) {
-      final onPageSelected = selectedChild.props.onPageSelected;
-      payload.executeAction(onPageSelected);
+    if (selectedChild is VWNavigationBarItemDefault) {
+      final onPageSelected = selectedChild.props.onSelect;
+      final onPageSelectedAction = onPageSelected?['action'];
+      if (onPageSelectedAction != null) {
+        payload.executeAction(ActionFlow.fromJson(onPageSelectedAction));
+      }
     }
     onDestinationSelected?.call(index);
   }
@@ -48,8 +53,9 @@ class VWBottomNavigationBar
       labelBehavior: payload.evalExpr(props.showLabels) ?? true
           ? NavigationDestinationLabelBehavior.alwaysShow
           : NavigationDestinationLabelBehavior.alwaysHide,
+      selectedIndex: selectedIndex,
       destinations: children
-              ?.whereType<VWBottomNavigationBarItem>()
+              ?.whereType<VWNavigationBarItemDefault>()
               .map((e) => e.toWidget(payload))
               .toList() ??
           [],

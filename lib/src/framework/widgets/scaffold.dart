@@ -4,6 +4,7 @@ import '../../../digia_ui.dart';
 import '../base/extensions.dart';
 import '../base/virtual_stateless_widget.dart';
 import '../base/virtual_widget.dart';
+import '../internal_widgets/inherited_scaffold_controller.dart';
 import '../utils/flutter_extensions.dart';
 import '../utils/functional_util.dart';
 import '../utils/types.dart';
@@ -12,10 +13,12 @@ import '../widget_props/scaffold_props.dart';
 import '../widget_props/sliver_app_bar_props.dart';
 import '../widget_props/text_props.dart';
 import 'app_bar.dart';
-import 'bottom_navigation_bar.dart';
-import 'bottom_navigation_bar_item.dart';
 import 'drawer.dart';
 import 'icon.dart';
+import 'nav_bar_item_custom.dart';
+import 'nav_bar_item_default.dart';
+import 'navigation_bar.dart';
+import 'navigation_bar_custom.dart';
 import 'safe_area.dart';
 import 'sliver_app_bar.dart';
 
@@ -41,7 +44,6 @@ class VWScaffold extends VirtualStatelessWidget<ScaffoldProps> {
     final bottomNavigationBar =
         childOf('bottomNavigationBar')?.toWidget(payload);
 
-    int bottomNavBarIndex = 0;
     final themeData = Theme.of(payload.buildContext).copyWith(
       dividerTheme: const DividerThemeData(color: Colors.transparent),
       scaffoldBackgroundColor:
@@ -56,57 +58,30 @@ class VWScaffold extends VirtualStatelessWidget<ScaffoldProps> {
     }
 
     return Theme(
-        data: themeData,
-        child: bottomNavigationBar == null
-            ? Scaffold(
-                appBar: isCollapsibleAppBar ? null : _buildAppBar(payload),
+      data: themeData,
+      child: bottomNavigationBar == null
+          ? Scaffold(
+              appBar: isCollapsibleAppBar ? null : _buildAppBar(payload),
+              drawer: drawer,
+              endDrawer: endDrawer,
+              persistentFooterButtons: persistentFooterButtons,
+              body: isCollapsibleAppBar
+                  ? _buildCollapsibleAppBarBody(payload, enableSafeArea)
+                  : _buildRegularBody(payload, enableSafeArea),
+            )
+          : StatefulBuilder(
+              builder: (context, setState) => _ScaffoldWithBottomNav(
+                appBarWidget: appBarWidget,
                 drawer: drawer,
                 endDrawer: endDrawer,
                 persistentFooterButtons: persistentFooterButtons,
-                body: isCollapsibleAppBar
-                    ? _buildCollapsibleAppBarBody(payload, enableSafeArea)
-                    : _buildRegularBody(payload, enableSafeArea),
-              )
-            : StatefulBuilder(
-                builder: (context, setState) {
-                  void onDestinationSelected(int index) {
-                    setState(() {
-                      bottomNavBarIndex = index;
-                    });
-                  }
-
-                  Widget? buildBottomNavigationBar(RenderPayload payload) {
-                    final child = childOf('bottomNavigationBar');
-                    if (child == null || child is! VWBottomNavigationBar) {
-                      return null;
-                    }
-
-                    return VWBottomNavigationBar(
-                      props: child.props,
-                      commonProps: child.commonProps,
-                      parent: this,
-                      childGroups: child.childGroups,
-                      onDestinationSelected: (p0) {
-                        onDestinationSelected(p0);
-                      },
-                    ).toWidget(payload);
-                  }
-
-                  return Scaffold(
-                    appBar: isCollapsibleAppBar ? null : _buildAppBar(payload),
-                    drawer: drawer,
-                    endDrawer: endDrawer,
-                    bottomNavigationBar: buildBottomNavigationBar(payload),
-                    body: isCollapsibleAppBar
-                        ? _buildCollapsibleAppBarBody(payload, enableSafeArea)
-                        : bottomNavBarIndex == 0
-                            ? _buildRegularBody(payload, enableSafeArea)
-                            : _buildBodyWithNavBar(
-                                payload, bottomNavBarIndex, enableSafeArea),
-                    persistentFooterButtons: persistentFooterButtons,
-                  );
-                },
-              ));
+                isCollapsibleAppBar: isCollapsibleAppBar,
+                enableSafeArea: enableSafeArea,
+                payload: payload,
+                parent: this,
+              ),
+            ),
+    );
   }
 
   PreferredSizeWidget? _buildAppBar(RenderPayload payload) {
@@ -277,26 +252,58 @@ class VWScaffold extends VirtualStatelessWidget<ScaffoldProps> {
   Widget? _buildBodyWithNavBar(
       RenderPayload payload, int bottomNavBarIndex, bool enableSafeArea) {
     final bottomNavBar = childOf('bottomNavigationBar');
-    if (bottomNavBar is! VWBottomNavigationBar) return null;
+    if (bottomNavBar is! VWNavigationBar &&
+        bottomNavBar is! VWNavigationBarCustom) {
+      return null;
+    }
 
-    final navigationItems =
-        bottomNavBar.children?.whereType<VWBottomNavigationBarItem>().toList();
+    final isDefaultNavBar = bottomNavBar is VWNavigationBar;
+    final navigationItems = isDefaultNavBar
+        ? bottomNavBar
+            .childrenOf('children')
+            ?.whereType<VWNavigationBarItemDefault>()
+            .toList()
+        : (bottomNavBar as VWNavigationBarCustom)
+            .childrenOf('children')
+            ?.whereType<VWNavigationBarItemCustom>()
+            .toList();
+
     if (navigationItems == null || navigationItems.isEmpty) return null;
 
-    final entityIds = navigationItems
-        .map(
-          (item) => as$<String?>(item.props.entity?['id']),
-        )
-        .toList();
-    if (entityIds.isEmpty || bottomNavBarIndex >= entityIds.length) return null;
+    final entityIds = navigationItems.map((item) {
+      if (isDefaultNavBar) {
+        return as$<String?>(((item as VWNavigationBarItemDefault)
+            .props
+            .onSelect?['entity'] as JsonLike?)?['id']);
+      } else {
+        return as$<String?>(((item as VWNavigationBarItemCustom)
+            .props
+            .onSelect?['entity'] as JsonLike?)?['id']);
+      }
+    }).toList();
 
+    if (entityIds.isEmpty || bottomNavBarIndex >= entityIds.length) return null;
     final currentEntityId = entityIds[bottomNavBarIndex];
     if (currentEntityId == null) return null;
 
-    final currentEntityArgs = as$<JsonLike?>(navigationItems
-        .firstWhere((item) => item.props.entity?['id'] == currentEntityId)
-        .props
-        .entity?['args']);
+    final currentItem = navigationItems.firstWhere((item) {
+      if (isDefaultNavBar) {
+        return ((item as VWNavigationBarItemDefault).props.onSelect?['entity']
+                as JsonLike?)?['id'] ==
+            currentEntityId;
+      } else {
+        return ((item as VWNavigationBarItemCustom).props.onSelect?['entity']
+                as JsonLike?)?['id'] ==
+            currentEntityId;
+      }
+    });
+
+    final currentEntityArgs = isDefaultNavBar
+        ? (((currentItem as VWNavigationBarItemDefault)
+            .props
+            .onSelect?['entity'] as JsonLike?)?['args'] as JsonLike?)
+        : (((currentItem as VWNavigationBarItemCustom).props.onSelect?['entity']
+            as JsonLike?)?['args'] as JsonLike?);
 
     final Widget entity =
         DefaultActionExecutor.of(payload.buildContext).viewBuilder(
@@ -305,5 +312,91 @@ class VWScaffold extends VirtualStatelessWidget<ScaffoldProps> {
       currentEntityArgs,
     );
     return enableSafeArea ? SafeArea(child: entity) : entity;
+  }
+}
+
+class _ScaffoldWithBottomNav extends StatefulWidget {
+  final VirtualWidget? appBarWidget;
+  final Widget? drawer;
+  final Widget? endDrawer;
+  final List<Widget>? persistentFooterButtons;
+  final bool isCollapsibleAppBar;
+  final bool enableSafeArea;
+  final RenderPayload payload;
+  final VWScaffold parent;
+
+  const _ScaffoldWithBottomNav({
+    required this.appBarWidget,
+    required this.drawer,
+    required this.endDrawer,
+    required this.persistentFooterButtons,
+    required this.isCollapsibleAppBar,
+    required this.enableSafeArea,
+    required this.payload,
+    required this.parent,
+  });
+
+  @override
+  State<_ScaffoldWithBottomNav> createState() => _ScaffoldWithBottomNavState();
+}
+
+class _ScaffoldWithBottomNavState extends State<_ScaffoldWithBottomNav> {
+  int bottomNavBarIndex = 0;
+
+  void onDestinationSelected(int index) {
+    setState(() {
+      bottomNavBarIndex = index;
+    });
+  }
+
+  Widget? buildBottomNavigationBar(RenderPayload payload) {
+    final child = widget.parent.childOf('bottomNavigationBar');
+    if (child == null) return null;
+    if (child is! VWNavigationBar && child is! VWNavigationBarCustom) {
+      return null;
+    }
+
+    if (child is VWNavigationBarCustom) {
+      return VWNavigationBarCustom(
+        props: child.props,
+        commonProps: child.commonProps,
+        parent: widget.parent,
+        childGroups: child.childGroups,
+        selectedIndex: bottomNavBarIndex,
+        onDestinationSelected: onDestinationSelected,
+      ).toWidget(payload);
+    } else {
+      child as VWNavigationBar;
+      return VWNavigationBar(
+        props: child.props,
+        commonProps: child.commonProps,
+        parent: widget.parent,
+        childGroups: child.childGroups,
+        selectedIndex: bottomNavBarIndex,
+        onDestinationSelected: onDestinationSelected,
+      ).toWidget(payload);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return InheritedScaffoldController(
+      setCurrentIndex: onDestinationSelected,
+      currentIndex: bottomNavBarIndex,
+      child: Scaffold(
+        appBar: widget.isCollapsibleAppBar
+            ? null
+            : widget.parent._buildAppBar(widget.payload),
+        drawer: widget.drawer,
+        endDrawer: widget.endDrawer,
+        bottomNavigationBar: buildBottomNavigationBar(widget.payload),
+        body: widget.isCollapsibleAppBar
+            ? widget.parent._buildCollapsibleAppBarBody(
+                widget.payload, widget.enableSafeArea)
+            : widget.parent._buildBodyWithNavBar(
+                widget.payload, bottomNavBarIndex, widget.enableSafeArea),
+        persistentFooterButtons: widget.persistentFooterButtons,
+      ),
+    );
   }
 }
