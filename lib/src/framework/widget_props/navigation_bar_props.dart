@@ -2,7 +2,7 @@ import '../models/types.dart';
 import '../utils/functional_util.dart';
 import '../utils/types.dart';
 
-class BottomNavigationBarProps {
+class NavigationBarProps {
   final ExprOr<String>? backgroundColor;
   final ExprOr<int>? animationDuration;
   final ExprOr<double>? height;
@@ -14,7 +14,7 @@ class BottomNavigationBarProps {
   final List<Object?>? shadow;
   final String? borderRadius;
 
-  const BottomNavigationBarProps({
+  const NavigationBarProps({
     this.backgroundColor,
     this.animationDuration,
     this.height,
@@ -27,8 +27,8 @@ class BottomNavigationBarProps {
     this.showLabels,
   });
 
-  factory BottomNavigationBarProps.fromJson(JsonLike json) {
-    return BottomNavigationBarProps(
+  factory NavigationBarProps.fromJson(JsonLike json) {
+    return NavigationBarProps(
       backgroundColor: ExprOr.fromJson<String>(json['backgroundColor']),
       animationDuration: ExprOr.fromJson<int>(json['animationDuration']),
       height: ExprOr.fromJson<double>(json['height']),

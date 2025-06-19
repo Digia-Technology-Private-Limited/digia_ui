@@ -56,6 +56,8 @@ abstract class VirtualWidgetRegistry {
     'digia/tabViewContent': tabViewContentBuilder,
     'digia/navigationBar': navigationBarBuilder,
     'digia/navigationBarItem': navigationBarItemBuilder,
+    'digia/navigationBarCustom': navigationBarCustomBuilder,
+    'digia/navigationBarItemCustom': navigationBarItemCustomBuilder,
     'digia/overlay': overlayBuilder,
     'digia/pageView': pageViewBuilder,
     'digia/smartScrollGroup': smartScrollGroupBuilder,

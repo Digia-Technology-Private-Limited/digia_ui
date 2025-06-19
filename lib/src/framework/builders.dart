@@ -9,14 +9,16 @@ import 'widget_props/animated_switcher_props.dart';
 import 'widget_props/app_bar_props.dart';
 import 'widget_props/async_builder_props.dart';
 import 'widget_props/before_after_slider_props.dart';
-import 'widget_props/bottom_navigation_bar_item_props.dart';
-import 'widget_props/bottom_navigation_bar_props.dart';
 import 'widget_props/carousel_props.dart';
 import 'widget_props/condtional_item_props.dart';
 import 'widget_props/flex_fit_props.dart';
 import 'widget_props/icon_props.dart';
 import 'widget_props/image_view_360_props.dart';
 import 'widget_props/markdown_props.dart';
+import 'widget_props/nav_bar_item_custom.dart';
+import 'widget_props/nav_bar_item_default_props.dart';
+import 'widget_props/navigation_bar_custom_props.dart';
+import 'widget_props/navigation_bar_props.dart';
 import 'widget_props/nested_scroll_view_props.dart';
 import 'widget_props/opacity_props.dart';
 import 'widget_props/paginated_list_view_props.dart';
@@ -43,8 +45,6 @@ import 'widgets/app_bar.dart';
 import 'widgets/async_builder.dart';
 import 'widgets/avatar.dart';
 import 'widgets/before_after_slider.dart';
-import 'widgets/bottom_navigation_bar.dart';
-import 'widgets/bottom_navigation_bar_item.dart';
 import 'widgets/button.dart';
 import 'widgets/calendar.dart';
 import 'widgets/carousel.dart';
@@ -53,7 +53,6 @@ import 'widgets/circular_progress_bar.dart';
 import 'widgets/conditional_builder.dart';
 import 'widgets/condtional_item.dart';
 import 'widgets/container.dart';
-import 'widgets/smart_scroll_view.dart';
 import 'widgets/drawer.dart';
 import 'widgets/expandable.dart';
 import 'widgets/flex.dart';
@@ -68,6 +67,10 @@ import 'widgets/linear_progress_bar.dart';
 import 'widgets/list_view.dart';
 import 'widgets/lottie.dart';
 import 'widgets/markdown.dart';
+import 'widgets/nav_bar_item_custom.dart';
+import 'widgets/nav_bar_item_default.dart';
+import 'widgets/navigation_bar.dart';
+import 'widgets/navigation_bar_custom.dart';
 import 'widgets/nested_scroll_view.dart';
 import 'widgets/opacity.dart';
 import 'widgets/overlay.dart';
@@ -75,6 +78,7 @@ import 'widgets/page_view.dart';
 import 'widgets/paginated_list_view.dart';
 import 'widgets/paginated_sliver_list.dart';
 import 'widgets/pin_field.dart';
+import 'widgets/pinned_header.dart';
 import 'widgets/range_slider.dart';
 import 'widgets/refresh_indicator.dart';
 import 'widgets/rich_text.dart';
@@ -85,7 +89,7 @@ import 'widgets/sliver_app_bar.dart';
 import 'widgets/sliver_grid.dart';
 import 'widgets/sliver_list.dart';
 import 'widgets/smart_scroll_group.dart';
-import 'widgets/pinned_header.dart';
+import 'widgets/smart_scroll_view.dart';
 import 'widgets/spacer.dart';
 import 'widgets/stack.dart';
 import 'widgets/stepper.dart';
@@ -940,13 +944,13 @@ VWAnimatedSwitcher animatedSwitcher(
   );
 }
 
-VWBottomNavigationBar navigationBarBuilder(
+VWNavigationBar navigationBarBuilder(
   VWNodeData data,
   VirtualWidget? parent,
   VirtualWidgetRegistry registry,
 ) {
-  return VWBottomNavigationBar(
-    props: BottomNavigationBarProps.fromJson(data.props.value),
+  return VWNavigationBar(
+    props: NavigationBarProps.fromJson(data.props.value),
     commonProps: data.commonProps,
     parent: parent,
     childGroups: createChildGroups(data.childGroups, parent, registry),
@@ -954,13 +958,41 @@ VWBottomNavigationBar navigationBarBuilder(
   );
 }
 
-VWBottomNavigationBarItem navigationBarItemBuilder(
+VWNavigationBarItemDefault navigationBarItemBuilder(
   VWNodeData data,
   VirtualWidget? parent,
   VirtualWidgetRegistry registry,
 ) {
-  return VWBottomNavigationBarItem(
-    props: BottomNavigationBarItemProps.fromJson(data.props.value),
+  return VWNavigationBarItemDefault(
+    props: NavigationBarItemDefaultProps.fromJson(data.props.value),
+    refName: data.refName,
+  );
+}
+
+VWNavigationBarCustom navigationBarCustomBuilder(
+  VWNodeData data,
+  VirtualWidget? parent,
+  VirtualWidgetRegistry registry,
+) {
+  return VWNavigationBarCustom(
+    props: NavigationBarCustomProps.fromJson(data.props.value),
+    commonProps: data.commonProps,
+    parent: parent,
+    childGroups: createChildGroups(data.childGroups, parent, registry),
+    refName: data.refName,
+  );
+}
+
+VWNavigationBarItemCustom navigationBarItemCustomBuilder(
+  VWNodeData data,
+  VirtualWidget? parent,
+  VirtualWidgetRegistry registry,
+) {
+  return VWNavigationBarItemCustom(
+    props: NavigationBarItemCustomProps.fromJson(data.props.value),
+    commonProps: data.commonProps,
+    parent: parent,
+    childGroups: createChildGroups(data.childGroups, parent, registry),
     refName: data.refName,
   );
 }
