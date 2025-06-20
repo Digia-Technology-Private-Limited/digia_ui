@@ -54,13 +54,14 @@ class ShowDialogProcessor extends ActionProcessor<ShowDialogAction> {
       },
     );
 
+    final entity = action.viewData?.evaluate(scopeContext);
     Object? result = await presentDialog(
       context: context,
       builder: (innerCtx) {
         return viewBuilder(
           innerCtx,
-          as$<String>(as$<JsonLike>(action.viewData)?['viewId']) ?? '',
-          as$<JsonLike>(as$<JsonLike>(action.viewData)?['args'])
+          as$<String>(as$<JsonLike>(entity)?['id']) ?? '',
+          as$<JsonLike>(as$<JsonLike>(entity)?['args'])
               ?.map((key, value) => MapEntry(
                     key,
                     ExprOr.fromJson<Object>(value),
