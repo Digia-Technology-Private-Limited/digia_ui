@@ -41,6 +41,7 @@ Future<T?> presentBottomSheet<T>({
     backgroundColor: backgroundColor,
     scrollControlDisabledMaxHeightRatio: scrollControlDisabledMaxHeightRatio,
     barrierColor: barrierColor,
+    useSafeArea: true,
     builder: (innerContext) {
       return BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),

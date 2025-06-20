@@ -44,13 +44,13 @@ class ShowBottomSheetProcessor extends ActionProcessor<ShowBottomSheetAction> {
     final navigatorKey = provider?.navigatorKey;
     final bgColor = ExprOr.fromJson<String>(style['bgColor'])
         ?.evaluate(scopeContext)
-        .maybe((p0) => provider?.getColor(p0));
+        .maybe((p0) => provider?.getColor(p0, context));
     final barrierColor = ExprOr.fromJson<String>(style['barrierColor'])
         ?.evaluate(scopeContext)
-        .maybe((p0) => provider?.getColor(p0));
+        .maybe((p0) => provider?.getColor(p0, context));
     final borderColor = ExprOr.fromJson<String>(style['borderColor'])
         ?.evaluate(scopeContext)
-        .maybe((p0) => provider?.getColor(p0));
+        .maybe((p0) => provider?.getColor(p0, context));
     final maxHeightRatio =
         ExprOr.fromJson<double>(style['maxHeight'])?.evaluate(scopeContext) ??
             1;
