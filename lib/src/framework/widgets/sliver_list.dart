@@ -15,13 +15,12 @@ class VWSliverList extends VirtualSliver<Props> {
     required super.childGroups,
   });
 
-  bool get shouldRepeatChild => props.getString('dataSource') != null;
+  bool get shouldRepeatChild => props.get('dataSource') != null;
 
   @override
   Widget render(RenderPayload payload) {
     if (shouldRepeatChild) {
-      final items =
-          payload.eval<List<Object>>(props.getString('dataSource')) ?? [];
+      final items = payload.eval<List<Object>>(props.get('dataSource')) ?? [];
 
       return SliverList.builder(
         itemCount: items.length,

@@ -18,7 +18,7 @@ class VWPageView extends VirtualStatelessWidget<Props> {
     required super.childGroups,
   });
 
-  bool get shouldRepeatChild => props.getString('dataSource') != null;
+  bool get shouldRepeatChild => props.get('dataSource') != null;
 
   @override
   Widget render(RenderPayload payload) {
@@ -37,8 +37,7 @@ class VWPageView extends VirtualStatelessWidget<Props> {
 
     if (shouldRepeatChild) {
       final childToRepeat = children!.first;
-      final items =
-          payload.eval<List<Object>>(props.getString('dataSource')) ?? [];
+      final items = payload.eval<List<Object>>(props.get('dataSource')) ?? [];
 
       final preloadPages =
           payload.eval<bool>(props.get('preloadPages')) ?? false;
