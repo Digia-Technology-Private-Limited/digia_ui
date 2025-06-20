@@ -18,8 +18,8 @@ class ImagePickerProcessor extends ActionProcessor<ImagePickerAction> {
   ) async {
     final mediaSource = action.mediaSource;
     final cameraDevice = action.cameraDevice;
-    final allowPhoto = action.allowPhoto ?? true;
-    final allowVideo = action.allowVideo ?? false;
+    final allowPhoto = action.mediaType == 'photo' || action.mediaType == 'all';
+    final allowVideo = action.mediaType == 'video' || action.mediaType == 'all';
     final maxDuration = action.maxDuration?.evaluate(scopeContext);
     final maxWidth = action.maxWidth?.evaluate(scopeContext);
     final maxHeight = action.maxHeight?.evaluate(scopeContext);
@@ -27,7 +27,7 @@ class ImagePickerProcessor extends ActionProcessor<ImagePickerAction> {
     final limit = action.limit?.evaluate(scopeContext)?.round();
     final allowMultiple = action.allowMultiple ?? false;
     final selectedPageState =
-        action.selectedPageState?.evaluate(scopeContext) as AdaptedFile?;
+        action.fileVariable?.evaluate(scopeContext) as AdaptedFile?;
 
     if (!allowPhoto && !allowVideo) {
       throw 'At least one of allowPhoto or allowVideo must be true';

@@ -3,12 +3,11 @@ import '../../utils/functional_util.dart';
 import '../base/action.dart';
 
 class ImagePickerAction extends Action {
-  final ExprOr<Object>? selectedPageState;
+  final ExprOr<Object>? fileVariable;
 
   final String? mediaSource;
   final String? cameraDevice;
-  final bool? allowPhoto;
-  final bool? allowVideo;
+  final String? mediaType;
   final ExprOr<double>? maxDuration;
 
   final ExprOr<double>? maxWidth;
@@ -23,15 +22,14 @@ class ImagePickerAction extends Action {
   ImagePickerAction({
     this.mediaSource,
     this.cameraDevice,
-    this.allowPhoto = true,
-    this.allowVideo = false,
+    this.mediaType,
     this.maxDuration,
     this.maxWidth,
     this.maxHeight,
     this.imageQuality,
     this.limit,
     this.allowMultiple = false,
-    this.selectedPageState,
+    this.fileVariable,
   });
 
   @override
@@ -41,14 +39,13 @@ class ImagePickerAction extends Action {
     return ImagePickerAction(
       mediaSource: as$<String>(json['mediaSource']),
       cameraDevice: as$<String>(json['cameraDevice']),
-      allowPhoto: as$<bool>(json['allowPhoto']),
-      allowVideo: as$<bool>(json['allowVideo']),
+      mediaType: as$<String>(json['mediaType']),
       allowMultiple: as$<bool>(json['allowMultiple']) ?? false,
       maxWidth: ExprOr.fromJson<double>(json['maxWidth']),
       maxHeight: ExprOr.fromJson<double>(json['maxHeight']),
       imageQuality: ExprOr.fromJson<double>(json['imageQuality']),
       maxDuration: ExprOr.fromJson<double>(json['maxDuration']),
-      selectedPageState: ExprOr.fromJson<Object>(json['selectedPageState']),
+      fileVariable: ExprOr.fromJson<Object>(json['fileVariable']),
     );
   }
 
@@ -58,14 +55,13 @@ class ImagePickerAction extends Action {
       'type': actionType.toString(),
       'mediaSource': mediaSource,
       'cameraDevice': cameraDevice,
-      'allowPhoto': allowPhoto,
-      'allowVideo': allowVideo,
+      'mediaType': mediaType,
       'allowMultiple': allowMultiple,
       'maxWidth': maxWidth?.toJson(),
       'maxHeight': maxHeight?.toJson(),
       'imageQuality': imageQuality?.toJson(),
       'maxDuration': maxDuration?.toJson(),
-      'selectedPageState': selectedPageState?.toJson(),
+      'fileVariable': fileVariable?.toJson(),
     };
   }
 }
