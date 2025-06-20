@@ -30,14 +30,11 @@ class VWSliverAppBar extends VirtualSliver<SliverAppBarProps> {
 
     final useFlexibleSpace = payload.evalExpr(props.useFlexibleSpace) ?? false;
     final titlePadding = To.edgeInsets(props.titlePadding);
-    final useBackgroundWidget =
-        payload.evalExpr(props.useBackgroundWidget) ?? false;
 
     final pinned = payload.evalExpr(props.pinned) ?? true;
     final floating = payload.evalExpr(props.floating) ?? false;
     final snap = payload.evalExpr(props.snap) ?? false;
 
-    final useBottomWidget = payload.evalExpr(props.useBottomWidget) ?? false;
     final bottomSectionHeight = payload.evalExpr(props.bottomSectionHeight);
     final bottomSectionWidth = payload.evalExpr(props.bottomSectionWidth);
 
@@ -58,26 +55,22 @@ class VWSliverAppBar extends VirtualSliver<SliverAppBarProps> {
         title: childOf('title')?.toWidget(payload),
         centerTitle: centerTitle,
         titlePadding: titlePadding,
-        background: useBackgroundWidget && childOf('background') != null
-            ? childOf('background')!.toWidget(payload)
-            : null,
+        background: childOf('background')?.toWidget(payload),
         collapseMode: collapseMode,
         expandedTitleScale: expandedTitleScale,
       );
-    } else if (useBackgroundWidget && childOf('background') != null) {
+    } else if (childOf('background') != null) {
       flexibleSpaceWidget = FlexibleSpaceBar(
         background: childOf('background')!.toWidget(payload),
       );
     }
 
-    final useTitleWidget = payload.evalExpr(props.useTitleWidget) ?? false;
-    final titleWidget = useTitleWidget
-        ? childOf('title')?.toWidget(payload)
-        : VWText(
-            props: props.title,
-            commonProps: null,
-            parent: this,
-          ).toWidget(payload);
+    final titleWidget = childOf('title')?.toWidget(payload) ??
+        VWText(
+          props: props.title,
+          commonProps: null,
+          parent: this,
+        ).toWidget(payload);
 
     return SliverAppBar(
       leading: childOf('leading')?.toWidget(payload),
@@ -100,7 +93,7 @@ class VWSliverAppBar extends VirtualSliver<SliverAppBarProps> {
       title: useFlexibleSpace ? null : titleWidget,
       centerTitle: useFlexibleSpace ? false : centerTitle,
       shape: shape,
-      bottom: useBottomWidget && bottomSectionHeight != null
+      bottom: bottomSectionHeight != null
           ? PreferredSize(
               preferredSize: Size(
                   bottomSectionWidth?.toWidth(payload.buildContext) ?? 0,
@@ -113,8 +106,7 @@ class VWSliverAppBar extends VirtualSliver<SliverAppBarProps> {
   }
 
   List<Widget>? _buildActions(RenderPayload payload) {
-    final useActionsWidget = payload.evalExpr(props.useActionsWidget) ?? false;
-    if (!useActionsWidget) return null;
+    if (childrenOf('actions') == null) return null;
 
     final actionWidgets = childrenOf('actions');
     if (actionWidgets == null || actionWidgets.isEmpty) return null;

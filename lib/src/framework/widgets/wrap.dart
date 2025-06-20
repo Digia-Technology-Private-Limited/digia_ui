@@ -17,7 +17,7 @@ class VWWrap extends VirtualStatelessWidget<Props> {
     super.refName,
   });
 
-  bool get shouldRepeatChild => props.getString('dataSource') != null;
+  bool get shouldRepeatChild => props.get('dataSource') != null;
 
   @override
   Widget render(RenderPayload payload) {
@@ -27,8 +27,7 @@ class VWWrap extends VirtualStatelessWidget<Props> {
 
     if (shouldRepeatChild) {
       final childToRepeat = children!.first;
-      final items =
-          payload.eval<List<Object>>(props.getString('dataSource')) ?? [];
+      final items = payload.eval<List<Object>>(props.get('dataSource')) ?? [];
       wrapChildren = items.mapIndexed((index, item) {
         return childToRepeat.toWidget(
           payload.copyWithChainedContext(

@@ -18,7 +18,7 @@ class VWListView extends VirtualStatelessWidget<Props> {
     super.refName,
   });
 
-  bool get shouldRepeatChild => props.getString('dataSource') != null;
+  bool get shouldRepeatChild => props.get('dataSource') != null;
 
   @override
   Widget render(RenderPayload payload) {
@@ -37,8 +37,7 @@ class VWListView extends VirtualStatelessWidget<Props> {
         payload.eval<String>(props.get('initialScrollPosition'));
 
     if (shouldRepeatChild) {
-      final items =
-          payload.eval<List<Object>>(props.getString('dataSource')) ?? [];
+      final items = payload.eval<List<Object>>(props.get('dataSource')) ?? [];
       return InternalListView(
         controller: controller,
         reverse: reverse,

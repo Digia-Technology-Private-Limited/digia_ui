@@ -19,11 +19,11 @@ class VWGridView extends VirtualStatelessWidget<Props> {
     super.refName,
   });
 
-  bool get shouldRepeatChild => props.getString('dataSource') != null;
+  bool get shouldRepeatChild => props.get('dataSource') != null;
 
   @override
   Widget render(RenderPayload payload) {
-    if (children == null || children!.isEmpty) return empty();
+    if (child == null) return empty();
 
     final controller =
         payload.eval<AdaptedScrollController>(props.get('controller'));
@@ -37,9 +37,7 @@ class VWGridView extends VirtualStatelessWidget<Props> {
     );
 
     if (shouldRepeatChild) {
-      final childToRepeat = children!.first;
-      final items =
-          payload.eval<List<Object>>(props.getString('dataSource')) ?? [];
+      final items = payload.eval<List<Object>>(props.get('dataSource')) ?? [];
       return InternalGridView(
         controller: controller,
         physics: physics,
@@ -48,7 +46,7 @@ class VWGridView extends VirtualStatelessWidget<Props> {
         crossAxisSpacing: crossAxisSpacing,
         gridDelegate: gridDelegate,
         itemCount: items.length,
-        itemBuilder: (buildContext, index) => childToRepeat.toWidget(
+        itemBuilder: (buildContext, index) => child!.toWidget(
           payload.copyWithChainedContext(
             _createExprContext(items[index], index),
             buildContext: buildContext,
@@ -64,9 +62,8 @@ class VWGridView extends VirtualStatelessWidget<Props> {
       mainAxisSpacing: mainAxisSpacing,
       crossAxisSpacing: crossAxisSpacing,
       gridDelegate: gridDelegate,
-      itemCount: children?.length ?? 0,
       itemBuilder: (context, index) =>
-          children![index].toWidget(payload.copyWith(buildContext: context)),
+          child?.toWidget(payload.copyWith(buildContext: context)) ?? empty(),
     );
   }
 
