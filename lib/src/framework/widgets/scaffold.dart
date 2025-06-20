@@ -94,7 +94,7 @@ class VWScaffold extends VirtualStatelessWidget<ScaffoldProps> {
         : null;
 
     return PreferredSize(
-      preferredSize: Size.fromHeight(height ?? 0),
+      preferredSize: Size.fromHeight(height ?? kToolbarHeight),
       child: VWAppBar(
         props: child.props,
         parent: this,
