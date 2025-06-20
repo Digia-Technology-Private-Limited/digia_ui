@@ -29,7 +29,8 @@ TextStyle? makeTextStyle(
     );
   }
 
-  final textColor = evalColor(json['textColor']);
+  final textColor =
+      evalColor(json['textColor'] ?? json.valueFor('font.textColor'));
   final textBgColor =
       evalColor(tryKeys<String>(json, ['textBackgroundColor', 'textBgColor']));
   final textDecoration = To.textDecoration(json['textDecoration']);
@@ -37,9 +38,10 @@ TextStyle? makeTextStyle(
   final textDecorationStyle =
       To.textDecorationStyle(json['textDecorationStyle']);
 
-  var fontToken = json['fontToken'];
+  var fontToken = json['fontToken'] ?? json['value'];
+  var fontMap = json['font'] as JsonLike?;
 
-  if (fontToken == null) {
+  if (fontToken == null && fontMap == null) {
     return fallback?.copyWith(
       color: textColor,
       backgroundColor: textBgColor,
@@ -49,6 +51,7 @@ TextStyle? makeTextStyle(
     );
   }
 
+  // Handle string font token (legacy or simple case)
   if (fontToken is String) {
     final textStyle =
         ResourceProvider.maybeOf(context)?.getFontFromToken(fontToken);
@@ -62,17 +65,23 @@ TextStyle? makeTextStyle(
     );
   }
 
-  // This means json['fontToken'] is a map
-  fontToken = fontToken as JsonLike;
-
-  final fontTokenValue = as$<String>(fontToken['value']);
-  final overridingFontFamily = fontToken.valueFor('font.fontFamily') as String?;
-  final overridingFontStyle =
-      eval<String>(fontToken.valueFor('font.style')).maybe(To.fontStyle);
-  final overridingFontWeight =
-      eval<String>(fontToken.valueFor('font.weight')).maybe(To.fontWeight);
-  final overridingFontSize = eval<double>(fontToken.valueFor('font.size'));
-  final overridingFontHeight = eval<double>(fontToken.valueFor('font.height'));
+  // Handle new structure (font map) or complex fontToken
+  final fontTokenValue =
+      as$<String>(fontToken is JsonLike ? fontToken['value'] : fontToken);
+  final overridingFontFamily = fontMap?['fontFamily'] as String? ??
+      (fontToken is JsonLike
+          ? fontToken.valueFor('font.fontFamily') as String?
+          : null);
+  final overridingFontStyle = eval<String>(fontMap?['style'] ??
+          (fontToken is JsonLike ? fontToken.valueFor('font.style') : null))
+      .maybe(To.fontStyle);
+  final overridingFontWeight = eval<String>(fontMap?['weight'] ??
+          (fontToken is JsonLike ? fontToken.valueFor('font.weight') : null))
+      .maybe(To.fontWeight);
+  final overridingFontSize = eval<double>(fontMap?['size'] ??
+      (fontToken is JsonLike ? fontToken.valueFor('font.size') : null));
+  final overridingFontHeight = eval<double>(fontMap?['height'] ??
+      (fontToken is JsonLike ? fontToken.valueFor('font.height') : null));
 
   final fontFromToken = fontTokenValue
       .maybe((it) => ResourceProvider.maybeOf(context)?.getFontFromToken(it));
