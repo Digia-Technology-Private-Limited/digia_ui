@@ -10,6 +10,7 @@ class CommonStyle {
   Object? margin;
   ExprOr<String>? bgColor;
   JsonLike? border;
+  Object? borderRadius;
   String? height;
   String? width;
   String? clipBehavior;
@@ -22,6 +23,7 @@ class CommonStyle {
     this.height,
     this.width,
     this.clipBehavior,
+    this.borderRadius,
   });
 
   factory CommonStyle.fromJson(JsonLike json) {
@@ -32,6 +34,10 @@ class CommonStyle {
         json,
         ['bgColor', 'backgroundColor'],
         parse: (v) => ExprOr.fromJson<String>(v),
+      ),
+      borderRadius: tryKeys(
+        json,
+        ['borderRadius', 'border.borderRadius'],
       ),
       // Backwar
       border: as$<JsonLike>(json['border']) ?? json,

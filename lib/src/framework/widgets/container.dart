@@ -27,7 +27,7 @@ class VWContainer extends VirtualStatelessWidget<Props> {
 
     final height = props.getString('height')?.toHeight(payload.buildContext);
 
-    final borderRadius = To.borderRadius(props.get('border.borderRadius'));
+    final borderRadius = To.borderRadius(props.get('borderRadius'));
 
     final alignment = To.alignment(props.get('childAlignment'));
     final margin = To.edgeInsets(props.get('margin'));
