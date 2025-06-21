@@ -28,8 +28,9 @@ class CallRestApiProcessor extends ActionProcessor<CallRestApiAction> {
     CallRestApiAction action,
     ScopeContext? scopeContext,
   ) async {
+    final dataSource = action.dataSource?.evaluate(scopeContext);
     final apiModel = ResourceProvider.maybeOf(context)
-        ?.apiModels[as$<JsonLike>(action.dataSource)?['id']];
+        ?.apiModels[as$<JsonLike>(dataSource)?['id']];
 
     if (apiModel == null) {
       return Future.error('No API Selected');
@@ -45,7 +46,7 @@ class CallRestApiProcessor extends ActionProcessor<CallRestApiAction> {
     return executeApiAction(
       scopeContext,
       apiModel,
-      as$<JsonLike>(as$<JsonLike>(action.dataSource)?['args'])
+      as$<JsonLike>(as$<JsonLike>(dataSource)?['args'])
           ?.map((key, value) => MapEntry(
                 key,
                 ExprOr.fromJson<Object>(value),

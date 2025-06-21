@@ -37,7 +37,7 @@ class ShowDialogProcessor extends ActionProcessor<ShowDialogAction> {
         action.barrierDismissible?.evaluate(scopeContext) ?? true;
     final barrierColor = action.barrierColor
         ?.evaluate(scopeContext)
-        .maybe((p0) => provider?.getColor(p0));
+        .maybe((p0) => provider?.getColor(p0, context));
     final waitForResult = action.waitForResult;
 
     logAction(
@@ -54,13 +54,14 @@ class ShowDialogProcessor extends ActionProcessor<ShowDialogAction> {
       },
     );
 
+    final entity = action.viewData?.evaluate(scopeContext);
     Object? result = await presentDialog(
       context: context,
       builder: (innerCtx) {
         return viewBuilder(
           innerCtx,
-          as$<String>(as$<JsonLike>(action.viewData)?['viewId']) ?? '',
-          as$<JsonLike>(as$<JsonLike>(action.viewData)?['args'])
+          as$<String>(as$<JsonLike>(entity)?['id']) ?? '',
+          as$<JsonLike>(as$<JsonLike>(entity)?['args'])
               ?.map((key, value) => MapEntry(
                     key,
                     ExprOr.fromJson<Object>(value),

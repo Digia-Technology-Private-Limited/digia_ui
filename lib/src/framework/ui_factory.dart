@@ -81,6 +81,12 @@ class DUIFactory {
           as$<String>(value).maybe(ColorUtil.fromString),
         ),
       ),
+      darkColors: DigiaUIClient.instance.config.darkColorTokens.map(
+        (key, value) => MapEntry(
+          key,
+          as$<String>(value).maybe(ColorUtil.fromString),
+        ),
+      ),
     );
   }
 
@@ -125,6 +131,7 @@ class DUIFactory {
       images: {...?resources.images, ...?overrideImages},
       textStyles: {...?resources.textStyles, ...?overrideTextStyles},
       colors: {...?resources.colors, ...?overrideColorTokens},
+      darkColors: {...?resources.darkColors, ...?overrideColorTokens},
       fontFactory: resources.fontFactory,
     );
 
@@ -250,6 +257,7 @@ class DUIFactory {
       images: {...?resources.images, ...?overrideImages},
       textStyles: {...?resources.textStyles, ...?overrideTextStyles},
       colors: {...?resources.colors, ...?overrideColorTokens},
+      darkColors: {...?resources.darkColors, ...?overrideColorTokens},
       fontFactory: resources.fontFactory,
     );
 
@@ -331,6 +339,7 @@ class UIResources {
   final Map<String, ImageProvider>? images;
   final Map<String, TextStyle?>? textStyles;
   final Map<String, Color?>? colors;
+  final Map<String, Color?>? darkColors;
   final DUIFontFactory? fontFactory;
 
   UIResources({
@@ -338,6 +347,7 @@ class UIResources {
     required this.images,
     required this.textStyles,
     required this.colors,
+    required this.darkColors,
     this.fontFactory,
   });
 }

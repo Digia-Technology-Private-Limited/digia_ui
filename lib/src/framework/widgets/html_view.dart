@@ -26,8 +26,9 @@ class VWHtmlView extends VirtualLeafStatelessWidget<Props> {
                 props.toProps('htmlStyleOverridesBody') ?? Props.empty())),
         'span': _makeStyle(
             payload, props.toProps('htmlStyleOverridesSpan') ?? Props.empty()),
-        'p': _makeStyle(payload,
-            props.toProps('htmlStyleOverridesParagraph') ?? Props.empty()),
+        'p': Style(padding: HtmlPaddings.all(0.0), margin: Margins.all(0.0))
+            .merge(_makeStyle(payload,
+                props.toProps('htmlStyleOverridesParagraph') ?? Props.empty())),
       },
     );
   }

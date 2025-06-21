@@ -17,9 +17,15 @@ class StateDescriptorFactory {
     'list': JsonArrayDescriptorParser(),
   };
 
+  final Map<String, String> _typeAliases = {
+    'boolean': 'bool',
+    'numeric': 'number',
+    'array': 'list',
+  };
+
   StateDescriptor<dynamic> fromJson(JsonLike json) {
     final type = json['type'];
-    final parser = _parsers[type];
+    final parser = _parsers[type] ?? _parsers[_typeAliases[type]];
     if (parser == null) {
       throw UnsupportedError('Unknown state type: $type');
     }
