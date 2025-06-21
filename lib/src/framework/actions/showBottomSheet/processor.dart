@@ -68,14 +68,14 @@ class ShowBottomSheetProcessor extends ActionProcessor<ShowBottomSheetAction> {
             .toString(),
       },
     );
-
+    final viewData = action.viewData?.evaluate(scopeContext);
     Object? result = await presentBottomSheet(
         context: navigatorKey?.currentContext ?? context,
         builder: (innerCtx) {
           return viewBuilder(
             innerCtx,
-            as$<String>(as$<JsonLike>(action.viewData)?['viewId']) ?? '',
-            as$<JsonLike>(as$<JsonLike>(action.viewData)?['args'])
+            as$<String>(as$<JsonLike>(viewData)?['id']) ?? '',
+            as$<JsonLike>(as$<JsonLike>(viewData)?['args'])
                 ?.map((key, value) => MapEntry(
                       key,
                       ExprOr.fromJson<Object>(value),

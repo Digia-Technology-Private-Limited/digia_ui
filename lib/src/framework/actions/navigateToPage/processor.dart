@@ -35,9 +35,10 @@ class NavigateToPageProcessor extends ActionProcessor<NavigateToPageAction> {
     NavigateToPageAction action,
     ScopeContext? scopeContext,
   ) async {
-    final pageId = as$<String>(as$<JsonLike>(action.pageData)?['pageId']);
+    final pageData = action.pageData?.evaluate(scopeContext);
+    final pageId = as$<String>(as$<JsonLike>(pageData)?['id']);
     if (pageId == null) {
-      throw ArgumentError('Null value', 'pageId');
+      throw ArgumentError('Null value', 'id');
     }
 
     final removePreviousScreensInStack =
@@ -48,8 +49,8 @@ class NavigateToPageProcessor extends ActionProcessor<NavigateToPageAction> {
     logAction(
       action.actionType.value,
       {
-        'pageId': pageId,
-        'pageArgs': as$<JsonLike>(action.pageData)?['pageArgs'],
+        'id': pageId,
+        'args': as$<JsonLike>(pageData)?['args'],
         'waitForResult': action.waitForResult,
         'shouldRemovePreviousScreensInStack': removePreviousScreensInStack,
         'routeNametoRemoveUntil': routeNametoRemoveUntil,
@@ -59,7 +60,6 @@ class NavigateToPageProcessor extends ActionProcessor<NavigateToPageAction> {
             .toString(),
       },
     );
-
     final navigatorKey = ResourceProvider.maybeOf(context)?.navigatorKey;
     Object? result = await NavigatorHelper.push(
       context,
@@ -67,7 +67,7 @@ class NavigateToPageProcessor extends ActionProcessor<NavigateToPageAction> {
       pageRouteBuilder(
         context,
         pageId,
-        as$<JsonLike>(as$<JsonLike>(action.pageData)?['pageArgs'])?.map(
+        as$<JsonLike>(as$<JsonLike>(pageData)?['args'])?.map(
           (key, value) => MapEntry(
             key,
             ExprOr.fromJson<Object>(value),
@@ -83,7 +83,7 @@ class NavigateToPageProcessor extends ActionProcessor<NavigateToPageAction> {
       logAction(
         '${action.actionType.value} - Result',
         {
-          'pageId': pageId,
+          'id': pageId,
           'result': result,
         },
       );
