@@ -72,7 +72,7 @@ TextStyle? makeTextStyle(
       (fontToken is JsonLike
           ? fontToken.valueFor('font.fontFamily') as String?
           : null);
-  final overridingFontStyle = eval<String>(fontMap?['style'] ??
+  final overridingFontStyle = eval<Object>(fontMap?['style'] ??
           (fontToken is JsonLike ? fontToken.valueFor('font.style') : null))
       .maybe(To.fontStyle);
   final overridingFontWeight = eval<String>(fontMap?['weight'] ??
