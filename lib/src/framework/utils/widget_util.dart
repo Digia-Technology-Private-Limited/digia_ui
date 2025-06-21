@@ -23,7 +23,7 @@ Widget wrapInContainer(
 
   final bgColor =
       style.bgColor?.evaluate(payload.scopeContext).maybe(payload.getColor);
-  final borderRadius = To.borderRadius(style.border?['borderRadius']);
+  final borderRadius = To.borderRadius(style.borderRadius);
   final border = To.border((
     style: as$<String>(style.border?['borderStyle']),
     width: as$<double>(style.border?['borderWidth']),

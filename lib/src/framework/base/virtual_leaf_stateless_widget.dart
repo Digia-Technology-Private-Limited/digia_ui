@@ -44,8 +44,7 @@ abstract class VirtualLeafStatelessWidget<T> extends VirtualWidget {
         payload: payload,
         actionFlow: commonProps?.onClick,
         child: current,
-        borderRadius:
-            To.borderRadius(commonProps?.style?.border?['borderRadius']),
+        borderRadius: To.borderRadius(commonProps?.style?.borderRadius),
       );
 
       return current;
