@@ -53,12 +53,15 @@ class _InternalPaginatedSliverListState
       builderDelegate: PagedChildBuilderDelegate(
         itemBuilder: (cntx, item, index) =>
             widget.itemBuilder(context, index, _pagingController.itemList),
-        firstPageProgressIndicatorBuilder: widget.firstPageLoadingBuilder,
-        newPageProgressIndicatorBuilder: widget.newPageLoadingBuilder,
         firstPageErrorIndicatorBuilder: widget.pageErrorBuilder ??
             (context) {
               return const Center(child: Text('first page error'));
             },
+        newPageErrorIndicatorBuilder: (context) => const SizedBox.shrink(),
+        firstPageProgressIndicatorBuilder: widget.firstPageLoadingBuilder,
+        newPageProgressIndicatorBuilder: widget.newPageLoadingBuilder,
+        noItemsFoundIndicatorBuilder: (context) => const SizedBox.shrink(),
+        noMoreItemsIndicatorBuilder: (context) => const SizedBox.shrink(),
       ),
     );
   }
