@@ -85,7 +85,7 @@ class VWAsyncBuilder extends VirtualStatelessWidget<AsyncBuilderProps> {
   }
 }
 
-Future<Response<Object?>> _makeFuture(
+Future<Object?> _makeFuture(
   JsonLike futureProps,
   RenderPayload payload,
 ) async {
