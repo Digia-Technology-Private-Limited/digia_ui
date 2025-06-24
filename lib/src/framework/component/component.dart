@@ -1,7 +1,6 @@
 import 'package:flutter/widgets.dart';
 
 import '../../network/api_request/api_request.dart';
-import '../base/message_handler.dart';
 import '../data_type/data_type_creator.dart';
 import '../expr/default_scope_context.dart';
 import '../expr/scope_context.dart';
@@ -23,7 +22,6 @@ class DUIComponent extends StatelessWidget {
   final UIResources? resources;
   final ScopeContext? scope;
   final Map<String, APIModel>? apiModels;
-  final DUIMessageHandler? messageHandler;
   final GlobalKey<NavigatorState>? navigatorKey;
 
   const DUIComponent({
@@ -35,7 +33,6 @@ class DUIComponent extends StatelessWidget {
     this.resources,
     this.scope,
     this.apiModels,
-    this.messageHandler,
     this.navigatorKey,
   });
 
@@ -62,7 +59,6 @@ class DUIComponent extends StatelessWidget {
         apiModels: apiModels ?? {},
         // Only these two need to be passed. Rest all values are
         // configured at initialization time.
-        messageHandler: messageHandler ?? inhertiedResources?.messageHandler,
         navigatorKey: navigatorKey ?? inhertiedResources?.navigatorKey,
         child: StatefulScopeWidget(
           namespace: id,

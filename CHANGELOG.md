@@ -2,6 +2,17 @@
 
 Digia Ui SDK.
 
+## [0.4.0] - 2025-06-24
+
+- 🔧 Revamped message handling in DigiaUI SDK — messages can now be listened to globally without passing handlers to each page
+- Simply extend DigiaMessageHandlerMixin in any stateful widget and register the messages you want to handle
+
+## [0.3.22] - 2025-06-24
+
+- 🐞 Fixed a rare race condition that could cause app crashes during initialization
+- 🐞 Resolved padding issues with bullet points in the HTML widget
+- 🛠️ Improved BottomSheet to be keyboard-aware and respect safe area insets
+
 ## [0.3.21] - 2025-06-19
 
 - 🐞 Fixed a bug in PaginatedList where a default UI was shown when custom no-items or no-more-items indicators were not provided
