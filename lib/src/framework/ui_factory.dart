@@ -303,6 +303,8 @@ class DUIFactory {
     BoxBorder? border,
     BorderRadius? borderRadius,
     WidgetBuilder? iconBuilder,
+    bool isKeyBoardSpaceAware = false,
+    bool useSafeArea = true,
     GlobalKey<NavigatorState>? navigatorKey,
   }) {
     return presentBottomSheet(
@@ -313,6 +315,8 @@ class DUIFactory {
       barrierColor: barrierColor,
       border: border,
       borderRadius: borderRadius,
+      useSafeArea: useSafeArea,
+      isKeyBoardSpaceAware: isKeyBoardSpaceAware,
       iconBuilder: iconBuilder,
       navigatorKey: navigatorKey,
     );
