@@ -71,37 +71,12 @@ class InternalCarousel extends StatefulWidget {
 class _InternalCarouselState extends State<InternalCarousel> {
   late ValueNotifier<int> _currentPageNotifier;
   late CarouselSliderController _carouselController;
-  late int _pageCount;
 
   @override
   void initState() {
     super.initState();
     _currentPageNotifier = ValueNotifier<int>(widget.initialPage);
     _carouselController = CarouselSliderController();
-    _calculatePageCount();
-  }
-
-  @override
-  void didUpdateWidget(InternalCarousel oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.viewportFraction != widget.viewportFraction ||
-        oldWidget.itemCount != widget.itemCount ||
-        oldWidget.children.length != widget.children.length) {
-      _calculatePageCount();
-    }
-  }
-
-  void _calculatePageCount() {
-    final totalItems =
-        widget.itemBuilder != null ? widget.itemCount : widget.children.length;
-
-    if (widget.viewportFraction >= 1.0 || totalItems <= 1) {
-      _pageCount = totalItems;
-    } else {
-      final itemsPerView = 1 / widget.viewportFraction;
-      _pageCount = (totalItems - itemsPerView).ceil() + 1;
-      _pageCount = _pageCount.clamp(1, totalItems);
-    }
   }
 
   @override
@@ -110,48 +85,44 @@ class _InternalCarouselState extends State<InternalCarousel> {
     super.dispose();
   }
 
-  CarouselOptions _buildCarouselOptions(int itemCount) {
-    return CarouselOptions(
-      scrollDirection: widget.direction,
-      aspectRatio: widget.aspectRatio,
-      padEnds: widget.padEnds,
-      autoPlay: widget.autoPlay,
-      pageSnapping: widget.pageSnapping,
-      autoPlayAnimationDuration:
-          Duration(milliseconds: widget.animationDuration),
-      autoPlayCurve: Curves.linear,
-      autoPlayInterval: Duration(milliseconds: widget.autoPlayInterval),
-      enableInfiniteScroll: widget.infiniteScroll,
-      initialPage: widget.initialPage,
-      viewportFraction: widget.viewportFraction,
-      enlargeFactor: widget.enlargeFactor,
-      enlargeCenterPage: widget.enlargeCenterPage,
-      reverse: widget.reverseScroll,
-      onPageChanged: (index, reason) {
-        _currentPageNotifier.value = index;
-        widget.onChanged?.call(index);
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    final itemCount =
-        widget.itemBuilder != null ? widget.itemCount : widget.children.length;
     Widget child;
     if (widget.itemBuilder != null) {
       child = SizedBox(
         height: widget.height,
         width: widget.width,
         child: CarouselSlider.builder(
-            carouselController: _carouselController,
-            itemCount: widget.itemCount,
-            itemBuilder: (ctx, index, realIndex) {
-              return KeepAliveWrapper(
-                  keepTabsAlive: widget.keepAlive,
-                  child: widget.itemBuilder!.call(ctx, index));
+          carouselController: _carouselController,
+          itemCount: widget.itemCount,
+          itemBuilder: (ctx, index, realIndex) {
+            return KeepAliveWrapper(
+                keepTabsAlive: widget.keepAlive,
+                child: widget.itemBuilder!.call(ctx, index));
+          },
+          options: CarouselOptions(
+            scrollDirection: widget.direction,
+            aspectRatio: widget.aspectRatio,
+            // disableCenter: true,
+            padEnds: widget.padEnds,
+            autoPlay: widget.autoPlay,
+            pageSnapping: widget.pageSnapping,
+            autoPlayAnimationDuration:
+                Duration(milliseconds: widget.animationDuration),
+            autoPlayCurve: Curves.linear,
+            autoPlayInterval: Duration(milliseconds: widget.autoPlayInterval),
+            enableInfiniteScroll: widget.infiniteScroll,
+            initialPage: widget.initialPage,
+            viewportFraction: widget.viewportFraction,
+            enlargeFactor: widget.enlargeFactor,
+            enlargeCenterPage: widget.enlargeCenterPage,
+            reverse: widget.reverseScroll,
+            onPageChanged: (index, reason) {
+              _currentPageNotifier.value = index;
+              widget.onChanged?.call(index);
             },
-            options: _buildCarouselOptions(itemCount)),
+          ),
+        ),
       );
     } else {
       child = SizedBox(
@@ -162,11 +133,32 @@ class _InternalCarouselState extends State<InternalCarousel> {
           carouselController: _carouselController,
           itemBuilder: (context, index, realIndex) {
             return KeepAliveWrapper(
-              keepTabsAlive: widget.keepAlive,
-              child: widget.children[index],
-            );
+                keepTabsAlive: widget.keepAlive, child: widget.children[index]);
           },
-          options: _buildCarouselOptions(itemCount),
+          options: CarouselOptions(
+            scrollDirection: widget.direction,
+            aspectRatio: widget.aspectRatio,
+            padEnds: widget.padEnds,
+            autoPlay: widget.autoPlay,
+            // disableCenter: true,
+            pageSnapping: widget.pageSnapping,
+            autoPlayAnimationDuration:
+                Duration(milliseconds: widget.animationDuration),
+            autoPlayCurve: Curves.linear,
+            autoPlayInterval: Duration(
+              milliseconds: widget.autoPlayInterval,
+            ),
+            enableInfiniteScroll: widget.infiniteScroll,
+            initialPage: widget.initialPage,
+            viewportFraction: widget.viewportFraction,
+            enlargeFactor: widget.enlargeFactor,
+            enlargeCenterPage: widget.enlargeCenterPage,
+            reverse: widget.reverseScroll,
+            onPageChanged: (index, reason) {
+              _currentPageNotifier.value = index;
+              widget.onChanged?.call(index);
+            },
+          ),
         ),
       );
     }
@@ -186,7 +178,9 @@ class _InternalCarouselState extends State<InternalCarousel> {
               return IndicatorBuilder(
                 indicatorEffect: widget.indicatorEffectType,
                 currentPageNotifier: _currentPageNotifier,
-                itemCount: _pageCount,
+                itemCount: widget.itemBuilder != null
+                    ? widget.itemCount
+                    : widget.children.length,
                 carouselController: _carouselController,
                 offset: widget.offset,
                 dotHeight: widget.dotHeight,
