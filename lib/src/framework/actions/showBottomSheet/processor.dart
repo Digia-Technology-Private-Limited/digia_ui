@@ -54,6 +54,9 @@ class ShowBottomSheetProcessor extends ActionProcessor<ShowBottomSheetAction> {
     final maxHeightRatio =
         ExprOr.fromJson<double>(style['maxHeight'])?.evaluate(scopeContext) ??
             1;
+    final isKeyBoardSpaceAware =
+        as$<bool>(style['isKeyBoardSpaceAware']) ?? false;
+    final useSafeArea = as$<bool>(style['useSafeArea']) ?? true;
 
     final iconProps = as$<JsonLike>(style['icon']).maybe(IconProps.fromJson);
 
@@ -86,6 +89,8 @@ class ShowBottomSheetProcessor extends ActionProcessor<ShowBottomSheetAction> {
         backgroundColor: bgColor,
         scrollControlDisabledMaxHeightRatio: maxHeightRatio,
         barrierColor: barrierColor,
+        useSafeArea: useSafeArea,
+        isKeyBoardSpaceAware: isKeyBoardSpaceAware,
         border: To.border((
           style: as$<String>(style['borderStyle']),
           width: as$<double>(style['borderWidth']),

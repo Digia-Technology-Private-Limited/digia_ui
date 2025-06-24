@@ -29,6 +29,25 @@ class VWHtmlView extends VirtualLeafStatelessWidget<Props> {
         'p': Style(padding: HtmlPaddings.all(0.0), margin: Margins.all(0.0))
             .merge(_makeStyle(payload,
                 props.toProps('htmlStyleOverridesParagraph') ?? Props.empty())),
+        'ul': Style(
+          padding: HtmlPaddings.only(left: 12),
+          margin: Margins.zero,
+          listStyleType: ListStyleType.disc,
+          listStylePosition: ListStylePosition.outside,
+          display: Display.block,
+        ),
+        'ol': Style(
+          padding: HtmlPaddings.only(left: 12),
+          margin: Margins.zero,
+          listStyleType: ListStyleType.decimal,
+          listStylePosition: ListStylePosition.outside,
+          display: Display.block,
+        ),
+        'li': Style(
+          padding: HtmlPaddings.zero,
+          margin: Margins.zero,
+          display: Display.listItem,
+        ),
       },
     );
   }
