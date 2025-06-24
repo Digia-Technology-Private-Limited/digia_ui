@@ -3,7 +3,6 @@ import 'package:flutter/scheduler.dart';
 
 import '../../network/api_request/api_request.dart';
 import '../actions/base/action_flow.dart';
-import '../base/message_handler.dart';
 import '../data_type/data_type_creator.dart';
 import '../data_type/variable.dart';
 import '../expr/default_scope_context.dart';
@@ -28,7 +27,6 @@ class DUIPage extends StatelessWidget {
   final VirtualWidgetRegistry registry;
   final ScopeContext? scope;
   final Map<String, APIModel>? apiModels;
-  final DUIMessageHandler? messageHandler;
   final GlobalKey<NavigatorState>? navigatorKey;
   final DUIPageController? controller;
 
@@ -41,7 +39,6 @@ class DUIPage extends StatelessWidget {
     this.resources,
     this.scope,
     this.apiModels,
-    this.messageHandler,
     this.navigatorKey,
     this.controller,
   });
@@ -87,7 +84,6 @@ class DUIPage extends StatelessWidget {
       colors: resources?.colors ?? {},
       darkColors: resources?.darkColors ?? {},
       apiModels: apiModels ?? {},
-      messageHandler: messageHandler,
       navigatorKey: navigatorKey,
       child: child,
     );

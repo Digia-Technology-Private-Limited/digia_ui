@@ -1,8 +1,8 @@
 import 'package:flutter/widgets.dart';
 
-import '../../base/message_handler.dart';
+import '../../digia_ui_scope.dart';
 import '../../expr/scope_context.dart';
-import '../../resource_provider.dart';
+import '../../message_bus.dart';
 import '../base/processor.dart';
 import 'action.dart';
 
@@ -24,14 +24,9 @@ class PostMessageProcessor extends ActionProcessor<PostMessageAction> {
       },
     );
 
-    final handler = ResourceProvider.maybeOf(context)?.messageHandler;
-    if (handler == null) return null;
+    final messageBus = DigiaUIScope.of(context).messageBus;
 
-    handler.handleMessage(DUIMessage(
-      context: context,
-      name: name,
-      payload: payload,
-    ));
+    messageBus.send(Message(name: name, payload: payload, context: context));
 
     return null;
   }
