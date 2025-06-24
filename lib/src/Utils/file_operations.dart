@@ -28,7 +28,7 @@ class FileOperationsImpl implements FileOperations {
       // Send a GET request to the provided URL
       var path = await localPath;
       final file = File('$path/$fileName');
-      file.writeAsString(data);
+      await file.writeAsString(data);
       print('File written successfully to $path/$fileName');
       return true;
     } catch (e) {
@@ -44,7 +44,7 @@ class FileOperationsImpl implements FileOperations {
       // Send a GET request to the provided URL
       var path = await localPath;
       final file = File('$path/$fileName');
-      file.writeAsBytes(data);
+      await file.writeAsBytes(data);
       print('File written successfully to $path/$fileName');
       return true;
     } catch (e) {
