@@ -2,6 +2,11 @@
 
 Digia Ui SDK.
 
+## [0.4.0] - 2025-06-24
+
+- 🔧 Revamped message handling in DigiaUI SDK — messages can now be listened to globally without passing handlers to each page
+- Simply extend DigiaMessageHandlerMixin in any stateful widget and register the messages you want to handle
+
 ## [0.3.22] - 2025-06-24
 
 - 🐞 Fixed a rare race condition that could cause app crashes during initialization
