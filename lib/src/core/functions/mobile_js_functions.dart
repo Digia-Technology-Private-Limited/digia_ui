@@ -31,7 +31,9 @@ class MobileJsFunctions implements JSFunctions {
             var res = await downloadOps.downloadFile(remotePath, fileName);
             if (res == null) return false;
           }
-          jsFile = await fileOps.readString(fileName) ?? '';
+          final file = await fileOps.readString(fileName);
+          if (file == null) return false;
+          jsFile = file;
           runtime.evaluate(jsFile);
           return true;
         case PreferLocal(localPath: String localPath):
