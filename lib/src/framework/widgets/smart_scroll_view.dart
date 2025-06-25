@@ -1,5 +1,7 @@
 import 'package:flutter/widgets.dart';
 import '../base/virtual_stateless_widget.dart';
+import '../expr/default_scope_context.dart';
+import '../expr/scope_context.dart';
 import '../render_payload.dart';
 import '../utils/flutter_type_converters.dart';
 import '../utils/sliver_util.dart';
@@ -15,6 +17,8 @@ class VWSmartScrollView extends VirtualStatelessWidget<SmartScrollViewProps> {
     required super.childGroups,
   });
 
+  bool get shouldRepeatChild => props.dataSource != null;
+
   @override
   Widget render(RenderPayload payload) {
     final controller = payload.evalExpr(props.controller);
@@ -25,7 +29,11 @@ class VWSmartScrollView extends VirtualStatelessWidget<SmartScrollViewProps> {
                 ?.enableOverlapAbsorption ??
             false;
 
-    return CustomScrollView(
+    if (shouldRepeatChild && (children?.isNotEmpty ?? false)) {
+      final List items =
+          props.dataSource?.evaluate(payload.scopeContext) as List? ?? [];
+
+      return CustomScrollView(
         controller: controller,
         reverse: isReverse,
         scrollDirection: To.axis(props.scrollDirection) ?? Axis.vertical,
@@ -37,9 +45,42 @@ class VWSmartScrollView extends VirtualStatelessWidget<SmartScrollViewProps> {
                 payload.buildContext,
               ),
             ),
-          ...?children
-              ?.map((e) => SliverUtil.convertToSliver(e))
-              .map((child) => child.toWidget(payload))
-        ]);
+          ...List.generate(items.length, (index) {
+            final dataItem = items[index];
+            final template = SliverUtil.convertToSliver(children!.first);
+            return template.toWidget(
+              payload.copyWithChainedContext(
+                _createExprContext(dataItem, index),
+              ),
+            );
+          }),
+        ],
+      );
+    }
+
+    return CustomScrollView(
+      controller: controller,
+      reverse: isReverse,
+      scrollDirection: To.axis(props.scrollDirection) ?? Axis.vertical,
+      physics: To.scrollPhysics(props.allowScroll),
+      slivers: [
+        if (enableOverlapInjector)
+          SliverOverlapInjector(
+            handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
+              payload.buildContext,
+            ),
+          ),
+        ...?children
+            ?.map((e) => SliverUtil.convertToSliver(e))
+            .map((child) => child.toWidget(payload)),
+      ],
+    );
+  }
+
+  ScopeContext _createExprContext(Object? item, int index) {
+    return DefaultScopeContext(variables: {
+      'currentItem': item,
+      'index': index,
+    });
   }
 }
