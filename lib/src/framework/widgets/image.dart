@@ -38,7 +38,6 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
             }),
             commonProps: null,
             parent: null);
-
   ImageProvider _createImageProvider(
     RenderPayload payload,
     Object? imageSource,
@@ -70,7 +69,7 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
         final DigiaUIHost? host = DigiaUIClient.instance.developerConfig?.host;
         final String finalUrl;
         if (host is DashboardHost && host.resourceProxyUrl != null) {
-          finalUrl = '${host.resourceProxyUrl}$imageSource';
+          finalUrl = '${host.resourceProxyUrl}${Uri.encodeFull(imageSource)}';
         } else {
           finalUrl = imageSource;
         }
@@ -95,7 +94,7 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
         final DigiaUIHost? host = DigiaUIClient.instance.developerConfig?.host;
         final String finalUrl;
         if (host is DashboardHost && host.resourceProxyUrl != null) {
-          finalUrl = '${host.resourceProxyUrl}$imageSource';
+          finalUrl = '${host.resourceProxyUrl}${Uri.encodeFull(imageSource)}';
         } else {
           finalUrl = imageSource;
         }
