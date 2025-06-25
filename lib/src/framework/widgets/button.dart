@@ -46,11 +46,11 @@ class VWButton extends VirtualLeafStatelessWidget<Props> {
         if (states.contains(WidgetState.disabled)) {
           return disabledStyleJson
               .getString('backgroundColor')
-              .maybe(payload.getColor);
+              .maybe(payload.evalColor);
         }
         return defaultStyleJson
             .getString('backgroundColor')
-            .maybe(payload.getColor);
+            .maybe(payload.evalColor);
       }),
     );
 
