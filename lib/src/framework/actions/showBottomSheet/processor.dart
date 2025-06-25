@@ -60,10 +60,14 @@ class ShowBottomSheetProcessor extends ActionProcessor<ShowBottomSheetAction> {
 
     final iconProps = as$<JsonLike>(style['icon']).maybe(IconProps.fromJson);
 
+    final viewData = action.viewData?.deepEvaluate(scopeContext);
+    final evaluatedArgs = as$<JsonLike>(as$<JsonLike>(viewData)?['args']);
+
     logAction(
       action.actionType.value,
       {
-        'viewData': action.viewData?.toJson(),
+        'id': as$<String>(as$<JsonLike>(viewData)?['id']),
+        'args': evaluatedArgs,
         'style': style,
         'onResult': action.onResult?.actions
             .map((a) => a.actionType.value)
@@ -71,18 +75,13 @@ class ShowBottomSheetProcessor extends ActionProcessor<ShowBottomSheetAction> {
             .toString(),
       },
     );
-    final viewData = action.viewData?.evaluate(scopeContext);
     Object? result = await presentBottomSheet(
         context: navigatorKey?.currentContext ?? context,
         builder: (innerCtx) {
           return viewBuilder(
             innerCtx,
             as$<String>(as$<JsonLike>(viewData)?['id']) ?? '',
-            as$<JsonLike>(as$<JsonLike>(viewData)?['args'])
-                ?.map((key, value) => MapEntry(
-                      key,
-                      ExprOr.fromJson<Object>(value),
-                    )),
+            evaluatedArgs,
           );
         },
         navigatorKey: navigatorKey,
@@ -117,7 +116,8 @@ class ShowBottomSheetProcessor extends ActionProcessor<ShowBottomSheetAction> {
       logAction(
         '${action.actionType.value} - Result',
         {
-          'viewData': action.viewData?.toJson(),
+          'id': as$<String>(as$<JsonLike>(viewData)?['id']),
+          'args': evaluatedArgs,
           'result': result,
         },
       );

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../expr/default_scope_context.dart';
 import '../../expr/scope_context.dart';
-import '../../models/types.dart';
 import '../../resource_provider.dart';
 import '../../utils/functional_util.dart';
 import '../../utils/navigation_util.dart';
@@ -40,10 +39,14 @@ class ShowDialogProcessor extends ActionProcessor<ShowDialogAction> {
         .maybe((p0) => provider?.getColor(p0, context));
     final waitForResult = action.waitForResult;
 
+    final viewData = action.viewData?.deepEvaluate(scopeContext);
+    final evaluatedArgs = as$<JsonLike>(as$<JsonLike>(viewData)?['args']);
+
     logAction(
       action.actionType.value,
       {
-        'viewData': action.viewData?.toJson(),
+        'id': as$<String>(as$<JsonLike>(viewData)?['id']),
+        'args': evaluatedArgs,
         'barrierDismissible': barrierDismissible,
         'barrierColor': barrierColor.toString(),
         'waitForResult': waitForResult,
@@ -54,18 +57,13 @@ class ShowDialogProcessor extends ActionProcessor<ShowDialogAction> {
       },
     );
 
-    final entity = action.viewData?.evaluate(scopeContext);
     Object? result = await presentDialog(
       context: context,
       builder: (innerCtx) {
         return viewBuilder(
           innerCtx,
-          as$<String>(as$<JsonLike>(entity)?['id']) ?? '',
-          as$<JsonLike>(as$<JsonLike>(entity)?['args'])
-              ?.map((key, value) => MapEntry(
-                    key,
-                    ExprOr.fromJson<Object>(value),
-                  )),
+          as$<String>(as$<JsonLike>(viewData)?['id']) ?? '',
+          evaluatedArgs,
         );
       },
       barrierDismissible: barrierDismissible,
@@ -76,7 +74,8 @@ class ShowDialogProcessor extends ActionProcessor<ShowDialogAction> {
       logAction(
         '${action.actionType.value} - Result',
         {
-          'viewData': action.viewData?.toJson(),
+          'id': as$<String>(as$<JsonLike>(viewData)?['id']),
+          'args': evaluatedArgs,
           'result': result,
         },
       );
