@@ -8,6 +8,7 @@ class VWAnimatedBuilder extends VirtualStatelessWidget<Props> {
   VWAnimatedBuilder({
     required super.props,
     required super.commonProps,
+    super.parentProps,
     required super.parent,
     super.refName,
     required super.childGroups,

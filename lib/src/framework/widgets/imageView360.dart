@@ -9,6 +9,7 @@ class VWImageView360 extends VirtualStatelessWidget<ImageView360Props> {
   VWImageView360({
     required super.props,
     required super.commonProps,
+    super.parentProps,
     required super.parent,
     super.refName,
     required super.childGroups,

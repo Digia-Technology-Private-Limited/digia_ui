@@ -9,6 +9,7 @@ class VWIcon extends VirtualLeafStatelessWidget<IconProps> {
   VWIcon({
     required super.props,
     required super.commonProps,
+    super.parentProps,
     required super.parent,
     super.refName,
   });

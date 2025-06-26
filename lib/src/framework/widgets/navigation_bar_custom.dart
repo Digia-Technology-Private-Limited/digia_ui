@@ -17,6 +17,7 @@ class VWNavigationBarCustom
   VWNavigationBarCustom({
     required super.props,
     required super.commonProps,
+    super.parentProps,
     required super.parent,
     required super.childGroups,
     super.refName,

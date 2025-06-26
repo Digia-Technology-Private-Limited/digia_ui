@@ -11,6 +11,7 @@ class VWCheckbox extends VirtualLeafStatelessWidget<Props> {
   VWCheckbox({
     required super.props,
     required super.commonProps,
+    super.parentProps,
     required super.parent,
     super.refName,
   });

@@ -11,6 +11,7 @@ class VWHtmlView extends VirtualLeafStatelessWidget<Props> {
   VWHtmlView({
     required super.props,
     required super.commonProps,
+    super.parentProps,
     required super.parent,
     super.refName,
   });

@@ -8,6 +8,7 @@ class VWSizedBox extends VirtualLeafStatelessWidget<SizedBoxProps> {
   VWSizedBox({
     required super.props,
     required super.commonProps,
+    super.parentProps,
     required super.parent,
     super.refName,
   });

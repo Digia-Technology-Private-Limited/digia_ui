@@ -16,6 +16,7 @@ class VWNavigationBar extends VirtualStatelessWidget<NavigationBarProps> {
   VWNavigationBar({
     required super.props,
     required super.commonProps,
+    super.parentProps,
     required super.parent,
     required super.childGroups,
     super.refName,

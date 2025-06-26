@@ -7,6 +7,7 @@ abstract class VirtualStatelessWidget<T> extends VirtualLeafStatelessWidget<T> {
   VirtualStatelessWidget({
     required super.props,
     required super.commonProps,
+    super.parentProps,
     required super.parent,
     required super.refName,
     required this.childGroups,

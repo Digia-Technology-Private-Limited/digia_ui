@@ -7,8 +7,6 @@ import '../base/virtual_widget.dart';
 import '../models/props.dart';
 import '../render_payload.dart';
 import '../utils/flutter_type_converters.dart';
-import '../utils/functional_util.dart';
-import '../utils/types.dart';
 import '../widget_props/positioned_props.dart';
 import 'positioned.dart';
 
@@ -16,6 +14,7 @@ class VWStack extends VirtualStatelessWidget<Props> {
   VWStack(
       {required super.props,
       required super.commonProps,
+      super.parentProps,
       required super.childGroups,
       required super.parent,
       super.refName});
@@ -41,13 +40,8 @@ class VWStack extends VirtualStatelessWidget<Props> {
       return childVirtualWidget;
     }
 
-    final position = as$<JsonLike>(childVirtualWidget.commonProps?.parentProps
-        ?.get('positioned.position'));
-
-    final hasPosition = childVirtualWidget.commonProps?.parentProps
-            ?.getBool('positioned.hasPosition') ??
-        false;
-    if (!hasPosition || position == null) return childVirtualWidget;
+    final position = childVirtualWidget.parentProps?.get('position');
+    if (position == null) return childVirtualWidget;
 
     return VWPositioned(
       props: PositionedProps.fromJson(position),

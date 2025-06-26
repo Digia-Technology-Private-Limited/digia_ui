@@ -10,6 +10,7 @@ class VWSliverGrid extends VirtualSliver<Props> {
   VWSliverGrid({
     required super.props,
     required super.commonProps,
+    super.parentProps,
     required super.parent,
     required super.refName,
     required super.childGroups,

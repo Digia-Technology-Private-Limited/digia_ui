@@ -9,6 +9,7 @@ class VWSvgImage extends VirtualLeafStatelessWidget<Props> {
   VWSvgImage({
     required super.props,
     required super.commonProps,
+    super.parentProps,
     required super.parent,
     super.refName,
   });

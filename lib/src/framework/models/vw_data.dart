@@ -96,6 +96,7 @@ class VWNodeData extends VWData {
   final String type;
   final Props props;
   final CommonProps? commonProps;
+  final Props? parentProps;
   final Map<String, List<VWData>>? childGroups;
   final VWRepeatData? repeatData;
 
@@ -103,6 +104,7 @@ class VWNodeData extends VWData {
     required this.type,
     required this.props,
     required this.commonProps,
+    required this.parentProps,
     required this.childGroups,
     required this.repeatData,
     required super.refName,
@@ -115,6 +117,9 @@ class VWNodeData extends VWData {
           Props.empty(),
       commonProps:
           as$<JsonLike>(json['containerProps']).maybe(CommonProps.fromJson),
+      parentProps:
+          as$<JsonLike>(json['parentProps']).maybe((p0) => Props(p0)) ??
+              Props.empty(),
       childGroups: tryKeys(
         json,
         ['children', 'composites', 'childGroups'],

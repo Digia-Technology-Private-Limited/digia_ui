@@ -12,6 +12,7 @@ class VWExpandable extends VirtualStatelessWidget<Props> {
   VWExpandable({
     required super.props,
     required super.commonProps,
+    super.parentProps,
     required super.childGroups,
     required super.parent,
     super.refName,

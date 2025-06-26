@@ -10,6 +10,7 @@ class VWText extends VirtualLeafStatelessWidget<TextProps> {
   VWText({
     required super.props,
     required super.commonProps,
+    super.parentProps,
     super.parent,
     super.refName,
   });

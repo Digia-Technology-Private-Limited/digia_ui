@@ -141,6 +141,7 @@ VWText textBuilder(VWNodeData data, VirtualWidget? parent, _) {
   return VWText(
     props: TextProps.fromJson(data.props.value),
     commonProps: data.commonProps,
+    parentProps: data.parentProps,
     parent: parent,
     refName: data.refName,
   );
@@ -150,6 +151,7 @@ VWMarkDown markdownBuilder(VWNodeData data, VirtualWidget? parent, _) {
   return VWMarkDown(
     props: MarkDownProps.fromJson(data.props.value),
     commonProps: data.commonProps,
+    parentProps: data.parentProps,
     parent: parent,
     refName: data.refName,
   );
@@ -159,6 +161,7 @@ VWRangeSlider rangeSliderBuilder(VWNodeData data, VirtualWidget? parent, _) {
   return VWRangeSlider(
     props: RangeSliderProps.fromJson(data.props.value),
     commonProps: data.commonProps,
+    parentProps: data.parentProps,
     parent: parent,
     refName: data.refName,
   );
@@ -168,6 +171,7 @@ VWRichText richTextBuilder(VWNodeData data, VirtualWidget? parent, _) {
   return VWRichText(
     props: RichTextProps.fromJson(data.props.value),
     commonProps: data.commonProps,
+    parentProps: data.parentProps,
     parent: parent,
     refName: data.refName,
   );
@@ -181,6 +185,7 @@ VWTextFormField textFormFieldBuilder(
   return VWTextFormField(
     props: data.props,
     commonProps: data.commonProps,
+    parentProps: data.parentProps,
     parent: parent,
     childGroups: createChildGroups(data.childGroups, parent, registry),
     refName: data.refName,
@@ -195,6 +200,7 @@ VWContainer containerBuilder(
   return VWContainer(
     props: data.props,
     commonProps: data.commonProps,
+    parentProps: data.parentProps,
     parent: parent,
     childGroups: createChildGroups(data.childGroups, parent, registry),
     refName: data.refName,
@@ -205,6 +211,7 @@ VWIcon iconBuilder(VWNodeData data, VirtualWidget? parent, _) {
   return VWIcon(
     props: IconProps.fromJson(data.props.value) ?? IconProps.empty(),
     commonProps: data.commonProps,
+    parentProps: data.parentProps,
     parent: parent,
     refName: data.refName,
   );
@@ -214,6 +221,7 @@ VWPinField pinFieldBuilder(VWNodeData data, VirtualWidget? parent, _) {
   return VWPinField(
     props: PinFieldProps.fromJson(data.props.value),
     commonProps: data.commonProps,
+    parentProps: data.parentProps,
     parent: parent,
     refName: data.refName,
   );
@@ -243,6 +251,7 @@ VWFlex flexBuilder(
     direction: direction,
     props: data.props,
     commonProps: data.commonProps,
+    parentProps: data.parentProps,
     parent: parent,
     childGroups: createChildGroups(data.childGroups, parent, registry),
     refName: data.refName,
@@ -270,6 +279,7 @@ VWListView listViewBuilder(
   return VWListView(
     props: data.props,
     commonProps: data.commonProps,
+    parentProps: data.parentProps,
     parent: parent,
     childGroups: createChildGroups(data.childGroups, parent, registry),
     refName: data.refName,
@@ -280,6 +290,7 @@ VWHtmlView htmlViewBuilder(VWNodeData data, VirtualWidget? parent, _) {
   return VWHtmlView(
     props: data.props,
     commonProps: data.commonProps,
+    parentProps: data.parentProps,
     parent: parent,
     refName: data.refName,
   );
@@ -289,6 +300,7 @@ VWAvatar avatarBuilder(VWNodeData data, VirtualWidget? parent, _) {
   return VWAvatar(
     props: data.props,
     commonProps: data.commonProps,
+    parentProps: data.parentProps,
     parent: parent,
     refName: data.refName,
   );
@@ -298,6 +310,7 @@ VWButton buttonBuilder(VWNodeData data, VirtualWidget? parent, _) {
   return VWButton(
     props: data.props,
     commonProps: data.commonProps,
+    parentProps: data.parentProps,
     parent: parent,
     refName: data.refName,
   );
@@ -307,6 +320,7 @@ VWIconButton iconButtonBuilder(VWNodeData data, VirtualWidget? parent, _) {
   return VWIconButton(
     props: data.props,
     commonProps: data.commonProps,
+    parentProps: data.parentProps,
     parent: parent,
     refName: data.refName,
   );
@@ -316,6 +330,7 @@ VWImage imageBuilder(VWNodeData data, VirtualWidget? parent, _) {
   return VWImage(
     props: data.props,
     commonProps: data.commonProps,
+    parentProps: data.parentProps,
     parent: parent,
     refName: data.refName,
   );
@@ -325,6 +340,7 @@ VWSvgImage svgBuilder(VWNodeData data, VirtualWidget? parent, _) {
   return VWSvgImage(
     props: data.props,
     commonProps: data.commonProps,
+    parentProps: data.parentProps,
     parent: parent,
     refName: data.refName,
   );
@@ -334,6 +350,7 @@ VWWebView webViewBuilder(VWNodeData data, VirtualWidget? parent, _) {
   return VWWebView(
     props: data.props,
     commonProps: data.commonProps,
+    parentProps: data.parentProps,
     parent: parent,
     refName: data.refName,
   );
@@ -343,6 +360,7 @@ VWSizedBox sizedBoxBuilder(VWNodeData data, VirtualWidget? parent, _) {
   return VWSizedBox(
     props: SizedBoxProps.fromJson(data.props.value),
     commonProps: data.commonProps,
+    parentProps: data.parentProps,
     parent: parent,
     refName: data.refName,
   );
@@ -352,6 +370,7 @@ VWSpacer spacerBuilder(VWNodeData data, VirtualWidget? parent, _) {
   return VWSpacer(
     props: SpacerProps.fromJson(data.props.value),
     commonProps: data.commonProps,
+    parentProps: data.parentProps,
     parent: parent,
     refName: data.refName,
   );
@@ -361,6 +380,7 @@ VWLottie lottieBuilder(VWNodeData data, VirtualWidget? parent, _) {
   return VWLottie(
     props: data.props,
     commonProps: data.commonProps,
+    parentProps: data.parentProps,
     parent: parent,
     refName: data.refName,
   );
@@ -374,6 +394,7 @@ VWStack stackBuilder(
   return VWStack(
     props: data.props,
     commonProps: data.commonProps,
+    parentProps: data.parentProps,
     parent: parent,
     childGroups: createChildGroups(data.childGroups, parent, registry),
     refName: data.refName,
@@ -384,6 +405,7 @@ VWVideoPlayer videoPlayerBuilder(VWNodeData data, VirtualWidget? parent, _) {
   return VWVideoPlayer(
     props: data.props,
     commonProps: data.commonProps,
+    parentProps: data.parentProps,
     parent: parent,
     refName: data.refName,
   );
@@ -413,6 +435,7 @@ VWStyledHorizontalDivider horizontalDividerBuilder(
           : null,
     ),
     commonProps: data.commonProps,
+    parentProps: data.parentProps,
     parent: parent,
     refName: data.refName,
   );
@@ -442,6 +465,7 @@ VWStyledVerticalDivider verticalDividerBuilder(
           : null,
     ),
     commonProps: data.commonProps,
+    parentProps: data.parentProps,
     parent: parent,
     refName: data.refName,
   );
@@ -452,6 +476,7 @@ VWStyledHorizontalDivider styledHorizontalDividerBuilder(
   return VWStyledHorizontalDivider(
     props: StyledDividerProps.fromJson(data.props.value),
     commonProps: data.commonProps,
+    parentProps: data.parentProps,
     parent: parent,
     refName: data.refName,
   );
@@ -462,6 +487,7 @@ VWStyledVerticalDivider styledVerticalDividerBuilder(
   return VWStyledVerticalDivider(
     props: StyledDividerProps.fromJson(data.props.value),
     commonProps: data.commonProps,
+    parentProps: data.parentProps,
     parent: parent,
     refName: data.refName,
   );
@@ -472,6 +498,7 @@ VWCircularProgressBar circularProgressBarBuilder(
   return VWCircularProgressBar(
     props: data.props,
     commonProps: data.commonProps,
+    parentProps: data.parentProps,
     parent: parent,
     refName: data.refName,
   );
@@ -482,6 +509,7 @@ VWLinearProgressBar linearProgressBarBuilder(
   return VWLinearProgressBar(
     props: data.props,
     commonProps: data.commonProps,
+    parentProps: data.parentProps,
     parent: parent,
     refName: data.refName,
   );
@@ -491,6 +519,7 @@ VWCheckbox checkboxBuilder(VWNodeData data, VirtualWidget? parent, _) {
   return VWCheckbox(
     props: data.props,
     commonProps: data.commonProps,
+    parentProps: data.parentProps,
     parent: parent,
     refName: data.refName,
   );
@@ -500,6 +529,7 @@ VWAppBar appBarBuilder(
     VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
   return VWAppBar(
     props: AppBarProps.fromJson(data.props.value),
+    parentProps: data.parentProps,
     parent: parent,
     refName: data.refName,
     childGroups: createChildGroups(data.childGroups, parent, registry),
@@ -514,6 +544,7 @@ VWDrawer drawerBuilder(
   return VWDrawer(
     props: data.props,
     commonProps: data.commonProps,
+    parentProps: data.parentProps,
     parent: parent,
     refName: data.refName,
     childGroups: createChildGroups(data.childGroups, parent, registry),
@@ -528,6 +559,7 @@ VWScaffold scaffoldBuilder(
   return VWScaffold(
     props: ScaffoldProps.fromJson(data.props.value),
     commonProps: data.commonProps,
+    parentProps: data.parentProps,
     parent: parent,
     childGroups: createChildGroups(data.childGroups, parent, registry),
     refName: data.refName,
@@ -541,6 +573,7 @@ VWSafeArea safeAreaBuilder(
 ) {
   return VWSafeArea(
     props: SafeAreaProps.fromJson(data.props.value),
+    parentProps: data.parentProps,
     childGroups: createChildGroups(data.childGroups, parent, registry),
     refName: data.refName,
   );
@@ -554,6 +587,7 @@ VWGridView gridViewBuilder(
   return VWGridView(
     props: data.props,
     commonProps: data.commonProps,
+    parentProps: data.parentProps,
     parent: parent,
     childGroups: createChildGroups(data.childGroups, parent, registry),
     refName: data.refName,
@@ -568,6 +602,7 @@ VWAnimatedButton animatedButtonBuilder(
   return VWAnimatedButton(
     props: data.props,
     commonProps: data.commonProps,
+    parentProps: data.parentProps,
     parent: parent,
     refName: data.refName,
   );
@@ -581,6 +616,7 @@ VWExpandable expandableBuilder(
   return VWExpandable(
     props: data.props,
     commonProps: data.commonProps,
+    parentProps: data.parentProps,
     parent: parent,
     refName: data.refName,
     childGroups: createChildGroups(data.childGroups, parent, registry),
@@ -595,6 +631,7 @@ VWWrap wrapBuilder(
   return VWWrap(
     props: data.props,
     commonProps: data.commonProps,
+    parentProps: data.parentProps,
     parent: parent,
     refName: data.refName,
     childGroups: createChildGroups(data.childGroups, parent, registry),
@@ -606,6 +643,7 @@ VWYoutubePlayer youtubePlayerBuilder(
   return VWYoutubePlayer(
     props: data.props,
     commonProps: data.commonProps,
+    parentProps: data.parentProps,
     parent: parent,
     refName: data.refName,
   );
@@ -615,6 +653,7 @@ VWSwitch switchBuilder(VWNodeData data, VirtualWidget? parent, _) {
   return VWSwitch(
     props: SwitchProps.fromJson(data.props.value),
     commonProps: data.commonProps,
+    parentProps: data.parentProps,
     parent: parent,
     refName: data.refName,
   );
@@ -624,6 +663,7 @@ VWCalendar calendarBuilder(VWNodeData data, VirtualWidget? parent, _) {
   return VWCalendar(
     props: data.props,
     commonProps: data.commonProps,
+    parentProps: data.parentProps,
     parent: parent,
     refName: data.refName,
   );
@@ -637,6 +677,7 @@ VWTimer timerBuilder(
   return VWTimer(
     props: TimerProps.fromJson(data.props.value),
     commonProps: data.commonProps,
+    parentProps: data.parentProps,
     parent: parent,
     refName: data.refName,
     childGroups: createChildGroups(data.childGroups, parent, registry),
@@ -651,6 +692,7 @@ VWAsyncBuilder asyncBuilderBuilder(
   return VWAsyncBuilder(
     props: AsyncBuilderProps.fromJson(data.props.value),
     commonProps: data.commonProps,
+    parentProps: data.parentProps,
     parent: parent,
     refName: data.refName,
     childGroups: createChildGroups(data.childGroups, parent, registry),
@@ -665,6 +707,7 @@ VWStreamBuilder streamBuilderBuilder(
   return VWStreamBuilder(
     props: StreamBuilderProps.fromJson(data.props.value),
     commonProps: data.commonProps,
+    parentProps: data.parentProps,
     parent: parent,
     refName: data.refName,
     childGroups: createChildGroups(data.childGroups, parent, registry),
@@ -677,6 +720,7 @@ VWConditionalBuilder conditionalBuilderBuilder(
   VirtualWidgetRegistry registry,
 ) {
   return VWConditionalBuilder(
+    parentProps: data.parentProps,
     childGroups: createChildGroups(data.childGroups, parent, registry),
   );
 }
@@ -701,6 +745,7 @@ VWRefreshIndicator refreshIndicatorBuilder(
   return VWRefreshIndicator(
     props: data.props,
     commonProps: data.commonProps,
+    parentProps: data.parentProps,
     parent: parent,
     refName: data.refName,
     childGroups: createChildGroups(data.childGroups, parent, registry),
@@ -715,6 +760,7 @@ VWBeforeAfterSlider beforeAfterSliderBuilder(
   return VWBeforeAfterSlider(
     props: BeforeAfterSliderProps.fromJson(data.props.value),
     commonProps: data.commonProps,
+    parentProps: data.parentProps,
     parent: parent,
     refName: data.refName,
     childGroups: createChildGroups(data.childGroups, parent, registry),
@@ -729,6 +775,7 @@ VWImageView360 imageView360Builder(
   return VWImageView360(
       props: ImageView360Props.fromJson(data.props.value),
       commonProps: data.commonProps,
+      parentProps: data.parentProps,
       parent: parent,
       refName: data.refName,
       childGroups: createChildGroups(data.childGroups, parent, registry));
@@ -742,6 +789,7 @@ VWOpacity opacityBuilder(
   return VWOpacity(
     props: OpacityProps.fromJson(data.props.value),
     commonProps: data.commonProps,
+    parentProps: data.parentProps,
     parent: parent,
     refName: data.refName,
     childGroups: createChildGroups(data.childGroups, parent, registry),
@@ -756,6 +804,7 @@ VWTabViewController tabControllerBuilder(
   return VWTabViewController(
     props: TabViewControllerProps.fromJson(data.props.value),
     commonProps: data.commonProps,
+    parentProps: data.parentProps,
     parent: parent,
     childGroups: createChildGroups(data.childGroups, parent, registry),
     refName: data.refName,
@@ -770,6 +819,7 @@ VWTabBar tabBarBuilder(
   return VWTabBar(
     props: data.props,
     commonProps: data.commonProps,
+    parentProps: data.parentProps,
     parent: parent,
     childGroups: createChildGroups(data.childGroups, parent, registry),
     refName: data.refName,
@@ -784,6 +834,7 @@ VWOverlay overlayBuilder(
   return VWOverlay(
     props: data.props,
     commonProps: data.commonProps,
+    parentProps: data.parentProps,
     parent: parent,
     childGroups: createChildGroups(data.childGroups, parent, registry),
     refName: data.refName,
@@ -798,6 +849,7 @@ VWTabViewContent tabViewContentBuilder(
   return VWTabViewContent(
     props: TabViewContentProps.fromJson(data.props.value),
     commonProps: data.commonProps,
+    parentProps: data.parentProps,
     parent: parent,
     //
     childGroups: createChildGroups(data.childGroups, parent, registry),
@@ -813,6 +865,7 @@ VWPageView pageViewBuilder(
   return VWPageView(
     props: data.props,
     commonProps: data.commonProps,
+    parentProps: data.parentProps,
     parent: parent,
     childGroups: createChildGroups(data.childGroups, parent, registry),
     refName: data.refName,
@@ -827,6 +880,7 @@ VWPaginatedListView paginatedListViewBuilder(
   return VWPaginatedListView(
     props: PaginatedListViewProps.fromJson(data.props.value),
     commonProps: data.commonProps,
+    parentProps: data.parentProps,
     parent: parent,
     childGroups: createChildGroups(data.childGroups, parent, registry),
     refName: data.refName,
@@ -841,6 +895,7 @@ VWPaginatedSliverList paginatedSliverListBuilder(
   return VWPaginatedSliverList(
     props: PaginatedSliverListProps.fromJson(data.props.value),
     commonProps: data.commonProps,
+    parentProps: data.parentProps,
     parent: parent,
     childGroups: createChildGroups(data.childGroups, parent, registry),
     refName: data.refName,
@@ -855,6 +910,7 @@ VWSliverAppBar sliverAppBarBuilder(
   return VWSliverAppBar(
     props: SliverAppBarProps.fromJson(data.props.value),
     commonProps: data.commonProps,
+    parentProps: data.parentProps,
     parent: parent,
     refName: data.refName,
     childGroups: createChildGroups(data.childGroups, parent, registry),
@@ -869,6 +925,7 @@ VWSmartScrollView smartScrollViewBuilder(
   return VWSmartScrollView(
     props: SmartScrollViewProps.fromJson(data.props.value),
     commonProps: data.commonProps,
+    parentProps: data.parentProps,
     parent: parent,
     refName: data.refName,
     childGroups: createChildGroups(data.childGroups, parent, registry),
@@ -883,6 +940,7 @@ VWNestedScrollView nestedScrollViewBuilder(
   return VWNestedScrollView(
     props: NestedScrollViewProps.fromJson(data.props.value),
     commonProps: data.commonProps,
+    parentProps: data.parentProps,
     parent: parent,
     refName: data.refName,
     childGroups: createChildGroups(data.childGroups, parent, registry),
@@ -897,6 +955,7 @@ VWSliverList sliverListBuilder(
   return VWSliverList(
     props: data.props,
     commonProps: data.commonProps,
+    parentProps: data.parentProps,
     parent: parent,
     refName: data.refName,
     childGroups: createChildGroups(data.childGroups, parent, registry),
@@ -911,6 +970,7 @@ VWSliverGrid sliverGridBuilder(
   return VWSliverGrid(
     props: data.props,
     commonProps: data.commonProps,
+    parentProps: data.parentProps,
     parent: parent,
     refName: data.refName,
     childGroups: createChildGroups(data.childGroups, parent, registry),
@@ -925,6 +985,7 @@ VWAnimatedBuilder animationBuilder(
   return VWAnimatedBuilder(
     props: data.props,
     commonProps: data.commonProps,
+    parentProps: data.parentProps,
     parent: parent,
     refName: data.refName,
     childGroups: createChildGroups(data.childGroups, parent, registry),
@@ -939,6 +1000,7 @@ VWAnimatedSwitcher animatedSwitcher(
   return VWAnimatedSwitcher(
     props: AnimatedSwitcherProps.fromJson(data.props.value),
     commonProps: data.commonProps,
+    parentProps: data.parentProps,
     parent: parent,
     refName: data.refName,
     childGroups: createChildGroups(data.childGroups, parent, registry),
@@ -953,6 +1015,7 @@ VWNavigationBar navigationBarBuilder(
   return VWNavigationBar(
     props: NavigationBarProps.fromJson(data.props.value),
     commonProps: data.commonProps,
+    parentProps: data.parentProps,
     parent: parent,
     childGroups: createChildGroups(data.childGroups, parent, registry),
     refName: data.refName,
@@ -978,6 +1041,7 @@ VWNavigationBarCustom navigationBarCustomBuilder(
   return VWNavigationBarCustom(
     props: NavigationBarCustomProps.fromJson(data.props.value),
     commonProps: data.commonProps,
+    parentProps: data.parentProps,
     parent: parent,
     childGroups: createChildGroups(data.childGroups, parent, registry),
     refName: data.refName,
@@ -992,6 +1056,7 @@ VWNavigationBarItemCustom navigationBarItemCustomBuilder(
   return VWNavigationBarItemCustom(
     props: NavigationBarItemCustomProps.fromJson(data.props.value),
     commonProps: data.commonProps,
+    parentProps: data.parentProps,
     parent: parent,
     childGroups: createChildGroups(data.childGroups, parent, registry),
     refName: data.refName,
@@ -1006,6 +1071,7 @@ VWCarousel carouselBuilder(
   return VWCarousel(
     props: CarouselProps.fromJson(data.props.value),
     commonProps: data.commonProps,
+    parentProps: data.parentProps,
     parent: parent,
     childGroups: createChildGroups(data.childGroups, parent, registry),
     refName: data.refName,
@@ -1017,6 +1083,7 @@ VWStepper flutterStepperBuilder(
   return VWStepper(
     props: data.props,
     commonProps: data.commonProps,
+    parentProps: data.parentProps,
     parent: parent,
     childGroups: createChildGroups(data.childGroups, parent, registry),
     refName: data.refName,
@@ -1031,6 +1098,7 @@ VWSmartScrollGroup smartScrollGroupBuilder(
   return VWSmartScrollGroup(
     props: data.props,
     commonProps: data.commonProps,
+    parentProps: data.parentProps,
     parent: parent,
     refName: data.refName,
     childGroups: createChildGroups(data.childGroups, parent, registry),
@@ -1045,6 +1113,7 @@ VWPinnedHeader pinnedHeaderBuilder(
   return VWPinnedHeader(
     props: data.props,
     commonProps: data.commonProps,
+    parentProps: data.parentProps,
     parent: parent,
     refName: data.refName,
     childGroups: createChildGroups(data.childGroups, parent, registry),

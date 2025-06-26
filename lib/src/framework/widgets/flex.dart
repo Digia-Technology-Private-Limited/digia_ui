@@ -20,6 +20,7 @@ class VWFlex extends VirtualStatelessWidget<Props> {
     required this.direction,
     required super.props,
     required super.commonProps,
+    super.parentProps,
     required super.parent,
     super.refName,
     required super.childGroups,
@@ -72,11 +73,10 @@ class VWFlex extends VirtualStatelessWidget<Props> {
       return childVirtualWidget;
     }
 
-    final expansionType = childVirtualWidget.commonProps?.parentProps
-        ?.getString('expansion.type');
-    final flexValue = payload.eval<int>(childVirtualWidget
-        .commonProps?.parentProps
-        ?.get('expansion.flexValue'));
+    final expansionType =
+        childVirtualWidget.parentProps?.getString('expansion.type');
+    final flexValue = payload
+        .eval<int>(childVirtualWidget.parentProps?.get('expansion.flexValue'));
 
     if (expansionType == null) return childVirtualWidget;
 

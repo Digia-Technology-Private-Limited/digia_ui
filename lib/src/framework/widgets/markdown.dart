@@ -14,6 +14,7 @@ class VWMarkDown extends VirtualLeafStatelessWidget<MarkDownProps> {
   VWMarkDown({
     required super.props,
     required super.commonProps,
+    super.parentProps,
     super.parent,
     super.refName,
   });

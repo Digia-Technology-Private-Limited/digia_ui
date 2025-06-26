@@ -16,6 +16,7 @@ class VWContainer extends VirtualStatelessWidget<Props> {
   VWContainer({
     required super.props,
     super.commonProps,
+    super.parentProps,
     required super.childGroups,
     required super.parent,
     super.refName,

@@ -18,6 +18,7 @@ class VWAppBar extends VirtualStatelessWidget<AppBarProps> {
   VWAppBar({
     required super.props,
     required super.parent,
+    super.parentProps,
     super.refName,
     this.leadingIcon,
     this.trailingIcon,

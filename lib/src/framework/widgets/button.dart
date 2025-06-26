@@ -20,6 +20,7 @@ class VWButton extends VirtualLeafStatelessWidget<Props> {
   VWButton({
     required super.props,
     required super.commonProps,
+    super.parentProps,
     required super.parent,
     super.refName,
   });

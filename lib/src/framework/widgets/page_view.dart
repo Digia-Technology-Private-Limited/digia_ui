@@ -14,6 +14,7 @@ class VWPageView extends VirtualStatelessWidget<Props> {
     super.refName,
     required super.props,
     required super.commonProps,
+    super.parentProps,
     required super.parent,
     required super.childGroups,
   });

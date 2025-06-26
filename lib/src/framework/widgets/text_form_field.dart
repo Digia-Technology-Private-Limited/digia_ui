@@ -16,6 +16,7 @@ class VWTextFormField extends VirtualStatelessWidget<Props> {
   VWTextFormField({
     required super.props,
     required super.commonProps,
+    super.parentProps,
     required super.parent,
     super.refName,
     required super.childGroups,

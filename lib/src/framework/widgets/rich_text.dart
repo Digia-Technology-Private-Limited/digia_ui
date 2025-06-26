@@ -15,6 +15,7 @@ class VWRichText extends VirtualLeafStatelessWidget<RichTextProps> {
   VWRichText({
     required super.props,
     required super.commonProps,
+    super.parentProps,
     required super.parent,
     super.refName,
   });

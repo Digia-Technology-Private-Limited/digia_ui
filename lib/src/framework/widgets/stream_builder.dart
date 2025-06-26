@@ -20,6 +20,7 @@ class VWStreamBuilder extends VirtualStatelessWidget<StreamBuilderProps> {
   VWStreamBuilder({
     required super.props,
     required super.commonProps,
+    super.parentProps,
     required super.childGroups,
     required super.parent,
     super.refName,
