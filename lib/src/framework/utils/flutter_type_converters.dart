@@ -119,6 +119,21 @@ abstract class To {
         _ => LaunchMode.platformDefault
       };
 
+  static Alignment? _toAlignmentFromPoint(Object? xPoint, Object? yPoint) {
+    final x = NumUtil.toDouble(xPoint);
+    final y = NumUtil.toDouble(yPoint);
+    return (x, y).maybe((p0, p1) => Alignment(p0, p1));
+  }
+
+  static Alignment? _parsePointInString(String value) {
+    if (!value.contains(',')) return null;
+    final parts = value.split(',');
+    return _toAlignmentFromPoint(
+      parts.elementAtOrNull(0),
+      parts.elementAtOrNull(1),
+    );
+  }
+
   static Alignment? alignment(dynamic value) {
     if (value is String) {
       return switch (value) {
@@ -131,14 +146,12 @@ abstract class To {
         'bottomLeft' => Alignment.bottomLeft,
         'bottomCenter' => Alignment.bottomCenter,
         'bottomRight' => Alignment.bottomRight,
-        _ => null
+        _ => _parsePointInString(value),
       };
     }
 
     if (value is Map) {
-      final xNullable = NumUtil.toDouble(value['x']);
-      final yNullable = NumUtil.toDouble(value['y']);
-      return (xNullable, yNullable).maybe((p0, p1) => Alignment(p0, p1));
+      return _toAlignmentFromPoint(value['x'], value['y']);
     }
 
     return null;
