@@ -2,6 +2,10 @@
 
 Digia Ui SDK.
 
+## [0.4.1] - 2025-06-27
+
+- 🐞 Fixed a bug where StateContainer values were lost when the parent widget rebuilt
+
 ## [0.4.0] - 2025-06-24
 
 - 🔧 Revamped message handling in DigiaUI SDK — messages can now be listened to globally without passing handlers to each page
