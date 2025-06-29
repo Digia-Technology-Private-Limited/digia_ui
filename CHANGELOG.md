@@ -2,6 +2,10 @@
 
 Digia Ui SDK.
 
+## [0.4.2] - 2025-06-29
+
+- 🛠️ Initial page in carousel can now be dynamic
+
 ## [0.4.1] - 2025-06-27
 
 - 🐞 Fixed a bug where StateContainer values were lost when the parent widget rebuilt
