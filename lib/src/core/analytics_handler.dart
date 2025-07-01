@@ -37,8 +37,9 @@ void _logAnalytics(DUILogger? logger, List<AnalyticEvent>? events,
 
   for (var event in events) {
     String eventName = as$<String>(event.name) ?? 'Unknown Event';
-    Map<String, dynamic> eventPayload = as<Map<String, dynamic>>(
-        evaluateNestedExpressions(event.payload ?? {}, enclosing));
+    Map<String, dynamic> eventPayload = as$<Map<String, dynamic>>(
+            evaluateNestedExpressions(event.payload ?? {}, enclosing)) ??
+        {};
     logger?.logEvent(eventName: eventName, eventPayload: eventPayload);
   }
 }
