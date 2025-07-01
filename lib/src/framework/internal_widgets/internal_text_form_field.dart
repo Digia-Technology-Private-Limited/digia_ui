@@ -20,8 +20,8 @@ class InternalTextFormField extends StatefulWidget {
   final void Function(String)? onSubmit;
 
   final Color? cursorColor;
-  final String? regex;
-  final String? errorText;
+  // final String? regex;
+  // final String? errorText;
   final void Function(String)? onChanged;
   final InputDecoration? inputDecoration;
   final int? debounceValue;
@@ -44,8 +44,8 @@ class InternalTextFormField extends StatefulWidget {
       this.minLines,
       this.maxLength,
       this.cursorColor,
-      this.regex,
-      this.errorText,
+      // this.regex,
+      // this.errorText,
       this.inputDecoration = const InputDecoration(),
       this.debounceValue
       // this.onChanged,
@@ -85,6 +85,7 @@ class _DUITextFieldState extends State<InternalTextFormField> {
       autofocus: widget.autoFocus ?? false,
       controller: widget.controller,
       enabled: widget.enabled,
+      initialValue: widget.initialValue,
       keyboardType: widget.keyboardType,
       textInputAction: widget.textInputAction,
       style: widget.style,
