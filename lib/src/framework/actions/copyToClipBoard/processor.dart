@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -27,9 +28,13 @@ class CopyToClipBoardProcessor extends ActionProcessor<CopyToClipBoardAction> {
     if (message != null && message.isNotEmpty) {
       try {
         await Clipboard.setData(ClipboardData(text: message));
-        _showToast(toast, 'Copied to Clipboard!');
+        if (kIsWeb) {
+          _showToast(toast, 'Copied to Clipboard!');
+        }
       } catch (e) {
-        _showToast(toast, 'Failed to copy to clipboard.');
+        if (kIsWeb) {
+          _showToast(toast, 'Failed to copy to clipboard.');
+        }
       }
       return null;
     } else {
