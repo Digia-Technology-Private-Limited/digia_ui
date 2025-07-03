@@ -47,8 +47,10 @@ class VWTextFormField extends VirtualStatelessWidget<Props> {
     final contentPadding = To.edgeInsets(props.get('contentPadding'));
     final focusColor = payload.evalColor(props.get('focusColor'));
     final cursorColor = payload.evalColor(props.get('cursorColor'));
-    final regex = payload.eval<String>(props.get('regex'));
-    final errorText = payload.eval<String>(props.get('errorText'));
+    final validations = payload.eval<List<ValidationIssue>>(
+      props.get('validationRules'),
+      decoder: (p0) {},
+    );
     final errorStyle = payload.getTextStyle(props.getMap('errorStyle'));
     final enabledBorder = _toInputBorder(payload, props.get('enabledBorder'));
     final disabledBorder = _toInputBorder(payload, props.get('disabledBorder'));
@@ -86,8 +88,7 @@ class VWTextFormField extends VirtualStatelessWidget<Props> {
       minLines: minLines,
       maxLength: maxLength,
       cursorColor: cursorColor,
-      regex: regex,
-      errorText: errorText,
+      validations: validations,
       inputDecoration: InputDecoration(
         fillColor: fillColor,
         filled: fillColor != null,
