@@ -112,7 +112,7 @@ final Map<String, Object?> validConfigData = {
                         'fit': 'cover',
                         'aspectRatio': 2,
                         'imageSrc': 'https://picsum.photos/id/9/400/225',
-                        'placeHolder': null,
+                        'placeholder': null,
                         'errorImage': null
                       },
                       'containerProps': {

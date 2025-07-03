@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../digia_ui.dart';
 import '../models/props.dart';
+import '../utils/num_util.dart';
 import '../widget_props/icon_props.dart';
 import '../widget_props/nav_bar_item_default_props.dart';
 import 'icon.dart';
@@ -34,11 +35,15 @@ class VWNavigationBarItemDefault
     } else {
       final image = props.unselectedImage;
       if (image != null) {
-        unselectedWidget = VWImage(
-          props: Props(image),
-          commonProps: commonProps,
-          parent: this,
-        ).toWidget(payload);
+        unselectedWidget = SizedBox(
+          height: NumUtil.toDouble(props.unselectedImage?['height']),
+          width: NumUtil.toDouble(props.unselectedImage?['width']),
+          child: VWImage(
+            props: Props(image),
+            commonProps: commonProps,
+            parent: this,
+          ).toWidget(payload),
+        );
       }
     }
 
@@ -52,11 +57,15 @@ class VWNavigationBarItemDefault
     } else {
       final image = props.selectedImage;
       if (image != null) {
-        selectedWidget = VWImage(
-          props: Props(image),
-          commonProps: commonProps,
-          parent: this,
-        ).toWidget(payload);
+        selectedWidget = SizedBox(
+          height: NumUtil.toDouble(props.selectedImage?['height']),
+          width: NumUtil.toDouble(props.selectedImage?['width']),
+          child: VWImage(
+            props: Props(image),
+            commonProps: commonProps,
+            parent: this,
+          ).toWidget(payload),
+        );
       }
     }
 
