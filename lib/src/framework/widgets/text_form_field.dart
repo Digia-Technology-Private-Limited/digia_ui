@@ -58,10 +58,6 @@ class VWTextFormField extends VirtualStatelessWidget<Props> {
       },
     ).toList();
 
-    payload.eval<List<ValidationIssue>>(
-      props.get('validationRules'),
-      decoder: (p0) {},
-    );
     final errorStyle = payload.getTextStyle(props.getMap('errorStyle'));
     final enabledBorder = _toInputBorder(payload, props.get('enabledBorder'));
     final disabledBorder = _toInputBorder(payload, props.get('disabledBorder'));
