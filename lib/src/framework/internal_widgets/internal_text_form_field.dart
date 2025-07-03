@@ -82,6 +82,7 @@ class _DUITextFieldState extends State<InternalTextFormField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       autofocus: widget.autoFocus ?? false,
       controller: widget.controller,
       enabled: widget.enabled,
@@ -95,7 +96,13 @@ class _DUITextFieldState extends State<InternalTextFormField> {
       minLines: widget.minLines,
       maxLength: widget.maxLength,
       cursorColor: widget.cursorColor,
+      validator: _validateInput,
       onChanged: _onChanged,
+      buildCounter: (context,
+              {required currentLength,
+              required isFocused,
+              required maxLength}) =>
+          null,
       onFieldSubmitted: (value) {
         widget.onSubmit?.call(value);
 
@@ -113,5 +120,20 @@ class _DUITextFieldState extends State<InternalTextFormField> {
   void dispose() {
     _debouncer?.cancel();
     super.dispose();
+  }
+
+  String? _validateInput(String? value) {
+    if (value == null || value.isEmpty) {
+      return null;
+    }
+    if (widget.regex != null && widget.regex!.isNotEmpty) {
+      RegExp regex = RegExp(widget.regex!);
+      if (!regex.hasMatch(value)) {
+        return widget.errorText;
+      } else {
+        return null;
+      }
+    }
+    return null;
   }
 }
