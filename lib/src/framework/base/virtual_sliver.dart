@@ -1,12 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 import '../../../digia_ui.dart';
 import '../models/common_props.dart';
 import '../utils/flutter_extensions.dart';
+import '../utils/functional_util.dart';
 import 'default_error_widget.dart';
 import 'virtual_stateless_widget.dart';
-import 'package:digia_ui/src/framework/utils/functional_util.dart';
 
 abstract class VirtualSliver<T> extends VirtualStatelessWidget<T> {
   VirtualSliver({
@@ -115,5 +116,75 @@ Widget wrapInGestureDetector(
       onTap: () => payload.executeAction(actionFlow),
       child: child,
     );
+  }
+}
+
+class SliverGestureDetector extends SingleChildRenderObjectWidget {
+  final GestureTapCallback? onTap;
+  final HitTestBehavior hitTestBehavior;
+
+  const SliverGestureDetector({
+    super.key,
+    this.onTap,
+    this.hitTestBehavior = HitTestBehavior.deferToChild,
+    required Widget sliver,
+  }) : super(child: sliver);
+
+  @override
+  RenderObject createRenderObject(BuildContext context) {
+    return _RenderSliverGestureDetector(
+      onTap: onTap,
+      hitTestBehavior: hitTestBehavior,
+    );
+  }
+
+  @override
+  void updateRenderObject(
+      BuildContext context, _RenderSliverGestureDetector renderObject) {
+    renderObject.onTap = onTap;
+    renderObject.hitTestBehavior = hitTestBehavior;
+  }
+}
+
+class _RenderSliverGestureDetector extends RenderProxySliver {
+  GestureTapCallback? onTap;
+  HitTestBehavior hitTestBehavior;
+
+  _RenderSliverGestureDetector({
+    this.onTap,
+    this.hitTestBehavior = HitTestBehavior.deferToChild,
+  });
+
+  @override
+  bool hitTest(SliverHitTestResult result,
+      {required double mainAxisPosition, required double crossAxisPosition}) {
+    final hit = super.hitTest(result,
+        mainAxisPosition: mainAxisPosition,
+        crossAxisPosition: crossAxisPosition);
+
+    switch (hitTestBehavior) {
+      case HitTestBehavior.opaque:
+        if (!hit) {
+          result.add(HitTestEntry(this));
+          return true;
+        }
+        break;
+      case HitTestBehavior.translucent:
+        result.add(HitTestEntry(this));
+        return true;
+      case HitTestBehavior.deferToChild:
+        if (hit && onTap != null) {
+          result.add(HitTestEntry(this));
+        }
+        return hit;
+    }
+    return hit;
+  }
+
+  @override
+  void handleEvent(PointerEvent event, HitTestEntry entry) {
+    if (event is PointerUpEvent && onTap != null) {
+      onTap!();
+    }
   }
 }
