@@ -82,9 +82,10 @@ class _DUITextFieldState extends State<InternalTextFormField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      autovalidateMode: AutovalidateMode.onUserInteraction,
+      autovalidateMode: AutovalidateMode.always,
       autofocus: widget.autoFocus ?? false,
       controller: widget.controller,
+      initialValue: widget.initialValue,
       enabled: widget.enabled,
       keyboardType: widget.keyboardType,
       textInputAction: widget.textInputAction,
