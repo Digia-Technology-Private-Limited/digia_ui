@@ -130,6 +130,7 @@ class _DUITextFieldState extends State<InternalTextFormField> {
       autofocus: widget.autoFocus ?? false,
       controller: widget.controller,
       enabled: widget.enabled,
+      initialValue: widget.initialValue,
       keyboardType: widget.keyboardType,
       textInputAction: widget.textInputAction,
       style: widget.style,
