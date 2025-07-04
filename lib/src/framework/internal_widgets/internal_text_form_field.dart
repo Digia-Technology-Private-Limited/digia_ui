@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 
 import '../utils/debouncer.dart';
 import '../utils/functional_util.dart';
+import '../utils/object_util.dart';
 
 class ValidationIssue {
   final String type;
-  final dynamic data;
+  final Object? data;
   final String errorMessage;
 
   ValidationIssue({
@@ -97,22 +98,28 @@ class _DUITextFieldState extends State<InternalTextFormField> {
               return rule.errorMessage;
             }
             break;
-
           case 'minLength':
-            if (value != null && value.length < (rule.data as int)) {
+            final minLength = rule.data?.to<int>();
+            if (value != null &&
+                minLength != null &&
+                value.length < minLength) {
               return rule.errorMessage;
             }
             break;
 
           case 'maxLength':
-            if (value != null && value.length > (rule.data as int)) {
+            final maxLength = rule.data?.to<int>();
+            if (value != null &&
+                maxLength != null &&
+                value.length > maxLength) {
               return rule.errorMessage;
             }
             break;
 
           case 'pattern':
-            if (value != null && value.isNotEmpty) {
-              final regExp = RegExp(rule.data as String);
+            final regex = rule.data?.to<String>();
+            if (value != null && regex != null && value.isNotEmpty) {
+              final regExp = RegExp(regex);
               if (!regExp.hasMatch(value)) {
                 return rule.errorMessage;
               }
