@@ -2,6 +2,13 @@
 
 Digia Ui SDK.
 
+## [0.4.3] - 2025-07-04
+
+- 🔁 Reverted previous fix for StateContainer value retention — it will now reinitialize on every rebuild
+- A comprehensive fix addressing both concerns will be released soon
+- 🐞 Fixed an issue where TextField malfunctioned when both controller and initialValue were set
+- 🐞 Added null safety handling for Analytics events
+
 ## [0.4.2] - 2025-06-29
 
 - 🛠️ Initial page in carousel can now be dynamic
