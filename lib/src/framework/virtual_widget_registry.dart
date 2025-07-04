@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 
-import 'base/virtual_builder_widget.dart';
+import 'base/virtual_component.dart';
 import 'base/virtual_widget.dart';
 import 'builders.dart';
 import 'models/vw_data.dart';
@@ -145,8 +145,11 @@ abstract class VirtualWidgetRegistry {
 }
 
 class DefaultVirtualWidgetRegistry implements VirtualWidgetRegistry {
-  final Widget Function(String id, JsonLike? args,
-      [JsonLike? commonProps, JsonLike? parentProps]) componentBuilder;
+  final Widget Function(
+    String id,
+    JsonLike? args,
+    // [JsonLike? commonProps, JsonLike? parentProps]
+  ) componentBuilder;
 
   final Map<String, VirtualWidgetBuilder> builders;
 
@@ -172,11 +175,22 @@ class DefaultVirtualWidgetRegistry implements VirtualWidgetRegistry {
         widget = stateContainerBuilder(data, parent, this);
         break;
       case VWComponentData():
-        widget = VirtualBuilderWidget((payload) => componentBuilder(
-              data.id,
-              data.args?.map(
-                  (k, v) => MapEntry(k, v?.evaluate(payload.scopeContext))),
-            ));
+        widget = VirtualComponent(
+          commonProps: data.commonProps,
+          parentProps: data.parentProps,
+          parent: parent,
+          refName: data.refName,
+          componentBuilder: (payload) => componentBuilder(
+            data.id,
+            data.args?.map(
+              (k, v) => MapEntry(
+                k,
+                v?.evaluate(payload.scopeContext),
+              ),
+            ),
+          ),
+        );
+
         break;
     }
 
