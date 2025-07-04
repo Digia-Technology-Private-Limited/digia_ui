@@ -136,9 +136,10 @@ abstract class VirtualWidgetRegistry {
   );
 
   factory VirtualWidgetRegistry({
-    required Widget Function(String id, JsonLike? args,
-            [JsonLike? commonProps, JsonLike? parentProps])
-        componentBuilder,
+    required Widget Function(
+      String id,
+      JsonLike? args,
+    ) componentBuilder,
   }) = DefaultVirtualWidgetRegistry;
 
   VirtualWidget createWidget(VWData data, VirtualWidget? parent);
@@ -148,7 +149,6 @@ class DefaultVirtualWidgetRegistry implements VirtualWidgetRegistry {
   final Widget Function(
     String id,
     JsonLike? args,
-    // [JsonLike? commonProps, JsonLike? parentProps]
   ) componentBuilder;
 
   final Map<String, VirtualWidgetBuilder> builders;
