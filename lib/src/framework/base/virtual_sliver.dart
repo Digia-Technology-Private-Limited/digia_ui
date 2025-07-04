@@ -68,16 +68,13 @@ Widget wrapInContainer(
       width: as$<double>(style.border?['borderWidth']),
       color: as$<String>(style.border?['borderColor']).maybe(payload.getColor),
     ));
-    current = ClipRRect(
-      borderRadius: borderRadius,
-      child: DecoratedSliver(
-        decoration: BoxDecoration(
-          color: bgColor,
-          border: border,
-          borderRadius: borderRadius,
-        ),
-        sliver: current,
+    current = DecoratedSliver(
+      decoration: BoxDecoration(
+        color: bgColor,
+        border: border,
+        borderRadius: borderRadius,
       ),
+      sliver: current,
     );
   }
 

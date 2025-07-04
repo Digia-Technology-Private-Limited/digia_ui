@@ -14,21 +14,21 @@ class SliverUtil {
   static final Map<Type, Function(VirtualStatelessWidget)> boxToSliverMap = {
     VWListView: (widget) => VWSliverList(
           props: widget.props,
-          commonProps: null,
+          commonProps: widget.commonProps,
           parent: widget.parent,
           refName: widget.refName,
           childGroups: widget.childGroups,
         ),
     VWGridView: (widget) => VWSliverGrid(
           props: widget.props,
-          commonProps: null,
+          commonProps: widget.commonProps,
           parent: widget.parent,
           refName: widget.refName,
           childGroups: widget.childGroups,
         ),
     VWPaginatedListView: (widget) => VWPaginatedSliverList(
           props: widget.props,
-          commonProps: null,
+          commonProps: widget.commonProps,
           parent: widget.parent,
           refName: widget.refName,
           childGroups: widget.childGroups,
