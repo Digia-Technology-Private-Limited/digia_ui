@@ -8,12 +8,12 @@ import '../utils/widget_util.dart';
 import 'default_error_widget.dart';
 import 'virtual_widget.dart';
 
-class VirtualComponent extends VirtualWidget {
-  final Widget Function(RenderPayload payload) componentBuilder;
+class VirtualCommonWrapper extends VirtualWidget {
+  final Widget Function(RenderPayload payload) builder;
   final CommonProps? commonProps;
   final Props? parentProps;
-  VirtualComponent({
-    required this.componentBuilder,
+  VirtualCommonWrapper({
+    required this.builder,
     required this.commonProps,
     this.parentProps,
     required super.parent,
@@ -21,7 +21,7 @@ class VirtualComponent extends VirtualWidget {
   });
 
   @override
-  Widget render(RenderPayload payload) => componentBuilder(payload);
+  Widget render(RenderPayload payload) => builder(payload);
 
   @override
   Widget toWidget(RenderPayload payload) {
