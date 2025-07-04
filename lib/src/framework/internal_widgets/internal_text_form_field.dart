@@ -138,7 +138,7 @@ class _DUITextFieldState extends State<InternalTextFormField> {
       autovalidateMode: AutovalidateMode.always,
       controller: widget.controller,
       enabled: widget.enabled,
-      initialValue: widget.initialValue,
+      initialValue: widget.controller == null ? widget.initialValue : null,
       keyboardType: widget.keyboardType,
       textInputAction: widget.textInputAction,
       style: widget.style,
