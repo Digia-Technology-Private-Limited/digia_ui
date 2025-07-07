@@ -33,7 +33,7 @@ class VWAsyncBuilder extends VirtualStatelessWidget<AsyncBuilderProps> {
 
   @override
   Widget render(RenderPayload payload) {
-    final controller = payload.eval<AsyncController>(props.controller)
+    final controller = payload.evalExpr<AsyncController>(props.controller)
       ?..setFutureCreator(
         () => _makeFuture(props, payload),
       );

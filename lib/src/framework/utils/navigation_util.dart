@@ -32,7 +32,6 @@ Future<T?> presentBottomSheet<T>({
   Color? backgroundColor,
   Color? barrierColor,
   BoxBorder? border,
-  bool isKeyBoardSpaceAware = false,
   bool useSafeArea = true,
   BorderRadius? borderRadius,
   WidgetBuilder? iconBuilder,
@@ -44,7 +43,7 @@ Future<T?> presentBottomSheet<T>({
     scrollControlDisabledMaxHeightRatio: scrollControlDisabledMaxHeightRatio,
     barrierColor: barrierColor,
     useSafeArea: useSafeArea,
-    isScrollControlled: isKeyBoardSpaceAware,
+    isScrollControlled: true,
     builder: (innerContext) {
       return BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
@@ -63,14 +62,11 @@ Future<T?> presentBottomSheet<T>({
                 // elevation: 2,
                 child: SafeArea(
                   child: Stack(children: [
-                    if (isKeyBoardSpaceAware)
-                      Padding(
-                        padding: EdgeInsets.only(
-                            bottom: MediaQuery.viewInsetsOf(context).bottom),
-                        child: builder(innerContext),
-                      )
-                    else
-                      builder(innerContext),
+                    Padding(
+                      padding: EdgeInsets.only(
+                          bottom: MediaQuery.viewInsetsOf(context).bottom),
+                      child: builder(innerContext),
+                    ),
                     if (iconBuilder != null)
                       Positioned(
                         top: 24,

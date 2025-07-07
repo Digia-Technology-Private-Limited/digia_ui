@@ -11,6 +11,7 @@ import 'flutter_extensions.dart';
 import 'flutter_type_converters.dart';
 import 'functional_util.dart';
 import 'num_util.dart';
+import 'object_util.dart';
 import 'types.dart';
 
 Widget wrapInContainer(
@@ -32,7 +33,7 @@ Widget wrapInContainer(
   final border = style.border;
   final borderType = as$<JsonLike>(border?['borderType']);
   final borderColor = border?['borderColor'];
-  final borderWidth = as$<double>(border?['borderWidth']);
+  final borderWidth = (border?['borderWidth'])?.to<double>();
   final dashPattern = as$<List<Object?>>(borderType?['dashPattern']);
   final borderPattern = as$<String>(borderType?['borderPattern']);
   final borderStrokeCap = as$<String>(borderType?['strokeCap']);
