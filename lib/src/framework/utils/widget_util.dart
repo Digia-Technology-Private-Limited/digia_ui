@@ -81,11 +81,6 @@ Widget wrapInContainer(
     current = SizedBox(width: width, height: height, child: current);
   }
 
-  final margin = To.edgeInsets(style.margin);
-  if (!margin.isZero) {
-    current = Padding(padding: margin, child: current);
-  }
-
   return current;
 }
 

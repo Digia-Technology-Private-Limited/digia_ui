@@ -1,6 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import '../../digia_ui_client.dart';
+import '../../dui_dev_config.dart';
+import '../base/default_error_widget.dart';
 import '../base/virtual_stateless_widget.dart';
 import '../custom/border_with_pattern.dart';
 import '../custom/custom_flutter_types.dart';
@@ -11,6 +15,7 @@ import '../utils/flutter_type_converters.dart';
 import '../utils/functional_util.dart';
 import '../utils/json_util.dart';
 import '../utils/types.dart';
+import '../utils/widget_util.dart';
 
 class VWContainer extends VirtualStatelessWidget<Props> {
   VWContainer({
@@ -23,6 +28,46 @@ class VWContainer extends VirtualStatelessWidget<Props> {
   });
 
   @override
+  Widget toWidget(RenderPayload payload) {
+    try {
+      if (commonProps == null) return render(payload);
+      final isVisible =
+          commonProps?.visibility?.evaluate(payload.scopeContext) ?? true;
+      if (!isVisible) return empty();
+      var current = render(payload);
+
+      // Align
+      current = wrapInAlign(
+        value: commonProps!.align,
+        child: current,
+      );
+
+      current = wrapInGestureDetector(
+        payload: payload,
+        actionFlow: commonProps?.onClick,
+        child: current,
+        borderRadius: To.borderRadius(props.get('borderRadius')),
+      );
+
+      // Margin should always be the last widget
+      final margin = To.edgeInsets(props.get('margin'));
+      if (!margin.isZero) {
+        current = Padding(padding: margin, child: current);
+      }
+
+      return current;
+    } catch (error) {
+      if (DigiaUIClient.instance.developerConfig?.host is DashboardHost ||
+          kDebugMode) {
+        return DefaultErrorWidget(
+            refName: refName, errorMessage: error.toString());
+      } else {
+        rethrow;
+      }
+    }
+  }
+
+  @override
   Widget render(RenderPayload payload) {
     final width = props.getString('width')?.toWidth(payload.buildContext);
 
@@ -31,7 +76,7 @@ class VWContainer extends VirtualStatelessWidget<Props> {
     final borderRadius = To.borderRadius(props.get('borderRadius'));
 
     final alignment = To.alignment(props.get('childAlignment'));
-    final margin = To.edgeInsets(props.get('margin'));
+
     final padding = To.edgeInsets(props.get('padding'));
     final color = payload.evalColor(props.get('color'));
 
@@ -80,10 +125,7 @@ class VWContainer extends VirtualStatelessWidget<Props> {
       );
     }
 
-    return Padding(
-      padding: margin,
-      child: container,
-    );
+    return container;
   }
 }
 
