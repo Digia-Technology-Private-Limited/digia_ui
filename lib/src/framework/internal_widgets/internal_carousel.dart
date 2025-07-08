@@ -43,7 +43,7 @@ class InternalCarousel extends StatefulWidget {
       this.direction = Axis.horizontal,
       this.aspectRatio = 0.25,
       this.keepAlive = false,
-      this.initialPage = 1,
+      this.initialPage = 0,
       this.enlargeCenterPage = false,
       this.viewportFraction = 0.8,
       this.autoPlay = false,

@@ -46,10 +46,13 @@ class _StatefulScopeWidgetState extends State<StatefulScopeWidget> {
   @override
   void didUpdateWidget(StatefulScopeWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
-    // if (widget.namespace != oldWidget.namespace) {
-    // If the namespace changes, we need to reinitialize the state context
+    // TODO: Optimize widget updates by implementing state diffing to only re-initialize
+    // when necessary, rather than on every didUpdateWidget call
+
+    // Currently, we re-initialize the state context on every widget update.
+    // Ideally, we would only re-initialize when oldWidget.initialState differs from widget.initialState,
+    // but implementing efficient state diffing is complex and not yet implemented.
     _initializeStateContext();
-    // }
   }
 
   @override

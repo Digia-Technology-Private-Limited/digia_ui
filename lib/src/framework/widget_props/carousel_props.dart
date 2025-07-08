@@ -12,7 +12,7 @@ class CarouselProps {
   final String? height;
   final Axis direction;
   final double aspectRatio;
-  final int initialPage;
+  final ExprOr<int>? initialPage;
   final bool enlargeCenterPage;
   final double viewportFraction;
   final bool autoPlay;
@@ -40,7 +40,7 @@ class CarouselProps {
     this.height,
     this.direction = Axis.horizontal,
     this.aspectRatio = 0.25,
-    this.initialPage = 1,
+    this.initialPage,
     this.enlargeCenterPage = false,
     this.viewportFraction = 0.8,
     this.autoPlay = false,
@@ -73,7 +73,7 @@ class CarouselProps {
       height: as$<String>(json['height']),
       direction: To.axis(as$<String>(json['direction'])) ?? Axis.horizontal,
       aspectRatio: as$<double>(NumUtil.toDouble(json['aspectRatio'])) ?? 0.25,
-      initialPage: as$<int>(json['initialPage']) ?? 1,
+      initialPage: ExprOr.fromJson<int>(json['initialPage']),
       enlargeCenterPage: as$<bool>(json['enlargeCenterPage']) ?? false,
       viewportFraction:
           as$<double>(NumUtil.toDouble(json['viewportFraction'])) ?? 0.8,
