@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
+import '../../../../digia_ui.dart';
 import '../../expr/scope_context.dart';
 import '../base/processor.dart';
 import 'action.dart';
@@ -23,13 +24,18 @@ class CopyToClipBoardProcessor extends ActionProcessor<CopyToClipBoardAction> {
     );
 
     final toast = FToast().init(context);
+    final DigiaUIHost? host = DigiaUIClient.instance.developerConfig?.host;
 
     if (message != null && message.isNotEmpty) {
       try {
         await Clipboard.setData(ClipboardData(text: message));
-        _showToast(toast, 'Copied to Clipboard!');
+        if (host is DashboardHost) {
+          _showToast(toast, 'Copied to Clipboard!');
+        }
       } catch (e) {
-        _showToast(toast, 'Failed to copy to clipboard.');
+        if (host is DashboardHost) {
+          _showToast(toast, 'Failed to copy to clipboard.');
+        }
       }
       return null;
     } else {
