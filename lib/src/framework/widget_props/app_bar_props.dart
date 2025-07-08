@@ -32,6 +32,7 @@ class AppBarProps {
   final ExprOr<String>? titlePadding;
   final ExprOr<String>? collapseMode;
   final ExprOr<double>? expandedTitleScale;
+  final ExprOr<bool>? visibility;
   final JsonLike? shape;
 
   const AppBarProps({
@@ -62,6 +63,7 @@ class AppBarProps {
     this.automaticallyImplyLeading,
     this.defaultButtonColor,
     this.height,
+    this.visibility,
   });
 
   factory AppBarProps.fromJson(JsonLike json) {
@@ -100,6 +102,7 @@ class AppBarProps {
           ExprOr.fromJson<bool>(json['automaticallyImplyLeading']),
       defaultButtonColor: ExprOr.fromJson<String>(json['defaultButtonColor']),
       height: ExprOr.fromJson<String>(json['height']),
+      visibility: ExprOr.fromJson<bool>(json['visibility']),
     );
   }
 }

@@ -50,23 +50,30 @@ class VWSliverAppBar extends VirtualSliver<SliverAppBarProps> {
     final expandedTitleScale =
         payload.evalExpr(props.expandedTitleScale)?.toDouble() ?? 1.5;
 
+    // Cache child widgets for performance
+    final cachedTitleWidget = childOf('title')?.toWidget(payload);
+    final cachedLeadingWidget = childOf('leading')?.toWidget(payload);
+    final cachedBackgroundWidget = childOf('background')?.toWidget(payload);
+    final cachedBottomWidget = childOf('bottom')?.toWidget(payload);
+    final cachedActionsWidgets = _buildActions(payload);
+
     Widget? flexibleSpaceWidget;
     if (useFlexibleSpace) {
       flexibleSpaceWidget = FlexibleSpaceBar(
-        title: childOf('title')?.toWidget(payload),
+        title: cachedTitleWidget,
         centerTitle: centerTitle,
         titlePadding: titlePadding,
-        background: childOf('background')?.toWidget(payload),
+        background: cachedBackgroundWidget,
         collapseMode: collapseMode,
         expandedTitleScale: expandedTitleScale,
       );
-    } else if (childOf('background') != null) {
+    } else if (cachedBackgroundWidget != null) {
       flexibleSpaceWidget = FlexibleSpaceBar(
-        background: childOf('background')!.toWidget(payload),
+        background: cachedBackgroundWidget,
       );
     }
 
-    final titleWidget = childOf('title')?.toWidget(payload) ??
+    final titleWidget = cachedTitleWidget ??
         VWText(
           props: props.title,
           commonProps: null,
@@ -74,7 +81,7 @@ class VWSliverAppBar extends VirtualSliver<SliverAppBarProps> {
         ).toWidget(payload);
 
     return SliverAppBar(
-      leading: childOf('leading')?.toWidget(payload),
+      leading: cachedLeadingWidget,
       automaticallyImplyLeading: showDefaultButton,
       iconTheme: showDefaultButton && defaultButtonColor != null
           ? IconThemeData(color: defaultButtonColor)
@@ -94,15 +101,14 @@ class VWSliverAppBar extends VirtualSliver<SliverAppBarProps> {
       title: useFlexibleSpace ? null : titleWidget,
       centerTitle: useFlexibleSpace ? false : centerTitle,
       shape: shape,
-      bottom: bottomSectionHeight != null
-          ? PreferredSize(
-              preferredSize: Size(
-                  bottomSectionWidth?.toWidth(payload.buildContext) ?? 0,
-                  bottomSectionHeight.toHeight(payload.buildContext) ?? 0),
-              child: childOf('bottom')?.toWidget(payload) ?? Container(),
-            )
-          : null,
-      actions: _buildActions(payload),
+      bottom: PreferredSize(
+        preferredSize: Size(
+          bottomSectionWidth?.toWidth(payload.buildContext) ?? 0,
+          bottomSectionHeight?.toHeight(payload.buildContext) ?? 0,
+        ),
+        child: cachedBottomWidget ?? Container(),
+      ),
+      actions: cachedActionsWidgets,
     );
   }
 
