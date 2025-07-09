@@ -9,6 +9,7 @@ class VWLinearProgressBar extends VirtualLeafStatelessWidget<Props> {
   VWLinearProgressBar({
     required super.props,
     required super.commonProps,
+    super.parentProps,
     required super.parent,
     super.refName,
   });

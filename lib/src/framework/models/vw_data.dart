@@ -50,11 +50,15 @@ sealed class VWData {
 class VWComponentData extends VWData {
   final String id;
   final Map<String, ExprOr<Object>?>? args;
+  final CommonProps? commonProps;
+  final Props? parentProps;
 
   VWComponentData({
     required this.id,
     required this.args,
     required super.refName,
+    required this.commonProps,
+    required this.parentProps,
   });
 
   factory VWComponentData.fromJson(JsonLike json) {
@@ -63,6 +67,11 @@ class VWComponentData extends VWData {
       args: as$<JsonLike>(json['componentArgs'])
           ?.map((k, v) => MapEntry(k, ExprOr.fromJson<Object>(v))),
       refName: tryKeys<String>(json, ['varName', 'refName']),
+      commonProps:
+          as$<JsonLike>(json['containerProps']).maybe(CommonProps.fromJson),
+      parentProps:
+          as$<JsonLike>(json['parentProps']).maybe((p0) => Props(p0)) ??
+              Props.empty(),
     );
   }
 }
@@ -96,6 +105,7 @@ class VWNodeData extends VWData {
   final String type;
   final Props props;
   final CommonProps? commonProps;
+  final Props? parentProps;
   final Map<String, List<VWData>>? childGroups;
   final VWRepeatData? repeatData;
 
@@ -103,6 +113,7 @@ class VWNodeData extends VWData {
     required this.type,
     required this.props,
     required this.commonProps,
+    required this.parentProps,
     required this.childGroups,
     required this.repeatData,
     required super.refName,
@@ -115,16 +126,23 @@ class VWNodeData extends VWData {
           Props.empty(),
       commonProps:
           as$<JsonLike>(json['containerProps']).maybe(CommonProps.fromJson),
+      parentProps:
+          as$<JsonLike>(json['parentProps']).maybe((p0) => Props(p0)) ??
+              Props.empty(),
       childGroups: tryKeys(
         json,
         ['children', 'composites', 'childGroups'],
         parse: _parseVWNodeDataMap,
       ),
       repeatData: tryKeys(
-        json,
-        ['dataRef', 'repeatData'],
-        parse: VWRepeatData.fromJson,
-      ),
+            json,
+            ['dataRef', 'repeatData'],
+            parse: VWRepeatData.fromJson,
+          ) ??
+          (json['props'] is Map
+              ? VWRepeatData.fromJson(
+                  as$<JsonLike>(json['props'])?['dataSource'])
+              : null),
       refName: tryKeys<String>(json, ['varName', 'refName']),
     );
   }

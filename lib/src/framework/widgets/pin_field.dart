@@ -17,6 +17,7 @@ class VWPinField extends VirtualLeafStatelessWidget<PinFieldProps> {
   VWPinField({
     required super.props,
     required super.commonProps,
+    super.parentProps,
     required super.parent,
     super.refName,
   });

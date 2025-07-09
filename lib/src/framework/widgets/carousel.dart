@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../base/extensions.dart';
 import '../base/virtual_stateless_widget.dart';
 import '../expr/default_scope_context.dart';
 import '../expr/scope_context.dart';
@@ -12,23 +11,25 @@ class VWCarousel extends VirtualStatelessWidget<CarouselProps> {
   VWCarousel({
     required super.props,
     required super.commonProps,
+    super.parentProps,
     required super.childGroups,
     required super.parent,
     super.refName,
-    required super.repeatData,
   });
-  bool get shouldRepeatChild => repeatData != null;
+
+  bool get shouldRepeatChild => props.dataSource != null;
 
   @override
   Widget render(RenderPayload payload) {
-    if (children == null || children!.isEmpty) return empty();
+    if (child == null) return empty();
 
     if (shouldRepeatChild) {
-      final childToRepeat = children!.first;
-      final items = payload.evalRepeatData(repeatData!);
+      final items = payload.eval<List<Object>>(
+              props.dataSource?.evaluate(payload.scopeContext)) ??
+          [];
       return InternalCarousel(
         itemCount: items.length,
-        itemBuilder: (buildContext, index) => childToRepeat.toWidget(
+        itemBuilder: (buildContext, index) => child!.toWidget(
           payload.copyWithChainedContext(
             _createExprContext(items[index], index),
           ),
@@ -92,7 +93,7 @@ class VWCarousel extends VirtualStatelessWidget<CarouselProps> {
       activeDotColor:
           payload.evalColorExpr(props.activeDotColor) ?? Colors.indigo,
       indicatorEffectType: props.indicatorEffectType,
-      children: children?.toWidgetArray(payload) ?? [],
+      children: [child?.toWidget(payload) ?? empty()],
       onChanged: (value) async {
         await payload.executeAction(
           props.onChanged,

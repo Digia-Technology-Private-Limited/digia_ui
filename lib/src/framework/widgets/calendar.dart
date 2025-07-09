@@ -16,6 +16,7 @@ class VWCalendar extends VirtualLeafStatelessWidget<Props> {
   VWCalendar({
     required super.props,
     required super.commonProps,
+    super.parentProps,
     required super.parent,
     super.refName,
   });

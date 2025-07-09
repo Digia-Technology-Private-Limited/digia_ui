@@ -2,6 +2,19 @@ import 'package:flutter/material.dart';
 
 import '../utils/debouncer.dart';
 import '../utils/functional_util.dart';
+import '../utils/object_util.dart';
+
+class ValidationIssue {
+  final String type;
+  final Object? data;
+  final String errorMessage;
+
+  ValidationIssue({
+    required this.type,
+    this.data,
+    required this.errorMessage,
+  });
+}
 
 class InternalTextFormField extends StatefulWidget {
   final TextEditingController? controller;
@@ -18,38 +31,35 @@ class InternalTextFormField extends StatefulWidget {
   final int? maxLength;
   final bool? autoFocus;
   final void Function(String)? onSubmit;
-
+  final List<ValidationIssue>? validations;
   final Color? cursorColor;
-  final String? regex;
-  final String? errorText;
   final void Function(String)? onChanged;
   final InputDecoration? inputDecoration;
   final int? debounceValue;
 
-  const InternalTextFormField(
-      {super.key,
-      this.autoFocus,
-      this.enabled,
-      this.keyboardType,
-      this.textInputAction,
-      this.style,
-      this.onChanged,
-      this.onSubmit,
-      this.initialValue,
-      required this.controller,
-      required this.textAlign,
-      required this.readOnly,
-      required this.obscureText,
-      this.maxLines,
-      this.minLines,
-      this.maxLength,
-      this.cursorColor,
-      this.regex,
-      this.errorText,
-      this.inputDecoration = const InputDecoration(),
-      this.debounceValue
-      // this.onChanged,
-      });
+  const InternalTextFormField({
+    super.key,
+    this.autoFocus,
+    this.enabled,
+    this.keyboardType,
+    this.textInputAction,
+    this.style,
+    this.onChanged,
+    this.onSubmit,
+    this.initialValue,
+    required this.controller,
+    required this.textAlign,
+    required this.readOnly,
+    required this.obscureText,
+    this.maxLines,
+    this.minLines,
+    this.maxLength,
+    this.cursorColor,
+    this.inputDecoration = const InputDecoration(),
+    this.debounceValue,
+    this.validations,
+    // this.onChanged,
+  });
 
   @override
   State<InternalTextFormField> createState() => _DUITextFieldState();
@@ -79,6 +89,48 @@ class _DUITextFieldState extends State<InternalTextFormField> {
     }
   }
 
+  String? validateField(String? value, List<ValidationIssue>? validations) {
+    if (validations != null) {
+      for (final rule in validations) {
+        switch (rule.type) {
+          case 'required':
+            if (value == null || value.trim().isEmpty) {
+              return rule.errorMessage;
+            }
+            break;
+          case 'minLength':
+            final minLength = rule.data?.to<int>();
+            if (value != null &&
+                minLength != null &&
+                value.length < minLength) {
+              return rule.errorMessage;
+            }
+            break;
+
+          case 'maxLength':
+            final maxLength = rule.data?.to<int>();
+            if (value != null &&
+                maxLength != null &&
+                value.length > maxLength) {
+              return rule.errorMessage;
+            }
+            break;
+
+          case 'pattern':
+            final regex = rule.data?.to<String>();
+            if (value != null && regex != null && value.isNotEmpty) {
+              final regExp = RegExp(regex);
+              if (!regExp.hasMatch(value)) {
+                return rule.errorMessage;
+              }
+            }
+            break;
+        }
+      }
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return TextFormField(
@@ -96,8 +148,8 @@ class _DUITextFieldState extends State<InternalTextFormField> {
       maxLines: widget.maxLines,
       minLines: widget.minLines,
       maxLength: widget.maxLength,
+      validator: (value) => validateField(value, widget.validations),
       cursorColor: widget.cursorColor,
-      validator: _validateInput,
       onChanged: _onChanged,
       buildCounter: (context,
               {required currentLength,
@@ -106,11 +158,6 @@ class _DUITextFieldState extends State<InternalTextFormField> {
           null,
       onFieldSubmitted: (value) {
         widget.onSubmit?.call(value);
-
-        // FocusScopeNode focusScope = FocusScope.of(context);
-        // if (!focusScope.hasPrimaryFocus && focusScope.canRequestFocus) {
-        //   focusScope.nextFocus();
-        // }
       },
       onTapOutside: (event) => FocusScope.of(context).unfocus(),
       decoration: widget.inputDecoration,
@@ -121,20 +168,5 @@ class _DUITextFieldState extends State<InternalTextFormField> {
   void dispose() {
     _debouncer?.cancel();
     super.dispose();
-  }
-
-  String? _validateInput(String? value) {
-    if (value == null || value.isEmpty) {
-      return null;
-    }
-    if (widget.regex != null && widget.regex!.isNotEmpty) {
-      RegExp regex = RegExp(widget.regex!);
-      if (!regex.hasMatch(value)) {
-        return widget.errorText;
-      } else {
-        return null;
-      }
-    }
-    return null;
   }
 }

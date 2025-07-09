@@ -2,10 +2,11 @@ import '../models/types.dart';
 import '../utils/functional_util.dart';
 import '../utils/types.dart';
 
-class BottomNavigationBarProps {
+class NavigationBarProps {
   final ExprOr<String>? backgroundColor;
   final ExprOr<int>? animationDuration;
   final ExprOr<double>? height;
+  final ExprOr<double>? elevation;
   final ExprOr<String>? surfaceTintColor;
   final ExprOr<String>? overlayColor;
   final ExprOr<String>? indicatorColor;
@@ -14,10 +15,11 @@ class BottomNavigationBarProps {
   final List<Object?>? shadow;
   final String? borderRadius;
 
-  const BottomNavigationBarProps({
+  const NavigationBarProps({
     this.backgroundColor,
     this.animationDuration,
     this.height,
+    this.elevation,
     this.borderRadius,
     this.shadow,
     this.surfaceTintColor,
@@ -27,11 +29,12 @@ class BottomNavigationBarProps {
     this.showLabels,
   });
 
-  factory BottomNavigationBarProps.fromJson(JsonLike json) {
-    return BottomNavigationBarProps(
+  factory NavigationBarProps.fromJson(JsonLike json) {
+    return NavigationBarProps(
       backgroundColor: ExprOr.fromJson<String>(json['backgroundColor']),
       animationDuration: ExprOr.fromJson<int>(json['animationDuration']),
       height: ExprOr.fromJson<double>(json['height']),
+      elevation: ExprOr.fromJson<double>(json['elevation']),
       surfaceTintColor: ExprOr.fromJson<String>(json['surfaceTintColor']),
       overlayColor: ExprOr.fromJson<String>(json['overlayColor']),
       indicatorColor: ExprOr.fromJson<String>(json['indicatorColor']),

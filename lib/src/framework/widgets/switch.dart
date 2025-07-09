@@ -10,6 +10,7 @@ class VWSwitch extends VirtualLeafStatelessWidget<SwitchProps> {
   VWSwitch({
     required super.props,
     required super.commonProps,
+    super.parentProps,
     required super.parent,
     super.refName,
   });

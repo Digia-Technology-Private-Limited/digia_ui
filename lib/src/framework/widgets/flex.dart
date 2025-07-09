@@ -20,13 +20,13 @@ class VWFlex extends VirtualStatelessWidget<Props> {
     required this.direction,
     required super.props,
     required super.commonProps,
+    super.parentProps,
     required super.parent,
     super.refName,
     required super.childGroups,
-    required super.repeatData,
   });
 
-  bool get shouldRepeatChild => repeatData != null;
+  bool get shouldRepeatChild => props.get('dataSource') != null;
 
   @override
   Widget render(RenderPayload payload) {
@@ -35,7 +35,7 @@ class VWFlex extends VirtualStatelessWidget<Props> {
     Widget widget;
     if (shouldRepeatChild) {
       final childToRepeat = children!.first;
-      final items = payload.evalRepeatData(repeatData!);
+      final items = payload.eval<List<Object>>(props.get('dataSource')) ?? [];
       widget = _buildFlex(
         () => items.mapIndexed((index, item) {
           return _wrapInFlexFitForBackwardCompat(childToRepeat, payload)
@@ -73,11 +73,10 @@ class VWFlex extends VirtualStatelessWidget<Props> {
       return childVirtualWidget;
     }
 
-    final expansionType = childVirtualWidget.commonProps?.parentProps
-        ?.getString('expansion.type');
-    final flexValue = payload.eval<int>(childVirtualWidget
-        .commonProps?.parentProps
-        ?.get('expansion.flexValue'));
+    final expansionType =
+        childVirtualWidget.parentProps?.getString('expansion.type');
+    final flexValue = payload
+        .eval<int>(childVirtualWidget.parentProps?.get('expansion.flexValue'));
 
     if (expansionType == null) return childVirtualWidget;
 

@@ -8,10 +8,11 @@ class VWAnimatedSwitcher extends VirtualStatelessWidget<AnimatedSwitcherProps> {
   VWAnimatedSwitcher({
     required super.props,
     required super.commonProps,
+    super.parentProps,
     required super.parent,
     super.refName,
     required super.childGroups,
-  }) : super(repeatData: null);
+  });
 
   @override
   Widget render(RenderPayload payload) {

@@ -1,22 +1,18 @@
 import '../../models/types.dart';
-import '../../utils/functional_util.dart';
-import '../../utils/json_util.dart';
 import '../../utils/object_util.dart';
 import '../../utils/types.dart';
 import '../base/action.dart';
 import '../base/action_flow.dart';
 
 class NavigateToPageAction extends Action {
-  final String? pageId;
-  final Map<String, ExprOr<Object>?>? pageArgs;
+  final ExprOr<JsonLike>? pageData;
   final bool waitForResult;
   final bool shouldRemovePreviousScreensInStack;
   final ExprOr<String>? routeNametoRemoveUntil;
   final ActionFlow? onResult;
 
   NavigateToPageAction({
-    required this.pageId,
-    this.pageArgs,
+    required this.pageData,
     this.waitForResult = false,
     this.shouldRemovePreviousScreensInStack = false,
     this.routeNametoRemoveUntil,
@@ -30,8 +26,7 @@ class NavigateToPageAction extends Action {
   @override
   Map<String, dynamic> toJson() => {
         'type': actionType.toString(),
-        'pageUId': pageId,
-        'pageArgs': pageArgs,
+        'pageData': pageData?.toJson(),
         'waitForResult': waitForResult,
         'shouldRemovePreviousScreensInStack':
             shouldRemovePreviousScreensInStack,
@@ -41,17 +36,7 @@ class NavigateToPageAction extends Action {
 
   factory NavigateToPageAction.fromJson(Map<String, Object?> json) {
     return NavigateToPageAction(
-      pageId: tryKeys<String>(json, ['pageUId', 'pageId']),
-      pageArgs: tryKeys<Map<String, ExprOr<Object>?>>(
-        json,
-        ['pageArgs', 'args'],
-        parse: (it) {
-          return as$<JsonLike>(it)?.map((key, value) => MapEntry(
-                key,
-                ExprOr.fromJson<Object>(value),
-              ));
-        },
-      ),
+      pageData: ExprOr.fromJson<JsonLike>(json['pageData']),
       waitForResult: json['waitForResult']?.to<bool>() ?? false,
       shouldRemovePreviousScreensInStack:
           json['shouldRemovePreviousScreensInStack']?.to<bool>() ?? false,

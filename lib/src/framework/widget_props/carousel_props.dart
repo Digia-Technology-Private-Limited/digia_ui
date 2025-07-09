@@ -33,6 +33,7 @@ class CarouselProps {
   final String indicatorEffectType;
   final bool? keepAlive;
   final ActionFlow? onChanged;
+  final ExprOr<Object>? dataSource;
 
   const CarouselProps({
     this.width,
@@ -60,6 +61,7 @@ class CarouselProps {
     this.indicatorEffectType = 'slide',
     this.keepAlive = false,
     this.onChanged,
+    this.dataSource,
   });
 
   /// Factory constructor to create an instance from JSON
@@ -96,6 +98,7 @@ class CarouselProps {
       indicatorEffectType: as$<String>(indicatorJson['indicatorEffectType']) ??
           IndicatorEffectType.slide.value,
       onChanged: ActionFlow.fromJson(json['onChanged']),
+      dataSource: ExprOr.fromJson<Object>(json['dataSource']),
     );
   }
 }

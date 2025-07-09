@@ -26,7 +26,7 @@ abstract class VirtualWidgetRegistry {
     'fw/sized_box': sizedBoxBuilder,
     'fw/spacer': spacerBuilder,
     'digia/safeArea': safeAreaBuilder,
-    'digia/customScrollView': customScrollViewBuilder,
+    'digia/smartScrollView': smartScrollViewBuilder,
     'digia/nestedScrollView': nestedScrollViewBuilder,
 
     // Basic Widgets
@@ -49,14 +49,19 @@ abstract class VirtualWidgetRegistry {
     'digia/appBar': appBarBuilder,
     'digia/sliverAppBar': sliverAppBarBuilder,
     'digia/sliverList': sliverListBuilder,
+    'digia/sliverGrid': sliverGridBuilder,
     'digia/drawer': drawerBuilder,
     'digia/tabController': tabControllerBuilder,
     'digia/tabBar': tabBarBuilder,
     'digia/tabViewContent': tabViewContentBuilder,
     'digia/navigationBar': navigationBarBuilder,
     'digia/navigationBarItem': navigationBarItemBuilder,
+    'digia/navigationBarCustom': navigationBarCustomBuilder,
+    'digia/navigationBarItemCustom': navigationBarItemCustomBuilder,
     'digia/overlay': overlayBuilder,
     'digia/pageView': pageViewBuilder,
+    'digia/smartScrollGroup': smartScrollGroupBuilder,
+    'digia/pinnedHeader': pinnedHeaderBuilder,
     // 'digia/tabView': tabViewBuilder,
     // 'digia/tabViewItem': tabViewItemBuilder,
 
@@ -92,7 +97,6 @@ abstract class VirtualWidgetRegistry {
     'digia/linearProgressBar': linearProgressBarBuilder,
     'digia/paginatedListView': paginatedListViewBuilder,
     'digia/paginatedSliverList': paginatedSliverListBuilder,
-    // 'digia/sliverList': sliverListBuilder,
 
     // Async Widgets
     'digia/futureBuilder': asyncBuilderBuilder,
@@ -132,14 +136,20 @@ abstract class VirtualWidgetRegistry {
   );
 
   factory VirtualWidgetRegistry({
-    required Widget Function(String id, JsonLike? args) componentBuilder,
+    required Widget Function(
+      String id,
+      JsonLike? args,
+    ) componentBuilder,
   }) = DefaultVirtualWidgetRegistry;
 
   VirtualWidget createWidget(VWData data, VirtualWidget? parent);
 }
 
 class DefaultVirtualWidgetRegistry implements VirtualWidgetRegistry {
-  final Widget Function(String id, JsonLike? args) componentBuilder;
+  final Widget Function(
+    String id,
+    JsonLike? args,
+  ) componentBuilder;
 
   final Map<String, VirtualWidgetBuilder> builders;
 
@@ -165,11 +175,22 @@ class DefaultVirtualWidgetRegistry implements VirtualWidgetRegistry {
         widget = stateContainerBuilder(data, parent, this);
         break;
       case VWComponentData():
-        widget = VirtualBuilderWidget((payload) => componentBuilder(
-              data.id,
-              data.args?.map(
-                  (k, v) => MapEntry(k, v?.evaluate(payload.scopeContext))),
-            ));
+        widget = VirtualBuilderWidget(
+          commonProps: data.commonProps,
+          parentProps: data.parentProps,
+          parent: parent,
+          refName: data.refName,
+          (payload) => componentBuilder(
+            data.id,
+            data.args?.map(
+              (k, v) => MapEntry(
+                k,
+                v?.evaluate(payload.scopeContext),
+              ),
+            ),
+          ),
+        );
+
         break;
     }
 

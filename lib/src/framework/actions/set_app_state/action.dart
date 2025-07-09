@@ -1,14 +1,13 @@
-import '../../models/types.dart';
 import '../../utils/functional_util.dart';
+import '../../utils/types.dart';
 import '../base/action.dart';
+import '../setState/action.dart';
 
 class SetAppStateAction extends Action {
-  final ExprOr<Object>? value;
-  final String name;
+  final List<StateUpdate> updates;
 
   SetAppStateAction({
-    required this.name,
-    this.value,
+    required this.updates,
     super.disableActionIf,
   });
 
@@ -17,14 +16,17 @@ class SetAppStateAction extends Action {
 
   @override
   Map<String, dynamic> toJson() => {
-        'name': name,
-        'value': value?.toJson(),
+        'updates': updates.map((e) => e.toJson()).toList(),
       };
 
   factory SetAppStateAction.fromJson(Map<String, Object?> json) {
     return SetAppStateAction(
-      name: as<String>(json['name']),
-      value: ExprOr.fromJson<Object>(json['value']),
+      updates: as$<List<dynamic>>(json['updates'])
+              ?.map((it) => as$<JsonLike>(it))
+              .nonNulls
+              .map(StateUpdate.fromJson)
+              .toList() ??
+          [],
     );
   }
 }

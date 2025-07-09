@@ -9,10 +9,11 @@ class VWDrawer extends VirtualStatelessWidget<Props> {
   VWDrawer({
     required super.props,
     required super.commonProps,
+    super.parentProps,
     required super.parent,
     required super.childGroups,
     super.refName,
-  }) : super(repeatData: null);
+  });
 
   @override
   Widget render(RenderPayload payload) {

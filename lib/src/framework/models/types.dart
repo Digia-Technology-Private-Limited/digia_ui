@@ -16,7 +16,17 @@ class ExprOr<T extends Object> {
 
   ExprOr(Object value)
       : _value = value,
-        isExpr = expr.hasExpression(value);
+        isExpr = _isExpression(value);
+
+  // Helper method to determine if a value is an expression
+  static bool _isExpression(Object value) {
+    if (value is Map<String, dynamic> && value.containsKey('expr')) {
+      // New format: {"expr": "expression"}
+      return true;
+    }
+    // Old format: "${expression}" - use existing logic
+    return expr.hasExpression(value);
+  }
 
   // Evaluates the value, returning a result of type T
   T? evaluate(
@@ -24,8 +34,19 @@ class ExprOr<T extends Object> {
     T? Function(Object)? decoder,
   }) {
     if (isExpr) {
-      // If it's an expression, evaluate it using the expression utility
-      return expr.evaluateExpression<T>(_value as String, scopeContext);
+      String expressionString;
+
+      if (_value is Map<String, dynamic> &&
+          (_value as Map<String, dynamic>).containsKey('expr')) {
+        // New format: extract expression from map
+        expressionString = (_value as Map<String, dynamic>)['expr'] as String;
+      } else {
+        // Old format: use the value directly as string
+        expressionString = _value as String;
+      }
+
+      // Evaluate the expression using the expression utility
+      return expr.evaluateExpression<T>(expressionString, scopeContext);
     } else {
       // If it's not an expression, cast it to T
       return decoder?.call(_value) ?? _value.to<T>();
@@ -41,12 +62,40 @@ class ExprOr<T extends Object> {
   ///
   /// Returns the deeply evaluated result.
   Object? deepEvaluate(ScopeContext? scopeContext) {
-    return expr.evaluateNestedExpressions(_value, scopeContext);
+    if (isExpr) {
+      Object valueToEvaluate;
+
+      if (_value is Map<String, dynamic> &&
+          (_value as Map<String, dynamic>).containsKey('expr')) {
+        // New format: extract expression from map
+        valueToEvaluate = (_value as Map<String, dynamic>)['expr'];
+      } else {
+        // Old format: use the value directly
+        valueToEvaluate = _value;
+      }
+
+      return expr.evaluateNestedExpressions(valueToEvaluate, scopeContext);
+    } else {
+      return expr.evaluateNestedExpressions(_value, scopeContext);
+    }
   }
 
   // Creates an ExprOr instance from a JSON representation
   static ExprOr<T>? fromJson<T extends Object>(Object? json) {
     if (json == null) return null;
+
+    // Handle both old and new formats
+    if (json is Map<String, dynamic>) {
+      if (json.containsKey('expr')) {
+        // New format: {"expr": "expression"}
+        return ExprOr<T>(json);
+      } else {
+        // Map without 'expr' key - treat as regular value
+        return ExprOr<T>(json);
+      }
+    }
+
+    // Old format or primitive value
     return ExprOr<T>(json);
   }
 

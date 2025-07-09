@@ -39,11 +39,14 @@ class ShowDialogProcessor extends ActionProcessor<ShowDialogAction> {
         .maybe((p0) => provider?.getColor(p0, context));
     final waitForResult = action.waitForResult;
 
+    final viewData = action.viewData?.deepEvaluate(scopeContext);
+    final evaluatedArgs = as$<JsonLike>(as$<JsonLike>(viewData)?['args']);
+
     logAction(
       action.actionType.value,
       {
-        'viewId': action.viewId,
-        'args': action.args,
+        'id': as$<String>(as$<JsonLike>(viewData)?['id']),
+        'args': evaluatedArgs,
         'barrierDismissible': barrierDismissible,
         'barrierColor': barrierColor.toString(),
         'waitForResult': waitForResult,
@@ -59,11 +62,8 @@ class ShowDialogProcessor extends ActionProcessor<ShowDialogAction> {
       builder: (innerCtx) {
         return viewBuilder(
           innerCtx,
-          action.viewId,
-          action.args?.map((key, value) => MapEntry(
-                key,
-                value?.evaluate(scopeContext),
-              )),
+          as$<String>(as$<JsonLike>(viewData)?['id']) ?? '',
+          evaluatedArgs,
         );
       },
       barrierDismissible: barrierDismissible,
@@ -74,7 +74,8 @@ class ShowDialogProcessor extends ActionProcessor<ShowDialogAction> {
       logAction(
         '${action.actionType.value} - Result',
         {
-          'viewId': action.viewId,
+          'id': as$<String>(as$<JsonLike>(viewData)?['id']),
+          'args': evaluatedArgs,
           'result': result,
         },
       );

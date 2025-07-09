@@ -13,7 +13,6 @@ class VWPositioned extends VirtualStatelessWidget<PositionedProps> {
     required VirtualWidget child,
   }) : super(
           commonProps: null,
-          repeatData: null,
           childGroups: {
             'child': [child]
           },

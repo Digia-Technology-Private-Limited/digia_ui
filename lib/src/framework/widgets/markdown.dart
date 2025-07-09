@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:markdown_widget/config/configs.dart';
-import 'package:markdown_widget/widget/all.dart';
+import 'package:markdown_widget/markdown_widget.dart';
 
 import '../base/virtual_leaf_stateless_widget.dart';
 import '../expr/default_scope_context.dart';
@@ -15,6 +14,7 @@ class VWMarkDown extends VirtualLeafStatelessWidget<MarkDownProps> {
   VWMarkDown({
     required super.props,
     required super.commonProps,
+    super.parentProps,
     super.parent,
     super.refName,
   });

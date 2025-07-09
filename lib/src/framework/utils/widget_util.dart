@@ -1,12 +1,18 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
 import '../actions/base/action_flow.dart';
+import '../custom/border_with_pattern.dart';
+import '../custom/custom_flutter_types.dart';
 import '../models/common_props.dart';
 import '../render_payload.dart';
 import 'flutter_extensions.dart';
 import 'flutter_type_converters.dart';
 import 'functional_util.dart';
 import 'num_util.dart';
+import 'object_util.dart';
+import 'types.dart';
 
 Widget wrapInContainer(
     {required RenderPayload payload,
@@ -23,23 +29,49 @@ Widget wrapInContainer(
 
   final bgColor =
       style.bgColor?.evaluate(payload.scopeContext).maybe(payload.getColor);
-  final borderRadius = To.borderRadius(style.border?['borderRadius']);
-  final border = To.border((
-    style: as$<String>(style.border?['borderStyle']),
-    width: as$<double>(style.border?['borderWidth']),
-    color: as$<String>(style.border?['borderColor']).maybe(payload.getColor),
-  ));
-  if (!(bgColor == null && borderRadius.isZero && border == null)) {
+  final borderRadius = To.borderRadius(style.borderRadius);
+  final border = style.border;
+  final borderType = as$<JsonLike>(border?['borderType']);
+  final borderColor = border?['borderColor'];
+  final borderWidth = (border?['borderWidth'])?.to<double>();
+  final dashPattern = as$<List<Object?>>(borderType?['dashPattern']);
+  final borderPattern = as$<String>(borderType?['borderPattern']);
+  final borderStrokeCap = as$<String>(borderType?['strokeCap']);
+  final borderStrokeAlign = as$<String>(border?['strokeAlign']);
+
+  current = DecoratedBox(
+    decoration: BoxDecoration(
+      color: bgColor,
+      border: borderPattern == null || (borderWidth == null || borderWidth == 0)
+          ? null
+          : (borderPattern == 'solid'
+              ? To.border((
+                  style: borderPattern,
+                  width: borderWidth,
+                  color: payload.evalColor(borderColor),
+                  strokeAlign:
+                      To.strokeAlign(borderStrokeAlign) ?? StrokeAlign.center,
+                ))
+              : BorderWithPattern(
+                  color: payload.evalColor(borderColor) ?? Colors.black,
+                  strokeWidth: borderWidth,
+                  strokeAlign:
+                      To.strokeAlign(borderStrokeAlign) ?? StrokeAlign.center,
+                  strokeCap: To.strokeCap(borderStrokeCap) ?? StrokeCap.butt,
+                  dashPattern:
+                      To.dashPattern(jsonEncode(dashPattern)) ?? [3, 1],
+                  borderPattern:
+                      To.borderPattern(borderPattern) ?? BorderPattern.solid,
+                )),
+      borderRadius: borderRadius,
+    ),
+    child: current,
+  );
+
+  if (!borderRadius.isZero) {
     current = ClipRRect(
       borderRadius: borderRadius,
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          color: bgColor,
-          border: border,
-          borderRadius: borderRadius,
-        ),
-        child: current,
-      ),
+      child: current,
     );
   }
 
@@ -47,11 +79,6 @@ Widget wrapInContainer(
   final width = style.width?.toWidth(payload.buildContext);
   if (!(width == null && height == null)) {
     current = SizedBox(width: width, height: height, child: current);
-  }
-
-  final margin = To.edgeInsets(style.margin);
-  if (!margin.isZero) {
-    current = Padding(padding: margin, child: current);
   }
 
   return current;

@@ -2,7 +2,6 @@ import '../actions/base/action_flow.dart';
 import '../utils/functional_util.dart';
 import '../utils/json_util.dart';
 import '../utils/types.dart';
-import 'props.dart';
 import 'types.dart';
 
 class CommonStyle {
@@ -10,6 +9,7 @@ class CommonStyle {
   Object? margin;
   ExprOr<String>? bgColor;
   JsonLike? border;
+  Object? borderRadius;
   String? height;
   String? width;
   String? clipBehavior;
@@ -22,6 +22,7 @@ class CommonStyle {
     this.height,
     this.width,
     this.clipBehavior,
+    this.borderRadius,
   });
 
   factory CommonStyle.fromJson(JsonLike json) {
@@ -32,6 +33,10 @@ class CommonStyle {
         json,
         ['bgColor', 'backgroundColor'],
         parse: (v) => ExprOr.fromJson<String>(v),
+      ),
+      borderRadius: tryKeys(
+        json,
+        ['borderRadius', 'border.borderRadius'],
       ),
       // Backwar
       border: as$<JsonLike>(json['border']) ?? json,
@@ -47,14 +52,14 @@ class CommonProps {
   final String? align;
   final CommonStyle? style;
   final ActionFlow? onClick;
-  final Props? parentProps;
+  // final Props? parentProps;
 
   CommonProps({
     required this.visibility,
     required this.align,
     required this.style,
     required this.onClick,
-    required this.parentProps,
+    // required this.parentProps,
   });
 
   factory CommonProps.fromJson(JsonLike json) {
@@ -69,7 +74,7 @@ class CommonProps {
       onClick: ActionFlow.fromJson(json['onClick']),
       // Dont change anything. Flex & Stack use this.
       // But keys are on same level as others
-      parentProps: Props(json),
+      // parentProps: Props(json),
     );
   }
 }

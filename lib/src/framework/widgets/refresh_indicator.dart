@@ -8,10 +8,10 @@ class VWRefreshIndicator extends VirtualStatelessWidget<Props> {
   VWRefreshIndicator({
     required super.props,
     required super.commonProps,
+    super.parentProps,
     required super.childGroups,
     required super.parent,
     super.refName,
-    required super.repeatData,
   });
 
   @override

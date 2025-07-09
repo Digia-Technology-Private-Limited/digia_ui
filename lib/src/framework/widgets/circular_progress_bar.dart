@@ -9,6 +9,7 @@ class VWCircularProgressBar extends VirtualLeafStatelessWidget<Props> {
   VWCircularProgressBar({
     required super.props,
     required super.commonProps,
+    super.parentProps,
     required super.parent,
     super.refName,
   });

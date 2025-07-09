@@ -2,8 +2,11 @@ import 'package:flutter/widgets.dart';
 
 import '../../expr/default_scope_context.dart';
 import '../../expr/scope_context.dart';
+import '../../models/types.dart';
 import '../../resource_provider.dart';
+import '../../utils/functional_util.dart';
 import '../../utils/network_util.dart';
+import '../../utils/types.dart';
 import '../base/action_flow.dart';
 import '../base/processor.dart';
 import 'action.dart';
@@ -25,7 +28,9 @@ class CallRestApiProcessor extends ActionProcessor<CallRestApiAction> {
     CallRestApiAction action,
     ScopeContext? scopeContext,
   ) async {
-    final apiModel = ResourceProvider.maybeOf(context)?.apiModels[action.apiId];
+    final dataSource = action.dataSource?.evaluate(scopeContext);
+    final apiModel = ResourceProvider.maybeOf(context)
+        ?.apiModels[as$<JsonLike>(dataSource)?['id']];
 
     if (apiModel == null) {
       return Future.error('No API Selected');
@@ -34,15 +39,18 @@ class CallRestApiProcessor extends ActionProcessor<CallRestApiAction> {
     logAction(
       action.actionType.value,
       {
-        'apiId': action.apiId,
-        'args': action.args,
+        'dataSource': action.dataSource?.toJson(),
       },
     );
 
     return executeApiAction(
       scopeContext,
       apiModel,
-      action.args,
+      as$<JsonLike>(as$<JsonLike>(dataSource)?['args'])
+          ?.map((key, value) => MapEntry(
+                key,
+                ExprOr.fromJson<Object>(value),
+              )),
       successCondition: action.successCondition,
       onSuccess: (response) async {
         if (action.onSuccess != null) {

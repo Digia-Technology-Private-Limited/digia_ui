@@ -10,10 +10,10 @@ class VWSafeArea extends VirtualStatelessWidget<SafeAreaProps> {
     SafeAreaProps? props,
     super.refName,
     required super.childGroups,
+    super.parentProps,
   }) : super(
           props: props ?? const SafeAreaProps(),
           commonProps: null,
-          repeatData: null,
           parent: null,
         );
 

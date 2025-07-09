@@ -7,6 +7,7 @@ import '../base/virtual_leaf_stateless_widget.dart';
 import '../models/props.dart';
 import '../models/types.dart';
 import '../render_payload.dart';
+import '../utils/flutter_extensions.dart';
 import '../utils/flutter_type_converters.dart';
 import '../utils/functional_util.dart';
 import '../utils/json_util.dart';
@@ -20,6 +21,7 @@ class VWButton extends VirtualLeafStatelessWidget<Props> {
   VWButton({
     required super.props,
     required super.commonProps,
+    super.parentProps,
     required super.parent,
     super.refName,
   });
@@ -46,12 +48,18 @@ class VWButton extends VirtualLeafStatelessWidget<Props> {
         if (states.contains(WidgetState.disabled)) {
           return disabledStyleJson
               .getString('backgroundColor')
-              .maybe(payload.getColor);
+              .maybe(payload.evalColor);
         }
         return defaultStyleJson
             .getString('backgroundColor')
-            .maybe(payload.getColor);
+            .maybe(payload.evalColor);
       }),
+      fixedSize: WidgetStateProperty.all(Size(
+        defaultStyleJson.getString('width')?.toWidth(payload.buildContext) ??
+            0.0,
+        defaultStyleJson.getString('height')?.toHeight(payload.buildContext) ??
+            0.0,
+      )),
     );
 
     final isDisabled = payload.eval<bool>(props.get('isDisabled')) ??

@@ -1,6 +1,5 @@
 import 'package:flutter/widgets.dart';
 
-import '../base/extensions.dart';
 import '../base/virtual_stateless_widget.dart';
 import '../data_type/adapted_types/scroll_controller.dart';
 import '../expr/default_scope_context.dart';
@@ -14,17 +13,17 @@ class VWListView extends VirtualStatelessWidget<Props> {
   VWListView({
     required super.props,
     required super.commonProps,
+    super.parentProps,
     required super.childGroups,
     required super.parent,
     super.refName,
-    required super.repeatData,
   });
 
-  bool get shouldRepeatChild => repeatData != null;
+  bool get shouldRepeatChild => props.get('dataSource') != null;
 
   @override
   Widget render(RenderPayload payload) {
-    if (children == null || children!.isEmpty) return empty();
+    if (child == null) return empty();
 
     final controller =
         payload.eval<AdaptedScrollController>(props.get('controller'));
@@ -39,8 +38,7 @@ class VWListView extends VirtualStatelessWidget<Props> {
         payload.eval<String>(props.get('initialScrollPosition'));
 
     if (shouldRepeatChild) {
-      final childToRepeat = children!.first;
-      final items = payload.evalRepeatData(repeatData!);
+      final items = payload.eval<List<Object>>(props.get('dataSource')) ?? [];
       return InternalListView(
         controller: controller,
         reverse: reverse,
@@ -49,12 +47,14 @@ class VWListView extends VirtualStatelessWidget<Props> {
         shrinkWrap: shrinkWrap,
         initialScrollPosition: initialScrollPosition,
         itemCount: items.length,
-        itemBuilder: (innerCtx, index) => childToRepeat.toWidget(
-          payload.copyWithChainedContext(
-            _createExprContext(items[index], index),
-            buildContext: innerCtx,
-          ),
-        ),
+        itemBuilder: (innerCtx, index) =>
+            child?.toWidget(
+              payload.copyWithChainedContext(
+                _createExprContext(items[index], index),
+                buildContext: innerCtx,
+              ),
+            ) ??
+            empty(),
       );
     }
 
@@ -65,7 +65,7 @@ class VWListView extends VirtualStatelessWidget<Props> {
       physics: physics,
       shrinkWrap: shrinkWrap,
       initialScrollPosition: initialScrollPosition,
-      children: children?.toWidgetArray(payload) ?? [],
+      children: [child?.toWidget(payload) ?? empty()],
     );
   }
 

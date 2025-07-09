@@ -13,6 +13,7 @@ class VWAvatar extends VirtualLeafStatelessWidget<Props> {
   VWAvatar({
     required super.props,
     required super.commonProps,
+    super.parentProps,
     required super.parent,
     super.refName,
   });

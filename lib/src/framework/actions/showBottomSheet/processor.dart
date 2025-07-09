@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 
+import '../../custom/custom_flutter_types.dart';
 import '../../expr/default_scope_context.dart';
 import '../../expr/scope_context.dart';
 import '../../models/types.dart';
@@ -54,17 +55,18 @@ class ShowBottomSheetProcessor extends ActionProcessor<ShowBottomSheetAction> {
     final maxHeightRatio =
         ExprOr.fromJson<double>(style['maxHeight'])?.evaluate(scopeContext) ??
             1;
-    final isKeyBoardSpaceAware =
-        as$<bool>(style['isKeyBoardSpaceAware']) ?? false;
     final useSafeArea = as$<bool>(style['useSafeArea']) ?? true;
 
     final iconProps = as$<JsonLike>(style['icon']).maybe(IconProps.fromJson);
 
+    final viewData = action.viewData?.deepEvaluate(scopeContext);
+    final evaluatedArgs = as$<JsonLike>(as$<JsonLike>(viewData)?['args']);
+
     logAction(
       action.actionType.value,
       {
-        'viewId': action.viewId,
-        'args': action.args,
+        'id': as$<String>(as$<JsonLike>(viewData)?['id']),
+        'args': evaluatedArgs,
         'style': style,
         'onResult': action.onResult?.actions
             .map((a) => a.actionType.value)
@@ -72,17 +74,13 @@ class ShowBottomSheetProcessor extends ActionProcessor<ShowBottomSheetAction> {
             .toString(),
       },
     );
-
     Object? result = await presentBottomSheet(
         context: navigatorKey?.currentContext ?? context,
         builder: (innerCtx) {
           return viewBuilder(
             innerCtx,
-            action.viewId,
-            action.args?.map((key, value) => MapEntry(
-                  key,
-                  value?.evaluate(scopeContext),
-                )),
+            as$<String>(as$<JsonLike>(viewData)?['id']) ?? '',
+            evaluatedArgs,
           );
         },
         navigatorKey: navigatorKey,
@@ -90,11 +88,12 @@ class ShowBottomSheetProcessor extends ActionProcessor<ShowBottomSheetAction> {
         scrollControlDisabledMaxHeightRatio: maxHeightRatio,
         barrierColor: barrierColor,
         useSafeArea: useSafeArea,
-        isKeyBoardSpaceAware: isKeyBoardSpaceAware,
         border: To.border((
           style: as$<String>(style['borderStyle']),
           width: as$<double>(style['borderWidth']),
           color: borderColor,
+          strokeAlign: To.strokeAlign(as$<String>(style['strokeAlign'])) ??
+              StrokeAlign.center,
         )),
         borderRadius: To.borderRadius(style['borderRadius']),
         iconBuilder: iconProps.maybe((p0) {
@@ -117,7 +116,8 @@ class ShowBottomSheetProcessor extends ActionProcessor<ShowBottomSheetAction> {
       logAction(
         '${action.actionType.value} - Result',
         {
-          'viewId': action.viewId,
+          'id': as$<String>(as$<JsonLike>(viewData)?['id']),
+          'args': evaluatedArgs,
           'result': result,
         },
       );

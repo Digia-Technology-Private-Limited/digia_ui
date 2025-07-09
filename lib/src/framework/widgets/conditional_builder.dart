@@ -11,10 +11,10 @@ class VWConditionalBuilder extends VirtualStatelessWidget<Props> {
     super.commonProps,
     super.refName,
     required super.childGroups,
+    super.parentProps,
   }) : super(
           props: Props.empty(),
           parent: null,
-          repeatData: null,
         );
 
   @override

@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_avif/flutter_avif.dart';
 import 'package:flutter_blurhash/flutter_blurhash.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:lottie/lottie.dart';
 import 'package:octo_image/octo_image.dart';
 
@@ -23,6 +24,7 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
   VWImage({
     required super.props,
     required super.commonProps,
+    super.parentProps,
     required super.parent,
     super.refName,
   });
@@ -37,7 +39,6 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
             }),
             commonProps: null,
             parent: null);
-
   ImageProvider _createImageProvider(
     RenderPayload payload,
     Object? imageSource,
@@ -69,7 +70,7 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
         final DigiaUIHost? host = DigiaUIClient.instance.developerConfig?.host;
         final String finalUrl;
         if (host is DashboardHost && host.resourceProxyUrl != null) {
-          finalUrl = '${host.resourceProxyUrl}$imageSource';
+          finalUrl = '${host.resourceProxyUrl}${Uri.encodeFull(imageSource)}';
         } else {
           finalUrl = imageSource;
         }
@@ -86,10 +87,46 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
     throw Exception('Unsupported image source type');
   }
 
+  Widget _buildSvgImage(
+      Object? imageSource, RenderPayload payload, double opacity) {
+    final color = payload.evalColor(props.get('svgColor'));
+    if (imageSource is String) {
+      if (imageSource.startsWith('http')) {
+        final DigiaUIHost? host = DigiaUIClient.instance.developerConfig?.host;
+        final String finalUrl;
+        if (host is DashboardHost && host.resourceProxyUrl != null) {
+          finalUrl = '${host.resourceProxyUrl}${Uri.encodeFull(imageSource)}';
+        } else {
+          finalUrl = imageSource;
+        }
+        return SvgPicture.network(
+          finalUrl,
+          colorFilter:
+              ColorFilter.mode(color ?? Colors.black, BlendMode.srcATop),
+          errorBuilder: (context, error, stackTrace) =>
+              _buildErrorWidget(error),
+          fit: To.boxFit(props.get('fit')),
+        );
+      } else {
+        return SvgPicture.asset(
+          imageSource,
+          colorFilter:
+              ColorFilter.mode(color ?? Colors.black, BlendMode.srcATop),
+          errorBuilder: (context, error, stackTrace) =>
+              _buildErrorWidget(error),
+          fit: To.boxFit(props.get('fit')),
+        );
+      }
+    }
+
+    throw Exception('Unsupported image source type');
+  }
+
   OctoPlaceholderBuilder? _placeHolderBuilderCreator() {
     Widget widget = Container(color: Colors.transparent);
 
-    final placeHolderValue = props.getString('placeHolder');
+    final placeHolderValue =
+        props.getString('placeholder') ?? props.getString('placeholderSrc');
 
     if (placeHolderValue != null && placeHolderValue.isNotEmpty) {
       widget = switch (placeHolderValue.split('/').first) {
@@ -114,7 +151,14 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
   }
 
   Widget _buildErrorWidget(Object error) {
-    final errorImage = props.getString('errorImage');
+    final errorImageObj = props.get('errorImage');
+    String? errorImage;
+
+    if (errorImageObj is Map && errorImageObj['errorSrc'] != null) {
+      errorImage = errorImageObj['errorSrc'] as String?;
+    } else if (errorImageObj is String) {
+      errorImage = errorImageObj;
+    }
     if (errorImage == null &&
         (DigiaUIClient.instance.developerConfig?.host is DashboardHost ||
             kDebugMode)) {
@@ -161,6 +205,11 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
               'dpr': dpr,
             }));
         final opacity = payload.eval<double>(props.get('opacity')) ?? 1.0;
+        final imageType = props.getString('imageType') ?? 'auto';
+
+        if (imageType == 'svg') {
+          return _buildSvgImage(imageSource, payload, opacity);
+        }
 
         final imageProvider = _createImageProvider(
           payload,
@@ -170,7 +219,7 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
           dpr,
         );
 
-        if ((imageSource as String).contains('.avif')) {
+        if (imageType == 'avif' || (imageSource as String).contains('.avif')) {
           return Opacity(
             opacity: opacity,
             child: AvifImage(

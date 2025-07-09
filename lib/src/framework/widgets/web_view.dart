@@ -9,6 +9,7 @@ class VWWebView extends VirtualLeafStatelessWidget<Props> {
   VWWebView({
     required super.props,
     required super.commonProps,
+    super.parentProps,
     required super.parent,
     super.refName,
   });

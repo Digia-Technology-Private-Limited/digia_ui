@@ -10,12 +10,12 @@ class VWSliverToBoxAdaptor extends VirtualStatelessWidget<Props> {
       : super(
           props: Props.empty(),
           commonProps: null,
+          parentProps: null,
           parent: null,
           refName: null,
           childGroups: {
             'child': [child]
           },
-          repeatData: null,
         );
 
   @override

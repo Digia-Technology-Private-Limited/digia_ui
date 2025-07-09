@@ -12,10 +12,11 @@ class VWExpandable extends VirtualStatelessWidget<Props> {
   VWExpandable({
     required super.props,
     required super.commonProps,
+    super.parentProps,
     required super.childGroups,
     required super.parent,
     super.refName,
-  }) : super(repeatData: null);
+  });
 
   @override
   Widget render(RenderPayload payload) {
@@ -40,7 +41,7 @@ class VWExpandable extends VirtualStatelessWidget<Props> {
             props.getString('headerAlignment')),
         iconPlacement: To.expandablePanelIconPlacement(
             iconProps?.getString('iconPlacement')),
-        iconColor: payload.evalColor(props.get('color')),
+        iconColor: payload.evalColor(iconProps?.get('iconColor')),
         alignment: To.alignment(props.get('alignment')),
         animationDuration:
             Duration(milliseconds: props.getInt('animationDuration') ?? 1000),
@@ -52,7 +53,7 @@ class VWExpandable extends VirtualStatelessWidget<Props> {
             : CupertinoIcons.chevron_down,
         hasIcon: props.getBool('hasIcon') ?? true,
         iconPadding: To.edgeInsets(iconProps?.get('iconPadding')),
-        iconSize: iconProps?.getDouble('size'),
+        iconSize: iconProps?.getDouble('iconSize'),
         iconRotationAngle:
             ((iconProps?.getDouble('iconRotationAngle') ?? 90.0) / 180) * pi,
         tapHeaderToExpand: props.getBool('tapHeaderToExpand') ?? true,
@@ -60,7 +61,7 @@ class VWExpandable extends VirtualStatelessWidget<Props> {
         tapBodyToCollapse: props.getBool('tapBodyToCollapse') ?? false,
         useInkWell: props.getBool('useInkWell') ?? false,
         inkWellBorderRadius:
-            BorderRadius.circular(iconProps?.getDouble('size') ?? 0),
+            BorderRadius.circular(props.getDouble('borderRadius') ?? 0),
       ),
     );
   }

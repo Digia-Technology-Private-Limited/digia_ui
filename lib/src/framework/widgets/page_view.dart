@@ -2,7 +2,6 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../../../digia_ui.dart';
-import '../base/extensions.dart';
 import '../base/virtual_stateless_widget.dart';
 import '../data_type/adapted_types/page_controller.dart';
 import '../expr/default_scope_context.dart';
@@ -11,18 +10,19 @@ import '../internal_widgets/internal_page_view.dart';
 import '../models/props.dart';
 
 class VWPageView extends VirtualStatelessWidget<Props> {
-  VWPageView(
-      {super.refName,
-      required super.props,
-      required super.commonProps,
-      required super.parent,
-      required super.repeatData,
-      required super.childGroups});
-  bool get shouldRepeatChild => repeatData != null;
+  VWPageView({
+    super.refName,
+    required super.props,
+    required super.commonProps,
+    super.parentProps,
+    required super.parent,
+    required super.childGroups,
+  });
+
+  bool get shouldRepeatChild => props.get('dataSource') != null;
+
   @override
   Widget render(RenderPayload payload) {
-    if (children == null || children!.isEmpty) return empty();
-
     final isReversed = payload.eval<bool>(props.get('reverse'));
     final initialPage = payload.eval<int>(props.get('initialPage'));
     final viewportFraction =
@@ -37,8 +37,7 @@ class VWPageView extends VirtualStatelessWidget<Props> {
     final padEnds = payload.eval<bool>(props.get('padEnds'));
 
     if (shouldRepeatChild) {
-      final childToRepeat = children!.first;
-      final items = payload.evalRepeatData(repeatData!);
+      final items = payload.eval<List<Object>>(props.get('dataSource')) ?? [];
 
       final preloadPages =
           payload.eval<bool>(props.get('preloadPages')) ?? false;
@@ -49,18 +48,21 @@ class VWPageView extends VirtualStatelessWidget<Props> {
 
       if (preloadPages) {
         childPages = items.mapIndexed((index, e) {
-          return childToRepeat.toWidget(
-            payload.copyWithChainedContext(_createExprContext(e, index)),
-          );
+          return child?.toWidget(
+                payload.copyWithChainedContext(_createExprContext(e, index)),
+              ) ??
+              empty();
         }).toList();
       } else {
         itemCount = items.length;
-        itemBuilder = (innerCtx, index) => childToRepeat.toWidget(
+        itemBuilder = (innerCtx, index) =>
+            child?.toWidget(
               payload.copyWithChainedContext(
                 _createExprContext(items[index], index),
                 buildContext: innerCtx,
               ),
-            );
+            ) ??
+            empty();
       }
 
       return InternalPageView(
@@ -94,7 +96,7 @@ class VWPageView extends VirtualStatelessWidget<Props> {
       viewportFraction: viewportFraction,
       scrollDirection: scrollDirection,
       physics: physics,
-      children: children?.toWidgetArray(payload) ?? [],
+      children: [child?.toWidget(payload) ?? empty()],
       onChanged: (index) async {
         await payload.executeAction(
           onPageChanged,

@@ -6,7 +6,10 @@ import 'package:flutter/widgets.dart';
 import '../../../core/action/api_handler.dart';
 import '../../expr/default_scope_context.dart';
 import '../../expr/scope_context.dart';
+import '../../models/types.dart';
 import '../../resource_provider.dart';
+import '../../utils/functional_util.dart';
+import '../../utils/types.dart';
 import '../base/action_flow.dart';
 import '../base/processor.dart';
 import 'action.dart';
@@ -28,16 +31,17 @@ class UploadProcessor extends ActionProcessor<UploadAction> {
     UploadAction action,
     ScopeContext? scopeContext,
   ) async {
-    final apiModel = ResourceProvider.maybeOf(context)?.apiModels[action.apiId];
+    final apiModel = ResourceProvider.maybeOf(context)
+        ?.apiModels[as$<JsonLike>(action.dataSource)?['dataSourceId']];
     final progressStreamController = action.streamController
         ?.evaluate(scopeContext) as StreamController<Object?>?;
     final apiCancelToken = action.cancelToken?.evaluate(scopeContext);
-    final args = action.args?.map((k, v) => MapEntry(
-          k,
-          v?.evaluate(scopeContext),
-        ));
+    final args = as$<JsonLike>(as$<JsonLike>(action.dataSource)?['args'])
+        ?.map((k, v) => MapEntry(
+              k,
+              ExprOr.fromJson<Object>(v),
+            ));
 
-    // final args = {'file': generateDummyFile(10)};
     if (apiModel == null) {
       return Future.error('No API Selected');
     }
@@ -45,8 +49,8 @@ class UploadProcessor extends ActionProcessor<UploadAction> {
     logAction(
       action.actionType.value,
       {
-        'apiId': action.apiId,
-        'args': args,
+        'dataSource': action.dataSource?.toJson(),
+        'args': as$<JsonLike>(action.dataSource)?['args'],
       },
     );
 
@@ -119,8 +123,3 @@ class UploadProcessor extends ActionProcessor<UploadAction> {
     };
   }
 }
-
-// Uint8List generateDummyFile(int sizeInMB) {
-//   int fileSize = sizeInMB * 1024 * 1024;
-//   return Uint8List.fromList(List<int>.generate(fileSize, (i) => i % 256));
-// }

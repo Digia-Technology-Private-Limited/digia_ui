@@ -9,6 +9,7 @@ class VWVideoPlayer extends VirtualLeafStatelessWidget<Props> {
   VWVideoPlayer({
     required super.props,
     required super.commonProps,
+    super.parentProps,
     required super.parent,
     super.refName,
   });

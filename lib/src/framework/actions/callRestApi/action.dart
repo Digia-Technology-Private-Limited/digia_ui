@@ -1,19 +1,16 @@
 import '../../models/types.dart';
-import '../../utils/functional_util.dart';
 import '../../utils/types.dart';
 import '../base/action.dart';
 import '../base/action_flow.dart';
 
 class CallRestApiAction extends Action {
-  final String apiId;
-  final Map<String, ExprOr<Object>?>? args;
+  final ExprOr<JsonLike>? dataSource;
   final ExprOr<bool>? successCondition;
   final ActionFlow? onSuccess;
   final ActionFlow? onError;
 
   CallRestApiAction({
-    required this.apiId,
-    required this.args,
+    required this.dataSource,
     this.successCondition,
     this.onSuccess,
     this.onError,
@@ -24,11 +21,7 @@ class CallRestApiAction extends Action {
 
   factory CallRestApiAction.fromJson(Map<String, Object?> json) {
     return CallRestApiAction(
-      apiId: json['dataSourceId'] as String,
-      args: as$<JsonLike>(json['args'])?.map((key, value) => MapEntry(
-            key,
-            ExprOr.fromJson<Object>(value),
-          )),
+      dataSource: ExprOr.fromJson<JsonLike>(json['dataSource']),
       successCondition: ExprOr.fromJson<bool>(json['successCondition']),
       onSuccess: ActionFlow.fromJson(json['onSuccess']),
       onError: ActionFlow.fromJson(json['onError']),
@@ -39,8 +32,7 @@ class CallRestApiAction extends Action {
   Map<String, dynamic> toJson() {
     return {
       'type': actionType.toString(),
-      'dataSourceId': apiId,
-      'args': args,
+      'dataSource': dataSource?.toJson(),
       'successCondition': successCondition?.toJson(),
       'onSuccess': onSuccess?.toJson(),
       'onError': onError?.toJson(),

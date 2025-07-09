@@ -10,6 +10,7 @@ class BottomNavigationBar extends StatefulWidget {
   final Color? indicatorColor;
   final ShapeBorder? indicatorShape;
   final double? height;
+  final double? elevation;
   final NavigationDestinationLabelBehavior? labelBehavior;
   final WidgetStateProperty<Color?>? overlayColor;
   final List<BoxShadow>? shadow;
@@ -30,6 +31,7 @@ class BottomNavigationBar extends StatefulWidget {
     this.height,
     this.labelBehavior,
     this.overlayColor,
+    this.elevation,
   });
 
   @override
@@ -37,12 +39,24 @@ class BottomNavigationBar extends StatefulWidget {
 }
 
 class _BottomNavigationBarState extends State<BottomNavigationBar> {
-  int _selectedIndex = 0;
+  late int _selectedIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedIndex = widget.selectedIndex;
+  }
+
+  @override
+  void didUpdateWidget(BottomNavigationBar oldWidget) {
+    if (widget.selectedIndex != oldWidget.selectedIndex) {
+      _selectedIndex = widget.selectedIndex;
+    }
+    super.didUpdateWidget(oldWidget);
+  }
 
   void _handleDestinationSelected(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+    _selectedIndex = index;
     if (widget.onDestinationSelected != null) {
       widget.onDestinationSelected!(index);
     }
@@ -57,6 +71,7 @@ class _BottomNavigationBarState extends State<BottomNavigationBar> {
         child: NavigationBar(
           backgroundColor: widget.backgroundColor,
           animationDuration: widget.animationDuration,
+          elevation: widget.elevation,
           selectedIndex: _selectedIndex,
           onDestinationSelected: _handleDestinationSelected,
           surfaceTintColor: widget.surfaceTintColor,

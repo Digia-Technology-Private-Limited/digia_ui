@@ -13,6 +13,7 @@ class VWStyledHorizontalDivider
     extends VirtualLeafStatelessWidget<StyledDividerProps> {
   VWStyledHorizontalDivider({
     required super.commonProps,
+    super.parentProps,
     required super.parent,
     required super.props,
     super.refName,

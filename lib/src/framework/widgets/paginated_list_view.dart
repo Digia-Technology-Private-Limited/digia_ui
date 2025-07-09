@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../base/extensions.dart';
 import '../base/virtual_stateless_widget.dart';
 import '../expr/default_scope_context.dart';
 import '../expr/scope_context.dart';
@@ -16,25 +15,26 @@ class VWPaginatedListView
   VWPaginatedListView({
     required super.props,
     required super.commonProps,
+    super.parentProps,
     required super.childGroups,
     required super.parent,
     super.refName,
-    required super.repeatData,
   });
 
-  bool get shouldRepeatChild => repeatData != null;
+  bool get shouldRepeatChild => props.dataSource != null;
 
   @override
   Widget render(RenderPayload payload) {
-    if (children == null || children!.isEmpty) return empty();
+    if (child == null) return empty();
 
     final initialScrollPosition = payload.evalExpr(props.initialScrollPosition);
     final isReverse = payload.evalExpr(props.reverse) ?? false;
     final firstPageKey = payload.evalExpr(props.firstPageKey);
 
     if (shouldRepeatChild) {
-      final childToRepeat = children!.first;
-      final items = payload.evalRepeatData(repeatData!);
+      final items = payload.eval<List<Object>>(
+              props.dataSource?.evaluate(payload.scopeContext)) ??
+          [];
 
       return PaginatedListView(
         firstPageKey: firstPageKey!,
@@ -42,7 +42,7 @@ class VWPaginatedListView
         isReverse: isReverse,
         items: items,
         itemBuilder: (innerCtx, index, data) {
-          return childToRepeat.toWidget(
+          return child!.toWidget(
             payload.copyWithChainedContext(
               _createExprContext(data?[index], index),
               buildContext: innerCtx,
@@ -105,8 +105,7 @@ class VWPaginatedListView
       controller: ScrollController(),
       reverse: isReverse,
       initialScrollPosition: initialScrollPosition,
-      itemCount: children?.length ?? 0,
-      children: children?.toWidgetArray(payload) ?? [],
+      children: [child?.toWidget(payload) ?? empty()],
     );
   }
 

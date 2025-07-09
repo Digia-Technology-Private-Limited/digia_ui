@@ -10,6 +10,7 @@ class VWRangeSlider extends VirtualLeafStatelessWidget<RangeSliderProps> {
   VWRangeSlider({
     required super.props,
     required super.commonProps,
+    super.parentProps,
     required super.parent,
     super.refName,
   });

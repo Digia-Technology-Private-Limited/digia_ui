@@ -11,6 +11,8 @@ class PaginatedListViewProps {
   final ExprOr<List>? transformItems;
   final ExprOr<Object>? firstPageKey;
   final ExprOr<Object>? nextPageKey;
+  final ExprOr<Object>? apiDataSource;
+  final ExprOr<Object>? dataSource;
 
   PaginatedListViewProps({
     this.initialScrollPosition,
@@ -20,6 +22,8 @@ class PaginatedListViewProps {
     this.firstPageKey,
     this.nextPageKey,
     this.transformItems,
+    this.apiDataSource,
+    this.dataSource,
   });
 
   factory PaginatedListViewProps.fromJson(JsonLike json) {
@@ -27,8 +31,8 @@ class PaginatedListViewProps {
       initialScrollPosition:
           ExprOr.fromJson<String>(json['initialScrollPosition']),
       reverse: ExprOr.fromJson<bool>(json['reverse']),
-      apiId: as$<String>(json.valueFor('dataSource.id')),
-      args: as$<JsonLike>(json.valueFor('dataSource.args'))
+      apiId: as$<String>(json.valueFor('apiDataSource.id')),
+      args: as$<JsonLike>(json.valueFor('apiDataSource.args'))
           ?.map((key, value) => MapEntry(
                 key,
                 ExprOr.fromJson<Object>(value),
@@ -36,6 +40,8 @@ class PaginatedListViewProps {
       transformItems: ExprOr.fromJson<List>(json['newItemsTransformation']),
       firstPageKey: ExprOr.fromJson<Object>(json['firstPageKey']),
       nextPageKey: ExprOr.fromJson<Object>(json['nextPageKey']),
+      apiDataSource: ExprOr.fromJson<Object>(json['apiDataSource']),
+      dataSource: ExprOr.fromJson<Object>(json['dataSource']),
     );
   }
 }

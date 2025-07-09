@@ -7,19 +7,19 @@ import '../internal_widgets/internal_paginated_sliver_list.dart';
 import '../render_payload.dart';
 import '../utils/functional_util.dart';
 import '../utils/network_util.dart';
-import '../widget_props/paginated_sliver_list_props.dart';
+import '../widget_props/paginated_list_view_props.dart';
 
-class VWPaginatedSliverList extends VirtualSliver<PaginatedSliverListProps> {
+class VWPaginatedSliverList extends VirtualSliver<PaginatedListViewProps> {
   VWPaginatedSliverList({
     required super.props,
     required super.commonProps,
+    super.parentProps,
     required super.childGroups,
     required super.parent,
     super.refName,
-    required super.repeatData,
   });
 
-  bool get shouldRepeatChild => repeatData != null;
+  bool get shouldRepeatChild => props.dataSource != null;
 
   @override
   Widget render(RenderPayload payload) {
@@ -27,7 +27,9 @@ class VWPaginatedSliverList extends VirtualSliver<PaginatedSliverListProps> {
 
     if (shouldRepeatChild) {
       final childToRepeat = children!.first;
-      final items = payload.evalRepeatData(repeatData!);
+      final items = payload.eval<List<Object>>(
+              props.dataSource?.evaluate(payload.scopeContext)) ??
+          [];
       final firstPageKey = payload.evalExpr(props.firstPageKey);
 
       return InternalPaginatedSliverList(

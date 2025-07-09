@@ -3,35 +3,36 @@ import 'package:flutter/widgets.dart';
 
 import '../actions/base/action_flow.dart';
 import '../base/virtual_leaf_stateless_widget.dart';
-import '../models/props.dart';
+import '../models/types.dart';
 import '../render_payload.dart';
 import '../utils/flutter_type_converters.dart';
 import '../utils/functional_util.dart';
 import '../utils/json_util.dart';
 import '../utils/types.dart';
+import '../widget_props/rich_text_props.dart';
 
-class VWRichText extends VirtualLeafStatelessWidget<Props> {
+class VWRichText extends VirtualLeafStatelessWidget<RichTextProps> {
   VWRichText({
     required super.props,
     required super.commonProps,
+    super.parentProps,
     required super.parent,
     super.refName,
   });
 
   @override
   Widget render(RenderPayload payload) {
-    final spanChildren = _toTextSpan(payload, props.get('textSpans'));
+    final textSpans = payload.evalExpr(props.textSpans);
+    final spanChildren = _toTextSpan(payload, textSpans);
 
     if (spanChildren == null || spanChildren.isEmpty) {
       return const SizedBox.shrink();
     }
 
-    final maxLines = payload.eval<int>(props.get('maxLines'));
-    final overflow =
-        To.textOverflow(payload.eval<String>(props.get('overflow')));
-    final textAlign =
-        To.textAlign(payload.eval<String>(props.get('alignment')));
-    final styleJson = props.getMap('textStyle') ?? props.getMap('style');
+    final maxLines = payload.evalExpr(props.maxLines);
+    final overflow = To.textOverflow(payload.evalExpr(props.overflow));
+    final textAlign = To.textAlign(payload.evalExpr(props.alignment));
+    final styleJson = props.textStyle;
 
     return RichText(
       maxLines: maxLines,
@@ -44,27 +45,29 @@ class VWRichText extends VirtualLeafStatelessWidget<Props> {
     );
   }
 
-  List<TextSpan>? _toTextSpan(RenderPayload payload, Object? textSpan) {
-    if (textSpan == null) return null;
+  List<TextSpan>? _toTextSpan(RenderPayload payload, Object? textSpans) {
+    if (textSpans == null) return null;
 
-    if (textSpan is String) {
-      final value = payload.eval<String>(textSpan);
+    if (textSpans is String) {
+      final value = payload.eval<String>(textSpans);
       return value == null ? null : [TextSpan(text: value)];
     }
 
-    if (textSpan is! List) return null;
+    if (textSpans is! List) return null;
 
-    final spanChildren = textSpan
+    final spanChildren = textSpans
         .cast<Object>()
         .map((span) {
           if (span is String) {
-            return TextSpan(text: payload.eval<String>(span));
+            return TextSpan(
+                text: payload.evalExpr(ExprOr.fromJson<String>(span)));
           }
 
           final spanObject = as$<JsonLike>(span);
           if (spanObject == null) return null;
 
-          final text = payload.eval<String>(spanObject['text']);
+          final text =
+              payload.evalExpr(ExprOr.fromJson<String>(spanObject['text']));
           final styleJson = tryKeys<JsonLike>(
             spanObject,
             ['spanStyle', 'textStyle', 'style'],
