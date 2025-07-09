@@ -1,10 +1,16 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../../digia_ui.dart';
+import '../custom/border_with_pattern.dart';
+import '../custom/custom_flutter_types.dart';
 import '../models/common_props.dart';
 import '../utils/flutter_extensions.dart';
 import '../utils/functional_util.dart';
+import '../utils/object_util.dart';
+import '../utils/types.dart';
 import 'default_error_widget.dart';
 import 'virtual_stateless_widget.dart';
 
@@ -56,6 +62,10 @@ Widget wrapInContainer(
   if (style == null) return child;
 
   Widget current = child;
+  final padding = To.edgeInsets(style.padding);
+  if (!padding.isZero) {
+    current = SliverPadding(padding: padding, sliver: current);
+  }
 
   if (style.bgColor != null ||
       style.borderRadius != null ||
@@ -63,11 +73,34 @@ Widget wrapInContainer(
     final bgColor =
         style.bgColor?.evaluate(payload.scopeContext).maybe(payload.getColor);
     final borderRadius = To.borderRadius(style.borderRadius);
-    final border = To.border((
-      style: as$<String>(style.border?['borderStyle']),
-      width: as$<double>(style.border?['borderWidth']),
-      color: as$<String>(style.border?['borderColor']).maybe(payload.getColor),
-    ));
+    final borderWidth = (style.border?['borderWidth'])?.to<double>();
+    final borderType = as$<JsonLike>(style.border?['borderType']);
+    final borderColor = style.border?['borderColor'];
+    final dashPattern = as$<List<Object?>>(borderType?['dashPattern']);
+    final borderPattern = as$<String>(borderType?['borderPattern']);
+    final borderStrokeCap = as$<String>(borderType?['strokeCap']);
+    final borderStrokeAlign = as$<String>(style.border?['strokeAlign']);
+    final border = borderPattern == null ||
+            (borderWidth == null || borderWidth == 0)
+        ? null
+        : (borderPattern == 'solid'
+            ? To.border((
+                style: borderPattern,
+                width: borderWidth,
+                color: payload.evalColor(borderColor),
+                strokeAlign:
+                    To.strokeAlign(borderStrokeAlign) ?? StrokeAlign.center,
+              ))
+            : BorderWithPattern(
+                color: payload.evalColor(borderColor) ?? Colors.black,
+                strokeWidth: borderWidth,
+                strokeAlign:
+                    To.strokeAlign(borderStrokeAlign) ?? StrokeAlign.center,
+                strokeCap: To.strokeCap(borderStrokeCap) ?? StrokeCap.butt,
+                dashPattern: To.dashPattern(jsonEncode(dashPattern)) ?? [3, 1],
+                borderPattern:
+                    To.borderPattern(borderPattern) ?? BorderPattern.solid,
+              ));
     current = DecoratedSliver(
       decoration: BoxDecoration(
         color: bgColor,
@@ -76,11 +109,6 @@ Widget wrapInContainer(
       ),
       sliver: current,
     );
-  }
-
-  final padding = To.edgeInsets(style.padding);
-  if (!padding.isZero) {
-    current = SliverPadding(padding: padding, sliver: current);
   }
 
   return current;

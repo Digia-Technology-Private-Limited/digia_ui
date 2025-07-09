@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 
-import 'base/virtual_component.dart';
+import 'base/virtual_builder_widget.dart';
 import 'base/virtual_widget.dart';
 import 'builders.dart';
 import 'models/vw_data.dart';
@@ -175,12 +175,12 @@ class DefaultVirtualWidgetRegistry implements VirtualWidgetRegistry {
         widget = stateContainerBuilder(data, parent, this);
         break;
       case VWComponentData():
-        widget = VirtualCommonWrapper(
+        widget = VirtualBuilderWidget(
           commonProps: data.commonProps,
           parentProps: data.parentProps,
           parent: parent,
           refName: data.refName,
-          builder: (payload) => componentBuilder(
+          (payload) => componentBuilder(
             data.id,
             data.args?.map(
               (k, v) => MapEntry(
