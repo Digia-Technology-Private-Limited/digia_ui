@@ -30,7 +30,6 @@ import 'widget_props/scaffold_props.dart';
 import 'widget_props/sized_box_props.dart';
 import 'widget_props/sliver_app_bar_props.dart';
 import 'widget_props/smart_scroll_view_props.dart';
-import 'widget_props/spacer_props.dart';
 import 'widget_props/stream_builder_props.dart';
 import 'widget_props/styled_divider_props.dart';
 import 'widget_props/switch_props.dart';
@@ -367,7 +366,7 @@ VWSizedBox sizedBoxBuilder(VWNodeData data, VirtualWidget? parent, _) {
 
 VWSpacer spacerBuilder(VWNodeData data, VirtualWidget? parent, _) {
   return VWSpacer(
-    props: SpacerProps.fromJson(data.props.value),
+    props: data.props,
     commonProps: data.commonProps,
     parentProps: data.parentProps,
     parent: parent,
