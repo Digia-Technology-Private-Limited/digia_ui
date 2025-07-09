@@ -32,6 +32,7 @@ class SliverAppBarProps {
   final ExprOr<String>? titlePadding;
   final ExprOr<String>? collapseMode;
   final ExprOr<double>? expandedTitleScale;
+  final ExprOr<bool>? visibility;
   final JsonLike? shape;
 
   const SliverAppBarProps({
@@ -62,6 +63,7 @@ class SliverAppBarProps {
     this.automaticallyImplyLeading,
     this.defaultButtonColor,
     this.height,
+    this.visibility,
   });
 
   factory SliverAppBarProps.fromJson(JsonLike json) {
@@ -100,6 +102,7 @@ class SliverAppBarProps {
           ExprOr.fromJson<bool>(json['automaticallyImplyLeading']),
       defaultButtonColor: ExprOr.fromJson<String>(json['defaultButtonColor']),
       height: ExprOr.fromJson<String>(json['height']),
+      visibility: ExprOr.fromJson<bool>(json['visibility']),
     );
   }
 }

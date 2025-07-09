@@ -37,7 +37,6 @@ class VWPageView extends VirtualStatelessWidget<Props> {
     final padEnds = payload.eval<bool>(props.get('padEnds'));
 
     if (shouldRepeatChild) {
-      final childToRepeat = children!.first;
       final items = payload.eval<List<Object>>(props.get('dataSource')) ?? [];
 
       final preloadPages =
@@ -49,18 +48,21 @@ class VWPageView extends VirtualStatelessWidget<Props> {
 
       if (preloadPages) {
         childPages = items.mapIndexed((index, e) {
-          return childToRepeat.toWidget(
-            payload.copyWithChainedContext(_createExprContext(e, index)),
-          );
+          return child?.toWidget(
+                payload.copyWithChainedContext(_createExprContext(e, index)),
+              ) ??
+              empty();
         }).toList();
       } else {
         itemCount = items.length;
-        itemBuilder = (innerCtx, index) => childToRepeat.toWidget(
+        itemBuilder = (innerCtx, index) =>
+            child?.toWidget(
               payload.copyWithChainedContext(
                 _createExprContext(items[index], index),
                 buildContext: innerCtx,
               ),
-            );
+            ) ??
+            empty();
       }
 
       return InternalPageView(

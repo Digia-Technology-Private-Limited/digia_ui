@@ -126,7 +126,7 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
     Widget widget = Container(color: Colors.transparent);
 
     final placeHolderValue =
-        props.getString('placeHolder') ?? props.getString('placeholderSrc');
+        props.getString('placeholder') ?? props.getString('placeholderSrc');
 
     if (placeHolderValue != null && placeHolderValue.isNotEmpty) {
       widget = switch (placeHolderValue.split('/').first) {

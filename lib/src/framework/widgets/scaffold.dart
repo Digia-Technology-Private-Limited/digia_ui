@@ -19,6 +19,7 @@ import 'nav_bar_item_custom.dart';
 import 'nav_bar_item_default.dart';
 import 'navigation_bar.dart';
 import 'navigation_bar_custom.dart';
+import 'nested_scroll_view.dart';
 import 'safe_area.dart';
 import 'sliver_app_bar.dart';
 
@@ -90,6 +91,12 @@ class VWScaffold extends VirtualStatelessWidget<ScaffoldProps> {
 
     if (child == null || child is! VWAppBar) return null;
 
+    // Check AppBar visibility before building
+    final isVisible = payload.evalExpr(child.props.visibility) ?? true;
+    if (!isVisible) {
+      return null;
+    }
+
     final height = child.props.height != null
         ? payload.evalExpr(child.props.height)?.toHeight(payload.buildContext)
         : null;
@@ -118,82 +125,114 @@ class VWScaffold extends VirtualStatelessWidget<ScaffoldProps> {
     // Get SliverAppBar properties from AppBar
     final appBarProps = appBarWidget is VWAppBar ? appBarWidget.props : null;
 
-    // Create SliverAppBarProps from AppBarProps
-    final sliverAppBarProps = SliverAppBarProps(
-      backgroundColor: payload.eval(appBarProps?.backgroundColor),
-      centerTitle: payload.eval(appBarProps?.centerTitle),
-      collapsedHeight: payload.eval(appBarProps?.collapsedHeight),
-      elevation: payload.eval(appBarProps?.elevation),
-      expandedHeight: payload.eval(appBarProps?.expandedHeight),
-      pinned: payload.eval(appBarProps?.pinned),
-      iconColor: payload.eval(appBarProps?.iconColor),
-      title: appBarProps?.title ?? TextProps(),
-      titleSpacing: payload.eval(appBarProps?.titleSpacing),
-      toolbarHeight: payload.eval(appBarProps?.toolbarHeight),
-      snap: payload.eval(appBarProps?.snap),
-      floating: payload.eval(appBarProps?.floating),
-      shadowColor: payload.eval(appBarProps?.shadowColor),
-      useFlexibleSpace: payload.eval(appBarProps?.useFlexibleSpace),
-      titlePadding: payload.eval(appBarProps?.titlePadding),
-      collapseMode: payload.eval(appBarProps?.collapseMode),
-      expandedTitleScale: payload.eval(appBarProps?.expandedTitleScale),
-      shape: payload.eval(appBarProps?.shape),
-      bottomSectionHeight: payload.eval(appBarProps?.bottomSectionHeight),
-      bottomSectionWidth: payload.eval(appBarProps?.bottomSectionWidth),
-      automaticallyImplyLeading:
-          payload.eval(appBarProps?.automaticallyImplyLeading),
-      defaultButtonColor: payload.eval(appBarProps?.defaultButtonColor),
-      enableCollapsibleAppBar:
-          payload.eval(appBarProps?.enableCollapsibleAppBar),
-      height: payload.eval(appBarProps?.height),
-      trailingIcon: payload.eval(appBarProps?.trailingIcon),
-      onTapLeadingIcon: payload.eval(appBarProps?.onTapLeadingIcon),
-    );
+    // Check AppBar visibility before building
+    final isVisible = appBarProps != null
+        ? (payload.evalExpr(appBarProps.visibility) ?? true)
+        : true;
 
-    Widget body = NestedScrollView(
-      headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-        return <Widget>[
-          VWSliverAppBar(
-            props: sliverAppBarProps,
-            commonProps: null,
-            parent: this,
-            refName: appBarWidget.refName,
-            childGroups: {
-              'title': appBarWidget is VirtualStatelessWidget &&
-                      appBarWidget.childGroups != null &&
-                      appBarWidget.childGroups!.containsKey('title')
-                  ? appBarWidget.childGroups!['title']!
-                  : [],
-              'leading': appBarWidget is VirtualStatelessWidget &&
-                      appBarWidget.childGroups != null &&
-                      appBarWidget.childGroups!.containsKey('leading')
-                  ? appBarWidget.childGroups!['leading']!
-                  : [],
-              'actions': appBarWidget is VirtualStatelessWidget &&
-                      appBarWidget.childGroups != null &&
-                      appBarWidget.childGroups!.containsKey('actions')
-                  ? appBarWidget.childGroups!['actions']!
-                  : [],
-              'bottom': appBarWidget is VirtualStatelessWidget &&
-                      appBarWidget.childGroups != null &&
-                      appBarWidget.childGroups!.containsKey('bottom')
-                  ? appBarWidget.childGroups!['bottom']!
-                  : [],
-              'background': appBarWidget is VirtualStatelessWidget &&
-                      appBarWidget.childGroups != null &&
-                      appBarWidget.childGroups!.containsKey('background')
-                  ? appBarWidget.childGroups!['background']!
-                  : [],
-            },
-          ).toWidget(payload),
-        ];
-      },
-      body: Builder(
-        builder: (BuildContext context) {
-          return bodyWidget?.toWidget(payload) ?? empty();
+    // Default enableOverlapAbsorption to true
+    final enableOverlapAbsorption = true;
+
+    Widget body;
+
+    if (isVisible) {
+      // Create SliverAppBarProps from AppBarProps
+      final sliverAppBarProps = SliverAppBarProps(
+        backgroundColor: payload.eval(appBarProps?.backgroundColor),
+        centerTitle: payload.eval(appBarProps?.centerTitle),
+        collapsedHeight: payload.eval(appBarProps?.collapsedHeight),
+        elevation: payload.eval(appBarProps?.elevation),
+        expandedHeight: payload.eval(appBarProps?.expandedHeight),
+        pinned: payload.eval(appBarProps?.pinned),
+        iconColor: payload.eval(appBarProps?.iconColor),
+        title: appBarProps?.title ?? TextProps(),
+        titleSpacing: payload.eval(appBarProps?.titleSpacing),
+        toolbarHeight: payload.eval(appBarProps?.toolbarHeight),
+        snap: payload.eval(appBarProps?.snap),
+        floating: payload.eval(appBarProps?.floating),
+        shadowColor: payload.eval(appBarProps?.shadowColor),
+        useFlexibleSpace: payload.eval(appBarProps?.useFlexibleSpace),
+        titlePadding: payload.eval(appBarProps?.titlePadding),
+        collapseMode: payload.eval(appBarProps?.collapseMode),
+        expandedTitleScale: payload.eval(appBarProps?.expandedTitleScale),
+        shape: payload.eval(appBarProps?.shape),
+        bottomSectionHeight: payload.eval(appBarProps?.bottomSectionHeight),
+        bottomSectionWidth: payload.eval(appBarProps?.bottomSectionWidth),
+        automaticallyImplyLeading:
+            payload.eval(appBarProps?.automaticallyImplyLeading),
+        defaultButtonColor: payload.eval(appBarProps?.defaultButtonColor),
+        enableCollapsibleAppBar:
+            payload.eval(appBarProps?.enableCollapsibleAppBar),
+        height: payload.eval(appBarProps?.height),
+        trailingIcon: payload.eval(appBarProps?.trailingIcon),
+        onTapLeadingIcon: payload.eval(appBarProps?.onTapLeadingIcon),
+        visibility: payload.eval(appBarProps?.visibility),
+      );
+
+      // Cache the header widget for performance
+      final cachedHeaderWidget = VWSliverAppBar(
+        props: sliverAppBarProps,
+        commonProps: null,
+        parent: this,
+        refName: appBarWidget.refName,
+        childGroups: {
+          'title': appBarWidget is VirtualStatelessWidget &&
+                  appBarWidget.childGroups != null &&
+                  appBarWidget.childGroups!.containsKey('title')
+              ? appBarWidget.childGroups!['title']!
+              : [],
+          'leading': appBarWidget is VirtualStatelessWidget &&
+                  appBarWidget.childGroups != null &&
+                  appBarWidget.childGroups!.containsKey('leading')
+              ? appBarWidget.childGroups!['leading']!
+              : [],
+          'actions': appBarWidget is VirtualStatelessWidget &&
+                  appBarWidget.childGroups != null &&
+                  appBarWidget.childGroups!.containsKey('actions')
+              ? appBarWidget.childGroups!['actions']!
+              : [],
+          'bottom': appBarWidget is VirtualStatelessWidget &&
+                  appBarWidget.childGroups != null &&
+                  appBarWidget.childGroups!.containsKey('bottom')
+              ? appBarWidget.childGroups!['bottom']!
+              : [],
+          'background': appBarWidget is VirtualStatelessWidget &&
+                  appBarWidget.childGroups != null &&
+                  appBarWidget.childGroups!.containsKey('background')
+              ? appBarWidget.childGroups!['background']!
+              : [],
         },
-      ),
-    );
+      ).toWidget(payload);
+
+      body = NestedScrollView(
+        headerSliverBuilder:
+            (BuildContext innerContext, bool innerBoxIsScrolled) {
+          Widget output = cachedHeaderWidget;
+
+          if (enableOverlapAbsorption) {
+            output = SliverOverlapAbsorber(
+              handle:
+                  NestedScrollView.sliverOverlapAbsorberHandleFor(innerContext),
+              sliver: output,
+            );
+          }
+
+          return <Widget>[output];
+        },
+        body: NestedScrollViewData(
+          enableOverlapAbsorption: enableOverlapAbsorption,
+          child: Builder(
+            builder: (BuildContext context) {
+              final updatedPayload = payload.copyWith(buildContext: context);
+              return bodyWidget?.toWidget(updatedPayload) ?? empty();
+            },
+          ),
+        ),
+      );
+    } else {
+      // AppBar is not visible, just render the body without NestedScrollView
+      body = bodyWidget?.toWidget(payload) ?? empty();
+    }
 
     if (enableSafeArea) {
       body = SafeArea(child: body);

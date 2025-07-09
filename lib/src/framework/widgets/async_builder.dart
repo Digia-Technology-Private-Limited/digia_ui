@@ -1,7 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
-import '../actions/base/action_flow.dart';
 import '../base/virtual_stateless_widget.dart';
 import '../expr/default_scope_context.dart';
 import '../expr/scope_context.dart';
@@ -34,18 +33,15 @@ class VWAsyncBuilder extends VirtualStatelessWidget<AsyncBuilderProps> {
 
   @override
   Widget render(RenderPayload payload) {
-    final futureProps = payload.evalExpr(props.future);
-    if (futureProps == null) return empty();
-
-    final controller = payload.eval<AsyncController>(props.controller)
+    final controller = payload.evalExpr<AsyncController>(props.controller)
       ?..setFutureCreator(
-        () => _makeFuture(futureProps, payload),
+        () => _makeFuture(props, payload),
       );
 
     return AsyncBuilder<Object?>(
       initialData: payload.evalExpr(props.initialData),
       controller: controller,
-      futureFactory: () => _makeFuture(futureProps, payload),
+      futureFactory: () => _makeFuture(props, payload),
       builder: (innerCtx, snapshot) {
         final updatedPayload = payload.copyWithChainedContext(
             _createExprContext(snapshot),
@@ -87,9 +83,12 @@ class VWAsyncBuilder extends VirtualStatelessWidget<AsyncBuilderProps> {
 }
 
 Future<Object?> _makeFuture(
-  JsonLike futureProps,
+  AsyncBuilderProps props,
   RenderPayload payload,
 ) async {
+  final futureProps = payload.evalExpr(props.future);
+  if (futureProps == null) return Future.error('Future props not provided');
+
   final type = futureProps['futureType'];
   if (type == null) return Future.error('Type not selected');
 
@@ -116,17 +115,15 @@ Future<Object?> _makeFuture(
               ExprOr.fromJson<Object>(value),
             )),
         onSuccess: (response) async {
-          final actionFlow = ActionFlow.fromJson(futureProps['onSuccess']);
           await payload.executeAction(
-            actionFlow,
+            props.onSuccess,
             scopeContext:
                 DefaultScopeContext(variables: {'response': response}),
           );
         },
         onError: (response) async {
-          final actionFlow = ActionFlow.fromJson(futureProps['onError']);
           await payload.executeAction(
-            actionFlow,
+            props.onError,
             scopeContext:
                 DefaultScopeContext(variables: {'response': response}),
           );

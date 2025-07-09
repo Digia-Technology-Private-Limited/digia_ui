@@ -318,15 +318,24 @@ abstract class To {
         String? style,
         double? width,
         Color? color,
+        StrokeAlign? strokeAlign,
       })? border) {
     if (border == null || border.style != 'solid') {
       return null;
     }
 
+    final strokeAlign = switch (border.strokeAlign) {
+      StrokeAlign.inside => BorderSide.strokeAlignInside,
+      StrokeAlign.outside => BorderSide.strokeAlignOutside,
+      StrokeAlign.center => BorderSide.strokeAlignCenter,
+      _ => BorderSide.strokeAlignInside,
+    };
+
     return Border.all(
       style: BorderStyle.solid,
       width: border.width ?? 1.0,
       color: border.color ?? ColorUtil.fromHexString('#000000'),
+      strokeAlign: strokeAlign,
     );
   }
 

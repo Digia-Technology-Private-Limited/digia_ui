@@ -41,6 +41,7 @@ class VWNavigationBar extends VirtualStatelessWidget<NavigationBarProps> {
     return internal.BottomNavigationBar(
       borderRadius: To.borderRadius(props.borderRadius),
       shadow: toShadowList(payload, props.shadow),
+      elevation: payload.evalExpr(props.elevation),
       backgroundColor: payload.evalColorExpr(props.backgroundColor),
       animationDuration: Duration(
           milliseconds: payload.evalExpr(props.animationDuration) ?? 0),

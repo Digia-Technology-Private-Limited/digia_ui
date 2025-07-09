@@ -10,6 +10,7 @@ class BottomNavigationBar extends StatefulWidget {
   final Color? indicatorColor;
   final ShapeBorder? indicatorShape;
   final double? height;
+  final double? elevation;
   final NavigationDestinationLabelBehavior? labelBehavior;
   final WidgetStateProperty<Color?>? overlayColor;
   final List<BoxShadow>? shadow;
@@ -30,6 +31,7 @@ class BottomNavigationBar extends StatefulWidget {
     this.height,
     this.labelBehavior,
     this.overlayColor,
+    this.elevation,
   });
 
   @override
@@ -69,6 +71,7 @@ class _BottomNavigationBarState extends State<BottomNavigationBar> {
         child: NavigationBar(
           backgroundColor: widget.backgroundColor,
           animationDuration: widget.animationDuration,
+          elevation: widget.elevation,
           selectedIndex: _selectedIndex,
           onDestinationSelected: _handleDestinationSelected,
           surfaceTintColor: widget.surfaceTintColor,

@@ -22,7 +22,6 @@ import 'widget_props/navigation_bar_props.dart';
 import 'widget_props/nested_scroll_view_props.dart';
 import 'widget_props/opacity_props.dart';
 import 'widget_props/paginated_list_view_props.dart';
-import 'widget_props/paginated_sliver_list_props.dart';
 import 'widget_props/pin_field_props.dart';
 import 'widget_props/range_slider_props.dart';
 import 'widget_props/rich_text_props.dart';
@@ -893,7 +892,7 @@ VWPaginatedSliverList paginatedSliverListBuilder(
   VirtualWidgetRegistry registry,
 ) {
   return VWPaginatedSliverList(
-    props: PaginatedSliverListProps.fromJson(data.props.value),
+    props: PaginatedListViewProps.fromJson(data.props.value),
     commonProps: data.commonProps,
     parentProps: data.parentProps,
     parent: parent,

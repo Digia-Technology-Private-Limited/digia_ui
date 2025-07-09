@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 
+import '../../custom/custom_flutter_types.dart';
 import '../../expr/default_scope_context.dart';
 import '../../expr/scope_context.dart';
 import '../../models/types.dart';
@@ -91,6 +92,8 @@ class ShowBottomSheetProcessor extends ActionProcessor<ShowBottomSheetAction> {
           style: as$<String>(style['borderStyle']),
           width: as$<double>(style['borderWidth']),
           color: borderColor,
+          strokeAlign: To.strokeAlign(as$<String>(style['strokeAlign'])) ??
+              StrokeAlign.center,
         )),
         borderRadius: To.borderRadius(style['borderRadius']),
         iconBuilder: iconProps.maybe((p0) {
