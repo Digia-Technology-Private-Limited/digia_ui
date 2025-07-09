@@ -136,14 +136,20 @@ abstract class VirtualWidgetRegistry {
   );
 
   factory VirtualWidgetRegistry({
-    required Widget Function(String id, JsonLike? args) componentBuilder,
+    required Widget Function(
+      String id,
+      JsonLike? args,
+    ) componentBuilder,
   }) = DefaultVirtualWidgetRegistry;
 
   VirtualWidget createWidget(VWData data, VirtualWidget? parent);
 }
 
 class DefaultVirtualWidgetRegistry implements VirtualWidgetRegistry {
-  final Widget Function(String id, JsonLike? args) componentBuilder;
+  final Widget Function(
+    String id,
+    JsonLike? args,
+  ) componentBuilder;
 
   final Map<String, VirtualWidgetBuilder> builders;
 
@@ -169,11 +175,22 @@ class DefaultVirtualWidgetRegistry implements VirtualWidgetRegistry {
         widget = stateContainerBuilder(data, parent, this);
         break;
       case VWComponentData():
-        widget = VirtualBuilderWidget((payload) => componentBuilder(
-              data.id,
-              data.args?.map(
-                  (k, v) => MapEntry(k, v?.evaluate(payload.scopeContext))),
-            ));
+        widget = VirtualBuilderWidget(
+          commonProps: data.commonProps,
+          parentProps: data.parentProps,
+          parent: parent,
+          refName: data.refName,
+          (payload) => componentBuilder(
+            data.id,
+            data.args?.map(
+              (k, v) => MapEntry(
+                k,
+                v?.evaluate(payload.scopeContext),
+              ),
+            ),
+          ),
+        );
+
         break;
     }
 

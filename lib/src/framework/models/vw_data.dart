@@ -50,11 +50,15 @@ sealed class VWData {
 class VWComponentData extends VWData {
   final String id;
   final Map<String, ExprOr<Object>?>? args;
+  final CommonProps? commonProps;
+  final Props? parentProps;
 
   VWComponentData({
     required this.id,
     required this.args,
     required super.refName,
+    required this.commonProps,
+    required this.parentProps,
   });
 
   factory VWComponentData.fromJson(JsonLike json) {
@@ -63,6 +67,11 @@ class VWComponentData extends VWData {
       args: as$<JsonLike>(json['componentArgs'])
           ?.map((k, v) => MapEntry(k, ExprOr.fromJson<Object>(v))),
       refName: tryKeys<String>(json, ['varName', 'refName']),
+      commonProps:
+          as$<JsonLike>(json['containerProps']).maybe(CommonProps.fromJson),
+      parentProps:
+          as$<JsonLike>(json['parentProps']).maybe((p0) => Props(p0)) ??
+              Props.empty(),
     );
   }
 }
