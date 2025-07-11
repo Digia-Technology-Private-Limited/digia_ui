@@ -105,17 +105,17 @@ class VWCalendar extends VirtualLeafStatelessWidget<Props> {
       onDateSelected: (selectedDay, focusedDay) async {
         await payload.executeAction(onDateSelected,
             scopeContext: DefaultScopeContext(variables: {
-              'selectedDate': selectedDay,
-              'focusedDay': focusedDay,
+              'selectedDate': selectedDay.toIso8601String(),
+              'focusedDay': focusedDay.toIso8601String(),
             }));
       },
       onRangeSelected:
           (selectedRangeStart, selectedRangeEnd, focusedDay) async {
         await payload.executeAction(onRangeSelected,
             scopeContext: DefaultScopeContext(variables: {
-              'selectedRangeStart': selectedRangeStart,
-              'selectedRangeEnd': selectedRangeEnd,
-              'focusedDay': focusedDay,
+              'selectedRangeStart': selectedRangeStart?.toIso8601String(),
+              'selectedRangeEnd': selectedRangeEnd?.toIso8601String(),
+              'focusedDay': focusedDay.toIso8601String(),
             }));
       },
     );
