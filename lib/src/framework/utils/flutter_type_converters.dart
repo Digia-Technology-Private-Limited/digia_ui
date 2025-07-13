@@ -60,14 +60,18 @@ abstract class To {
 
   static FontWeight fontWeight(dynamic value) => switch (value) {
         'thin' => FontWeight.w100,
-        'extralight' || 'extra-light' || 'extra_light' => FontWeight.w200,
+        'extralight' ||
+        'extra-light' ||
+        'extra_light' ||
+        'extraLight' =>
+          FontWeight.w200,
         'light' => FontWeight.w300,
         'regular' => FontWeight.normal,
         'medium' => FontWeight.w500,
-        'semibold' || 'semi-bold' => FontWeight.w600,
+        'semibold' || 'semi-bold' || 'semiBold' => FontWeight.w600,
         'bold' => FontWeight.w700,
-        'extrabold' || 'extra-bold' => FontWeight.w800,
-        'black' => FontWeight.w900,
+        'extrabold' || 'extra-bold' || 'extraBold' => FontWeight.w800,
+        'black' || 'thick' => FontWeight.w900,
         _ => FontWeight.normal,
       };
 
