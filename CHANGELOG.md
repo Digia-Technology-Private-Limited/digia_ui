@@ -2,6 +2,14 @@
 
 Digia Ui SDK.
 
+## [1.0.0-rc.1] – 2025-07-15 (Release Candidate)
+
+⚠ Breaking Changes:
+This version is not backward compatible with 0.x.x.
+Most widgets have been overhauled, and the property binding system has been redesigned to support our new Visual Dashboard experience — including Drag & Drop, live property editing, and dynamic controller bindings.
+
+If you're upgrading from a previous version, please refer to the migration guide to adapt existing configurations.
+
 ## [0.4.3] - 2025-07-04
 
 - 🔁 Reverted previous fix for StateContainer value retention — it will now reinitialize on every rebuild
