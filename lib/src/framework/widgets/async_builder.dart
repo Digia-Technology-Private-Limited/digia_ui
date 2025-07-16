@@ -47,12 +47,20 @@ class VWAsyncBuilder extends VirtualStatelessWidget<AsyncBuilderProps> {
         final updatedPayload = payload.copyWithChainedContext(
             _createExprContext(snapshot),
             buildContext: innerCtx);
+
+        // TTI Callback - Log when future builder has data
         if (snapshot.connectionState == ConnectionState.done &&
             snapshot.hasData) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             PagePerformanceMonitor().markTimeToInteractive('Future');
+
+            // Simple TTI callback - log to console with timestamp
+            final now = DateTime.now();
+            print(
+                'TTI: FutureBuilder completed with data at ${now.millisecond}ms');
           });
         }
+
         return child?.toWidget(updatedPayload) ?? empty();
       },
     );
