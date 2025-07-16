@@ -7,6 +7,7 @@ import '../expr/scope_context.dart';
 import '../internal_widgets/async_builder/controller.dart';
 import '../internal_widgets/async_builder/widget.dart';
 import '../models/types.dart';
+import '../page_performance_monitor.dart';
 import '../render_payload.dart';
 import '../utils/functional_util.dart';
 import '../utils/network_util.dart';
@@ -46,6 +47,11 @@ class VWAsyncBuilder extends VirtualStatelessWidget<AsyncBuilderProps> {
         final updatedPayload = payload.copyWithChainedContext(
             _createExprContext(snapshot),
             buildContext: innerCtx);
+        if (snapshot.connectionState == ConnectionState.done) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            PagePerformanceMonitor().markTimeToInteractive('Future');
+          });
+        }
         return child?.toWidget(updatedPayload) ?? empty();
       },
     );
