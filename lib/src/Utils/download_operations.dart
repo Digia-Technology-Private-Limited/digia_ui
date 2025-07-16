@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 
 import '../framework/utils/functional_util.dart';
 import '../network/core/types.dart';
+import '../network/network_monitor.dart';
 import 'file_operations.dart';
 
 abstract class FileDownloader {
@@ -16,7 +17,10 @@ class FileDownloaderImpl implements FileDownloader {
   FileDownloaderImpl({
     this.fileOps = const FileOperationsImpl(),
     Dio? client,
-  }) : client = client ?? Dio();
+  }) : client = client ?? Dio() {
+    // Add network monitoring interceptor
+    this.client.interceptors.add(NetworkMonitorInterceptor());
+  }
 
   @override
   Future<Response?> downloadFile(String url, String fileName,

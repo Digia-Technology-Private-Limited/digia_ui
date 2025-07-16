@@ -135,6 +135,12 @@ class DUIFactory {
     );
     final pageDef = configProvider.getPageDefinition(pageId);
 
+    // Start page performance monitoring
+    PagePerformanceMonitor().startPageLoad(
+      pageId,
+      pageArgs: pageArgs?.cast<String, dynamic>(),
+    );
+
     DigiaUIClient.instance.developerConfig?.logger?.logEntity(
       entitySlug: pageId,
       eventName: 'INITIALIZATION',

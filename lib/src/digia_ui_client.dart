@@ -98,6 +98,12 @@ class DigiaUIClient {
     DUIAnalytics? duiAnalytics,
     SharedPreferences? prefs,
   }) async {
+    // Start network monitoring
+    NetworkMonitor().startMonitoring();
+
+    // Start page performance monitoring
+    PagePerformanceMonitor().startMonitoring();
+
     await DUIPreferences.initialize();
 
     setUuid();
@@ -139,6 +145,9 @@ class DigiaUIClient {
     }
 
     _instance._isInitialized = true;
+
+    // Stop network monitoring and log final stats
+    NetworkMonitor().stopMonitoring();
   }
 
   Map<String, Object?> get jsVars => {

@@ -65,6 +65,11 @@ class NetworkClient {
       throw 'Invalid BaseUrl';
     }
 
+    // Add network monitoring interceptor to both Dio instances
+    final networkMonitorInterceptor = NetworkMonitorInterceptor();
+    digiaDioInstance.interceptors.add(networkMonitorInterceptor);
+    projectDioInstance.interceptors.add(networkMonitorInterceptor);
+
     developerConfig?.inspector?.dioInterceptors?.forEach((interceptor) {
       projectDioInstance.interceptors.add(interceptor);
     });

@@ -9,6 +9,7 @@ import '../expr/default_scope_context.dart';
 import '../expr/scope_context.dart';
 import '../models/page_definition.dart';
 import '../models/vw_data.dart';
+import '../page_performance_monitor.dart';
 import '../render_payload.dart';
 import '../resource_provider.dart';
 import '../state/state_context.dart';
@@ -187,6 +188,9 @@ class _DUIPageContentState extends State<_DUIPageContent> {
     if (widget.onPageLoaded != null) {
       _executeAction(context, widget.onPageLoaded!, widget.scope);
     }
+
+    // Mark TTI when onPageLoad completes (or immediately if no onPageLoad)
+    PagePerformanceMonitor().markTimeToInteractive(widget.pageId);
   }
 
   void _handleBackPress(bool didPop) {
