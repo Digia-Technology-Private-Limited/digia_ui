@@ -47,7 +47,8 @@ class VWAsyncBuilder extends VirtualStatelessWidget<AsyncBuilderProps> {
         final updatedPayload = payload.copyWithChainedContext(
             _createExprContext(snapshot),
             buildContext: innerCtx);
-        if (snapshot.connectionState == ConnectionState.done) {
+        if (snapshot.connectionState == ConnectionState.done &&
+            snapshot.hasData) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             PagePerformanceMonitor().markTimeToInteractive('Future');
           });
