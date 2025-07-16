@@ -52,14 +52,17 @@ class VWAsyncBuilder extends VirtualStatelessWidget<AsyncBuilderProps> {
   }
 
   ScopeContext _createExprContext(AsyncSnapshot<Object?> snapshot) {
-    final response = snapshot.data as Response<Object?>?;
     final String futureState;
+    final Response<Object?>? response;
     if (snapshot.hasError) {
       futureState = AsyncFutureState.error.value;
+      response = null;
     } else if (snapshot.connectionState == ConnectionState.waiting) {
       futureState = AsyncFutureState.loading.value;
+      response = null;
     } else {
       futureState = AsyncFutureState.completed.value;
+      response = snapshot.data as Response<Object?>?;
     }
 
     final respObj = {
