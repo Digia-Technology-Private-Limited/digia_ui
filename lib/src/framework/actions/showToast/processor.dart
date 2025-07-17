@@ -6,6 +6,7 @@ import '../../models/types.dart';
 import '../../resource_provider.dart';
 import '../../utils/flutter_type_converters.dart';
 import '../../utils/functional_util.dart';
+import '../../utils/num_util.dart';
 import '../../utils/textstyle_util.dart';
 import '../../utils/types.dart';
 import '../base/processor.dart';
@@ -39,8 +40,9 @@ class ShowToastProcessor extends ActionProcessor<ShowToastAction> {
       context: context,
       eval: evalExpr,
     );
-    final height = style['height'] as double?;
-    final width = style['width'] as double?;
+    final height = NumUtil.toDouble(style['height']);
+    final width = NumUtil.toDouble(style['width']);
+
     final padding = To.edgeInsets(style['padding'] ?? '24, 12, 24, 12');
     final margin = To.edgeInsets(style['margin']);
     final alignment = To.alignment(style['alignment']);
