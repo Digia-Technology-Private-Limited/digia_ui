@@ -52,7 +52,7 @@ class VWAsyncBuilder extends VirtualStatelessWidget<AsyncBuilderProps> {
   }
 
   ScopeContext _createExprContext(AsyncSnapshot<Object?> snapshot) {
-    final response = snapshot.data as Response<Object?>?;
+    final isResponse = snapshot.data is Response<Object?>;
     final String futureState;
     if (snapshot.hasError) {
       futureState = AsyncFutureState.error.value;
@@ -61,17 +61,29 @@ class VWAsyncBuilder extends VirtualStatelessWidget<AsyncBuilderProps> {
     } else {
       futureState = AsyncFutureState.completed.value;
     }
+    Map respObj = {};
+    if (isResponse) {
+      final response = snapshot.data as Response<Object?>?;
 
-    final respObj = {
-      'futureState': futureState,
-      'response': {
-        'body': response?.data,
-        'statusCode': response?.statusCode,
-        'headers': response?.headers,
-        'requestObj': _requestObjToMap(response?.requestOptions),
-        'error': snapshot.error,
-      }
-    };
+      respObj = {
+        'futureState': futureState,
+        'response': {
+          'body': response?.data,
+          'statusCode': response?.statusCode,
+          'headers': response?.headers,
+          'requestObj': _requestObjToMap(response?.requestOptions),
+          'error': snapshot.error,
+        }
+      };
+    } else {
+      respObj = {
+        'futureState': futureState,
+        'response': {
+          'body': snapshot.data,
+          'error': snapshot.error,
+        }
+      };
+    }
 
     return DefaultScopeContext(
       variables: {
