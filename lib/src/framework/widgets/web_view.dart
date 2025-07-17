@@ -17,6 +17,8 @@ class VWWebView extends VirtualLeafStatelessWidget<Props> {
   @override
   Widget render(RenderPayload payload) {
     final url = payload.eval<String>(props.get('url'));
+    final shouldInterceptBackButton =
+        payload.eval<bool>(props.get('shouldInterceptBackButton')) ?? true;
 
     if (url == null) {
       return const Center(child: Text('Error: No URL provided'));
@@ -24,14 +26,19 @@ class VWWebView extends VirtualLeafStatelessWidget<Props> {
 
     return _VWWebView(
       url: url,
+      shouldInterceptBackButton: shouldInterceptBackButton,
     );
   }
 }
 
 class _VWWebView extends StatefulWidget {
   final String url;
+  final bool shouldInterceptBackButton;
 
-  const _VWWebView({required this.url});
+  const _VWWebView({
+    required this.url,
+    required this.shouldInterceptBackButton,
+  });
 
   @override
   _VWWebViewState createState() => _VWWebViewState();
@@ -54,16 +61,17 @@ class _VWWebViewState extends State<_VWWebView> {
       await controller.goBack();
       return false;
     }
-
     return true;
   }
 
   @override
   Widget build(BuildContext context) {
     bool isIOS = Theme.of(context).platform == TargetPlatform.iOS;
-    if (isIOS) {
+
+    if (isIOS || !widget.shouldInterceptBackButton) {
       return WebViewWidget(controller: controller);
     }
+
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, _) async {
