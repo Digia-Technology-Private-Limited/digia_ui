@@ -26,6 +26,14 @@ class _InternalWebViewState extends State<InternalWebView> {
       ..loadRequest(Uri.parse(widget.url));
   }
 
+  @override
+  void didUpdateWidget(InternalWebView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.url != oldWidget.url) {
+      controller.loadRequest(Uri.parse(widget.url));
+    }
+  }
+
   Future<bool> _handleBack() async {
     final canGoBack = await controller.canGoBack();
     if (canGoBack) {
@@ -48,7 +56,7 @@ class _InternalWebViewState extends State<InternalWebView> {
       onPopInvokedWithResult: (didPop, _) async {
         if (didPop) return;
         if (await _handleBack() && context.mounted) {
-          Navigator.of(context).pop();
+          Navigator.pop(context);
         }
       },
       child: WebViewWidget(controller: controller),
