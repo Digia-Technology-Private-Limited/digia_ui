@@ -1,4 +1,4 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 import '../base/virtual_leaf_stateless_widget.dart';
@@ -22,12 +22,57 @@ class VWWebView extends VirtualLeafStatelessWidget<Props> {
       return const Center(child: Text('Error: No URL provided'));
     }
 
-    WebViewController controller = WebViewController()
-      ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..loadRequest(Uri.parse(url));
+    return _VWWebView(
+      url: url,
+    );
+  }
+}
 
-    return WebViewWidget(
-      controller: controller,
+class _VWWebView extends StatefulWidget {
+  final String url;
+
+  const _VWWebView({required this.url});
+
+  @override
+  _VWWebViewState createState() => _VWWebViewState();
+}
+
+class _VWWebViewState extends State<_VWWebView> {
+  late final WebViewController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..loadRequest(Uri.parse(widget.url));
+  }
+
+  Future<bool> _handleBack() async {
+    final canGoBack = await controller.canGoBack();
+    if (canGoBack) {
+      await controller.goBack();
+      return false;
+    }
+
+    return true;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    bool isIOS = Theme.of(context).platform == TargetPlatform.iOS;
+    if (isIOS) {
+      return WebViewWidget(controller: controller);
+    }
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) async {
+        if (didPop) return;
+        if (await _handleBack() && context.mounted) {
+          Navigator.of(context).pop();
+        }
+      },
+      child: WebViewWidget(controller: controller),
     );
   }
 }
