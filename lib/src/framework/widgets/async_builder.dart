@@ -73,7 +73,7 @@ class VWAsyncBuilder extends VirtualStatelessWidget<AsyncBuilderProps> {
 
   ScopeContext _createExprContext(
       AsyncSnapshot<Object?> snapshot, FutureType? futureType) {
-    final String futureState = _getFutureState(snapshot);
+    final FutureState futureState = _getFutureState(snapshot);
 
     switch (futureType) {
       case FutureType.api:
@@ -85,62 +85,64 @@ class VWAsyncBuilder extends VirtualStatelessWidget<AsyncBuilderProps> {
     }
   }
 
-  String _getFutureState(AsyncSnapshot<Object?> snapshot) {
+  FutureState _getFutureState(AsyncSnapshot<Object?> snapshot) {
     if (snapshot.hasError) {
-      return FutureState.error.name;
+      return FutureState.error;
     } else if (snapshot.connectionState == ConnectionState.waiting) {
-      return FutureState.loading.name;
+      return FutureState.loading;
     } else {
-      return FutureState.completed.name;
+      return FutureState.completed;
     }
   }
 
+  // in loading state data is some Object.
+  // in success state data is Response<Object> (dio)
   ScopeContext _createApiExprContext(
-      AsyncSnapshot<Object?> snapshot, String futureState) {
-    final response = snapshot.data is Response<Object?>
-        ? snapshot.data as Response<Object?>
-        : null;
-
-    Map<String, dynamic> respObj;
+      AsyncSnapshot<Object?> snapshot, FutureState futureState) {
+    Object? dataKey;
+    Map<String, Object?>? responseKey;
 
     switch (futureState) {
-      case 'loading':
-        respObj = {
-          'futureState': futureState,
-          'data': snapshot.data,
-        };
-        break;
-      case 'error':
-        respObj = {
-          'futureState': futureState,
-          'data': snapshot.data,
-          'error': snapshot.error,
-          if (response != null)
-            'response': {
-              'body': response.data,
-              'statusCode': response.statusCode,
-              'headers': response.headers,
-              'requestObj': _requestObjToMap(response.requestOptions),
-            },
-        };
-        break;
+      case FutureState.loading:
+        dataKey = snapshot.data;
 
-      case 'completed':
-      default:
-        respObj = {
-          'futureState': futureState,
-          'data': response?.data ?? snapshot.data,
-          if (response != null)
-            'response': {
-              'body': response.data,
-              'statusCode': response.statusCode,
-              'headers': response.headers,
-              'requestObj': _requestObjToMap(response.requestOptions),
-            },
-        };
-        break;
+      case FutureState.error:
+        if (snapshot.error is DioException) {
+          final error = snapshot.error as DioException;
+          responseKey = {
+            'statusCode': error.response?.statusCode,
+            'headers': error.response?.headers.map,
+            'requestObj': _requestObjToMap(error.response?.requestOptions),
+            'error': error.message,
+          };
+        } else {
+          responseKey = {
+            'error': snapshot.error?.toString(),
+          };
+        }
+
+      case FutureState.completed:
+        final apiResponse = as$<Response<Object?>>(snapshot.data);
+        if (apiResponse != null) {
+          dataKey = apiResponse.data;
+          responseKey = {
+            'body': apiResponse.data,
+            'statusCode': apiResponse.statusCode,
+            'headers': apiResponse.headers.map,
+            'requestObj': _requestObjToMap(apiResponse.requestOptions),
+          };
+        } else {
+          responseKey = {
+            'error': 'Unknown Error',
+          };
+        }
     }
 
+    final respObj = {
+      'futureState': futureState.name,
+      'data': dataKey,
+      'response': responseKey
+    };
     return DefaultScopeContext(
       variables: {
         ...respObj,
@@ -149,12 +151,13 @@ class VWAsyncBuilder extends VirtualStatelessWidget<AsyncBuilderProps> {
     );
   }
 
+  // Expected 'Type' of snapshot.data is Object?
   ScopeContext _createDefaultExprContext(
     AsyncSnapshot<Object?> snapshot,
-    String futureState,
+    FutureState futureState,
   ) {
     final respObj = {
-      'futureState': futureState,
+      'futureState': futureState.name,
       'data': snapshot.data,
       if (snapshot.hasError) 'error': snapshot.error,
     };
@@ -190,7 +193,7 @@ class VWAsyncBuilder extends VirtualStatelessWidget<AsyncBuilderProps> {
   }
 }
 
-Future<Object?> _makeApiFuture(
+Future<Response<Object?>> _makeApiFuture(
   JsonLike futureProps,
   RenderPayload payload,
   AsyncBuilderProps props,
