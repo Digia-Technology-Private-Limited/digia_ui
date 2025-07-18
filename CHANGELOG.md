@@ -2,6 +2,12 @@
 
 Digia Ui SDK.
 
+## [1.0.0-rc.3] – 2025-07-18 (Release Candidate)
+
+⚠ This version is not backward compatible with 0.x.x.
+
+- 🛠️ Minor functionality improvements to Switch Widget
+
 ## [1.0.0-rc.2] – 2025-07-18 (Release Candidate)
 
 ⚠ This version is not backward compatible with 0.x.x.
