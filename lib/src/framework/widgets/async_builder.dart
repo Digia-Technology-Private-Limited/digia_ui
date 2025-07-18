@@ -57,7 +57,7 @@ class VWAsyncBuilder extends VirtualStatelessWidget<AsyncBuilderProps> {
             // Simple TTI callback - log to console with timestamp
             final now = DateTime.now();
             print(
-                'TTI: FutureBuilder completed with data at ${now.millisecond}ms');
+                'TTI: FutureBuilder ($refName) completed with data at ${now.millisecond}ms');
           });
         }
 
