@@ -7,13 +7,13 @@ import '../utils/types.dart';
 class SwitchProps {
   final ExprOr<bool>? enabled;
   final ExprOr<bool>? value;
-  final ExprOr<Color>? activeColor;
+  final ExprOr<String>? activeColor;
 
-  final ExprOr<Color>? inactiveThumbColor;
+  final ExprOr<String>? inactiveThumbColor;
 
-  final ExprOr<Color>? activeTrackColor;
+  final ExprOr<String>? activeTrackColor;
 
-  final ExprOr<Color>? inactiveTrackColor;
+  final ExprOr<String>? inactiveTrackColor;
   final ActionFlow? onChanged;
 
   const SwitchProps({
@@ -30,10 +30,10 @@ class SwitchProps {
     return SwitchProps(
       enabled: ExprOr.fromJson<bool>(json['enabled']),
       value: ExprOr.fromJson<bool>(json['value']),
-      activeColor: ExprOr.fromJson<Color>(json['activeColor']),
-      inactiveThumbColor: ExprOr.fromJson<Color>(json['inactiveThumbColor']),
-      activeTrackColor: ExprOr.fromJson<Color>(json['activeTrackColor']),
-      inactiveTrackColor: ExprOr.fromJson<Color>(json['inactiveTrackColor']),
+      activeColor: ExprOr.fromJson<String>(json['activeColor']),
+      inactiveThumbColor: ExprOr.fromJson<String>(json['inactiveThumbColor']),
+      activeTrackColor: ExprOr.fromJson<String>(json['activeTrackColor']),
+      inactiveTrackColor: ExprOr.fromJson<String>(json['inactiveTrackColor']),
       onChanged: ActionFlow.fromJson(json['onChanged']),
     );
   }
