@@ -49,8 +49,9 @@ class _InternalSwitchState extends State<InternalSwitch> {
       child: Switch.adaptive(
         value: _value,
         onChanged: onChange,
-        activeColor: widget.activeColor,
-        inactiveThumbColor: widget.inactiveThumbColor,
+        thumbColor: WidgetStatePropertyAll(
+          _value ? widget.activeColor : widget.inactiveThumbColor,
+        ),
         activeTrackColor: widget.activeTrackColor,
         inactiveTrackColor: widget.inactiveTrackColor,
       ),
