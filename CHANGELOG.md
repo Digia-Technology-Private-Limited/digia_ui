@@ -2,6 +2,25 @@
 
 Digia Ui SDK.
 
+## [1.0.0-rc.4] – 2025-07-21 (Release Candidate)
+
+⚠ This version is not backward compatible with 0.x.x.
+
+- 🐞 Bug fixes to Switch Widget
+
+## [1.0.0-rc.3] – 2025-07-18 (Release Candidate)
+
+⚠ This version is not backward compatible with 0.x.x.
+
+- 🛠️ Minor functionality improvements to Switch Widget
+
+## [1.0.0-rc.2] – 2025-07-18 (Release Candidate)
+
+⚠ This version is not backward compatible with 0.x.x.
+
+- 🛠️ Minor functionality improvements in FutureBuilder and PaginatedListView
+- 🧭 WebView can now intercept the back button to navigate within its own stack before exiting (Android only)
+
 ## [1.0.0-rc.1] – 2025-07-15 (Release Candidate)
 
 ⚠ Breaking Changes:

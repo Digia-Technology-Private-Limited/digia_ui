@@ -11,15 +11,19 @@ import '../page_performance_monitor.dart';
 import '../render_payload.dart';
 import '../utils/functional_util.dart';
 import '../utils/network_util.dart';
+import '../utils/num_util.dart';
 import '../utils/types.dart';
 import '../widget_props/async_builder_props.dart';
 
-enum AsyncFutureState {
+enum FutureState {
   loading,
   completed,
   error;
+}
 
-  String get value => name;
+enum FutureType {
+  api,
+  delay;
 }
 
 class VWAsyncBuilder extends VirtualStatelessWidget<AsyncBuilderProps> {
@@ -44,9 +48,11 @@ class VWAsyncBuilder extends VirtualStatelessWidget<AsyncBuilderProps> {
       controller: controller,
       futureFactory: () => _makeFuture(props, payload),
       builder: (innerCtx, snapshot) {
+        final futureType = _getFutureType(props, payload);
         final updatedPayload = payload.copyWithChainedContext(
-            _createExprContext(snapshot),
-            buildContext: innerCtx);
+          _createExprContext(snapshot, futureType),
+          buildContext: innerCtx,
+        );
 
         // TTI Callback - Log when future builder has data
         if (snapshot.connectionState == ConnectionState.done &&
@@ -66,29 +72,109 @@ class VWAsyncBuilder extends VirtualStatelessWidget<AsyncBuilderProps> {
     );
   }
 
-  ScopeContext _createExprContext(AsyncSnapshot<Object?> snapshot) {
-    final String futureState;
-    final Response<Object?>? response;
+  FutureType? _getFutureType(AsyncBuilderProps props, RenderPayload payload) {
+    final futureProps = payload.evalExpr(props.future);
+    final type = futureProps?['futureType'] as String?;
+
+    switch (type) {
+      case 'api':
+        return FutureType.api;
+      case 'delay':
+        return FutureType.delay;
+      default:
+        return null;
+    }
+  }
+
+  ScopeContext _createExprContext(
+      AsyncSnapshot<Object?> snapshot, FutureType? futureType) {
+    final FutureState futureState = _getFutureState(snapshot);
+
+    switch (futureType) {
+      case FutureType.api:
+        return _createApiExprContext(snapshot, futureState);
+      case FutureType.delay:
+        return _createDefaultExprContext(snapshot, futureState);
+      default:
+        return _createDefaultExprContext(snapshot, futureState);
+    }
+  }
+
+  FutureState _getFutureState(AsyncSnapshot<Object?> snapshot) {
     if (snapshot.hasError) {
-      futureState = AsyncFutureState.error.value;
-      response = null;
+      return FutureState.error;
     } else if (snapshot.connectionState == ConnectionState.waiting) {
-      futureState = AsyncFutureState.loading.value;
-      response = null;
+      return FutureState.loading;
     } else {
-      futureState = AsyncFutureState.completed.value;
-      response = snapshot.data as Response<Object?>?;
+      return FutureState.completed;
+    }
+  }
+
+  // in loading state data is some Object.
+  // in success state data is Response<Object> (dio)
+  ScopeContext _createApiExprContext(
+      AsyncSnapshot<Object?> snapshot, FutureState futureState) {
+    Object? dataKey;
+    Map<String, Object?>? responseKey;
+
+    switch (futureState) {
+      case FutureState.loading:
+        dataKey = snapshot.data;
+
+      case FutureState.error:
+        if (snapshot.error is DioException) {
+          final error = snapshot.error as DioException;
+          responseKey = {
+            'statusCode': error.response?.statusCode,
+            'headers': error.response?.headers.map,
+            'requestObj': _requestObjToMap(error.response?.requestOptions),
+            'error': error.message,
+          };
+        } else {
+          responseKey = {
+            'error': snapshot.error?.toString(),
+          };
+        }
+
+      case FutureState.completed:
+        final apiResponse = as$<Response<Object?>>(snapshot.data);
+        if (apiResponse != null) {
+          dataKey = apiResponse.data;
+          responseKey = {
+            'body': apiResponse.data,
+            'statusCode': apiResponse.statusCode,
+            'headers': apiResponse.headers.map,
+            'requestObj': _requestObjToMap(apiResponse.requestOptions),
+          };
+        } else {
+          responseKey = {
+            'error': 'Unknown Error',
+          };
+        }
     }
 
     final respObj = {
-      'futureState': futureState,
-      'response': {
-        'body': response?.data,
-        'statusCode': response?.statusCode,
-        'headers': response?.headers,
-        'requestObj': _requestObjToMap(response?.requestOptions),
-        'error': snapshot.error,
-      }
+      'futureState': futureState.name,
+      'data': dataKey,
+      'response': responseKey
+    };
+    return DefaultScopeContext(
+      variables: {
+        ...respObj,
+        ...?refName.maybe((it) => {it: respObj}),
+      },
+    );
+  }
+
+  // Expected 'Type' of snapshot.data is Object?
+  ScopeContext _createDefaultExprContext(
+    AsyncSnapshot<Object?> snapshot,
+    FutureState futureState,
+  ) {
+    final respObj = {
+      'futureState': futureState.name,
+      'data': snapshot.data,
+      if (snapshot.hasError) 'error': snapshot.error,
     };
 
     return DefaultScopeContext(
@@ -98,61 +184,72 @@ class VWAsyncBuilder extends VirtualStatelessWidget<AsyncBuilderProps> {
       },
     );
   }
+
+  Future<Object?> _makeFuture(
+    AsyncBuilderProps props,
+    RenderPayload payload,
+  ) async {
+    final futureProps = payload.evalExpr(props.future);
+    if (futureProps == null) {
+      return Future.error('Future props not provided');
+    }
+
+    final type = _getFutureType(props, payload);
+    if (type == null) {
+      return Future.error('Unknown Future Type');
+    }
+
+    switch (type) {
+      case FutureType.api:
+        return _makeApiFuture(futureProps, payload, props);
+      case FutureType.delay:
+        return _makeDelayFuture(futureProps);
+    }
+  }
 }
 
-Future<Object?> _makeFuture(
-  AsyncBuilderProps props,
+Future<Response<Object?>> _makeApiFuture(
+  JsonLike futureProps,
   RenderPayload payload,
+  AsyncBuilderProps props,
 ) async {
-  final futureProps = payload.evalExpr(props.future);
-  if (futureProps == null) return Future.error('Future props not provided');
+  final dataSource = futureProps['dataSource'] as JsonLike?;
+  final apiDataSourceId = dataSource?['id'] as String?;
 
-  final type = futureProps['futureType'];
-  if (type == null) return Future.error('Type not selected');
-
-  switch (type) {
-    case 'api':
-      final dataSource = futureProps['dataSource'] as JsonLike?;
-      final apiDataSourceId = dataSource?['id'] as String?;
-
-      if (apiDataSourceId == null) {
-        return Future.error('No API Selected');
-      }
-
-      final apiModel = payload.getApiModel(apiDataSourceId);
-
-      if (apiModel == null) {
-        return Future.error('No API Selected');
-      }
-
-      return executeApiAction(
-        payload.scopeContext,
-        apiModel,
-        as$<JsonLike>(dataSource?['args'])?.map((key, value) => MapEntry(
-              key,
-              ExprOr.fromJson<Object>(value),
-            )),
-        onSuccess: (response) async {
-          await payload.executeAction(
-            props.onSuccess,
-            scopeContext:
-                DefaultScopeContext(variables: {'response': response}),
-          );
-        },
-        onError: (response) async {
-          await payload.executeAction(
-            props.onError,
-            scopeContext:
-                DefaultScopeContext(variables: {'response': response}),
-          );
-        },
-      );
-
-    case 'delay':
-      return Future.delayed(
-          Duration(milliseconds: futureProps['durationInMs'] as int? ?? 0));
+  if (apiDataSourceId == null) {
+    return Future.error('No API Selected');
   }
-  return Future.error('No future type selected.');
+
+  final apiModel = payload.getApiModel(apiDataSourceId);
+  if (apiModel == null) {
+    return Future.error('No API Selected');
+  }
+
+  return executeApiAction(
+    payload.scopeContext,
+    apiModel,
+    as$<JsonLike>(dataSource?['args'])?.map((key, value) => MapEntry(
+          key,
+          ExprOr.fromJson<Object>(value),
+        )),
+    onSuccess: (response) async {
+      await payload.executeAction(
+        props.onSuccess,
+        scopeContext: DefaultScopeContext(variables: {'response': response}),
+      );
+    },
+    onError: (response) async {
+      await payload.executeAction(
+        props.onError,
+        scopeContext: DefaultScopeContext(variables: {'response': response}),
+      );
+    },
+  );
+}
+
+Future<Object?> _makeDelayFuture(JsonLike futureProps) async {
+  final durationInMs = NumUtil.toInt(futureProps['durationInMs']) ?? 0;
+  return Future.delayed(Duration(milliseconds: durationInMs));
 }
 
 JsonLike? _requestObjToMap(RequestOptions? requestOptions) {

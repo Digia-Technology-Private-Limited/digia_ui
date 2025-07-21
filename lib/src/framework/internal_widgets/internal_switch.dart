@@ -44,13 +44,17 @@ class _InternalSwitchState extends State<InternalSwitch> {
   Widget build(BuildContext context) {
     final onChange = widget.enabled ? _setState : null;
 
-    return Switch.adaptive(
-      value: _value,
-      onChanged: onChange,
-      activeColor: widget.activeColor,
-      inactiveThumbColor: widget.inactiveThumbColor,
-      activeTrackColor: widget.activeTrackColor,
-      inactiveTrackColor: widget.inactiveTrackColor,
+    return FittedBox(
+      fit: BoxFit.fill,
+      child: Switch.adaptive(
+        value: _value,
+        onChanged: onChange,
+        thumbColor: WidgetStatePropertyAll(
+          _value ? widget.activeColor : widget.inactiveThumbColor,
+        ),
+        activeTrackColor: widget.activeTrackColor,
+        inactiveTrackColor: widget.inactiveTrackColor,
+      ),
     );
   }
 }

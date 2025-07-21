@@ -37,7 +37,7 @@ class PaginatedListViewProps {
                 key,
                 ExprOr.fromJson<Object>(value),
               )),
-      transformItems: ExprOr.fromJson<List>(json['newItemsTransformation']),
+      transformItems: ExprOr.fromJson<List>(json['transformItems']),
       firstPageKey: ExprOr.fromJson<Object>(json['firstPageKey']),
       nextPageKey: ExprOr.fromJson<Object>(json['nextPageKey']),
       apiDataSource: ExprOr.fromJson<Object>(json['apiDataSource']),
