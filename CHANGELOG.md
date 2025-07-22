@@ -2,6 +2,13 @@
 
 Digia Ui SDK.
 
+## [1.0.0-rc.5] – 2025-07-21 (Release Candidate)
+
+⚠ This version is not backward compatible with 0.x.x.
+
+- 🐞 Bug fixes in SetState Action
+- 🛠️ Changes to FutureBuilder's exposed variables
+
 ## [1.0.0-rc.4] – 2025-07-21 (Release Candidate)
 
 ⚠ This version is not backward compatible with 0.x.x.
