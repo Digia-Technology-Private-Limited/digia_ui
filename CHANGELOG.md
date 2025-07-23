@@ -2,6 +2,12 @@
 
 Digia Ui SDK.
 
+## [1.0.0-rc.6] – 2025-07-23 (Release Candidate)
+
+⚠ This version is not backward compatible with 0.x.x.
+
+- Fixed compatibility with Flutter 3.32.X
+
 ## [1.0.0-rc.5] – 2025-07-21 (Release Candidate)
 
 ⚠ This version is not backward compatible with 0.x.x.
