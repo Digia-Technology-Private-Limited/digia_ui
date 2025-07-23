@@ -79,7 +79,7 @@ abstract class VirtualWidgetRegistry {
     'digia/beforeAfterSlider': beforeAfterSliderBuilder,
     'digia/imageView360': imageView360Builder,
     // 'digia/stepper': stepperBuilder,
-    'digia/flutterStepper': flutterStepperBuilder,
+    // 'digia/flutterStepper': flutterStepperBuilder,
     'digia/pinField': pinFieldBuilder,
     'digia/calendar': calendarBuilder,
     'digia/rangeSlider': rangeSliderBuilder,
