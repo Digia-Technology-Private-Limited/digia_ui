@@ -13,14 +13,16 @@ class DashboardHost extends DigiaUIHost {
 class DeveloperConfig {
   //for android/ios
   final String? proxyUrl;
-  DUIInspector? inspector;
-  DUILogger? logger;
+  final DUIInspector? inspector;
+  final DUILogger? logger;
   final DigiaUIHost? host;
+  final String baseUrl;
 
-  DeveloperConfig({
+  const DeveloperConfig({
     this.proxyUrl,
     this.inspector,
     this.logger,
     this.host,
+    this.baseUrl = 'https://app.digia.tech/api/v1',
   });
 }
