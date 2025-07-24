@@ -2,6 +2,31 @@
 
 Digia Ui SDK.
 
+## [1.0.0-rc.6] – 2025-07-23 (Release Candidate)
+
+⚠ This version is not backward compatible with 0.x.x.
+
+- Fixed compatibility with Flutter 3.32.X
+
+## [1.0.0-rc.5] – 2025-07-21 (Release Candidate)
+
+⚠ This version is not backward compatible with 0.x.x.
+
+- 🐞 Bug fixes in SetState Action
+- 🛠️ Changes to FutureBuilder's exposed variables
+
+## [1.0.0-rc.4] – 2025-07-21 (Release Candidate)
+
+⚠ This version is not backward compatible with 0.x.x.
+
+- 🐞 Bug fixes to Switch Widget
+
+## [1.0.0-rc.3] – 2025-07-18 (Release Candidate)
+
+⚠ This version is not backward compatible with 0.x.x.
+
+- 🛠️ Minor functionality improvements to Switch Widget
+
 ## [1.0.0-rc.2] – 2025-07-18 (Release Candidate)
 
 ⚠ This version is not backward compatible with 0.x.x.

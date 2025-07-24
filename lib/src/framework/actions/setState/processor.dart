@@ -19,7 +19,7 @@ class SetStateProcessor extends ActionProcessor<SetStateAction> {
     }
 
     final updates = action.updates;
-    final rebuildPage = action.rebuild?.evaluate(scopeContext) ?? true;
+    final rebuildPage = action.rebuild?.evaluate(scopeContext) ?? false;
 
     if (updates.isNotEmpty) {
       final updatesMap = Map.fromEntries(updates.map(

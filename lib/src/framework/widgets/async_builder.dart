@@ -140,7 +140,7 @@ class VWAsyncBuilder extends VirtualStatelessWidget<AsyncBuilderProps> {
 
     final respObj = {
       'futureState': futureState.name,
-      'data': dataKey,
+      'futureValue': dataKey,
       'response': responseKey
     };
     return DefaultScopeContext(
@@ -158,7 +158,7 @@ class VWAsyncBuilder extends VirtualStatelessWidget<AsyncBuilderProps> {
   ) {
     final respObj = {
       'futureState': futureState.name,
-      'data': snapshot.data,
+      'futureValue': snapshot.data,
       if (snapshot.hasError) 'error': snapshot.error,
     };
 
