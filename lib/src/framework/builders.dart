@@ -1076,17 +1076,17 @@ VWCarousel carouselBuilder(
   );
 }
 
-VWStepper flutterStepperBuilder(
-    VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
-  return VWStepper(
-    props: data.props,
-    commonProps: data.commonProps,
-    parentProps: data.parentProps,
-    parent: parent,
-    childGroups: createChildGroups(data.childGroups, parent, registry),
-    refName: data.refName,
-  );
-}
+// VWStepper flutterStepperBuilder(
+//     VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
+//   return VWStepper(
+//     props: data.props,
+//     commonProps: data.commonProps,
+//     parentProps: data.parentProps,
+//     parent: parent,
+//     childGroups: createChildGroups(data.childGroups, parent, registry),
+//     refName: data.refName,
+//   );
+// }
 
 VWSmartScrollGroup smartScrollGroupBuilder(
   VWNodeData data,

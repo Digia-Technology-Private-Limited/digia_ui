@@ -16,7 +16,7 @@ repository: https://github.com/Digia-Technology-Private-Limited/digia_ui.git
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 1.0.0-rc.4
+version: 1.0.0-rc.6
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
@@ -75,7 +75,7 @@ dependencies:
   path_provider: ^2.0.14
   shared_preferences: ^2.2.2
   styled_divider: ^1.0.5
-  timelines: ^0.1.0
+  # timelines: ^0.1.0
   url_launcher: ^6.1.11
   uuid: ^4.4.0
   video_player: ^2.8.6
