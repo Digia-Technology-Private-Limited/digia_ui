@@ -31,6 +31,26 @@ class WebJsFunctions implements JSFunctions {
   }
 
   @override
+  callAsyncJs(String fnName, dynamic v1) {
+    var obj = js.JsObject.jsify(as<Object>(v1));
+    try {
+      var res = js.context.callMethod(fnName, [obj]);
+      var finalRes = jsonDecode(
+          as<String>(js.context['JSON'].callMethod('stringify', [res])));
+      return finalRes;
+    } catch (e) {
+      if (DigiaUIClient.instance.developerConfig?.host is DashboardHost ||
+          kDebugMode) {
+        print('--------------ERROR Running Function-----------');
+        print('functionName ---->    $fnName');
+        print('input ----------> $v1');
+        print('error -------> $e');
+      }
+      throw Exception('Error running function $fnName \n $e');
+    }
+  }
+
+  @override
   Future<bool> initFunctions(FunctionInitStrategy strategy) async {
     switch (strategy) {
       case PreferRemote(remotePath: String remotePath):
