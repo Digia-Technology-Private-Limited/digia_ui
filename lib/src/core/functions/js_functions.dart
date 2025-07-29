@@ -5,6 +5,7 @@ import 'js_functions_stub.dart'
 abstract class JSFunctions {
   factory JSFunctions() => getJSFunction();
   dynamic callJs(String fnName, dynamic data);
+  dynamic callAsyncJs(String fnName, dynamic data);
   Future<bool> initFunctions(FunctionInitStrategy strategy);
   static String getFunctionsFileName(int? version) {
     return version == null ? 'functions.js' : 'functions_v$version.js';
