@@ -5,6 +5,7 @@ import '../expr/default_scope_context.dart';
 import '../expr/scope_context.dart';
 import '../internal_widgets/internal_stream_builder.dart';
 import '../render_payload.dart';
+import '../utils/functional_util.dart';
 import '../widget_props/stream_builder_props.dart';
 
 enum StreamState {
@@ -40,7 +41,7 @@ class VWStreamBuilder extends VirtualStatelessWidget<StreamBuilderProps> {
       initialData: initialData,
       builder: (innerCtx, snapshot) {
         final updatedPayload = payload.copyWithChainedContext(
-            _createExprContext(snapshot, initialData),
+            _createExprContext(snapshot),
             buildContext: innerCtx);
 
         return child?.toWidget(updatedPayload) ?? empty();
@@ -49,7 +50,6 @@ class VWStreamBuilder extends VirtualStatelessWidget<StreamBuilderProps> {
         final updatedPayload = payload.copyWithChainedContext(
             _createExprContext(
               AsyncSnapshot.withData(ConnectionState.active, data),
-              payload.evalExpr(props.initialData),
             ),
             buildContext: context);
         updatedPayload.executeAction(props.onSuccess);
@@ -61,23 +61,31 @@ class VWStreamBuilder extends VirtualStatelessWidget<StreamBuilderProps> {
     );
   }
 
-  ScopeContext _createExprContext(
-      AsyncSnapshot<Object?> snapshot, Object? initialData) {
-    final String streamState;
+  StreamState _getStreamState(AsyncSnapshot<Object?> snapshot) {
     if (snapshot.hasError) {
-      streamState = StreamState.error.value;
+      return StreamState.error;
     } else if (snapshot.connectionState == ConnectionState.waiting) {
-      streamState = StreamState.loading.value;
+      return StreamState.loading;
     } else if (snapshot.connectionState == ConnectionState.active) {
-      streamState = StreamState.listening.value;
+      return StreamState.listening;
     } else {
-      streamState = StreamState.completed.value;
+      return StreamState.completed;
     }
+  }
+
+  ScopeContext _createExprContext(AsyncSnapshot<Object?> snapshot) {
+    final StreamState streamState = _getStreamState(snapshot);
+
+    final streamObj = {
+      'streamState': streamState.name,
+      'streamValue': snapshot.data,
+      if (snapshot.hasError) 'error': snapshot.error,
+    };
 
     return DefaultScopeContext(
       variables: {
-        'streamState': streamState,
-        'streamValue': snapshot.data,
+        ...streamObj,
+        ...?refName.maybe((it) => {it: streamObj}),
       },
     );
   }

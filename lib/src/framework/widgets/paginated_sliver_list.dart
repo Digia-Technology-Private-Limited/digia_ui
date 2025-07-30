@@ -109,10 +109,14 @@ class VWPaginatedSliverList extends VirtualSliver<PaginatedListViewProps> {
   }
 
   ScopeContext _createExprContext(Object? item, int index) {
-    return DefaultScopeContext(variables: {
+    final paginatedSliverListObj = {
       'currentItem': item,
-      'index': index
-      // TODO: Add class instance using refName
+      'index': index,
+    };
+
+    return DefaultScopeContext(variables: {
+      ...paginatedSliverListObj,
+      ...?refName.maybe((it) => {it: paginatedSliverListObj}),
     });
   }
 }

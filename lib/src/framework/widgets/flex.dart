@@ -10,6 +10,7 @@ import '../expr/scope_context.dart';
 import '../models/props.dart';
 import '../render_payload.dart';
 import '../utils/flutter_type_converters.dart';
+import '../utils/functional_util.dart';
 import '../widget_props/flex_fit_props.dart';
 import 'flex_fit.dart';
 
@@ -104,10 +105,14 @@ class VWFlex extends VirtualStatelessWidget<Props> {
   }
 
   ScopeContext _createExprContext(Object? item, int index) {
-    return DefaultScopeContext(variables: {
+    final flexObj = {
       'currentItem': item,
-      'index': index
-      // TODO: Add class instance using refName
+      'index': index,
+    };
+
+    return DefaultScopeContext(variables: {
+      ...flexObj,
+      ...?refName.maybe((it) => {it: flexObj}),
     });
   }
 }
