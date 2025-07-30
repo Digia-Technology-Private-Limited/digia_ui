@@ -8,6 +8,7 @@ import '../../internal_widgets/tab_view/inherited_tab_view_controller.dart';
 import '../../models/props.dart';
 import '../../render_payload.dart';
 import '../../utils/flutter_type_converters.dart';
+import '../../utils/functional_util.dart';
 
 class VWTabBar extends VirtualStatelessWidget<Props> {
   VWTabBar({
@@ -80,9 +81,14 @@ class VWTabBar extends VirtualStatelessWidget<Props> {
   }
 
   ScopeContext _createExprContext(Object? item, int index) {
-    return DefaultScopeContext(variables: {
+    final tabBarObj = {
       'currentItem': item,
       'index': index,
+    };
+
+    return DefaultScopeContext(variables: {
+      ...tabBarObj,
+      ...?refName.maybe((it) => {it: tabBarObj}),
     });
   }
 }

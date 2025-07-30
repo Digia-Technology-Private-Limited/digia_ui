@@ -7,6 +7,7 @@ import '../expr/scope_context.dart';
 import '../models/props.dart';
 import '../render_payload.dart';
 import '../utils/flutter_type_converters.dart';
+import '../utils/functional_util.dart';
 
 class VWWrap extends VirtualStatelessWidget<Props> {
   VWWrap({
@@ -64,9 +65,14 @@ class VWWrap extends VirtualStatelessWidget<Props> {
   }
 
   ScopeContext _createExprContext(Object? item, int index) {
-    return DefaultScopeContext(variables: {
+    final wrapObj = {
       'currentItem': item,
       'index': index,
+    };
+
+    return DefaultScopeContext(variables: {
+      ...wrapObj,
+      ...?refName.maybe((it) => {it: wrapObj}),
     });
   }
 }

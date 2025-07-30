@@ -8,6 +8,7 @@ import '../expr/default_scope_context.dart';
 import '../expr/scope_context.dart';
 import '../internal_widgets/internal_page_view.dart';
 import '../models/props.dart';
+import '../utils/functional_util.dart';
 
 class VWPageView extends VirtualStatelessWidget<Props> {
   VWPageView({
@@ -107,7 +108,14 @@ class VWPageView extends VirtualStatelessWidget<Props> {
   }
 
   ScopeContext _createExprContext(Object? item, int index) {
-    return DefaultScopeContext(
-        variables: {'currentItem': item, 'index': index});
+    final pageViewObj = {
+      'currentItem': item,
+      'index': index,
+    };
+
+    return DefaultScopeContext(variables: {
+      ...pageViewObj,
+      ...?refName.maybe((it) => {it: pageViewObj}),
+    });
   }
 }
