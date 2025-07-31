@@ -2,7 +2,6 @@ library;
 
 export 'package:digia_ui/src/analytics/dui_analytics.dart';
 export 'package:digia_ui/src/config/app_state/global_state.dart';
-export 'package:digia_ui/src/config_resolver.dart';
 export 'package:digia_ui/src/digia_ui_client.dart';
 export 'package:digia_ui/src/dui_app.dart';
 export 'package:digia_ui/src/dui_dev_config.dart';

@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 
+import '../analytics/dui_analytics.dart';
 import 'message_bus.dart';
 
 /// Provides access to Digia UI SDK resources through the widget tree.
@@ -25,6 +26,8 @@ class DigiaUIScope extends StatefulWidget {
   /// The widget below this widget in the tree.
   final Widget child;
 
+  final DUIAnalytics? analyticsHandler;
+
   /// Creates a [DigiaUIScope] widget.
   ///
   /// The [child] parameter must not be null.
@@ -32,6 +35,7 @@ class DigiaUIScope extends StatefulWidget {
   DigiaUIScope({
     super.key,
     MessageBus? messageBus,
+    this.analyticsHandler,
     required this.child,
   }) : messageBus = messageBus ?? MessageBus();
 
@@ -69,6 +73,7 @@ class _DigiaUIScopeState extends State<DigiaUIScope> {
   Widget build(BuildContext context) {
     return _DigiaUIScopeInherited(
       messageBus: widget.messageBus,
+      analyticsHandler: widget.analyticsHandler,
       child: widget.child,
     );
   }
@@ -82,11 +87,14 @@ class _DigiaUIScopeInherited extends InheritedWidget {
   /// The message bus instance that will be made available to descendants.
   final MessageBus messageBus;
 
+  final DUIAnalytics? analyticsHandler;
+
   /// Creates a [_DigiaUIScopeInherited] widget.
   ///
   /// Both [messageBus] and [child] parameters must not be null.
   const _DigiaUIScopeInherited({
     required this.messageBus,
+    required this.analyticsHandler,
     required super.child,
   });
 

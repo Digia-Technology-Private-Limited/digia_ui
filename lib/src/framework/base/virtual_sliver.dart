@@ -4,6 +4,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../../digia_ui.dart';
+import '../../digia_ui_app.dart';
+import '../../init/digia_ui_manager.dart';
 import '../custom/border_with_pattern.dart';
 import '../custom/custom_flutter_types.dart';
 import '../models/common_props.dart';
@@ -42,8 +44,7 @@ abstract class VirtualSliver<T> extends VirtualStatelessWidget<T> {
 
       return current;
     } catch (error) {
-      if (DigiaUIClient.instance.developerConfig?.host is DashboardHost ||
-          kDebugMode) {
+      if (DigiaUIManager().host is DashboardHost || kDebugMode) {
         return SliverToBoxAdapter(
           child: DefaultErrorWidget(
               refName: refName, errorMessage: error.toString()),

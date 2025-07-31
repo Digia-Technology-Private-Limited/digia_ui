@@ -1,4 +1,4 @@
-import '../../digia_ui.dart';
+import '../core/functions/js_functions.dart';
 import '../framework/data_type/variable.dart';
 import '../framework/data_type/variable_json_converter.dart';
 import '../framework/utils/functional_util.dart';
@@ -15,6 +15,7 @@ class DUIConfig {
   final bool? versionUpdated;
   final int? version;
   final Map<String, dynamic>? _environment;
+  JSFunctions? jsFunctions;
 
   DUIConfig(dynamic data)
       : _themeConfig = as<Map<String, dynamic>>(data['theme']),
@@ -40,8 +41,7 @@ class DUIConfig {
       as<Map<String, Object?>>(_themeConfig['fonts']);
 
   void setEnvVariable(String varName, Object? value) {
-    final Map<String, Variable> variables =
-        DigiaUIClient.instance.config.getEnvironmentVariables();
+    final Map<String, Variable> variables = getEnvironmentVariables();
     if (!variables.containsKey(varName)) {
       return;
     }

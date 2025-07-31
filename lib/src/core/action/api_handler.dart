@@ -5,8 +5,9 @@ import 'package:dio/dio.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:mime_type/mime_type.dart';
 
-import '../../../digia_ui.dart';
+import '../../dui_dev_config.dart';
 import '../../framework/data_type/adapted_types/file.dart';
+import '../../init/digia_ui_manager.dart';
 import '../../network/api_request/api_request.dart';
 import '../../network/core/types.dart';
 
@@ -25,8 +26,7 @@ class ApiHandler {
       StreamController<Object?>? progressStreamController,
       CancelToken? cancelToken}) async {
     final stopwatch = Stopwatch();
-    final envVariables =
-        DigiaUIClient.instance.config.getEnvironmentVariables();
+    final envVariables = DigiaUIManager().environmentVariables;
     final envArgs = envVariables.map((key, value) {
       final dvalue = envVariables[key]?.defaultValue;
       return MapEntry('env.$key', dvalue);
@@ -38,7 +38,7 @@ class ApiHandler {
     }
 
     String url = _hydrateTemplate(apiModel.url, finalArgs);
-    final DigiaUIHost? host = DigiaUIClient.instance.developerConfig?.host;
+    final DigiaUIHost? host = DigiaUIManager().host;
     if (host is DashboardHost &&
         host.resourceProxyUrl != null &&
         url.startsWith('http:')) {
@@ -52,7 +52,7 @@ class ApiHandler {
         : null;
     final bodyType = apiModel.bodyType;
 
-    final networkClient = DigiaUIClient.getNetworkClient();
+    final networkClient = DigiaUIManager().networkClient;
     Response<Object?> response;
 
     stopwatch.start();
@@ -86,26 +86,26 @@ class ApiHandler {
       }
       stopwatch.stop();
       stopwatch.reset();
-      DigiaUIClient.instance.duiAnalytics?.onDataSourceSuccess(
-          'api',
-          url,
-          {'body': preparedData},
-          {'responseTime': stopwatch.elapsedMilliseconds});
+      // DigiaUIClient.instance.duiAnalytics?.onDataSourceSuccess(
+      //     'api',
+      //     url,
+      //     {'body': preparedData},
+      //     {'responseTime': stopwatch.elapsedMilliseconds});
       return response;
     } on DioException catch (e) {
       progressStreamController?.sink.addError(e);
 
-      DigiaUIClient.instance.duiAnalytics?.onDataSourceError(
-          'api',
-          url,
-          ApiServerInfo(e.response?.data, e.requestOptions,
-              e.response?.statusCode, e.error, e.message));
+      // DigiaUIClient.instance.duiAnalytics?.onDataSourceError(
+      //     'api',
+      //     url,
+      //     ApiServerInfo(e.response?.data, e.requestOptions,
+      //         e.response?.statusCode, e.error, e.message));
       rethrow;
     } catch (e) {
       progressStreamController?.sink.addError(e);
 
-      DigiaUIClient.instance.duiAnalytics?.onDataSourceError(
-          'api', url, ApiServerInfo(null, null, -1, e, null));
+      // DigiaUIClient.instance.duiAnalytics?.onDataSourceError(
+      //     'api', url, ApiServerInfo(null, null, -1, e, null));
       rethrow;
     } finally {
       progressStreamController?.sink.close();

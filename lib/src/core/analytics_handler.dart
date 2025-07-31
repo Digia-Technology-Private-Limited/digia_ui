@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 
 import '../../digia_ui.dart';
+import '../Utils/extensions.dart';
+import '../digia_ui_app.dart';
 import '../framework/expr/expression_util.dart';
 import '../framework/expr/scope_context.dart';
 import '../framework/utils/functional_util.dart';
+import '../init/digia_ui_manager.dart';
 
 class AnalyticsHandler {
   static final AnalyticsHandler _instance = AnalyticsHandler._();
@@ -17,7 +20,7 @@ class AnalyticsHandler {
     required List<AnalyticEvent> events,
     ScopeContext? enclosing,
   }) async {
-    final logger = DigiaUIClient.instance.developerConfig?.logger;
+    final logger = DigiaUIManager().logger;
 
     _logAnalytics(logger, events, context, enclosing);
 
@@ -27,7 +30,7 @@ class AnalyticsHandler {
       return AnalyticEvent(name: event.name, payload: payload);
     }).toList();
 
-    DigiaUIClient.instance.duiAnalytics?.onEvent(evaluatedList);
+    context.analyticsHandler?.onEvent(evaluatedList);
   }
 }
 

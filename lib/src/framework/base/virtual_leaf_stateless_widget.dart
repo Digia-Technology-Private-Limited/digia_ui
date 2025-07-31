@@ -2,6 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
 import '../../../digia_ui.dart';
+import '../../digia_ui_app.dart';
+import '../../init/digia_ui_manager.dart';
 import '../models/common_props.dart';
 import '../models/props.dart';
 import '../utils/flutter_extensions.dart';
@@ -59,8 +61,7 @@ abstract class VirtualLeafStatelessWidget<T> extends VirtualWidget {
 
       return current;
     } catch (error) {
-      if (DigiaUIClient.instance.developerConfig?.host is DashboardHost ||
-          kDebugMode) {
+      if (DigiaUIManager().host is DashboardHost || kDebugMode) {
         return DefaultErrorWidget(
             refName: refName, errorMessage: error.toString());
       } else {

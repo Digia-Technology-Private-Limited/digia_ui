@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import '../../digia_ui_app.dart';
 import '../../digia_ui_client.dart';
 import '../../dui_dev_config.dart';
 import '../base/default_error_widget.dart';
@@ -57,8 +58,7 @@ class VWContainer extends VirtualStatelessWidget<Props> {
 
       return current;
     } catch (error) {
-      if (DigiaUIClient.instance.developerConfig?.host is DashboardHost ||
-          kDebugMode) {
+      if (DigiaUIManager().host is DashboardHost || kDebugMode) {
         return DefaultErrorWidget(
             refName: refName, errorMessage: error.toString());
       } else {

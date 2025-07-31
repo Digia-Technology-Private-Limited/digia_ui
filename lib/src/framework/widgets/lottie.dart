@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
+import '../../digia_ui_app.dart';
 import '../../digia_ui_client.dart';
 import '../../dui_dev_config.dart';
 import '../base/virtual_leaf_stateless_widget.dart';
@@ -52,7 +53,7 @@ class VWLottie extends VirtualLeafStatelessWidget<Props> {
     }
 
     if (lottiePath.startsWith('http')) {
-      final DigiaUIHost? host = DigiaUIClient.instance.developerConfig?.host;
+      final DigiaUIHost? host = DigiaUIManager().host;
       final String finalUrl;
       if (host is DashboardHost && host.resourceProxyUrl != null) {
         finalUrl = '${host.resourceProxyUrl}${Uri.encodeFull(lottiePath)}';

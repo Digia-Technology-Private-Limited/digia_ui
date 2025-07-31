@@ -2,31 +2,31 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 
-import '../environment.dart';
+import '../init/flavor.dart';
 import 'model.dart';
 import 'provider.dart';
 import 'source/asset.dart';
 import 'source/base.dart';
 import 'source/cache.dart';
 import 'source/delegated.dart';
-import 'source/fallback.dart';
 import 'source/network.dart';
 import 'source/network_file.dart';
 
 class ConfigStrategyFactory {
   static ConfigSource createStrategy(
-    FlavorInfo flavor,
+    Flavor flavor,
     ConfigProvider provider,
   ) {
     return switch (flavor) {
-      Debug() => _createDebugConfigSource(provider, flavor.branchName),
-      Staging() => NetworkConfigSource(provider, '/config/getAppConfigStaging'),
-      Versioned() => _createVersionedSource(provider, flavor.version),
-      Release() when kIsWeb =>
+      DebugFlavor() => _createDebugConfigSource(provider, flavor.branchName),
+      StagingFlavor() =>
+        NetworkConfigSource(provider, '/config/getAppConfigStaging'),
+      VersionedFlavor() => _createVersionedSource(provider, flavor.version),
+      ReleaseFlavor() when kIsWeb =>
         NetworkFileConfigSource(provider, '/config/getAppConfigRelease'),
-      Release() => _createReleaseFlavorConfigSource(
+      ReleaseFlavor() => _createReleaseFlavorConfigSource(
           provider,
-          flavor.initPriority,
+          flavor.initStrategy,
           flavor.appConfigPath,
           flavor.functionsPath,
         )
@@ -47,13 +47,13 @@ ConfigSource _createDebugConfigSource(
 
 ConfigSource _createReleaseFlavorConfigSource(
   ConfigProvider provider,
-  InitPriority priority,
+  DSLInitStrategy priority,
   String appConfigPath,
   String functionsPath,
 ) {
   return switch (priority) {
-    PrioritizeNetwork(timeout: var timeout) => DelegatedConfigSource(() async {
-
+    NetworkFirstStrategy(timeout: var timeout) =>
+      DelegatedConfigSource(() async {
         final burnedSource =
             AssetConfigSource(provider, appConfigPath, functionsPath);
         final burnedConfig = await burnedSource.getConfig();
@@ -69,7 +69,7 @@ ConfigSource _createReleaseFlavorConfigSource(
             await provider.fileOps.delete('appConfig.json');
           }
         } catch (_) {}
-        
+
         if (config.version != null) {
           provider.addVersionHeader(config.version!);
         }
@@ -78,14 +78,14 @@ ConfigSource _createReleaseFlavorConfigSource(
           final networkFileSource = NetworkFileConfigSource(
             provider,
             '/config/getAppConfigRelease',
-            timeout: Duration(seconds: timeout),
+            timeout: timeout,
           );
           config = await networkFileSource.getConfig();
         } catch (_) {}
 
         return config;
       }),
-    PrioritizeCache() => DelegatedConfigSource(() async {
+    CacheFirstStrategy() => DelegatedConfigSource(() async {
         final burnedSource =
             AssetConfigSource(provider, appConfigPath, functionsPath);
         final burnedConfig = await burnedSource.getConfig();
@@ -109,7 +109,7 @@ ConfigSource _createReleaseFlavorConfigSource(
 
         return configToUse;
       }),
-    PrioritizeLocal() =>
+    LocalFirstStrategy() =>
       AssetConfigSource(provider, appConfigPath, functionsPath),
   };
 }

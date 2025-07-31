@@ -1,12 +1,13 @@
 import 'dart:async';
 import 'dart:convert';
-
-import 'dart:html';
 import 'dart:js' as js;
+
 import 'package:flutter/foundation.dart';
+import 'package:web/web.dart' as web;
 
 import '../../../digia_ui.dart';
 import '../../framework/utils/functional_util.dart';
+import '../../init/digia_ui_manager.dart';
 import '../functions/js_functions.dart';
 
 class WebJsFunctions implements JSFunctions {
@@ -19,8 +20,7 @@ class WebJsFunctions implements JSFunctions {
           as<String>(js.context['JSON'].callMethod('stringify', [res])));
       return finalRes;
     } catch (e) {
-      if (DigiaUIClient.instance.developerConfig?.host is DashboardHost ||
-          kDebugMode) {
+      if (DigiaUIManager().host is DashboardHost || kDebugMode) {
         print('--------------ERROR Running Function-----------');
         print('functionName ---->    $fnName');
         print('input ----------> $v1');
@@ -37,12 +37,12 @@ class WebJsFunctions implements JSFunctions {
         // We need a Completer to ensure that we wait till the source is set
         // This fixes bug where fnNames are not found on first load
         Completer completer = Completer();
-        ScriptElement script = ScriptElement()
+        web.HTMLScriptElement script = web.HTMLScriptElement()
           ..onLoad.listen((_) => completer.complete(true))
           ..onError.listen((_) => completer.complete(false))
           ..src = '$remotePath?t=${DateTime.now().millisecondsSinceEpoch}'
           ..type = 'text/javascript';
-        document.head?.append(script);
+        web.document.head?.append(script);
         return await completer.future;
       case PreferLocal():
         throw Exception('Local strategy not available for web');

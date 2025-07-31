@@ -132,10 +132,6 @@ class NetworkClient {
     }
   }
 
-  void setEnvVariable(String varName, Object? value) {
-    DigiaUIClient.instance.config.setEnvVariable(varName, value);
-  }
-
   void replaceProjectHeaders(Map<String, String> headers) {
     projectDioInstance.options.headers = headers;
   }
