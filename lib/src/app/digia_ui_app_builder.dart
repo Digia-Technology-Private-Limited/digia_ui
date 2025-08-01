@@ -50,6 +50,13 @@ class _DigiaUIAppBuilderState extends State<DigiaUIAppBuilder> {
     }
   }
 
+  void reinitialize() {
+    setState(() {
+      _status = const DigiaUIStatus.loading();
+    });
+    _initialize();
+  }
+
   @override
   Widget build(BuildContext context) {
     final child = widget.builder(context, _status);

@@ -12,6 +12,19 @@ class Environment {
   @override
   String toString() => name;
 
+  static Environment fromString(String name) {
+    switch (name.toLowerCase()) {
+      case 'local':
+        return local;
+      case 'development':
+        return development;
+      case 'production':
+        return production;
+      default:
+        return Environment.custom(name);
+    }
+  }
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||

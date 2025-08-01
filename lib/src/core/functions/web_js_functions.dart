@@ -7,7 +7,6 @@ import 'package:web/web.dart' as web;
 
 import '../../../digia_ui.dart';
 import '../../framework/utils/functional_util.dart';
-import '../../init/digia_ui_manager.dart';
 import '../functions/js_functions.dart';
 
 class WebJsFunctions implements JSFunctions {

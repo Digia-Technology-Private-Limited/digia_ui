@@ -2,9 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../../digia_ui_app.dart';
-import '../../digia_ui_client.dart';
 import '../../dui_dev_config.dart';
+import '../../init/digia_ui_manager.dart';
 import '../base/default_error_widget.dart';
 import '../base/virtual_stateless_widget.dart';
 import '../custom/border_with_pattern.dart';

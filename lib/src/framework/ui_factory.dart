@@ -1,17 +1,21 @@
 import 'package:digia_expr/digia_expr.dart';
 import 'package:flutter/widgets.dart';
 
-import '../../digia_ui.dart';
 import '../config/app_state/app_state_scope_context.dart';
+import '../config/app_state/global_state.dart';
+import '../init/digia_ui_manager.dart';
 import 'actions/action_executor.dart';
 import 'base/virtual_widget.dart';
 import 'component/component.dart';
 import 'data_type/method_bindings/method_binding_registry.dart';
+import 'font_factory.dart';
 import 'page/config_provider.dart';
 import 'page/page.dart';
+import 'page/page_controller.dart';
 import 'page/page_route.dart';
 import 'utils/color_util.dart';
 import 'utils/functional_util.dart';
+import 'utils/navigation_util.dart';
 import 'utils/textstyle_util.dart';
 import 'utils/types.dart';
 import 'virtual_widget_registry.dart';
@@ -58,6 +62,13 @@ class DUIFactory {
     Map<String, ImageProvider>? images,
     DUIFontFactory? fontFactory,
   }) {
+    final digiaUIInstance = DigiaUIManager().safeInstance;
+    if (digiaUIInstance == null) {
+      throw StateError(
+          'DigiaUIManager is not initialized. Make sure to call DigiaUI.createWith() '
+          'and await its completion before calling DUIFactory().initialize().');
+    }
+
     widgetRegistry = DefaultVirtualWidgetRegistry(
       // MessageHandler is not propagated here
       componentBuilder: (id, args) => createComponent(id, args),
@@ -65,23 +76,23 @@ class DUIFactory {
     bindingRegistry = MethodBindingRegistry();
 
     configProvider =
-        pageConfigProvider ?? DUIConfigProvider(DigiaUIClient.instance.config);
+        pageConfigProvider ?? DUIConfigProvider(digiaUIInstance.dslConfig);
     resources = UIResources(
       icons: icons,
       images: images,
       textStyles:
-          DigiaUIClient.instance.config.fontTokens.map((key, value) => MapEntry(
+          digiaUIInstance.dslConfig.fontTokens.map((key, value) => MapEntry(
                 key,
                 convertToTextStyle(value, fontFactory),
               )),
       fontFactory: fontFactory,
-      colors: DigiaUIClient.instance.config.colorTokens.map(
+      colors: digiaUIInstance.dslConfig.colorTokens.map(
         (key, value) => MapEntry(
           key,
           as$<String>(value).maybe(ColorUtil.fromString),
         ),
       ),
-      darkColors: DigiaUIClient.instance.config.darkColorTokens.map(
+      darkColors: digiaUIInstance.dslConfig.darkColorTokens.map(
         (key, value) => MapEntry(
           key,
           as$<String>(value).maybe(ColorUtil.fromString),
@@ -135,7 +146,7 @@ class DUIFactory {
     );
     final pageDef = configProvider.getPageDefinition(pageId);
 
-    DigiaUIClient.instance.developerConfig?.logger?.logEntity(
+    DigiaUIManager().logger?.logEntity(
       entitySlug: pageId,
       eventName: 'INITIALIZATION',
       argDefs: pageDef.pageArgDefs
@@ -152,7 +163,7 @@ class DUIFactory {
         viewBuilder: (context, id, args) => _buildView(context, id, args),
         pageRouteBuilder: (context, id, args) => createPageRoute(id, args),
         bindingRegistry: bindingRegistry,
-        logger: DigiaUIClient.instance.developerConfig?.logger,
+        logger: DigiaUIManager().logger,
         metaData: {
           'entitySlug': pageId,
         },
@@ -170,7 +181,7 @@ class DUIFactory {
           values: DUIAppState().value,
           variables: {
             ...StdLibFunctions.functions,
-            ...DigiaUIClient.instance.jsVars
+            ...DigiaUIManager().jsVars,
           },
         ),
       ),
@@ -252,7 +263,7 @@ class DUIFactory {
 
     final componentDef = configProvider.getComponentDefinition(componentid);
 
-    DigiaUIClient.instance.developerConfig?.logger?.logEntity(
+    DigiaUIManager().logger?.logEntity(
       entitySlug: componentid,
       eventName: 'INITIALIZATION',
       argDefs: componentDef.argDefs
@@ -269,7 +280,7 @@ class DUIFactory {
         viewBuilder: (context, id, args) => _buildView(context, id, args),
         pageRouteBuilder: (context, id, args) => createPageRoute(id, args),
         bindingRegistry: bindingRegistry,
-        logger: DigiaUIClient.instance.developerConfig?.logger,
+        logger: DigiaUIManager().logger,
         metaData: {
           'entitySlug': componentid,
         },
@@ -286,7 +297,7 @@ class DUIFactory {
           values: DUIAppState().value,
           variables: {
             ...StdLibFunctions.functions,
-            ...DigiaUIClient.instance.jsVars
+            ...DigiaUIManager().jsVars,
           },
         ),
       ),

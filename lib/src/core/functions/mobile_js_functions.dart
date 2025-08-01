@@ -7,7 +7,6 @@ import 'package:flutter_js/flutter_js.dart';
 import '../../../digia_ui.dart';
 import '../../Utils/download_operations.dart';
 import '../../Utils/file_operations.dart';
-import '../../init/digia_ui_manager.dart';
 import './js_functions.dart';
 
 class MobileJsFunctions implements JSFunctions {

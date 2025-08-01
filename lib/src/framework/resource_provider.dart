@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 import '../network/api_request/api_request.dart';
 import 'font_factory.dart';
