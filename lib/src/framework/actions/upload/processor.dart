@@ -31,15 +31,16 @@ class UploadProcessor extends ActionProcessor<UploadAction> {
     UploadAction action,
     ScopeContext? scopeContext,
   ) async {
+    final dataSource = action.dataSource?.evaluate(scopeContext);
     final apiModel = ResourceProvider.maybeOf(context)
-        ?.apiModels[as$<JsonLike>(action.dataSource)?['dataSourceId']];
+        ?.apiModels[as$<JsonLike>(dataSource)?['id']];
     final progressStreamController = action.streamController
         ?.evaluate(scopeContext) as StreamController<Object?>?;
     final apiCancelToken = action.cancelToken?.evaluate(scopeContext);
-    final args = as$<JsonLike>(as$<JsonLike>(action.dataSource)?['args'])
-        ?.map((k, v) => MapEntry(
-              k,
-              ExprOr.fromJson<Object>(v),
+    final args = as$<JsonLike>(as$<JsonLike>(dataSource)?['args'])
+        ?.map((key, value) => MapEntry(
+              key,
+              ExprOr.fromJson<Object>(value)?.evaluate(scopeContext),
             ));
 
     if (apiModel == null) {
@@ -50,7 +51,6 @@ class UploadProcessor extends ActionProcessor<UploadAction> {
       action.actionType.value,
       {
         'dataSource': action.dataSource?.toJson(),
-        'args': as$<JsonLike>(action.dataSource)?['args'],
       },
     );
 
