@@ -1,4 +1,3 @@
-
 import 'package:collection/collection.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
@@ -596,24 +595,17 @@ abstract class To {
     if (data == null) return null;
 
     final type = as$<String>(data['type']);
+    final colorList = as$<List>(data['colorList']) ?? [];
+    final colors = colorList
+        .map((e) => evalColor(as$<String>(e['color'])) ?? Colors.transparent)
+        .nonNulls
+        .toList();
+    final stops =
+        colorList.map((e) => NumUtil.toDouble(e['stop'])).nonNulls.toList();
+    if (colors.isEmpty) return null;
 
     switch (type) {
       case 'linear':
-        final colors = (data['colorList'] as List?)
-            ?.map(
-                (e) => evalColor(as$<String>(e['color'])) ?? Colors.transparent)
-            .nonNulls
-            .toList();
-
-        if (colors == null || colors.isEmpty) return null;
-
-        final stops = (data['colorList'] as List?)
-            ?.map((e) => NumUtil.toDouble(e['stop']))
-            .nonNulls
-            .toList();
-
-        // final rotationInRadians = NumUtil.toInt(data['angle'])
-        //     .maybe((p0) => GradientRotation(p0 / 180.0 * math.pi));
         final begin = To.alignment(data['begin']);
         final end = To.alignment(data['end']);
 
@@ -621,8 +613,18 @@ abstract class To {
           begin: begin ?? Alignment.centerLeft,
           end: end ?? Alignment.centerRight,
           colors: colors,
-          stops: stops?.length == colors.length ? stops! : null,
-          // transform: rotationInRadians,
+          stops: stops.length == colors.length ? stops : null,
+        );
+
+      case 'angular':
+        final center = To.alignment(data['center']);
+        final radius = NumUtil.toDouble(data['radius']);
+
+        return RadialGradient(
+          radius: radius ?? 0.5,
+          center: center ?? Alignment.center,
+          colors: colors,
+          stops: stops.length == colors.length ? stops : null,
         );
 
       default:

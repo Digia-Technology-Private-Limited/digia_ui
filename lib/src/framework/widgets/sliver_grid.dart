@@ -5,6 +5,7 @@ import '../expr/default_scope_context.dart';
 import '../expr/scope_context.dart';
 import '../models/props.dart';
 import '../render_payload.dart';
+import '../utils/functional_util.dart';
 
 class VWSliverGrid extends VirtualSliver<Props> {
   VWSliverGrid({
@@ -55,9 +56,14 @@ class VWSliverGrid extends VirtualSliver<Props> {
   }
 
   ScopeContext _createExprContext(Object? item, int index) {
-    return DefaultScopeContext(variables: {
+    final sliverGridObj = {
       'currentItem': item,
       'index': index,
+    };
+
+    return DefaultScopeContext(variables: {
+      ...sliverGridObj,
+      ...?refName.maybe((it) => {it: sliverGridObj}),
     });
   }
 }

@@ -5,6 +5,7 @@ import '../expr/scope_context.dart';
 import '../internal_widgets/internal_carousel.dart';
 import '../render_payload.dart';
 import '../utils/flutter_extensions.dart';
+import '../utils/functional_util.dart';
 import '../widget_props/carousel_props.dart';
 
 class VWCarousel extends VirtualStatelessWidget<CarouselProps> {
@@ -108,10 +109,14 @@ class VWCarousel extends VirtualStatelessWidget<CarouselProps> {
   }
 
   ScopeContext _createExprContext(Object? item, int index) {
-    return DefaultScopeContext(variables: {
+    final carouselObj = {
       'currentItem': item,
-      'index': index
-      // TODO: Add class instance using refName
+      'index': index,
+    };
+
+    return DefaultScopeContext(variables: {
+      ...carouselObj,
+      ...?refName.maybe((it) => {it: carouselObj}),
     });
   }
 }

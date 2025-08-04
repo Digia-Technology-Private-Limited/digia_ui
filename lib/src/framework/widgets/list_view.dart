@@ -8,6 +8,7 @@ import '../internal_widgets/internal_list_view.dart';
 import '../models/props.dart';
 import '../render_payload.dart';
 import '../utils/flutter_type_converters.dart';
+import '../utils/functional_util.dart';
 
 class VWListView extends VirtualStatelessWidget<Props> {
   VWListView({
@@ -70,10 +71,16 @@ class VWListView extends VirtualStatelessWidget<Props> {
   }
 
   ScopeContext _createExprContext(Object? item, int index) {
-    return DefaultScopeContext(variables: {
+    final listObj = {
       'currentItem': item,
-      'index': index
-      // TODO: Add class instance using refName
-    });
+      'index': index,
+    };
+
+    return DefaultScopeContext(
+      variables: {
+        ...listObj,
+        ...?refName.maybe((it) => {it: listObj}),
+      },
+    );
   }
 }

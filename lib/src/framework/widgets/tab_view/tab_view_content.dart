@@ -48,9 +48,14 @@ class VWTabViewContent extends VirtualStatelessWidget<TabViewContentProps> {
   }
 
   ScopeContext _createExprContext(Object? item, int index) {
-    return DefaultScopeContext(variables: {
+    final tabViewContentObj = {
       'currentItem': item,
       'index': index,
+    };
+
+    return DefaultScopeContext(variables: {
+      ...tabViewContentObj,
+      ...?refName.maybe((it) => {it: tabViewContentObj}),
     });
   }
 }

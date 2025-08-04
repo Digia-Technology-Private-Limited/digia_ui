@@ -4,6 +4,7 @@ import '../../expr/default_scope_context.dart';
 import '../../expr/scope_context.dart';
 import '../../internal_widgets/tab_view/tab_view_controller_scope_widget.dart';
 import '../../render_payload.dart';
+import '../../utils/functional_util.dart';
 import '../../widget_props/tab_view_controller_props.dart';
 
 class VWTabViewController
@@ -42,7 +43,14 @@ class VWTabViewController
   }
 
   ScopeContext _createExprContext(int? currentIndex, Object? currentItem) {
-    return DefaultScopeContext(
-        variables: {'index': currentIndex, 'currentItem': currentItem});
+    final tabViewControllerObj = {
+      'index': currentIndex,
+      'currentItem': currentItem,
+    };
+
+    return DefaultScopeContext(variables: {
+      ...tabViewControllerObj,
+      ...?refName.maybe((it) => {it: tabViewControllerObj}),
+    });
   }
 }

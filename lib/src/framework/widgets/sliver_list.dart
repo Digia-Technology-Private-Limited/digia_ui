@@ -5,6 +5,7 @@ import '../expr/default_scope_context.dart';
 import '../expr/scope_context.dart';
 import '../models/props.dart';
 import '../render_payload.dart';
+import '../utils/functional_util.dart';
 
 class VWSliverList extends VirtualSliver<Props> {
   VWSliverList({
@@ -40,10 +41,14 @@ class VWSliverList extends VirtualSliver<Props> {
   }
 
   ScopeContext _createExprContext(Object? item, int index) {
-    return DefaultScopeContext(variables: {
+    final sliverListObj = {
       'currentItem': item,
-      'index': index
-      // TODO: Add class instance using refName
+      'index': index,
+    };
+
+    return DefaultScopeContext(variables: {
+      ...sliverListObj,
+      ...?refName.maybe((it) => {it: sliverListObj}),
     });
   }
 }
