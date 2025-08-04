@@ -65,6 +65,32 @@ class MobileJsFunctions implements JSFunctions {
     var finalRes = json.decode(jsEvalResult.stringResult);
     return finalRes;
   }
+
+  @override
+  Future<dynamic> callAsyncJs(String fnName, dynamic v1) async {
+    var input = json.encode(v1);
+
+    // Evaluate JS and get promise result
+    JsEvalResult jsEvalResult = await runtime.evaluateAsync('$fnName($input)');
+
+    // 🔹 Handle promise properly
+    JsEvalResult promiseResult = await runtime.handlePromise(jsEvalResult);
+
+    if (promiseResult.isError) {
+      if (DigiaUIClient.instance.developerConfig?.host is DashboardHost ||
+          kDebugMode) {
+        print('--------------ERROR Running Function-----------');
+        print('functionName ---->    $fnName');
+        print('input ----------> $input');
+        print('error -------> ${promiseResult.stringResult}');
+      }
+      throw Exception(
+          'Error running function $fnName \n ${promiseResult.stringResult}');
+    }
+
+    var finalRes = json.decode(promiseResult.stringResult);
+    return finalRes;
+  }
 }
 
 JSFunctions getJSFunction() => MobileJsFunctions();

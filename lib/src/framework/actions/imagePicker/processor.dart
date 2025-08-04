@@ -98,21 +98,23 @@ class ImagePickerProcessor extends ActionProcessor<ImagePickerAction> {
         // User canceled the picker
         return null;
       }
-      // logger?.log(ActionLog(getPageName(context), 'Action.imagePicker', {
-      //   'mediaSource': mediaSource,
-      //   'cameraDevice': cameraDevice,
-      //   'allowPhoto': allowPhoto,
-      //   'allowVideo': allowVideo,
-      //   'maxDuration': maxDuration,
-      //   'maxWidth': maxWidth,
-      //   'maxHeight': maxHeight,
-      //   'imageQuality': imageQuality,
-      //   'limit': limit,
-      //   'allowMultiple': allowMultiple,
-      //   'selectedPageState': selectedPageState,
-      //   'rebuildPage': rebuildPage,
-      //   'fileCount': pickedFiles.length,
-      // }));
+      logAction(
+        action.actionType.value,
+        {
+          'mediaSource': mediaSource,
+          'cameraDevice': cameraDevice,
+          'allowPhoto': allowPhoto,
+          'allowVideo': allowVideo,
+          'maxDuration': maxDuration,
+          'maxWidth': maxWidth,
+          'maxHeight': maxHeight,
+          'imageQuality': imageQuality,
+          'limit': limit,
+          'allowMultiple': allowMultiple,
+          'selectedPageState': selectedPageState,
+          'fileCount': pickedFiles.length,
+        },
+      );
     } catch (e) {
       print('Error picking media: $e');
       return null;
