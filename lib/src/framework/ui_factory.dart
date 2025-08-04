@@ -101,6 +101,12 @@ class DUIFactory {
     );
   }
 
+  // Destroy the factory
+  void destroy() {
+    widgetRegistry.dispose();
+    bindingRegistry.dispose();
+  }
+
   // Register a new widget
   void registerWidget<T>(
     String type,
