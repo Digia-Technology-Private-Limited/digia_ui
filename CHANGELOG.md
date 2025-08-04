@@ -2,6 +2,16 @@
 
 Digia Ui SDK.
 
+## [1.0.0-rc.7] – 2025-08-04 (Release Candidate)
+
+⚠ This version is not backward compatible with 0.x.x.
+
+- ✨ Added support for async calling of JS functions
+- ✨ Widgets now expose all internal scope variables with their own name as prefix (e.g., widgetA.varA)
+- 🐞 Bug fixes in UploadAction and ImagePicker
+- 🐞 Fixed gradient issues in border rendering
+- 🎨 Added support for radial gradients
+
 ## [1.0.0-rc.6] – 2025-07-23 (Release Candidate)
 
 ⚠ This version is not backward compatible with 0.x.x.
