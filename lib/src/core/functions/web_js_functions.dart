@@ -38,8 +38,7 @@ class WebJsFunctions implements JSFunctions {
           as<String>(js.context['JSON'].callMethod('stringify', [res])));
       return finalRes;
     } catch (e) {
-      if (DigiaUIClient.instance.developerConfig?.host is DashboardHost ||
-          kDebugMode) {
+      if (DigiaUIManager().host is DashboardHost || kDebugMode) {
         print('--------------ERROR Running Function-----------');
         print('functionName ---->    $fnName');
         print('input ----------> $v1');

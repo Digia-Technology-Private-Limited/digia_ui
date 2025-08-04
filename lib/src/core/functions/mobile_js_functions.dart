@@ -77,8 +77,7 @@ class MobileJsFunctions implements JSFunctions {
     JsEvalResult promiseResult = await runtime.handlePromise(jsEvalResult);
 
     if (promiseResult.isError) {
-      if (DigiaUIClient.instance.developerConfig?.host is DashboardHost ||
-          kDebugMode) {
+      if (DigiaUIManager().host is DashboardHost || kDebugMode) {
         print('--------------ERROR Running Function-----------');
         print('functionName ---->    $fnName');
         print('input ----------> $input');
