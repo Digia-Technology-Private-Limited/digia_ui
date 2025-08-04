@@ -62,9 +62,9 @@ class _DigiaUIAppBuilderState extends State<DigiaUIAppBuilder> {
 
   @override
   Widget build(BuildContext context) {
-    final child = widget.builder(context, _status);
-
-    if (!_status.isReady) return child;
+    if (!_status.isReady) {
+      return widget.builder(context, _status);
+    }
 
     return DigiaUIApp(
       digiaUI: _status.digiaUI!,
@@ -74,7 +74,7 @@ class _DigiaUIAppBuilderState extends State<DigiaUIAppBuilder> {
       icons: widget.icons,
       images: widget.images,
       fontFactory: widget.fontFactory,
-      child: child,
+      builder: (context) => widget.builder(context, _status),
     );
   }
 }
