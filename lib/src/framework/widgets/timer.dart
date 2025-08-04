@@ -5,6 +5,7 @@ import '../expr/default_scope_context.dart';
 import '../expr/scope_context.dart';
 import '../internal_widgets/timer/widget.dart';
 import '../render_payload.dart';
+import '../utils/functional_util.dart';
 import '../widget_props/timer_props.dart';
 
 class VWTimer extends VirtualStatelessWidget<TimerProps> {
@@ -78,8 +79,15 @@ class VWTimer extends VirtualStatelessWidget<TimerProps> {
   }
 
   ScopeContext _createExprContext(int? value) {
-    return DefaultScopeContext(variables: {
+    final timerObj = {
       'tickValue': value,
-    });
+    };
+
+    return DefaultScopeContext(
+      variables: {
+        ...timerObj,
+        ...?refName.maybe((it) => {it: timerObj}),
+      },
+    );
   }
 }
