@@ -1,3 +1,5 @@
+import 'package:digia_expr/digia_expr.dart';
+
 import '../dui_dev_config.dart';
 import '../dui_logger.dart';
 import '../framework/data_type/variable.dart';
@@ -13,7 +15,7 @@ class DigiaUIManager {
 
   DigiaUI? _digiaUI;
 
-  void initialize(DigiaUI digiaUI) async {
+  void initialize(DigiaUI digiaUI) {
     _digiaUI = digiaUI;
   }
 
@@ -29,4 +31,29 @@ class DigiaUIManager {
       _digiaUI!.dslConfig.getEnvironmentVariables();
   DigiaUIHost? get host => _digiaUI!.initConfig.developerConfig.host;
   NetworkClient get networkClient => _digiaUI!.networkClient;
+
+  Map<String, Object?> get jsVars => {
+        'js': ExprClassInstance(
+            klass: ExprClass(name: 'js', fields: {}, methods: {
+          'eval': ExprCallableImpl(
+              fn: (evaluator, arguments) {
+                return safeInstance?.dslConfig.jsFunctions?.callJs(
+                    _toValue<String>(evaluator, arguments[0])!,
+                    arguments
+                        .skip(1)
+                        .map((e) => _toValue(evaluator, e))
+                        .toList());
+              },
+              arity: 2)
+        }))
+      };
+
+  T? _toValue<T>(evaluator, Object obj) {
+    if (obj is ASTNode) {
+      final result = evaluator.eval(obj);
+      return result as T?;
+    }
+
+    return obj as T?;
+  }
 }

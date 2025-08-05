@@ -31,7 +31,7 @@ class DigiaUI {
     // Initialize Preferences
     await PreferencesStore.instance.initialize();
 
-    final headers = await _createDigiaHeaders(options, "");
+    final headers = await _createDigiaHeaders(options, '');
 
     final networkClient = NetworkClient(
       options.developerConfig.baseUrl,

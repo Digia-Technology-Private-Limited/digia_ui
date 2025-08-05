@@ -1,12 +1,12 @@
 library;
 
+export 'package:digia_ui/dui_settings.dart';
 export 'package:digia_ui/src/analytics/dui_analytics.dart';
+export 'package:digia_ui/src/app/digia_ui_app.dart';
+export 'package:digia_ui/src/app/digia_ui_app_builder.dart';
 export 'package:digia_ui/src/config/app_state/global_state.dart';
-export 'package:digia_ui/src/digia_ui_client.dart';
-export 'package:digia_ui/src/dui_app.dart';
 export 'package:digia_ui/src/dui_dev_config.dart';
 export 'package:digia_ui/src/dui_logger.dart';
-export 'package:digia_ui/src/environment.dart';
 export 'package:digia_ui/src/framework/actions/base/action_flow.dart';
 export 'package:digia_ui/src/framework/base/virtual_leaf_stateless_widget.dart';
 export 'package:digia_ui/src/framework/digia_message_handler_mixin.dart';
@@ -20,5 +20,10 @@ export 'package:digia_ui/src/framework/ui_factory.dart';
 export 'package:digia_ui/src/framework/utils/flutter_type_converters.dart';
 export 'package:digia_ui/src/framework/utils/navigation_util.dart';
 export 'package:digia_ui/src/framework/widgets/image.dart';
+export 'package:digia_ui/src/init/config.dart';
+export 'package:digia_ui/src/init/digia_ui.dart';
+export 'package:digia_ui/src/init/digia_ui_manager.dart';
+export 'package:digia_ui/src/init/environment.dart';
+export 'package:digia_ui/src/init/flavor.dart';
 export 'package:digia_ui/src/inspector/dui_inspector.dart';
 export 'package:digia_ui/src/network/netwok_config.dart';

@@ -3,22 +3,33 @@ import 'package:flutter/widgets.dart';
 import '../analytics/dui_analytics.dart';
 import '../config/app_state/global_state.dart';
 import '../framework/digia_ui_scope.dart';
+import '../framework/font_factory.dart';
 import '../framework/message_bus.dart';
+import '../framework/page/config_provider.dart';
+import '../framework/ui_factory.dart';
 import '../init/digia_ui.dart';
 import '../init/digia_ui_manager.dart';
 
 class DigiaUIApp extends StatefulWidget {
   final DigiaUI digiaUI;
-  final Widget child;
   final DUIAnalytics? analytics;
   final MessageBus? messageBus;
+  final ConfigProvider? pageConfigProvider;
+  final Map<String, IconData>? icons;
+  final Map<String, ImageProvider<Object>>? images;
+  final DUIFontFactory? fontFactory;
+  final Widget Function(BuildContext context) builder;
 
   const DigiaUIApp({
     super.key,
     required this.digiaUI,
-    required this.child,
     this.messageBus,
     this.analytics,
+    this.pageConfigProvider,
+    this.icons,
+    this.images,
+    this.fontFactory,
+    required this.builder,
   });
 
   @override
@@ -30,6 +41,12 @@ class _DigiaUIAppState extends State<DigiaUIApp> {
   void initState() {
     DigiaUIManager().initialize(widget.digiaUI);
     DUIAppState().init(widget.digiaUI.dslConfig.appState ?? []);
+    DUIFactory().initialize(
+      pageConfigProvider: widget.pageConfigProvider,
+      icons: widget.icons,
+      images: widget.images,
+      fontFactory: widget.fontFactory,
+    );
     super.initState();
   }
 
@@ -38,7 +55,7 @@ class _DigiaUIAppState extends State<DigiaUIApp> {
     return DigiaUIScope(
       analyticsHandler: widget.analytics,
       messageBus: widget.messageBus,
-      child: widget.child,
+      child: widget.builder(context),
     );
   }
 
@@ -46,6 +63,7 @@ class _DigiaUIAppState extends State<DigiaUIApp> {
   void dispose() {
     DigiaUIManager().destroy();
     DUIAppState().dispose();
+    DUIFactory().destroy();
     super.dispose();
   }
 }

@@ -2,8 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
 import '../../../digia_ui.dart';
-import '../../digia_ui_app.dart';
-import '../../init/digia_ui_manager.dart';
 import '../models/common_props.dart';
 import '../models/props.dart';
 import '../utils/flutter_extensions.dart';

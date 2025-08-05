@@ -143,6 +143,8 @@ abstract class VirtualWidgetRegistry {
   }) = DefaultVirtualWidgetRegistry;
 
   VirtualWidget createWidget(VWData data, VirtualWidget? parent);
+
+  void dispose();
 }
 
 class DefaultVirtualWidgetRegistry implements VirtualWidgetRegistry {
@@ -227,5 +229,10 @@ class DefaultVirtualWidgetRegistry implements VirtualWidgetRegistry {
         createChildGroups(data.childGroups, parent, registry),
       );
     };
+  }
+
+  @override
+  void dispose() {
+    builders.clear();
   }
 }
