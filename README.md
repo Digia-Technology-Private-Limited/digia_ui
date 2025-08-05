@@ -37,7 +37,7 @@ Digia UI SDK is part of the Digia Studio ecosystem, where:
 - 🔄 **Instant Updates** - Push UI and logic changes instantly without app store approvals
 - 🔗 **Expression Binding** - Powerful data binding system for dynamic content
 - 🎯 **Pre-built Actions** - Navigation, state management, API calls, and more
-- 📱 **Native Performance** - Direct compilation to native code with Flutter's performance
+- 📱 **Native Performance** - Rendering handled directly by Flutter widgets for optimal performance
 - 🧩 **Custom Widgets** - Register your own widgets to extend functionality
 - 🌐 **Multi-Platform** - Single codebase for Android, iOS, and Mobile Web
 
