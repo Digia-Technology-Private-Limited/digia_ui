@@ -11,21 +11,56 @@ import '../preferences_store.dart';
 import '../version.dart';
 import 'config.dart';
 
+/// Core DigiaUI class responsible for initializing and managing the SDK.
+///
+/// This class handles the initialization of the Digia UI SDK, including network
+/// configuration, preferences setup, and configuration loading. It serves as
+/// the main entry point for SDK setup and provides methods for runtime
+/// configuration management.
 class DigiaUI {
+  /// The initialization configuration provided during SDK setup.
   final InitConfig initConfig;
+
+  /// The network client used for API communications.
   final NetworkClient networkClient;
+
+  /// The DSL configuration containing widget definitions and app structure.
   final DUIConfig dslConfig;
 
+  /// Creates a new DigiaUI instance with the specified configurations.
+  ///
+  /// This is a private constructor used internally after initialization.
   DigiaUI._(
     this.initConfig,
     this.networkClient,
     this.dslConfig,
   );
 
+  /// Sets an environment variable that can be accessed in expressions.
+  ///
+  /// Environment variables can be used in JSON expressions throughout the app
+  /// using the syntax `${env.variableName}`.
+  ///
+  /// [varName] is the name of the variable.
+  /// [value] is the value to set, can be any JSON-serializable object.
   void setEnvVariable(String varName, Object? value) {
     dslConfig.setEnvVariable(varName, value);
   }
 
+  /// Initializes the Digia UI SDK with the provided configuration.
+  ///
+  /// This is the main initialization method that sets up the SDK for use.
+  /// It performs the following operations:
+  /// - Initializes shared preferences store
+  /// - Creates network client with proper headers
+  /// - Loads configuration from the server
+  /// - Sets up state observers if provided
+  ///
+  /// [options] contains all the configuration needed for initialization.
+  ///
+  /// Returns a fully initialized [DigiaUI] instance ready for use.
+  ///
+  /// Throws exceptions if initialization fails (network errors, invalid config, etc.).
   // Main initialization method (eager pattern)
   static Future<DigiaUI> createWith(InitConfig options) async {
     // Initialize Preferences
@@ -52,6 +87,15 @@ class DigiaUI {
     return DigiaUI._(options, networkClient, config);
   }
 
+  /// Creates the default headers required for Digia API communication.
+  ///
+  /// This method generates headers containing SDK version, platform information,
+  /// app details, and authentication information.
+  ///
+  /// [options] contains the configuration including access key.
+  /// [uuid] is an optional user identifier.
+  ///
+  /// Returns a map of headers to be used with network requests.
   static Future<Map<String, dynamic>> _createDigiaHeaders(
     InitConfig options,
     String? uuid,
@@ -73,6 +117,12 @@ class DigiaUI {
     );
   }
 
+  /// Determines the current platform for API communication.
+  ///
+  /// Returns platform identifier string:
+  /// - 'ios' for iOS devices
+  /// - 'android' for Android devices
+  /// - 'mobile_web' for web or other platforms
   static String _getPlatform() {
     if (kIsWeb) return 'mobile_web';
 

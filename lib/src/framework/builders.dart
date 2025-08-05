@@ -61,7 +61,7 @@ import 'widgets/html_view.dart';
 import 'widgets/icon.dart';
 import 'widgets/icon_button.dart';
 import 'widgets/image.dart';
-import 'widgets/imageView360.dart';
+import 'widgets/image_view_360.dart';
 import 'widgets/linear_progress_bar.dart';
 import 'widgets/list_view.dart';
 import 'widgets/lottie.dart';

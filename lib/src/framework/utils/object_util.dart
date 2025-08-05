@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 
+import '../../utils/logger.dart';
 import 'json_util.dart';
 import 'num_util.dart';
 import 'types.dart';
@@ -99,7 +100,8 @@ extension ObjectExt on Object? {
 
     // Log the cast error in debug mode
     if (kDebugMode && this != null) {
-      print('CastError when trying to cast $this to $R');
+      Logger.error('CastError when trying to cast $this to $R',
+          tag: 'ObjectUtil', error: TypeError());
     }
 
     return null;

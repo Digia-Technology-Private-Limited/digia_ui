@@ -1,5 +1,4 @@
-import 'package:digia_expr/src/expr_context.dart';
-
+import 'package:digia_expr/digia_expr.dart';
 import 'scope_context.dart';
 
 /// A basic implementation of ExprContext that can be used as-is or extended.

@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
     return DigiaUIApp(
       digiaUI: digiaUI,
       analytics: MyAnalytics(),
-      child: MaterialApp(
+      builder: (context) => MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           scaffoldBackgroundColor: Colors.white,
@@ -95,22 +95,22 @@ class _DigiaHomeState extends State<DigiaHome> {
 class MyAnalytics extends DUIAnalytics {
   @override
   void onDataSourceError(String dataSourceType, String source, errorInfo) {
-    print({
+    debugPrint('${{
       'dataType': dataSourceType,
       'source': source,
       'metaData': errorInfo.message
-    });
+    }}');
   }
 
   @override
   void onDataSourceSuccess(
       String dataSourceType, String source, metaData, perfData) {
-    print({
+    debugPrint('${{
       'dataType': dataSourceType,
       'source': source,
       'metaData': metaData.toString(),
       'perfData': perfData.toString()
-    });
+    }}');
   }
 
   @override

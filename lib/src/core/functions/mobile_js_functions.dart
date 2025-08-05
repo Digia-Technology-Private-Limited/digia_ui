@@ -7,6 +7,7 @@ import 'package:flutter_js/flutter_js.dart';
 import '../../../digia_ui.dart';
 import '../../Utils/download_operations.dart';
 import '../../Utils/file_operations.dart';
+import '../../utils/logger.dart';
 import './js_functions.dart';
 
 class MobileJsFunctions implements JSFunctions {
@@ -42,7 +43,7 @@ class MobileJsFunctions implements JSFunctions {
           return true;
       }
     } catch (e) {
-      print('file not found');
+      Logger.error('file not found', tag: 'MobileJsFunctions', error: e);
       return false;
     }
   }
@@ -54,10 +55,12 @@ class MobileJsFunctions implements JSFunctions {
         runtime.evaluate('JSON.stringify($fnName($input))');
     if (jsEvalResult.isError) {
       if (DigiaUIManager().host is DashboardHost || kDebugMode) {
-        print('--------------ERROR Running Function-----------');
-        print('functionName ---->    $fnName');
-        print('input ----------> $input');
-        print('error -------> ${jsEvalResult.stringResult}');
+        Logger.error('--------------ERROR Running Function-----------',
+            tag: 'MobileJsFunctions');
+        Logger.log('functionName ---->    $fnName', tag: 'MobileJsFunctions');
+        Logger.log('input ----------> $input', tag: 'MobileJsFunctions');
+        Logger.error('error -------> ${jsEvalResult.stringResult}',
+            tag: 'MobileJsFunctions');
       }
       throw Exception(
           'Error running function $fnName \n ${jsEvalResult.stringResult}');
@@ -78,10 +81,12 @@ class MobileJsFunctions implements JSFunctions {
 
     if (promiseResult.isError) {
       if (DigiaUIManager().host is DashboardHost || kDebugMode) {
-        print('--------------ERROR Running Function-----------');
-        print('functionName ---->    $fnName');
-        print('input ----------> $input');
-        print('error -------> ${promiseResult.stringResult}');
+        Logger.error('--------------ERROR Running Function-----------',
+            tag: 'MobileJsFunctions');
+        Logger.log('functionName ---->    $fnName', tag: 'MobileJsFunctions');
+        Logger.log('input ----------> $input', tag: 'MobileJsFunctions');
+        Logger.error('error -------> ${promiseResult.stringResult}',
+            tag: 'MobileJsFunctions');
       }
       throw Exception(
           'Error running function $fnName \n ${promiseResult.stringResult}');

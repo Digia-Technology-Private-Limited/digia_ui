@@ -10,6 +10,7 @@ import '../../framework/data_type/adapted_types/file.dart';
 import '../../init/digia_ui_manager.dart';
 import '../../network/api_request/api_request.dart';
 import '../../network/core/types.dart';
+import '../../utils/logger.dart';
 
 class ApiHandler {
   static final ApiHandler _instance = ApiHandler._();
@@ -72,7 +73,7 @@ class ApiHandler {
               'total': p1,
               'progress': p0 / p1 * 100,
             });
-            print('Progress: ${p0 / p1 * 100}');
+            Logger.log('Progress: ${p0 / p1 * 100}', tag: 'ApiHandler');
           },
         );
       } else {

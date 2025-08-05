@@ -71,6 +71,9 @@ class UploadProcessor extends ActionProcessor<UploadAction> {
       };
       final isSuccess = action.successCondition?.evaluate(scopeContext) ?? true;
       if (isSuccess) {
+        if (!context.mounted) {
+          return null;
+        }
         if (action.onSuccess != null) {
           await executeActionFlow(
               context,
@@ -81,6 +84,9 @@ class UploadProcessor extends ActionProcessor<UploadAction> {
               ));
         }
       } else {
+        if (!context.mounted) {
+          return null;
+        }
         if (action.onError != null) {
           await executeActionFlow(
               context,
@@ -92,6 +98,9 @@ class UploadProcessor extends ActionProcessor<UploadAction> {
         }
       }
     }, onError: (error) async {
+      if (!context.mounted) {
+        return null;
+      }
       if (error is DioException && action.onError != null) {
         final response = {
           'body': error.response?.data,
