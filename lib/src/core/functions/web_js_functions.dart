@@ -7,7 +7,6 @@ import 'package:web/web.dart' as web;
 
 import '../../../digia_ui.dart';
 import '../../framework/utils/functional_util.dart';
-import '../../init/digia_ui_manager.dart';
 import '../functions/js_functions.dart';
 
 class WebJsFunctions implements JSFunctions {
@@ -39,8 +38,7 @@ class WebJsFunctions implements JSFunctions {
           as<String>(js.context['JSON'].callMethod('stringify', [res])));
       return finalRes;
     } catch (e) {
-      if (DigiaUIClient.instance.developerConfig?.host is DashboardHost ||
-          kDebugMode) {
+      if (DigiaUIManager().host is DashboardHost || kDebugMode) {
         print('--------------ERROR Running Function-----------');
         print('functionName ---->    $fnName');
         print('input ----------> $v1');

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
-import '../../digia_ui_app.dart';
-import '../../digia_ui_client.dart';
 import '../../dui_dev_config.dart';
+import '../../init/digia_ui_manager.dart';
 import '../base/virtual_leaf_stateless_widget.dart';
 import '../models/props.dart';
 import '../render_payload.dart';

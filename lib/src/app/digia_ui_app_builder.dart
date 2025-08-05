@@ -1,7 +1,9 @@
 import 'package:flutter/widgets.dart';
 
 import '../analytics/dui_analytics.dart';
+import '../framework/font_factory.dart';
 import '../framework/message_bus.dart';
+import '../framework/page/config_provider.dart';
 import '../init/config.dart';
 import '../init/digia_ui.dart';
 import 'digia_ui_app.dart';
@@ -11,6 +13,10 @@ class DigiaUIAppBuilder extends StatefulWidget {
   final Widget Function(BuildContext context, DigiaUIStatus status) builder;
   final DUIAnalytics? analytics;
   final MessageBus? messageBus;
+  final ConfigProvider? pageConfigProvider;
+  final Map<String, IconData>? icons;
+  final Map<String, ImageProvider<Object>>? images;
+  final DUIFontFactory? fontFactory;
 
   const DigiaUIAppBuilder({
     super.key,
@@ -18,6 +24,10 @@ class DigiaUIAppBuilder extends StatefulWidget {
     required this.builder,
     this.messageBus,
     this.analytics,
+    this.pageConfigProvider,
+    this.icons,
+    this.images,
+    this.fontFactory,
   });
 
   @override
@@ -52,15 +62,19 @@ class _DigiaUIAppBuilderState extends State<DigiaUIAppBuilder> {
 
   @override
   Widget build(BuildContext context) {
-    final child = widget.builder(context, _status);
-
-    if (!_status.isReady) return child;
+    if (!_status.isReady) {
+      return widget.builder(context, _status);
+    }
 
     return DigiaUIApp(
       digiaUI: _status.digiaUI!,
       messageBus: widget.messageBus,
       analytics: widget.analytics,
-      child: child,
+      pageConfigProvider: widget.pageConfigProvider,
+      icons: widget.icons,
+      images: widget.images,
+      fontFactory: widget.fontFactory,
+      builder: (context) => widget.builder(context, _status),
     );
   }
 }

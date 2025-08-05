@@ -7,7 +7,6 @@ import 'package:flutter_js/flutter_js.dart';
 import '../../../digia_ui.dart';
 import '../../Utils/download_operations.dart';
 import '../../Utils/file_operations.dart';
-import '../../init/digia_ui_manager.dart';
 import './js_functions.dart';
 
 class MobileJsFunctions implements JSFunctions {
@@ -78,8 +77,7 @@ class MobileJsFunctions implements JSFunctions {
     JsEvalResult promiseResult = await runtime.handlePromise(jsEvalResult);
 
     if (promiseResult.isError) {
-      if (DigiaUIClient.instance.developerConfig?.host is DashboardHost ||
-          kDebugMode) {
+      if (DigiaUIManager().host is DashboardHost || kDebugMode) {
         print('--------------ERROR Running Function-----------');
         print('functionName ---->    $fnName');
         print('input ----------> $input');

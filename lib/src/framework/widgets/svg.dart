@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../digia_ui.dart';
-import '../../init/digia_ui_manager.dart';
 import '../models/props.dart';
 import '../utils/flutter_extensions.dart';
 

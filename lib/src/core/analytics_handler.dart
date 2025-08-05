@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../../digia_ui.dart';
 import '../Utils/extensions.dart';
-import '../digia_ui_app.dart';
 import '../framework/expr/expression_util.dart';
 import '../framework/expr/scope_context.dart';
 import '../framework/utils/functional_util.dart';
-import '../init/digia_ui_manager.dart';
 
 class AnalyticsHandler {
   static final AnalyticsHandler _instance = AnalyticsHandler._();

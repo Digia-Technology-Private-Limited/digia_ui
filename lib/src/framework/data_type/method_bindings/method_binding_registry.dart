@@ -25,4 +25,8 @@ class MethodBindingRegistry {
     throw Exception(
         'Method $methodName not found on instance of type: ${instance.runtimeType}');
   }
+
+  void dispose() {
+    _bindings.clear();
+  }
 }
