@@ -7,6 +7,7 @@ import 'package:web/web.dart' as web;
 
 import '../../../digia_ui.dart';
 import '../../framework/utils/functional_util.dart';
+import '../../utils/logger.dart';
 import '../functions/js_functions.dart';
 
 class WebJsFunctions implements JSFunctions {
@@ -20,10 +21,11 @@ class WebJsFunctions implements JSFunctions {
       return finalRes;
     } catch (e) {
       if (DigiaUIManager().host is DashboardHost || kDebugMode) {
-        print('--------------ERROR Running Function-----------');
-        print('functionName ---->    $fnName');
-        print('input ----------> $v1');
-        print('error -------> $e');
+        Logger.error('--------------ERROR Running Function-----------',
+            tag: 'WebJsFunctions');
+        Logger.log('functionName ---->    $fnName', tag: 'WebJsFunctions');
+        Logger.log('input ----------> $v1', tag: 'WebJsFunctions');
+        Logger.error('error -------> $e', tag: 'WebJsFunctions');
       }
       throw Exception('Error running function $fnName \n $e');
     }
@@ -39,10 +41,11 @@ class WebJsFunctions implements JSFunctions {
       return finalRes;
     } catch (e) {
       if (DigiaUIManager().host is DashboardHost || kDebugMode) {
-        print('--------------ERROR Running Function-----------');
-        print('functionName ---->    $fnName');
-        print('input ----------> $v1');
-        print('error -------> $e');
+        Logger.error('--------------ERROR Running Function-----------',
+            tag: 'WebJsFunctions');
+        Logger.log('functionName ---->    $fnName', tag: 'WebJsFunctions');
+        Logger.log('input ----------> $v1', tag: 'WebJsFunctions');
+        Logger.error('error -------> $e', tag: 'WebJsFunctions');
       }
       throw Exception('Error running function $fnName \n $e');
     }

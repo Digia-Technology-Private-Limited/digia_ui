@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import '../framework/utils/functional_util.dart';
 import '../network/core/types.dart';
 import 'file_operations.dart';
+import 'logger.dart';
 
 abstract class FileDownloader {
   Future<Response?> downloadFile(String url, String fileName, {int retry = 0});
@@ -36,17 +37,19 @@ class FileDownloaderImpl implements FileDownloader {
           final bool success = await fileOps.writeBytesToFile(
               as<List<int>>(response.data), fileName);
           if (!success) {
-            print('Failed to write file: $fileName');
+            Logger.error('Failed to write file: $fileName',
+                tag: 'FileDownloader');
             await _retryFileDownload(url, fileName, retry);
           }
         }
         return response;
       } else {
-        print('Failed to download file: ${response.statusCode}');
+        Logger.error('Failed to download file: ${response.statusCode}',
+            tag: 'FileDownloader');
         await _retryFileDownload(url, fileName, retry);
       }
     } catch (e) {
-      print('An error occurred: $e');
+      Logger.error('An error occurred: $e', tag: 'FileDownloader');
       await _retryFileDownload(url, fileName, retry);
     }
     return null;
@@ -57,7 +60,8 @@ class FileDownloaderImpl implements FileDownloader {
     if (retry < 2) {
       return await downloadFile(url, fileName, retry: retry + 1);
     } else {
-      print('3 retries done.. $fileName fetch failed');
+      Logger.error('3 retries done.. $fileName fetch failed',
+          tag: 'FileDownloader');
       return null;
     }
   }

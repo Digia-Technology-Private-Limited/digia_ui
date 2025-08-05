@@ -1,6 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:path_provider/path_provider.dart';
+
+import 'logger.dart';
 
 abstract class FileOperations {
   Future<String> get localPath;
@@ -29,10 +32,11 @@ class FileOperationsImpl implements FileOperations {
       var path = await localPath;
       final file = File('$path/$fileName');
       await file.writeAsString(data);
-      print('File written successfully to $path/$fileName');
+      Logger.log('File written successfully to $path/$fileName',
+          tag: 'FileOperations');
       return true;
     } catch (e) {
-      print('An error occurred: $e');
+      Logger.error('An error occurred: $e', tag: 'FileOperations');
       return false;
     }
   }
@@ -45,10 +49,11 @@ class FileOperationsImpl implements FileOperations {
       var path = await localPath;
       final file = File('$path/$fileName');
       await file.writeAsBytes(data);
-      print('File written successfully to $path/$fileName');
+      Logger.log('File written successfully to $path/$fileName',
+          tag: 'FileOperations');
       return true;
     } catch (e) {
-      print('An error occurred: $e');
+      Logger.error('An error occurred: $e', tag: 'FileOperations');
       return false;
     }
   }
@@ -59,7 +64,7 @@ class FileOperationsImpl implements FileOperations {
       final file = File('${await localPath}/$fileName');
       return await file.readAsString(encoding: utf8);
     } catch (e) {
-      print('An error occurred: $e');
+      Logger.error('An error occurred: $e', tag: 'FileOperations');
       return null;
     }
   }
@@ -70,7 +75,7 @@ class FileOperationsImpl implements FileOperations {
       final exists = await File('${await localPath}/$fileName').exists();
       return exists;
     } catch (e) {
-      print('An error occurred: $e');
+      Logger.error('An error occurred: $e', tag: 'FileOperations');
       return false;
     }
   }

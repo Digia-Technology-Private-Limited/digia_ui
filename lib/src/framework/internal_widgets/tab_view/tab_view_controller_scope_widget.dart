@@ -17,7 +17,7 @@ class TabViewControllerScopeWidget extends StatefulWidget {
   });
 
   @override
-  _TabViewControllerScopeWidgetState createState() =>
+  State<TabViewControllerScopeWidget> createState() =>
       _TabViewControllerScopeWidgetState();
 }
 

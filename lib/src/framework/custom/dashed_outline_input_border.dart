@@ -2,14 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:path_drawing/path_drawing.dart';
 
 class DashedOutlineInputBorder extends InputBorder {
-  @override
-  final BorderSide borderSide;
   final BorderRadius borderRadius;
   final List<double> dashPattern;
   final StrokeCap strokeCap;
 
   const DashedOutlineInputBorder({
-    required this.borderSide,
+    required super.borderSide,
     this.dashPattern = const <double>[3, 3],
     this.strokeCap = StrokeCap.butt,
     required this.borderRadius,

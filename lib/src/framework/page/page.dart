@@ -161,7 +161,7 @@ class _DUIPageContentState extends State<_DUIPageContent> {
       child = _buildContent(context);
     }
     return PopScope(
-      onPopInvoked: _handleBackPress,
+      onPopInvokedWithResult: _handleBackPress,
       child: child,
     );
   }
@@ -189,7 +189,7 @@ class _DUIPageContentState extends State<_DUIPageContent> {
     }
   }
 
-  void _handleBackPress(bool didPop) {
+  void _handleBackPress(bool didPop, Object? result) {
     if (widget.onBackPress != null) {
       _executeAction(context, widget.onBackPress!, widget.scope);
     }

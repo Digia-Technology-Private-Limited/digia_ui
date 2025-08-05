@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
 
+import '../../utils/logger.dart';
+
 /// Provides a safe way to apply a function to a nullable value.
 ///
 /// This extension method allows for chaining operations on nullable types,
@@ -80,7 +82,8 @@ T? as$<T>(Object? x) {
   }
   // Consider using a logging framework instead of print for production code
   if (kDebugMode && x != null) {
-    print('CastError when trying to cast $x to $T');
+    Logger.error('CastError when trying to cast $x to $T',
+        tag: 'FunctionalUtil', error: TypeError());
   }
   return null;
 }
