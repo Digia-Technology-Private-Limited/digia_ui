@@ -1,16 +1,14 @@
-# Digia UI SDK
+<div align="center">
+  <h1>
+    <span style="background: linear-gradient(45deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; color: transparent;">
+      Digia UI SDK
+    </span>
+  </h1>
+</div>
 
 [![Flutter](https://img.shields.io/badge/Flutter-3.0+-blue.svg)](https://flutter.dev)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Documentation](https://img.shields.io/badge/docs-digia.tech-blue.svg)](https://docs.digia.tech)
-
-<div align="center">
-  <h1>
-    <span style="background: linear-gradient(45deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; color: transparent;">
-      DigiaUI SDK
-    </span>
-  </h1>
-</div>
 
 **Digia UI SDK** is the Flutter-based rendering engine for [Digia Studio](https://digia.studio), a low-code mobile application platform. Built on the Server-Driven UI (SDUI) architecture, this SDK dynamically renders native Flutter widgets based on configurations received from the server, enabling real-time UI updates without requiring app releases or store approvals.
 
