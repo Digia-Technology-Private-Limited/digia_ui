@@ -1,21 +1,37 @@
-MIT License
+Business Source License 1.1
 
-Copyright (c) 2022 Tinker Box Private Limited
+Licensor: Tinkerbox Technology Private Limited  
+Licensed Work: digia_ui Flutter library  
+License Date: August 5, 2025  
+Change Date: August 5, 2029  
+Change License: Apache License, Version 2.0
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+Terms
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+1. Grant of Rights
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+Subject to the terms and conditions of this License, Licensor grants you a non-exclusive, worldwide, royalty-free, non-transferable license to use, copy, modify, and distribute the Licensed Work, including for commercial and production purposes, **except for the limitation described in Section 2**.
+
+2. Use Limitation
+
+You may **not** use the Licensed Work, in whole or in part, to create, offer, or maintain a platform, service, SDK, or product that is **similar to or competes with** Digia — specifically, products that allow users to visually or programmatically build or configure mobile applications, UI components, or digital interfaces (e.g., low-code/no-code platforms, server-driven UI frameworks, or SDK-based app generators).
+
+This restriction does **not** apply to:
+
+- Internal tools or apps built using the Licensed Work
+- Production or commercial use in mobile apps, services, or infrastructure that do not offer app-building functionality to third parties
+
+3. Change Date and Change License
+
+On the Change Date, the Licensed Work will automatically become subject to the Change License, which shall be the Apache License, Version 2.0, as published by the Apache Software Foundation.
+
+4. Other Conditions
+
+No trademark, patent, or branding rights are granted under this License. If you violate the terms of this License, your rights under it automatically terminate.
+
+5. Definitions
+
+- "Licensed Work" means the digia_ui Flutter library and any derivative works.
+- "Competing Service" means any product or platform whose primary function is to provide tools, SDKs, or services that enable others to design, configure, or generate mobile applications or UIs.
+
+For more details, see https://mariadb.com/bsl11
