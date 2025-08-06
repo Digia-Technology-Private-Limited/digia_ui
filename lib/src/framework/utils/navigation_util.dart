@@ -64,7 +64,7 @@ Future<T?> presentBottomSheet<T>({
                   child: Stack(children: [
                     Padding(
                       padding: EdgeInsets.only(
-                          bottom: MediaQuery.viewInsetsOf(context).bottom),
+                          bottom: MediaQuery.viewInsetsOf(innerContext).bottom),
                       child: builder(innerContext),
                     ),
                     if (iconBuilder != null)
