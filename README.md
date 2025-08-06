@@ -192,7 +192,7 @@ Digia UI SDK supports two integration patterns:
 
 ### 1. Full App Mode
 
-Build your entire app using Digia Studio and render it with the SDK:
+Build your whole application in Digia Studio and use the SDK to render it. If you're on any paid plan, you can also download the APK directly from Digia Studio.
 
 ```dart
 MaterialApp(
@@ -226,7 +226,8 @@ Navigator.push(
 
 ## 📄 Creating Pages
 
-Pages are full-screen UI definitions with lifecycle hooks and state management:
+Pages are complete, full-screen UI definitions that include lifecycle hooks and built-in state management.  
+Learn more about Pages in the [official documentation](https://docs.digia.tech/building-ui/pages).
 
 ```dart
 // Create a page with arguments
@@ -249,30 +250,59 @@ Navigator.push(
 
 ## 🧩 Creating Components
 
-Components are reusable UI blocks that can be embedded anywhere:
+Components are modular UI elements that you can reuse throughout your app. They come with built-in lifecycle hooks and support for state management.
+Find more details about Components in the [official documentation](https://docs.digia.tech/building-ui/components).
 
 ```dart
-// Create a reusable product card component
-Widget productCard = DUIFactory().createComponent(
-  'product_card',
-  {
-    'title': 'iPhone 15 Pro',
-    'price': 999.99,
-    'imageUrl': 'https://...',
-    'onTap': () => print('Product tapped'),
-  },
-);
+class ProductListPage extends StatelessWidget {
+  final List<Product> products;
 
-// Use in a ListView
-ListView.builder(
-  itemCount: products.length,
-  itemBuilder: (context, index) {
-    return DUIFactory().createComponent(
-      'product_card',
-      products[index].toJson(),
+  const ProductListPage({Key? key, required this.products}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Products')),
+      body: ListView.builder(
+        itemCount: products.length,
+        itemBuilder: (context, index) {
+          final product = products[index];
+
+          return DUIFactory().createComponent(
+            'product_list_item',
+            {
+              'id': product.id,
+              'title': product.title,
+              'price': product.price,
+              'imageUrl': product.imageUrl,
+              'rating': product.rating,
+              'isOnSale': product.isOnSale,
+              'discount': product.discount,
+              'onTap': () => _navigateToProduct(context, product),
+              'onAddToCart': () => _addToCart(product),
+            },
+          );
+        },
+      ),
     );
-  },
-);
+  }
+
+  void _navigateToProduct(BuildContext context, Product product) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => ProductDetailsPage(product: product),
+      ),
+    );
+  }
+
+  void _addToCart(Product product) {
+    CartManager.instance.addToCart(product);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('${product.title} added to cart')),
+    );
+  }
+}
 ```
 
 ## 🗂️ State Management
@@ -281,66 +311,16 @@ Digia UI provides a comprehensive state management system with four levels:
 
 ### 1. Global State (App State)
 
-Shared across the entire app and can persist between sessions:
+Shared across the entire app and can optionally persist between sessions. Global state provides bidirectional communication between your native Flutter code and Digia UI pages, enabling seamless integration and real-time updates.
 
-```dart
-// Set global state
-DUIAppState().setValue('user', {
-  'id': '123',
-  'name': 'John Doe',
-  'email': 'john@example.com',
-});
+**Key Features:**
 
-// Get global state
-final user = DUIAppState().value['user'];
+- **Bidirectional Access** - Read and write from both native Flutter code and Digia UI
+- **Stream-Based** - All state changes are broadcast through streams for reactive programming
+- **Real-time Updates** - UI automatically updates when state changes from any source
+- **Persistence** - Can optionally persist between app sessions
 
-// Listen to state changes
-DUIAppState().addListener(() {
-  print('Global state changed');
-});
-```
-
-### 2. Page State
-
-Scoped to individual pages and cleared when page is disposed:
-
-```json
-{
-  "initStateDefs": {
-    "cartItems": {
-      "type": "list",
-      "defaultValue": []
-    },
-    "isLoading": {
-      "type": "boolean",
-      "defaultValue": false
-    }
-  }
-}
-```
-
-### 3. Component State
-
-Local state for reusable components:
-
-```json
-{
-  "initStateDefs": {
-    "isExpanded": {
-      "type": "boolean",
-      "defaultValue": false
-    }
-  }
-}
-```
-
-### 4. Local State
-
-Widget-level state for UI interactions (managed internally by the SDK).
-
-## 🔄 Native Code Integration
-
-Share state between your native Flutter code and Digia UI pages:
+**Setting State from Native Code:**
 
 ```dart
 // In your native Flutter code
@@ -349,16 +329,159 @@ class CartManager {
     // Update your business logic
     cart.add(product);
 
-    // Sync with Digia UI
+    // Sync with Digia UI - these changes will be immediately reflected in all Digia UI pages
     DUIAppState().setValue('cartCount', cart.length);
     DUIAppState().setValue('cartTotal', cart.totalAmount);
+    DUIAppState().setValue('cartItems', cart.items.map((item) => item.toJson()).toList());
+  }
+
+  void updateUserProfile(User user) {
+    // Update user data that Digia UI pages can access
+    DUIAppState().setValue('user', {
+      'id': user.id,
+      'name': user.name,
+      'email': user.email,
+      'avatar': user.avatarUrl,
+      'preferences': user.preferences.toJson(),
+    });
   }
 }
-
-// Access in Digia Studio expressions
-// ${appState.cartCount}
-// ${appState.cartTotal}
 ```
+
+**Accessing State in Digia Studio:**
+
+For instructions on accessing App State within Digia Studio, please refer to the documentation.
+
+**Listening to State Changes in Native Code:**
+
+Global state changes can be monitored through streams, enabling reactive programming patterns:
+
+```dart
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  late StreamSubscription _stateSubscription;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Listen to all global state changes
+    _stateSubscription = DUIAppState().listen('cartCount', (value) {
+        _updateCartBadge(value);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    // Remember to cancel the subscription
+    _stateSubscription.cancel();
+    super.dispose();
+  }
+
+  void _updateCartBadge(int count) {
+    // Update native Flutter UI elements
+    setState(() {
+      // Update cart badge in app bar
+    });
+  }
+}
+```
+
+**StreamBuilder Integration in Digia Studio:**
+
+Since global state is stream-based, you can wrap any widget with StreamBuilder in Digia Studio to create reactive UI components that automatically update when state changes:
+
+**In Digia Studio Visual Editor:**
+
+1. Drag a **StreamBuilder** widget from the widget palette
+2. Configure the stream source to listen to specific global state keys
+3. Design the UI that should update when the state changes
+4. Use expressions to access the stream data
+
+#### Best Practices for Global State:
+
+- **Use meaningful keys** - Choose descriptive names like `user.profile` instead of `data1`
+- **Structure complex data** - Use nested objects for related data
+- **Minimize state size** - Only store what's necessary for UI updates
+- **Handle null values** - Always provide fallbacks in expressions
+- **Clean up on logout** - Clear sensitive data when user logs out
+- **Use streams wisely** - Cancel subscriptions to prevent memory leaks
+
+### 2. Page State
+
+Scoped to individual pages and cleared when page is disposed. Every page needs its own state management for handling user interactions, form data, loading states, and temporary data that shouldn't persist beyond the page lifecycle.
+
+**Key Features:**
+
+- Automatically initialized when page is created
+- Cleared when page is disposed or navigated away
+- Isolated from other pages
+- Perfect for form data, loading states, and temporary UI state
+
+**Common Use Cases:**
+
+- Form validation and data
+- Loading and error states
+- Selected items in lists
+- Temporary filters and search queries
+- Modal and dialog states
+
+### 3. Component State
+
+Local state for reusable components. Components are modular UI elements that can maintain their own state independently, making them truly reusable across different pages and contexts.
+
+**Key Features:**
+
+- Each component instance has its own isolated state
+- State persists as long as the component is mounted
+- Enables building complex, stateful reusable components
+- Perfect for interactive widgets like toggles, accordions, and custom inputs
+
+**Common Use Cases:**
+
+- Expandable/collapsible sections
+- Custom input components with validation
+- Interactive cards with hover/selection states
+- Reusable form fields with their own validation
+- Toggle switches and checkboxes
+
+### 4. State Container (Local State)
+
+Widget-level state for UI interactions within a specific widget tree. While individual UI widgets in Digia Studio don't have built-in state, the Local State (State Container) provides a way to manage state in a localized manner within a widget subtree.
+
+**Key Features:**
+
+- Scoped to a specific widget subtree
+- Managed by State Container widgets
+- Enables stateful behavior for otherwise stateless widgets
+- Perfect for localized UI interactions and temporary state
+
+**Common Use Cases:**
+
+- Counter widgets and numeric inputs
+- Show/hide toggles for UI elements
+- Tab selection within a widget group
+- Temporary UI state that doesn't need to persist
+- Interactive animations and transitions
+
+**State Hierarchy and Scope:**
+
+- **Global State** - Available everywhere in the app
+- **Page State** - Available within the current page and its components
+- **Component State** - Available within the specific component instance
+- **Local State** - Available within the State Container widget subtree
+
+**Best Practices:**
+
+- Use Global State for user authentication, app settings, and data that needs to persist
+- Use Page State for form data, loading states, and page-specific temporary data
+- Use Component State for reusable component behavior and isolated interactions
+- Use Local State for simple UI interactions and temporary widget-level state
 
 ## 🎨 Custom Widget Registration
 
@@ -414,5 +537,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-Built with ❤️ by the Digia team
 Built with ❤️ by the Digia team
