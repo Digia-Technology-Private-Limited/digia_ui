@@ -2,6 +2,12 @@
 
 Digia Ui SDK.
 
+## [1.0.0-rc.8] – 2025-08-06 (Release Candidate)
+
+⚠ This version is not backward compatible with 0.x.x.
+
+- ✨ Added support for `resizeToAvoidBottomInset` in Scaffold. Defaults to true.
+
 ## [1.0.0-rc.7] – 2025-08-04 (Release Candidate)
 
 ⚠ This version is not backward compatible with 0.x.x.
