@@ -66,6 +66,9 @@ class DigiaUIAppBuilder extends StatefulWidget {
   /// Custom font factory for creating text styles with specific fonts
   final DUIFontFactory? fontFactory;
 
+  /// Environment variables to make available in expressions and configurations
+  final Map<String, Object?>? environmentVariables;
+
   /// Creates a new [DigiaUIAppBuilder] with the specified configuration.
   ///
   /// The [options] parameter contains initialization settings including
@@ -82,6 +85,7 @@ class DigiaUIAppBuilder extends StatefulWidget {
     this.icons,
     this.images,
     this.fontFactory,
+    this.environmentVariables,
   });
 
   @override
@@ -136,6 +140,7 @@ class _DigiaUIAppBuilderState extends State<DigiaUIAppBuilder> {
       icons: widget.icons,
       images: widget.images,
       fontFactory: widget.fontFactory,
+      environmentVariables: widget.environmentVariables,
       builder: (context) => widget.builder(context, _status),
     );
   }

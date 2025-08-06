@@ -117,6 +117,12 @@ class DUIFactory {
   /// - [fontFactory]: Custom font factory for creating text styles
   ///
   /// Throws [StateError] if DigiaUIManager is not properly initialized.
+  ///
+  /// Note: Environment variables should be set using the dedicated methods:
+  /// - [setEnvironmentVariable] for single variables
+  /// - [setEnvironmentVariables] for multiple variables
+  /// - [clearEnvironmentVariable] for single variables
+  /// - [clearEnvironmentVariables] for multiple variables
   // Initialize the singleton with all necessary values
   void initialize({
     ConfigProvider? pageConfigProvider,
@@ -171,6 +177,125 @@ class DUIFactory {
         ),
       ),
     );
+  }
+
+  /// Sets a single environment variable value at runtime.
+  ///
+  /// This method allows updating environment variables after configuration
+  /// loading, which is useful for dynamic configuration based on user
+  /// preferences or runtime conditions.
+  ///
+  /// Parameters:
+  /// - [varName]: The name of the environment variable to update
+  /// - [value]: The new value to set for the variable
+  ///
+  /// The method only updates variables that already exist in the configuration.
+  /// If the variable doesn't exist, the method returns without making changes.
+  ///
+  /// Example:
+  /// ```dart
+  /// DUIFactory().setEnvironmentVariable('baseUrl', 'https://new-api.example.com');
+  /// DUIFactory().setEnvironmentVariable('userId', 12345);
+  /// DUIFactory().setEnvironmentVariable('isLoggedIn', true);
+  /// ```
+  void setEnvironmentVariable(String varName, Object? value) {
+    final digiaUIInstance = DigiaUIManager().safeInstance;
+    if (digiaUIInstance == null) {
+      throw StateError(
+          'DigiaUIManager is not initialized. Make sure to call DigiaUI.createWith() '
+          'and await its completion before calling DUIFactory().setEnvironmentVariable().');
+    }
+    digiaUIInstance.dslConfig.setEnvVariable(varName, value);
+  }
+
+  /// Sets multiple environment variables at once.
+  ///
+  /// This method allows updating multiple environment variables simultaneously,
+  /// which is more efficient than calling setEnvironmentVariable multiple times.
+  ///
+  /// Parameters:
+  /// - [variables]: A map of variable names to their new values
+  ///
+  /// Only variables that already exist in the configuration will be updated.
+  /// Non-existent variables will be ignored.
+  ///
+  /// Example:
+  /// ```dart
+  /// DUIFactory().setEnvironmentVariables({
+  ///   'baseUrl': 'https://api.example.com',
+  ///   'userId': 12345,
+  ///   'isLoggedIn': true,
+  ///   'theme': 'dark',
+  /// });
+  /// ```
+  void setEnvironmentVariables(Map<String, Object?> variables) {
+    final digiaUIInstance = DigiaUIManager().safeInstance;
+    if (digiaUIInstance == null) {
+      throw StateError(
+          'DigiaUIManager is not initialized. Make sure to call DigiaUI.createWith() '
+          'and await its completion before calling DUIFactory().setEnvironmentVariables().');
+    }
+    for (final entry in variables.entries) {
+      digiaUIInstance.dslConfig.setEnvVariable(entry.key, entry.value);
+    }
+  }
+
+  /// Clears a single environment variable value at runtime.
+  ///
+  /// This method resets an environment variable to null, effectively clearing
+  /// its value while keeping the variable definition in the configuration.
+  ///
+  /// Parameters:
+  /// - [varName]: The name of the environment variable to clear
+  ///
+  /// The method only clears variables that already exist in the configuration.
+  /// If the variable doesn't exist, the method returns without making changes.
+  ///
+  /// Example:
+  /// ```dart
+  /// DUIFactory().clearEnvironmentVariable('baseUrl');
+  /// DUIFactory().clearEnvironmentVariable('userId');
+  /// ```
+  void clearEnvironmentVariable(String varName) {
+    final digiaUIInstance = DigiaUIManager().safeInstance;
+    if (digiaUIInstance == null) {
+      throw StateError(
+          'DigiaUIManager is not initialized. Make sure to call DigiaUI.createWith() '
+          'and await its completion before calling DUIFactory().clearEnvironmentVariable().');
+    }
+    digiaUIInstance.dslConfig.setEnvVariable(varName, null);
+  }
+
+  /// Clears multiple environment variables at once.
+  ///
+  /// This method resets multiple environment variables to null simultaneously,
+  /// which is more efficient than calling clearEnvironmentVariable multiple times.
+  ///
+  /// Parameters:
+  /// - [varNames]: A list of variable names to clear
+  ///
+  /// Only variables that already exist in the configuration will be cleared.
+  /// Non-existent variables will be ignored.
+  ///
+  /// Example:
+  /// ```dart
+  /// DUIFactory().clearEnvironmentVariables([
+  ///   'baseUrl',
+  ///   'userId',
+  ///   'isLoggedIn',
+  ///   'theme',
+  /// ]);
+  /// ```
+  void clearEnvironmentVariables(List<String> varNames) {
+    final digiaUIInstance = DigiaUIManager().safeInstance;
+    if (digiaUIInstance == null) {
+      throw StateError(
+          'DigiaUIManager is not initialized. Make sure to call DigiaUI.createWith() '
+          'and await its completion before calling DUIFactory().clearEnvironmentVariables().');
+    }
+    for (final varName in varNames) {
+      digiaUIInstance.dslConfig.setEnvVariable(varName, null);
+    }
   }
 
   /// Destroys the factory and cleans up all resources.

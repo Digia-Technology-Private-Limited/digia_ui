@@ -20,6 +20,7 @@ import '../init/digia_ui_manager.dart';
 /// - Global app state management
 /// - UI factory setup with custom resources
 /// - Analytics and message bus integration
+/// - Environment variable configuration
 /// - Providing Digia UI context to child widgets
 ///
 /// Example usage:
@@ -29,6 +30,7 @@ import '../init/digia_ui_manager.dart';
 ///   analytics: MyAnalyticsHandler(),
 ///   messageBus: MyMessageBus(),
 ///   icons: customIcons,
+///   environmentVariables: {'authToken': '1234567890'},
 ///   builder: (context) => MaterialApp(
 ///     home: DUIFactory().createInitialPage(),
 ///   ),
@@ -56,6 +58,9 @@ class DigiaUIApp extends StatefulWidget {
   /// Custom font factory for creating text styles with specific fonts
   final DUIFontFactory? fontFactory;
 
+  /// Environment variables to make available in expressions and configurations
+  final Map<String, Object?>? environmentVariables;
+
   /// Builder function that creates the child widget tree with access to BuildContext
   final Widget Function(BuildContext context) builder;
 
@@ -73,6 +78,7 @@ class DigiaUIApp extends StatefulWidget {
     this.icons,
     this.images,
     this.fontFactory,
+    this.environmentVariables,
     required this.builder,
   });
 
@@ -96,6 +102,11 @@ class _DigiaUIAppState extends State<DigiaUIApp> {
       images: widget.images,
       fontFactory: widget.fontFactory,
     );
+
+    // Apply environment variables from DigiaUIApp if provided
+    if (widget.environmentVariables != null) {
+      DUIFactory().setEnvironmentVariables(widget.environmentVariables!);
+    }
     super.initState();
   }
 

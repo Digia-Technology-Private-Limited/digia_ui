@@ -36,17 +36,6 @@ class DigiaUI {
     this.dslConfig,
   );
 
-  /// Sets an environment variable that can be accessed in expressions.
-  ///
-  /// Environment variables can be used in JSON expressions throughout the app
-  /// using the syntax `${env.variableName}`.
-  ///
-  /// [varName] is the name of the variable.
-  /// [value] is the value to set, can be any JSON-serializable object.
-  void setEnvVariable(String varName, Object? value) {
-    dslConfig.setEnvVariable(varName, value);
-  }
-
   /// Initializes the Digia UI SDK with the provided configuration.
   ///
   /// This is the main initialization method that sets up the SDK for use.
@@ -77,7 +66,6 @@ class DigiaUI {
 
     final config =
         await ConfigResolver(options.flavor, networkClient).getConfig();
-    // Initialize App State
 
     if (options.developerConfig.inspector?.stateObserver != null) {
       // TODO: R1.0
