@@ -1,7 +1,7 @@
 Business Source License 1.1
 
 Licensor: Tinkerbox Technology Private Limited  
-Licensed Work: Digia Flutter SDK  
+Licensed Work: digia_ui Flutter library  
 License Date: August 5, 2025  
 Change Date: August 5, 2029  
 Change License: Apache License, Version 2.0
@@ -31,7 +31,7 @@ No trademark, patent, or branding rights are granted under this License. If you 
 
 5. Definitions
 
-- "Licensed Work" means the Digia Flutter SDK and any derivative works.
+- "Licensed Work" means the digia_ui Flutter library and any derivative works.
 - "Competing Service" means any product or platform whose primary function is to provide tools, SDKs, or services that enable others to design, configure, or generate mobile applications or UIs.
 
 For more details, see https://mariadb.com/bsl11
