@@ -1,118 +1,164 @@
 import 'package:digia_ui/digia_ui.dart';
 import 'package:flutter/material.dart';
 
-// const String baseUrl = 'http://localhost:3000/api/v1';
-const String baseUrl = 'https://dev.digia.tech/api/v1';
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  // Initialize DigiaUI
-  final digiaUI = await DigiaUI.createWith(InitConfig(
-    accessKey: "681b8775af81b5e02c8d9f0a",
-    flavor: Flavor.debug(environment: Environment.development),
-    networkConfiguration:
-        const NetworkConfiguration(defaultHeaders: {}, timeout: 30),
-  ));
-
-  runApp(MyApp(digiaUI: digiaUI));
+  runApp(const DigiaUIExample());
 }
 
-class MyApp extends StatelessWidget {
-  final DigiaUI digiaUI;
-
-  const MyApp({super.key, required this.digiaUI});
+class DigiaUIExample extends StatelessWidget {
+  const DigiaUIExample({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return DigiaUIApp(
-      digiaUI: digiaUI,
-      analytics: MyAnalytics(),
-      builder: (context) => MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          scaffoldBackgroundColor: Colors.white,
-          brightness: Brightness.light,
+    return const MaterialApp(
+      title: 'Digia UI Example',
+      debugShowCheckedModeBanner: false,
+      home: SplashScreen(),
+    );
+  }
+}
+
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen>
+    with TickerProviderStateMixin {
+  late AnimationController _logoController;
+  late Animation<double> _logoScale;
+  DigiaUI? _digiaUI;
+  int _countdown = 3;
+
+  @override
+  void initState() {
+    super.initState();
+    _setupAnimation();
+    _initializeDigiaUI();
+  }
+
+  void _setupAnimation() {
+    _logoController = AnimationController(
+      duration: const Duration(milliseconds: 1500),
+      vsync: this,
+    );
+    _logoScale = Tween<double>(begin: 0.5, end: 1.0).animate(
+      CurvedAnimation(parent: _logoController, curve: Curves.elasticOut),
+    );
+    _logoController.forward().then((_) {
+      _startCountdown();
+    });
+  }
+
+  void _startCountdown() {
+    Future.delayed(const Duration(seconds: 1), () {
+      if (mounted) {
+        setState(() {
+          _countdown--;
+        });
+        if (_countdown > 0) {
+          _startCountdown();
+        } else {
+          _navigateToMainApp();
+        }
+      }
+    });
+  }
+
+  Future<void> _initializeDigiaUI() async {
+    try {
+      final initConfig = InitConfig(
+        accessKey: "68930cce1963e358762b546b",
+        flavor: Flavor.debug(environment: Environment.production),
+        networkConfiguration: const NetworkConfiguration(
+          defaultHeaders: {'X-App-Type': 'SimpleApp'},
+          timeout: 25,
         ),
-        title: 'Digia App',
-        home: const DigiaHome(),
+      );
+      final digiaUI = await DigiaUI.createWith(initConfig);
+      _digiaUI = digiaUI;
+    } catch (error) {
+      debugPrint('Initialization failed: $error');
+    }
+  }
+
+  void _navigateToMainApp() {
+    if (_digiaUI != null) {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => MainAppScreen(digiaUI: _digiaUI!),
+        ),
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    _logoController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xFF3F51B5),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            AnimatedBuilder(
+              animation: _logoScale,
+              builder: (context, child) {
+                return Transform.scale(
+                  scale: _logoScale.value,
+                  child: Container(
+                    width: 150,
+                    height: 150,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.2),
+                          blurRadius: 20,
+                          spreadRadius: 5,
+                        ),
+                      ],
+                    ),
+                    child: Image.asset('assets/logo.png'),
+                  ),
+                );
+              },
+            ),
+            const SizedBox(height: 40),
+            Text(
+              'Redirecting you to Digia in $_countdown',
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
-class DigiaHome extends StatefulWidget {
-  const DigiaHome({super.key});
+class MainAppScreen extends StatelessWidget {
+  final DigiaUI digiaUI;
 
-  @override
-  State<DigiaHome> createState() => _DigiaHomeState();
-}
-
-class _DigiaHomeState extends State<DigiaHome> {
-  @override
-  void initState() {
-    super.initState();
-    _initializeFactory();
-  }
-
-  void _initializeFactory() {
-    // Initialize DUIFactory with the current configuration
-    DUIFactory().initialize();
-  }
+  const MainAppScreen({super.key, required this.digiaUI});
 
   @override
   Widget build(BuildContext context) {
-    try {
-      // Create and return the initial page
-      return DUIFactory().createInitialPage();
-    } catch (e) {
-      // Show error if something goes wrong
-      return Scaffold(
-        body: SafeArea(
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
-                  'Error loading app',
-                  style: TextStyle(color: Colors.red, fontSize: 24),
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  e.toString(),
-                  style: const TextStyle(color: Colors.red, fontSize: 16),
-                  textAlign: TextAlign.center,
-                ),
-              ],
-            ),
-          ),
-        ),
-      );
-    }
+    return DigiaUIApp(
+      digiaUI: digiaUI,
+      builder: (context) => DUIFactory().createInitialPage(),
+    );
   }
-}
-
-class MyAnalytics extends DUIAnalytics {
-  @override
-  void onDataSourceError(String dataSourceType, String source, errorInfo) {
-    debugPrint('${{
-      'dataType': dataSourceType,
-      'source': source,
-      'metaData': errorInfo.message
-    }}');
-  }
-
-  @override
-  void onDataSourceSuccess(
-      String dataSourceType, String source, metaData, perfData) {
-    debugPrint('${{
-      'dataType': dataSourceType,
-      'source': source,
-      'metaData': metaData.toString(),
-      'perfData': perfData.toString()
-    }}');
-  }
-
-  @override
-  void onEvent(List<AnalyticEvent> events) {}
 }
