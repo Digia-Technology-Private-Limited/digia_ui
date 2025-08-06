@@ -9,7 +9,7 @@ import '../network/netwok_config.dart';
 import '../network/network_client.dart';
 import '../preferences_store.dart';
 import '../version.dart';
-import 'config.dart';
+import 'options.dart';
 
 /// Core DigiaUI class responsible for initializing and managing the SDK.
 ///

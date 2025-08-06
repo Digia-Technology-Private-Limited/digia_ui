@@ -20,7 +20,7 @@ export 'package:digia_ui/src/framework/ui_factory.dart';
 export 'package:digia_ui/src/framework/utils/flutter_type_converters.dart';
 export 'package:digia_ui/src/framework/utils/navigation_util.dart';
 export 'package:digia_ui/src/framework/widgets/image.dart';
-export 'package:digia_ui/src/init/config.dart';
+export 'package:digia_ui/src/init/options.dart';
 export 'package:digia_ui/src/init/digia_ui.dart';
 export 'package:digia_ui/src/init/digia_ui_manager.dart';
 export 'package:digia_ui/src/init/environment.dart';

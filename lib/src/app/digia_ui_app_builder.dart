@@ -4,7 +4,7 @@ import '../analytics/dui_analytics.dart';
 import '../framework/font_factory.dart';
 import '../framework/message_bus.dart';
 import '../framework/page/config_provider.dart';
-import '../init/config.dart';
+import '../init/options.dart';
 import '../init/digia_ui.dart';
 import 'digia_ui_app.dart';
 
