@@ -19,7 +19,7 @@ import 'config.dart';
 /// configuration management.
 class DigiaUI {
   /// The initialization configuration provided during SDK setup.
-  final InitConfig initConfig;
+  final DigiaUIOptions initConfig;
 
   /// The network client used for API communications.
   final NetworkClient networkClient;
@@ -62,7 +62,7 @@ class DigiaUI {
   ///
   /// Throws exceptions if initialization fails (network errors, invalid config, etc.).
   // Main initialization method (eager pattern)
-  static Future<DigiaUI> createWith(InitConfig options) async {
+  static Future<DigiaUI> initialize(DigiaUIOptions options) async {
     // Initialize Preferences
     await PreferencesStore.instance.initialize();
 
@@ -97,7 +97,7 @@ class DigiaUI {
   ///
   /// Returns a map of headers to be used with network requests.
   static Future<Map<String, dynamic>> _createDigiaHeaders(
-    InitConfig options,
+    DigiaUIOptions options,
     String? uuid,
   ) async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();

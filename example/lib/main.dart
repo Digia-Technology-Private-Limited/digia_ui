@@ -12,7 +12,7 @@ class DigiaUIExample extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DigiaUIAppBuilder(
-      options: InitConfig(
+      options: DigiaUIOptions(
         accessKey: '68930cce1963e358762b546b',
         flavor: Flavor.debug(environment: Environment.production),
       ),

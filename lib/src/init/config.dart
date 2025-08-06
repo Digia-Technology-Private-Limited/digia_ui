@@ -7,7 +7,7 @@ import 'flavor.dart';
 /// This class contains all the necessary configuration parameters required
 /// to initialize the SDK, including authentication, environment settings,
 /// and optional developer configurations.
-class InitConfig {
+class DigiaUIOptions {
   /// The access key for your Digia project (required for authentication).
   final String accessKey;
 
@@ -20,26 +20,26 @@ class InitConfig {
   /// Developer configuration for debugging and advanced features.
   final DeveloperConfig developerConfig;
 
-  /// Creates a new InitConfig with the specified parameters.
+  /// Creates a new DigiaUIOptions with the specified parameters.
   ///
   /// [accessKey] is required and should be obtained from your Digia project.
   /// [flavor] specifies the environment (dev, staging, production).
   /// [networkConfiguration] is optional for customizing network behavior.
-  InitConfig({
+  DigiaUIOptions({
     required this.accessKey,
     required this.flavor,
     this.networkConfiguration,
   }) : developerConfig = DeveloperConfig();
 
   // Private constructor
-  InitConfig._({
+  DigiaUIOptions._({
     required this.accessKey,
     required this.flavor,
     this.networkConfiguration,
     DeveloperConfig? developerConfig,
   }) : developerConfig = developerConfig ?? DeveloperConfig();
 
-  /// Creates an internal InitConfig with additional developer configuration.
+  /// Creates an internal DigiaUIOptions with additional developer configuration.
   ///
   /// This constructor is used internally by the SDK and provides access
   /// to advanced developer features and debugging tools.
@@ -48,13 +48,13 @@ class InitConfig {
   /// [flavor] specifies the environment.
   /// [networkConfiguration] is optional for network customization.
   /// [developerConfig] provides access to debugging and development features.
-  static InitConfig internal({
+  static DigiaUIOptions internal({
     required String accessKey,
     required Flavor flavor,
     NetworkConfiguration? networkConfiguration,
     required DeveloperConfig developerConfig,
   }) {
-    return InitConfig._(
+    return DigiaUIOptions._(
       accessKey: accessKey,
       flavor: flavor,
       networkConfiguration: networkConfiguration,

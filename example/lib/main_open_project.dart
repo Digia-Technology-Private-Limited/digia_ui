@@ -70,15 +70,15 @@ class _SplashScreenState extends State<SplashScreen>
 
   Future<void> _initializeDigiaUI() async {
     try {
-      final initConfig = InitConfig(
+      final initConfig = DigiaUIOptions(
         accessKey: "68930cce1963e358762b546b",
         flavor: Flavor.debug(environment: Environment.production),
         networkConfiguration: const NetworkConfiguration(
           defaultHeaders: {'X-App-Type': 'SimpleApp'},
-          timeoutInMilliseconds: 25000,
+          timeoutInMs: 25000,
         ),
       );
-      final digiaUI = await DigiaUI.createWith(initConfig);
+      final digiaUI = await DigiaUI.initialize(initConfig);
       _digiaUI = digiaUI;
     } catch (error) {
       debugPrint('Initialization failed: $error');

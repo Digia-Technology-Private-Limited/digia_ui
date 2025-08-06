@@ -165,8 +165,8 @@ class NetworkFirstStrategy extends DSLInitStrategy {
   final Duration timeout;
 
   /// Creates a network-first strategy with the specified timeout.
-  NetworkFirstStrategy({required int timeoutInMilliseconds})
-      : timeout = Duration(milliseconds: timeoutInMilliseconds);
+  NetworkFirstStrategy({required int timeoutInMs})
+      : timeout = Duration(milliseconds: timeoutInMs);
 }
 
 /// Cache-first initialization strategy.

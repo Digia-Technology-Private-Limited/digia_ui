@@ -81,8 +81,8 @@ void main() {
           .thenAnswer((_) async => true);
 
       // ACT
-      final strategy = createReleaseStrategy(
-          NetworkFirstStrategy(timeoutInMilliseconds: 5000));
+      final strategy =
+          createReleaseStrategy(NetworkFirstStrategy(timeoutInMs: 5000));
       final config = await strategy.getConfig();
 
       // ASSERT
@@ -130,8 +130,8 @@ void main() {
       });
 
       // ACT
-      final strategy = createReleaseStrategy(
-          NetworkFirstStrategy(timeoutInMilliseconds: 1000));
+      final strategy =
+          createReleaseStrategy(NetworkFirstStrategy(timeoutInMs: 1000));
       final config = await strategy.getConfig();
 
       // ASSERT
@@ -167,8 +167,8 @@ void main() {
           .thenAnswer((_) async => json.encode(validConfigData));
 
       // ACT
-      final strategy = createReleaseStrategy(
-          NetworkFirstStrategy(timeoutInMilliseconds: 1000));
+      final strategy =
+          createReleaseStrategy(NetworkFirstStrategy(timeoutInMs: 1000));
       final config = await strategy.getConfig();
 
       verify(() => mockFileOps.readString('appConfig.json')).called(1);
@@ -197,8 +197,8 @@ void main() {
           .thenAnswer((_) async => json.encode(validConfigData));
 
       // ACT
-      final strategy = createReleaseStrategy(
-          NetworkFirstStrategy(timeoutInMilliseconds: 5000));
+      final strategy =
+          createReleaseStrategy(NetworkFirstStrategy(timeoutInMs: 5000));
       final config = await strategy.getConfig();
 
       verify(() => mockProvider

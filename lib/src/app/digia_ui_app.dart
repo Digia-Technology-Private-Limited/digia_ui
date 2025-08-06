@@ -25,7 +25,7 @@ import '../init/digia_ui_manager.dart';
 /// Example usage:
 /// ```dart
 /// DigiaUIApp(
-///   digiaUI: await DigiaUI.createWith(config),
+///   digiaUI: await DigiaUI.initialize(config),
 ///   analytics: MyAnalyticsHandler(),
 ///   messageBus: MyMessageBus(),
 ///   icons: customIcons,
@@ -62,7 +62,7 @@ class DigiaUIApp extends StatefulWidget {
   /// Creates a new [DigiaUIApp] with the specified configuration.
   ///
   /// The [digiaUI] parameter must be an initialized instance obtained from
-  /// `DigiaUI.createWith()`. The [builder] function will be called to create
+  /// `DigiaUI.initialize()`. The [builder] function will be called to create
   /// the child widget tree once the Digia UI system is ready.
   const DigiaUIApp({
     super.key,

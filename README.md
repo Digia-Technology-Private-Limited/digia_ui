@@ -7,7 +7,7 @@
 </div>
 
 [![Flutter](https://img.shields.io/badge/Flutter-3.0+-blue.svg)](https://flutter.dev)
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![License](https://img.shields.io/badge/license-BSL%201.1-green.svg)](LICENSE)
 [![Documentation](https://img.shields.io/badge/docs-digia.tech-blue.svg)](https://docs.digia.tech)
 
 **Digia UI SDK** is the Flutter-based rendering engine for [Digia Studio](https://digia.studio), a low-code mobile application platform. Built on the Server-Driven UI (SDUI) architecture, this SDK dynamically renders native Flutter widgets based on configurations received from the server, enabling real-time UI updates without requiring app releases or store approvals.
@@ -48,6 +48,12 @@ Add Digia UI SDK to your `pubspec.yaml`:
 ```yaml
 dependencies:
   digia_ui: ^latest_version
+```
+
+Or use the Flutter CLI:
+
+```bash
+flutter pub add digia_ui
 ```
 
 Run:
@@ -91,15 +97,13 @@ Use this approach when DigiaUI needs to be initialized before rendering the firs
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  final digiaUI = await DigiaUI.createWith(
-    InitConfig(
+  final digiaUI = await DigiaUI.initialize(
+    DigiaUIOptions(
       accessKey: 'YOUR_PROJECT_ACCESS_KEY',
       flavor: Flavor.release(),
-      // Use a Init Strategy of your choice.
-      // InitStrategy.cacheFirst() or InitStrategy.networkFirst()
-      strategy: InitStrategy.networkFirst(
-        timeout: Duration(seconds: 5), // Custom timeout
-      )
+      // Use a Strategy of your choice.
+      // NetworkFirstStrategy() or CacheFirstStrategy()
+      strategy: NetworkFirstStrategy(timeoutInMs: 2000),
     ),
   );
 
@@ -124,10 +128,10 @@ import 'package:digia_ui/digia_ui.dart';
 void main() {
   runApp(
     DigiaUIAppBuilder(
-      options: InitConfig(
+      options: DigiaUIOptions(
         accessKey: 'YOUR_PROJECT_ACCESS_KEY', // Your project access key
         flavor: Flavor.release(), // Use release or debug flavor
-        strategy: InitStrategy.networkFirst(), // Choose your init strategy
+        strategy: NetworkFirstStrategy(timeoutInMs: 2000), // Choose your init strategy
       ),
       builder: (context, status) {
         // Make sure to access DUIFactory only when SDK is ready
@@ -520,13 +524,11 @@ For detailed custom widget documentation, visit [docs.digia.tech](https://docs.d
 - **[Expression Reference](https://docs.digia.tech/expressions)** - Data binding and expressions
 - **[Actions Reference](https://docs.digia.tech/actions)** - Available actions and their parameters
 
-## 🤝 Contributing
-
-We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
-
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the Business Source License 1.1 (BSL 1.1) - see the [LICENSE](LICENSE) file for details. The BSL 1.1 allows personal and commercial use with certain restrictions around competing platforms. On August 5, 2029, the license will automatically convert to Apache License 2.0.
+
+For commercial licensing inquiries or exceptions, please contact admin@digia.tech.
 
 ## 🆘 Support
 

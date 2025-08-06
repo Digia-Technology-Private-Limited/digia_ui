@@ -8,25 +8,25 @@ class NetworkConfiguration {
   final Map<String, dynamic> defaultHeaders;
 
   /// Request timeout in milliseconds.
-  final int timeoutInMilliseconds;
+  final int timeoutInMs;
 
   /// Creates a network configuration with the specified settings.
   const NetworkConfiguration({
     required this.defaultHeaders,
-    required this.timeoutInMilliseconds,
+    required this.timeoutInMs,
   });
 
   /// Creates a network configuration with default values.
   ///
   /// [defaultHeaders] will be empty if not provided.
-  /// [timeoutInMilliseconds] will be 30 seconds if not provided.
+  /// [timeoutInMs] will be 30 seconds if not provided.
   factory NetworkConfiguration.withDefaults({
     Map<String, dynamic>? defaultHeaders,
-    int? timeoutInMilliseconds,
+    int? timeoutInMs,
   }) {
     return NetworkConfiguration(
       defaultHeaders: defaultHeaders ?? {},
-      timeoutInMilliseconds: timeoutInMilliseconds ?? 30000,
+      timeoutInMs: timeoutInMs ?? 30000,
     );
   }
 }

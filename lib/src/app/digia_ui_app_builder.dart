@@ -23,7 +23,7 @@ import 'digia_ui_app.dart';
 /// Example usage:
 /// ```dart
 /// DigiaUIAppBuilder(
-///   options: InitConfig(
+///   options: DigiaUIOptions(
 ///     accessKey: 'YOUR_ACCESS_KEY',
 ///     flavor: Flavor.production(),
 ///   ),
@@ -42,7 +42,7 @@ import 'digia_ui_app.dart';
 /// ```
 class DigiaUIAppBuilder extends StatefulWidget {
   /// Configuration options for initializing the Digia UI system
-  final InitConfig options;
+  final DigiaUIOptions options;
 
   /// Builder function that receives the current initialization status
   /// and should return appropriate widgets for each state
@@ -102,7 +102,7 @@ class _DigiaUIAppBuilderState extends State<DigiaUIAppBuilder> {
   void _initialize() async {
     try {
       // Attempt to create and initialize DigiaUI with provided options
-      final digiaUI = await DigiaUI.createWith(widget.options);
+      final digiaUI = await DigiaUI.initialize(widget.options);
 
       // Only update state if the widget is still mounted to avoid memory leaks
       if (mounted) {

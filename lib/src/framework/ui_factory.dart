@@ -128,7 +128,7 @@ class DUIFactory {
     final digiaUIInstance = DigiaUIManager().safeInstance;
     if (digiaUIInstance == null) {
       throw StateError(
-          'DigiaUIManager is not initialized. Make sure to call DigiaUI.createWith() '
+          'DigiaUIManager is not initialized. Make sure to call DigiaUI.initialize() '
           'and await its completion before calling DUIFactory().initialize().');
     }
 
