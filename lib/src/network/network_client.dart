@@ -74,7 +74,8 @@ Dio _createDigiaDio(String baseUrl, Map<String, dynamic> headers,
 Dio _createProjectDio(NetworkConfiguration projectNetworkConfiguration,
     DeveloperConfig? developerConfig) {
   var dio = Dio(BaseOptions(
-      connectTimeout: Duration(seconds: projectNetworkConfiguration.timeout),
+      connectTimeout: Duration(
+          milliseconds: projectNetworkConfiguration.timeoutInMilliseconds),
       headers: {
         ...projectNetworkConfiguration.defaultHeaders,
       }));

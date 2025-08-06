@@ -75,7 +75,7 @@ class _SplashScreenState extends State<SplashScreen>
         flavor: Flavor.debug(environment: Environment.production),
         networkConfiguration: const NetworkConfiguration(
           defaultHeaders: {'X-App-Type': 'SimpleApp'},
-          timeout: 25,
+          timeoutInMilliseconds: 25000,
         ),
       );
       final digiaUI = await DigiaUI.createWith(initConfig);

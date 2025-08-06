@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 import '../../digia_ui.dart';
-import '../Utils/extensions.dart';
 import '../framework/expr/expression_util.dart';
 import '../framework/expr/scope_context.dart';
 import '../framework/utils/functional_util.dart';
+import '../utils/extensions.dart';
 
 /// Singleton class responsible for processing and executing analytics events within the Digia UI system.
 ///
