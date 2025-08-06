@@ -1,37 +1,76 @@
-Business Source License 1.1
+License text copyright (c) 2020 MariaDB Corporation Ab, All Rights Reserved.
+"Business Source License" is a trademark of MariaDB Corporation Ab.
 
-Licensor: Tinkerbox Technology Private Limited  
-Licensed Work: digia_ui Flutter library  
-License Date: August 5, 2025  
-Change Date: August 5, 2029  
-Change License: Apache License, Version 2.0
+Parameters
+
+Licensor:             Tinkerbox Technology Private Limited
+Licensed Work:        Digia Flutter SDK and any associated components and libraries
+                      (c) 2025 Tinkerbox Technology Private Limited
+Additional Use Grant: You may make personal, commercial, and production use of the
+                      Licensed Work, provided Your use does not include offering the
+                      Licensed Work, or any derivative work thereof, as part of a
+                      competing low-code, no-code, or SDK-based platform or service.
+
+                      For the purposes of this license:
+
+                      A "competing platform" is any service, SDK, or developer tool
+                      that allows users to visually or programmatically build mobile
+                      applications or user interfaces and whose primary purpose
+                      significantly overlaps with Digia's paid platform offerings.
+
+                      A "Product" means any application, service, or tool that embeds,
+                      integrates, or builds upon the Licensed Work.
+
+                      "Embedded" means including the source code or executable code
+                      from the Licensed Work in a competing platform or Product, or
+                      requiring the Licensed Work to function as part of a competitive
+                      offering.
+
+                      Hosting, using, or embedding the Licensed Work in commercial or
+                      internal-use software that does not compete with Digia's core
+                      offerings is permitted.
+
+Change Date:          August 5, 2029
+Change License:       Apache License, Version 2.0
+
+For inquiries about commercial licensing or exceptions, contact:
+admin@digia.tech
+
+Notice
+
+Business Source License 1.1
 
 Terms
 
-1. Grant of Rights
+The Licensor hereby grants you the right to copy, modify, create derivative
+works, redistribute, and make personal or commercial use of the Licensed Work,
+including in production, subject to the Additional Use Grant above.
 
-Subject to the terms and conditions of this License, Licensor grants you a non-exclusive, worldwide, royalty-free, non-transferable license to use, copy, modify, and distribute the Licensed Work, including for commercial and production purposes, **except for the limitation described in Section 2**.
+Effective on the Change Date stated above, the Licensed Work will automatically
+be released under the Change License. On that date, all rights granted under this
+License terminate, and the Licensed Work becomes governed by the Change License.
 
-2. Use Limitation
+If your use of the Licensed Work does not comply with the Additional Use Grant,
+you must purchase a commercial license from the Licensor or refrain from using
+the Licensed Work.
 
-You may **not** use the Licensed Work, in whole or in part, to create, offer, or maintain a platform, service, SDK, or product that is **similar to or competes with** Digia — specifically, products that allow users to visually or programmatically build or configure mobile applications, UI components, or digital interfaces (e.g., low-code/no-code platforms, server-driven UI frameworks, or SDK-based app generators).
+All copies of the original and modified Licensed Work, and derivative works of
+the Licensed Work, are subject to this License. This License applies separately
+for each version of the Licensed Work, and the Change Date may vary by version.
 
-This restriction does **not** apply to:
+You must conspicuously display this License on each original or modified copy
+of the Licensed Work. If you receive the Licensed Work from a third party,
+this License still applies.
 
-- Internal tools or apps built using the Licensed Work
-- Production or commercial use in mobile apps, services, or infrastructure that do not offer app-building functionality to third parties
+Any use of the Licensed Work in violation of this License will automatically
+terminate your rights under this License for the current and all other versions.
 
-3. Change Date and Change License
+This License does not grant you any right in any trademark or logo of Tinkerbox 
+Technology Private Limited or its affiliates (provided that you may use a 
+trademark or logo of the Licensor as expressly required by this License).
 
-On the Change Date, the Licensed Work will automatically become subject to the Change License, which shall be the Apache License, Version 2.0, as published by the Apache Software Foundation.
-
-4. Other Conditions
-
-No trademark, patent, or branding rights are granted under this License. If you violate the terms of this License, your rights under it automatically terminate.
-
-5. Definitions
-
-- "Licensed Work" means the digia_ui Flutter library and any derivative works.
-- "Competing Service" means any product or platform whose primary function is to provide tools, SDKs, or services that enable others to design, configure, or generate mobile applications or UIs.
-
-For more details, see https://mariadb.com/bsl11
+TO THE EXTENT PERMITTED BY APPLICABLE LAW, THE LICENSED WORK IS PROVIDED ON
+AN "AS IS" BASIS. LICENSOR HEREBY DISCLAIMS ALL WARRANTIES AND CONDITIONS,
+EXPRESS OR IMPLIED, INCLUDING (WITHOUT LIMITATION) WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, NON-INFRINGEMENT, AND
+TITLE.
