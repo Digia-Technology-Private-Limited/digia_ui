@@ -67,9 +67,10 @@ DigiaUI SDK offers two initialization strategies to suit different application n
 #### NetworkFirst Strategy
 
 - **Prioritizes fresh content** - Always fetches the latest DSL configuration from the network first
-- **Fast performance** - DSL is hosted on CDN with average load times under 30ms for large projects
+- **Fast performance** - DSL is hosted on CDN with average load times under 100ms for large projects
 - **Recommended for production** - Ensures users always see the most up-to-date UI
 - **Best for** - Apps where having the latest content is critical
+- **Timeout fallback** - Optionally set a timeout; if exceeded, falls back to cache or burned DSL config
 
 #### CacheFirst Strategy
 
@@ -80,144 +81,108 @@ DigiaUI SDK offers two initialization strategies to suit different application n
 
 ### Implementation Options
 
-#### Option 1: Using DigiaUIApp (NetworkFirst - Recommended)
+DigiaUI SDK offers two implementation options for different needs.
 
-Use this approach when you want to ensure users always see the latest UI configuration and can wait for the network request to complete:
+#### Option 1: Using DigiaUIApp
+
+Use this approach when DigiaUI needs to be initialized before rendering the first frame.
 
 ```dart
 void main() async {
-    WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();
 
-    final digiaUI = await DigiaUI.createWith(
-        InitConfig(
-            accessKey: 'YOUR_PROJECT_ACCESS_KEY',
-            flavor: Flavor.release(),
-            strategy: InitStrategy.networkFirst(), // Fetches latest DSL from CDN
-        ),
-    );
+  final digiaUI = await DigiaUI.createWith(
+    InitConfig(
+      accessKey: 'YOUR_PROJECT_ACCESS_KEY',
+      flavor: Flavor.release(),
+      // Use a Init Strategy of your choice.
+      // InitStrategy.cacheFirst() or InitStrategy.networkFirst()
+      strategy: InitStrategy.networkFirst(
+        timeout: Duration(seconds: 5), // Custom timeout
+      )
+    ),
+  );
 
-    runApp(
-        DigiaUIApp(
-            digiaUI: digiaUI,
-            builder: (context) => MaterialApp(
-                home: DUIFactory().createInitialPage(),
-            ),
-        ),
-    );
+  runApp(
+    DigiaUIApp(
+      digiaUI: digiaUI,
+      builder: (context) => MaterialApp(
+        home: DUIFactory().createInitialPage(),
+      ),
+    ),
+  );
 }
 ```
 
-#### Option 2: Using DigiaUIAppBuilder (CacheFirst)
+#### Option 2: Using DigiaUIAppBuilder
 
-Use this approach when you want instant app startup and can accept showing cached content initially:
+For advanced use cases where you need more granular control over the initialization process. You can choose whether or not to wait for DigiaUI to be ready. This is especially useful when your app starts with a few native Flutter pages before transitioning to DigiaUI-powered screens.
 
 ```dart
 import 'package:digia_ui/digia_ui.dart';
 
 void main() {
-    runApp(
-        DigiaUIAppBuilder(
-            options: InitConfig(
-                accessKey: 'YOUR_PROJECT_ACCESS_KEY',
-                flavor: Flavor.release(),
-                strategy: InitStrategy.cacheFirst(), // Uses cached DSL, updates in background
+  runApp(
+    DigiaUIAppBuilder(
+      options: InitConfig(
+        accessKey: 'YOUR_PROJECT_ACCESS_KEY', // Your project access key
+        flavor: Flavor.release(), // Use release or debug flavor
+        strategy: InitStrategy.networkFirst(), // Choose your init strategy
+      ),
+      builder: (context, status) {
+        // Make sure to access DUIFactory only when SDK is ready
+        if (status.isReady) {
+          return MaterialApp(
+            home: DUIFactory().createInitialPage(),
+          );
+        }
+
+        // Show loading indicator while initializing
+        if (status.isLoading) {
+          return MaterialApp(
+            home: Scaffold(
+              body: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(),
+                  SizedBox(height: 16),
+                  Text('Loading latest content...'),
+                  if (status.hasCache)
+                    TextButton(
+                      onPressed: () => status.useCachedVersion(),
+                      child: Text('Use Offline Version'),
+                    ),
+                ],
+              ),
             ),
-            builder: (context, status) {
-                if (status.isLoading) {
-                    return const MaterialApp(
-                        home: Scaffold(
-                            body: Center(child: CircularProgressIndicator()),
-                        ),
-                    );
-                }
+          );
+        }
 
-                if (status.isError) {
-                    return MaterialApp(
-                        home: Scaffold(
-                            body: Center(
-                                child: Text('Error: ${status.error}'),
-                            ),
-                        ),
-                    );
-                }
-
-                // SDK is ready with cached or fresh DSL
-                return MaterialApp(
-                    home: DUIFactory().createInitialPage(),
-                );
-            },
-        ),
-    );
-}
-```
-
-#### Option 3: Hybrid Initialization with Custom Loading
-
-For advanced use cases where you need fine-grained control over the initialization process:
-
-```dart
-void main() {
-    runApp(
-        DigiaUIAppBuilder(
-            options: InitConfig(
-                accessKey: 'YOUR_PROJECT_ACCESS_KEY',
-                flavor: Flavor.release(),
-                strategy: InitStrategy.networkFirst(
-                    timeout: Duration(seconds: 5), // Custom timeout
-                    fallbackToCache: true, // Use cache if network fails
-                ),
+        // Show error UI if initialization fails
+        // (This scenario should never occur in normal usage, but it's best practice to provide a user-friendly fallback just in case.)
+        return MaterialApp(
+          home: Scaffold(
+            body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.error_outline, size: 48),
+                  SizedBox(height: 16),
+                  Text('Failed to load content'),
+                  Text('Error: ${status.error}'),
+                  if (status.hasCache)
+                    ElevatedButton(
+                      onPressed: () => status.useCachedVersion(),
+                      child: Text('Use Cached Version'),
+                    ),
+                ],
+              ),
             ),
-            builder: (context, status) {
-                if (status.isLoading) {
-                    return MaterialApp(
-                        home: Scaffold(
-                            body: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                    CircularProgressIndicator(),
-                                    SizedBox(height: 16),
-                                    Text('Loading latest content...'),
-                                    if (status.hasCache)
-                                        TextButton(
-                                            onPressed: () => status.useCachedVersion(),
-                                            child: Text('Use Offline Version'),
-                                        ),
-                                ],
-                            ),
-                        ),
-                    );
-                }
-
-                if (status.isError) {
-                    return MaterialApp(
-                        home: Scaffold(
-                            body: Center(
-                                child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                        Icon(Icons.error_outline, size: 48),
-                                        SizedBox(height: 16),
-                                        Text('Failed to load content'),
-                                        Text('Error: ${status.error}'),
-                                        if (status.hasCache)
-                                            ElevatedButton(
-                                                onPressed: () => status.useCachedVersion(),
-                                                child: Text('Use Cached Version'),
-                                            ),
-                                    ],
-                                ),
-                            ),
-                        ),
-                    );
-                }
-
-                // SDK is ready
-                return MaterialApp(
-                    home: DUIFactory().createInitialPage(),
-                );
-            },
-        ),
-    );
+          ),
+        );
+      },
+    ),
+  );
 }
 ```
 
@@ -231,14 +196,14 @@ Build your entire app using Digia Studio and render it with the SDK:
 
 ```dart
 MaterialApp(
-    home: DUIFactory().createInitialPage(),
-    onGenerateRoute: (settings) {
-        // Let Digia UI handle all routing
-        return DUIFactory().createPageRoute(
-            settings.name!,
-            settings.arguments as Map<String, dynamic>?,
-        );
-    },
+  home: DUIFactory().createInitialPage(),
+  onGenerateRoute: (settings) {
+    // Let Digia UI handle all routing
+    return DUIFactory().createPageRoute(
+      settings.name!,
+      settings.arguments as Map<String, dynamic>?,
+    );
+  },
 )
 ```
 
@@ -249,13 +214,13 @@ Migrate pages incrementally by mixing native Flutter screens with Digia UI pages
 ```dart
 // Navigate to a Digia UI page from native Flutter
 Navigator.push(
-    context,
-    MaterialPageRoute(
-        builder: (_) => DUIFactory().createPage('checkout_page', {
-            'cartId': cartId,
-            'userId': userId,
-        }),
-    ),
+  context,
+  MaterialPageRoute(
+    builder: (_) => DUIFactory().createPage('checkout_page', {
+      'cartId': cartId,
+      'userId': userId,
+    }),
+  ),
 );
 ```
 
@@ -266,19 +231,19 @@ Pages are full-screen UI definitions with lifecycle hooks and state management:
 ```dart
 // Create a page with arguments
 Widget checkoutPage = DUIFactory().createPage(
-    'checkout_page',
-    {
-        'cartId': '12345',
-        'totalAmount': 99.99,
-    },
+  'checkout_page',
+  {
+    'cartId': '12345',
+    'totalAmount': 99.99,
+  },
 );
 
 // Navigate to a page
 Navigator.push(
-    context,
-    DUIFactory().createPageRoute('product_details', {
-        'productId': product.id,
-    }),
+  context,
+  DUIFactory().createPageRoute('product_details', {
+    'productId': product.id,
+  }),
 );
 ```
 
@@ -289,24 +254,24 @@ Components are reusable UI blocks that can be embedded anywhere:
 ```dart
 // Create a reusable product card component
 Widget productCard = DUIFactory().createComponent(
-    'product_card',
-    {
-        'title': 'iPhone 15 Pro',
-        'price': 999.99,
-        'imageUrl': 'https://...',
-        'onTap': () => print('Product tapped'),
-    },
+  'product_card',
+  {
+    'title': 'iPhone 15 Pro',
+    'price': 999.99,
+    'imageUrl': 'https://...',
+    'onTap': () => print('Product tapped'),
+  },
 );
 
 // Use in a ListView
 ListView.builder(
-    itemCount: products.length,
-    itemBuilder: (context, index) {
-        return DUIFactory().createComponent(
-            'product_card',
-            products[index].toJson(),
-        );
-    },
+  itemCount: products.length,
+  itemBuilder: (context, index) {
+    return DUIFactory().createComponent(
+      'product_card',
+      products[index].toJson(),
+    );
+  },
 );
 ```
 
@@ -321,9 +286,9 @@ Shared across the entire app and can persist between sessions:
 ```dart
 // Set global state
 DUIAppState().setValue('user', {
-    'id': '123',
-    'name': 'John Doe',
-    'email': 'john@example.com',
+  'id': '123',
+  'name': 'John Doe',
+  'email': 'john@example.com',
 });
 
 // Get global state
@@ -331,7 +296,7 @@ final user = DUIAppState().value['user'];
 
 // Listen to state changes
 DUIAppState().addListener(() {
-    print('Global state changed');
+  print('Global state changed');
 });
 ```
 
@@ -380,14 +345,14 @@ Share state between your native Flutter code and Digia UI pages:
 ```dart
 // In your native Flutter code
 class CartManager {
-    void addToCart(Product product) {
-        // Update your business logic
-        cart.add(product);
+  void addToCart(Product product) {
+    // Update your business logic
+    cart.add(product);
 
-        // Sync with Digia UI
-        DUIAppState().setValue('cartCount', cart.length);
-        DUIAppState().setValue('cartTotal', cart.totalAmount);
-    }
+    // Sync with Digia UI
+    DUIAppState().setValue('cartCount', cart.length);
+    DUIAppState().setValue('cartTotal', cart.totalAmount);
+  }
 }
 
 // Access in Digia Studio expressions
@@ -402,24 +367,24 @@ Extend Digia UI with your own custom widgets:
 ```dart
 // Define your custom widget
 class CustomMapWidget extends VirtualWidget<MapProps> {
-    final MapProps props;
+  final MapProps props;
 
-    @override
-    Widget render(RenderPayload payload) {
-        return GoogleMap(
-            initialCameraPosition: CameraPosition(
-                target: LatLng(props.latitude, props.longitude),
-                zoom: props.zoom,
-            ),
-        );
-    }
+  @override
+  Widget render(RenderPayload payload) {
+    return GoogleMap(
+      initialCameraPosition: CameraPosition(
+        target: LatLng(props.latitude, props.longitude),
+        zoom: props.zoom,
+      ),
+    );
+  }
 }
 
 // Register during initialization
 DUIFactory().registerWidget(
-    'custom/map',
-    MapProps.fromJson,
-    (props, childGroups) => CustomMapWidget(props),
+  'custom/map',
+  MapProps.fromJson,
+  (props, childGroups) => CustomMapWidget(props),
 );
 ```
 
@@ -449,4 +414,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
+Built with ❤️ by the Digia team
 Built with ❤️ by the Digia team
