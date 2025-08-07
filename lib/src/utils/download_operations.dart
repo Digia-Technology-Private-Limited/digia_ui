@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
-import '../framework/utils/functional_util.dart';
+import '../framework/utils/functional_util.dart' show as;
 import '../network/core/types.dart';
 import 'file_operations.dart';
 import 'logger.dart';

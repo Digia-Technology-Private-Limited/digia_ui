@@ -1,12 +1,12 @@
-import '../Utils/asset_bundle_operations.dart';
-import '../Utils/download_operations.dart';
-import '../Utils/file_operations.dart';
 import '../core/functions/js_functions.dart';
 import '../framework/utils/functional_util.dart';
 import '../framework/utils/types.dart';
 import '../init/flavor.dart';
 import '../network/core/types.dart';
 import '../network/network_client.dart';
+import '../utils/asset_bundle_operations.dart';
+import '../utils/download_operations.dart';
+import '../utils/file_operations.dart';
 import 'exception.dart';
 import 'factory.dart';
 import 'model.dart';

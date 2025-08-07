@@ -5,8 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_js/flutter_js.dart';
 
 import '../../../digia_ui.dart';
-import '../../Utils/download_operations.dart';
-import '../../Utils/file_operations.dart';
+import '../../utils/download_operations.dart';
+import '../../utils/file_operations.dart';
 import '../../utils/logger.dart';
 import './js_functions.dart';
 
