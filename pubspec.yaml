@@ -56,7 +56,7 @@ dependencies:
   path_drawing: ^1.0.0
   flutter_blurhash: ^0.9.1
   flutter_html: ^3.0.0-beta.2
-  digia_expr: 0.0.14
+  digia_expr: 0.0.15
   flutter_js: 0.8.5
   fluttertoast: ^8.2.5
   font_awesome_flutter: 10.8.0
