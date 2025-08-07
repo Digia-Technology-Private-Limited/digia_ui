@@ -19,7 +19,7 @@ repository: https://github.com/Digia-Technology-Private-Limited/digia_ui.git
 version: 1.0.0-rc.9
 
 environment:
-  sdk: '>=3.0.0 <4.0.0'
+  sdk: '>=3.5.0 <4.0.0'
 
 # https://github.com/frencojobs/derry
 scripts:
