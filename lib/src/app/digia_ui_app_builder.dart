@@ -4,8 +4,8 @@ import '../analytics/dui_analytics.dart';
 import '../framework/font_factory.dart';
 import '../framework/message_bus.dart';
 import '../framework/page/config_provider.dart';
-import '../init/options.dart';
 import '../init/digia_ui.dart';
+import '../init/options.dart';
 import 'digia_ui_app.dart';
 
 /// A widget that handles the asynchronous initialization of the Digia UI system.

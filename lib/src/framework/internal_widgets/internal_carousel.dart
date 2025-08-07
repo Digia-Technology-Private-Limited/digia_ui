@@ -307,7 +307,6 @@ class IndicatorBuilder extends StatelessWidget {
           ),
         );
       case IndicatorEffectType.slide:
-      default:
         return SlideEffect(
           offset: offset,
           dotHeight: dotHeight,
