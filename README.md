@@ -533,9 +533,9 @@ For commercial licensing inquiries or exceptions, please contact admin@digia.tec
 ## 🆘 Support
 
 - 📚 [Documentation](https://docs.digia.tech)
-- 💬 [Community Forum](https://community.digia.tech)
-- 🐛 [Issue Tracker](https://github.com/digia/digia-ui/issues)
-- 📧 [Contact Support](mailto:support@digia.tech)
+- 💬 [Community](https://discord.gg/szgbr63a)
+- 🐛 [Issue Tracker](https://github.com/Digia-Technology-Private-Limited/digia_ui/issues)
+- 📧 [Contact Support](mailto:admin@digia.tech)
 
 ---
 
