@@ -2,6 +2,12 @@
 
 Digia Ui SDK.
 
+## [1.0.0-rc.9] – 2025-08-06 (Release Candidate)
+
+⚠ This version is not backward compatible with 0.x.x.
+
+- 🐞 Fixed a bug where nearest context was not being used inside Bottomsheet.
+
 ## [1.0.0-rc.8] – 2025-08-06 (Release Candidate)
 
 ⚠ This version is not backward compatible with 0.x.x.
