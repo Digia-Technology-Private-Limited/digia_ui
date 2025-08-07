@@ -517,13 +517,6 @@ DUIFactory().registerWidget(
 
 For detailed custom widget documentation, visit [docs.digia.tech](https://docs.digia.tech/custom-widgets).
 
-## 📚 Documentation
-
-- **[Digia Studio Documentation](https://docs.digia.tech)** - Learn how to create projects and design UIs
-- **[Custom Widgets Guide](https://docs.digia.tech/custom-widgets)** - Build and register custom widgets
-- **[Expression Reference](https://docs.digia.tech/expressions)** - Data binding and expressions
-- **[Actions Reference](https://docs.digia.tech/actions)** - Available actions and their parameters
-
 ## 📄 License
 
 This project is licensed under the Business Source License 1.1 (BSL 1.1) - see the [LICENSE](LICENSE) file for details. The BSL 1.1 allows personal and commercial use with certain restrictions around competing platforms. On August 5, 2029, the license will automatically convert to Apache License 2.0.
