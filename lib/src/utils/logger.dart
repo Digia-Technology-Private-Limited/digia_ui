@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 
 /// A utility class for logging messages.
 /// Uses debugPrint() when in debug mode (kDebugMode is true).
+///
 class Logger {
   /// Private constructor to prevent instantiation
   Logger._();
