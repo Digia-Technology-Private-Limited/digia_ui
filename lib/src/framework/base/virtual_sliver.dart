@@ -42,8 +42,7 @@ abstract class VirtualSliver<T> extends VirtualStatelessWidget<T> {
 
       return current;
     } catch (error) {
-      if (DigiaUIClient.instance.developerConfig?.host is DashboardHost ||
-          kDebugMode) {
+      if (DigiaUIManager().host is DashboardHost || kDebugMode) {
         return SliverToBoxAdapter(
           child: DefaultErrorWidget(
               refName: refName, errorMessage: error.toString()),

@@ -1,6 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../digia_ui_client.dart';
+import '../../init/digia_ui_manager.dart';
 import 'reactive_value.dart';
 
 /// A reactive value that can optionally persist its value to SharedPreferences
@@ -52,7 +52,8 @@ class PersistedReactiveValue<T> extends ReactiveValue<T> {
   }
 
   static String _createPrefKey(String key) {
-    final projectId = DigiaUIClient.instance.accessKey;
+    // TODO: R1.0 Why is this needed?
+    final projectId = DigiaUIManager().accessKey;
     return '${projectId}_app_state_$key';
   }
 }

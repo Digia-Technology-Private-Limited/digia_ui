@@ -2,7 +2,7 @@ import 'package:digia_ui/src/config/exception.dart';
 import 'package:digia_ui/src/config/factory.dart';
 import 'package:digia_ui/src/config/model.dart';
 import 'package:digia_ui/src/config/source/base.dart';
-import 'package:digia_ui/src/environment.dart';
+import 'package:digia_ui/src/init/flavor.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -18,7 +18,8 @@ void main() {
 
   group('Versioned Strategy Tests', () {
     ConfigSource createVersionedStrategy(int version) =>
-        ConfigStrategyFactory.createStrategy(Versioned(version), mockProvider);
+        ConfigStrategyFactory.createStrategy(
+            Flavor.versioned(version: version), mockProvider);
 
     test('Happy Path: Config with specific version', () async {
       // ARRANGE

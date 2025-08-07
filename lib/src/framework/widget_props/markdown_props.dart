@@ -94,7 +94,7 @@ class MarkDownProps {
     final blockQuoteConfig = json['blockQuote'] as JsonLike?;
     final listConfig = json['list'] as JsonLike?;
     final codeConfig = json['code'] as JsonLike?;
-    final tableConfig = json['table'] as JsonLike?;
+    // final tableConfig = json['table'] as JsonLike?;
 
     return MarkDownProps(
       duration: ExprOr.fromJson<int>(json['duration']),

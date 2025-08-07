@@ -1,0 +1,502 @@
+{
+    "isSuccess": true,
+    "data": {
+        "response": {
+            "appSettings": {
+                "initialRoute": "homepage"
+            },
+            "pages": {
+                "homepage": {
+                    "uid": "homepage",
+                    "actions": {
+                        "onPageLoadAction": {
+                            "steps": []
+                        },
+                        "onPageLoad": {
+                            "type": "Action.buildPage"
+                        },
+                        "onBackPress": {
+                            "steps": []
+                        }
+                    },
+                    "inputArgs": null,
+                    "variables": null,
+                    "layout": {
+                        "root": {
+                            "category": "widget",
+                            "type": "fw/scaffold",
+                            "props": {
+                                "scaffoldBackgroundColor": "#FFFFFF",
+                                "enableSafeArea": true
+                            },
+                            "containerProps": {
+                                "visibility": true,
+                                "style": {
+                                    "border": {
+                                        "borderWidth": 0,
+                                        "borderType": {
+                                            "borderPattern": "solid",
+                                            "dashPattern": {
+                                                "_$kind": "json"
+                                            }
+                                        },
+                                        "strokeAlign": "inside"
+                                    }
+                                },
+                                "onClick": {
+                                    "steps": []
+                                }
+                            },
+                            "parentProps": {},
+                            "children": {
+                                "appBar": [],
+                                "body": [
+                                    {
+                                        "category": "widget",
+                                        "type": "digia/column",
+                                        "props": {
+                                            "mainAxisAlignment": "start",
+                                            "crossAxisAlignment": "start",
+                                            "mainAxisSize": "max",
+                                            "isScrollable": false
+                                        },
+                                        "containerProps": {
+                                            "visibility": true,
+                                            "style": {
+                                                "padding": "32,32,32,32",
+                                                "border": {
+                                                    "borderWidth": 0,
+                                                    "borderType": {
+                                                        "borderPattern": "solid",
+                                                        "dashPattern": {
+                                                            "_$kind": "json"
+                                                        }
+                                                    },
+                                                    "strokeAlign": "inside"
+                                                }
+                                            },
+                                            "onClick": {
+                                                "steps": []
+                                            }
+                                        },
+                                        "parentProps": {
+                                            "expansion": {}
+                                        },
+                                        "children": {
+                                            "children": [
+                                                {
+                                                    "category": "widget",
+                                                    "type": "digia/image",
+                                                    "props": {
+                                                        "imageType": "image",
+                                                        "imageSrc": "https://d14d5nk8lue86f.cloudfront.net/s3fs-public/styles/header_image/public/2024-08/august%201%20story.jpeg?itok=F_C7tCyi",
+                                                        "fit": "contain",
+                                                        "opacity": 1,
+                                                        "type": "image",
+                                                        "source": "network",
+                                                        "placeholderSrc": "Select Placeholder",
+                                                        "placeholder": "none",
+                                                        "errorImage": {
+                                                            "errorEnabled": false
+                                                        }
+                                                    },
+                                                    "containerProps": {
+                                                        "visibility": true,
+                                                        "style": {
+                                                            "border": {
+                                                                "borderWidth": 0,
+                                                                "borderType": {
+                                                                    "borderPattern": "solid",
+                                                                    "dashPattern": {
+                                                                        "_$kind": "json"
+                                                                    }
+                                                                },
+                                                                "strokeAlign": "inside"
+                                                            },
+                                                            "width": "311"
+                                                        },
+                                                        "onClick": {
+                                                            "steps": []
+                                                        }
+                                                    },
+                                                    "parentProps": {
+                                                        "expansion": {}
+                                                    },
+                                                    "children": {},
+                                                    "dataRef": null,
+                                                    "varName": "image1",
+                                                    "initStateDefs": null,
+                                                    "componentArgs": {}
+                                                },
+                                                {
+                                                    "category": "widget",
+                                                    "type": "digia/text",
+                                                    "props": {
+                                                        "text": "Mountains",
+                                                        "textStyle": {
+                                                            "fontToken": {
+                                                                "font": {
+                                                                    "fontFamily": "Space Grotesk",
+                                                                    "weight": "bold",
+                                                                    "size": 36,
+                                                                    "height": 1.22,
+                                                                    "style": false
+                                                                }
+                                                            },
+                                                            "textColor": "0A0A0A"
+                                                        },
+                                                        "alignment": "left",
+                                                        "overflow": "clip"
+                                                    },
+                                                    "containerProps": {
+                                                        "visibility": true,
+                                                        "style": {
+                                                            "margin": "0,32,0,0",
+                                                            "border": {
+                                                                "borderWidth": 0,
+                                                                "borderType": {
+                                                                    "borderPattern": "solid",
+                                                                    "dashPattern": {
+                                                                        "_$kind": "json"
+                                                                    }
+                                                                },
+                                                                "strokeAlign": "inside"
+                                                            }
+                                                        },
+                                                        "onClick": {
+                                                            "steps": []
+                                                        }
+                                                    },
+                                                    "parentProps": {
+                                                        "expansion": {}
+                                                    },
+                                                    "children": {},
+                                                    "dataRef": null,
+                                                    "varName": "text1",
+                                                    "initStateDefs": null,
+                                                    "componentArgs": {}
+                                                },
+                                                {
+                                                    "category": "widget",
+                                                    "type": "digia/text",
+                                                    "props": {
+                                                        "text": "Do you love mountains?",
+                                                        "textStyle": {
+                                                            "fontToken": {
+                                                                "font": {
+                                                                    "fontFamily": "Space Grotesk",
+                                                                    "weight": "regular",
+                                                                    "size": 18,
+                                                                    "height": 1.5,
+                                                                    "style": false
+                                                                }
+                                                            },
+                                                            "textColor": "5E5E5E"
+                                                        },
+                                                        "alignment": "left",
+                                                        "overflow": "clip"
+                                                    },
+                                                    "containerProps": {
+                                                        "visibility": true,
+                                                        "style": {
+                                                            "margin": "0,9,0,32",
+                                                            "border": {
+                                                                "borderWidth": 0,
+                                                                "borderType": {
+                                                                    "borderPattern": "solid",
+                                                                    "dashPattern": {
+                                                                        "_$kind": "json"
+                                                                    }
+                                                                },
+                                                                "strokeAlign": "inside"
+                                                            }
+                                                        },
+                                                        "onClick": {
+                                                            "steps": []
+                                                        }
+                                                    },
+                                                    "parentProps": {
+                                                        "expansion": {}
+                                                    },
+                                                    "children": {},
+                                                    "dataRef": null,
+                                                    "varName": "text2",
+                                                    "initStateDefs": null,
+                                                    "componentArgs": {}
+                                                },
+                                                {
+                                                    "category": "widget",
+                                                    "type": "digia/button",
+                                                    "props": {
+                                                        "buttonState": "default",
+                                                        "isDisabled": false,
+                                                        "disabledStyle": {
+                                                            "previewInUI": false
+                                                        },
+                                                        "defaultStyle": {
+                                                            "backgroundColor": "#F5F5F5",
+                                                            "padding": "12,6,12,6",
+                                                            "elevation": 0,
+                                                            "alignment": "centerRight",
+                                                            "height": "28",
+                                                            "width": "137"
+                                                        },
+                                                        "text": {
+                                                            "text": "  Explore Now",
+                                                            "textStyle": {
+                                                                "fontToken": {
+                                                                    "font": {
+                                                                        "fontFamily": "Poppins",
+                                                                        "weight": "medium",
+                                                                        "size": 11,
+                                                                        "height": 1.45,
+                                                                        "style": false
+                                                                    }
+                                                                },
+                                                                "textColor": "#ff0a0a0a"
+                                                            },
+                                                            "alignment": "left",
+                                                            "maxLines": 1,
+                                                            "overflow": "ellipsis"
+                                                        },
+                                                        "shape": {
+                                                            "value": "roundedRect",
+                                                            "borderRadius": "6,6,6,6",
+                                                            "eccentricity": 0,
+                                                            "borderWidth": 0,
+                                                            "borderStyle": "none"
+                                                        },
+                                                        "leadingIcon": {
+                                                            "iconData": {
+                                                                "pack": "cupertino",
+                                                                "key": "circle"
+                                                            },
+                                                            "iconSize": 16,
+                                                            "iconColor": "#000000"
+                                                        },
+                                                        "trailingIcon": {
+                                                            "iconData": {},
+                                                            "iconSize": 16
+                                                        },
+                                                        "onClick": {
+                                                            "steps": []
+                                                        }
+                                                    },
+                                                    "containerProps": {
+                                                        "visibility": true,
+                                                        "style": {
+                                                            "border": {
+                                                                "borderWidth": 0,
+                                                                "borderType": {
+                                                                    "borderPattern": "solid",
+                                                                    "dashPattern": {
+                                                                        "_$kind": "json"
+                                                                    }
+                                                                },
+                                                                "strokeAlign": "inside"
+                                                            }
+                                                        },
+                                                        "onClick": {
+                                                            "steps": []
+                                                        }
+                                                    },
+                                                    "parentProps": null,
+                                                    "children": {},
+                                                    "dataRef": null,
+                                                    "varName": "button1",
+                                                    "initStateDefs": null,
+                                                    "componentArgs": null
+                                                }
+                                            ]
+                                        },
+                                        "dataRef": null,
+                                        "varName": "column1",
+                                        "initStateDefs": null,
+                                        "componentArgs": {}
+                                    }
+                                ]
+                            },
+                            "dataRef": null,
+                            "varName": "scaffold1",
+                            "initStateDefs": null,
+                            "componentArgs": {}
+                        }
+                    }
+                }
+            },
+            "components": {},
+            "rest": {
+                "defaultHeaders": {},
+                "resources": {}
+            },
+            "theme": {
+                "colors": {
+                    "light": {
+                        "primary": "#a39cdd",
+                        "secondary": "#39d2c0",
+                        "tertiary": "#ee8b60",
+                        "alternate": "#ff5963",
+                        "primarytext": "#101213",
+                        "secondarytext": "#57636c",
+                        "primarybackground": "#f1f4f8",
+                        "secondarybackground": "#ffffff",
+                        "accent1": "#616161",
+                        "accent2": "#e0e0e0",
+                        "accent4": "#eeeeee",
+                        "success": "#04a24c",
+                        "error": "#e21c3d",
+                        "warning": "#fcdc0c",
+                        "info": "#1c4494",
+                        "customcolor1": "#cc12b0",
+                        "customcolor2": "#205f7d"
+                    },
+                    "dark": {
+                        "primary": "#a39cdd",
+                        "secondary": "#39d2c0",
+                        "tertiary": "#ee8b60",
+                        "alternate": "#ff5963",
+                        "primarytext": "#101213",
+                        "secondarytext": "#57636c",
+                        "primarybackground": "#f1f4f8",
+                        "secondarybackground": "#ffffff",
+                        "accent1": "#616161",
+                        "accent2": "#e0e0e0",
+                        "accent4": "#eeeeee",
+                        "success": "#04a24c",
+                        "error": "#e21c3d",
+                        "warning": "#fcdc0c",
+                        "info": "#1c4494",
+                        "customcolor1": "#cc12b0",
+                        "customcolor2": "#205f7d"
+                    }
+                },
+                "fonts": {
+                    "displayLarge": {
+                        "size": 57,
+                        "weight": "regular",
+                        "font-family": "Poppins",
+                        "height": 1.12,
+                        "style": "normal"
+                    },
+                    "displayMedium": {
+                        "size": 45,
+                        "weight": "regular",
+                        "font-family": "Poppins",
+                        "height": 1.16,
+                        "style": "normal"
+                    },
+                    "displaySmall": {
+                        "size": 36,
+                        "weight": "regular",
+                        "font-family": "Poppins",
+                        "height": 1.22,
+                        "style": "normal"
+                    },
+                    "headlineLarge": {
+                        "size": 38,
+                        "weight": "regular",
+                        "font-family": "Poppins",
+                        "height": 1.25,
+                        "style": "normal"
+                    },
+                    "headlineMedium": {
+                        "size": 28,
+                        "weight": "regular",
+                        "font-family": "Poppins",
+                        "height": 1.29,
+                        "style": "normal"
+                    },
+                    "headlineSmall": {
+                        "size": 24,
+                        "weight": "regular",
+                        "font-family": "Poppins",
+                        "height": 1.33,
+                        "style": "normal"
+                    },
+                    "titleLarge": {
+                        "size": 22,
+                        "weight": "regular",
+                        "font-family": "Poppins",
+                        "height": 1.27,
+                        "style": "normal"
+                    },
+                    "titleMedium": {
+                        "size": 16,
+                        "weight": "medium",
+                        "font-family": "Poppins",
+                        "height": 1.5,
+                        "style": "normal"
+                    },
+                    "titleSmall": {
+                        "size": 14,
+                        "weight": "medium",
+                        "font-family": "Poppins",
+                        "height": 1.43,
+                        "style": "normal"
+                    },
+                    "labelLarge": {
+                        "size": 14,
+                        "weight": "medium",
+                        "font-family": "Poppins",
+                        "height": 1.43,
+                        "style": "normal"
+                    },
+                    "labelMedium": {
+                        "size": 12,
+                        "weight": "medium",
+                        "font-family": "Poppins",
+                        "height": 1.33,
+                        "style": "normal"
+                    },
+                    "labelSmall": {
+                        "size": 11,
+                        "weight": "medium",
+                        "font-family": "Poppins",
+                        "height": 1.45,
+                        "style": "normal"
+                    },
+                    "bodyLarge": {
+                        "size": 16,
+                        "weight": "regular",
+                        "font-family": "Poppins",
+                        "height": 1.5,
+                        "style": "normal"
+                    },
+                    "bodyMedium": {
+                        "size": 14,
+                        "weight": "regular",
+                        "font-family": "Poppins",
+                        "height": 1.43,
+                        "style": "normal"
+                    },
+                    "bodySmall": {
+                        "size": 12,
+                        "weight": "regular",
+                        "font-family": "Poppins",
+                        "height": 1.33,
+                        "style": "normal"
+                    },
+                    "default": {
+                        "size": 12,
+                        "weight": "regular",
+                        "font-family": {
+                            "primary": "Poppins",
+                            "secondary": "Roboto"
+                        },
+                        "height": 1.2,
+                        "style": "normal"
+                    }
+                }
+            },
+            "appState": null,
+            "widgets": [],
+            "appAssets": [],
+            "environment": {
+                "name": "Development",
+                "kind": "development",
+                "variables": null
+            },
+            "functionsFilePath": null
+        }
+    }
+}

@@ -178,15 +178,15 @@ class ColorUtil {
   /// channel information (transparency), with the [enableAlpha] flag set to `false`.
   static String toHexString(Color color,
       {bool includeHashSign = true, bool skipAlphaIfOpaque = true}) {
-    final alphaString =
-        (skipAlphaIfOpaque && _padRadix(color.alpha).toUpperCase() == 'FF')
-            ? ''
-            : _padRadix(color.alpha);
+    final alphaString = (skipAlphaIfOpaque &&
+            _padRadix((color.a * 255.0).round() & 0xff).toUpperCase() == 'FF')
+        ? ''
+        : _padRadix((color.a * 255.0).round() & 0xff);
     final String hex = (includeHashSign ? '#' : '') +
         alphaString +
-        _padRadix(color.red) +
-        _padRadix(color.green) +
-        _padRadix(color.blue);
+        _padRadix((color.r * 255.0).round() & 0xff) +
+        _padRadix((color.g * 255.0).round() & 0xff) +
+        _padRadix((color.b * 255.0).round() & 0xff);
     return hex.toUpperCase();
   }
 
@@ -194,5 +194,6 @@ class ColorUtil {
   static String _padRadix(int value) => value.toRadixString(16).padLeft(2, '0');
 
   static Color randomColor({double opacity = 0.3}) =>
-      Color((Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(opacity);
+      Color((Random().nextDouble() * 0xFFFFFF).toInt())
+          .withValues(alpha: opacity);
 }

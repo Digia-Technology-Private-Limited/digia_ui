@@ -1,26 +1,28 @@
-import '../Utils/asset_bundle_operations.dart';
-import '../Utils/download_operations.dart';
-import '../Utils/file_operations.dart';
 import '../core/functions/js_functions.dart';
-import '../digia_ui_client.dart';
-import '../environment.dart';
 import '../framework/utils/functional_util.dart';
 import '../framework/utils/types.dart';
+import '../init/flavor.dart';
 import '../network/core/types.dart';
+import '../network/network_client.dart';
+import '../utils/asset_bundle_operations.dart';
+import '../utils/download_operations.dart';
+import '../utils/file_operations.dart';
 import 'exception.dart';
 import 'factory.dart';
 import 'model.dart';
 import 'provider.dart';
 
 class ConfigResolver implements ConfigProvider {
-  final FlavorInfo _flavorInfo;
+  final Flavor _flavorInfo;
+  final NetworkClient _networkClient;
   String? _branchName;
+  JSFunctions? _functions;
 
-  ConfigResolver(this._flavorInfo);
+  ConfigResolver(this._flavorInfo, this._networkClient);
 
   @override
   Future<JsonLike?> getAppConfigFromNetwork(String path) async {
-    var resp = await DigiaUIClient.instance.networkClient.requestInternal(
+    var resp = await _networkClient.requestInternal(
       HttpMethod.post,
       data: {'branchName': _branchName},
       path,
@@ -33,33 +35,32 @@ class ConfigResolver implements ConfigProvider {
   @override
   Future<void> initFunctions(
       {String? remotePath, String? localPath, int? version}) async {
+    _functions = JSFunctions();
     if (remotePath != null) {
-      var jsFunctions = JSFunctions();
       var res =
-          await jsFunctions.initFunctions(PreferRemote(remotePath, version));
+          await _functions!.initFunctions(PreferRemote(remotePath, version));
       if (!res) {
         throw ConfigException('Functions not initialized');
       }
-      DigiaUIClient.instance.jsFunctions = jsFunctions;
     }
     if (localPath != null) {
-      var jsFunctions = JSFunctions();
-      var res = await jsFunctions.initFunctions(PreferLocal(localPath));
+      var res = await _functions!.initFunctions(PreferLocal(localPath));
       if (!res) {
         throw ConfigException('Functions not initialized');
       }
-      DigiaUIClient.instance.jsFunctions = jsFunctions;
     }
   }
 
   Future<DUIConfig> getConfig() async {
     final strategy = ConfigStrategyFactory.createStrategy(_flavorInfo, this);
-    return await strategy.getConfig();
+    final config = await strategy.getConfig();
+    config.jsFunctions = _functions;
+    return config;
   }
 
   @override
   void addVersionHeader(int version) =>
-      DigiaUIClient.instance.networkClient.addVersionHeader(version);
+      _networkClient.addVersionHeader(version);
 
   @override
   AssetBundleOperations get bundleOps => const AssetBundleOperationsImpl();

@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:digia_ui/src/config/exception.dart';
 import 'package:digia_ui/src/config/factory.dart';
 import 'package:digia_ui/src/config/source/base.dart';
-import 'package:digia_ui/src/environment.dart';
+import 'package:digia_ui/src/init/flavor.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -28,9 +28,13 @@ void main() {
     when(() => mockProvider.bundleOps).thenReturn(mockAssetOps);
   });
 
-  ConfigSource createReleaseStrategy(InitPriority priority) {
+  ConfigSource createReleaseStrategy(DSLInitStrategy priority) {
     return ConfigStrategyFactory.createStrategy(
-      Release(priority, 'appConfig.json', 'functions.js'),
+      Flavor.release(
+        initStrategy: priority,
+        appConfigPath: 'appConfig.json',
+        functionsPath: 'functions.js',
+      ),
       mockProvider,
     );
   }
@@ -47,7 +51,7 @@ void main() {
           )).thenAnswer((_) async {});
 
       // ACT
-      final strategy = createReleaseStrategy(PrioritizeLocal());
+      final strategy = createReleaseStrategy(LocalFirstStrategy());
       final config = await strategy.getConfig();
 
       // ASSERT
@@ -82,7 +86,7 @@ void main() {
       when(() => mockAssetOps.readString('appConfig.json'))
           .thenThrow(ConfigException('Asset read failed'));
 
-      final strategy = createReleaseStrategy(PrioritizeLocal());
+      final strategy = createReleaseStrategy(LocalFirstStrategy());
 
       expect(() => strategy.getConfig(), throwsA(isA<ConfigException>()));
     });

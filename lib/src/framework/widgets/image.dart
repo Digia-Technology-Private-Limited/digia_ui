@@ -9,8 +9,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:lottie/lottie.dart';
 import 'package:octo_image/octo_image.dart';
 
-import '../../digia_ui_client.dart';
 import '../../dui_dev_config.dart';
+import '../../init/digia_ui_manager.dart';
 import '../base/virtual_leaf_stateless_widget.dart';
 import '../data_type/adapted_types/file.dart';
 import '../expr/default_scope_context.dart';
@@ -67,7 +67,7 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
 
     if (imageSource is String) {
       if (imageSource.startsWith('http')) {
-        final DigiaUIHost? host = DigiaUIClient.instance.developerConfig?.host;
+        final DigiaUIHost? host = DigiaUIManager().host;
         final String finalUrl;
         if (host is DashboardHost && host.resourceProxyUrl != null) {
           finalUrl = '${host.resourceProxyUrl}${Uri.encodeFull(imageSource)}';
@@ -92,7 +92,7 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
     final color = payload.evalColor(props.get('svgColor'));
     if (imageSource is String) {
       if (imageSource.startsWith('http')) {
-        final DigiaUIHost? host = DigiaUIClient.instance.developerConfig?.host;
+        final DigiaUIHost? host = DigiaUIManager().host;
         final String finalUrl;
         if (host is DashboardHost && host.resourceProxyUrl != null) {
           finalUrl = '${host.resourceProxyUrl}${Uri.encodeFull(imageSource)}';
@@ -160,8 +160,7 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
       errorImage = errorImageObj;
     }
     if (errorImage == null &&
-        (DigiaUIClient.instance.developerConfig?.host is DashboardHost ||
-            kDebugMode)) {
+        (DigiaUIManager().host is DashboardHost || kDebugMode)) {
       return Center(
         child: Text(
           error.toString(),

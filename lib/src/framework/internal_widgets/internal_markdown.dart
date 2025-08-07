@@ -21,7 +21,7 @@ class AnimatedMarkdown extends StatefulWidget {
   });
 
   @override
-  _AnimatedMarkdownState createState() => _AnimatedMarkdownState();
+  State<AnimatedMarkdown> createState() => _AnimatedMarkdownState();
 }
 
 class _AnimatedMarkdownState extends State<AnimatedMarkdown> {

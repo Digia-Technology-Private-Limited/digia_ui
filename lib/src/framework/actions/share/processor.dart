@@ -28,7 +28,10 @@ class ShareProcessor extends ActionProcessor<ShareAction> {
       if (kIsWeb) {
         _showWebDialog(context, message);
       } else {
-        await Share.share(message, subject: subject);
+        await SharePlus.instance.share(ShareParams(
+          subject: subject,
+          text: message,
+        ));
       }
       return null;
     } else {

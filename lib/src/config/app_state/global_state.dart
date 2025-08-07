@@ -1,8 +1,9 @@
 import 'dart:async';
 
-import 'package:shared_preferences/shared_preferences.dart';
+import '../../preferences_store.dart';
 import 'reactive_value.dart';
 import 'reactive_value_factory.dart';
+import 'state_descriptor_parser.dart';
 
 /// Describes how a state value should behave
 class StateDescriptor<T> {
@@ -31,7 +32,6 @@ class DUIAppState {
   factory DUIAppState() => _instance;
 
   final Map<String, ReactiveValue<Object?>> _values = {};
-  SharedPreferences? _prefs;
   bool _isInitialized = false;
 
   DUIAppState._internal();
@@ -40,13 +40,13 @@ class DUIAppState {
   ///
   /// [descriptors] - List of state descriptors to initialize
   /// [prefs] - SharedPreferences instance
-  Future<void> init(
-      List<StateDescriptor> descriptors, SharedPreferences prefs) async {
+  Future<void> init(List<dynamic> values) async {
     if (_isInitialized) {
       dispose();
     }
 
-    _prefs = prefs;
+    final descriptors =
+        values.map((e) => StateDescriptorFactory().fromJson(e)).toList();
 
     for (final descriptor in descriptors) {
       if (_values.containsKey(descriptor.key)) {
@@ -54,7 +54,10 @@ class DUIAppState {
       }
 
       // Create either PersistedReactiveValue or ReactiveValue based on shouldPersist
-      final value = DefaultReactiveValueFactory().create(descriptor, prefs);
+      final value = DefaultReactiveValueFactory().create(
+        descriptor,
+        PreferencesStore.instance.prefs,
+      );
 
       _values[descriptor.key] = value;
     }

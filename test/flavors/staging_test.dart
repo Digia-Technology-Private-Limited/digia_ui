@@ -2,7 +2,7 @@ import 'package:digia_ui/src/config/exception.dart';
 import 'package:digia_ui/src/config/factory.dart';
 import 'package:digia_ui/src/config/model.dart';
 import 'package:digia_ui/src/config/source/base.dart';
-import 'package:digia_ui/src/environment.dart';
+import 'package:digia_ui/src/init/flavor.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -18,7 +18,7 @@ void main() {
 
   group('Staging Strategy Tests', () {
     ConfigSource createStagingStrategy() =>
-        ConfigStrategyFactory.createStrategy(Staging(), mockProvider);
+        ConfigStrategyFactory.createStrategy(Flavor.staging(), mockProvider);
 
     test('Happy Path', () async {
       // ARRANGE

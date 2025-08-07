@@ -62,8 +62,7 @@ class VirtualBuilderWidget extends VirtualWidget {
 
       return current;
     } catch (error) {
-      if (DigiaUIClient.instance.developerConfig?.host is DashboardHost ||
-          kDebugMode) {
+      if (DigiaUIManager().host is DashboardHost || kDebugMode) {
         return DefaultErrorWidget(
             refName: refName, errorMessage: error.toString());
       } else {

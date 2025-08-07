@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import '../../utils/logger.dart';
 import 'types.dart';
 
 typedef JsonReviver = Object? Function(Object? key, Object? value);
@@ -17,7 +18,7 @@ Object? tryJsonDecode(String source, {JsonReviver? reviver}) {
     return jsonDecode(source, reviver: reviver);
   } catch (e) {
     // Consider using a logging framework instead of print for production code
-    print('JSON decode error: $e');
+    Logger.error('JSON decode error: $e', tag: 'JsonUtil', error: e);
     return null;
   }
 }

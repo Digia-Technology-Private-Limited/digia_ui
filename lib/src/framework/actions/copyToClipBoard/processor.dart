@@ -24,7 +24,7 @@ class CopyToClipBoardProcessor extends ActionProcessor<CopyToClipBoardAction> {
     );
 
     final toast = FToast().init(context);
-    final DigiaUIHost? host = DigiaUIClient.instance.developerConfig?.host;
+    final DigiaUIHost? host = DigiaUIManager().host;
 
     if (message != null && message.isNotEmpty) {
       try {

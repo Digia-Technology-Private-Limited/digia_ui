@@ -18,7 +18,7 @@ class VWSvgImage extends VirtualLeafStatelessWidget<Props> {
       double? width, double? height, Color? color) {
     if (imageSource is String) {
       if (imageSource.startsWith('http')) {
-        final DigiaUIHost? host = DigiaUIClient.instance.developerConfig?.host;
+        final DigiaUIHost? host = DigiaUIManager().host;
         final String finalUrl;
         if (host is DashboardHost && host.resourceProxyUrl != null) {
           finalUrl = '${host.resourceProxyUrl}${Uri.encodeFull(imageSource)}';

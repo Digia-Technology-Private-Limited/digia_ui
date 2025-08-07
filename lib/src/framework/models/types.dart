@@ -36,10 +36,9 @@ class ExprOr<T extends Object> {
     if (isExpr) {
       String expressionString;
 
-      if (_value is Map<String, dynamic> &&
-          (_value as Map<String, dynamic>).containsKey('expr')) {
+      if (_value is Map<String, dynamic> && _value.containsKey('expr')) {
         // New format: extract expression from map
-        expressionString = (_value as Map<String, dynamic>)['expr'] as String;
+        expressionString = _value['expr'] as String;
       } else {
         // Old format: use the value directly as string
         expressionString = _value as String;
@@ -65,10 +64,9 @@ class ExprOr<T extends Object> {
     if (isExpr) {
       Object valueToEvaluate;
 
-      if (_value is Map<String, dynamic> &&
-          (_value as Map<String, dynamic>).containsKey('expr')) {
+      if (_value is Map<String, dynamic> && _value.containsKey('expr')) {
         // New format: extract expression from map
-        valueToEvaluate = (_value as Map<String, dynamic>)['expr'];
+        valueToEvaluate = _value['expr'];
       } else {
         // Old format: use the value directly
         valueToEvaluate = _value;

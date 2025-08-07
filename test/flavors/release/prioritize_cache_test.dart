@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:digia_ui/src/config/factory.dart';
 import 'package:digia_ui/src/config/source/base.dart';
-import 'package:digia_ui/src/environment.dart';
+import 'package:digia_ui/src/init/flavor.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -35,9 +35,13 @@ void main() {
         )).thenAnswer((_) async {});
   });
 
-  ConfigSource createReleaseStrategy(InitPriority priority) {
+  ConfigSource createReleaseStrategy(DSLInitStrategy priority) {
     return ConfigStrategyFactory.createStrategy(
-      Release(priority, 'appConfig.json', 'functions.js'),
+      Flavor.release(
+        initStrategy: priority,
+        appConfigPath: 'appConfig.json',
+        functionsPath: 'functions.js',
+      ),
       mockProvider,
     );
   }
@@ -72,7 +76,7 @@ void main() {
           ));
 
       // ACT
-      final strategy = createReleaseStrategy(PrioritizeCache());
+      final strategy = createReleaseStrategy(CacheFirstStrategy());
       final config = await strategy.getConfig();
 
       // ASSERT
@@ -135,7 +139,7 @@ void main() {
           ));
 
       // ACT
-      final strategy = createReleaseStrategy(PrioritizeCache());
+      final strategy = createReleaseStrategy(CacheFirstStrategy());
       final config = await strategy.getConfig();
 
       // ASSERT
@@ -189,7 +193,7 @@ void main() {
           ));
 
       // ACT
-      final strategy = createReleaseStrategy(PrioritizeCache());
+      final strategy = createReleaseStrategy(CacheFirstStrategy());
       final config = await strategy.getConfig();
 
       // ASSERT
@@ -224,7 +228,7 @@ void main() {
           .thenAnswer((_) async => 'invalid asset json');
 
       // ACT & ASSERT
-      final strategy = createReleaseStrategy(PrioritizeCache());
+      final strategy = createReleaseStrategy(CacheFirstStrategy());
       expect(
         () async => await strategy.getConfig(),
         throwsA(isA<FormatException>()),
