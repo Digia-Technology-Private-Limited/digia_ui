@@ -2,6 +2,11 @@
 
 Digia Ui SDK.
 
+## [1.0.0] – 2025-08-07
+
+⚠ This version is not backward compatible with 0.x.x.
+Public Release (1.0.0)
+
 ## [1.0.0-rc.9] – 2025-08-06 (Release Candidate)
 
 ⚠ This version is not backward compatible with 0.x.x.
