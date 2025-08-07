@@ -36,7 +36,7 @@ class StateContext extends ChangeNotifier {
   StateContext get originContext {
     StateContext current = this;
     while (current._ancestorContext != null) {
-      current = current._ancestorContext!;
+      current = current._ancestorContext;
     }
     return current;
   }
