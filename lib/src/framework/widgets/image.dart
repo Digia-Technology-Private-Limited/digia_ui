@@ -102,7 +102,7 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
         return SvgPicture.network(
           finalUrl,
           colorFilter:
-              ColorFilter.mode(color ?? Colors.black, BlendMode.srcATop),
+              color != null ? ColorFilter.mode(color, BlendMode.srcIn) : null,
           errorBuilder: (context, error, stackTrace) =>
               _buildErrorWidget(error),
           fit: To.boxFit(props.get('fit')),
@@ -111,7 +111,7 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
         return SvgPicture.asset(
           imageSource,
           colorFilter:
-              ColorFilter.mode(color ?? Colors.black, BlendMode.srcATop),
+              color != null ? ColorFilter.mode(color, BlendMode.srcIn) : null,
           errorBuilder: (context, error, stackTrace) =>
               _buildErrorWidget(error),
           fit: To.boxFit(props.get('fit')),

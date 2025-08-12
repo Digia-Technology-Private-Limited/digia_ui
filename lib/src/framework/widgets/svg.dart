@@ -30,7 +30,7 @@ class VWSvgImage extends VirtualLeafStatelessWidget<Props> {
           width: width,
           height: height,
           colorFilter:
-              ColorFilter.mode(color ?? Colors.black, BlendMode.srcATop),
+              color != null ? ColorFilter.mode(color, BlendMode.srcIn) : null,
           errorBuilder: (context, error, stackTrace) =>
               _buildErrorWidget(error),
           fit: To.boxFit(props.get('fit')),
@@ -41,7 +41,7 @@ class VWSvgImage extends VirtualLeafStatelessWidget<Props> {
           width: width,
           height: height,
           colorFilter:
-              ColorFilter.mode(color ?? Colors.black, BlendMode.srcATop),
+              color != null ? ColorFilter.mode(color, BlendMode.srcIn) : null,
           errorBuilder: (context, error, stackTrace) =>
               _buildErrorWidget(error),
           fit: To.boxFit(props.get('fit')),
