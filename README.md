@@ -1,11 +1,6 @@
-<div align="center">
-  <h1>
-    <span style="background: linear-gradient(45deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; color: transparent;">
-      Digia UI SDK
-    </span>
-  </h1>
+<!-- Local asset image -->
 
-</div>
+[![Banner](docs/images/readme_header.png)](https://www.digia.tech)
 
 [![Flutter](https://img.shields.io/badge/Flutter-3.0+-blue.svg)](https://flutter.dev)
 [![License](https://img.shields.io/badge/license-BSL%201.1-green.svg)](LICENSE)
@@ -13,7 +8,7 @@
 
 **Digia UI SDK** is the Flutter-based rendering engine for [Digia Studio](https://app.digia.tech), a low-code mobile application platform. Built on the Server-Driven UI (SDUI) architecture, this SDK dynamically renders native Flutter widgets based on configurations received from the server, enabling real-time UI updates without requiring app releases or store approvals.
 
-## 🚀 Overview
+# 🚀 Overview
 
 ### What is Server-Driven UI?
 
@@ -164,7 +159,7 @@ void main() {
         }
 
         // Show error UI if initialization fails
-        // (This scenario should never occur in normal usage, but it's best practice to provide a user-friendly fallback just in case.)
+        // In practice, this scenario should never occur, but it's a good habit to provide a user-friendly fallback just in case.
         return MaterialApp(
           home: Scaffold(
             body: Center(
@@ -378,7 +373,7 @@ class _HomePageState extends State<HomePage> {
     _stateSubscription = DUIAppState().listen('cartCount', (value) {
         _updateCartBadge(value);
       }
-    });
+    );
   }
 
   @override
