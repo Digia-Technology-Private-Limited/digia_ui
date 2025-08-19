@@ -330,14 +330,16 @@ class NetworkClient {
   /// );
   /// ```
   static Map<String, dynamic> getDefaultDigiaHeaders(
-      String packageVersion,
-      String accessKey,
-      String platform,
-      String? uuid,
-      String packageName,
-      String appVersion,
-      String appBuildNumber,
-      String environment) {
+    String packageVersion,
+    String accessKey,
+    String platform,
+    String? uuid,
+    String packageName,
+    String appVersion,
+    String appBuildNumber,
+    String environment,
+    String buildSignature,
+  ) {
     return {
       'x-digia-version': packageVersion,
       'x-digia-project-id': accessKey,
@@ -346,7 +348,8 @@ class NetworkClient {
       'x-app-package-name': packageName,
       'x-app-version': appVersion,
       'x-app-build-number': appBuildNumber,
-      'x-digia-environment': environment
+      'x-digia-environment': environment,
+      if (buildSignature.isNotEmpty) 'x-app-signature': buildSignature,
     };
   }
 
