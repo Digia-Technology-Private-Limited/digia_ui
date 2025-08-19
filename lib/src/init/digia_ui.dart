@@ -92,6 +92,7 @@ class DigiaUI {
     var packageName = packageInfo.packageName;
     var appVersion = packageInfo.version;
     var appbuildNumber = packageInfo.buildNumber;
+    // Android Only. Empty elsewhere.
     var appSignatureSha256 = packageInfo.buildSignature;
 
     return NetworkClient.getDefaultDigiaHeaders(
@@ -103,7 +104,7 @@ class DigiaUI {
       appVersion,
       appbuildNumber,
       options.flavor.environment.name,
-      appSignatureSha256
+      appSignatureSha256,
     );
   }
 
