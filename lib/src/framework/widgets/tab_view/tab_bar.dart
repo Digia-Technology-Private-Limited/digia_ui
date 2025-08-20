@@ -50,9 +50,7 @@ class VWTabBar extends VirtualStatelessWidget<Props> {
                 : TabAlignment.center
             : null,
         indicatorSize: indicatorSize,
-        indicator: props.getBool('hasIndicatorDecoration') ?? false
-            ? _buildIndicatorDecoration(payload)
-            : null,
+        indicator: _buildIndicatorDecoration(payload),
         controller: controller,
         overlayColor: WidgetStateProperty.all(Colors.transparent),
         padding: To.edgeInsets(props.get('tabBarPadding')),
