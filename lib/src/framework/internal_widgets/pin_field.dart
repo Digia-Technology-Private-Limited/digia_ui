@@ -9,12 +9,12 @@ class SmsRetrieverImpl implements SmsRetriever {
   final SmartAuth _smartAuth;
 
   @override
-  Future<void> dispose() => _smartAuth.removeSmsListener();
+  Future<void> dispose() => _smartAuth.removeUserConsentApiListener();
 
   @override
   Future<String?> getSmsCode() async {
-    final res = await _smartAuth.getSmsCode();
-    return res.succeed && res.codeFound ? res.code : null;
+    final res = await _smartAuth.getSmsWithUserConsentApi();
+    return res.hasData ? res.data?.code : null;
   }
 
   @override
@@ -55,7 +55,7 @@ class _PinFieldState extends State<PinField> {
   void initState() {
     super.initState();
     _controller = TextEditingController();
-    _smsRetrieverImpl = SmsRetrieverImpl(SmartAuth());
+    _smsRetrieverImpl = SmsRetrieverImpl(SmartAuth.instance);
   }
 
   @override
