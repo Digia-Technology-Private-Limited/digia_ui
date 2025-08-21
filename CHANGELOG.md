@@ -2,6 +2,16 @@
 
 Digia Ui SDK.
 
+## [1.1.0] – 2025-08-21
+
+- ✅ Verified compatibility with Flutter 3.35.1
+- 📦 Updated several packages to newer versions for hygiene
+- 📖 Improved README documentation
+- ✨ Added indicator decoration support to TabBar
+- 🔄 Upgraded SmartAuth to latest for Android 35 compatibility
+- 🐞 Fixed SVG color rendering issue
+- 🐞 Fixed keyboard stuttering on open/close (dependency issue) — details
+
 ## [1.0.0] – 2025-08-07
 
 ⚠ This version is not backward compatible with 0.x.x.
