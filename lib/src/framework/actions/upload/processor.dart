@@ -122,7 +122,7 @@ class UploadProcessor extends ActionProcessor<UploadAction> {
     return result;
   }
 
-  _requestObjToMap(RequestOptions request) {
+  Map<String, dynamic> _requestObjToMap(RequestOptions request) {
     return {
       'url': request.path,
       'method': request.method,

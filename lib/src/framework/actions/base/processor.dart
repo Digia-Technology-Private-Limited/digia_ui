@@ -10,7 +10,7 @@ abstract class ActionProcessor<T extends an.Action> {
 
   ActionProcessor({this.logger, this.metaData});
 
-  logAction(String actionType, Map<String, Object?> actionData) {
+  void logAction(String actionType, Map<String, Object?> actionData) {
     logger?.log(
       type: LogType.action,
       data: {

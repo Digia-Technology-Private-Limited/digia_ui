@@ -9,7 +9,7 @@ class HttpAdapter {
     return _instance;
   }
 
-  static init(
+  static void init(
       {String baseUrl = '',
       Duration connectTimeout = const Duration(seconds: 1000),
       Map<String, dynamic>? defaultHeaders = const {
