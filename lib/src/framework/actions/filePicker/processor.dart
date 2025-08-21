@@ -110,7 +110,7 @@ FileType toFileType(String? fileType) {
   }
 }
 
-showExceedSizeLimitToast(FToast toast, dynamic file, double? sizeLimit) {
+void showExceedSizeLimitToast(FToast toast, dynamic file, double? sizeLimit) {
   toast.showToast(
     child: Container(
       padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
