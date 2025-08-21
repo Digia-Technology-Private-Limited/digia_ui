@@ -48,6 +48,7 @@ class DigiaUIManager {
         }))
       };
 
+  // ignore: strict_top_level_inference
   T? _toValue<T>(evaluator, Object obj) {
     if (obj is ASTNode) {
       final result = evaluator.eval(obj);
