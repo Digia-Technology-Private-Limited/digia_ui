@@ -29,7 +29,8 @@ extension ExtentUtil on String {
   ///
   /// Supports percentage (e.g., "50%") and absolute (e.g., "100.5") values.
   /// Returns null for invalid input.
-  double? _computeExtent(BuildContext context, double Function(Size) getExtent) {
+  double? _computeExtent(
+      BuildContext context, double Function(Size) getExtent) {
     final trimmedValue = trim();
     if (trimmedValue.isEmpty) return null;
 
