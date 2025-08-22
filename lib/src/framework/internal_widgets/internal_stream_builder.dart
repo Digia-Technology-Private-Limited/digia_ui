@@ -22,38 +22,38 @@ class InternalStreamBuilder extends StatefulWidget {
 }
 
 class _InternalStreamBuilderState extends State<InternalStreamBuilder> {
-  late final StreamSubscription<Object?> _subscription;
+  late final Stream<Object?> _broadcastStream;
+  StreamSubscription<Object?>? _subscription;
 
   @override
   void initState() {
     super.initState();
+    _broadcastStream = widget.controller.stream.asBroadcastStream();
 
-    _subscription = widget.controller.stream.listen(
+    _subscription = _broadcastStream.listen(
       (data) {
-        if (context.mounted == false) return;
-
-        // ignore: use_build_context_synchronously
-        widget.onSuccess?.call(context, data);
+        if (mounted) {
+          widget.onSuccess?.call(context, data);
+        }
       },
-      onError: (error) {
-        if (context.mounted == false) return;
-
-        // ignore: use_build_context_synchronously
-        widget.onError?.call(context);
+      onError: (_) {
+        if (mounted) {
+          widget.onError?.call(context);
+        }
       },
     );
   }
 
   @override
   void dispose() {
-    _subscription.cancel();
+    _subscription?.cancel();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<Object?>(
-      stream: widget.controller.stream,
+      stream: _broadcastStream,
       initialData: widget.initialData,
       builder: widget.builder,
     );
