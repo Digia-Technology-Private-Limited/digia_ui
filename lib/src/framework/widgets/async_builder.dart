@@ -188,7 +188,7 @@ class VWAsyncBuilder extends VirtualStatelessWidget<AsyncBuilderProps> {
       case FutureType.api:
         return _makeApiFuture(futureProps, payload, props);
       case FutureType.delay:
-        return _makeDelayFuture(futureProps);
+        return _makeDelayFuture(futureProps, payload, props);
     }
   }
 }
@@ -232,9 +232,27 @@ Future<Response<Object?>> _makeApiFuture(
   );
 }
 
-Future<Object?> _makeDelayFuture(JsonLike futureProps) async {
-  final durationInMs = NumUtil.toInt(futureProps['durationInMs']) ?? 0;
-  return Future.delayed(Duration(milliseconds: durationInMs));
+Future<Object?> _makeDelayFuture(
+  JsonLike futureProps,
+  RenderPayload payload,
+  AsyncBuilderProps props,
+) async {
+  try {
+    final durationInMs = NumUtil.toInt(futureProps['durationInMs']) ?? 0;
+    final result = await Future.delayed(Duration(milliseconds: durationInMs));
+
+    await payload.executeAction(
+      props.onSuccess,
+      scopeContext: DefaultScopeContext(variables: {'response': result}),
+    );
+    return result;
+  } catch (error) {
+    await payload.executeAction(
+      props.onError,
+      scopeContext: DefaultScopeContext(variables: {'response': error}),
+    );
+    rethrow;
+  }
 }
 
 JsonLike? _requestObjToMap(RequestOptions? requestOptions) {
