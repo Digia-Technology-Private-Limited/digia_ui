@@ -35,7 +35,6 @@ abstract class VirtualWidgetRegistry {
     'digia/richText': richTextBuilder,
     'digia/icon': iconBuilder,
     'digia/image': imageBuilder,
-    'digia/svg': svgBuilder,
     'digia/button': buttonBuilder,
     'digia/iconButton': iconButtonBuilder,
     'digia/checkbox': checkboxBuilder,
