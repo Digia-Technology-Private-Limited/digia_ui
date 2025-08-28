@@ -72,12 +72,14 @@ JsonLike _requestObjToMap(RequestOptions request) {
 
 bool hasExtension(String src, List<String> exts) {
   final uri = Uri.tryParse(src);
-  final path =
+  final lowerPath =
       (uri?.path ?? src).toLowerCase().split('?').first.split('#').first;
-  if (exts.any((e) => path.endsWith(e))) return true;
+  final normalizedExts =
+      exts.map((e) => e.toLowerCase()).toList(growable: false);
+  if (normalizedExts.any(lowerPath.endsWith)) return true;
   if (src.startsWith('data:')) {
     final lower = src.toLowerCase();
-    if (exts.contains('.svg') && lower.startsWith('data:image/svg+xml')) {
+    if (normalizedExts.any((ext) => lower.startsWith('data:image/$ext'))) {
       return true;
     }
   }
