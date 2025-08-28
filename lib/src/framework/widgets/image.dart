@@ -106,6 +106,7 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
           errorBuilder: (context, error, stackTrace) =>
               _buildErrorWidget(error),
           fit: To.boxFit(props.get('fit')),
+          alignment: To.alignment(props.get('alignment')) ?? Alignment.center,
         );
       } else {
         return SvgPicture.asset(
@@ -115,6 +116,7 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
           errorBuilder: (context, error, stackTrace) =>
               _buildErrorWidget(error),
           fit: To.boxFit(props.get('fit')),
+          alignment: To.alignment(props.get('alignment')) ?? Alignment.center,
         );
       }
     }
@@ -206,7 +208,8 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
         final opacity = payload.eval<double>(props.get('opacity')) ?? 1.0;
         final imageType = props.getString('imageType') ?? 'auto';
 
-        if (imageType == 'svg') {
+        if (imageType == 'svg' ||
+            (imageSource is String && imageSource.contains('.svg'))) {
           return _buildSvgImage(imageSource, payload, opacity);
         }
 
@@ -218,12 +221,15 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
           dpr,
         );
 
-        if (imageType == 'avif' || (imageSource as String).contains('.avif')) {
+        if (imageType == 'avif' ||
+            (imageSource is String && imageSource.contains('.avif'))) {
           return Opacity(
             opacity: opacity,
             child: AvifImage(
               image: imageProvider,
               fit: To.boxFit(props.get('fit')),
+              alignment:
+                  To.alignment(props.get('alignment')) ?? Alignment.center,
               gaplessPlayback: true,
               errorBuilder: (context, error, stackTrace) {
                 return _buildErrorWidget(error);
@@ -236,6 +242,9 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
           child: imageProvider is MemoryImage || imageProvider is FileImage
               ? Image(
                   image: imageProvider,
+                  fit: To.boxFit(props.get('fit')),
+                  alignment:
+                      To.alignment(props.get('alignment')) ?? Alignment.center,
                   errorBuilder: (context, error, stackTrace) {
                     return _buildErrorWidget(error);
                   },
@@ -251,7 +260,9 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
                   placeholderBuilder: _placeHolderBuilderCreator(),
                   errorBuilder: (context, error, stackTrace) {
                     return _buildErrorWidget(error);
-                  }),
+                  },
+                  alignment: To.alignment(props.get('alignment')),
+                ),
         );
       }),
     );
