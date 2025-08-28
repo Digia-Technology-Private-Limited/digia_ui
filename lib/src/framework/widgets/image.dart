@@ -18,6 +18,7 @@ import '../models/props.dart';
 import '../render_payload.dart';
 import '../resource_provider.dart';
 import '../utils/flutter_type_converters.dart';
+import '../utils/network_util.dart' show hasExtension;
 import '../utils/widget_util.dart';
 
 class VWImage extends VirtualLeafStatelessWidget<Props> {
@@ -206,10 +207,11 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
               'dpr': dpr,
             }));
         final opacity = payload.eval<double>(props.get('opacity')) ?? 1.0;
-        final imageType = props.getString('imageType') ?? 'auto';
+        final imageType =
+            (props.getString('imageType') ?? 'auto').toLowerCase();
 
         if (imageType == 'svg' ||
-            (imageSource is String && imageSource.contains('.svg'))) {
+            (imageSource is String && hasExtension(imageSource, ['.svg']))) {
           return _buildSvgImage(imageSource, payload, opacity);
         }
 
@@ -222,7 +224,7 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
         );
 
         if (imageType == 'avif' ||
-            (imageSource is String && imageSource.contains('.avif'))) {
+            (imageSource is String && hasExtension(imageSource, ['.avif']))) {
           return Opacity(
             opacity: opacity,
             child: AvifImage(
@@ -261,7 +263,8 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
                   errorBuilder: (context, error, stackTrace) {
                     return _buildErrorWidget(error);
                   },
-                  alignment: To.alignment(props.get('alignment')),
+                  alignment:
+                      To.alignment(props.get('alignment')) ?? Alignment.center,
                 ),
         );
       }),

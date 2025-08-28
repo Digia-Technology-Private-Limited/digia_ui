@@ -69,3 +69,17 @@ JsonLike _requestObjToMap(RequestOptions request) {
     'queryParameters': request.queryParameters,
   };
 }
+
+bool hasExtension(String src, List<String> exts) {
+  final uri = Uri.tryParse(src);
+  final path =
+      (uri?.path ?? src).toLowerCase().split('?').first.split('#').first;
+  if (exts.any((e) => path.endsWith(e))) return true;
+  if (src.startsWith('data:')) {
+    final lower = src.toLowerCase();
+    if (exts.contains('.svg') && lower.startsWith('data:image/svg+xml')) {
+      return true;
+    }
+  }
+  return false;
+}
