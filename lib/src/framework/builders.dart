@@ -94,7 +94,6 @@ import 'widgets/stack.dart';
 import 'widgets/stream_builder.dart';
 import 'widgets/styled_horizontal_divider.dart';
 import 'widgets/styled_vertical_divider.dart';
-import 'widgets/svg.dart';
 import 'widgets/switch.dart';
 import 'widgets/tab_view/tab_bar.dart';
 import 'widgets/tab_view/tab_view_content.dart';
@@ -325,16 +324,6 @@ VWIconButton iconButtonBuilder(VWNodeData data, VirtualWidget? parent, _) {
 
 VWImage imageBuilder(VWNodeData data, VirtualWidget? parent, _) {
   return VWImage(
-    props: data.props,
-    commonProps: data.commonProps,
-    parentProps: data.parentProps,
-    parent: parent,
-    refName: data.refName,
-  );
-}
-
-VWSvgImage svgBuilder(VWNodeData data, VirtualWidget? parent, _) {
-  return VWSvgImage(
     props: data.props,
     commonProps: data.commonProps,
     parentProps: data.parentProps,
