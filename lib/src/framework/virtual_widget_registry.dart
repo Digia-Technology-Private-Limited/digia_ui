@@ -18,7 +18,6 @@ abstract class VirtualWidgetRegistry {
     'digia/container': containerBuilder,
     'digia/column': columnBuilder,
     'digia/row': rowBuilder,
-    'digia/flexFit': flexFitBuilder,
     'digia/stack': stackBuilder,
     'digia/listView': listViewBuilder,
     'digia/gridView': gridViewBuilder,
