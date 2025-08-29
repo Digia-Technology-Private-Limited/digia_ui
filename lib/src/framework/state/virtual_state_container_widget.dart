@@ -18,6 +18,7 @@ class VirtualStateContainerWidget extends VirtualWidget {
     required super.parent,
     required this.initStateDefs,
     Map<String, List<VirtualWidget>>? childGroups,
+    super.parentProps,
   }) : child = childGroups?.entries.firstOrNull?.value.firstOrNull;
 
   @override

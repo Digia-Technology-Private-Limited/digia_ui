@@ -1,8 +1,6 @@
 import 'package:flutter/widgets.dart';
 
 import '../base/extensions.dart';
-import '../base/virtual_builder_widget.dart';
-import '../base/virtual_leaf_stateless_widget.dart';
 import '../base/virtual_stateless_widget.dart';
 import '../base/virtual_widget.dart';
 import '../models/props.dart';
@@ -11,47 +9,55 @@ import '../utils/flutter_type_converters.dart';
 import '../widget_props/positioned_props.dart';
 import 'positioned.dart';
 
+/// A virtual widget that renders a Stack container
+///
+/// Stack widgets allow children to be positioned on top of each other,
+/// with configurable alignment and fit properties.
 class VWStack extends VirtualStatelessWidget<Props> {
-  VWStack(
-      {required super.props,
-      required super.commonProps,
-      super.parentProps,
-      required super.childGroups,
-      required super.parent,
-      super.refName});
+  VWStack({
+    required super.props,
+    required super.commonProps,
+    super.parentProps,
+    required super.childGroups,
+    required super.parent,
+    super.refName,
+  });
 
   @override
   Widget render(RenderPayload payload) {
+    // Return empty widget if no children are defined
     if (children == null || children!.isEmpty) return empty();
 
     return Stack(
-        alignment: To.stackChildAlignment(props.getString('childAlignment')),
-        fit: To.stackFit(props.get('fit')),
-        children: children!
-            .map(_wrapInPositionedForBackwardCompat)
-            .toWidgetArray(payload));
+      alignment: _getChildAlignment,
+      fit: _getStackFit,
+      children: children!.map(_wrapInPositioned).toWidgetArray(payload),
+    );
   }
 
-  // This is for backward compatibility:
-  VirtualWidget _wrapInPositionedForBackwardCompat(
-      VirtualWidget childVirtualWidget) {
-    // Ignore if widget is already wrapped in Positioned
+  /// Gets the alignment for stack children from props
+  /// Defaults to center alignment if not specified
+  AlignmentGeometry get _getChildAlignment =>
+      To.stackChildAlignment(props.getString('childAlignment'));
+
+  /// Gets the stack fit mode from props
+  /// Determines how the stack should size itself relative to its children
+  StackFit get _getStackFit => To.stackFit(props.get('fit'));
+
+  /// Wraps a child widget in Positioned based on parent props
+  ///
+  /// This method applies positioning properties from the child's parent props
+  /// to properly position the child within the stack container.
+  VirtualWidget _wrapInPositioned(VirtualWidget childVirtualWidget) {
+    // Skip wrapping if widget is already positioned
     if (childVirtualWidget is VWPositioned) {
       return childVirtualWidget;
     }
 
-    // Check if widget is VirtualLeafStatelessWidget or VirtualBuilderWidget
-    if (childVirtualWidget is! VirtualLeafStatelessWidget &&
-        childVirtualWidget is! VirtualBuilderWidget) {
-      return childVirtualWidget;
-    }
+    final parentProps = childVirtualWidget.parentProps;
+    if (parentProps == null) return childVirtualWidget;
 
-    // Cast to access parentProps
-    final parentProps = childVirtualWidget is VirtualLeafStatelessWidget
-        ? childVirtualWidget.parentProps
-        : (childVirtualWidget as VirtualBuilderWidget).parentProps;
-
-    final position = parentProps?.get('position');
+    final position = parentProps.get('position');
     if (position == null) return childVirtualWidget;
 
     return VWPositioned(
