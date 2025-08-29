@@ -79,11 +79,13 @@ class VWComponentData extends VWData {
 class VWStateData extends VWData {
   final Map<String, Variable> initStateDefs;
   final Map<String, List<VWData>>? childGroups;
+  final Props? parentProps;
 
   VWStateData({
     required super.refName,
     required this.initStateDefs,
     required this.childGroups,
+    required this.parentProps,
   });
 
   factory VWStateData.fromJson(JsonLike json) {
@@ -97,6 +99,9 @@ class VWStateData extends VWData {
         parse: _parseVWNodeDataMap,
       ),
       refName: tryKeys<String>(json, ['varName', 'refName']),
+      parentProps:
+          as$<JsonLike>(json['parentProps']).maybe((p0) => Props(p0)) ??
+              Props.empty(),
     );
   }
 }

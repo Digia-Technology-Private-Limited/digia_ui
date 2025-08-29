@@ -129,6 +129,7 @@ VirtualStateContainerWidget stateContainerBuilder(
   return VirtualStateContainerWidget(
     refName: data.refName,
     parent: parent,
+    parentProps: data.parentProps,
     initStateDefs: data.initStateDefs,
     childGroups: createChildGroups(data.childGroups, parent, registry),
   );
