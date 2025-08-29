@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/widgets.dart';
 
 import '../base/extensions.dart';
+import '../base/virtual_builder_widget.dart';
 import '../base/virtual_leaf_stateless_widget.dart';
 import '../base/virtual_stateless_widget.dart';
 import '../base/virtual_widget.dart';
@@ -69,15 +70,24 @@ class VWFlex extends VirtualStatelessWidget<Props> {
   VirtualWidget _wrapInFlexFitForBackwardCompat(
       VirtualWidget childVirtualWidget, RenderPayload payload) {
     // Ignore if widget is already wrapped in FlexFit
-    if (childVirtualWidget is! VirtualLeafStatelessWidget ||
-        childVirtualWidget is VWFlexFit) {
+    if (childVirtualWidget is VWFlexFit) {
       return childVirtualWidget;
     }
 
-    final expansionType =
-        childVirtualWidget.parentProps?.getString('expansion.type');
-    final flexValue = payload
-        .eval<int>(childVirtualWidget.parentProps?.get('expansion.flexValue'));
+    // Check if widget is VirtualLeafStatelessWidget or VirtualBuilderWidget
+    if (childVirtualWidget is! VirtualLeafStatelessWidget &&
+        childVirtualWidget is! VirtualBuilderWidget) {
+      return childVirtualWidget;
+    }
+
+    // Cast to access parentProps
+    final parentProps = childVirtualWidget is VirtualLeafStatelessWidget
+        ? childVirtualWidget.parentProps
+        : (childVirtualWidget as VirtualBuilderWidget).parentProps;
+
+    final expansionType = parentProps?.getString('expansion.type');
+    final flexValue =
+        payload.eval<int>(parentProps?.get('expansion.flexValue'));
 
     if (expansionType == null) return childVirtualWidget;
 

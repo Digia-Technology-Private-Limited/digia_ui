@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 
 import '../base/extensions.dart';
+import '../base/virtual_builder_widget.dart';
 import '../base/virtual_leaf_stateless_widget.dart';
 import '../base/virtual_stateless_widget.dart';
 import '../base/virtual_widget.dart';
@@ -35,12 +36,22 @@ class VWStack extends VirtualStatelessWidget<Props> {
   VirtualWidget _wrapInPositionedForBackwardCompat(
       VirtualWidget childVirtualWidget) {
     // Ignore if widget is already wrapped in Positioned
-    if (childVirtualWidget is! VirtualLeafStatelessWidget ||
-        childVirtualWidget is VWPositioned) {
+    if (childVirtualWidget is VWPositioned) {
       return childVirtualWidget;
     }
 
-    final position = childVirtualWidget.parentProps?.get('position');
+    // Check if widget is VirtualLeafStatelessWidget or VirtualBuilderWidget
+    if (childVirtualWidget is! VirtualLeafStatelessWidget &&
+        childVirtualWidget is! VirtualBuilderWidget) {
+      return childVirtualWidget;
+    }
+
+    // Cast to access parentProps
+    final parentProps = childVirtualWidget is VirtualLeafStatelessWidget
+        ? childVirtualWidget.parentProps
+        : (childVirtualWidget as VirtualBuilderWidget).parentProps;
+
+    final position = parentProps?.get('position');
     if (position == null) return childVirtualWidget;
 
     return VWPositioned(
