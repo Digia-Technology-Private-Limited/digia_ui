@@ -126,7 +126,7 @@ class VWFlex extends VirtualStatelessWidget<Props> {
       direction: direction,
       mainAxisSize:
           To.mainAxisSize(props.get('mainAxisSize')) ?? MainAxisSize.min,
-      mainAxisAlignment: To.mainAxisAlginment(props.get('mainAxisAlignment')) ??
+      mainAxisAlignment: To.mainAxisAlignment(props.get('mainAxisAlignment')) ??
           MainAxisAlignment.start,
       crossAxisAlignment:
           To.crossAxisAlignment(props.get('crossAxisAlignment')) ??

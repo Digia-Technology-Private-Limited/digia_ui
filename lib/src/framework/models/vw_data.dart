@@ -79,7 +79,7 @@ class VWComponentData extends VWData {
 class VWStateData extends VWData {
   final Map<String, Variable> initStateDefs;
   final Map<String, List<VWData>>? childGroups;
-  final Props? parentProps;
+  final Props parentProps;
 
   VWStateData({
     required super.refName,
