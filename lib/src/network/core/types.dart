@@ -39,21 +39,11 @@ enum BodyType {
   multipart,
   @JsonValue('FORM_URLENCODED')
   formUrlEncoded, // New enum value
+  @JsonValue('GRAPHQL')
+  graphql
 }
 
 extension BodyTypeProperties on BodyType {
-  String get stringValue {
-    switch (this) {
-      case BodyType.json:
-        return 'JSON';
-      case BodyType.multipart:
-        return 'MULTIPART';
-      case BodyType.formUrlEncoded:
-        return 'FORM_URLENCODED'; // New case
-    }
-  }
-
-  // Helper method to get the appropriate content type header
   String? get contentTypeHeader {
     switch (this) {
       case BodyType.json:
@@ -62,6 +52,8 @@ extension BodyTypeProperties on BodyType {
         return 'multipart/form-data';
       case BodyType.formUrlEncoded:
         return 'application/x-www-form-urlencoded';
+      case BodyType.graphql:
+        return 'application/json';
     }
   }
 }
