@@ -35,7 +35,7 @@ class VWTextFormField extends VirtualStatelessWidget<Props> {
     final textAlign =
         To.textAlign(payload.eval<String>(props.get('textAlign')));
     final readOnly = props.getBool('readOnly') ?? false;
-    final obscureText = props.getBool('obscureText') ?? false;
+    final obscureText = payload.eval<bool>(props.get('obscureText')) ?? false;
     final maxLines = props.getInt('maxLines');
     final minLines = props.getInt('minLines');
     final maxLength = props.getInt('maxLength');
