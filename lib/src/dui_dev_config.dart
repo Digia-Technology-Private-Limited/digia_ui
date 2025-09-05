@@ -1,5 +1,4 @@
-import 'dui_logger.dart';
-import 'inspector/dui_inspector.dart';
+import 'package:digia_inspector_core/digia_inspector_core.dart';
 
 /// Sealed class representing different hosting environments for Digia UI.
 ///
@@ -63,7 +62,6 @@ class DashboardHost extends DigiaUIHost {
 /// const developerConfig = DeveloperConfig(
 ///   proxyUrl: '192.168.1.100:8888', // Charles Proxy
 ///   logger: MyCustomLogger(),
-///   inspector: MyNetworkInspector(),
 ///   baseUrl: 'https://dev-api.digia.tech/api/v1',
 ///   host: DashboardHost(),
 /// );
@@ -78,19 +76,12 @@ class DeveloperConfig {
   /// Only applies to Android/iOS platforms in debug mode.
   final String? proxyUrl;
 
-  /// Inspector instance for monitoring network requests and app behavior.
-  ///
-  /// The inspector provides debugging capabilities such as network request
-  /// logging, response inspection, and performance monitoring. Custom
-  /// implementations can extend the base [DUIInspector] class.
-  final DUIInspector? inspector;
-
   /// Logger instance for capturing debug information and events.
   ///
   /// Custom loggers can be provided to integrate with existing logging
   /// infrastructure or to capture specific types of debug information.
   /// The logger receives events from throughout the Digia UI system.
-  final DUILogger? logger;
+  final DigiaLogger? logger;
 
   /// Host configuration for custom deployment environments.
   ///
@@ -115,13 +106,11 @@ class DeveloperConfig {
   ///
   /// Parameters:
   /// - [proxyUrl]: HTTP proxy URL for network debugging
-  /// - [inspector]: Network and app behavior inspector
   /// - [logger]: Custom logger for debug information
   /// - [host]: Custom host configuration
   /// - [baseUrl]: Custom backend API URL (defaults to production)
   const DeveloperConfig({
     this.proxyUrl,
-    this.inspector,
     this.logger,
     this.host,
     this.baseUrl = 'https://app.digia.tech/api/v1',

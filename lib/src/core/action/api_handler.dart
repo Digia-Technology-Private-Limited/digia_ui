@@ -67,6 +67,7 @@ class ApiHandler {
           additionalHeaders: headers,
           data: preparedData,
           cancelToken: cancelToken,
+          apiName: apiModel.name,
           uploadProgress: (p0, p1) {
             progressStreamController?.sink.add({
               'count': p0,
@@ -78,12 +79,14 @@ class ApiHandler {
         );
       } else {
         response = await networkClient.requestProject(
-            bodyType: bodyType ?? BodyType.json,
-            url: url,
-            method: apiModel.method,
-            additionalHeaders: headers,
-            cancelToken: cancelToken,
-            data: preparedData);
+          bodyType: bodyType ?? BodyType.json,
+          url: url,
+          method: apiModel.method,
+          additionalHeaders: headers,
+          cancelToken: cancelToken,
+          data: preparedData,
+          apiName: apiModel.name,
+        );
       }
       stopwatch.stop();
       stopwatch.reset();

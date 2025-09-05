@@ -10,6 +10,7 @@ part 'api_request.g.dart';
 @JsonSerializable()
 class APIModel {
   final String id;
+  final String name;
   final String url;
   final HttpMethod method;
   final JsonLike? headers;
@@ -20,6 +21,7 @@ class APIModel {
 
   APIModel({
     required this.id,
+    required this.name,
     required this.url,
     required this.method,
     required this.headers,
