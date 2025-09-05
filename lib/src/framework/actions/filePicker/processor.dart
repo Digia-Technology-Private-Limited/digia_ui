@@ -2,6 +2,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
+import '../../../utils/logger.dart';
 import '../../data_type/adapted_types/file.dart';
 import '../../expr/scope_context.dart';
 import '../base/processor.dart';
@@ -53,6 +54,9 @@ class FilePickerProcessor extends ActionProcessor<FilePickerAction> {
         },
       );
 
+      if (!context.mounted) {
+        return null;
+      }
       final toast = FToast().init(context);
 
       if (sizeLimit != null && showToast) {
@@ -67,7 +71,8 @@ class FilePickerProcessor extends ActionProcessor<FilePickerAction> {
         platformFiles = pickedFile.files;
       }
     } catch (e) {
-      print('Error picking file: $e');
+      Logger.error('Error picking file: $e',
+          tag: 'FilePickerProcessor', error: e);
       return null;
     }
 
@@ -83,7 +88,7 @@ class FilePickerProcessor extends ActionProcessor<FilePickerAction> {
           file.setDataFromAdaptedFile(files);
         }
       } catch (e) {
-        print('Error: $e');
+        Logger.error('Error: $e', tag: 'FilePickerProcessor', error: e);
       }
     }
 
@@ -105,7 +110,7 @@ FileType toFileType(String? fileType) {
   }
 }
 
-showExceedSizeLimitToast(FToast toast, dynamic file, double? sizeLimit) {
+void showExceedSizeLimitToast(FToast toast, dynamic file, double? sizeLimit) {
   toast.showToast(
     child: Container(
       padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),

@@ -18,7 +18,6 @@ abstract class VirtualWidgetRegistry {
     'digia/container': containerBuilder,
     'digia/column': columnBuilder,
     'digia/row': rowBuilder,
-    'digia/flexFit': flexFitBuilder,
     'digia/stack': stackBuilder,
     'digia/listView': listViewBuilder,
     'digia/gridView': gridViewBuilder,
@@ -35,7 +34,6 @@ abstract class VirtualWidgetRegistry {
     'digia/richText': richTextBuilder,
     'digia/icon': iconBuilder,
     'digia/image': imageBuilder,
-    'digia/svg': svgBuilder,
     'digia/button': buttonBuilder,
     'digia/iconButton': iconButtonBuilder,
     'digia/checkbox': checkboxBuilder,
@@ -143,6 +141,8 @@ abstract class VirtualWidgetRegistry {
   }) = DefaultVirtualWidgetRegistry;
 
   VirtualWidget createWidget(VWData data, VirtualWidget? parent);
+
+  void dispose();
 }
 
 class DefaultVirtualWidgetRegistry implements VirtualWidgetRegistry {
@@ -227,5 +227,10 @@ class DefaultVirtualWidgetRegistry implements VirtualWidgetRegistry {
         createChildGroups(data.childGroups, parent, registry),
       );
     };
+  }
+
+  @override
+  void dispose() {
+    builders.clear();
   }
 }

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../../utils/logger.dart';
 import '../../data_type/adapted_types/file.dart';
 import '../../expr/scope_context.dart';
 import '../../utils/functional_util.dart';
@@ -25,7 +26,7 @@ class ImagePickerProcessor extends ActionProcessor<ImagePickerAction> {
     final maxHeight = action.maxHeight?.evaluate(scopeContext);
     final imageQuality = action.imageQuality?.evaluate(scopeContext)?.round();
     final limit = action.limit?.evaluate(scopeContext)?.round();
-    final allowMultiple = action.allowMultiple ?? false;
+    final allowMultiple = action.allowMultiple;
     final selectedPageState =
         action.fileVariable?.evaluate(scopeContext) as AdaptedFile?;
 
@@ -98,23 +99,26 @@ class ImagePickerProcessor extends ActionProcessor<ImagePickerAction> {
         // User canceled the picker
         return null;
       }
-      // logger?.log(ActionLog(getPageName(context), 'Action.imagePicker', {
-      //   'mediaSource': mediaSource,
-      //   'cameraDevice': cameraDevice,
-      //   'allowPhoto': allowPhoto,
-      //   'allowVideo': allowVideo,
-      //   'maxDuration': maxDuration,
-      //   'maxWidth': maxWidth,
-      //   'maxHeight': maxHeight,
-      //   'imageQuality': imageQuality,
-      //   'limit': limit,
-      //   'allowMultiple': allowMultiple,
-      //   'selectedPageState': selectedPageState,
-      //   'rebuildPage': rebuildPage,
-      //   'fileCount': pickedFiles.length,
-      // }));
+      logAction(
+        action.actionType.value,
+        {
+          'mediaSource': mediaSource,
+          'cameraDevice': cameraDevice,
+          'allowPhoto': allowPhoto,
+          'allowVideo': allowVideo,
+          'maxDuration': maxDuration,
+          'maxWidth': maxWidth,
+          'maxHeight': maxHeight,
+          'imageQuality': imageQuality,
+          'limit': limit,
+          'allowMultiple': allowMultiple,
+          'selectedPageState': selectedPageState,
+          'fileCount': pickedFiles.length,
+        },
+      );
     } catch (e) {
-      print('Error picking media: $e');
+      Logger.error('Error picking media: $e',
+          tag: 'ImagePickerProcessor', error: e);
       return null;
     }
 
@@ -128,7 +132,8 @@ class ImagePickerProcessor extends ActionProcessor<ImagePickerAction> {
           }
         }
       } catch (e) {
-        print('Error processing picked media: $e');
+        Logger.error('Error processing picked media: $e',
+            tag: 'ImagePickerProcessor', error: e);
       }
     }
 

@@ -9,8 +9,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:lottie/lottie.dart';
 import 'package:octo_image/octo_image.dart';
 
-import '../../digia_ui_client.dart';
 import '../../dui_dev_config.dart';
+import '../../init/digia_ui_manager.dart';
 import '../base/virtual_leaf_stateless_widget.dart';
 import '../data_type/adapted_types/file.dart';
 import '../expr/default_scope_context.dart';
@@ -18,6 +18,7 @@ import '../models/props.dart';
 import '../render_payload.dart';
 import '../resource_provider.dart';
 import '../utils/flutter_type_converters.dart';
+import '../utils/network_util.dart' show hasExtension;
 import '../utils/widget_util.dart';
 
 class VWImage extends VirtualLeafStatelessWidget<Props> {
@@ -67,7 +68,7 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
 
     if (imageSource is String) {
       if (imageSource.startsWith('http')) {
-        final DigiaUIHost? host = DigiaUIClient.instance.developerConfig?.host;
+        final DigiaUIHost? host = DigiaUIManager().host;
         final String finalUrl;
         if (host is DashboardHost && host.resourceProxyUrl != null) {
           finalUrl = '${host.resourceProxyUrl}${Uri.encodeFull(imageSource)}';
@@ -92,7 +93,7 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
     final color = payload.evalColor(props.get('svgColor'));
     if (imageSource is String) {
       if (imageSource.startsWith('http')) {
-        final DigiaUIHost? host = DigiaUIClient.instance.developerConfig?.host;
+        final DigiaUIHost? host = DigiaUIManager().host;
         final String finalUrl;
         if (host is DashboardHost && host.resourceProxyUrl != null) {
           finalUrl = '${host.resourceProxyUrl}${Uri.encodeFull(imageSource)}';
@@ -102,19 +103,21 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
         return SvgPicture.network(
           finalUrl,
           colorFilter:
-              ColorFilter.mode(color ?? Colors.black, BlendMode.srcATop),
+              color != null ? ColorFilter.mode(color, BlendMode.srcIn) : null,
           errorBuilder: (context, error, stackTrace) =>
               _buildErrorWidget(error),
           fit: To.boxFit(props.get('fit')),
+          alignment: To.alignment(props.get('alignment')) ?? Alignment.center,
         );
       } else {
         return SvgPicture.asset(
           imageSource,
           colorFilter:
-              ColorFilter.mode(color ?? Colors.black, BlendMode.srcATop),
+              color != null ? ColorFilter.mode(color, BlendMode.srcIn) : null,
           errorBuilder: (context, error, stackTrace) =>
               _buildErrorWidget(error),
           fit: To.boxFit(props.get('fit')),
+          alignment: To.alignment(props.get('alignment')) ?? Alignment.center,
         );
       }
     }
@@ -160,8 +163,7 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
       errorImage = errorImageObj;
     }
     if (errorImage == null &&
-        (DigiaUIClient.instance.developerConfig?.host is DashboardHost ||
-            kDebugMode)) {
+        (DigiaUIManager().host is DashboardHost || kDebugMode)) {
       return Center(
         child: Text(
           error.toString(),
@@ -205,9 +207,11 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
               'dpr': dpr,
             }));
         final opacity = payload.eval<double>(props.get('opacity')) ?? 1.0;
-        final imageType = props.getString('imageType') ?? 'auto';
+        final imageType =
+            (props.getString('imageType') ?? 'auto').toLowerCase();
 
-        if (imageType == 'svg') {
+        if (imageType == 'svg' ||
+            (imageSource is String && hasExtension(imageSource, ['.svg']))) {
           return _buildSvgImage(imageSource, payload, opacity);
         }
 
@@ -219,12 +223,15 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
           dpr,
         );
 
-        if (imageType == 'avif' || (imageSource as String).contains('.avif')) {
+        if (imageType == 'avif' ||
+            (imageSource is String && hasExtension(imageSource, ['.avif']))) {
           return Opacity(
             opacity: opacity,
             child: AvifImage(
               image: imageProvider,
               fit: To.boxFit(props.get('fit')),
+              alignment:
+                  To.alignment(props.get('alignment')) ?? Alignment.center,
               gaplessPlayback: true,
               errorBuilder: (context, error, stackTrace) {
                 return _buildErrorWidget(error);
@@ -237,6 +244,9 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
           child: imageProvider is MemoryImage || imageProvider is FileImage
               ? Image(
                   image: imageProvider,
+                  fit: To.boxFit(props.get('fit')),
+                  alignment:
+                      To.alignment(props.get('alignment')) ?? Alignment.center,
                   errorBuilder: (context, error, stackTrace) {
                     return _buildErrorWidget(error);
                   },
@@ -252,7 +262,10 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
                   placeholderBuilder: _placeHolderBuilderCreator(),
                   errorBuilder: (context, error, stackTrace) {
                     return _buildErrorWidget(error);
-                  }),
+                  },
+                  alignment:
+                      To.alignment(props.get('alignment')) ?? Alignment.center,
+                ),
         );
       }),
     );

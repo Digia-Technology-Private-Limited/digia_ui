@@ -69,3 +69,19 @@ JsonLike _requestObjToMap(RequestOptions request) {
     'queryParameters': request.queryParameters,
   };
 }
+
+bool hasExtension(String src, List<String> exts) {
+  final uri = Uri.tryParse(src);
+  final lowerPath =
+      (uri?.path ?? src).toLowerCase().split('?').first.split('#').first;
+  final normalizedExts =
+      exts.map((e) => e.toLowerCase()).toList(growable: false);
+  if (normalizedExts.any(lowerPath.endsWith)) return true;
+  if (src.startsWith('data:')) {
+    final lower = src.toLowerCase();
+    if (normalizedExts.any((ext) => lower.startsWith('data:image/$ext'))) {
+      return true;
+    }
+  }
+  return false;
+}

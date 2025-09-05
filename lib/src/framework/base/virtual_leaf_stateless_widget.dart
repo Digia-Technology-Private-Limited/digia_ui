@@ -3,7 +3,6 @@ import 'package:flutter/widgets.dart';
 
 import '../../../digia_ui.dart';
 import '../models/common_props.dart';
-import '../models/props.dart';
 import '../utils/flutter_extensions.dart';
 import '../utils/widget_util.dart';
 import 'default_error_widget.dart';
@@ -12,14 +11,13 @@ import 'virtual_widget.dart';
 abstract class VirtualLeafStatelessWidget<T> extends VirtualWidget {
   T props;
   CommonProps? commonProps;
-  Props? parentProps;
 
   VirtualLeafStatelessWidget({
     required this.props,
     required this.commonProps,
     required super.parent,
     required super.refName,
-    this.parentProps,
+    super.parentProps,
   });
 
   @override
@@ -59,8 +57,7 @@ abstract class VirtualLeafStatelessWidget<T> extends VirtualWidget {
 
       return current;
     } catch (error) {
-      if (DigiaUIClient.instance.developerConfig?.host is DashboardHost ||
-          kDebugMode) {
+      if (DigiaUIManager().host is DashboardHost || kDebugMode) {
         return DefaultErrorWidget(
             refName: refName, errorMessage: error.toString());
       } else {

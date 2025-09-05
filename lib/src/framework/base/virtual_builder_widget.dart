@@ -3,7 +3,6 @@ import 'package:flutter/widgets.dart';
 
 import '../../../digia_ui.dart';
 import '../models/common_props.dart';
-import '../models/props.dart';
 
 import '../utils/flutter_extensions.dart';
 import '../utils/widget_util.dart';
@@ -13,11 +12,10 @@ import 'virtual_widget.dart';
 class VirtualBuilderWidget extends VirtualWidget {
   final Widget Function(RenderPayload payload) builder;
   final CommonProps? commonProps;
-  final Props? parentProps;
   VirtualBuilderWidget(
     this.builder, {
     required this.commonProps,
-    this.parentProps,
+    super.parentProps,
     super.refName,
     required super.parent,
   });
@@ -62,8 +60,7 @@ class VirtualBuilderWidget extends VirtualWidget {
 
       return current;
     } catch (error) {
-      if (DigiaUIClient.instance.developerConfig?.host is DashboardHost ||
-          kDebugMode) {
+      if (DigiaUIManager().host is DashboardHost || kDebugMode) {
         return DefaultErrorWidget(
             refName: refName, errorMessage: error.toString());
       } else {

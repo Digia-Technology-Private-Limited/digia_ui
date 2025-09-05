@@ -29,7 +29,6 @@ class BorderWithPattern extends BoxBorder {
       case StrokeAlign.center:
         return EdgeInsets.all(strokeWidth / 2);
       case StrokeAlign.outside:
-      default:
         return EdgeInsets.zero;
     }
   }
@@ -106,7 +105,6 @@ class BorderWithPattern extends BoxBorder {
             (rect.shortestSide / 2) + (strokeWidth / 2) - (strokeWidth / 16);
         break;
       case StrokeAlign.center:
-      default:
         radius = rect.shortestSide / 2;
         break;
     }
@@ -124,7 +122,6 @@ class BorderWithPattern extends BoxBorder {
         rRect = rRect.inflate(strokeWidth / 2 - strokeWidth / 16);
         break;
       case StrokeAlign.center:
-      default:
     }
     return Path()..addRRect(rRect);
   }

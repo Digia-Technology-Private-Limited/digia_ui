@@ -4,6 +4,7 @@ import '../expr/default_scope_context.dart';
 import '../expr/scope_context.dart';
 import '../render_payload.dart';
 import '../utils/flutter_type_converters.dart';
+import '../utils/functional_util.dart';
 import '../utils/sliver_util.dart';
 import '../widget_props/smart_scroll_view_props.dart';
 import 'nested_scroll_view.dart';
@@ -79,9 +80,14 @@ class VWSmartScrollView extends VirtualStatelessWidget<SmartScrollViewProps> {
   }
 
   ScopeContext _createExprContext(Object? item, int index) {
-    return DefaultScopeContext(variables: {
+    final smartScrollViewObj = {
       'currentItem': item,
       'index': index,
+    };
+
+    return DefaultScopeContext(variables: {
+      ...smartScrollViewObj,
+      ...?refName.maybe((it) => {it: smartScrollViewObj}),
     });
   }
 }

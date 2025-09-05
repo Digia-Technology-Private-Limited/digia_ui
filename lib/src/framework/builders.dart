@@ -11,7 +11,6 @@ import 'widget_props/async_builder_props.dart';
 import 'widget_props/before_after_slider_props.dart';
 import 'widget_props/carousel_props.dart';
 import 'widget_props/condtional_item_props.dart';
-import 'widget_props/flex_fit_props.dart';
 import 'widget_props/icon_props.dart';
 import 'widget_props/image_view_360_props.dart';
 import 'widget_props/markdown_props.dart';
@@ -55,13 +54,12 @@ import 'widgets/container.dart';
 import 'widgets/drawer.dart';
 import 'widgets/expandable.dart';
 import 'widgets/flex.dart';
-import 'widgets/flex_fit.dart';
 import 'widgets/grid_view.dart';
 import 'widgets/html_view.dart';
 import 'widgets/icon.dart';
 import 'widgets/icon_button.dart';
 import 'widgets/image.dart';
-import 'widgets/imageView360.dart';
+import 'widgets/image_view_360.dart';
 import 'widgets/linear_progress_bar.dart';
 import 'widgets/list_view.dart';
 import 'widgets/lottie.dart';
@@ -91,11 +89,9 @@ import 'widgets/smart_scroll_group.dart';
 import 'widgets/smart_scroll_view.dart';
 import 'widgets/spacer.dart';
 import 'widgets/stack.dart';
-import 'widgets/stepper.dart';
 import 'widgets/stream_builder.dart';
 import 'widgets/styled_horizontal_divider.dart';
 import 'widgets/styled_vertical_divider.dart';
-import 'widgets/svg.dart';
 import 'widgets/switch.dart';
 import 'widgets/tab_view/tab_bar.dart';
 import 'widgets/tab_view/tab_view_content.dart';
@@ -130,6 +126,7 @@ VirtualStateContainerWidget stateContainerBuilder(
   return VirtualStateContainerWidget(
     refName: data.refName,
     parent: parent,
+    parentProps: data.parentProps,
     initStateDefs: data.initStateDefs,
     childGroups: createChildGroups(data.childGroups, parent, registry),
   );
@@ -256,19 +253,6 @@ VWFlex flexBuilder(
   );
 }
 
-VWFlexFit flexFitBuilder(
-  VWNodeData data,
-  VirtualWidget? parent,
-  VirtualWidgetRegistry registry,
-) {
-  return VWFlexFit(
-    props: FlexFitProps.fromJson(data.props.value),
-    parent: parent,
-    refName: data.refName,
-    childGroups: createChildGroups(data.childGroups, parent, registry),
-  );
-}
-
 VWListView listViewBuilder(
   VWNodeData data,
   VirtualWidget? parent,
@@ -326,16 +310,6 @@ VWIconButton iconButtonBuilder(VWNodeData data, VirtualWidget? parent, _) {
 
 VWImage imageBuilder(VWNodeData data, VirtualWidget? parent, _) {
   return VWImage(
-    props: data.props,
-    commonProps: data.commonProps,
-    parentProps: data.parentProps,
-    parent: parent,
-    refName: data.refName,
-  );
-}
-
-VWSvgImage svgBuilder(VWNodeData data, VirtualWidget? parent, _) {
-  return VWSvgImage(
     props: data.props,
     commonProps: data.commonProps,
     parentProps: data.parentProps,

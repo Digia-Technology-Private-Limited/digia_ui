@@ -2,7 +2,7 @@ import 'package:digia_ui/src/config/exception.dart';
 import 'package:digia_ui/src/config/factory.dart';
 import 'package:digia_ui/src/config/model.dart';
 import 'package:digia_ui/src/config/source/base.dart';
-import 'package:digia_ui/src/environment.dart';
+import 'package:digia_ui/src/init/flavor.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -25,8 +25,8 @@ void main() {
   /// 2. initFunctions should have captured 1 arg: minimalConfigData['functionsFilePath']
 
   group('Debug Strategy Tests', () {
-    ConfigSource createStrategy() =>
-        ConfigStrategyFactory.createStrategy(Debug(null), mockProvider);
+    ConfigSource createStrategy() => ConfigStrategyFactory.createStrategy(
+        Flavor.debug(branchName: null), mockProvider);
 
     test('Happy Path', () async {
       // ARRANGE

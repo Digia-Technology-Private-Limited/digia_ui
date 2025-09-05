@@ -130,7 +130,6 @@ class _PatternPainter extends CustomPainter {
         }
         break;
       case BorderPattern.solid:
-      default:
     }
     canvas.drawPath(path, paint);
   }

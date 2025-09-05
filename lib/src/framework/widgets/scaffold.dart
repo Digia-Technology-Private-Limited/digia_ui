@@ -52,6 +52,8 @@ class VWScaffold extends VirtualStatelessWidget<ScaffoldProps> {
           payload.evalColorExpr(props.scaffoldBackgroundColor),
     );
     final enableSafeArea = payload.evalExpr(props.enableSafeArea) ?? true;
+    final resizeToAvoidBottomInset =
+        payload.evalExpr(props.resizeToAvoidBottomInset) ?? true;
 
     bool isCollapsibleAppBar = false;
     if (appBarWidget != null && appBarWidget is VWAppBar) {
@@ -63,6 +65,7 @@ class VWScaffold extends VirtualStatelessWidget<ScaffoldProps> {
       data: themeData,
       child: bottomNavigationBar == null
           ? Scaffold(
+              resizeToAvoidBottomInset: resizeToAvoidBottomInset,
               appBar: isCollapsibleAppBar ? null : _buildAppBar(payload),
               drawer: drawer,
               endDrawer: endDrawer,
@@ -79,6 +82,7 @@ class VWScaffold extends VirtualStatelessWidget<ScaffoldProps> {
                 persistentFooterButtons: persistentFooterButtons,
                 isCollapsibleAppBar: isCollapsibleAppBar,
                 enableSafeArea: enableSafeArea,
+                resizeToAvoidBottomInset: resizeToAvoidBottomInset,
                 payload: payload,
                 parent: this,
               ),
@@ -359,17 +363,18 @@ class _ScaffoldWithBottomNav extends StatefulWidget {
   final bool enableSafeArea;
   final RenderPayload payload;
   final VWScaffold parent;
+  final bool resizeToAvoidBottomInset;
 
-  const _ScaffoldWithBottomNav({
-    required this.appBarWidget,
-    required this.drawer,
-    required this.endDrawer,
-    required this.persistentFooterButtons,
-    required this.isCollapsibleAppBar,
-    required this.enableSafeArea,
-    required this.payload,
-    required this.parent,
-  });
+  const _ScaffoldWithBottomNav(
+      {required this.appBarWidget,
+      required this.drawer,
+      required this.endDrawer,
+      required this.persistentFooterButtons,
+      required this.isCollapsibleAppBar,
+      required this.enableSafeArea,
+      required this.payload,
+      required this.parent,
+      required this.resizeToAvoidBottomInset});
 
   @override
   State<_ScaffoldWithBottomNav> createState() => _ScaffoldWithBottomNavState();
@@ -419,6 +424,7 @@ class _ScaffoldWithBottomNavState extends State<_ScaffoldWithBottomNav> {
       setCurrentIndex: onDestinationSelected,
       currentIndex: bottomNavBarIndex,
       child: Scaffold(
+        resizeToAvoidBottomInset: widget.resizeToAvoidBottomInset,
         appBar: widget.isCollapsibleAppBar
             ? null
             : widget.parent._buildAppBar(widget.payload),

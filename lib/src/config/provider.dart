@@ -1,7 +1,7 @@
-import '../Utils/asset_bundle_operations.dart';
-import '../Utils/download_operations.dart';
-import '../Utils/file_operations.dart';
 import '../framework/utils/types.dart';
+import '../utils/asset_bundle_operations.dart';
+import '../utils/download_operations.dart';
+import '../utils/file_operations.dart';
 
 /// Pending: addVersion to headers.
 /// - Why add version to header only in VERSIONED & RELEASE

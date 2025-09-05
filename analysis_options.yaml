@@ -26,6 +26,7 @@ linter:
     prefer_single_quotes: true # Uncomment to enable the `prefer_single_quotes` rule
     prefer_relative_imports: true
     directives_ordering: true
+    avoid_web_libraries_in_flutter: false
 # Additional information about this file can be found at
 # https://dart.dev/guides/language/analysis-options
 

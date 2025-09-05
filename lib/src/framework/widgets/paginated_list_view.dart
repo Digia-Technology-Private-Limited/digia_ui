@@ -110,9 +110,14 @@ class VWPaginatedListView
   }
 
   ScopeContext _createExprContext(Object? item, int index) {
-    return DefaultScopeContext(variables: {
+    final paginatedListViewObj = {
       'currentItem': item,
       'index': index,
+    };
+
+    return DefaultScopeContext(variables: {
+      ...paginatedListViewObj,
+      ...?refName.maybe((it) => {it: paginatedListViewObj}),
     });
   }
 }

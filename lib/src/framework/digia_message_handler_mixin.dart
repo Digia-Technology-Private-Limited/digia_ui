@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/widgets.dart';
 
 import '../../digia_ui.dart';
+import '../utils/logger.dart';
 
 /// A mixin that provides message handling capabilities for StatefulWidget states.
 ///
@@ -72,7 +73,8 @@ mixin DigiaMessageHandlerMixin<T extends StatefulWidget> on State<T> {
       } catch (e) {
         // Log or handle subscription errors
         assert(() {
-          print('Error subscribing to message ${entry.key}: $e');
+          Logger.error('Error subscribing to message ${entry.key}: $e',
+              tag: 'DigiaMessageHandlerMixin', error: e);
           return true;
         }());
       }

@@ -38,7 +38,7 @@ class DataTypeCreator {
         return AdaptedFile();
 
       case DataType.streamController:
-        return StreamController<Object?>();
+        return StreamController<Object?>.broadcast();
 
       case DataType.asyncController:
         return AsyncController<Object?>();

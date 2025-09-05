@@ -31,15 +31,16 @@ class UploadProcessor extends ActionProcessor<UploadAction> {
     UploadAction action,
     ScopeContext? scopeContext,
   ) async {
+    final dataSource = action.dataSource?.evaluate(scopeContext);
     final apiModel = ResourceProvider.maybeOf(context)
-        ?.apiModels[as$<JsonLike>(action.dataSource)?['dataSourceId']];
+        ?.apiModels[as$<JsonLike>(dataSource)?['id']];
     final progressStreamController = action.streamController
         ?.evaluate(scopeContext) as StreamController<Object?>?;
     final apiCancelToken = action.cancelToken?.evaluate(scopeContext);
-    final args = as$<JsonLike>(as$<JsonLike>(action.dataSource)?['args'])
-        ?.map((k, v) => MapEntry(
-              k,
-              ExprOr.fromJson<Object>(v),
+    final args = as$<JsonLike>(as$<JsonLike>(dataSource)?['args'])
+        ?.map((key, value) => MapEntry(
+              key,
+              ExprOr.fromJson<Object>(value)?.evaluate(scopeContext),
             ));
 
     if (apiModel == null) {
@@ -50,7 +51,6 @@ class UploadProcessor extends ActionProcessor<UploadAction> {
       action.actionType.value,
       {
         'dataSource': action.dataSource?.toJson(),
-        'args': as$<JsonLike>(action.dataSource)?['args'],
       },
     );
 
@@ -71,6 +71,9 @@ class UploadProcessor extends ActionProcessor<UploadAction> {
       };
       final isSuccess = action.successCondition?.evaluate(scopeContext) ?? true;
       if (isSuccess) {
+        if (!context.mounted) {
+          return null;
+        }
         if (action.onSuccess != null) {
           await executeActionFlow(
               context,
@@ -81,6 +84,9 @@ class UploadProcessor extends ActionProcessor<UploadAction> {
               ));
         }
       } else {
+        if (!context.mounted) {
+          return null;
+        }
         if (action.onError != null) {
           await executeActionFlow(
               context,
@@ -92,6 +98,9 @@ class UploadProcessor extends ActionProcessor<UploadAction> {
         }
       }
     }, onError: (error) async {
+      if (!context.mounted) {
+        return null;
+      }
       if (error is DioException && action.onError != null) {
         final response = {
           'body': error.response?.data,
@@ -113,7 +122,7 @@ class UploadProcessor extends ActionProcessor<UploadAction> {
     return result;
   }
 
-  _requestObjToMap(RequestOptions request) {
+  Map<String, dynamic> _requestObjToMap(RequestOptions request) {
     return {
       'url': request.path,
       'method': request.method,

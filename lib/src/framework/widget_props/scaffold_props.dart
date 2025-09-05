@@ -5,6 +5,7 @@ import '../utils/types.dart';
 class ScaffoldProps {
   final ExprOr<String>? scaffoldBackgroundColor;
   final ExprOr<bool>? enableSafeArea;
+  final ExprOr<bool>? resizeToAvoidBottomInset;
   final JsonLike? body;
   final JsonLike? appBar;
   final JsonLike? drawer;
@@ -12,16 +13,16 @@ class ScaffoldProps {
   final JsonLike? bottomNavigationBar;
   final List<JsonLike>? persistentFooterButtons;
 
-  const ScaffoldProps({
-    this.scaffoldBackgroundColor,
-    this.enableSafeArea,
-    this.body,
-    this.appBar,
-    this.drawer,
-    this.endDrawer,
-    this.bottomNavigationBar,
-    this.persistentFooterButtons,
-  });
+  const ScaffoldProps(
+      {this.scaffoldBackgroundColor,
+      this.enableSafeArea,
+      this.body,
+      this.appBar,
+      this.drawer,
+      this.endDrawer,
+      this.bottomNavigationBar,
+      this.persistentFooterButtons,
+      this.resizeToAvoidBottomInset});
 
   factory ScaffoldProps.fromJson(JsonLike json) {
     return ScaffoldProps(
@@ -39,6 +40,8 @@ class ScaffoldProps {
               .where((e) => e != null)
               .cast<JsonLike>()
               .toList(),
+      resizeToAvoidBottomInset:
+          ExprOr.fromJson<bool>(json['resizeToAvoidBottomInset']),
     );
   }
 }

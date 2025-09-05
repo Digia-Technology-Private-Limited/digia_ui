@@ -2,6 +2,43 @@
 
 Digia Ui SDK.
 
+## [1.1.0] – 2025-08-21
+
+- ✅ Verified compatibility with Flutter 3.35.1
+- 📦 Updated several packages to newer versions for hygiene
+- 📖 Improved README documentation
+- ✨ Added indicator decoration support to TabBar
+- 🔄 Upgraded SmartAuth to latest for Android 35 compatibility
+- 🐞 Fixed SVG color rendering issue
+- 🐞 Fixed keyboard stuttering on open/close (dependency issue) — details
+
+## [1.0.0] – 2025-08-07
+
+⚠ This version is not backward compatible with 0.x.x.
+Public Release (1.0.0)
+
+## [1.0.0-rc.9] – 2025-08-06 (Release Candidate)
+
+⚠ This version is not backward compatible with 0.x.x.
+
+- 🐞 Fixed a bug where nearest context was not being used inside Bottomsheet.
+
+## [1.0.0-rc.8] – 2025-08-06 (Release Candidate)
+
+⚠ This version is not backward compatible with 0.x.x.
+
+- ✨ Added support for `resizeToAvoidBottomInset` in Scaffold. Defaults to true.
+
+## [1.0.0-rc.7] – 2025-08-04 (Release Candidate)
+
+⚠ This version is not backward compatible with 0.x.x.
+
+- ✨ Added support for async calling of JS functions
+- ✨ Widgets now expose all internal scope variables with their own name as prefix (e.g., widgetA.varA)
+- 🐞 Bug fixes in UploadAction and ImagePicker
+- 🐞 Fixed gradient issues in border rendering
+- 🎨 Added support for radial gradients
+
 ## [1.0.0-rc.6] – 2025-07-23 (Release Candidate)
 
 ⚠ This version is not backward compatible with 0.x.x.

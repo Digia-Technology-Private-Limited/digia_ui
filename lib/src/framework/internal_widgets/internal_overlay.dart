@@ -35,7 +35,7 @@ class InternalOverlay extends StatefulWidget {
   });
 
   @override
-  _InternalOverlayState createState() => _InternalOverlayState();
+  State<InternalOverlay> createState() => _InternalOverlayState();
 }
 
 class _InternalOverlayState extends State<InternalOverlay> {
@@ -165,7 +165,7 @@ class _TapDetector extends StatefulWidget {
   });
 
   @override
-  _TapDetectorState createState() => _TapDetectorState();
+  State<_TapDetector> createState() => _TapDetectorState();
 }
 
 class _TapDetectorState extends State<_TapDetector> {

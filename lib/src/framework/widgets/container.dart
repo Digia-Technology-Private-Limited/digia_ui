@@ -2,8 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../../digia_ui_client.dart';
 import '../../dui_dev_config.dart';
+import '../../init/digia_ui_manager.dart';
 import '../base/default_error_widget.dart';
 import '../base/virtual_stateless_widget.dart';
 import '../custom/border_with_pattern.dart';
@@ -57,8 +57,7 @@ class VWContainer extends VirtualStatelessWidget<Props> {
 
       return current;
     } catch (error) {
-      if (DigiaUIClient.instance.developerConfig?.host is DashboardHost ||
-          kDebugMode) {
+      if (DigiaUIManager().host is DashboardHost || kDebugMode) {
         return DefaultErrorWidget(
             refName: refName, errorMessage: error.toString());
       } else {
@@ -78,13 +77,14 @@ class VWContainer extends VirtualStatelessWidget<Props> {
     final alignment = To.alignment(props.get('childAlignment'));
 
     final padding = To.edgeInsets(props.get('padding'));
-    final color = payload.evalColor(props.get('color'));
+    final gradiant = To.gradient(props.getMap('gradiant'),
+        evalColor: (it) => payload.evalColor(it));
+    final color =
+        gradiant != null ? null : payload.evalColor(props.get('color'));
 
     BoxShape shape = props.getString('shape') == 'circle'
         ? BoxShape.circle
         : BoxShape.rectangle;
-    final gradiant = To.gradient(props.getMap('gradiant'),
-        evalColor: (it) => payload.evalColor(it));
     final elevation = props.getDouble('elevation') ?? 0.0;
 
     Widget container = Container(
