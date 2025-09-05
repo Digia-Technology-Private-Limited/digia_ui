@@ -87,11 +87,6 @@ class AnalyticsHandler {
     required List<AnalyticEvent> events,
     ScopeContext? enclosing,
   }) async {
-    final logger = DigiaUIManager().logger;
-
-    // Log analytics events for debugging purposes
-    _logAnalytics(logger, events, context, enclosing);
-
     // Evaluate expressions in event payloads and create processed events
     final evaluatedList = events.map((event) {
       final payload = as$<Map<String, dynamic>>(
@@ -101,38 +96,5 @@ class AnalyticsHandler {
 
     // Forward processed events to the registered analytics handler
     context.analyticsHandler?.onEvent(evaluatedList);
-  }
-}
-
-/// Internal helper function for logging analytics events to the Digia UI logging system.
-///
-/// This function processes each analytics event and logs it with the configured logger.
-/// It safely handles expression evaluation and provides fallback values for missing data.
-///
-/// Parameters:
-/// - [logger]: The Digia UI logger instance for recording events
-/// - [events]: List of analytics events to log
-/// - [context]: BuildContext for accessing widget tree data
-/// - [enclosing]: Scope context for expression evaluation
-///
-/// The function evaluates expressions in event payloads and logs both the event name
-/// and the processed payload data for debugging and monitoring purposes.
-void _logAnalytics(DUILogger? logger, List<AnalyticEvent>? events,
-    BuildContext context, ScopeContext? enclosing) {
-  // Return early if no events to process
-  if (events == null) return;
-
-  // Process each analytics event for logging
-  for (var event in events) {
-    // Extract event name with fallback to 'Unknown Event'
-    String eventName = as$<String>(event.name) ?? 'Unknown Event';
-
-    // Evaluate expressions in payload and provide fallback to empty map
-    Map<String, dynamic> eventPayload = as$<Map<String, dynamic>>(
-            evaluateNestedExpressions(event.payload ?? {}, enclosing)) ??
-        {};
-
-    // Log the processed event to the Digia UI logging system
-    logger?.logEvent(eventName: eventName, eventPayload: eventPayload);
   }
 }

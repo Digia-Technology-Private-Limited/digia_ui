@@ -1,6 +1,4 @@
 import 'dart:io';
-
-// import 'package:chucker_flutter/chucker_flutter.dart';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'package:flutter/foundation.dart';
@@ -136,11 +134,11 @@ class NetworkClient {
   ///
   /// Throws an exception if the base URL is empty or invalid.
   NetworkClient(
-      String baseUrl,
-      Map<String, dynamic> digiaHeaders,
-      NetworkConfiguration projectNetworkConfiguration,
-      DeveloperConfig? developerConfig)
-      : digiaDioInstance =
+    String baseUrl,
+    Map<String, dynamic> digiaHeaders,
+    NetworkConfiguration projectNetworkConfiguration,
+    DeveloperConfig? developerConfig,
+  )   : digiaDioInstance =
             _createDigiaDio(baseUrl, digiaHeaders, developerConfig),
         projectDioInstance =
             _createProjectDio(projectNetworkConfiguration, developerConfig) {
@@ -149,10 +147,11 @@ class NetworkClient {
       throw 'Invalid BaseUrl';
     }
 
-    // Add debugging interceptors if provided
-    developerConfig?.inspector?.dioInterceptors?.forEach((interceptor) {
-      projectDioInstance.interceptors.add(interceptor);
-    });
+    // Add interceptor if provided by logger
+    final dioInterceptor = developerConfig?.logger?.dioInterceptor;
+    if (dioInterceptor != null) {
+      projectDioInstance.interceptors.add(dioInterceptor.interceptor);
+    }
   }
 
   /// Makes an HTTP request using the project-configured Dio instance.
@@ -168,6 +167,7 @@ class NetworkClient {
   /// - [additionalHeaders]: Optional headers to add to the request
   /// - [cancelToken]: Optional token for request cancellation
   /// - [data]: Request body data
+  /// - [apiName]: Optional API name for enhanced logging (from APIModel.name)
   ///
   /// Returns a [Response] containing the server response.
   ///
@@ -183,6 +183,7 @@ class NetworkClient {
     Map<String, dynamic>? additionalHeaders,
     CancelToken? cancelToken,
     Object? data,
+    String? apiName,
   }) {
     // Remove headers already passed in base headers to avoid conflicts
     if (additionalHeaders != null) {
@@ -208,6 +209,9 @@ class NetworkClient {
         method: method.stringValue,
         headers: headers,
         contentType: bodyType.contentTypeHeader,
+        extra: {
+          if (apiName != null) 'apiName': apiName,
+        },
       ),
     );
   }
@@ -367,6 +371,7 @@ class NetworkClient {
   /// - [data]: Multipart form data (typically FormData)
   /// - [uploadProgress]: Callback function to track upload progress
   /// - [cancelToken]: Optional token for request cancellation
+  /// - [apiName]: Optional API name for enhanced logging (from APIModel.name)
   ///
   /// Returns a [Response] containing the server response after upload completion.
   ///
@@ -397,6 +402,7 @@ class NetworkClient {
     Object? data,
     required void Function(int, int) uploadProgress,
     CancelToken? cancelToken,
+    String? apiName,
   }) {
     // Remove headers already passed in base headers to avoid conflicts
     if (additionalHeaders != null) {
@@ -425,6 +431,9 @@ class NetworkClient {
         method: method.stringValue,
         headers: headers,
         contentType: bodyType.contentTypeHeader,
+        extra: {
+          if (apiName != null) 'apiName': apiName,
+        },
       ),
       onSendProgress: (count, total) {
         uploadProgress(count, total);
