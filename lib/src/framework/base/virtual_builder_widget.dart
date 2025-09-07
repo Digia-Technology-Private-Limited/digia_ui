@@ -28,15 +28,22 @@ class VirtualBuilderWidget extends VirtualWidget {
   @override
   Widget toWidget(RenderPayload payload) {
     try {
-      if (commonProps == null) return render(payload);
+      // Use the widget name (refName or class name) to extend the hierarchy
+      final widgetName = refName ?? runtimeType.toString();
+      final updatedPayload = payload.withExtendedHierarchy([widgetName]);
+
+      if (commonProps == null) return render(updatedPayload);
+
       final isVisible =
-          commonProps?.visibility?.evaluate(payload.scopeContext) ?? true;
+          commonProps?.visibility?.evaluate(updatedPayload.scopeContext) ??
+              true;
       if (!isVisible) return empty();
-      var current = render(payload);
+
+      var current = render(updatedPayload);
 
       // Styling
       current = wrapInContainer(
-        payload: payload,
+        payload: updatedPayload,
         style: commonProps!.style,
         child: current,
       );
@@ -48,7 +55,7 @@ class VirtualBuilderWidget extends VirtualWidget {
       );
 
       current = wrapInGestureDetector(
-        payload: payload,
+        payload: updatedPayload,
         actionFlow: commonProps?.onClick,
         child: current,
         borderRadius: To.borderRadius(commonProps?.style?.borderRadius),

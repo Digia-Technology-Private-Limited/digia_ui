@@ -5,6 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import '../../../utils/logger.dart';
 import '../../data_type/adapted_types/file.dart';
 import '../../expr/scope_context.dart';
+import '../action_descriptor.dart';
 import '../base/processor.dart';
 import 'action.dart';
 
@@ -13,8 +14,10 @@ class FilePickerProcessor extends ActionProcessor<FilePickerAction> {
   Future<Object?>? execute(
     BuildContext context,
     FilePickerAction action,
-    ScopeContext? scopeContext,
-  ) async {
+    ScopeContext? scopeContext, {
+    required String eventId,
+    required String parentId,
+  }) async {
     final file =
         action.selectedPageState?.evaluate(scopeContext) as AdaptedFile?;
     final fileType = action.fileType;
@@ -22,11 +25,41 @@ class FilePickerProcessor extends ActionProcessor<FilePickerAction> {
     final showToast = action.showToast ?? true;
     final isMultiSelect = action.isMultiSelected ?? false;
 
+    final desc = ActionDescriptor(
+      id: eventId,
+      type: action.actionType,
+      definition: action.toJson(),
+      resolvedParameters: {
+        'fileType': fileType,
+        'sizeLimit': sizeLimit,
+        'isMultiSelect': isMultiSelect,
+        'showToast': showToast,
+      },
+    );
+
+    executionContext?.notifyStart(
+      eventId: eventId,
+      parentId: parentId,
+      descriptor: desc,
+    );
+
     final type = toFileType(fileType);
 
     List<PlatformFile>? platformFiles;
-    // bool isSinglePick;
     try {
+      executionContext?.notifyProgress(
+        eventId: eventId,
+        parentId: parentId,
+        descriptor: desc,
+        details: {
+          'stage': 'file_picker_started',
+          'fileType': fileType,
+          'sizeLimit': sizeLimit,
+          'isMultiSelect': isMultiSelect,
+          'showToast': showToast,
+        },
+      );
+
       // Compression has to be set to 0, because of this issue:
       // https://github.com/miguelpruivo/flutter_file_picker/issues/1534
       FilePickerResult? pickedFile = await FilePicker.platform.pickFiles(
@@ -35,28 +68,40 @@ class FilePickerProcessor extends ActionProcessor<FilePickerAction> {
           allowedExtensions: type == FileType.custom ? ['pdf'] : null,
           compressionQuality: 0);
 
-      // isSinglePick = pickedFile?.isSinglePick ?? true;
-
       if (pickedFile == null) {
         // User canceled the picker
+        executionContext?.notifyComplete(
+          eventId: eventId,
+          parentId: parentId,
+          descriptor: desc,
+          error: null,
+          stackTrace: null,
+        );
         return null;
       }
 
-      logAction(
-        action.actionType.value,
-        {
-          'fileType': fileType,
-          'sizeLimit': sizeLimit,
-          'isMultiSelect': isMultiSelect,
-          'showToast': showToast,
+      if (!context.mounted) {
+        executionContext?.notifyComplete(
+          eventId: eventId,
+          parentId: parentId,
+          descriptor: desc,
+          error: null,
+          stackTrace: null,
+        );
+        return null;
+      }
+
+      executionContext?.notifyProgress(
+        eventId: eventId,
+        parentId: parentId,
+        descriptor: desc,
+        details: {
+          'stage': 'files_picked',
           'pickedFileCount': pickedFile.count,
-          'pickedFile(s)': pickedFile.names,
+          'pickedFileNames': pickedFile.names,
         },
       );
 
-      if (!context.mounted) {
-        return null;
-      }
       final toast = FToast().init(context);
 
       if (sizeLimit != null && showToast) {
@@ -73,6 +118,13 @@ class FilePickerProcessor extends ActionProcessor<FilePickerAction> {
     } catch (e) {
       Logger.error('Error picking file: $e',
           tag: 'FilePickerProcessor', error: e);
+      executionContext?.notifyComplete(
+        eventId: eventId,
+        parentId: parentId,
+        descriptor: desc,
+        error: e,
+        stackTrace: StackTrace.current,
+      );
       return null;
     }
 
@@ -87,10 +139,37 @@ class FilePickerProcessor extends ActionProcessor<FilePickerAction> {
         if (file != null) {
           file.setDataFromAdaptedFile(files);
         }
+
+        executionContext?.notifyProgress(
+          eventId: eventId,
+          parentId: parentId,
+          descriptor: desc,
+          details: {
+            'stage': 'files_processed',
+            'finalFileCount': finalFiles.length,
+            'fileSet': file != null,
+          },
+        );
       } catch (e) {
         Logger.error('Error: $e', tag: 'FilePickerProcessor', error: e);
+        executionContext?.notifyComplete(
+          eventId: eventId,
+          parentId: parentId,
+          descriptor: desc,
+          error: e,
+          stackTrace: StackTrace.current,
+        );
+        return null;
       }
     }
+
+    executionContext?.notifyComplete(
+      eventId: eventId,
+      parentId: parentId,
+      descriptor: desc,
+      error: null,
+      stackTrace: null,
+    );
 
     return null;
   }

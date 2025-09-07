@@ -1,3 +1,4 @@
+import 'package:digia_inspector_core/digia_inspector_core.dart';
 import 'package:flutter/widgets.dart';
 
 import '../network/api_request/api_request.dart';
@@ -14,8 +15,13 @@ import 'utils/types.dart';
 class RenderPayload {
   final BuildContext buildContext;
   final ScopeContext scopeContext;
+  final ObservabilityContext? observabilityContext;
 
-  RenderPayload({required this.buildContext, required this.scopeContext});
+  RenderPayload({
+    required this.buildContext,
+    required this.scopeContext,
+    this.observabilityContext,
+  });
 
   // Retrieves an icon from a map, currently not implemented
   IconData? getIcon(Map<String, Object?>? map) {
@@ -60,6 +66,62 @@ class RenderPayload {
       buildContext,
       actionFlow,
       _chainExprContext(scopeContext),
+      eventId: '',
+      parentId: '',
+    );
+  }
+
+  /// Creates a child ObservabilityContext with additional hierarchy elements
+  @Deprecated('Use extendHierarchy or forTrigger methods instead')
+  ObservabilityContext? withAdditionalHierarchy({
+    String? triggerWidgetId,
+    String? triggerType,
+    List<String>? additionalHierarchy,
+  }) {
+    if (observabilityContext == null) return null;
+
+    // If triggerWidgetId is provided and additionalHierarchy is null,
+    // add a default hierarchy element
+    final hierarchyToAdd = additionalHierarchy ??
+        (triggerWidgetId != null ? [triggerWidgetId] : null);
+
+    return observabilityContext!.copyWith(
+      widgetHierarchy: hierarchyToAdd != null
+          ? [...observabilityContext!.widgetHierarchy, ...hierarchyToAdd]
+          : observabilityContext!.widgetHierarchy,
+      triggerWidgetId: triggerWidgetId,
+      triggerType: triggerType ?? observabilityContext!.triggerType,
+    );
+  }
+
+  /// Extends the observability context hierarchy with additional widget names
+  ///
+  /// This is the preferred method for adding widgets to the hierarchy chain
+  ObservabilityContext? extendHierarchy(List<String> additionalHierarchy) {
+    return observabilityContext?.extendHierarchy(additionalHierarchy);
+  }
+
+  /// Creates a context for triggering an action with optional hierarchy extension
+  ///
+  /// This is the preferred method when executing actions that need trigger information
+  ObservabilityContext? forTrigger({
+    String? triggerWidgetId,
+    required String triggerType,
+    List<String>? additionalHierarchy,
+  }) {
+    return observabilityContext?.forTrigger(
+      triggerWidgetId: triggerWidgetId,
+      triggerType: triggerType,
+      additionalHierarchy: additionalHierarchy,
+    );
+  }
+
+  /// Creates a new RenderPayload with an extended hierarchy
+  ///
+  /// Convenience method to create a new payload with extended observability context
+  RenderPayload withExtendedHierarchy(List<String> additionalHierarchy) {
+    return copyWith(
+      observabilityContext: extendHierarchy(additionalHierarchy),
     );
   }
 
@@ -120,10 +182,12 @@ class RenderPayload {
   RenderPayload copyWithChainedContext(
     ScopeContext scopeContext, {
     BuildContext? buildContext,
+    ObservabilityContext? observabilityContext,
   }) {
     return copyWith(
       buildContext: buildContext ?? this.buildContext,
       scopeContext: _chainExprContext(scopeContext),
+      observabilityContext: observabilityContext ?? this.observabilityContext,
     );
   }
 
@@ -131,10 +195,12 @@ class RenderPayload {
   RenderPayload copyWith({
     BuildContext? buildContext,
     ScopeContext? scopeContext,
+    ObservabilityContext? observabilityContext,
   }) {
     return RenderPayload(
       buildContext: buildContext ?? this.buildContext,
       scopeContext: scopeContext ?? this.scopeContext,
+      observabilityContext: observabilityContext ?? this.observabilityContext,
     );
   }
 }

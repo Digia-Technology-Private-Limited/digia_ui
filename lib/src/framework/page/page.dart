@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:digia_inspector_core/digia_inspector_core.dart';
 
 import '../../network/api_request/api_request.dart';
 import '../actions/base/action_flow.dart';
@@ -175,23 +176,43 @@ class _DUIPageContentState extends State<_DUIPageContent> {
 
     final virtualWidget = widget.registry.createWidget(rootNode, null);
 
+    // Build ObservabilityContext with page information
+    final observabilityContext = ObservabilityContext(
+      widgetHierarchy: ['DUIPage'],
+      currentPageId: widget.pageId,
+      triggerType: 'onPageLoad',
+    );
+
     return virtualWidget.toWidget(
       RenderPayload(
         buildContext: context,
         scopeContext: widget.scope,
+        observabilityContext: observabilityContext,
       ),
     );
   }
 
   void _onPageLoaded() {
     if (widget.onPageLoaded != null) {
-      _executeAction(context, widget.onPageLoaded!, widget.scope);
+      final observabilityContext = ObservabilityContext(
+        widgetHierarchy: ['DUIPage'],
+        currentPageId: widget.pageId,
+        triggerType: 'onPageLoad',
+      );
+      _executeAction(
+          context, widget.onPageLoaded!, widget.scope, observabilityContext);
     }
   }
 
   void _handleBackPress(bool didPop, Object? result) {
     if (widget.onBackPress != null) {
-      _executeAction(context, widget.onBackPress!, widget.scope);
+      final observabilityContext = ObservabilityContext(
+        widgetHierarchy: ['DUIPage'],
+        currentPageId: widget.pageId,
+        triggerType: 'onBackPress',
+      );
+      _executeAction(
+          context, widget.onBackPress!, widget.scope, observabilityContext);
     }
   }
 
@@ -199,11 +220,14 @@ class _DUIPageContentState extends State<_DUIPageContent> {
     BuildContext context,
     ActionFlow actionFlow,
     ScopeContext? scopeContext,
+    ObservabilityContext? observabilityContext,
   ) {
     return DefaultActionExecutor.of(context).execute(
       context,
       actionFlow,
       scopeContext,
+      eventId: '',
+      parentId: '',
     );
   }
 }

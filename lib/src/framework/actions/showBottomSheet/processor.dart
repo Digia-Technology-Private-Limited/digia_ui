@@ -12,6 +12,7 @@ import '../../utils/navigation_util.dart';
 import '../../utils/types.dart';
 import '../../widget_props/icon_props.dart';
 import '../../widgets/icon.dart';
+import '../action_descriptor.dart';
 import '../base/action_flow.dart';
 import '../base/processor.dart';
 import 'action.dart';
@@ -20,8 +21,10 @@ class ShowBottomSheetProcessor extends ActionProcessor<ShowBottomSheetAction> {
   final Future<Object?>? Function(
     BuildContext context,
     ActionFlow actionFlow,
-    ScopeContext? scopeContext,
-  ) executeActionFlow;
+    ScopeContext? scopeContext, {
+    required String eventId,
+    required String parentId,
+  }) executeActionFlow;
 
   final Widget Function(
     BuildContext context,
@@ -38,8 +41,10 @@ class ShowBottomSheetProcessor extends ActionProcessor<ShowBottomSheetAction> {
   Future<Object?>? execute(
     BuildContext context,
     ShowBottomSheetAction action,
-    ScopeContext? scopeContext,
-  ) async {
+    ScopeContext? scopeContext, {
+    required String eventId,
+    required String parentId,
+  }) async {
     final JsonLike style = action.style ?? {};
     final provider = ResourceProvider.maybeOf(context);
     final navigatorKey = provider?.navigatorKey;
@@ -61,75 +66,122 @@ class ShowBottomSheetProcessor extends ActionProcessor<ShowBottomSheetAction> {
 
     final viewData = action.viewData?.deepEvaluate(scopeContext);
     final evaluatedArgs = as$<JsonLike>(as$<JsonLike>(viewData)?['args']);
+    final bottomSheetId = as$<String>(as$<JsonLike>(viewData)?['id']);
 
-    logAction(
-      action.actionType.value,
-      {
-        'id': as$<String>(as$<JsonLike>(viewData)?['id']),
+    final desc = ActionDescriptor(
+      id: eventId,
+      type: action.actionType,
+      definition: action.toJson(),
+      resolvedParameters: {
+        'id': bottomSheetId,
         'args': evaluatedArgs,
         'style': style,
-        'onResult': action.onResult?.actions
-            .map((a) => a.actionType.value)
-            .toList()
-            .toString(),
+        'waitForResult': action.waitForResult,
       },
     );
-    Object? result = await presentBottomSheet(
-        context: navigatorKey?.currentContext ?? context,
-        builder: (innerCtx) {
-          return viewBuilder(
-            innerCtx,
-            as$<String>(as$<JsonLike>(viewData)?['id']) ?? '',
-            evaluatedArgs,
-          );
-        },
-        navigatorKey: navigatorKey,
-        backgroundColor: bgColor,
-        scrollControlDisabledMaxHeightRatio: maxHeightRatio,
-        barrierColor: barrierColor,
-        useSafeArea: useSafeArea,
-        border: To.border((
-          style: as$<String>(style['borderStyle']),
-          width: as$<double>(style['borderWidth']),
-          color: borderColor,
-          strokeAlign: To.strokeAlign(as$<String>(style['strokeAlign'])) ??
-              StrokeAlign.center,
-        )),
-        borderRadius: To.borderRadius(style['borderRadius']),
-        iconBuilder: iconProps.maybe((p0) {
-          return (innerCtx) => VWIcon(
-                props: p0,
-                commonProps: null,
-                parent: null,
-              ).toWidget(
-                RenderPayload(
-                  buildContext: context,
-                  scopeContext: DefaultScopeContext(
-                    variables: {},
-                    enclosing: scopeContext,
+
+    executionContext?.notifyStart(
+      eventId: eventId,
+      parentId: parentId,
+      descriptor: desc,
+    );
+
+    executionContext?.notifyProgress(
+      eventId: eventId,
+      parentId: parentId,
+      descriptor: desc,
+      details: {
+        'id': bottomSheetId,
+        'args': evaluatedArgs,
+        'style': style,
+        'waitForResult': action.waitForResult,
+      },
+    );
+
+    try {
+      final future = presentBottomSheet(
+          context: navigatorKey?.currentContext ?? context,
+          builder: (innerCtx) {
+            return viewBuilder(
+              innerCtx,
+              bottomSheetId ?? '',
+              evaluatedArgs,
+            );
+          },
+          navigatorKey: navigatorKey,
+          backgroundColor: bgColor,
+          scrollControlDisabledMaxHeightRatio: maxHeightRatio,
+          barrierColor: barrierColor,
+          useSafeArea: useSafeArea,
+          border: To.border((
+            style: as$<String>(style['borderStyle']),
+            width: as$<double>(style['borderWidth']),
+            color: borderColor,
+            strokeAlign: To.strokeAlign(as$<String>(style['strokeAlign'])) ??
+                StrokeAlign.center,
+          )),
+          borderRadius: To.borderRadius(style['borderRadius']),
+          iconBuilder: iconProps.maybe((p0) {
+            return (innerCtx) => VWIcon(
+                  props: p0,
+                  commonProps: null,
+                  parent: null,
+                ).toWidget(
+                  RenderPayload(
+                    buildContext: context,
+                    scopeContext: DefaultScopeContext(
+                      variables: {},
+                      enclosing: scopeContext,
+                    ),
                   ),
-                ),
-              );
-        }));
+                );
+          }));
 
-    if (action.waitForResult && context.mounted) {
-      logAction(
-        '${action.actionType.value} - Result',
-        {
-          'id': as$<String>(as$<JsonLike>(viewData)?['id']),
-          'args': evaluatedArgs,
-          'result': result,
+      executionContext?.notifyProgress(
+        eventId: eventId,
+        parentId: parentId,
+        descriptor: desc,
+        details: {
+          'stage': 'bottom_sheet_presented',
+          'id': bottomSheetId,
+          'success': true,
+          'navigatorKeyExists': navigatorKey != null,
         },
       );
-      await executeActionFlow(
-        context,
-        action.onResult ?? ActionFlow.empty(),
-        DefaultScopeContext(variables: {
-          'result': result,
-        }, enclosing: scopeContext),
-      );
-    }
 
-    return null;
+      Object? result = await future;
+
+      if (action.waitForResult && context.mounted) {
+        await executeActionFlow(
+          context,
+          action.onResult ?? ActionFlow.empty(),
+          DefaultScopeContext(variables: {
+            'result': result,
+          }, enclosing: scopeContext),
+          parentId: parentId,
+          eventId: eventId,
+        );
+      }
+
+      executionContext?.notifyComplete(
+        eventId: eventId,
+        parentId: parentId,
+        descriptor: desc,
+        error: null,
+        stackTrace: null,
+      );
+
+      return null;
+    } catch (error) {
+      executionContext?.notifyComplete(
+        eventId: eventId,
+        parentId: parentId,
+        descriptor: desc,
+        error: error,
+        stackTrace: StackTrace.current,
+      );
+
+      rethrow;
+    }
   }
 }

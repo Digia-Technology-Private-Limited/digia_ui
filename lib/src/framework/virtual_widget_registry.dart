@@ -1,3 +1,4 @@
+import 'package:digia_inspector_core/digia_inspector_core.dart';
 import 'package:flutter/widgets.dart';
 
 import 'base/virtual_builder_widget.dart';
@@ -138,6 +139,7 @@ abstract class VirtualWidgetRegistry {
     required Widget Function(
       String id,
       JsonLike? args,
+      ObservabilityContext? observabilityContext,
     ) componentBuilder,
   }) = DefaultVirtualWidgetRegistry;
 
@@ -150,6 +152,7 @@ class DefaultVirtualWidgetRegistry implements VirtualWidgetRegistry {
   final Widget Function(
     String id,
     JsonLike? args,
+    ObservabilityContext? observabilityContext,
   ) componentBuilder;
 
   final Map<String, VirtualWidgetBuilder> builders;
@@ -181,6 +184,7 @@ class DefaultVirtualWidgetRegistry implements VirtualWidgetRegistry {
           parentProps: data.parentProps,
           parent: parent,
           refName: data.refName,
+          extendHierarchy: false,
           (payload) => componentBuilder(
             data.id,
             data.args?.map(
@@ -189,6 +193,7 @@ class DefaultVirtualWidgetRegistry implements VirtualWidgetRegistry {
                 v?.evaluate(payload.scopeContext),
               ),
             ),
+            payload.observabilityContext,
           ),
         );
 

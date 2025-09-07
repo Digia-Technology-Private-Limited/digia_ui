@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../../expr/scope_context.dart';
+import '../action_descriptor.dart';
 import '../base/processor.dart';
 import 'action.dart';
 
@@ -11,16 +12,38 @@ class ShareProcessor extends ActionProcessor<ShareAction> {
   Future<Object?>? execute(
     BuildContext context,
     ShareAction action,
-    ScopeContext? scopeContext,
-  ) async {
+    ScopeContext? scopeContext, {
+    required String eventId,
+    required String parentId,
+  }) async {
     final message = action.message?.evaluate(scopeContext);
     final subject = action.subject?.evaluate(scopeContext);
 
-    logAction(
-      action.actionType.value,
-      {
+    final desc = ActionDescriptor(
+      id: eventId,
+      type: action.actionType,
+      definition: action.toJson(),
+      resolvedParameters: {
         'message': message,
         'subject': subject,
+      },
+    );
+
+    executionContext?.notifyStart(
+      eventId: eventId,
+      parentId: parentId,
+      descriptor: desc,
+    );
+
+    executionContext?.notifyProgress(
+      eventId: eventId,
+      parentId: parentId,
+      descriptor: desc,
+      details: {
+        'message': message,
+        'subject': subject,
+        'messageLength': message?.length,
+        'isWeb': kIsWeb,
       },
     );
 
@@ -33,8 +56,23 @@ class ShareProcessor extends ActionProcessor<ShareAction> {
           text: message,
         ));
       }
+
+      executionContext?.notifyComplete(
+        eventId: eventId,
+        parentId: parentId,
+        descriptor: desc,
+        error: null,
+        stackTrace: null,
+      );
       return null;
     } else {
+      executionContext?.notifyComplete(
+        eventId: eventId,
+        parentId: parentId,
+        descriptor: desc,
+        error: null,
+        stackTrace: null,
+      );
       return null;
     }
   }

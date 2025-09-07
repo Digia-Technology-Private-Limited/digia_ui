@@ -1,9 +1,11 @@
 import 'package:digia_expr/digia_expr.dart';
+import 'package:digia_inspector_core/digia_inspector_core.dart';
 import 'package:flutter/widgets.dart';
 
 import '../config/app_state/app_state_scope_context.dart';
 import '../config/app_state/global_state.dart';
 import '../init/digia_ui_manager.dart';
+import 'actions/action_execution_context.dart';
 import 'actions/action_executor.dart';
 import 'base/virtual_widget.dart';
 import 'component/component.dart';
@@ -101,6 +103,9 @@ class DUIFactory {
   /// Registry for method bindings used in expressions
   late MethodBindingRegistry bindingRegistry;
 
+  /// Execution context for the factory
+  late ActionExecutionContext executionContext;
+
   /// Private constructor for singleton pattern
   DUIFactory._internal();
 
@@ -141,11 +146,19 @@ class DUIFactory {
     // Initialize widget registry with component builder
     widgetRegistry = DefaultVirtualWidgetRegistry(
       // MessageHandler is not propagated here
-      componentBuilder: (id, args) => createComponent(id, args),
+      componentBuilder: (id, args, observabilityContext) =>
+          _createComponentWithContext(id, args, observabilityContext),
     );
 
     // Initialize method binding registry for expression evaluation
     bindingRegistry = MethodBindingRegistry();
+
+    // Initialize execution context for action execution
+    executionContext = ActionExecutionContext(
+      actionObserver: DigiaUIManager().inspector!.actionObserver!,
+      observabilityContext:
+          ObservabilityContext(widgetHierarchy: [], triggerType: ''),
+    );
 
     // Set up configuration provider (use custom or default)
     configProvider =
@@ -417,17 +430,17 @@ class DUIFactory {
     final pageDef = configProvider.getPageDefinition(pageId);
 
     // Log page initialization for debugging and analytics
-    DigiaUIManager().logger?.logEntity(
-      entitySlug: pageId,
-      eventName: 'INITIALIZATION',
-      argDefs: pageDef.pageArgDefs
-              ?.map((k, v) => MapEntry(k, pageArgs?[k] ?? v.defaultValue)) ??
-          {},
-      initStateDefs:
-          pageDef.initStateDefs?.map((k, v) => MapEntry(k, v.defaultValue)) ??
-              {},
-      stateContainerVariables: {},
-    );
+    // DigiaUIManager().logger?.logEntity(
+    //   entitySlug: pageId,
+    //   eventName: 'INITIALIZATION',
+    //   argDefs: pageDef.pageArgDefs
+    //           ?.map((k, v) => MapEntry(k, pageArgs?[k] ?? v.defaultValue)) ??
+    //       {},
+    //   initStateDefs:
+    //       pageDef.initStateDefs?.map((k, v) => MapEntry(k, v.defaultValue)) ??
+    //           {},
+    //   stateContainerVariables: {},
+    // );
 
     // Wrap page with action executor for handling actions
     return DefaultActionExecutor(
@@ -435,10 +448,11 @@ class DUIFactory {
         viewBuilder: (context, id, args) => _buildView(context, id, args),
         pageRouteBuilder: (context, id, args) => createPageRoute(id, args),
         bindingRegistry: bindingRegistry,
-        logger: DigiaUIManager().logger,
-        metaData: {
-          'entitySlug': pageId,
-        },
+        // logger: DigiaUIManager().logger,
+        executionContext: executionContext,
+        // metaData: {
+        //   'entitySlug': pageId,
+        // },
       ),
       child: DUIPage(
         pageId: pageId,
@@ -550,6 +564,22 @@ class DUIFactory {
     return createComponent(viewId, args);
   }
 
+  /// Internal method for creating components with observability context.
+  ///
+  /// This method is used by the widget registry to create components with
+  /// the proper observability context passed down from the parent widget.
+  Widget _createComponentWithContext(
+    String componentId,
+    JsonLike? args,
+    ObservabilityContext? observabilityContext,
+  ) {
+    return _createComponentInternal(
+      componentId,
+      args,
+      observabilityContext: observabilityContext,
+    );
+  }
+
   /// Creates a reusable component widget from a JSON configuration.
   ///
   /// Components are smaller, reusable UI blocks that can be embedded within
@@ -574,8 +604,6 @@ class DUIFactory {
   ///   },
   /// );
   /// ```
-  // TODO: What should be done about MessageHandler here?
-  // Show it propagate to Page?
   Widget createComponent(
     String componentid,
     JsonLike? args, {
@@ -584,6 +612,31 @@ class DUIFactory {
     Map<String, TextStyle>? overrideTextStyles,
     Map<String, Color?>? overrideColorTokens,
     GlobalKey<NavigatorState>? navigatorKey,
+  }) {
+    return _createComponentInternal(
+      componentid,
+      args,
+      overrideIcons: overrideIcons,
+      overrideImages: overrideImages,
+      overrideTextStyles: overrideTextStyles,
+      overrideColorTokens: overrideColorTokens,
+      navigatorKey: navigatorKey,
+    );
+  }
+
+  /// Internal method for creating components with optional observability context.
+  ///
+  /// This method handles the actual component creation logic and can optionally
+  /// receive an observability context from parent widgets.
+  Widget _createComponentInternal(
+    String componentid,
+    JsonLike? args, {
+    Map<String, IconData>? overrideIcons,
+    Map<String, ImageProvider>? overrideImages,
+    Map<String, TextStyle>? overrideTextStyles,
+    Map<String, Color?>? overrideColorTokens,
+    GlobalKey<NavigatorState>? navigatorKey,
+    ObservabilityContext? observabilityContext,
   }) {
     // Merge overriding resources with existing resources
     final mergedResources = UIResources(
@@ -599,17 +652,17 @@ class DUIFactory {
     final componentDef = configProvider.getComponentDefinition(componentid);
 
     // Log component initialization for debugging and analytics
-    DigiaUIManager().logger?.logEntity(
-      entitySlug: componentid,
-      eventName: 'INITIALIZATION',
-      argDefs: componentDef.argDefs
-              ?.map((key, value) => MapEntry(key, value.defaultValue)) ??
-          {},
-      initStateDefs: componentDef.initStateDefs
-              ?.map((key, value) => MapEntry(key, value.defaultValue)) ??
-          {},
-      stateContainerVariables: {},
-    );
+    // DigiaUIManager().logger?.logEntity(
+    //   entitySlug: componentid,
+    //   eventName: 'INITIALIZATION',
+    //   argDefs: componentDef.argDefs
+    //           ?.map((key, value) => MapEntry(key, value.defaultValue)) ??
+    //       {},
+    //   initStateDefs: componentDef.initStateDefs
+    //           ?.map((key, value) => MapEntry(key, value.defaultValue)) ??
+    //       {},
+    //   stateContainerVariables: {},
+    // );
 
     // Wrap component with action executor for handling actions
     return DefaultActionExecutor(
@@ -617,10 +670,11 @@ class DUIFactory {
         viewBuilder: (context, id, args) => _buildView(context, id, args),
         pageRouteBuilder: (context, id, args) => createPageRoute(id, args),
         bindingRegistry: bindingRegistry,
-        logger: DigiaUIManager().logger,
-        metaData: {
-          'entitySlug': componentid,
-        },
+        // logger: DigiaUIManager().logger,
+        executionContext: executionContext,
+        // metaData: {
+        //   'entitySlug': componentid,
+        // },
       ),
       child: DUIComponent(
         id: componentid,
@@ -630,6 +684,7 @@ class DUIFactory {
         definition: componentDef,
         registry: widgetRegistry,
         apiModels: configProvider.getAllApiModels(),
+        parentObservabilityContext: observabilityContext,
         scope: AppStateScopeContext(
           values: DUIAppState().value,
           variables: {

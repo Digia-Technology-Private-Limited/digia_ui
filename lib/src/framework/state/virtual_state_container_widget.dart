@@ -31,6 +31,9 @@ class VirtualStateContainerWidget extends VirtualWidget {
           scopeContext: payload.scopeContext,
         )));
 
+    // Build hierarchy context for state container
+    final hierarchyContext = buildHierarchyContext(payload);
+
     return StatefulScopeWidget(
       namespace: refName,
       initialState: resolvedState,
@@ -38,6 +41,7 @@ class VirtualStateContainerWidget extends VirtualWidget {
         final updatedPayload = payload.copyWithChainedContext(
           _createExprContext(state),
           buildContext: context,
+          observabilityContext: hierarchyContext,
         );
         return child!.toWidget(updatedPayload);
       },

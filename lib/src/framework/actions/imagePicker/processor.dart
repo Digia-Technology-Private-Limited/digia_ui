@@ -7,6 +7,7 @@ import '../../../utils/logger.dart';
 import '../../data_type/adapted_types/file.dart';
 import '../../expr/scope_context.dart';
 import '../../utils/functional_util.dart';
+import '../action_descriptor.dart';
 import '../base/processor.dart';
 import 'action.dart';
 
@@ -15,8 +16,10 @@ class ImagePickerProcessor extends ActionProcessor<ImagePickerAction> {
   Future<Object?>? execute(
     BuildContext context,
     ImagePickerAction action,
-    ScopeContext? scopeContext,
-  ) async {
+    ScopeContext? scopeContext, {
+    required String eventId,
+    required String parentId,
+  }) async {
     final mediaSource = action.mediaSource;
     final cameraDevice = action.cameraDevice;
     final allowPhoto = action.mediaType == 'photo' || action.mediaType == 'all';
@@ -30,8 +33,40 @@ class ImagePickerProcessor extends ActionProcessor<ImagePickerAction> {
     final selectedPageState =
         action.fileVariable?.evaluate(scopeContext) as AdaptedFile?;
 
+    final desc = ActionDescriptor(
+      id: eventId,
+      type: action.actionType,
+      definition: action.toJson(),
+      resolvedParameters: {
+        'mediaSource': mediaSource,
+        'cameraDevice': cameraDevice,
+        'allowPhoto': allowPhoto,
+        'allowVideo': allowVideo,
+        'maxDuration': maxDuration,
+        'maxWidth': maxWidth,
+        'maxHeight': maxHeight,
+        'imageQuality': imageQuality,
+        'limit': limit,
+        'allowMultiple': allowMultiple,
+      },
+    );
+
+    executionContext?.notifyStart(
+      eventId: eventId,
+      parentId: parentId,
+      descriptor: desc,
+    );
+
     if (!allowPhoto && !allowVideo) {
-      throw 'At least one of allowPhoto or allowVideo must be true';
+      final error = 'At least one of allowPhoto or allowVideo must be true';
+      executionContext?.notifyComplete(
+        eventId: eventId,
+        parentId: parentId,
+        descriptor: desc,
+        error: error,
+        stackTrace: StackTrace.current,
+      );
+      throw error;
     }
 
     ImageSource source = _toImageSource(mediaSource) ?? ImageSource.gallery;
@@ -41,6 +76,20 @@ class ImagePickerProcessor extends ActionProcessor<ImagePickerAction> {
     List<XFile> pickedFiles = [];
 
     try {
+      executionContext?.notifyProgress(
+        eventId: eventId,
+        parentId: parentId,
+        descriptor: desc,
+        details: {
+          'stage': 'image_picker_started',
+          'mediaSource': mediaSource,
+          'cameraDevice': cameraDevice,
+          'allowPhoto': allowPhoto,
+          'allowVideo': allowVideo,
+          'allowMultiple': allowMultiple,
+        },
+      );
+
       if (allowMultiple) {
         if (allowPhoto && allowVideo) {
           pickedFiles = await imagePicker.pickMultipleMedia(
@@ -97,28 +146,36 @@ class ImagePickerProcessor extends ActionProcessor<ImagePickerAction> {
 
       if (pickedFiles.isEmpty) {
         // User canceled the picker
+        executionContext?.notifyComplete(
+          eventId: eventId,
+          parentId: parentId,
+          descriptor: desc,
+          error: null,
+          stackTrace: null,
+        );
         return null;
       }
-      logAction(
-        action.actionType.value,
-        {
-          'mediaSource': mediaSource,
-          'cameraDevice': cameraDevice,
-          'allowPhoto': allowPhoto,
-          'allowVideo': allowVideo,
-          'maxDuration': maxDuration,
-          'maxWidth': maxWidth,
-          'maxHeight': maxHeight,
-          'imageQuality': imageQuality,
-          'limit': limit,
-          'allowMultiple': allowMultiple,
-          'selectedPageState': selectedPageState,
+
+      executionContext?.notifyProgress(
+        eventId: eventId,
+        parentId: parentId,
+        descriptor: desc,
+        details: {
+          'stage': 'media_picked',
           'fileCount': pickedFiles.length,
+          'fileNames': pickedFiles.map((f) => f.name).toList(),
         },
       );
     } catch (e) {
       Logger.error('Error picking media: $e',
           tag: 'ImagePickerProcessor', error: e);
+      executionContext?.notifyComplete(
+        eventId: eventId,
+        parentId: parentId,
+        descriptor: desc,
+        error: e,
+        stackTrace: StackTrace.current,
+      );
       return null;
     }
 
@@ -130,12 +187,39 @@ class ImagePickerProcessor extends ActionProcessor<ImagePickerAction> {
           if (selectedPageState != null) {
             selectedPageState.setDataFromAdaptedFile(finalFiles.first);
           }
+
+          executionContext?.notifyProgress(
+            eventId: eventId,
+            parentId: parentId,
+            descriptor: desc,
+            details: {
+              'stage': 'media_processed',
+              'finalFileCount': finalFiles.length,
+              'fileSet': selectedPageState != null,
+            },
+          );
         }
       } catch (e) {
         Logger.error('Error processing picked media: $e',
             tag: 'ImagePickerProcessor', error: e);
+        executionContext?.notifyComplete(
+          eventId: eventId,
+          parentId: parentId,
+          descriptor: desc,
+          error: e,
+          stackTrace: StackTrace.current,
+        );
+        return null;
       }
     }
+
+    executionContext?.notifyComplete(
+      eventId: eventId,
+      parentId: parentId,
+      descriptor: desc,
+      error: null,
+      stackTrace: null,
+    );
 
     return null;
   }
