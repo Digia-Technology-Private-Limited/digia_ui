@@ -299,7 +299,7 @@ class IndicatorBuilder extends StatelessWidget {
           ),
           activeDotDecoration: DotDecoration(
             borderRadius: BorderRadius.circular(100),
-            width: dotWidth ,
+            width: dotWidth,
             height: dotHeight,
             color: activeDotColor ?? Colors.indigo,
             dotBorder: DotBorder(
