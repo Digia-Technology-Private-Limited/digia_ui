@@ -94,7 +94,8 @@ class VWTextFormField extends VirtualStatelessWidget<Props> {
       keyboardType: keyboardType,
       textInputAction: textInputAction,
       style: style,
-      maxLines: effectiveMaxLines, // Ensuring the effective maxLines and minLines are dynamically set as per the obscureText
+      maxLines:
+          effectiveMaxLines, // Ensuring the effective maxLines and minLines are dynamically set as per the obscureText
       minLines: effectiveMinLines,
       maxLength: maxLength,
       cursorColor: cursorColor,
