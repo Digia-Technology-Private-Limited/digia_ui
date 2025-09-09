@@ -1,3 +1,4 @@
+import 'package:digia_inspector_core/digia_inspector_core.dart';
 import 'package:flutter/widgets.dart';
 
 import '../../network/api_request/api_request.dart';
@@ -23,6 +24,7 @@ class DUIComponent extends StatelessWidget {
   final ScopeContext? scope;
   final Map<String, APIModel>? apiModels;
   final GlobalKey<NavigatorState>? navigatorKey;
+  final ObservabilityContext? parentObservabilityContext;
 
   const DUIComponent({
     super.key,
@@ -34,6 +36,7 @@ class DUIComponent extends StatelessWidget {
     this.scope,
     this.apiModels,
     this.navigatorKey,
+    this.parentObservabilityContext,
   });
 
   @override
@@ -70,12 +73,17 @@ class DUIComponent extends StatelessWidget {
                 resolvedArgs,
                 state,
               ),
+              parentObservabilityContext,
             );
           },
         ));
   }
 
-  Widget _buildContent(BuildContext context, ScopeContext scopeContext) {
+  Widget _buildContent(
+    BuildContext context,
+    ScopeContext scopeContext,
+    ObservabilityContext? parentObservabilityContext,
+  ) {
     final rootNode = definition.layout?.root;
     // Blank Layout
     if (rootNode == null) {
@@ -84,10 +92,17 @@ class DUIComponent extends StatelessWidget {
 
     final virtualWidget = registry.createWidget(rootNode, null);
 
+    // Extend parent observability context for this component
+    final componentObservabilityContext =
+        parentObservabilityContext?.forComponent(
+      componentId: id,
+    );
+
     return virtualWidget.toWidget(
       RenderPayload(
         buildContext: context,
         scopeContext: scopeContext,
+        observabilityContext: componentObservabilityContext,
       ),
     );
   }

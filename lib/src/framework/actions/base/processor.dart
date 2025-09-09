@@ -1,29 +1,27 @@
 import 'package:flutter/widgets.dart';
 
-import '../../../dui_logger.dart';
 import '../../expr/scope_context.dart';
+import '../action_execution_context.dart';
 import 'action.dart' as an;
 
+// typedef ActionExecutionDetails = ({
+//   BuildContext context,
+//   ScopeContext? scopeContext,
+//   String eventId,
+//   String parentId,
+// });
+
 abstract class ActionProcessor<T extends an.Action> {
-  DUILogger? logger;
-  Map<String, Object?>? metaData;
+  ActionExecutionContext? executionContext;
 
-  ActionProcessor({this.logger, this.metaData});
+  ActionProcessor({this.executionContext});
 
-  void logAction(String actionType, Map<String, Object?> actionData) {
-    logger?.log(
-      type: LogType.action,
-      data: {
-        'entitySlug': metaData?['entitySlug'],
-        'actionType': actionType,
-        'actionData': actionData,
-      },
-    );
-  }
-
+  // Future<Object?>? execute(T action, ActionExecutionDetails details);
   Future<Object?>? execute(
     BuildContext context,
     T action,
-    ScopeContext? scopeContext,
-  );
+    ScopeContext? scopeContext, {
+    required String eventId,
+    required String parentId,
+  });
 }

@@ -148,7 +148,7 @@ class NetworkClient {
     }
 
     // Add interceptor if provided by logger
-    final dioInterceptor = developerConfig?.inspector?.dioInterceptor;
+    final dioInterceptor = developerConfig?.inspector?.networkObserver;
     if (dioInterceptor != null) {
       projectDioInstance.interceptors.add(dioInterceptor.interceptor);
     }

@@ -9,6 +9,7 @@ import '../../utils/functional_util.dart';
 import '../../utils/num_util.dart';
 import '../../utils/textstyle_util.dart';
 import '../../utils/types.dart';
+import '../action_descriptor.dart';
 import '../base/processor.dart';
 import 'action.dart';
 
@@ -17,8 +18,10 @@ class ShowToastProcessor extends ActionProcessor<ShowToastAction> {
   Future<Object?>? execute(
     BuildContext context,
     ShowToastAction action,
-    ScopeContext? scopeContext,
-  ) async {
+    ScopeContext? scopeContext, {
+    required String eventId,
+    required String parentId,
+  }) async {
     T? evalExpr<T extends Object>(Object? expr) {
       return ExprOr.fromJson<T>(expr)?.evaluate(scopeContext);
     }
@@ -47,9 +50,37 @@ class ShowToastProcessor extends ActionProcessor<ShowToastAction> {
     final margin = To.edgeInsets(style['margin']);
     final alignment = To.alignment(style['alignment']);
 
-    logAction(
-      action.actionType.value,
-      {
+    // logAction(
+    //   action.actionType.value,
+    //   {
+    //     'message': message,
+    //     'duration': duration,
+    //     'style': style,
+    //   },
+    // );
+
+    final desc = ActionDescriptor(
+      id: eventId,
+      type: action.actionType,
+      definition: action.toJson(),
+      resolvedParameters: {
+        'message': message,
+        'duration': duration,
+        'style': style,
+      },
+    );
+
+    executionContext?.notifyStart(
+      eventId: eventId,
+      parentId: parentId,
+      descriptor: desc,
+    );
+
+    executionContext?.notifyProgress(
+      eventId: eventId,
+      parentId: parentId,
+      descriptor: desc,
+      details: {
         'message': message,
         'duration': duration,
         'style': style,
@@ -75,6 +106,14 @@ class ShowToastProcessor extends ActionProcessor<ShowToastAction> {
       ),
       gravity: ToastGravity.BOTTOM,
       toastDuration: Duration(seconds: duration),
+    );
+
+    executionContext?.notifyComplete(
+      eventId: eventId,
+      parentId: parentId,
+      descriptor: desc,
+      error: null,
+      stackTrace: null,
     );
 
     return null;

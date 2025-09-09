@@ -4,6 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../../../digia_ui.dart';
 import '../../expr/scope_context.dart';
+import '../action_descriptor.dart';
 import '../base/processor.dart';
 import 'action.dart';
 
@@ -12,33 +13,77 @@ class CopyToClipBoardProcessor extends ActionProcessor<CopyToClipBoardAction> {
   Future<Object?>? execute(
     BuildContext context,
     CopyToClipBoardAction action,
-    ScopeContext? scopeContext,
-  ) async {
+    ScopeContext? scopeContext, {
+    required String eventId,
+    required String parentId,
+  }) async {
     final message = action.message?.evaluate(scopeContext);
 
-    logAction(
-      action.actionType.value,
-      {
+    final desc = ActionDescriptor(
+      id: eventId,
+      type: action.actionType,
+      definition: action.toJson(),
+      resolvedParameters: {
         'message': message,
       },
+    );
+
+    executionContext?.notifyStart(
+      eventId: eventId,
+      parentId: parentId,
+      descriptor: desc,
     );
 
     final toast = FToast().init(context);
     final DigiaUIHost? host = DigiaUIManager().host;
 
     if (message != null && message.isNotEmpty) {
+      executionContext?.notifyProgress(
+        eventId: eventId,
+        parentId: parentId,
+        descriptor: desc,
+        details: {
+          'message': message,
+          'messageLength': message.length,
+          'hostType': host.runtimeType.toString(),
+        },
+      );
+
       try {
         await Clipboard.setData(ClipboardData(text: message));
         if (host is DashboardHost) {
           _showToast(toast, 'Copied to Clipboard!');
         }
+
+        executionContext?.notifyComplete(
+          eventId: eventId,
+          parentId: parentId,
+          descriptor: desc,
+          error: null,
+          stackTrace: null,
+        );
       } catch (e) {
         if (host is DashboardHost) {
           _showToast(toast, 'Failed to copy to clipboard.');
         }
+
+        executionContext?.notifyComplete(
+          eventId: eventId,
+          parentId: parentId,
+          descriptor: desc,
+          error: e,
+          stackTrace: StackTrace.current,
+        );
       }
       return null;
     } else {
+      executionContext?.notifyComplete(
+        eventId: eventId,
+        parentId: parentId,
+        descriptor: desc,
+        error: null,
+        stackTrace: null,
+      );
       return null;
     }
   }
