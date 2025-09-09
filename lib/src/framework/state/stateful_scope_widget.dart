@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:digia_inspector_core/digia_inspector_core.dart';
 import 'state_context.dart';
 import 'state_context_provider.dart';
 
@@ -14,11 +15,15 @@ class StatefulScopeWidget extends StatefulWidget {
   /// The initial state values for this scope.
   final Map<String, Object?> initialState;
 
+  /// The type of state this widget manages.
+  final StateType stateType;
+
   const StatefulScopeWidget({
     super.key,
     required this.childBuilder,
     required this.initialState,
     this.namespace,
+    this.stateType = StateType.stateContainer,
   });
 
   @override
@@ -40,6 +45,7 @@ class _StatefulScopeWidgetState extends State<StatefulScopeWidget> {
       widget.namespace,
       initialState: widget.initialState,
       ancestorContext: ancestorProvider?.stateContext,
+      stateType: widget.stateType,
     );
   }
 
