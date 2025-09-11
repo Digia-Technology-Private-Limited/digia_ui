@@ -1,13 +1,21 @@
+import 'package:digia_inspector_core/digia_inspector_core.dart';
+import 'package:digia_ui/src/init/digia_ui_manager.dart';
 import 'package:flutter/widgets.dart';
-import 'state_observer.dart';
 
 /// Manages state for a specific namespace and provides access to enclosing contexts.
 class StateContext extends ChangeNotifier {
-  /// The global state observer, if any.
-  static StateObserver? observer;
+  /// The state observer, if any.
+  static StateObserver? get digiaStateObserver =>
+      DigiaUIManager().inspector?.stateObserver;
 
   /// The unique identifier for this state context.
   final String? namespace;
+
+  /// Unique ID for this state context instance.
+  late final String stateId;
+
+  /// The type of state this context represents.
+  late final StateType _stateType;
 
   /// The state variables stored in this context.
   final Map<String, Object?> _stateVariables;
@@ -19,12 +27,35 @@ class StateContext extends ChangeNotifier {
     this.namespace, {
     required Map<String, Object?> initialState,
     StateContext? ancestorContext,
+    StateType stateType = StateType.stateContainer,
   })  : _stateVariables = Map.from(initialState),
-        _ancestorContext = ancestorContext;
+        _ancestorContext = ancestorContext {
+    // Generate unique state ID
+    stateId = TimestampHelper.generateId();
+    _stateType = stateType;
+
+    // Log state creation
+    digiaStateObserver?.onCreate(
+      stateId,
+      stateType,
+      namespace: namespace,
+      initialState: Map.from(initialState),
+      metadata: {
+        'hasAncestor': ancestorContext != null,
+        'ancestorNamespace': ancestorContext?.namespace,
+        'stateType': stateType.value,
+      },
+    );
+  }
 
   @override
   void dispose() {
-    observer?.onDispose();
+    digiaStateObserver?.onDispose(
+      stateId,
+      _stateType,
+      namespace: namespace,
+      finalState: Map.from(_stateVariables),
+    );
     super.dispose();
   }
 
@@ -64,10 +95,12 @@ class StateContext extends ChangeNotifier {
       nextState[key] = value;
 
       if (namespace != null) {
-        observer?.onStateChange(
-          namespace!,
-          nextState,
-          Map<String, Object?>.from(_stateVariables),
+        digiaStateObserver?.onChange(
+          stateId,
+          _stateType,
+          namespace: namespace,
+          previousState: Map<String, Object?>.from(_stateVariables),
+          currentState: nextState,
         );
       }
       _stateVariables[key] = value;
@@ -100,7 +133,13 @@ class StateContext extends ChangeNotifier {
     });
 
     if (notify && anyUpdated) {
-      observer?.onStateChange(namespace!, nextState, currentState);
+      digiaStateObserver?.onChange(
+        stateId,
+        _stateType,
+        namespace: namespace,
+        previousState: currentState,
+        currentState: nextState,
+      );
       notifyListeners();
     }
 
