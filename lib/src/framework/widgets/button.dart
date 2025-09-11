@@ -38,11 +38,11 @@ class VWButton extends VirtualLeafStatelessWidget<Props> {
         defaultStyleJson.getString('height')?.toHeight(payload.buildContext);
     final minWidth =
         defaultStyleJson.getString('minWidth')?.toWidth(payload.buildContext) ??
-            64.0;
+            5;
     final minHeight = defaultStyleJson
             .getString('minHeight')
             ?.toHeight(payload.buildContext) ??
-        36.0;
+        5;
     final maxWidth =
         defaultStyleJson.getString('maxWidth')?.toWidth(payload.buildContext);
     final maxHeight =
@@ -83,7 +83,7 @@ class VWButton extends VirtualLeafStatelessWidget<Props> {
             ? WidgetStateProperty.all(
                 Size(maxWidth ?? double.infinity, maxHeight ?? double.infinity))
             : null,
-        tapTargetSize: MaterialTapTargetSize.padded,
+        tapTargetSize:  MaterialTapTargetSize.padded,
         visualDensity: VisualDensity.adaptivePlatformDensity);
 
     final isDisabled = payload.eval<bool>(props.get('isDisabled')) ??
