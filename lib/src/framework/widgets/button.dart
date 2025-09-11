@@ -83,7 +83,7 @@ class VWButton extends VirtualLeafStatelessWidget<Props> {
             ? WidgetStateProperty.all(
                 Size(maxWidth ?? double.infinity, maxHeight ?? double.infinity))
             : null,
-        tapTargetSize:  MaterialTapTargetSize.padded,
+        tapTargetSize: MaterialTapTargetSize.padded,
         visualDensity: VisualDensity.adaptivePlatformDensity);
 
     final isDisabled = payload.eval<bool>(props.get('isDisabled')) ??
