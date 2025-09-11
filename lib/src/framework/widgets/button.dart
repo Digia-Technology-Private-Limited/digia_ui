@@ -36,55 +36,35 @@ class VWButton extends VirtualLeafStatelessWidget<Props> {
         defaultStyleJson.getString('width')?.toWidth(payload.buildContext);
     final height =
         defaultStyleJson.getString('height')?.toHeight(payload.buildContext);
-    final minWidth =
-        defaultStyleJson.getString('minWidth')?.toWidth(payload.buildContext) ??
-            5;
-    final minHeight = defaultStyleJson
-            .getString('minHeight')
-            ?.toHeight(payload.buildContext) ??
-        5;
-    final maxWidth =
-        defaultStyleJson.getString('maxWidth')?.toWidth(payload.buildContext);
-    final maxHeight =
-        defaultStyleJson.getString('maxHeight')?.toHeight(payload.buildContext);
 
     ButtonStyle style = ButtonStyle(
-        shape: WidgetStateProperty.all(
-            To.buttonShape(props.get('shape'), payload.getColor)),
-        padding: WidgetStateProperty.all(To.edgeInsets(
-          defaultStyleJson.get('padding'),
-          or: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-        )),
-        elevation: WidgetStateProperty.all(
-          defaultStyleJson.getDouble('elevation') ?? 0.0,
-        ),
-        shadowColor: WidgetStateProperty.all(
-            defaultStyleJson.getString('shadowColor').maybe(payload.getColor)),
-        alignment: To.alignment(defaultStyleJson.get('alignment')),
-        backgroundColor: WidgetStateProperty.resolveWith((states) {
-          if (states.contains(WidgetState.disabled)) {
-            return disabledStyleJson
-                .getString('backgroundColor')
-                .maybe(payload.evalColor);
-          }
-          return defaultStyleJson
+      shape: WidgetStateProperty.all(
+          To.buttonShape(props.get('shape'), payload.getColor)),
+      padding: WidgetStateProperty.all(To.edgeInsets(
+        defaultStyleJson.get('padding'),
+        or: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+      )),
+      elevation: WidgetStateProperty.all(
+        defaultStyleJson.getDouble('elevation') ?? 0.0,
+      ),
+      shadowColor: WidgetStateProperty.all(
+          defaultStyleJson.getString('shadowColor').maybe(payload.getColor)),
+      alignment: To.alignment(defaultStyleJson.get('alignment')),
+      backgroundColor: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.disabled)) {
+          return disabledStyleJson
               .getString('backgroundColor')
               .maybe(payload.evalColor);
-        }),
-        fixedSize: width != null || height != null
-            ? WidgetStateProperty.all(
-                Size(width ?? double.infinity, height ?? double.infinity))
-            : null,
-        minimumSize: WidgetStateProperty.all(Size(
-          minWidth,
-          minHeight,
-        )),
-        maximumSize: maxWidth != null || maxHeight != null
-            ? WidgetStateProperty.all(
-                Size(maxWidth ?? double.infinity, maxHeight ?? double.infinity))
-            : null,
-        tapTargetSize: MaterialTapTargetSize.padded,
-        visualDensity: VisualDensity.adaptivePlatformDensity);
+        }
+        return defaultStyleJson
+            .getString('backgroundColor')
+            .maybe(payload.evalColor);
+      }),
+      fixedSize: width != null || height != null
+          ? WidgetStateProperty.all(
+              Size(width ?? double.infinity, height ?? double.infinity))
+          : null,
+    );
 
     final isDisabled = payload.eval<bool>(props.get('isDisabled')) ??
         props.get('onClick') == null;
