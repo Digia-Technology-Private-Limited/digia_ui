@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_avif/flutter_avif.dart';
 import 'package:flutter_blurhash/flutter_blurhash.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lottie/lottie.dart';
 import 'package:octo_image/octo_image.dart';
@@ -20,7 +21,6 @@ import '../resource_provider.dart';
 import '../utils/flutter_type_converters.dart';
 import '../utils/network_util.dart' show hasExtension;
 import '../utils/widget_util.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 class VWImage extends VirtualLeafStatelessWidget<Props> {
   VWImage({
