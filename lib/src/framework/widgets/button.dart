@@ -31,6 +31,12 @@ class VWButton extends VirtualLeafStatelessWidget<Props> {
     final defaultStyleJson = props.toProps('defaultStyle') ?? Props.empty();
     final disabledStyleJson = props.toProps('disabledStyle') ?? Props.empty();
 
+    //sizing constraints
+    final width =
+        defaultStyleJson.getString('width')?.toWidth(payload.buildContext);
+    final height =
+        defaultStyleJson.getString('height')?.toHeight(payload.buildContext);
+
     ButtonStyle style = ButtonStyle(
       shape: WidgetStateProperty.all(
           To.buttonShape(props.get('shape'), payload.getColor)),
@@ -54,12 +60,10 @@ class VWButton extends VirtualLeafStatelessWidget<Props> {
             .getString('backgroundColor')
             .maybe(payload.evalColor);
       }),
-      fixedSize: WidgetStateProperty.all(Size(
-        defaultStyleJson.getString('width')?.toWidth(payload.buildContext) ??
-            0.0,
-        defaultStyleJson.getString('height')?.toHeight(payload.buildContext) ??
-            0.0,
-      )),
+      fixedSize: width != null || height != null
+          ? WidgetStateProperty.all(
+              Size(width ?? double.infinity, height ?? double.infinity))
+          : null,
     );
 
     final isDisabled = payload.eval<bool>(props.get('isDisabled')) ??
