@@ -1,11 +1,9 @@
 import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_avif/flutter_avif.dart';
 import 'package:flutter_blurhash/flutter_blurhash.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lottie/lottie.dart';
 import 'package:octo_image/octo_image.dart';
@@ -41,6 +39,7 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
             }),
             commonProps: null,
             parent: null);
+
   ImageProvider _createImageProvider(
     RenderPayload payload,
     Object? imageSource,
@@ -51,7 +50,8 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
     if (imageSource is List<AdaptedFile> && imageSource.isNotEmpty) {
       final firstFile = imageSource.first;
       if (firstFile.isWeb && firstFile.xFile?.path != null) {
-        return CachedNetworkImageProvider(firstFile.xFile!.path);
+        // return CachedNetworkImageProvider(firstFile.xFile!.path);
+        return NetworkImage(firstFile.xFile!.path);
       } else if (firstFile.isMobile && firstFile.path != null) {
         return FileImage(File(firstFile.path!));
       }
@@ -60,7 +60,8 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
 
     if (imageSource is AdaptedFile) {
       if (imageSource.isWeb && imageSource.xFile?.path != null) {
-        return CachedNetworkImageProvider(imageSource.xFile!.path);
+        // return CachedNetworkImageProvider(imageSource.xFile!.path);
+        return NetworkImage(imageSource.xFile!.path);
       } else if (imageSource.isMobile && imageSource.path != null) {
         return FileImage(File(imageSource.path!));
       }
@@ -76,9 +77,8 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
         } else {
           finalUrl = imageSource;
         }
-        return CachedNetworkImageProvider(
-          finalUrl,
-        );
+        // return CachedNetworkImageProvider(finalUrl);
+        return NetworkImage(finalUrl);
       } else {
         return ResourceProvider.maybeOf(payload.buildContext)
                 ?.getImageProvider(imageSource) ??
@@ -139,7 +139,7 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
         case 'blurhash':
           return BlurHash(
             hash: placeholderSrc ?? '',
-            duration: Duration.zero,
+            duration: const Duration(milliseconds: 300),
           );
         case 'network':
           if (placeholderSrc != null && placeholderSrc.startsWith('http')) {
@@ -218,26 +218,11 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
         final imageType =
             (props.getString('imageType') ?? 'auto').toLowerCase();
 
-        final fit = To.boxFit(props.get('fit'));
-        final alignment =
-            To.alignment(props.get('alignment')) ?? Alignment.center;
-
-        // helper method to get the final URL
-        String getFinalUrl(String src) {
-          final DigiaUIHost? host = DigiaUIManager().host;
-          if (host is DashboardHost && host.resourceProxyUrl != null) {
-            return '${host.resourceProxyUrl}${Uri.encodeFull(src)}';
-          }
-          return src;
-        }
-
-        // if svg, handle separately
         if (imageType == 'svg' ||
             (imageSource is String && hasExtension(imageSource, ['.svg']))) {
           return _buildSvgImage(imageSource, payload, opacity);
         }
 
-        // get proviider for non-network cases
         final imageProvider = _createImageProvider(
           payload,
           imageSource,
@@ -246,127 +231,49 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
           dpr,
         );
 
-        // determine if it's a network image
-        bool isNetworkImage =
-            imageSource is String && imageSource.startsWith('http');
-        if (!isNetworkImage) {
-          // non-network (asset, memory , file)
+        if (imageType == 'avif' ||
+            (imageSource is String && hasExtension(imageSource, ['.avif']))) {
           return Opacity(
             opacity: opacity,
-            child: imageProvider is MemoryImage
-                ? Image(
-                    image: imageProvider,
-                    fit: fit,
-                    alignment: alignment,
-                    errorBuilder: (context, error, stackTrace) {
-                      return _buildErrorWidget(error);
-                    },
-                  )
-                : OctoImage(
-                    fadeInDuration: const Duration(milliseconds: 200),
-                    fadeInCurve: Curves.easeIn,
-                    fadeOutDuration: const Duration(milliseconds: 200),
-                    fadeOutCurve: Curves.easeOut,
-                    image: imageProvider,
-                    fit: fit,
-                    gaplessPlayback: true,
-                    placeholderBuilder: _placeHolderBuilderCreator(),
-                    errorBuilder: (context, error, stackTrace) {
-                      return _buildErrorWidget(error);
-                    },
-                    alignment: alignment,
-                  ),
+            child: AvifImage(
+              image: imageProvider,
+              fit: To.boxFit(props.get('fit')),
+              alignment:
+                  To.alignment(props.get('alignment')) ?? Alignment.center,
+              gaplessPlayback: true,
+              errorBuilder: (context, error, stackTrace) {
+                return _buildErrorWidget(error);
+              },
+            ),
           );
         }
-
-        // Network images: Use FutureBuilder with cache manager for waiting state
-        final url = getFinalUrl(imageSource);
-        return FutureBuilder<FileInfo?>(
-          future: DefaultCacheManager().downloadFile(url),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              // Show placeholder during cache/download
-              final placeholderBuilder = _placeHolderBuilderCreator();
-              return Opacity(
-                opacity: opacity,
-                child: placeholderBuilder != null
-                    ? placeholderBuilder(context)
-                    : const SizedBox.shrink(),
-              );
-            }
-
-            if (snapshot.hasError || !snapshot.hasData) {
-              return Opacity(
-                opacity: opacity,
-                child:
-                    _buildErrorWidget(snapshot.error ?? 'Failed to load image'),
-              );
-            }
-
-            // Image is cached/downloaded, render based on type
-            if (kIsWeb) {
-              if (imageType == 'avif' || url.endsWith('.avif')) {
-                return Opacity(
-                  opacity: opacity,
-                  child: AvifImage.network(
-                    url,
-                    fit: fit,
-                    alignment: alignment,
-                    gaplessPlayback: true,
-                    errorBuilder: (context, error, stackTrace) {
-                      return _buildErrorWidget(error);
-                    },
-                  ),
-                );
-              } else {
-                return Opacity(
-                  opacity: opacity,
-                  child: CachedNetworkImage(
-                    imageUrl: url,
-                    fit: fit,
-                    alignment: alignment,
-                    placeholder: (context, url) {
-                      final placeholderBuilder = _placeHolderBuilderCreator();
-                      return placeholderBuilder != null
-                          ? placeholderBuilder(context)
-                          : const SizedBox.shrink();
-                    },
-                    errorWidget: (context, url, error) =>
-                        _buildErrorWidget(error),
-                  ),
-                );
-              }
-            } else {
-              // Non-web: Use file-based rendering (as before)
-              final file = snapshot.data!.file;
-              if (imageType == 'avif' || url.endsWith('.avif')) {
-                return Opacity(
-                  opacity: opacity,
-                  child: AvifImage.file(
-                    file,
-                    fit: fit,
-                    alignment: alignment,
-                    gaplessPlayback: true,
-                    errorBuilder: (context, error, stackTrace) {
-                      return _buildErrorWidget(error);
-                    },
-                  ),
-                );
-              } else {
-                return Opacity(
-                  opacity: opacity,
-                  child: Image.file(
-                    file,
-                    fit: fit,
-                    alignment: alignment,
-                    errorBuilder: (context, error, stackTrace) {
-                      return _buildErrorWidget(error);
-                    },
-                  ),
-                );
-              }
-            }
-          },
+        return Opacity(
+          opacity: opacity,
+          child: imageProvider is MemoryImage || imageProvider is FileImage
+              ? Image(
+                  image: imageProvider,
+                  fit: To.boxFit(props.get('fit')),
+                  alignment:
+                      To.alignment(props.get('alignment')) ?? Alignment.center,
+                  errorBuilder: (context, error, stackTrace) {
+                    return _buildErrorWidget(error);
+                  },
+                )
+              : OctoImage(
+                  fadeInDuration: const Duration(milliseconds: 200),
+                  fadeInCurve: Curves.easeIn,
+                  fadeOutDuration: const Duration(milliseconds: 200),
+                  fadeOutCurve: Curves.easeOut,
+                  image: imageProvider,
+                  fit: To.boxFit(props.get('fit')),
+                  gaplessPlayback: true,
+                  placeholderBuilder: _placeHolderBuilderCreator(),
+                  errorBuilder: (context, error, stackTrace) {
+                    return _buildErrorWidget(error);
+                  },
+                  alignment:
+                      To.alignment(props.get('alignment')) ?? Alignment.center,
+                ),
         );
       }),
     );
