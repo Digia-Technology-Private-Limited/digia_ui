@@ -67,11 +67,6 @@ class DigiaUI {
     final config =
         await ConfigResolver(options.flavor, networkClient).getConfig();
 
-    if (options.developerConfig.inspector?.stateObserver != null) {
-      // TODO: R1.0
-      // StateContext.observer = options.developerConfig.inspector?.stateObserver;
-    }
-
     return DigiaUI._(options, networkClient, config);
   }
 
