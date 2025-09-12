@@ -222,7 +222,7 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
         final alignment =
             To.alignment(props.get('alignment')) ?? Alignment.center;
 
-        // helper method to get the final URL 
+        // helper method to get the final URL
         String getFinalUrl(String src) {
           final DigiaUIHost? host = DigiaUIManager().host;
           if (host is DashboardHost && host.resourceProxyUrl != null) {
@@ -231,7 +231,7 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
           return src;
         }
 
-        // if svg, handle separately 
+        // if svg, handle separately
         if (imageType == 'svg' ||
             (imageSource is String && hasExtension(imageSource, ['.svg']))) {
           return _buildSvgImage(imageSource, payload, opacity);
