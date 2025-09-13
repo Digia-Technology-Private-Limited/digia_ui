@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -40,6 +39,7 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
             }),
             commonProps: null,
             parent: null);
+
   ImageProvider _createImageProvider(
     RenderPayload payload,
     Object? imageSource,
@@ -75,9 +75,7 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
         } else {
           finalUrl = imageSource;
         }
-        return CachedNetworkImageProvider(
-          finalUrl,
-        );
+        return CachedNetworkImageProvider(finalUrl);
       } else {
         return ResourceProvider.maybeOf(payload.buildContext)
                 ?.getImageProvider(imageSource) ??
@@ -126,31 +124,38 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
   }
 
   OctoPlaceholderBuilder? _placeHolderBuilderCreator() {
-    Widget widget = Container(color: Colors.transparent);
+    final placeholderType = props.getString('placeholder');
+    final placeholderSrc = props.getString('placeholderSrc');
 
-    final placeHolderValue =
-        props.getString('placeholder') ?? props.getString('placeholderSrc');
-
-    if (placeHolderValue != null && placeHolderValue.isNotEmpty) {
-      widget = switch (placeHolderValue.split('/').first) {
-        'http' ||
-        'https' =>
-          Image(image: CachedNetworkImageProvider(placeHolderValue)),
-        'assets' => placeHolderValue.toLowerCase().endsWith('.json')
-            ? Lottie.asset(
-                placeHolderValue,
-                fit: BoxFit.fill,
-              )
-            : Image.asset(placeHolderValue),
-        'blurHash' => BlurHash(
-            hash: placeHolderValue,
-            duration: const Duration(microseconds: 0),
-          ),
-        _ => widget
-      };
+    if (placeholderType == null || placeholderType.isEmpty) {
+      return null;
     }
 
-    return (context) => widget;
+    return (context) {
+      switch (placeholderType.toLowerCase()) {
+        case 'blurhash':
+          return BlurHash(
+            hash: placeholderSrc ?? '',
+            duration: const Duration(milliseconds: 300),
+          );
+        case 'network':
+          if (placeholderSrc != null && placeholderSrc.startsWith('http')) {
+            return CachedNetworkImage(imageUrl: placeholderSrc);
+          }
+          break;
+        case 'asset':
+          if (placeholderSrc != null) {
+            return Image.asset(placeholderSrc);
+          }
+          break;
+        case 'lottie':
+          if (placeholderSrc != null && placeholderSrc.endsWith('.json')) {
+            return LottieBuilder.asset(placeholderSrc, fit: BoxFit.contain);
+          }
+          break;
+      }
+      return Container(color: Colors.transparent);
+    };
   }
 
   Widget _buildErrorWidget(Object error) {
