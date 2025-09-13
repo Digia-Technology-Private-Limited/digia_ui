@@ -50,7 +50,7 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
     if (imageSource is List<AdaptedFile> && imageSource.isNotEmpty) {
       final firstFile = imageSource.first;
       if (firstFile.isWeb && firstFile.xFile?.path != null) {
-        return NetworkImage(firstFile.xFile!.path);
+        return CachedNetworkImageProvider(firstFile.xFile!.path);
       } else if (firstFile.isMobile && firstFile.path != null) {
         return FileImage(File(firstFile.path!));
       }
@@ -59,7 +59,7 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
 
     if (imageSource is AdaptedFile) {
       if (imageSource.isWeb && imageSource.xFile?.path != null) {
-        return NetworkImage(imageSource.xFile!.path);
+        return CachedNetworkImageProvider(imageSource.xFile!.path);
       } else if (imageSource.isMobile && imageSource.path != null) {
         return FileImage(File(imageSource.path!));
       }
@@ -75,7 +75,7 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
         } else {
           finalUrl = imageSource;
         }
-        return NetworkImage(finalUrl);
+        return CachedNetworkImageProvider(finalUrl);
       } else {
         return ResourceProvider.maybeOf(payload.buildContext)
                 ?.getImageProvider(imageSource) ??
