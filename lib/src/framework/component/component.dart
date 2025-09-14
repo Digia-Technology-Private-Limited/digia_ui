@@ -59,20 +59,14 @@ class DUIComponent extends StatelessWidget {
     // Log component state creation
     final componentStateId = TimestampHelper.generateId();
     stateObserver?.onCreate(
-      componentStateId,
-      StateType.component,
+      id: componentStateId,
+      stateType: StateType.component,
       namespace: id,
-      args: resolvedArgs ?? {},
-      initialState: resolvedState ?? {},
-      metadata: {
-        'componentId': id,
-        'componentArgs': resolvedArgs ?? {},
-        'hasArgs': resolvedArgs?.isNotEmpty ?? false,
-        'hasInitialState': resolvedState?.isNotEmpty ?? false,
-      },
+      argData: resolvedArgs ?? {},
+      stateData: resolvedState ?? {},
     );
 
-    final inhertiedResources = ResourceProvider.maybeOf(context);
+    final inheritedResources = ResourceProvider.maybeOf(context);
     return ResourceProvider(
         icons: resources?.icons ?? {},
         images: resources?.images ?? {},
@@ -83,7 +77,7 @@ class DUIComponent extends StatelessWidget {
         apiModels: apiModels ?? {},
         // Only these two need to be passed. Rest all values are
         // configured at initialization time.
-        navigatorKey: navigatorKey ?? inhertiedResources?.navigatorKey,
+        navigatorKey: navigatorKey ?? inheritedResources?.navigatorKey,
         child: StatefulScopeWidget(
           namespace: id,
           initialState: resolvedState ?? {},

@@ -14,6 +14,9 @@ class ReactiveValue<T> {
   /// Unique ID for this reactive value instance
   late final String stateId;
 
+  /// Derived namespace (stream name without `changeStream`)
+  late final String namespace;
+
   /// Static state observer for logging app state changes
   static StateObserver? get stateObserver =>
       DigiaUIManager().inspector?.stateObserver;
@@ -30,17 +33,14 @@ class ReactiveValue<T> {
   /// Create a new ReactiveValue with an initial value
   ReactiveValue(this._value, this.streamName) {
     stateId = TimestampHelper.generateId();
+    namespace = streamName.replaceAll('changeStream', '');
 
     // Log state creation
     stateObserver?.onCreate(
-      stateId,
-      StateType.app,
-      namespace: streamName.replaceAll('changeStream', ''),
-      initialState: {'value': _value},
-      metadata: {
-        'streamName': streamName,
-        'type': T.toString(),
-      },
+      id: stateId,
+      stateType: StateType.app,
+      namespace: namespace,
+      stateData: {'value': _value},
     );
   }
 
@@ -48,20 +48,12 @@ class ReactiveValue<T> {
   /// Returns true if the value was actually changed
   bool update(T newValue) {
     if (_value != newValue) {
-      final previousValue = _value;
-
       // Log state change
       stateObserver?.onChange(
-        stateId,
-        StateType.app,
-        namespace: streamName.replaceAll('changeStream', ''),
-        changes: {'value': newValue},
-        previousState: {'value': previousValue},
-        currentState: {'value': newValue},
-        metadata: {
-          'streamName': streamName,
-          'type': T.toString(),
-        },
+        id: stateId,
+        stateType: StateType.app,
+        namespace: namespace,
+        stateData: {'value': newValue},
       );
 
       _value = newValue;
@@ -75,14 +67,10 @@ class ReactiveValue<T> {
   void dispose() {
     // Log state disposal
     stateObserver?.onDispose(
-      stateId,
-      StateType.app,
-      namespace: streamName.replaceAll('changeStream', ''),
-      finalState: {'value': _value},
-      metadata: {
-        'streamName': streamName,
-        'type': T.toString(),
-      },
+      id: stateId,
+      stateType: StateType.app,
+      namespace: namespace,
+      stateData: {'value': _value},
     );
 
     _controller.close();

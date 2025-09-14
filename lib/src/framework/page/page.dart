@@ -64,17 +64,11 @@ class DUIPage extends StatelessWidget {
     // Log page state creation
     final pageStateId = TimestampHelper.generateId();
     stateObserver?.onCreate(
-      pageStateId,
-      StateType.page,
+      id: pageStateId,
+      stateType: StateType.page,
       namespace: pageId,
-      args: resolvePageArgs ?? {},
-      initialState: resolvedState ?? {},
-      metadata: {
-        'pageId': pageId,
-        'pageArgs': resolvePageArgs ?? {},
-        'hasArgs': resolvePageArgs?.isNotEmpty ?? false,
-        'hasInitialState': resolvedState?.isNotEmpty ?? false,
-      },
+      argData: resolvePageArgs ?? {},
+      stateData: resolvedState ?? {},
     );
 
     Widget child = StatefulScopeWidget(

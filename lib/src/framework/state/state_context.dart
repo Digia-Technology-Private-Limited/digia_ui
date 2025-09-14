@@ -1,11 +1,12 @@
 import 'package:digia_inspector_core/digia_inspector_core.dart';
-import 'package:digia_ui/src/init/digia_ui_manager.dart';
 import 'package:flutter/widgets.dart';
+
+import '../../init/digia_ui_manager.dart';
 
 /// Manages state for a specific namespace and provides access to enclosing contexts.
 class StateContext extends ChangeNotifier {
   /// The state observer, if any.
-  static StateObserver? get digiaStateObserver =>
+  static StateObserver? get stateObserver =>
       DigiaUIManager().inspector?.stateObserver;
 
   /// The unique identifier for this state context.
@@ -35,26 +36,21 @@ class StateContext extends ChangeNotifier {
     _stateType = stateType;
 
     // Log state creation
-    digiaStateObserver?.onCreate(
-      stateId,
-      stateType,
+    stateObserver?.onCreate(
+      id: stateId,
+      stateType: stateType,
       namespace: namespace,
-      initialState: Map.from(initialState),
-      metadata: {
-        'hasAncestor': ancestorContext != null,
-        'ancestorNamespace': ancestorContext?.namespace,
-        'stateType': stateType.value,
-      },
+      stateData: Map.from(initialState),
     );
   }
 
   @override
   void dispose() {
-    digiaStateObserver?.onDispose(
-      stateId,
-      _stateType,
+    stateObserver?.onDispose(
+      id: stateId,
+      stateType: _stateType,
       namespace: namespace,
-      finalState: Map.from(_stateVariables),
+      stateData: Map.from(_stateVariables),
     );
     super.dispose();
   }
@@ -95,12 +91,11 @@ class StateContext extends ChangeNotifier {
       nextState[key] = value;
 
       if (namespace != null) {
-        digiaStateObserver?.onChange(
-          stateId,
-          _stateType,
+        stateObserver?.onChange(
+          id: stateId,
+          stateType: _stateType,
           namespace: namespace,
-          previousState: Map<String, Object?>.from(_stateVariables),
-          currentState: nextState,
+          stateData: Map<String, Object?>.from(_stateVariables),
         );
       }
       _stateVariables[key] = value;
@@ -118,7 +113,6 @@ class StateContext extends ChangeNotifier {
     Map<String, bool> results = {};
     bool anyUpdated = false;
 
-    final currentState = Map<String, Object?>.from(_stateVariables);
     final nextState = Map<String, Object?>.from(_stateVariables);
 
     updates.forEach((key, value) {
@@ -133,13 +127,14 @@ class StateContext extends ChangeNotifier {
     });
 
     if (notify && anyUpdated) {
-      digiaStateObserver?.onChange(
-        stateId,
-        _stateType,
-        namespace: namespace,
-        previousState: currentState,
-        currentState: nextState,
-      );
+      if (namespace != null) {
+        stateObserver?.onChange(
+          id: stateId,
+          stateType: _stateType,
+          namespace: namespace,
+          stateData: Map<String, Object?>.from(_stateVariables),
+        );
+      }
       notifyListeners();
     }
 
