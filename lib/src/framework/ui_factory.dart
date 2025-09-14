@@ -147,7 +147,7 @@ class DUIFactory {
     widgetRegistry = DefaultVirtualWidgetRegistry(
       // MessageHandler is not propagated here
       componentBuilder: (id, args, observabilityContext) =>
-          _createComponentWithContext(id, args, observabilityContext),
+          createComponent(id, args, observabilityContext: observabilityContext),
     );
 
     // Initialize method binding registry for expression evaluation
@@ -564,22 +564,6 @@ class DUIFactory {
     return createComponent(viewId, args);
   }
 
-  /// Internal method for creating components with observability context.
-  ///
-  /// This method is used by the widget registry to create components with
-  /// the proper observability context passed down from the parent widget.
-  Widget _createComponentWithContext(
-    String componentId,
-    JsonLike? args,
-    ObservabilityContext? observabilityContext,
-  ) {
-    return _createComponentInternal(
-      componentId,
-      args,
-      observabilityContext: observabilityContext,
-    );
-  }
-
   /// Creates a reusable component widget from a JSON configuration.
   ///
   /// Components are smaller, reusable UI blocks that can be embedded within
@@ -605,30 +589,6 @@ class DUIFactory {
   /// );
   /// ```
   Widget createComponent(
-    String componentid,
-    JsonLike? args, {
-    Map<String, IconData>? overrideIcons,
-    Map<String, ImageProvider>? overrideImages,
-    Map<String, TextStyle>? overrideTextStyles,
-    Map<String, Color?>? overrideColorTokens,
-    GlobalKey<NavigatorState>? navigatorKey,
-  }) {
-    return _createComponentInternal(
-      componentid,
-      args,
-      overrideIcons: overrideIcons,
-      overrideImages: overrideImages,
-      overrideTextStyles: overrideTextStyles,
-      overrideColorTokens: overrideColorTokens,
-      navigatorKey: navigatorKey,
-    );
-  }
-
-  /// Internal method for creating components with optional observability context.
-  ///
-  /// This method handles the actual component creation logic and can optionally
-  /// receive an observability context from parent widgets.
-  Widget _createComponentInternal(
     String componentid,
     JsonLike? args, {
     Map<String, IconData>? overrideIcons,

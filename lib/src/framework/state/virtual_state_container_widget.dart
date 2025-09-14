@@ -1,3 +1,4 @@
+import 'package:digia_inspector_core/digia_inspector_core.dart' show StateType;
 import 'package:flutter/widgets.dart';
 
 import '../base/virtual_widget.dart';
@@ -37,6 +38,7 @@ class VirtualStateContainerWidget extends VirtualWidget {
     return StatefulScopeWidget(
       namespace: refName,
       initialState: resolvedState,
+      stateType: StateType.stateContainer,
       childBuilder: (context, state) {
         final updatedPayload = payload.copyWithChainedContext(
           _createExprContext(state),

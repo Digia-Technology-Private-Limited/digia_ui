@@ -28,7 +28,7 @@ class DigiaUIManager {
 
   String get accessKey => _digiaUI!.initConfig.accessKey;
   DigiaInspector? get inspector =>
-      _digiaUI!.initConfig.developerConfig.inspector;
+      _digiaUI?.initConfig.developerConfig.inspector;
   Map<String, Variable> get environmentVariables =>
       _digiaUI!.dslConfig.getEnvironmentVariables();
   DigiaUIHost? get host => _digiaUI!.initConfig.developerConfig.host;

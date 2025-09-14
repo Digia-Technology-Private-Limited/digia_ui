@@ -1,7 +1,8 @@
+import 'package:digia_inspector_core/digia_inspector_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:digia_inspector_core/digia_inspector_core.dart';
 
+import '../../init/digia_ui_manager.dart';
 import '../../network/api_request/api_request.dart';
 import '../actions/base/action_flow.dart';
 import '../data_type/data_type_creator.dart';
@@ -31,6 +32,10 @@ class DUIPage extends StatelessWidget {
   final GlobalKey<NavigatorState>? navigatorKey;
   final DUIPageController? controller;
 
+  /// Gets the state observer from the DigiaUIManager
+  static StateObserver? get stateObserver =>
+      DigiaUIManager().inspector?.stateObserver;
+
   const DUIPage({
     super.key,
     required this.pageId,
@@ -56,9 +61,20 @@ class DUIPage extends StatelessWidget {
               null,
             ))));
 
+    // Log page state creation
+    final pageStateId = TimestampHelper.generateId();
+    stateObserver?.onCreate(
+      id: pageStateId,
+      stateType: StateType.page,
+      namespace: pageId,
+      argData: resolvePageArgs ?? {},
+      stateData: resolvedState ?? {},
+    );
+
     Widget child = StatefulScopeWidget(
       namespace: pageId,
       initialState: resolvedState ?? {},
+      stateType: StateType.page,
       childBuilder: (context, state) {
         return _DUIPageContent(
           pageId: pageId,
@@ -178,9 +194,9 @@ class _DUIPageContentState extends State<_DUIPageContent> {
 
     // Build ObservabilityContext with page information
     final observabilityContext = ObservabilityContext(
-      widgetHierarchy: ['DUIPage'],
+      widgetHierarchy: [],
       currentPageId: widget.pageId,
-      triggerType: 'onPageLoad',
+      triggerType: '',
     );
 
     return virtualWidget.toWidget(
@@ -195,7 +211,7 @@ class _DUIPageContentState extends State<_DUIPageContent> {
   void _onPageLoaded() {
     if (widget.onPageLoaded != null) {
       final observabilityContext = ObservabilityContext(
-        widgetHierarchy: ['DUIPage'],
+        widgetHierarchy: [],
         currentPageId: widget.pageId,
         triggerType: 'onPageLoad',
       );
@@ -207,12 +223,16 @@ class _DUIPageContentState extends State<_DUIPageContent> {
   void _handleBackPress(bool didPop, Object? result) {
     if (widget.onBackPress != null) {
       final observabilityContext = ObservabilityContext(
-        widgetHierarchy: ['DUIPage'],
+        widgetHierarchy: [],
         currentPageId: widget.pageId,
         triggerType: 'onBackPress',
       );
       _executeAction(
-          context, widget.onBackPress!, widget.scope, observabilityContext);
+        context,
+        widget.onBackPress!,
+        widget.scope,
+        observabilityContext,
+      );
     }
   }
 

@@ -1,6 +1,7 @@
 import 'package:digia_inspector_core/digia_inspector_core.dart';
 import 'package:flutter/widgets.dart';
 
+import '../../init/digia_ui_manager.dart';
 import '../../network/api_request/api_request.dart';
 import '../data_type/data_type_creator.dart';
 import '../expr/default_scope_context.dart';
@@ -25,6 +26,10 @@ class DUIComponent extends StatelessWidget {
   final Map<String, APIModel>? apiModels;
   final GlobalKey<NavigatorState>? navigatorKey;
   final ObservabilityContext? parentObservabilityContext;
+
+  /// Gets the state observer from the DigiaUIManager
+  static StateObserver? get stateObserver =>
+      DigiaUIManager().inspector?.stateObserver;
 
   const DUIComponent({
     super.key,
@@ -51,7 +56,17 @@ class DUIComponent extends StatelessWidget {
               enclosing: scope,
             ))));
 
-    final inhertiedResources = ResourceProvider.maybeOf(context);
+    // Log component state creation
+    final componentStateId = TimestampHelper.generateId();
+    stateObserver?.onCreate(
+      id: componentStateId,
+      stateType: StateType.component,
+      namespace: id,
+      argData: resolvedArgs ?? {},
+      stateData: resolvedState ?? {},
+    );
+
+    final inheritedResources = ResourceProvider.maybeOf(context);
     return ResourceProvider(
         icons: resources?.icons ?? {},
         images: resources?.images ?? {},
@@ -62,10 +77,11 @@ class DUIComponent extends StatelessWidget {
         apiModels: apiModels ?? {},
         // Only these two need to be passed. Rest all values are
         // configured at initialization time.
-        navigatorKey: navigatorKey ?? inhertiedResources?.navigatorKey,
+        navigatorKey: navigatorKey ?? inheritedResources?.navigatorKey,
         child: StatefulScopeWidget(
           namespace: id,
           initialState: resolvedState ?? {},
+          stateType: StateType.component,
           childBuilder: (context, state) {
             return _buildContent(
               context,
