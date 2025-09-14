@@ -7,7 +7,7 @@ import '../render_payload.dart';
 abstract class VirtualWidget {
   final String? refName;
   final WeakReference<VirtualWidget>? _parent;
-  final Props? parentProps;
+  Props? parentProps;
 
   VirtualWidget? get parent => _parent?.target;
 
