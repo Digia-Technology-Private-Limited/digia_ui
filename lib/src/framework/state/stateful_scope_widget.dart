@@ -1,5 +1,6 @@
-import 'package:flutter/widgets.dart';
 import 'package:digia_inspector_core/digia_inspector_core.dart';
+import 'package:flutter/widgets.dart';
+
 import 'state_context.dart';
 import 'state_context_provider.dart';
 
