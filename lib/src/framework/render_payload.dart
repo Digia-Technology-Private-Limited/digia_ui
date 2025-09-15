@@ -1,3 +1,4 @@
+import 'package:digia_inspector_core/digia_inspector_core.dart';
 import 'package:flutter/widgets.dart';
 
 import '../network/api_request/api_request.dart';
@@ -6,6 +7,7 @@ import 'expr/expression_util.dart';
 import 'expr/scope_context.dart';
 import 'font_factory.dart';
 import 'models/types.dart';
+import 'observability/observability_scope.dart';
 import 'resource_provider.dart';
 import 'ui_factory.dart';
 import 'utils/textstyle_util.dart';
@@ -15,7 +17,10 @@ class RenderPayload {
   final BuildContext buildContext;
   final ScopeContext scopeContext;
 
-  RenderPayload({required this.buildContext, required this.scopeContext});
+  RenderPayload({
+    required this.buildContext,
+    required this.scopeContext,
+  });
 
   // Retrieves an icon from a map, currently not implemented
   IconData? getIcon(Map<String, Object?>? map) {
@@ -24,6 +29,10 @@ class RenderPayload {
     // TODO: Yet to be implemented
     return null;
   }
+
+  /// Gets the current ObservabilityContext from scope
+  ObservabilityContext? get observabilityContext =>
+      ObservabilityScope.of(buildContext);
 
   // Retrieves a color from the ResourceProvider using a key
   Color? getColor(String key) {
@@ -49,17 +58,48 @@ class RenderPayload {
     );
   }
 
-  // Executes an action flow with an optional expression context
+  /// Executes an action flow with optional trigger context
   Future<Object?>? executeAction(
     ActionFlow? actionFlow, {
     ScopeContext? scopeContext,
+    String? triggerType,
   }) {
     if (actionFlow == null) return null;
+
+    final observabilityContextWithTrigger = triggerType != null
+        ? observabilityContext?.forTrigger(triggerType: triggerType)
+        : observabilityContext;
 
     return DefaultActionExecutor.of(buildContext).execute(
       buildContext,
       actionFlow,
       _chainExprContext(scopeContext),
+      id: IdHelper.randomId(),
+      observabilityContext: observabilityContextWithTrigger,
+    );
+  }
+
+  /// Extends the observability context hierarchy with additional widget names
+  ///
+  /// This is the preferred method for adding widgets to the hierarchy chain
+  ObservabilityContext? extendHierarchy(
+      {required List<String> additionalHierarchy}) {
+    return observabilityContext?.extendHierarchy(additionalHierarchy);
+  }
+
+  /// Creates a context for triggering an action
+  ObservabilityContext? forTrigger({required String triggerType}) {
+    return observabilityContext?.forTrigger(triggerType: triggerType);
+  }
+
+  /// Creates a new RenderPayload with an extended hierarchy
+  ///
+  /// This creates a new scope wrapper with the extended context
+  Widget withExtendedHierarchy(List<String> additionalHierarchy, Widget child) {
+    final extended = observabilityContext?.extendHierarchy(additionalHierarchy);
+    return ObservabilityScope(
+      value: extended,
+      child: child,
     );
   }
 

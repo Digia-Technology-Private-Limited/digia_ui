@@ -1,29 +1,21 @@
+import 'package:digia_inspector_core/digia_inspector_core.dart';
 import 'package:flutter/widgets.dart';
 
-import '../../../dui_logger.dart';
 import '../../expr/scope_context.dart';
+import '../action_execution_context.dart';
 import 'action.dart' as an;
 
 abstract class ActionProcessor<T extends an.Action> {
-  DUILogger? logger;
-  Map<String, Object?>? metaData;
+  ActionExecutionContext? executionContext;
 
-  ActionProcessor({this.logger, this.metaData});
-
-  void logAction(String actionType, Map<String, Object?> actionData) {
-    logger?.log(
-      type: LogType.action,
-      data: {
-        'entitySlug': metaData?['entitySlug'],
-        'actionType': actionType,
-        'actionData': actionData,
-      },
-    );
-  }
+  ActionProcessor({this.executionContext});
 
   Future<Object?>? execute(
     BuildContext context,
     T action,
-    ScopeContext? scopeContext,
-  );
+    ScopeContext? scopeContext, {
+    required String id,
+    String? parentActionId,
+    ObservabilityContext? observabilityContext,
+  });
 }

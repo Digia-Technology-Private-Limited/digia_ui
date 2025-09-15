@@ -42,12 +42,14 @@ class VWPinField extends VirtualLeafStatelessWidget<PinFieldProps> {
         await payload.executeAction(
           props.onChanged,
           scopeContext: _createExprContext(pinValue),
+          triggerType: 'onChanged',
         );
       },
       onCompleted: (pinValue) async {
         await payload.executeAction(
           props.onCompleted,
           scopeContext: _createExprContext(pinValue),
+          triggerType: 'onCompleted',
         );
       },
       pinTheme: PinTheme(

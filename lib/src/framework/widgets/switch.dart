@@ -33,6 +33,7 @@ class VWSwitch extends VirtualLeafStatelessWidget<SwitchProps> {
           await payload.executeAction(
             props.onChanged,
             scopeContext: _createExprContext(p0),
+            triggerType: 'onChanged',
           );
         });
   }

@@ -299,11 +299,14 @@ class IndicatorBuilder extends StatelessWidget {
           ),
           activeDotDecoration: DotDecoration(
             borderRadius: BorderRadius.circular(100),
-            width: dotWidth * 0.75,
-            height: dotHeight * 0.75,
+            width: dotWidth,
+            height: dotHeight,
             color: activeDotColor ?? Colors.indigo,
             dotBorder: DotBorder(
-                padding: dotHeight * 0.75, width: 1, type: DotBorderType.solid),
+                padding: dotHeight * 0.75,
+                color: activeDotColor ?? Colors.indigo,
+                width: 2,
+                type: DotBorderType.solid),
           ),
         );
       case IndicatorEffectType.slide:

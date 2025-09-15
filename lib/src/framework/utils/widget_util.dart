@@ -84,25 +84,32 @@ Widget wrapInContainer(
   return current;
 }
 
-Widget wrapInGestureDetector(
-    {required RenderPayload payload,
-    required ActionFlow? actionFlow,
-    required Widget child,
-    BorderRadius? borderRadius}) {
+Widget wrapInGestureDetector({
+  required RenderPayload payload,
+  required ActionFlow? actionFlow,
+  required Widget child,
+  BorderRadius? borderRadius,
+}) {
   if (actionFlow == null || actionFlow.actions.isEmpty) return child;
 
   if (actionFlow.inkwell) {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: () => payload.executeAction(actionFlow),
+        onTap: () => payload.executeAction(
+          actionFlow,
+          triggerType: 'onTap',
+        ),
         borderRadius: borderRadius,
         child: child,
       ),
     );
   } else {
     return GestureDetector(
-      onTap: () => payload.executeAction(actionFlow),
+      onTap: () => payload.executeAction(
+        actionFlow,
+        triggerType: 'onTap',
+      ),
       child: child,
     );
   }

@@ -35,10 +35,13 @@ class VWTextFormField extends VirtualStatelessWidget<Props> {
     final textAlign =
         To.textAlign(payload.eval<String>(props.get('textAlign')));
     final readOnly = props.getBool('readOnly') ?? false;
-    final obscureText = props.getBool('obscureText') ?? false;
+    final obscureText = payload.eval<bool>(props.get('obscureText')) ?? false;
     final maxLines = props.getInt('maxLines');
     final minLines = props.getInt('minLines');
     final maxLength = props.getInt('maxLength');
+    final effectiveMaxLines = obscureText ? 1 : maxLines;
+    final effectiveMinLines = obscureText ? 1 : minLines;
+    final isMultiline = (effectiveMinLines ?? 1) > 1;
     final fillColor = payload.evalColor(props.get('fillColor'));
     final labelText = payload.eval<String>(props.get('labelText'));
     final labelStyle = payload.getTextStyle(props.getMap('labelStyle'));
@@ -75,6 +78,7 @@ class VWTextFormField extends VirtualStatelessWidget<Props> {
         await payload.executeAction(
           actionFlow,
           scopeContext: _createExprContext(p0),
+          triggerType: 'onChanged',
         );
       },
       onSubmit: (p0) async {
@@ -82,6 +86,7 @@ class VWTextFormField extends VirtualStatelessWidget<Props> {
         await payload.executeAction(
           actionFlow,
           scopeContext: _createExprContext(p0),
+          triggerType: 'onSubmit',
         );
       },
       textAlign: textAlign,
@@ -91,8 +96,9 @@ class VWTextFormField extends VirtualStatelessWidget<Props> {
       keyboardType: keyboardType,
       textInputAction: textInputAction,
       style: style,
-      maxLines: maxLines,
-      minLines: minLines,
+      maxLines:
+          effectiveMaxLines, // Ensuring the effective maxLines and minLines are dynamically set as per the obscureText
+      minLines: effectiveMinLines,
       maxLength: maxLength,
       cursorColor: cursorColor,
       validations: validations,
@@ -104,9 +110,7 @@ class VWTextFormField extends VirtualStatelessWidget<Props> {
         errorStyle: errorStyle,
         hintText: hintText,
         hintStyle: hintStyle,
-        contentPadding: minLines != null
-            ? (minLines > 1 ? const EdgeInsets.all(12) : contentPadding)
-            : contentPadding,
+        contentPadding: isMultiline ? const EdgeInsets.all(12) : contentPadding,
         focusColor: focusColor,
         prefixIcon: childOf('prefix')?.toWidget(payload),
         suffixIcon: childOf('suffix')?.toWidget(payload),

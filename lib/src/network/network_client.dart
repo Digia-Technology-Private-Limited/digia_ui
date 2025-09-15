@@ -148,7 +148,7 @@ class NetworkClient {
     }
 
     // Add interceptor if provided by logger
-    final dioInterceptor = developerConfig?.inspector?.dioInterceptor;
+    final dioInterceptor = developerConfig?.inspector?.networkObserver;
     if (dioInterceptor != null) {
       projectDioInstance.interceptors.add(dioInterceptor.interceptor);
     }
@@ -262,12 +262,18 @@ class NetworkClient {
       final response =
           await _execute(path, method, data: data, headers: headers);
 
-      if (response.statusCode == 200) {
+      final code = response.statusCode ?? 0;
+      if (code >= 200 && code < 300) {
         return BaseResponse.fromJson(
-            response.data as Map<String, Object?>, fromJsonT);
+          response.data as Map<String, Object?>,
+          fromJsonT,
+        );
       } else {
         return BaseResponse(
-            isSuccess: false, data: null, error: {'code': response.statusCode});
+          isSuccess: false,
+          data: null,
+          error: {'code': response.statusCode},
+        );
       }
     } catch (e) {
       throw Exception('Error making HTTP request: $e');

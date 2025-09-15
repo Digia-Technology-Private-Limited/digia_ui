@@ -221,12 +221,14 @@ Future<Response<Object?>> _makeApiFuture(
       await payload.executeAction(
         props.onSuccess,
         scopeContext: DefaultScopeContext(variables: {'response': response}),
+        triggerType: 'onSuccess',
       );
     },
     onError: (response) async {
       await payload.executeAction(
         props.onError,
         scopeContext: DefaultScopeContext(variables: {'response': response}),
+        triggerType: 'onError',
       );
     },
   );

@@ -82,7 +82,10 @@ class VWRichText extends VirtualLeafStatelessWidget<RichTextProps> {
                 (p0) => TapGestureRecognizer()
                   ..onTap = () {
                     final onClick = ActionFlow.fromJson(p0);
-                    payload.executeAction(onClick);
+                    payload.executeAction(
+                      onClick,
+                      triggerType: 'onTap',
+                    );
                   },
               ));
         })

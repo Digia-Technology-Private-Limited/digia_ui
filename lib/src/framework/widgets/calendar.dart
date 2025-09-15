@@ -103,20 +103,26 @@ class VWCalendar extends VirtualLeafStatelessWidget<Props> {
       selectedRangeStart: selectedRangeStart,
       selectedRangeEnd: selectedRangeEnd,
       onDateSelected: (selectedDay, focusedDay) async {
-        await payload.executeAction(onDateSelected,
-            scopeContext: DefaultScopeContext(variables: {
-              'selectedDate': selectedDay.toIso8601String(),
-              'focusedDay': focusedDay.toIso8601String(),
-            }));
+        await payload.executeAction(
+          onDateSelected,
+          scopeContext: DefaultScopeContext(variables: {
+            'selectedDate': selectedDay.toIso8601String(),
+            'focusedDay': focusedDay.toIso8601String(),
+          }),
+          triggerType: 'onDateSelected',
+        );
       },
       onRangeSelected:
           (selectedRangeStart, selectedRangeEnd, focusedDay) async {
-        await payload.executeAction(onRangeSelected,
-            scopeContext: DefaultScopeContext(variables: {
-              'selectedRangeStart': selectedRangeStart?.toIso8601String(),
-              'selectedRangeEnd': selectedRangeEnd?.toIso8601String(),
-              'focusedDay': focusedDay.toIso8601String(),
-            }));
+        await payload.executeAction(
+          onRangeSelected,
+          scopeContext: DefaultScopeContext(variables: {
+            'selectedRangeStart': selectedRangeStart?.toIso8601String(),
+            'selectedRangeEnd': selectedRangeEnd?.toIso8601String(),
+            'focusedDay': focusedDay.toIso8601String(),
+          }),
+          triggerType: 'onRangeSelected',
+        );
       },
     );
   }

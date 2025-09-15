@@ -67,8 +67,11 @@ class VWMarkDown extends VirtualLeafStatelessWidget<MarkDownProps> {
                   color: Color(0xff0969da),
                   decoration: TextDecoration.underline),
           onTap: (value) async {
-            await payload.executeAction(props.onLinkTap,
-                scopeContext: _createExprContext(value));
+            await payload.executeAction(
+              props.onLinkTap,
+              scopeContext: _createExprContext(value),
+              triggerType: 'onLinkTap',
+            );
           },
         ),
         payload

@@ -11,7 +11,7 @@ import 'num_util.dart';
 import 'types.dart';
 
 abstract class To {
-  static MainAxisAlignment? mainAxisAlginment(dynamic value) => switch (value) {
+  static MainAxisAlignment? mainAxisAlignment(dynamic value) => switch (value) {
         // Map string values to corresponding MainAxisAlignment constants
         'start' => MainAxisAlignment.start,
         'end' => MainAxisAlignment.end,

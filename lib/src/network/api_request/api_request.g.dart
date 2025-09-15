@@ -16,7 +16,9 @@ APIModel _$APIModelFromJson(Map<String, dynamic> json) => APIModel(
       bodyType: $enumDecodeNullable(_$BodyTypeEnumMap, json['bodyType']),
       variables:
           _$JsonConverterFromJson<Map<String, Object?>, Map<String, Variable>>(
-              json['variables'], const VariableJsonConverter().fromJson),
+        json['variables'],
+        const VariableJsonConverter().fromJson,
+      ),
     );
 
 Map<String, dynamic> _$APIModelToJson(APIModel instance) => <String, dynamic>{
@@ -29,7 +31,9 @@ Map<String, dynamic> _$APIModelToJson(APIModel instance) => <String, dynamic>{
       'bodyType': _$BodyTypeEnumMap[instance.bodyType],
       'variables':
           _$JsonConverterToJson<Map<String, Object?>, Map<String, Variable>>(
-              instance.variables, const VariableJsonConverter().toJson),
+        instance.variables,
+        const VariableJsonConverter().toJson,
+      ),
     };
 
 const _$HttpMethodEnumMap = {
@@ -44,6 +48,7 @@ const _$BodyTypeEnumMap = {
   BodyType.json: 'JSON',
   BodyType.multipart: 'MULTIPART',
   BodyType.formUrlEncoded: 'FORM_URLENCODED',
+  BodyType.graphql: 'GRAPHQL',
 };
 
 Value? _$JsonConverterFromJson<Json, Value>(

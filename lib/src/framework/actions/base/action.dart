@@ -40,15 +40,30 @@ enum ActionType {
 
 mixin ActionMixin {
   ActionType get actionType;
+
+  ActionId? get actionId;
+  set actionId(ActionId? id);
 }
 
 abstract class Action with ActionMixin {
   @override
   ActionType get actionType;
+
+  ActionId? _actionId;
+
+  @override
+  ActionId? get actionId => _actionId;
+
+  @override
+  set actionId(ActionId? id) => _actionId = id;
+
   ExprOr<bool>? disableActionIf;
+
   Action({
     this.disableActionIf,
   });
 
   Map<String, dynamic> toJson();
 }
+
+extension type ActionId(String id) {}
