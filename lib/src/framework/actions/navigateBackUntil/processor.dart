@@ -1,3 +1,4 @@
+import 'package:digia_inspector_core/digia_inspector_core.dart';
 import 'package:flutter/material.dart';
 
 import '../../expr/scope_context.dart';
@@ -8,14 +9,19 @@ import 'action.dart';
 class NavigateBackUntilProcessor
     extends ActionProcessor<NavigateBackUntilAction> {
   @override
-  Future<Object?>? execute(BuildContext context, NavigateBackUntilAction action,
-      ScopeContext? scopeContext,
-      {required String eventId, required String parentId}) async {
+  Future<Object?>? execute(
+    BuildContext context,
+    NavigateBackUntilAction action,
+    ScopeContext? scopeContext, {
+    required String id,
+    String? parentActionId,
+    ObservabilityContext? observabilityContext,
+  }) async {
     final routeNameToPopUntil =
         action.routeNameToPopUntil?.evaluate(scopeContext);
 
-    final desc = ActionDescriptor(
-      id: eventId,
+    final actionDescriptor = ActionDescriptor(
+      id: id,
       type: action.actionType,
       definition: action.toJson(),
       resolvedParameters: {
@@ -24,19 +30,21 @@ class NavigateBackUntilProcessor
     );
 
     executionContext?.notifyStart(
-      eventId: eventId,
-      parentId: parentId,
-      descriptor: desc,
+      id: id,
+      parentActionId: parentActionId,
+      descriptor: actionDescriptor,
+      observabilityContext: observabilityContext,
     );
 
     executionContext?.notifyProgress(
-      eventId: eventId,
-      parentId: parentId,
-      descriptor: desc,
+      id: id,
+      parentActionId: parentActionId,
+      descriptor: actionDescriptor,
       details: {
         'routeNameToPopUntil': routeNameToPopUntil,
         'hasRouteName': routeNameToPopUntil != null,
       },
+      observabilityContext: observabilityContext,
     );
 
     if (routeNameToPopUntil == null) {
@@ -46,11 +54,12 @@ class NavigateBackUntilProcessor
     }
 
     executionContext?.notifyComplete(
-      eventId: eventId,
-      parentId: parentId,
-      descriptor: desc,
+      id: id,
+      parentActionId: parentActionId,
+      descriptor: actionDescriptor,
       error: null,
       stackTrace: null,
+      observabilityContext: observabilityContext,
     );
 
     return null;

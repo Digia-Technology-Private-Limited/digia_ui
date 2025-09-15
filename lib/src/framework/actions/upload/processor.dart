@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:digia_inspector_core/digia_inspector_core.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/widgets.dart';
 
@@ -20,8 +21,9 @@ class UploadProcessor extends ActionProcessor<UploadAction> {
     BuildContext context,
     ActionFlow actionFlow,
     ScopeContext? scopeContext, {
-    required String eventId,
-    required String parentId,
+    required String id,
+    String? parentActionId,
+    ObservabilityContext? observabilityContext,
   }) executeActionFlow;
 
   UploadProcessor({
@@ -30,8 +32,13 @@ class UploadProcessor extends ActionProcessor<UploadAction> {
 
   @override
   Future<Object?>? execute(
-      BuildContext context, UploadAction action, ScopeContext? scopeContext,
-      {required String eventId, required String parentId}) async {
+    BuildContext context,
+    UploadAction action,
+    ScopeContext? scopeContext, {
+    required String id,
+    String? parentActionId,
+    ObservabilityContext? observabilityContext,
+  }) async {
     final dataSource = action.dataSource?.evaluate(scopeContext);
     final apiModel = ResourceProvider.maybeOf(context)
         ?.apiModels[as$<JsonLike>(dataSource)?['id']];
@@ -44,12 +51,8 @@ class UploadProcessor extends ActionProcessor<UploadAction> {
               ExprOr.fromJson<Object>(value)?.evaluate(scopeContext),
             ));
 
-    if (apiModel == null) {
-      return Future.error('No API Selected');
-    }
-
     final desc = ActionDescriptor(
-      id: eventId,
+      id: id,
       type: action.actionType,
       definition: action.toJson(),
       resolvedParameters: {
@@ -60,10 +63,22 @@ class UploadProcessor extends ActionProcessor<UploadAction> {
     );
 
     executionContext?.notifyStart(
-      eventId: eventId,
-      parentId: parentId,
+      id: id,
+      parentActionId: parentActionId,
       descriptor: desc,
     );
+
+    if (apiModel == null) {
+      final error = Exception('No API Selected');
+      executionContext?.notifyComplete(
+        id: id,
+        parentActionId: parentActionId,
+        descriptor: desc,
+        error: error,
+        stackTrace: StackTrace.current,
+      );
+      return Future.error(error);
+    }
 
     // Listen to progress stream and emit progress events
     StreamSubscription<Object?>? progressSubscription;
@@ -78,8 +93,8 @@ class UploadProcessor extends ActionProcessor<UploadAction> {
             // Emit real-time upload progress with numeric percentage
             // Align with ApiHandler stream payload structure
             executionContext?.notifyProgress(
-              eventId: eventId,
-              parentId: parentId,
+              id: id,
+              parentActionId: parentActionId,
               descriptor: desc,
               details: {
                 'count': count,
@@ -95,8 +110,8 @@ class UploadProcessor extends ActionProcessor<UploadAction> {
         onError: (error) {
           // Emit progress: Upload stream error
           executionContext?.notifyProgress(
-            eventId: eventId,
-            parentId: parentId,
+            id: id,
+            parentActionId: parentActionId,
             descriptor: desc,
             details: {
               'error': error.toString(),
@@ -125,8 +140,8 @@ class UploadProcessor extends ActionProcessor<UploadAction> {
       final isSuccess = action.successCondition?.evaluate(scopeContext) ?? true;
 
       executionContext?.notifyComplete(
-        eventId: eventId,
-        parentId: parentId,
+        id: id,
+        parentActionId: parentActionId,
         descriptor: desc,
         error: null,
         stackTrace: null,
@@ -140,6 +155,9 @@ class UploadProcessor extends ActionProcessor<UploadAction> {
           return null;
         }
         if (action.onSuccess != null) {
+          final onSuccessContext =
+              observabilityContext?.forTrigger(triggerType: 'onSuccess');
+
           await executeActionFlow(
             context,
             action.onSuccess!,
@@ -147,8 +165,9 @@ class UploadProcessor extends ActionProcessor<UploadAction> {
               variables: {'response': respObj},
               enclosing: scopeContext,
             ),
-            parentId: parentId,
-            eventId: eventId,
+            parentActionId: parentActionId,
+            id: id,
+            observabilityContext: onSuccessContext,
           );
         }
       } else {
@@ -156,6 +175,9 @@ class UploadProcessor extends ActionProcessor<UploadAction> {
           return null;
         }
         if (action.onError != null) {
+          final onErrorContext =
+              observabilityContext?.forTrigger(triggerType: 'onError');
+
           await executeActionFlow(
             context,
             action.onError!,
@@ -163,15 +185,16 @@ class UploadProcessor extends ActionProcessor<UploadAction> {
               variables: {'response': respObj},
               enclosing: scopeContext,
             ),
-            parentId: parentId,
-            eventId: eventId,
+            parentActionId: parentActionId,
+            id: id,
+            observabilityContext: onErrorContext,
           );
         }
       }
     }, onError: (error) async {
       executionContext?.notifyComplete(
-        eventId: eventId,
-        parentId: parentId,
+        id: id,
+        parentActionId: parentActionId,
         descriptor: desc,
         error: error,
         stackTrace: StackTrace.current,
@@ -191,6 +214,9 @@ class UploadProcessor extends ActionProcessor<UploadAction> {
           'requestObj': _requestObjToMap(error.requestOptions),
           'error': error.message,
         };
+        final onErrorContext =
+            observabilityContext?.forTrigger(triggerType: 'onError');
+
         await executeActionFlow(
           context,
           action.onError!,
@@ -198,8 +224,9 @@ class UploadProcessor extends ActionProcessor<UploadAction> {
             variables: {'response': response},
             enclosing: scopeContext,
           ),
-          parentId: parentId,
-          eventId: eventId,
+          parentActionId: parentActionId,
+          id: id,
+          observabilityContext: onErrorContext,
         );
       }
     });

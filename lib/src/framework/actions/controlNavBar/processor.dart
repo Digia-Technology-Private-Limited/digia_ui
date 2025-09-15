@@ -1,3 +1,4 @@
+import 'package:digia_inspector_core/digia_inspector_core.dart';
 import 'package:flutter/material.dart';
 
 import '../../expr/scope_context.dart';
@@ -12,14 +13,15 @@ class ControlNavBarProcessor extends ActionProcessor<ControlNavBarAction> {
     BuildContext context,
     ControlNavBarAction action,
     ScopeContext? scopeContext, {
-    required String eventId,
-    required String parentId,
+    required String id,
+    String? parentActionId,
+    ObservabilityContext? observabilityContext,
   }) async {
     final index = action.index?.evaluate(scopeContext);
     final navController = InheritedScaffoldController.maybeOf(context);
 
     final desc = ActionDescriptor(
-      id: eventId,
+      id: id,
       type: action.actionType,
       definition: action.toJson(),
       resolvedParameters: {
@@ -28,20 +30,22 @@ class ControlNavBarProcessor extends ActionProcessor<ControlNavBarAction> {
     );
 
     executionContext?.notifyStart(
-      eventId: eventId,
-      parentId: parentId,
+      id: id,
+      parentActionId: parentActionId,
       descriptor: desc,
+      observabilityContext: observabilityContext,
     );
 
     executionContext?.notifyProgress(
-      eventId: eventId,
-      parentId: parentId,
+      id: id,
+      parentActionId: parentActionId,
       descriptor: desc,
       details: {
         'index': index,
         'navControllerFound': navController != null,
         'indexIsInt': index is int,
       },
+      observabilityContext: observabilityContext,
     );
 
     if (navController != null && index is int) {
@@ -49,11 +53,12 @@ class ControlNavBarProcessor extends ActionProcessor<ControlNavBarAction> {
     }
 
     executionContext?.notifyComplete(
-      eventId: eventId,
-      parentId: parentId,
+      id: id,
+      parentActionId: parentActionId,
       descriptor: desc,
       error: null,
       stackTrace: null,
+      observabilityContext: observabilityContext,
     );
 
     return null;

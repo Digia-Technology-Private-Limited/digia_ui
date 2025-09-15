@@ -1,3 +1,4 @@
+import 'package:digia_inspector_core/digia_inspector_core.dart';
 import 'package:flutter/widgets.dart';
 
 import '../../expr/scope_context.dart';
@@ -12,8 +13,9 @@ class SetStateProcessor extends ActionProcessor<SetStateAction> {
     BuildContext context,
     SetStateAction action,
     ScopeContext? scopeContext, {
-    required String eventId,
-    required String parentId,
+    required String id,
+    String? parentActionId,
+    ObservabilityContext? observabilityContext,
   }) async {
     final stateContext =
         StateContextProvider.findStateByName(context, action.stateContextName);
@@ -25,7 +27,7 @@ class SetStateProcessor extends ActionProcessor<SetStateAction> {
     final rebuildPage = action.rebuild?.evaluate(scopeContext) ?? false;
 
     final desc = ActionDescriptor(
-      id: eventId,
+      id: id,
       type: action.actionType,
       definition: action.toJson(),
       resolvedParameters: {
@@ -35,9 +37,10 @@ class SetStateProcessor extends ActionProcessor<SetStateAction> {
     );
 
     executionContext?.notifyStart(
-      eventId: eventId,
-      parentId: parentId,
+      id: id,
+      parentActionId: parentActionId,
       descriptor: desc,
+      observabilityContext: observabilityContext,
     );
 
     if (updates.isNotEmpty) {
@@ -47,25 +50,27 @@ class SetStateProcessor extends ActionProcessor<SetStateAction> {
       ));
 
       executionContext?.notifyProgress(
-        eventId: eventId,
-        parentId: parentId,
+        id: id,
+        parentActionId: parentActionId,
         descriptor: desc,
         details: {
           'stateContextName': action.stateContextName,
           'rebuild': rebuildPage,
           ...updatesMap,
         },
+        observabilityContext: observabilityContext,
       );
 
       stateContext.setValues(updatesMap, notify: rebuildPage);
     }
 
     executionContext?.notifyComplete(
-      eventId: eventId,
-      parentId: parentId,
+      id: id,
+      parentActionId: parentActionId,
       descriptor: desc,
       error: null,
       stackTrace: null,
+      observabilityContext: observabilityContext,
     );
 
     return null;

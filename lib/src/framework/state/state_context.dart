@@ -13,7 +13,7 @@ class StateContext extends ChangeNotifier {
   final String? namespace;
 
   /// Unique ID for this state context instance.
-  late final String stateId;
+  final String stateId;
 
   /// The type of state this context represents.
   late final StateType _stateType;
@@ -26,13 +26,13 @@ class StateContext extends ChangeNotifier {
 
   StateContext(
     this.namespace, {
+    required this.stateId,
     required Map<String, Object?> initialState,
     StateContext? ancestorContext,
     StateType stateType = StateType.stateContainer,
   })  : _stateVariables = Map.from(initialState),
         _ancestorContext = ancestorContext {
     // Generate unique state ID
-    stateId = TimestampHelper.generateId();
     _stateType = stateType;
 
     // Log state creation
@@ -87,8 +87,7 @@ class StateContext extends ChangeNotifier {
   /// Returns true if the update was successful, false otherwise.
   bool setValue(String key, Object? value, {bool notify = true}) {
     if (_stateVariables.containsKey(key)) {
-      final nextState = Map<String, Object?>.from(_stateVariables);
-      nextState[key] = value;
+      _stateVariables[key] = value;
 
       if (namespace != null) {
         stateObserver?.onChange(
@@ -98,7 +97,6 @@ class StateContext extends ChangeNotifier {
           stateData: Map<String, Object?>.from(_stateVariables),
         );
       }
-      _stateVariables[key] = value;
       if (notify) notifyListeners();
       return true;
     }

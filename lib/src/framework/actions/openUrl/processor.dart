@@ -1,3 +1,4 @@
+import 'package:digia_inspector_core/digia_inspector_core.dart';
 import 'package:flutter/widgets.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -13,14 +14,15 @@ class OpenUrlProcessor extends ActionProcessor<OpenUrlAction> {
     BuildContext context,
     OpenUrlAction action,
     ScopeContext? scopeContext, {
-    required String eventId,
-    required String parentId,
+    required String id,
+    String? parentActionId,
+    ObservabilityContext? observabilityContext,
   }) async {
     final urlString = action.url?.evaluate(scopeContext);
     final launchMode = To.uriLaunchMode(action.launchMode);
 
     final desc = ActionDescriptor(
-      id: eventId,
+      id: id,
       type: action.actionType,
       definition: action.toJson(),
       resolvedParameters: {
@@ -30,61 +32,99 @@ class OpenUrlProcessor extends ActionProcessor<OpenUrlAction> {
     );
 
     executionContext?.notifyStart(
-      eventId: eventId,
-      parentId: parentId,
+      id: id,
+      parentActionId: parentActionId,
       descriptor: desc,
+      observabilityContext: observabilityContext,
     );
 
     if (urlString == null) {
       final error = ArgumentError('URL is null');
       executionContext?.notifyComplete(
-        eventId: eventId,
-        parentId: parentId,
+        id: id,
+        parentActionId: parentActionId,
         descriptor: desc,
         error: error,
         stackTrace: StackTrace.current,
+        observabilityContext: observabilityContext,
       );
       throw error;
     }
 
     executionContext?.notifyProgress(
-      eventId: eventId,
-      parentId: parentId,
+      id: id,
+      parentActionId: parentActionId,
       descriptor: desc,
       details: {
         'url': urlString,
         'launchMode': action.launchMode,
       },
+      observabilityContext: observabilityContext,
     );
 
-    final url = Uri.parse(urlString);
-    final canOpenUrl = await canLaunchUrl(url);
-
-    if (canOpenUrl) {
-      final result = await launchUrl(
-        url,
-        mode: launchMode,
-      );
-
+    final trimmed = urlString.trim();
+    final url = Uri.tryParse(trimmed);
+    if (url == null) {
+      final error = FormatException('Invalid URL: $trimmed');
       executionContext?.notifyComplete(
-        eventId: eventId,
-        parentId: parentId,
-        descriptor: desc,
-        error: null,
-        stackTrace: null,
-      );
-
-      return result;
-    } else {
-      final error = 'Not allowed to open url: $url';
-      executionContext?.notifyComplete(
-        eventId: eventId,
-        parentId: parentId,
+        id: id,
+        parentActionId: parentActionId,
         descriptor: desc,
         error: error,
         stackTrace: StackTrace.current,
+        observabilityContext: observabilityContext,
       );
       throw error;
     }
+
+    try {
+      final canOpenUrl = await canLaunchUrl(url);
+      if (!canOpenUrl) {
+        final error = StateError('Cannot open URL: $url');
+        executionContext?.notifyComplete(
+          id: id,
+          parentActionId: parentActionId,
+          descriptor: desc,
+          error: error,
+          stackTrace: StackTrace.current,
+          observabilityContext: observabilityContext,
+        );
+        throw error;
+      }
+
+      final launched = await launchUrl(url, mode: launchMode);
+      if (!launched) {
+        final error = StateError('launchUrl returned false for: $url');
+        executionContext?.notifyComplete(
+          id: id,
+          parentActionId: parentActionId,
+          descriptor: desc,
+          error: error,
+          stackTrace: StackTrace.current,
+          observabilityContext: observabilityContext,
+        );
+        throw error;
+      }
+    } catch (e, st) {
+      executionContext?.notifyComplete(
+        id: id,
+        parentActionId: parentActionId,
+        descriptor: desc,
+        error: e,
+        stackTrace: st,
+        observabilityContext: observabilityContext,
+      );
+      rethrow;
+    }
+
+    executionContext?.notifyComplete(
+      id: id,
+      parentActionId: parentActionId,
+      descriptor: desc,
+      error: null,
+      stackTrace: null,
+      observabilityContext: observabilityContext,
+    );
+    return true;
   }
 }

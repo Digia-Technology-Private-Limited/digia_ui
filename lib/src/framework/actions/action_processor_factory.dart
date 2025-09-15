@@ -1,3 +1,4 @@
+import 'package:digia_inspector_core/digia_inspector_core.dart';
 import 'package:flutter/widgets.dart';
 
 import '../data_type/method_bindings/method_binding_registry.dart';
@@ -43,8 +44,9 @@ class ActionProcDependencies {
     BuildContext context,
     ActionFlow actionFlow,
     ScopeContext? scopeContext, {
-    required String eventId,
-    required String parentId,
+    required String id,
+    String? parentActionId,
+    ObservabilityContext? observabilityContext,
   }) executeActionFlow;
   final MethodBindingRegistry bindingRegistry;
   // Add other shared dependencies here

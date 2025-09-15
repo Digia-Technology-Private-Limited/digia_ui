@@ -1,3 +1,4 @@
+import 'package:digia_inspector_core/digia_inspector_core.dart';
 import 'package:flutter/widgets.dart';
 
 import '../../expr/scope_context.dart';
@@ -11,13 +12,14 @@ class DelayProcessor extends ActionProcessor<DelayAction> {
     BuildContext context,
     DelayAction action,
     ScopeContext? scopeContext, {
-    required String eventId,
-    required String parentId,
+    required String id,
+    String? parentActionId,
+    ObservabilityContext? observabilityContext,
   }) async {
     final durationInMs = action.durationInMs?.evaluate(scopeContext);
 
     final desc = ActionDescriptor(
-      id: eventId,
+      id: id,
       type: action.actionType,
       definition: action.toJson(),
       resolvedParameters: {
@@ -26,19 +28,21 @@ class DelayProcessor extends ActionProcessor<DelayAction> {
     );
 
     executionContext?.notifyStart(
-      eventId: eventId,
-      parentId: parentId,
+      id: id,
+      parentActionId: parentActionId,
       descriptor: desc,
+      observabilityContext: observabilityContext,
     );
 
     executionContext?.notifyProgress(
-      eventId: eventId,
-      parentId: parentId,
+      id: id,
+      parentActionId: parentActionId,
       descriptor: desc,
       details: {
         'durationInMs': durationInMs,
         'durationIsNull': durationInMs == null,
       },
+      observabilityContext: observabilityContext,
     );
 
     if (durationInMs != null) {
@@ -46,11 +50,12 @@ class DelayProcessor extends ActionProcessor<DelayAction> {
     }
 
     executionContext?.notifyComplete(
-      eventId: eventId,
-      parentId: parentId,
+      id: id,
+      parentActionId: parentActionId,
       descriptor: desc,
       error: null,
       stackTrace: null,
+      observabilityContext: observabilityContext,
     );
 
     return null;

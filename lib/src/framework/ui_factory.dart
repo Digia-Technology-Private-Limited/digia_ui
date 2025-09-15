@@ -1,5 +1,4 @@
 import 'package:digia_expr/digia_expr.dart';
-import 'package:digia_inspector_core/digia_inspector_core.dart';
 import 'package:flutter/widgets.dart';
 
 import '../config/app_state/app_state_scope_context.dart';
@@ -104,7 +103,7 @@ class DUIFactory {
   late MethodBindingRegistry bindingRegistry;
 
   /// Execution context for the factory
-  late ActionExecutionContext executionContext;
+  late ActionExecutionContext actionExecutionContext;
 
   /// Private constructor for singleton pattern
   DUIFactory._internal();
@@ -147,17 +146,15 @@ class DUIFactory {
     widgetRegistry = DefaultVirtualWidgetRegistry(
       // MessageHandler is not propagated here
       componentBuilder: (id, args, observabilityContext) =>
-          createComponent(id, args, observabilityContext: observabilityContext),
+          createComponent(id, args),
     );
 
     // Initialize method binding registry for expression evaluation
     bindingRegistry = MethodBindingRegistry();
 
-    // Initialize execution context for action execution
-    executionContext = ActionExecutionContext(
-      actionObserver: DigiaUIManager().inspector!.actionObserver!,
-      observabilityContext:
-          ObservabilityContext(widgetHierarchy: [], triggerType: ''),
+    // Initialize action execution context
+    actionExecutionContext = ActionExecutionContext(
+      actionObserver: DigiaUIManager().inspector?.actionObserver,
     );
 
     // Set up configuration provider (use custom or default)
@@ -429,30 +426,13 @@ class DUIFactory {
     // Get page definition from configuration
     final pageDef = configProvider.getPageDefinition(pageId);
 
-    // Log page initialization for debugging and analytics
-    // DigiaUIManager().logger?.logEntity(
-    //   entitySlug: pageId,
-    //   eventName: 'INITIALIZATION',
-    //   argDefs: pageDef.pageArgDefs
-    //           ?.map((k, v) => MapEntry(k, pageArgs?[k] ?? v.defaultValue)) ??
-    //       {},
-    //   initStateDefs:
-    //       pageDef.initStateDefs?.map((k, v) => MapEntry(k, v.defaultValue)) ??
-    //           {},
-    //   stateContainerVariables: {},
-    // );
-
     // Wrap page with action executor for handling actions
     return DefaultActionExecutor(
       actionExecutor: ActionExecutor(
         viewBuilder: (context, id, args) => _buildView(context, id, args),
         pageRouteBuilder: (context, id, args) => createPageRoute(id, args),
         bindingRegistry: bindingRegistry,
-        // logger: DigiaUIManager().logger,
-        executionContext: executionContext,
-        // metaData: {
-        //   'entitySlug': pageId,
-        // },
+        actionExecutionContext: actionExecutionContext,
       ),
       child: DUIPage(
         pageId: pageId,
@@ -596,7 +576,6 @@ class DUIFactory {
     Map<String, TextStyle>? overrideTextStyles,
     Map<String, Color?>? overrideColorTokens,
     GlobalKey<NavigatorState>? navigatorKey,
-    ObservabilityContext? observabilityContext,
   }) {
     // Merge overriding resources with existing resources
     final mergedResources = UIResources(
@@ -611,30 +590,13 @@ class DUIFactory {
     // Get component definition from configuration
     final componentDef = configProvider.getComponentDefinition(componentid);
 
-    // Log component initialization for debugging and analytics
-    // DigiaUIManager().logger?.logEntity(
-    //   entitySlug: componentid,
-    //   eventName: 'INITIALIZATION',
-    //   argDefs: componentDef.argDefs
-    //           ?.map((key, value) => MapEntry(key, value.defaultValue)) ??
-    //       {},
-    //   initStateDefs: componentDef.initStateDefs
-    //           ?.map((key, value) => MapEntry(key, value.defaultValue)) ??
-    //       {},
-    //   stateContainerVariables: {},
-    // );
-
     // Wrap component with action executor for handling actions
     return DefaultActionExecutor(
       actionExecutor: ActionExecutor(
         viewBuilder: (context, id, args) => _buildView(context, id, args),
         pageRouteBuilder: (context, id, args) => createPageRoute(id, args),
         bindingRegistry: bindingRegistry,
-        // logger: DigiaUIManager().logger,
-        executionContext: executionContext,
-        // metaData: {
-        //   'entitySlug': componentid,
-        // },
+        actionExecutionContext: actionExecutionContext,
       ),
       child: DUIComponent(
         id: componentid,
@@ -644,7 +606,6 @@ class DUIFactory {
         definition: componentDef,
         registry: widgetRegistry,
         apiModels: configProvider.getAllApiModels(),
-        parentObservabilityContext: observabilityContext,
         scope: AppStateScopeContext(
           values: DUIAppState().value,
           variables: {

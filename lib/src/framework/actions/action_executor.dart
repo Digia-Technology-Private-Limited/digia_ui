@@ -1,23 +1,25 @@
+import 'package:digia_inspector_core/digia_inspector_core.dart';
 import 'package:flutter/widgets.dart';
 
 import '../data_type/method_bindings/method_binding_registry.dart';
 import '../expr/scope_context.dart';
-import '../utils/id_util.dart';
+import '../observability/observability_scope.dart';
 import '../utils/types.dart';
 import 'action_descriptor.dart';
 import 'action_execution_context.dart';
 import 'action_processor_factory.dart';
+import 'base/action.dart';
 import 'base/action_flow.dart';
 
 class ActionExecutor {
-  final ActionExecutionContext executionContext;
+  final ActionExecutionContext actionExecutionContext;
   final Widget Function(BuildContext, String, JsonLike?) viewBuilder;
   final Route<Object> Function(BuildContext, String, JsonLike?)
       pageRouteBuilder;
   final MethodBindingRegistry bindingRegistry;
 
   ActionExecutor({
-    required this.executionContext,
+    required this.actionExecutionContext,
     required this.viewBuilder,
     required this.pageRouteBuilder,
     required this.bindingRegistry,
@@ -27,22 +29,24 @@ class ActionExecutor {
     BuildContext context,
     ActionFlow actionFlow,
     ScopeContext? scopeContext, {
-    required String eventId,
-    required String parentId,
+    required String id,
+    String? parentActionId,
+    ObservabilityContext? observabilityContext,
   }) async {
-    // Use the provided parentId if it's not null, otherwise create a new flowId
-    final flowId = parentId.isNotEmpty ? parentId : IdGen.newFlowId();
+    final currentObservabilityContext =
+        observabilityContext ?? ObservabilityScope.of(context);
 
     // Register all actions as pending
     for (final action in actionFlow.actions) {
-      final actionId = IdGen.newActionId();
+      final actionId = ActionId(IdHelper.randomId());
       action.actionId = actionId;
 
-      executionContext.notifyPending(
-        eventId: actionId.id,
-        parentId: flowId,
+      actionExecutionContext.notifyPending(
+        id: actionId.id,
+        parentActionId: parentActionId,
         type: action.actionType,
         definition: action.toJson(),
+        observabilityContext: currentObservabilityContext,
       );
     }
 
@@ -53,16 +57,17 @@ class ActionExecutor {
       // disabled?
       final disabled = action.disableActionIf?.evaluate(scopeContext) ?? false;
       if (disabled) {
-        executionContext.notifyDisabled(
-          eventId: actionEventId!.id,
-          parentId: flowId,
+        actionExecutionContext.notifyDisabled(
+          id: actionEventId!.id,
+          parentActionId: parentActionId,
           descriptor: ActionDescriptor(
             id: actionEventId!.id,
             type: action.actionType,
             definition: action.toJson(),
             resolvedParameters: {},
           ),
-          reason: 'disableActionIf=true',
+          reason: action.disableActionIf?.toString() ?? 'disableActionIf=true',
+          observabilityContext: currentObservabilityContext,
         );
         continue;
       }
@@ -74,15 +79,16 @@ class ActionExecutor {
           pageRouteBuilder: pageRouteBuilder,
           bindingRegistry: bindingRegistry,
         ),
-        executionContext,
+        actionExecutionContext,
       ).getProcessor(action);
 
       await processor.execute(
         context,
         action,
         scopeContext,
-        eventId: actionEventId!.id,
-        parentId: flowId,
+        id: actionEventId!.id,
+        parentActionId: parentActionId,
+        observabilityContext: currentObservabilityContext,
       );
     }
 

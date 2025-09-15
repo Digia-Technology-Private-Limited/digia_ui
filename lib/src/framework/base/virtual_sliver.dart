@@ -27,23 +27,17 @@ abstract class VirtualSliver<T> extends VirtualStatelessWidget<T> {
   @override
   Widget toWidget(RenderPayload payload) {
     try {
-      final hierarchyContext = buildHierarchyContext(payload);
-      final updatedPayload = hierarchyContext != null
-          ? payload.copyWith(observabilityContext: hierarchyContext)
-          : payload;
-
-      if (commonProps == null) return render(updatedPayload);
+      if (commonProps == null) return render(payload);
 
       final isVisible =
-          commonProps?.visibility?.evaluate(updatedPayload.scopeContext) ??
-              true;
+          commonProps?.visibility?.evaluate(payload.scopeContext) ?? true;
       if (!isVisible) return SliverToBoxAdapter(child: empty());
 
-      var current = render(updatedPayload);
+      var current = render(payload);
 
       // Styling
       current = wrapInContainer(
-        payload: updatedPayload,
+        payload: payload,
         style: commonProps!.style,
         child: current,
       );

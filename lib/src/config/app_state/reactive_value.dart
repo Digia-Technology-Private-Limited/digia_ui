@@ -32,7 +32,7 @@ class ReactiveValue<T> {
 
   /// Create a new ReactiveValue with an initial value
   ReactiveValue(this._value, this.streamName) {
-    stateId = TimestampHelper.generateId();
+    stateId = IdHelper.randomId();
     namespace = streamName.replaceAll('changeStream', '');
 
     // Log state creation

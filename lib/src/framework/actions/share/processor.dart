@@ -1,3 +1,4 @@
+import 'package:digia_inspector_core/digia_inspector_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
@@ -13,14 +14,15 @@ class ShareProcessor extends ActionProcessor<ShareAction> {
     BuildContext context,
     ShareAction action,
     ScopeContext? scopeContext, {
-    required String eventId,
-    required String parentId,
+    required String id,
+    String? parentActionId,
+    ObservabilityContext? observabilityContext,
   }) async {
     final message = action.message?.evaluate(scopeContext);
     final subject = action.subject?.evaluate(scopeContext);
 
     final desc = ActionDescriptor(
-      id: eventId,
+      id: id,
       type: action.actionType,
       definition: action.toJson(),
       resolvedParameters: {
@@ -30,14 +32,15 @@ class ShareProcessor extends ActionProcessor<ShareAction> {
     );
 
     executionContext?.notifyStart(
-      eventId: eventId,
-      parentId: parentId,
+      id: id,
+      parentActionId: parentActionId,
       descriptor: desc,
+      observabilityContext: observabilityContext,
     );
 
     executionContext?.notifyProgress(
-      eventId: eventId,
-      parentId: parentId,
+      id: id,
+      parentActionId: parentActionId,
       descriptor: desc,
       details: {
         'message': message,
@@ -45,33 +48,44 @@ class ShareProcessor extends ActionProcessor<ShareAction> {
         'messageLength': message?.length,
         'isWeb': kIsWeb,
       },
+      observabilityContext: observabilityContext,
     );
 
-    if (message != null && message.isNotEmpty) {
-      if (kIsWeb) {
-        _showWebDialog(context, message);
-      } else {
-        await SharePlus.instance.share(ShareParams(
-          subject: subject,
-          text: message,
-        ));
+    Object? error;
+    StackTrace? stackTrace;
+    if (message is String && message.isNotEmpty) {
+      try {
+        if (kIsWeb) {
+          _showWebDialog(context, message);
+        } else {
+          await SharePlus.instance.share(ShareParams(
+            subject: subject,
+            text: message,
+          ));
+        }
+      } catch (e, s) {
+        error = e;
+        stackTrace = s;
+      } finally {
+        executionContext?.notifyComplete(
+          id: id,
+          parentActionId: parentActionId,
+          descriptor: desc,
+          error: error,
+          stackTrace: stackTrace,
+          observabilityContext: observabilityContext,
+        );
       }
-
-      executionContext?.notifyComplete(
-        eventId: eventId,
-        parentId: parentId,
-        descriptor: desc,
-        error: null,
-        stackTrace: null,
-      );
       return null;
     } else {
+      // Nothing to share; still mark complete.
       executionContext?.notifyComplete(
-        eventId: eventId,
-        parentId: parentId,
+        id: id,
+        parentActionId: parentActionId,
         descriptor: desc,
         error: null,
         stackTrace: null,
+        observabilityContext: observabilityContext,
       );
       return null;
     }

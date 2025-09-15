@@ -1,3 +1,4 @@
+import 'package:digia_inspector_core/digia_inspector_core.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -15,8 +16,9 @@ class FilePickerProcessor extends ActionProcessor<FilePickerAction> {
     BuildContext context,
     FilePickerAction action,
     ScopeContext? scopeContext, {
-    required String eventId,
-    required String parentId,
+    required String id,
+    String? parentActionId,
+    ObservabilityContext? observabilityContext,
   }) async {
     final file =
         action.selectedPageState?.evaluate(scopeContext) as AdaptedFile?;
@@ -26,7 +28,7 @@ class FilePickerProcessor extends ActionProcessor<FilePickerAction> {
     final isMultiSelect = action.isMultiSelected ?? false;
 
     final desc = ActionDescriptor(
-      id: eventId,
+      id: id,
       type: action.actionType,
       definition: action.toJson(),
       resolvedParameters: {
@@ -38,9 +40,10 @@ class FilePickerProcessor extends ActionProcessor<FilePickerAction> {
     );
 
     executionContext?.notifyStart(
-      eventId: eventId,
-      parentId: parentId,
+      id: id,
+      parentActionId: parentActionId,
       descriptor: desc,
+      observabilityContext: observabilityContext,
     );
 
     final type = toFileType(fileType);
@@ -48,8 +51,8 @@ class FilePickerProcessor extends ActionProcessor<FilePickerAction> {
     List<PlatformFile>? platformFiles;
     try {
       executionContext?.notifyProgress(
-        eventId: eventId,
-        parentId: parentId,
+        id: id,
+        parentActionId: parentActionId,
         descriptor: desc,
         details: {
           'stage': 'file_picker_started',
@@ -58,6 +61,7 @@ class FilePickerProcessor extends ActionProcessor<FilePickerAction> {
           'isMultiSelect': isMultiSelect,
           'showToast': showToast,
         },
+        observabilityContext: observabilityContext,
       );
 
       // Compression has to be set to 0, because of this issue:
@@ -71,35 +75,38 @@ class FilePickerProcessor extends ActionProcessor<FilePickerAction> {
       if (pickedFile == null) {
         // User canceled the picker
         executionContext?.notifyComplete(
-          eventId: eventId,
-          parentId: parentId,
+          id: id,
+          parentActionId: parentActionId,
           descriptor: desc,
           error: null,
           stackTrace: null,
+          observabilityContext: observabilityContext,
         );
         return null;
       }
 
       if (!context.mounted) {
         executionContext?.notifyComplete(
-          eventId: eventId,
-          parentId: parentId,
+          id: id,
+          parentActionId: parentActionId,
           descriptor: desc,
           error: null,
           stackTrace: null,
+          observabilityContext: observabilityContext,
         );
         return null;
       }
 
       executionContext?.notifyProgress(
-        eventId: eventId,
-        parentId: parentId,
+        id: id,
+        parentActionId: parentActionId,
         descriptor: desc,
         details: {
           'stage': 'files_picked',
           'pickedFileCount': pickedFile.count,
           'pickedFileNames': pickedFile.names,
         },
+        observabilityContext: observabilityContext,
       );
 
       final toast = FToast().init(context);
@@ -119,11 +126,12 @@ class FilePickerProcessor extends ActionProcessor<FilePickerAction> {
       Logger.error('Error picking file: $e',
           tag: 'FilePickerProcessor', error: e);
       executionContext?.notifyComplete(
-        eventId: eventId,
-        parentId: parentId,
+        id: id,
+        parentActionId: parentActionId,
         descriptor: desc,
         error: e,
         stackTrace: StackTrace.current,
+        observabilityContext: observabilityContext,
       );
       return null;
     }
@@ -141,8 +149,8 @@ class FilePickerProcessor extends ActionProcessor<FilePickerAction> {
         }
 
         executionContext?.notifyProgress(
-          eventId: eventId,
-          parentId: parentId,
+          id: id,
+          parentActionId: parentActionId,
           descriptor: desc,
           details: {
             'stage': 'files_processed',
@@ -153,22 +161,24 @@ class FilePickerProcessor extends ActionProcessor<FilePickerAction> {
       } catch (e) {
         Logger.error('Error: $e', tag: 'FilePickerProcessor', error: e);
         executionContext?.notifyComplete(
-          eventId: eventId,
-          parentId: parentId,
+          id: id,
+          parentActionId: parentActionId,
           descriptor: desc,
           error: e,
           stackTrace: StackTrace.current,
+          observabilityContext: observabilityContext,
         );
         return null;
       }
     }
 
     executionContext?.notifyComplete(
-      eventId: eventId,
-      parentId: parentId,
+      id: id,
+      parentActionId: parentActionId,
       descriptor: desc,
       error: null,
       stackTrace: null,
+      observabilityContext: observabilityContext,
     );
 
     return null;

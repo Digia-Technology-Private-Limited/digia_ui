@@ -13,6 +13,12 @@ typedef VirtualWidgetBuilder = VirtualWidget Function(
   VirtualWidgetRegistry registry,
 );
 
+typedef ComponentBuilder = Widget Function(
+  String id,
+  JsonLike? args,
+  ObservabilityContext? observabilityContext,
+);
+
 abstract class VirtualWidgetRegistry {
   static final Map<String, VirtualWidgetBuilder> _defaultBuilders = {
     // Layout Widgets
@@ -109,12 +115,6 @@ abstract class VirtualWidgetRegistry {
     'digia/animationBuilder': animationBuilder,
     'digia/animatedSwitcher': animatedSwitcher,
     'digia/timer': timerBuilder,
-
-    // Custom and Specialized Widgets
-    // 'digia/customDezervComponent': customDezervComponentBuilder,
-    // 'digia/dezerv/dialPad': dezervDialPadBuilder,
-    // 'digia/customShapeCard': customShapeCardBuilder,
-    // 'digia/probo/animated_fastscore': proboCustomComponentBuilder,
   };
 
   void registerWidget<T>(
@@ -135,11 +135,7 @@ abstract class VirtualWidgetRegistry {
   );
 
   factory VirtualWidgetRegistry({
-    required Widget Function(
-      String id,
-      JsonLike? args,
-      ObservabilityContext? observabilityContext,
-    ) componentBuilder,
+    required ComponentBuilder componentBuilder,
   }) = DefaultVirtualWidgetRegistry;
 
   VirtualWidget createWidget(VWData data, VirtualWidget? parent);
@@ -148,11 +144,7 @@ abstract class VirtualWidgetRegistry {
 }
 
 class DefaultVirtualWidgetRegistry implements VirtualWidgetRegistry {
-  final Widget Function(
-    String id,
-    JsonLike? args,
-    ObservabilityContext? observabilityContext,
-  ) componentBuilder;
+  final ComponentBuilder componentBuilder;
 
   final Map<String, VirtualWidgetBuilder> builders;
 

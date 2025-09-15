@@ -4,132 +4,141 @@ import 'action_descriptor.dart';
 import 'base/action.dart';
 
 class ActionExecutionContext {
-  final ActionObserver actionObserver;
-  final ObservabilityContext observabilityContext;
+  final ActionObserver? actionObserver;
 
   ActionExecutionContext({
-    required this.actionObserver,
-    required this.observabilityContext,
+    this.actionObserver,
   });
 
   void notifyPending({
-    required String eventId,
-    required String parentId,
+    required String id,
+    String? parentActionId,
     required ActionType type,
     required Map<String, dynamic> definition,
+    ObservabilityContext? observabilityContext,
   }) {
     final log = _makeLog(
-      ActionStatus.pending,
-      parentId: parentId,
+      status: ActionStatus.pending,
+      id: id,
+      parentActionId: parentActionId,
       actionDefinition: definition,
       actionType: type,
-      eventId: eventId,
+      observabilityContext: observabilityContext,
     );
-    actionObserver.onActionPending(log);
+    actionObserver?.onActionPending(log);
   }
 
   void notifyStart({
-    required String eventId,
-    required String parentId,
+    required String id,
+    String? parentActionId,
     required ActionDescriptor descriptor,
+    ObservabilityContext? observabilityContext,
   }) {
     final log = _makeLog(
-      ActionStatus.running,
-      parentId: parentId,
+      status: ActionStatus.running,
+      id: id,
+      parentActionId: parentActionId,
       actionDefinition: descriptor.definition,
+      resolvedParameters: descriptor.resolvedParameters,
       actionType: descriptor.type,
-      eventId: eventId,
+      observabilityContext: observabilityContext,
     );
-    actionObserver.onActionStart(log);
+    actionObserver?.onActionStart(log);
   }
 
   void notifyProgress({
-    required String eventId,
-    required String parentId,
+    required String id,
+    String? parentActionId,
     required ActionDescriptor descriptor,
     required Map<String, dynamic> details,
+    ObservabilityContext? observabilityContext,
   }) {
     final log = _makeLog(
-      ActionStatus.running,
-      parentId: parentId,
+      status: ActionStatus.running,
+      id: id,
+      parentActionId: parentActionId,
       actionDefinition: descriptor.definition,
       actionType: descriptor.type,
-      eventId: eventId,
+      resolvedParameters: descriptor.resolvedParameters,
       progressData: details,
+      observabilityContext: observabilityContext,
     );
-    actionObserver.onActionProgress(log);
+    actionObserver?.onActionProgress(log);
   }
 
   void notifyComplete({
-    required String eventId,
-    required String parentId,
+    required String id,
+    String? parentActionId,
     required ActionDescriptor descriptor,
     required Object? error,
     required StackTrace? stackTrace,
+    ObservabilityContext? observabilityContext,
   }) {
     final status = error == null ? ActionStatus.completed : ActionStatus.error;
     final log = _makeLog(
-      status,
-      parentId: parentId,
+      status: status,
+      id: id,
+      parentActionId: parentActionId,
       error: error,
+      resolvedParameters: descriptor.resolvedParameters,
       stackTrace: stackTrace,
       actionDefinition: descriptor.definition,
       actionType: descriptor.type,
-      eventId: eventId,
-      resolvedParameters: descriptor.resolvedParameters,
+      observabilityContext: observabilityContext,
     );
-    actionObserver.onActionComplete(log);
+    actionObserver?.onActionComplete(log);
   }
 
   void notifyDisabled({
-    required String eventId,
-    required String parentId,
+    required String id,
+    String? parentActionId,
     required ActionDescriptor descriptor,
     required String reason,
+    ObservabilityContext? observabilityContext,
   }) {
     final log = _makeLog(
-      ActionStatus.disabled,
-      parentId: parentId,
+      status: ActionStatus.disabled,
+      id: id,
+      parentActionId: parentActionId,
       actionDefinition: descriptor.definition,
-      metadata: {'reason': reason},
       resolvedParameters: descriptor.resolvedParameters,
+      metadata: {'reason': reason},
       actionType: descriptor.type,
-      eventId: eventId,
+      observabilityContext: observabilityContext,
     );
-    actionObserver.onActionDisabled(log);
+    actionObserver?.onActionDisabled(log);
   }
 
-  ActionLog _makeLog(
-    ActionStatus status, {
+  ActionLog _makeLog({
+    required ActionStatus status,
+    required ActionType? actionType,
+    ObservabilityContext? observabilityContext,
     Map<String, dynamic>? actionDefinition,
     Map<String, dynamic>? resolvedParameters,
-    ActionType? actionType,
-    String? eventId,
-    String? parentId,
+    String? id,
+    String? parentActionId,
     Map<String, dynamic>? progressData,
     Object? error,
     StackTrace? stackTrace,
     Map<String, dynamic> metadata = const {},
   }) {
+    final now = DateTime.now().toUtc();
     return ActionLog(
-      eventId: eventId ?? _uuid(),
-      actionId: eventId ?? _uuid(),
-      actionType: actionType?.value ?? '',
+      id: id ?? IdHelper.randomId(),
+      category: 'action',
+      actionType: actionType?.value ?? 'unknown',
       status: status,
-      timestamp: DateTime.now(),
-      executionTime: null, // filled by inspector manager if needed
-      parentEventId: parentId,
-      sourceChain: observabilityContext.sourceChain,
-      triggerName: observabilityContext.triggerType,
-      actionDefinition: actionDefinition ?? {},
-      resolvedParameters: resolvedParameters ?? {},
+      timestamp: now,
+      executionTime: null,
+      parentActionId: parentActionId,
+      sourceChain: observabilityContext?.sourceChain,
+      triggerName: observabilityContext?.triggerType,
+      actionDefinition: actionDefinition ?? const {},
+      resolvedParameters: resolvedParameters ?? const {},
       progressData: progressData,
       error: error,
       errorMessage: error?.toString(),
       stackTrace: stackTrace,
-      metadata: metadata,
     );
   }
-
-  String _uuid() => DateTime.now().microsecondsSinceEpoch.toString();
 }

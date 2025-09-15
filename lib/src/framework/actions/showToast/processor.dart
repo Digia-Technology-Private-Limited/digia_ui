@@ -1,3 +1,4 @@
+import 'package:digia_inspector_core/digia_inspector_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -19,8 +20,9 @@ class ShowToastProcessor extends ActionProcessor<ShowToastAction> {
     BuildContext context,
     ShowToastAction action,
     ScopeContext? scopeContext, {
-    required String eventId,
-    required String parentId,
+    required String id,
+    String? parentActionId,
+    ObservabilityContext? observabilityContext,
   }) async {
     T? evalExpr<T extends Object>(Object? expr) {
       return ExprOr.fromJson<T>(expr)?.evaluate(scopeContext);
@@ -50,17 +52,8 @@ class ShowToastProcessor extends ActionProcessor<ShowToastAction> {
     final margin = To.edgeInsets(style['margin']);
     final alignment = To.alignment(style['alignment']);
 
-    // logAction(
-    //   action.actionType.value,
-    //   {
-    //     'message': message,
-    //     'duration': duration,
-    //     'style': style,
-    //   },
-    // );
-
     final desc = ActionDescriptor(
-      id: eventId,
+      id: id,
       type: action.actionType,
       definition: action.toJson(),
       resolvedParameters: {
@@ -71,49 +64,72 @@ class ShowToastProcessor extends ActionProcessor<ShowToastAction> {
     );
 
     executionContext?.notifyStart(
-      eventId: eventId,
-      parentId: parentId,
+      id: id,
+      parentActionId: parentActionId,
       descriptor: desc,
+      observabilityContext: observabilityContext,
     );
 
     executionContext?.notifyProgress(
-      eventId: eventId,
-      parentId: parentId,
+      id: id,
+      parentActionId: parentActionId,
       descriptor: desc,
       details: {
         'message': message,
         'duration': duration,
         'style': style,
       },
+      observabilityContext: observabilityContext,
     );
 
-    final toast = FToast().init(context);
-    toast.showToast(
-      child: Container(
-        alignment: alignment,
-        height: height,
-        width: width,
-        decoration: BoxDecoration(
-          color: bgColor ?? Colors.black,
-          borderRadius: borderRadius,
+    try {
+      final toast = FToast().init(context);
+      toast.showToast(
+        child: Container(
+          alignment: alignment,
+          height: height,
+          width: width,
+          decoration: BoxDecoration(
+            color: bgColor ?? Colors.black,
+            borderRadius: borderRadius,
+          ),
+          padding: padding,
+          margin: margin,
+          child: Text(
+            message,
+            style: textStyle ?? const TextStyle(color: Colors.white),
+          ),
         ),
-        padding: padding,
-        margin: margin,
-        child: Text(
-          message,
-          style: textStyle ?? const TextStyle(color: Colors.white),
-        ),
-      ),
-      gravity: ToastGravity.BOTTOM,
-      toastDuration: Duration(seconds: duration),
-    );
+        gravity: ToastGravity.BOTTOM,
+        toastDuration: Duration(seconds: duration),
+      );
+      executionContext?.notifyComplete(
+        id: id,
+        parentActionId: parentActionId,
+        descriptor: desc,
+        error: null,
+        stackTrace: null,
+        observabilityContext: observabilityContext,
+      );
+    } catch (e, st) {
+      executionContext?.notifyComplete(
+        id: id,
+        parentActionId: parentActionId,
+        descriptor: desc,
+        error: e,
+        stackTrace: st,
+        observabilityContext: observabilityContext,
+      );
+      rethrow;
+    }
 
     executionContext?.notifyComplete(
-      eventId: eventId,
-      parentId: parentId,
+      id: id,
+      parentActionId: parentActionId,
       descriptor: desc,
       error: null,
       stackTrace: null,
+      observabilityContext: observabilityContext,
     );
 
     return null;

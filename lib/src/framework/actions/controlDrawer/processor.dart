@@ -1,3 +1,4 @@
+import 'package:digia_inspector_core/digia_inspector_core.dart';
 import 'package:flutter/material.dart';
 
 import '../../expr/scope_context.dart';
@@ -11,14 +12,15 @@ class ControlDrawerProcessor extends ActionProcessor<ControlDrawerAction> {
     BuildContext context,
     ControlDrawerAction action,
     ScopeContext? scopeContext, {
-    required String eventId,
-    required String parentId,
+    required String id,
+    String? parentActionId,
+    ObservabilityContext? observabilityContext,
   }) async {
     final choice = action.choice?.evaluate(scopeContext);
     final scaffold = Scaffold.maybeOf(context);
 
     final desc = ActionDescriptor(
-      id: eventId,
+      id: id,
       type: action.actionType,
       definition: action.toJson(),
       resolvedParameters: {
@@ -27,42 +29,50 @@ class ControlDrawerProcessor extends ActionProcessor<ControlDrawerAction> {
     );
 
     executionContext?.notifyStart(
-      eventId: eventId,
-      parentId: parentId,
+      id: id,
+      parentActionId: parentActionId,
       descriptor: desc,
+      observabilityContext: observabilityContext,
     );
 
     executionContext?.notifyProgress(
-      eventId: eventId,
-      parentId: parentId,
+      id: id,
+      parentActionId: parentActionId,
       descriptor: desc,
       details: {
         'choice': choice,
         'scaffoldFound': scaffold != null,
       },
+      observabilityContext: observabilityContext,
     );
 
-    switch (choice) {
-      case 'openDrawer':
-        scaffold?.openDrawer();
-        break;
-
-      case 'openEndDrawer':
-        scaffold?.openEndDrawer();
-        break;
-
-      default:
-        scaffold?.closeDrawer();
-        scaffold?.closeEndDrawer();
+    Object? error;
+    StackTrace? stackTrace;
+    try {
+      switch (choice) {
+        case 'openDrawer':
+          scaffold?.openDrawer();
+          break;
+        case 'openEndDrawer':
+          scaffold?.openEndDrawer();
+          break;
+        default:
+          // Unknown choice → no-op; instrumentation already recorded details.
+          break;
+      }
+    } catch (e, s) {
+      error = e;
+      stackTrace = s;
+    } finally {
+      executionContext?.notifyComplete(
+        id: id,
+        parentActionId: parentActionId,
+        descriptor: desc,
+        error: error,
+        stackTrace: stackTrace,
+        observabilityContext: observabilityContext,
+      );
     }
-
-    executionContext?.notifyComplete(
-      eventId: eventId,
-      parentId: parentId,
-      descriptor: desc,
-      error: null,
-      stackTrace: null,
-    );
 
     return null;
   }

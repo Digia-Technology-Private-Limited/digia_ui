@@ -1,3 +1,4 @@
+import 'package:digia_inspector_core/digia_inspector_core.dart';
 import 'package:flutter/widgets.dart';
 import '../../expr/default_scope_context.dart';
 import '../../expr/scope_context.dart';
@@ -15,8 +16,9 @@ class NavigateToPageProcessor extends ActionProcessor<NavigateToPageAction> {
     BuildContext context,
     ActionFlow actionFlow,
     ScopeContext? scopeContext, {
-    required String eventId,
-    required String parentId,
+    required String id,
+    String? parentActionId,
+    ObservabilityContext? observabilityContext,
   }) executeActionFlow;
 
   final Route<Object> Function(
@@ -35,8 +37,9 @@ class NavigateToPageProcessor extends ActionProcessor<NavigateToPageAction> {
     BuildContext context,
     NavigateToPageAction action,
     ScopeContext? scopeContext, {
-    required String eventId,
-    required String parentId,
+    required String id,
+    String? parentActionId,
+    ObservabilityContext? observabilityContext,
   }) async {
     final pageData = action.pageData?.deepEvaluate(scopeContext);
     final pageId = as$<String>(as$<JsonLike>(pageData)?['id']);
@@ -52,7 +55,7 @@ class NavigateToPageProcessor extends ActionProcessor<NavigateToPageAction> {
         action.routeNametoRemoveUntil?.evaluate(scopeContext);
 
     final desc = ActionDescriptor(
-      id: eventId,
+      id: id,
       type: action.actionType,
       definition: action.toJson(),
       resolvedParameters: {
@@ -65,14 +68,15 @@ class NavigateToPageProcessor extends ActionProcessor<NavigateToPageAction> {
     );
 
     executionContext?.notifyStart(
-      eventId: eventId,
-      parentId: parentId,
+      id: id,
+      parentActionId: parentActionId,
       descriptor: desc,
+      observabilityContext: observabilityContext,
     );
 
     executionContext?.notifyProgress(
-      eventId: eventId,
-      parentId: parentId,
+      id: id,
+      parentActionId: parentActionId,
       descriptor: desc,
       details: {
         'id': pageId,
@@ -81,6 +85,7 @@ class NavigateToPageProcessor extends ActionProcessor<NavigateToPageAction> {
         'shouldRemovePreviousScreensInStack': removePreviousScreensInStack,
         'routeNametoRemoveUntil': routeNametoRemoveUntil,
       },
+      observabilityContext: observabilityContext,
     );
 
     try {
@@ -100,46 +105,53 @@ class NavigateToPageProcessor extends ActionProcessor<NavigateToPageAction> {
       );
 
       executionContext?.notifyProgress(
-        eventId: eventId,
-        parentId: parentId,
+        id: id,
+        parentActionId: parentActionId,
         descriptor: desc,
         details: {
           'stage': 'page_pushed',
           'id': pageId,
           'navigatorKeyExists': navigatorKey != null,
         },
+        observabilityContext: observabilityContext,
       );
 
       Object? result = await pushFuture;
 
       if (action.waitForResult && context.mounted) {
+        final onResultContext =
+            observabilityContext?.forTrigger(triggerType: 'onResult');
+
         await executeActionFlow(
           context,
           action.onResult ?? ActionFlow.empty(),
           DefaultScopeContext(variables: {
             'result': result,
           }, enclosing: scopeContext),
-          eventId: eventId,
-          parentId: parentId,
+          id: id,
+          parentActionId: parentActionId,
+          observabilityContext: onResultContext,
         );
       }
 
       executionContext?.notifyComplete(
-        eventId: eventId,
-        parentId: parentId,
+        id: id,
+        parentActionId: parentActionId,
         descriptor: desc,
         error: null,
         stackTrace: null,
+        observabilityContext: observabilityContext,
       );
 
       return null;
     } catch (error) {
       executionContext?.notifyComplete(
-        eventId: eventId,
-        parentId: parentId,
+        id: id,
+        parentActionId: parentActionId,
         descriptor: desc,
         error: error,
         stackTrace: StackTrace.current,
+        observabilityContext: observabilityContext,
       );
 
       rethrow;

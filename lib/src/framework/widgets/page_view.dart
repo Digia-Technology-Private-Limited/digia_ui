@@ -83,6 +83,7 @@ class VWPageView extends VirtualStatelessWidget<Props> {
           await payload.executeAction(
             onPageChanged,
             scopeContext: _createExprContext(null, index),
+            triggerType: 'onChanged',
           );
         },
       );
@@ -102,6 +103,7 @@ class VWPageView extends VirtualStatelessWidget<Props> {
         await payload.executeAction(
           onPageChanged,
           scopeContext: _createExprContext(null, index),
+          triggerType: 'onChanged',
         );
       },
     );

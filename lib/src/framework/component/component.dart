@@ -7,6 +7,7 @@ import '../data_type/data_type_creator.dart';
 import '../expr/default_scope_context.dart';
 import '../expr/scope_context.dart';
 import '../models/component_definition.dart';
+import '../observability/observability_scope.dart';
 import '../render_payload.dart';
 import '../resource_provider.dart';
 import '../state/state_context.dart';
@@ -25,7 +26,6 @@ class DUIComponent extends StatelessWidget {
   final ScopeContext? scope;
   final Map<String, APIModel>? apiModels;
   final GlobalKey<NavigatorState>? navigatorKey;
-  final ObservabilityContext? parentObservabilityContext;
 
   /// Gets the state observer from the DigiaUIManager
   static StateObserver? get stateObserver =>
@@ -41,9 +41,7 @@ class DUIComponent extends StatelessWidget {
     this.scope,
     this.apiModels,
     this.navigatorKey,
-    this.parentObservabilityContext,
   });
-
   @override
   Widget build(BuildContext context) {
     final resolvedArgs = definition.argDefs
@@ -56,10 +54,9 @@ class DUIComponent extends StatelessWidget {
               enclosing: scope,
             ))));
 
-    // Log component state creation
-    final componentStateId = TimestampHelper.generateId();
+    final stateId = IdHelper.randomId();
     stateObserver?.onCreate(
-      id: componentStateId,
+      id: stateId,
       stateType: StateType.component,
       namespace: id,
       argData: resolvedArgs ?? {},
@@ -80,6 +77,7 @@ class DUIComponent extends StatelessWidget {
         navigatorKey: navigatorKey ?? inheritedResources?.navigatorKey,
         child: StatefulScopeWidget(
           namespace: id,
+          stateId: stateId,
           initialState: resolvedState ?? {},
           stateType: StateType.component,
           childBuilder: (context, state) {
@@ -89,7 +87,6 @@ class DUIComponent extends StatelessWidget {
                 resolvedArgs,
                 state,
               ),
-              parentObservabilityContext,
             );
           },
         ));
@@ -98,7 +95,6 @@ class DUIComponent extends StatelessWidget {
   Widget _buildContent(
     BuildContext context,
     ScopeContext scopeContext,
-    ObservabilityContext? parentObservabilityContext,
   ) {
     final rootNode = definition.layout?.root;
     // Blank Layout
@@ -108,17 +104,20 @@ class DUIComponent extends StatelessWidget {
 
     final virtualWidget = registry.createWidget(rootNode, null);
 
-    // Extend parent observability context for this component
+    // Get parent context from scope and extend for this component
+    final parentContext = ObservabilityScope.of(context);
     final componentObservabilityContext =
-        parentObservabilityContext?.forComponent(
-      componentId: id,
-    );
+        parentContext?.forComponent(componentId: id);
 
-    return virtualWidget.toWidget(
-      RenderPayload(
-        buildContext: context,
-        scopeContext: scopeContext,
-        observabilityContext: componentObservabilityContext,
+    return ObservabilityScope(
+      value: componentObservabilityContext,
+      child: Builder(
+        builder: (innerContext) => virtualWidget.toWidget(
+          RenderPayload(
+            buildContext: innerContext,
+            scopeContext: scopeContext,
+          ),
+        ),
       ),
     );
   }

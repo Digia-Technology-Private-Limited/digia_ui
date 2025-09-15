@@ -11,6 +11,7 @@ import '../expr/default_scope_context.dart';
 import '../expr/scope_context.dart';
 import '../models/page_definition.dart';
 import '../models/vw_data.dart';
+import '../observability/observability_scope.dart';
 import '../render_payload.dart';
 import '../resource_provider.dart';
 import '../state/state_context.dart';
@@ -61,10 +62,9 @@ class DUIPage extends StatelessWidget {
               null,
             ))));
 
-    // Log page state creation
-    final pageStateId = TimestampHelper.generateId();
+    final stateId = IdHelper.randomId();
     stateObserver?.onCreate(
-      id: pageStateId,
+      id: stateId,
       stateType: StateType.page,
       namespace: pageId,
       argData: resolvePageArgs ?? {},
@@ -72,6 +72,7 @@ class DUIPage extends StatelessWidget {
     );
 
     Widget child = StatefulScopeWidget(
+      stateId: stateId,
       namespace: pageId,
       initialState: resolvedState ?? {},
       stateType: StateType.page,
@@ -159,9 +160,15 @@ class _DUIPageContent extends StatefulWidget {
 }
 
 class _DUIPageContentState extends State<_DUIPageContent> {
+  late final ObservabilityContext observabilityContext;
+
   @override
   void initState() {
     super.initState();
+    observabilityContext = ObservabilityContext(
+      widgetHierarchy: [],
+      currentEntityId: widget.pageId,
+    );
     SchedulerBinding.instance.addPostFrameCallback((_) {
       _onPageLoaded();
     });
@@ -192,46 +199,37 @@ class _DUIPageContentState extends State<_DUIPageContent> {
 
     final virtualWidget = widget.registry.createWidget(rootNode, null);
 
-    // Build ObservabilityContext with page information
-    final observabilityContext = ObservabilityContext(
-      widgetHierarchy: [],
-      currentPageId: widget.pageId,
-      triggerType: '',
-    );
-
-    return virtualWidget.toWidget(
-      RenderPayload(
-        buildContext: context,
-        scopeContext: widget.scope,
-        observabilityContext: observabilityContext,
+    return ObservabilityScope(
+      value: observabilityContext,
+      child: Builder(
+        builder: (innerContext) => virtualWidget.toWidget(
+          RenderPayload(
+            buildContext: innerContext,
+            scopeContext: widget.scope,
+          ),
+        ),
       ),
     );
   }
 
   void _onPageLoaded() {
     if (widget.onPageLoaded != null) {
-      final observabilityContext = ObservabilityContext(
-        widgetHierarchy: [],
-        currentPageId: widget.pageId,
-        triggerType: 'onPageLoad',
-      );
       _executeAction(
-          context, widget.onPageLoaded!, widget.scope, observabilityContext);
+        context,
+        widget.onPageLoaded!,
+        widget.scope,
+        observabilityContext.forTrigger(triggerType: 'onPageLoad'),
+      );
     }
   }
 
   void _handleBackPress(bool didPop, Object? result) {
     if (widget.onBackPress != null) {
-      final observabilityContext = ObservabilityContext(
-        widgetHierarchy: [],
-        currentPageId: widget.pageId,
-        triggerType: 'onBackPress',
-      );
       _executeAction(
         context,
         widget.onBackPress!,
         widget.scope,
-        observabilityContext,
+        observabilityContext.forTrigger(triggerType: 'onBackPress'),
       );
     }
   }
@@ -240,14 +238,14 @@ class _DUIPageContentState extends State<_DUIPageContent> {
     BuildContext context,
     ActionFlow actionFlow,
     ScopeContext? scopeContext,
-    ObservabilityContext? observabilityContext,
+    ObservabilityContext observabilityContext,
   ) {
     return DefaultActionExecutor.of(context).execute(
       context,
       actionFlow,
       scopeContext,
-      eventId: '',
-      parentId: '',
+      id: IdHelper.randomId(),
+      observabilityContext: observabilityContext,
     );
   }
 }

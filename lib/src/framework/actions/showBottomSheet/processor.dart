@@ -1,3 +1,4 @@
+import 'package:digia_inspector_core/digia_inspector_core.dart';
 import 'package:flutter/widgets.dart';
 
 import '../../custom/custom_flutter_types.dart';
@@ -22,8 +23,9 @@ class ShowBottomSheetProcessor extends ActionProcessor<ShowBottomSheetAction> {
     BuildContext context,
     ActionFlow actionFlow,
     ScopeContext? scopeContext, {
-    required String eventId,
-    required String parentId,
+    required String id,
+    String? parentActionId,
+    ObservabilityContext? observabilityContext,
   }) executeActionFlow;
 
   final Widget Function(
@@ -42,8 +44,9 @@ class ShowBottomSheetProcessor extends ActionProcessor<ShowBottomSheetAction> {
     BuildContext context,
     ShowBottomSheetAction action,
     ScopeContext? scopeContext, {
-    required String eventId,
-    required String parentId,
+    required String id,
+    String? parentActionId,
+    ObservabilityContext? observabilityContext,
   }) async {
     final JsonLike style = action.style ?? {};
     final provider = ResourceProvider.maybeOf(context);
@@ -69,7 +72,7 @@ class ShowBottomSheetProcessor extends ActionProcessor<ShowBottomSheetAction> {
     final bottomSheetId = as$<String>(as$<JsonLike>(viewData)?['id']);
 
     final desc = ActionDescriptor(
-      id: eventId,
+      id: id,
       type: action.actionType,
       definition: action.toJson(),
       resolvedParameters: {
@@ -81,14 +84,15 @@ class ShowBottomSheetProcessor extends ActionProcessor<ShowBottomSheetAction> {
     );
 
     executionContext?.notifyStart(
-      eventId: eventId,
-      parentId: parentId,
+      id: id,
+      parentActionId: parentActionId,
       descriptor: desc,
+      observabilityContext: observabilityContext,
     );
 
     executionContext?.notifyProgress(
-      eventId: eventId,
-      parentId: parentId,
+      id: id,
+      parentActionId: parentActionId,
       descriptor: desc,
       details: {
         'id': bottomSheetId,
@@ -96,6 +100,7 @@ class ShowBottomSheetProcessor extends ActionProcessor<ShowBottomSheetAction> {
         'style': style,
         'waitForResult': action.waitForResult,
       },
+      observabilityContext: observabilityContext,
     );
 
     try {
@@ -138,8 +143,8 @@ class ShowBottomSheetProcessor extends ActionProcessor<ShowBottomSheetAction> {
           }));
 
       executionContext?.notifyProgress(
-        eventId: eventId,
-        parentId: parentId,
+        id: id,
+        parentActionId: parentActionId,
         descriptor: desc,
         details: {
           'stage': 'bottom_sheet_presented',
@@ -147,38 +152,45 @@ class ShowBottomSheetProcessor extends ActionProcessor<ShowBottomSheetAction> {
           'success': true,
           'navigatorKeyExists': navigatorKey != null,
         },
+        observabilityContext: observabilityContext,
       );
 
       Object? result = await future;
 
       if (action.waitForResult && context.mounted) {
+        final onResultContext = observabilityContext?.forTrigger(
+            triggerType: 'onBottomSheetResult');
+
         await executeActionFlow(
           context,
           action.onResult ?? ActionFlow.empty(),
           DefaultScopeContext(variables: {
             'result': result,
           }, enclosing: scopeContext),
-          parentId: parentId,
-          eventId: eventId,
+          parentActionId: parentActionId,
+          id: id,
+          observabilityContext: onResultContext,
         );
       }
 
       executionContext?.notifyComplete(
-        eventId: eventId,
-        parentId: parentId,
+        id: id,
+        parentActionId: parentActionId,
         descriptor: desc,
         error: null,
         stackTrace: null,
+        observabilityContext: observabilityContext,
       );
 
       return null;
     } catch (error) {
       executionContext?.notifyComplete(
-        eventId: eventId,
-        parentId: parentId,
+        id: id,
+        parentActionId: parentActionId,
         descriptor: desc,
         error: error,
         stackTrace: StackTrace.current,
+        observabilityContext: observabilityContext,
       );
 
       rethrow;

@@ -34,6 +34,7 @@ class VWRangeSlider extends VirtualLeafStatelessWidget<RangeSliderProps> {
         await payload.executeAction(
           props.onChanged,
           scopeContext: _createExprContext(value.start, value.end),
+          triggerType: 'onChanged',
         );
       },
       activeColor: payload.evalColorExpr(props.activeColor) ?? Colors.blue,
@@ -51,6 +52,7 @@ class VWRangeSlider extends VirtualLeafStatelessWidget<RangeSliderProps> {
 
   ScopeContext _createExprContext(double? first, double? second) {
     return DefaultScopeContext(
-        variables: {'startValue': first, 'endValue': second});
+      variables: {'startValue': first, 'endValue': second},
+    );
   }
 }

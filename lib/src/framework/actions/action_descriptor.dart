@@ -1,23 +1,25 @@
+import '../utils/types.dart';
 import 'base/action.dart';
 
 class ActionDescriptor {
   final String? id;
   final ActionType type;
-  final Map<String, dynamic> definition;
-  final Map<String, dynamic> resolvedParameters;
+  final JsonLike definition;
+  final JsonLike resolvedParameters;
 
   ActionDescriptor({
     this.id,
+    required JsonLike definition,
+    JsonLike resolvedParameters = const {},
     required this.type,
-    required this.definition,
-    this.resolvedParameters = const {},
-  });
+  })  : definition = Map.unmodifiable(definition),
+        resolvedParameters = Map.unmodifiable(resolvedParameters);
 
   ActionDescriptor copyWith({
     String? id,
     ActionType? type,
-    Map<String, dynamic>? definition,
-    Map<String, dynamic>? resolvedParameters,
+    JsonLike? definition,
+    JsonLike? resolvedParameters,
   }) {
     return ActionDescriptor(
       id: id ?? this.id,

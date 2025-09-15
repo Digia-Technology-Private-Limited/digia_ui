@@ -1,3 +1,4 @@
+import 'package:digia_inspector_core/digia_inspector_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -14,13 +15,14 @@ class CopyToClipBoardProcessor extends ActionProcessor<CopyToClipBoardAction> {
     BuildContext context,
     CopyToClipBoardAction action,
     ScopeContext? scopeContext, {
-    required String eventId,
-    required String parentId,
+    required String id,
+    String? parentActionId,
+    ObservabilityContext? observabilityContext,
   }) async {
     final message = action.message?.evaluate(scopeContext);
 
     final desc = ActionDescriptor(
-      id: eventId,
+      id: id,
       type: action.actionType,
       definition: action.toJson(),
       resolvedParameters: {
@@ -29,9 +31,10 @@ class CopyToClipBoardProcessor extends ActionProcessor<CopyToClipBoardAction> {
     );
 
     executionContext?.notifyStart(
-      eventId: eventId,
-      parentId: parentId,
+      id: id,
+      parentActionId: parentActionId,
       descriptor: desc,
+      observabilityContext: observabilityContext,
     );
 
     final toast = FToast().init(context);
@@ -39,14 +42,15 @@ class CopyToClipBoardProcessor extends ActionProcessor<CopyToClipBoardAction> {
 
     if (message != null && message.isNotEmpty) {
       executionContext?.notifyProgress(
-        eventId: eventId,
-        parentId: parentId,
+        id: id,
+        parentActionId: parentActionId,
         descriptor: desc,
         details: {
           'message': message,
           'messageLength': message.length,
           'hostType': host.runtimeType.toString(),
         },
+        observabilityContext: observabilityContext,
       );
 
       try {
@@ -56,11 +60,12 @@ class CopyToClipBoardProcessor extends ActionProcessor<CopyToClipBoardAction> {
         }
 
         executionContext?.notifyComplete(
-          eventId: eventId,
-          parentId: parentId,
+          id: id,
+          parentActionId: parentActionId,
           descriptor: desc,
           error: null,
           stackTrace: null,
+          observabilityContext: observabilityContext,
         );
       } catch (e) {
         if (host is DashboardHost) {
@@ -68,21 +73,23 @@ class CopyToClipBoardProcessor extends ActionProcessor<CopyToClipBoardAction> {
         }
 
         executionContext?.notifyComplete(
-          eventId: eventId,
-          parentId: parentId,
+          id: id,
+          parentActionId: parentActionId,
           descriptor: desc,
           error: e,
           stackTrace: StackTrace.current,
+          observabilityContext: observabilityContext,
         );
       }
       return null;
     } else {
       executionContext?.notifyComplete(
-        eventId: eventId,
-        parentId: parentId,
+        id: id,
+        parentActionId: parentActionId,
         descriptor: desc,
         error: null,
         stackTrace: null,
+        observabilityContext: observabilityContext,
       );
       return null;
     }

@@ -1,6 +1,8 @@
 import 'package:digia_expr/digia_expr.dart';
 
+import '../../init/digia_ui_manager.dart';
 import '../utils/object_util.dart';
+import 'expression_util_with_logging.dart';
 import 'scope_context.dart';
 
 /// Evaluates a string expression and converts the result to the specified type.
@@ -17,6 +19,13 @@ T? evaluateExpression<T extends Object>(
   ScopeContext? scopeContext,
 ) {
   return Expression.eval(expression, scopeContext)?.to<T>();
+  // if (DigiaUIManager().logger != null) {
+  //   return evaluateExpressionWithLogging<T>(
+  //     expression,
+  //     scopeContext,
+  //   );
+  // }
+  // return Expression.eval(expression, scopeContext)?.to<T>();
 }
 
 T? evaluate<T extends Object>(
@@ -30,6 +39,13 @@ T? evaluate<T extends Object>(
     return decoder?.call(expression) ?? expression.to<T>();
   }
 
+  // return Expression.eval(expression as String, scopeContext)?.to<T>();
+  // if (DigiaUIManager().logger != null) {
+  //   return evaluateExpressionWithLogging<T>(
+  //     expression as String,
+  //     scopeContext,
+  //   );
+  // }
   return Expression.eval(expression as String, scopeContext)?.to<T>();
 }
 

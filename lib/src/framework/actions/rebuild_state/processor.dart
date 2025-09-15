@@ -1,3 +1,4 @@
+import 'package:digia_inspector_core/digia_inspector_core.dart';
 import 'package:flutter/widgets.dart';
 
 import '../../expr/scope_context.dart';
@@ -12,11 +13,12 @@ class RebuildStateProcessor extends ActionProcessor<RebuildStateAction> {
     BuildContext context,
     RebuildStateAction action,
     ScopeContext? scopeContext, {
-    required String eventId,
-    required String parentId,
+    required String id,
+    String? parentActionId,
+    ObservabilityContext? observabilityContext,
   }) {
     final desc = ActionDescriptor(
-      id: eventId,
+      id: id,
       type: action.actionType,
       definition: action.toJson(),
       resolvedParameters: {
@@ -25,19 +27,21 @@ class RebuildStateProcessor extends ActionProcessor<RebuildStateAction> {
     );
 
     executionContext?.notifyStart(
-      eventId: eventId,
-      parentId: parentId,
+      id: id,
+      parentActionId: parentActionId,
       descriptor: desc,
+      observabilityContext: observabilityContext,
     );
 
     executionContext?.notifyProgress(
-      eventId: eventId,
-      parentId: parentId,
+      id: id,
+      parentActionId: parentActionId,
       descriptor: desc,
       details: {
         'stateContextName': action.stateContextName,
         'hasStateContextName': action.stateContextName != null,
       },
+      observabilityContext: observabilityContext,
     );
 
     if (action.stateContextName == null) {
@@ -50,11 +54,12 @@ class RebuildStateProcessor extends ActionProcessor<RebuildStateAction> {
     }
 
     executionContext?.notifyComplete(
-      eventId: eventId,
-      parentId: parentId,
+      id: id,
+      parentActionId: parentActionId,
       descriptor: desc,
       error: null,
       stackTrace: null,
+      observabilityContext: observabilityContext,
     );
 
     return null;

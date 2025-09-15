@@ -69,7 +69,10 @@ class VWAnimatedButton extends VirtualLeafStatelessWidget<Props> {
         ? null
         : () {
             final onClick = ActionFlow.fromJson(props.get('onClick'));
-            payload.executeAction(onClick);
+            payload.executeAction(
+              onClick,
+              triggerType: 'onPressed',
+            );
           };
 
     return ButtonBounceAnimation(

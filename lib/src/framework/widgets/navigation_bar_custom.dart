@@ -31,7 +31,10 @@ class VWNavigationBarCustom
       final onPageSelected = selectedChild.props.onSelect;
       final onPageSelectedAction = onPageSelected?['action'];
       if (onPageSelectedAction != null) {
-        payload.executeAction(ActionFlow.fromJson(onPageSelectedAction));
+        payload.executeAction(
+          ActionFlow.fromJson(onPageSelectedAction),
+          triggerType: 'onPageSelected',
+        );
       }
     }
     onDestinationSelected?.call(index);

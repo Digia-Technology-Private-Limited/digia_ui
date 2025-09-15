@@ -63,7 +63,10 @@ class VWIconButton extends VirtualLeafStatelessWidget<Props> {
             ? null
             : () {
                 final onClick = ActionFlow.fromJson(props.get('onClick'));
-                payload.executeAction(onClick);
+                payload.executeAction(
+                  onClick,
+                  triggerType: 'onPressed',
+                );
               },
         icon: icon,
         style: style,

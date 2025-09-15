@@ -1,3 +1,4 @@
+import 'package:digia_inspector_core/digia_inspector_core.dart';
 import 'package:flutter/widgets.dart';
 
 import '../../expr/default_scope_context.dart';
@@ -17,8 +18,9 @@ class CallRestApiProcessor extends ActionProcessor<CallRestApiAction> {
     BuildContext context,
     ActionFlow actionFlow,
     ScopeContext? scopeContext, {
-    required String eventId,
-    required String parentId,
+    required String id,
+    String? parentActionId,
+    ObservabilityContext? observabilityContext,
   }) executeActionFlow;
 
   CallRestApiProcessor({
@@ -31,8 +33,9 @@ class CallRestApiProcessor extends ActionProcessor<CallRestApiAction> {
     BuildContext context,
     CallRestApiAction action,
     ScopeContext? scopeContext, {
-    required String eventId,
-    required String parentId,
+    required String id,
+    String? parentActionId,
+    ObservabilityContext? observabilityContext,
   }) async {
     try {
       final dataSource = action.dataSource?.evaluate(scopeContext);
@@ -40,7 +43,7 @@ class CallRestApiProcessor extends ActionProcessor<CallRestApiAction> {
           ?.apiModels[as$<JsonLike>(dataSource)?['id']];
 
       final desc = ActionDescriptor(
-        id: eventId,
+        id: id,
         type: action.actionType,
         definition: action.toJson(),
         resolvedParameters: {
@@ -49,28 +52,31 @@ class CallRestApiProcessor extends ActionProcessor<CallRestApiAction> {
       );
 
       executionContext?.notifyStart(
-        eventId: eventId,
-        parentId: parentId,
+        id: id,
+        parentActionId: parentActionId,
         descriptor: desc,
+        observabilityContext: observabilityContext,
       );
 
       if (apiModel == null) {
         final err = Exception('No API Selected');
         executionContext?.notifyComplete(
-          eventId: eventId,
-          parentId: parentId,
+          id: id,
+          parentActionId: parentActionId,
           descriptor: desc,
           error: err,
           stackTrace: StackTrace.current,
+          observabilityContext: observabilityContext,
         );
         return Future.error(err);
       }
 
       executionContext?.notifyProgress(
-        eventId: eventId,
-        parentId: parentId,
+        id: id,
+        parentActionId: parentActionId,
         descriptor: desc,
         details: {'stage': 'request_started'},
+        observabilityContext: observabilityContext,
       );
 
       final result = await executeApiAction(
@@ -82,13 +88,17 @@ class CallRestApiProcessor extends ActionProcessor<CallRestApiAction> {
         successCondition: action.successCondition,
         onSuccess: (response) async {
           executionContext?.notifyProgress(
-            eventId: eventId,
-            parentId: parentId,
+            id: id,
+            parentActionId: parentActionId,
             descriptor: desc,
             details: {'stage': 'onSuccess', 'preview': _smallify(response)},
+            observabilityContext: observabilityContext,
           );
 
           if (action.onSuccess != null) {
+            final onSuccessContext =
+                observabilityContext?.forTrigger(triggerType: 'onSuccess');
+
             await executeActionFlow(
               context,
               action.onSuccess!,
@@ -96,20 +106,25 @@ class CallRestApiProcessor extends ActionProcessor<CallRestApiAction> {
                 variables: {'response': response},
                 enclosing: scopeContext,
               ),
-              eventId: eventId,
-              parentId: eventId,
+              id: id,
+              parentActionId: id,
+              observabilityContext: onSuccessContext,
             );
           }
         },
         onError: (response) async {
           executionContext?.notifyProgress(
-            eventId: eventId,
-            parentId: parentId,
+            id: id,
+            parentActionId: parentActionId,
             descriptor: desc,
             details: {'stage': 'onError', 'preview': _smallify(response)},
+            observabilityContext: observabilityContext,
           );
 
           if (action.onError != null) {
+            final onErrorContext =
+                observabilityContext?.forTrigger(triggerType: 'onError');
+
             await executeActionFlow(
               context,
               action.onError!,
@@ -117,34 +132,37 @@ class CallRestApiProcessor extends ActionProcessor<CallRestApiAction> {
                 variables: {'response': response},
                 enclosing: scopeContext,
               ),
-              eventId: eventId,
-              parentId: eventId,
+              id: id,
+              parentActionId: id,
+              observabilityContext: onErrorContext,
             );
           }
         },
       );
 
       executionContext?.notifyComplete(
-        eventId: eventId,
-        parentId: parentId,
+        id: id,
+        parentActionId: parentActionId,
         descriptor: desc,
         error: null,
         stackTrace: null,
+        observabilityContext: observabilityContext,
       );
       return result;
     } catch (e, st) {
       final desc = ActionDescriptor(
-        id: eventId,
+        id: id,
         type: action.actionType,
         definition: action.toJson(),
         resolvedParameters: {},
       );
       executionContext?.notifyComplete(
-        eventId: eventId,
-        parentId: parentId,
+        id: id,
+        parentActionId: parentActionId,
         descriptor: desc,
         error: e,
         stackTrace: st,
+        observabilityContext: observabilityContext,
       );
       rethrow;
     }

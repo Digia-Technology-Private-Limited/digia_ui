@@ -1,3 +1,4 @@
+import 'package:digia_inspector_core/digia_inspector_core.dart';
 import 'package:flutter/material.dart';
 
 import '../../expr/default_scope_context.dart';
@@ -18,8 +19,9 @@ class ShowDialogProcessor extends ActionProcessor<ShowDialogAction> {
     BuildContext context,
     ActionFlow actionFlow,
     ScopeContext? scopeContext, {
-    required String eventId,
-    required String parentId,
+    required String id,
+    String? parentActionId,
+    ObservabilityContext? observabilityContext,
   }) executeActionFlow;
 
   ShowDialogProcessor({
@@ -31,7 +33,9 @@ class ShowDialogProcessor extends ActionProcessor<ShowDialogAction> {
   @override
   Future<Object?>? execute(
       BuildContext context, ShowDialogAction action, ScopeContext? scopeContext,
-      {required String eventId, required String parentId}) async {
+      {required String id,
+      String? parentActionId,
+      ObservabilityContext? observabilityContext}) async {
     final provider = ResourceProvider.maybeOf(context);
 
     final barrierDismissible =
@@ -46,7 +50,7 @@ class ShowDialogProcessor extends ActionProcessor<ShowDialogAction> {
     final dialogId = as$<String>(as$<JsonLike>(viewData)?['id']);
 
     final desc = ActionDescriptor(
-      id: eventId,
+      id: id,
       type: action.actionType,
       definition: action.toJson(),
       resolvedParameters: {
@@ -58,14 +62,15 @@ class ShowDialogProcessor extends ActionProcessor<ShowDialogAction> {
     );
 
     executionContext?.notifyStart(
-      eventId: eventId,
-      parentId: parentId,
+      id: id,
+      parentActionId: parentActionId,
       descriptor: desc,
+      observabilityContext: observabilityContext,
     );
 
     executionContext?.notifyProgress(
-      eventId: eventId,
-      parentId: parentId,
+      id: id,
+      parentActionId: parentActionId,
       descriptor: desc,
       details: {
         'id': dialogId,
@@ -73,6 +78,7 @@ class ShowDialogProcessor extends ActionProcessor<ShowDialogAction> {
         'barrierDismissible': barrierDismissible,
         'waitForResult': waitForResult,
       },
+      observabilityContext: observabilityContext,
     );
 
     try {
@@ -90,46 +96,53 @@ class ShowDialogProcessor extends ActionProcessor<ShowDialogAction> {
       );
 
       executionContext?.notifyProgress(
-        eventId: eventId,
-        parentId: parentId,
+        id: id,
+        parentActionId: parentActionId,
         descriptor: desc,
         details: {
           'stage': 'dialog_presented',
           'id': dialogId,
           'success': true,
         },
+        observabilityContext: observabilityContext,
       );
 
       Object? result = await future;
 
       if (waitForResult && context.mounted) {
+        final onResultContext =
+            observabilityContext?.forTrigger(triggerType: 'onResult');
+
         await executeActionFlow(
           context,
           action.onResult ?? ActionFlow.empty(),
           DefaultScopeContext(variables: {
             'result': result,
           }, enclosing: scopeContext),
-          eventId: eventId,
-          parentId: parentId,
+          id: id,
+          parentActionId: parentActionId,
+          observabilityContext: onResultContext,
         );
       }
 
       executionContext?.notifyComplete(
-        eventId: eventId,
-        parentId: parentId,
+        id: id,
+        parentActionId: parentActionId,
         descriptor: desc,
         error: null,
         stackTrace: null,
+        observabilityContext: observabilityContext,
       );
 
       return null;
     } catch (error) {
       executionContext?.notifyComplete(
-        eventId: eventId,
-        parentId: parentId,
+        id: id,
+        parentActionId: parentActionId,
         descriptor: desc,
         error: error,
         stackTrace: StackTrace.current,
+        observabilityContext: observabilityContext,
       );
       rethrow;
     }

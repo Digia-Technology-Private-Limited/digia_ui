@@ -7,6 +7,7 @@ import 'expr/expression_util.dart';
 import 'expr/scope_context.dart';
 import 'font_factory.dart';
 import 'models/types.dart';
+import 'observability/observability_scope.dart';
 import 'resource_provider.dart';
 import 'ui_factory.dart';
 import 'utils/textstyle_util.dart';
@@ -15,12 +16,10 @@ import 'utils/types.dart';
 class RenderPayload {
   final BuildContext buildContext;
   final ScopeContext scopeContext;
-  final ObservabilityContext? observabilityContext;
 
   RenderPayload({
     required this.buildContext,
     required this.scopeContext,
-    this.observabilityContext,
   });
 
   // Retrieves an icon from a map, currently not implemented
@@ -30,6 +29,10 @@ class RenderPayload {
     // TODO: Yet to be implemented
     return null;
   }
+
+  /// Gets the current ObservabilityContext from scope
+  ObservabilityContext? get observabilityContext =>
+      ObservabilityScope.of(buildContext);
 
   // Retrieves a color from the ResourceProvider using a key
   Color? getColor(String key) {
@@ -55,73 +58,48 @@ class RenderPayload {
     );
   }
 
-  // Executes an action flow with an optional expression context
+  /// Executes an action flow with optional trigger context
   Future<Object?>? executeAction(
     ActionFlow? actionFlow, {
     ScopeContext? scopeContext,
+    String? triggerType,
   }) {
     if (actionFlow == null) return null;
+
+    final observabilityContextWithTrigger = triggerType != null
+        ? observabilityContext?.forTrigger(triggerType: triggerType)
+        : observabilityContext;
 
     return DefaultActionExecutor.of(buildContext).execute(
       buildContext,
       actionFlow,
       _chainExprContext(scopeContext),
-      eventId: '',
-      parentId: '',
-    );
-  }
-
-  /// Creates a child ObservabilityContext with additional hierarchy elements
-  @Deprecated('Use extendHierarchy or forTrigger methods instead')
-  ObservabilityContext? withAdditionalHierarchy({
-    String? triggerWidgetId,
-    String? triggerType,
-    List<String>? additionalHierarchy,
-  }) {
-    if (observabilityContext == null) return null;
-
-    // If triggerWidgetId is provided and additionalHierarchy is null,
-    // add a default hierarchy element
-    final hierarchyToAdd = additionalHierarchy ??
-        (triggerWidgetId != null ? [triggerWidgetId] : null);
-
-    return observabilityContext!.copyWith(
-      widgetHierarchy: hierarchyToAdd != null
-          ? [...observabilityContext!.widgetHierarchy, ...hierarchyToAdd]
-          : observabilityContext!.widgetHierarchy,
-      triggerWidgetId: triggerWidgetId,
-      triggerType: triggerType ?? observabilityContext!.triggerType,
+      id: IdHelper.randomId(),
+      observabilityContext: observabilityContextWithTrigger,
     );
   }
 
   /// Extends the observability context hierarchy with additional widget names
   ///
   /// This is the preferred method for adding widgets to the hierarchy chain
-  ObservabilityContext? extendHierarchy(List<String> additionalHierarchy) {
+  ObservabilityContext? extendHierarchy(
+      {required List<String> additionalHierarchy}) {
     return observabilityContext?.extendHierarchy(additionalHierarchy);
   }
 
-  /// Creates a context for triggering an action with optional hierarchy extension
-  ///
-  /// This is the preferred method when executing actions that need trigger information
-  ObservabilityContext? forTrigger({
-    String? triggerWidgetId,
-    required String triggerType,
-    List<String>? additionalHierarchy,
-  }) {
-    return observabilityContext?.forTrigger(
-      triggerWidgetId: triggerWidgetId,
-      triggerType: triggerType,
-      additionalHierarchy: additionalHierarchy,
-    );
+  /// Creates a context for triggering an action
+  ObservabilityContext? forTrigger({required String triggerType}) {
+    return observabilityContext?.forTrigger(triggerType: triggerType);
   }
 
   /// Creates a new RenderPayload with an extended hierarchy
   ///
-  /// Convenience method to create a new payload with extended observability context
-  RenderPayload withExtendedHierarchy(List<String> additionalHierarchy) {
-    return copyWith(
-      observabilityContext: extendHierarchy(additionalHierarchy),
+  /// This creates a new scope wrapper with the extended context
+  Widget withExtendedHierarchy(List<String> additionalHierarchy, Widget child) {
+    final extended = observabilityContext?.extendHierarchy(additionalHierarchy);
+    return ObservabilityScope(
+      value: extended,
+      child: child,
     );
   }
 
@@ -182,12 +160,10 @@ class RenderPayload {
   RenderPayload copyWithChainedContext(
     ScopeContext scopeContext, {
     BuildContext? buildContext,
-    ObservabilityContext? observabilityContext,
   }) {
     return copyWith(
       buildContext: buildContext ?? this.buildContext,
       scopeContext: _chainExprContext(scopeContext),
-      observabilityContext: observabilityContext ?? this.observabilityContext,
     );
   }
 
@@ -195,12 +171,10 @@ class RenderPayload {
   RenderPayload copyWith({
     BuildContext? buildContext,
     ScopeContext? scopeContext,
-    ObservabilityContext? observabilityContext,
   }) {
     return RenderPayload(
       buildContext: buildContext ?? this.buildContext,
       scopeContext: scopeContext ?? this.scopeContext,
-      observabilityContext: observabilityContext ?? this.observabilityContext,
     );
   }
 }

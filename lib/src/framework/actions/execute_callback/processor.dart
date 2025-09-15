@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:digia_inspector_core/digia_inspector_core.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../digia_ui.dart';
@@ -14,8 +15,9 @@ class ExecuteCallbackProcessor extends ActionProcessor<ExecuteCallbackAction> {
     BuildContext context,
     ActionFlow actionFlow,
     ScopeContext? scopeContext, {
-    required String eventId,
-    required String parentId,
+    required String id,
+    String? parentActionId,
+    ObservabilityContext? observabilityContext,
   }) executeActionFlow;
 
   ExecuteCallbackProcessor({
@@ -24,13 +26,18 @@ class ExecuteCallbackProcessor extends ActionProcessor<ExecuteCallbackAction> {
 
   @override
   Future<Object?>? execute(
-      BuildContext context, action, ScopeContext? scopeContext,
-      {required String eventId, required String parentId}) async {
+    BuildContext context,
+    action,
+    ScopeContext? scopeContext, {
+    required String id,
+    String? parentActionId,
+    ObservabilityContext? observabilityContext,
+  }) async {
     final resolvedArgs =
         convertVariableUpdateToMap(action.argUpdates, scopeContext);
 
-    final desc = ActionDescriptor(
-      id: eventId,
+    final actionDescriptor = ActionDescriptor(
+      id: id,
       type: action.actionType,
       definition: action.toJson(),
       resolvedParameters: {
@@ -40,19 +47,21 @@ class ExecuteCallbackProcessor extends ActionProcessor<ExecuteCallbackAction> {
     );
 
     executionContext?.notifyStart(
-      eventId: eventId,
-      parentId: parentId,
-      descriptor: desc,
+      id: id,
+      parentActionId: parentActionId,
+      descriptor: actionDescriptor,
+      observabilityContext: observabilityContext,
     );
 
     executionContext?.notifyProgress(
-      eventId: eventId,
-      parentId: parentId,
-      descriptor: desc,
+      id: id,
+      parentActionId: parentActionId,
+      descriptor: actionDescriptor,
       details: {
         'actionName': action.actionName?.evaluate(scopeContext),
         'argUpdates': resolvedArgs,
       },
+      observabilityContext: observabilityContext,
     );
 
     // Parse actionFlow from evaluated actionName
@@ -76,11 +85,12 @@ class ExecuteCallbackProcessor extends ActionProcessor<ExecuteCallbackAction> {
         } catch (e) {
           // JSON parsing failed - emit error and return
           executionContext?.notifyComplete(
-            eventId: eventId,
-            parentId: parentId,
-            descriptor: desc,
+            id: id,
+            parentActionId: parentActionId,
+            descriptor: actionDescriptor,
             error: e,
             stackTrace: StackTrace.current,
+            observabilityContext: observabilityContext,
           );
           return null;
         }
@@ -92,43 +102,50 @@ class ExecuteCallbackProcessor extends ActionProcessor<ExecuteCallbackAction> {
     // Handle null actionFlow with early return and logging
     if (actionFlow == null) {
       executionContext?.notifyComplete(
-        eventId: eventId,
-        parentId: parentId,
-        descriptor: desc,
+        id: id,
+        parentActionId: parentActionId,
+        descriptor: actionDescriptor,
         error: 'actionFlow parsing returned null',
         stackTrace: StackTrace.current,
+        observabilityContext: observabilityContext,
       );
       return null;
     }
 
     try {
+      final callbackContext = observabilityContext?.forTrigger(
+          triggerType: evaluatedActionName.toString());
+
       final result = await executeActionFlow(
-        eventId: eventId,
+        id: id,
         context,
         actionFlow,
         DefaultScopeContext(
           variables: {'args': resolvedArgs},
           enclosing: scopeContext,
         ),
-        parentId: parentId,
+        parentActionId: parentActionId,
+        observabilityContext: callbackContext,
       );
 
       executionContext?.notifyComplete(
-        eventId: eventId,
-        parentId: parentId,
-        descriptor: desc,
+        id: id,
+        parentActionId: parentActionId,
+        descriptor: actionDescriptor,
         error: null,
         stackTrace: null,
+        observabilityContext: observabilityContext,
       );
 
       return result;
     } catch (error) {
       executionContext?.notifyComplete(
-        eventId: eventId,
-        parentId: parentId,
-        descriptor: desc,
+        id: id,
+        parentActionId: parentActionId,
+        descriptor: actionDescriptor,
         error: error,
         stackTrace: StackTrace.current,
+        observabilityContext: observabilityContext,
       );
 
       rethrow;

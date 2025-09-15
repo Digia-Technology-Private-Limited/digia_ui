@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:digia_inspector_core/digia_inspector_core.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -17,8 +18,9 @@ class ImagePickerProcessor extends ActionProcessor<ImagePickerAction> {
     BuildContext context,
     ImagePickerAction action,
     ScopeContext? scopeContext, {
-    required String eventId,
-    required String parentId,
+    required String id,
+    String? parentActionId,
+    ObservabilityContext? observabilityContext,
   }) async {
     final mediaSource = action.mediaSource;
     final cameraDevice = action.cameraDevice;
@@ -34,7 +36,7 @@ class ImagePickerProcessor extends ActionProcessor<ImagePickerAction> {
         action.fileVariable?.evaluate(scopeContext) as AdaptedFile?;
 
     final desc = ActionDescriptor(
-      id: eventId,
+      id: id,
       type: action.actionType,
       definition: action.toJson(),
       resolvedParameters: {
@@ -52,19 +54,21 @@ class ImagePickerProcessor extends ActionProcessor<ImagePickerAction> {
     );
 
     executionContext?.notifyStart(
-      eventId: eventId,
-      parentId: parentId,
+      id: id,
+      parentActionId: parentActionId,
       descriptor: desc,
+      observabilityContext: observabilityContext,
     );
 
     if (!allowPhoto && !allowVideo) {
       final error = 'At least one of allowPhoto or allowVideo must be true';
       executionContext?.notifyComplete(
-        eventId: eventId,
-        parentId: parentId,
+        id: id,
+        parentActionId: parentActionId,
         descriptor: desc,
         error: error,
         stackTrace: StackTrace.current,
+        observabilityContext: observabilityContext,
       );
       throw error;
     }
@@ -77,8 +81,8 @@ class ImagePickerProcessor extends ActionProcessor<ImagePickerAction> {
 
     try {
       executionContext?.notifyProgress(
-        eventId: eventId,
-        parentId: parentId,
+        id: id,
+        parentActionId: parentActionId,
         descriptor: desc,
         details: {
           'stage': 'image_picker_started',
@@ -88,6 +92,7 @@ class ImagePickerProcessor extends ActionProcessor<ImagePickerAction> {
           'allowVideo': allowVideo,
           'allowMultiple': allowMultiple,
         },
+        observabilityContext: observabilityContext,
       );
 
       if (allowMultiple) {
@@ -119,12 +124,24 @@ class ImagePickerProcessor extends ActionProcessor<ImagePickerAction> {
       } else {
         XFile? pickedFile;
         if (allowPhoto && allowVideo) {
-          pickedFile = await imagePicker.pickMedia(
-            maxWidth: maxWidth,
-            maxHeight: maxHeight,
-            imageQuality: imageQuality,
-            requestFullMetadata: false,
-          );
+          if (source == ImageSource.camera) {
+            // Default to photo capture when both are allowed and source is camera.
+            pickedFile = await imagePicker.pickImage(
+              source: source,
+              maxWidth: maxWidth,
+              maxHeight: maxHeight,
+              imageQuality: imageQuality,
+              preferredCameraDevice: device,
+              requestFullMetadata: false,
+            );
+          } else {
+            pickedFile = await imagePicker.pickMedia(
+              maxWidth: maxWidth,
+              maxHeight: maxHeight,
+              imageQuality: imageQuality,
+              requestFullMetadata: false,
+            );
+          }
         } else if (allowPhoto) {
           pickedFile = await imagePicker.pickImage(
             source: source,
@@ -147,34 +164,37 @@ class ImagePickerProcessor extends ActionProcessor<ImagePickerAction> {
       if (pickedFiles.isEmpty) {
         // User canceled the picker
         executionContext?.notifyComplete(
-          eventId: eventId,
-          parentId: parentId,
+          id: id,
+          parentActionId: parentActionId,
           descriptor: desc,
           error: null,
           stackTrace: null,
+          observabilityContext: observabilityContext,
         );
         return null;
       }
 
       executionContext?.notifyProgress(
-        eventId: eventId,
-        parentId: parentId,
+        id: id,
+        parentActionId: parentActionId,
         descriptor: desc,
         details: {
           'stage': 'media_picked',
           'fileCount': pickedFiles.length,
           'fileNames': pickedFiles.map((f) => f.name).toList(),
         },
+        observabilityContext: observabilityContext,
       );
     } catch (e) {
       Logger.error('Error picking media: $e',
           tag: 'ImagePickerProcessor', error: e);
       executionContext?.notifyComplete(
-        eventId: eventId,
-        parentId: parentId,
+        id: id,
+        parentActionId: parentActionId,
         descriptor: desc,
         error: e,
         stackTrace: StackTrace.current,
+        observabilityContext: observabilityContext,
       );
       return null;
     }
@@ -189,36 +209,39 @@ class ImagePickerProcessor extends ActionProcessor<ImagePickerAction> {
           }
 
           executionContext?.notifyProgress(
-            eventId: eventId,
-            parentId: parentId,
+            id: id,
+            parentActionId: parentActionId,
             descriptor: desc,
             details: {
               'stage': 'media_processed',
               'finalFileCount': finalFiles.length,
               'fileSet': selectedPageState != null,
             },
+            observabilityContext: observabilityContext,
           );
         }
       } catch (e) {
         Logger.error('Error processing picked media: $e',
             tag: 'ImagePickerProcessor', error: e);
         executionContext?.notifyComplete(
-          eventId: eventId,
-          parentId: parentId,
+          id: id,
+          parentActionId: parentActionId,
           descriptor: desc,
           error: e,
           stackTrace: StackTrace.current,
+          observabilityContext: observabilityContext,
         );
         return null;
       }
     }
 
     executionContext?.notifyComplete(
-      eventId: eventId,
-      parentId: parentId,
+      id: id,
+      parentActionId: parentActionId,
       descriptor: desc,
       error: null,
       stackTrace: null,
+      observabilityContext: observabilityContext,
     );
 
     return null;

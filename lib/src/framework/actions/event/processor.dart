@@ -1,3 +1,4 @@
+import 'package:digia_inspector_core/digia_inspector_core.dart';
 import 'package:flutter/widgets.dart';
 
 import '../../../core/analytics_handler.dart';
@@ -12,8 +13,9 @@ class FireEventProcessor extends ActionProcessor<FireEventAction> {
     BuildContext context,
     ActionFlow actionFlow,
     ScopeContext? scopeContext, {
-    required String eventId,
-    required String parentId,
+    required String id,
+    String? parentActionId,
+    ObservabilityContext? observabilityContext,
   }) executeActionFlow;
 
   FireEventProcessor({
@@ -25,11 +27,12 @@ class FireEventProcessor extends ActionProcessor<FireEventAction> {
     BuildContext context,
     FireEventAction action,
     ScopeContext? scopeContext, {
-    required String eventId,
-    required String parentId,
+    required String id,
+    String? parentActionId,
+    ObservabilityContext? observabilityContext,
   }) async {
     final desc = ActionDescriptor(
-      id: eventId,
+      id: id,
       type: action.actionType,
       definition: action.toJson(),
       resolvedParameters: {
@@ -39,19 +42,21 @@ class FireEventProcessor extends ActionProcessor<FireEventAction> {
     );
 
     executionContext?.notifyStart(
-      eventId: eventId,
-      parentId: parentId,
+      id: id,
+      parentActionId: parentActionId,
       descriptor: desc,
+      observabilityContext: observabilityContext,
     );
 
     executionContext?.notifyProgress(
-      eventId: eventId,
-      parentId: parentId,
+      id: id,
+      parentActionId: parentActionId,
       descriptor: desc,
       details: {
         'events': action.events.map((e) => e.toJson()).toList(),
         'eventCount': action.events.length,
       },
+      observabilityContext: observabilityContext,
     );
 
     AnalyticsHandler.instance.execute(
@@ -61,11 +66,12 @@ class FireEventProcessor extends ActionProcessor<FireEventAction> {
     );
 
     executionContext?.notifyComplete(
-      eventId: eventId,
-      parentId: parentId,
+      id: id,
+      parentActionId: parentActionId,
       descriptor: desc,
       error: null,
       stackTrace: null,
+      observabilityContext: observabilityContext,
     );
 
     return null;
