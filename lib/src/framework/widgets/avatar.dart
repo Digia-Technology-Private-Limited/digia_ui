@@ -60,8 +60,8 @@ class VWAvatar extends VirtualLeafStatelessWidget<Props> {
 
   Widget? _getAvatarChildWidget(RenderPayload payload) {
     final imageProps = props.getMap('image');
-    final String? imageSrc = payload.eval(imageProps!['imageSrc']);
-    final String? imageFit = payload.eval(imageProps['fit']);
+    final String? imageSrc = payload.eval(imageProps?['imageSrc']);
+    final String? imageFit = payload.eval(imageProps?['fit']);
 
     if (imageSrc != null && imageSrc.isNotEmpty) {
       return VWImage.fromValues(
