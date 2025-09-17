@@ -35,31 +35,41 @@ class ControlNavBarProcessor extends ActionProcessor<ControlNavBarAction> {
       descriptor: desc,
       observabilityContext: observabilityContext,
     );
+    try {
+      executionContext?.notifyProgress(
+        id: id,
+        parentActionId: parentActionId,
+        descriptor: desc,
+        details: {
+          'index': index,
+          'navControllerFound': navController != null,
+          'indexIsInt': index is int,
+        },
+        observabilityContext: observabilityContext,
+      );
 
-    executionContext?.notifyProgress(
-      id: id,
-      parentActionId: parentActionId,
-      descriptor: desc,
-      details: {
-        'index': index,
-        'navControllerFound': navController != null,
-        'indexIsInt': index is int,
-      },
-      observabilityContext: observabilityContext,
-    );
-
-    if (navController != null && index is int) {
-      navController.setCurrentIndex(index);
+      if (navController != null && index is int) {
+        navController.setCurrentIndex(index);
+      }
+      executionContext?.notifyComplete(
+        id: id,
+        parentActionId: parentActionId,
+        descriptor: desc,
+        error: null,
+        stackTrace: null,
+        observabilityContext: observabilityContext,
+      );
+    } catch (e, st) {
+      executionContext?.notifyComplete(
+        id: id,
+        parentActionId: parentActionId,
+        descriptor: desc,
+        error: e,
+        stackTrace: st,
+        observabilityContext: observabilityContext,
+      );
+      rethrow;
     }
-
-    executionContext?.notifyComplete(
-      id: id,
-      parentActionId: parentActionId,
-      descriptor: desc,
-      error: null,
-      stackTrace: null,
-      observabilityContext: observabilityContext,
-    );
 
     return null;
   }

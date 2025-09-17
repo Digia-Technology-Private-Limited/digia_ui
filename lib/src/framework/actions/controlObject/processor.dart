@@ -71,15 +71,24 @@ class ControlObjectProcessor extends ActionProcessor<ControlObjectAction> {
       observabilityContext: observabilityContext,
     );
 
-    registry.execute(object, action.method, evaluatedArgs);
-
-    executionContext?.notifyComplete(
-      id: id,
-      parentActionId: parentActionId,
-      descriptor: actionDescriptor,
-      error: null,
-      stackTrace: null,
-    );
+    Object? error;
+    StackTrace? stackTrace;
+    try {
+      registry.execute(object, action.method, evaluatedArgs);
+    } catch (e, s) {
+      error = e;
+      stackTrace = s;
+      rethrow;
+    } finally {
+      executionContext?.notifyComplete(
+        id: id,
+        parentActionId: parentActionId,
+        descriptor: actionDescriptor,
+        error: error,
+        stackTrace: stackTrace,
+        observabilityContext: observabilityContext,
+      );
+    }
 
     return null;
   }

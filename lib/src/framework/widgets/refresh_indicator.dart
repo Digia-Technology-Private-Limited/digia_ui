@@ -29,7 +29,7 @@ class VWRefreshIndicator extends VirtualStatelessWidget<Props> {
           _toTriggerMode(payload.eval<String>(props.get('triggerMode'))),
       onRefresh: () async {
         final onRefresh = ActionFlow.fromJson(props.get('onRefresh'));
-        payload.executeAction(
+        await payload.executeAction(
           onRefresh,
           triggerType: 'onRefresh',
         );

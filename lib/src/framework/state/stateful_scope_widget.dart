@@ -1,4 +1,4 @@
-import 'package:digia_inspector_core/digia_inspector_core.dart';
+import 'package:digia_inspector_core/digia_inspector_core.dart' show StateType;
 import 'package:flutter/widgets.dart';
 
 import 'state_context.dart';
