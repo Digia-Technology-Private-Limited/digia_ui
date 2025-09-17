@@ -133,12 +133,19 @@ class VWFlex extends VirtualStatelessWidget<Props> {
   double get effectiveEndSpacing =>
       useSpacingForStartEnd ? spacing : endSpacing;
 
+  EdgeInsetsGeometry get padding => direction == Axis.horizontal
+      ? EdgeInsetsDirectional.only(
+          start: effectiveStartSpacing,
+          end: effectiveEndSpacing,
+        )
+      : EdgeInsets.only(
+          top: effectiveStartSpacing,
+          bottom: effectiveEndSpacing,
+        );
+
   Widget _buildFlex(List<Widget> Function() childrenBuilder) {
     return Padding(
-      padding: EdgeInsetsDirectional.only(
-        start: effectiveStartSpacing,
-        end: effectiveEndSpacing,
-      ),
+      padding: padding,
       child: Flex(
         direction: direction,
         mainAxisSize:
