@@ -125,7 +125,6 @@ class VWFlex extends VirtualStatelessWidget<Props> {
   double get startSpacing => props.getDouble('startSpacing') ?? 0.0;
   double get endSpacing => props.getDouble('endSpacing') ?? 0.0;
 
-
   EdgeInsetsGeometry get padding => direction == Axis.horizontal
       ? EdgeInsetsDirectional.only(
           start: startSpacing,
