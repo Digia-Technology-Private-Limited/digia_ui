@@ -28,9 +28,11 @@ abstract class VirtualSliver<T> extends VirtualStatelessWidget<T> {
   Widget toWidget(RenderPayload payload) {
     try {
       if (commonProps == null) return render(payload);
+
       final isVisible =
           commonProps?.visibility?.evaluate(payload.scopeContext) ?? true;
       if (!isVisible) return SliverToBoxAdapter(child: empty());
+
       var current = render(payload);
 
       // Styling

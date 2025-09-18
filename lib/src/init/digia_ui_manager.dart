@@ -1,7 +1,8 @@
 import 'package:digia_expr/digia_expr.dart';
+import 'package:digia_inspector_core/digia_inspector_core.dart';
 
 import '../dui_dev_config.dart';
-import '../dui_logger.dart';
+
 import '../framework/data_type/variable.dart';
 import '../network/network_client.dart';
 import 'digia_ui.dart';
@@ -26,7 +27,8 @@ class DigiaUIManager {
   DigiaUI? get safeInstance => _digiaUI;
 
   String get accessKey => _digiaUI!.initConfig.accessKey;
-  DUILogger? get logger => _digiaUI!.initConfig.developerConfig.logger;
+  DigiaInspector? get inspector =>
+      _digiaUI?.initConfig.developerConfig.inspector;
   Map<String, Variable> get environmentVariables =>
       _digiaUI!.dslConfig.getEnvironmentVariables();
   DigiaUIHost? get host => _digiaUI!.initConfig.developerConfig.host;

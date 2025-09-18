@@ -1,9 +1,12 @@
+import 'package:digia_inspector_core/digia_inspector_core.dart'
+    show StateType, IdHelper;
 import 'package:flutter/widgets.dart';
 
 import '../base/virtual_widget.dart';
 import '../data_type/data_type_creator.dart';
 import '../data_type/variable.dart';
 import '../expr/scope_context.dart';
+import '../observability/observability_scope.dart';
 import '../render_payload.dart';
 import 'state_context.dart';
 import 'state_scope_context.dart';
@@ -32,16 +35,28 @@ class VirtualStateContainerWidget extends VirtualWidget {
           scopeContext: payload.scopeContext,
         )));
 
-    return StatefulScopeWidget(
-      namespace: refName,
-      initialState: resolvedState,
-      childBuilder: (context, state) {
-        final updatedPayload = payload.copyWithChainedContext(
-          _createExprContext(state),
-          buildContext: context,
-        );
-        return child!.toWidget(updatedPayload);
-      },
+    final extendedContext = payload.observabilityContext
+        ?.extendHierarchy([refName ?? 'StateContainer']);
+
+    return ObservabilityScope(
+      value: extendedContext,
+      child: Builder(
+        builder: (newContext) {
+          return StatefulScopeWidget(
+            namespace: refName,
+            stateId: IdHelper.randomId(),
+            initialState: resolvedState,
+            stateType: StateType.stateContainer,
+            childBuilder: (context, state) {
+              final updatedPayload = payload.copyWithChainedContext(
+                _createExprContext(state),
+                buildContext: context,
+              );
+              return child!.toWidget(updatedPayload);
+            },
+          );
+        },
+      ),
     );
   }
 

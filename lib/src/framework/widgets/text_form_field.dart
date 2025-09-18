@@ -78,6 +78,7 @@ class VWTextFormField extends VirtualStatelessWidget<Props> {
         await payload.executeAction(
           actionFlow,
           scopeContext: _createExprContext(p0),
+          triggerType: 'onChanged',
         );
       },
       onSubmit: (p0) async {
@@ -85,6 +86,7 @@ class VWTextFormField extends VirtualStatelessWidget<Props> {
         await payload.executeAction(
           actionFlow,
           scopeContext: _createExprContext(p0),
+          triggerType: 'onSubmit',
         );
       },
       textAlign: textAlign,

@@ -64,6 +64,7 @@ class VWCarousel extends VirtualStatelessWidget<CarouselProps> {
           await payload.executeAction(
             props.onChanged,
             scopeContext: _createExprContextForAction(value),
+            triggerType: 'onChanged',
           );
         },
       );
@@ -99,6 +100,7 @@ class VWCarousel extends VirtualStatelessWidget<CarouselProps> {
         await payload.executeAction(
           props.onChanged,
           scopeContext: _createExprContextForAction(value),
+          triggerType: 'onChanged',
         );
       },
     );

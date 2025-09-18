@@ -1,3 +1,4 @@
+import 'package:digia_inspector_core/digia_inspector_core.dart';
 import 'package:flutter/widgets.dart';
 
 import 'base/virtual_builder_widget.dart';
@@ -10,6 +11,12 @@ typedef VirtualWidgetBuilder = VirtualWidget Function(
   VWNodeData data,
   VirtualWidget? parent,
   VirtualWidgetRegistry registry,
+);
+
+typedef ComponentBuilder = Widget Function(
+  String id,
+  JsonLike? args,
+  ObservabilityContext? observabilityContext,
 );
 
 abstract class VirtualWidgetRegistry {
@@ -108,12 +115,6 @@ abstract class VirtualWidgetRegistry {
     'digia/animationBuilder': animationBuilder,
     'digia/animatedSwitcher': animatedSwitcher,
     'digia/timer': timerBuilder,
-
-    // Custom and Specialized Widgets
-    // 'digia/customDezervComponent': customDezervComponentBuilder,
-    // 'digia/dezerv/dialPad': dezervDialPadBuilder,
-    // 'digia/customShapeCard': customShapeCardBuilder,
-    // 'digia/probo/animated_fastscore': proboCustomComponentBuilder,
   };
 
   void registerWidget<T>(
@@ -134,10 +135,7 @@ abstract class VirtualWidgetRegistry {
   );
 
   factory VirtualWidgetRegistry({
-    required Widget Function(
-      String id,
-      JsonLike? args,
-    ) componentBuilder,
+    required ComponentBuilder componentBuilder,
   }) = DefaultVirtualWidgetRegistry;
 
   VirtualWidget createWidget(VWData data, VirtualWidget? parent);
@@ -146,10 +144,7 @@ abstract class VirtualWidgetRegistry {
 }
 
 class DefaultVirtualWidgetRegistry implements VirtualWidgetRegistry {
-  final Widget Function(
-    String id,
-    JsonLike? args,
-  ) componentBuilder;
+  final ComponentBuilder componentBuilder;
 
   final Map<String, VirtualWidgetBuilder> builders;
 
@@ -180,6 +175,7 @@ class DefaultVirtualWidgetRegistry implements VirtualWidgetRegistry {
           parentProps: data.parentProps,
           parent: parent,
           refName: data.refName,
+          extendHierarchy: false,
           (payload) => componentBuilder(
             data.id,
             data.args?.map(
@@ -188,6 +184,7 @@ class DefaultVirtualWidgetRegistry implements VirtualWidgetRegistry {
                 v?.evaluate(payload.scopeContext),
               ),
             ),
+            payload.observabilityContext,
           ),
         );
 

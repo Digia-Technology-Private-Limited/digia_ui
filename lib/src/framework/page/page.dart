@@ -1,6 +1,8 @@
+import 'package:digia_inspector_core/digia_inspector_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
+import '../../init/digia_ui_manager.dart';
 import '../../network/api_request/api_request.dart';
 import '../actions/base/action_flow.dart';
 import '../data_type/data_type_creator.dart';
@@ -9,6 +11,7 @@ import '../expr/default_scope_context.dart';
 import '../expr/scope_context.dart';
 import '../models/page_definition.dart';
 import '../models/vw_data.dart';
+import '../observability/observability_scope.dart';
 import '../render_payload.dart';
 import '../resource_provider.dart';
 import '../state/state_context.dart';
@@ -29,6 +32,10 @@ class DUIPage extends StatelessWidget {
   final Map<String, APIModel>? apiModels;
   final GlobalKey<NavigatorState>? navigatorKey;
   final DUIPageController? controller;
+
+  /// Gets the state observer from the DigiaUIManager
+  static StateObserver? get stateObserver =>
+      DigiaUIManager().inspector?.stateObserver;
 
   const DUIPage({
     super.key,
@@ -55,9 +62,20 @@ class DUIPage extends StatelessWidget {
               null,
             ))));
 
+    final stateId = IdHelper.randomId();
+    stateObserver?.onCreate(
+      id: stateId,
+      stateType: StateType.page,
+      namespace: pageId,
+      argData: resolvePageArgs ?? {},
+      stateData: resolvedState ?? {},
+    );
+
     Widget child = StatefulScopeWidget(
+      stateId: stateId,
       namespace: pageId,
       initialState: resolvedState ?? {},
+      stateType: StateType.page,
       childBuilder: (context, state) {
         return _DUIPageContent(
           pageId: pageId,
@@ -142,9 +160,15 @@ class _DUIPageContent extends StatefulWidget {
 }
 
 class _DUIPageContentState extends State<_DUIPageContent> {
+  late final ObservabilityContext observabilityContext;
+
   @override
   void initState() {
     super.initState();
+    observabilityContext = ObservabilityContext(
+      widgetHierarchy: [],
+      currentEntityId: widget.pageId,
+    );
     SchedulerBinding.instance.addPostFrameCallback((_) {
       _onPageLoaded();
     });
@@ -175,23 +199,38 @@ class _DUIPageContentState extends State<_DUIPageContent> {
 
     final virtualWidget = widget.registry.createWidget(rootNode, null);
 
-    return virtualWidget.toWidget(
-      RenderPayload(
-        buildContext: context,
-        scopeContext: widget.scope,
+    return ObservabilityScope(
+      value: observabilityContext,
+      child: Builder(
+        builder: (innerContext) => virtualWidget.toWidget(
+          RenderPayload(
+            buildContext: innerContext,
+            scopeContext: widget.scope,
+          ),
+        ),
       ),
     );
   }
 
   void _onPageLoaded() {
     if (widget.onPageLoaded != null) {
-      _executeAction(context, widget.onPageLoaded!, widget.scope);
+      _executeAction(
+        context,
+        widget.onPageLoaded!,
+        widget.scope,
+        observabilityContext.forTrigger(triggerType: 'onPageLoad'),
+      );
     }
   }
 
   void _handleBackPress(bool didPop, Object? result) {
     if (widget.onBackPress != null) {
-      _executeAction(context, widget.onBackPress!, widget.scope);
+      _executeAction(
+        context,
+        widget.onBackPress!,
+        widget.scope,
+        observabilityContext.forTrigger(triggerType: 'onBackPress'),
+      );
     }
   }
 
@@ -199,11 +238,14 @@ class _DUIPageContentState extends State<_DUIPageContent> {
     BuildContext context,
     ActionFlow actionFlow,
     ScopeContext? scopeContext,
+    ObservabilityContext observabilityContext,
   ) {
     return DefaultActionExecutor.of(context).execute(
       context,
       actionFlow,
       scopeContext,
+      id: IdHelper.randomId(),
+      observabilityContext: observabilityContext,
     );
   }
 }
