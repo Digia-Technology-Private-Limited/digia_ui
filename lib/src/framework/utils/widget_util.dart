@@ -75,8 +75,12 @@ Widget wrapInContainer(
     );
   }
 
-  final isHeightIntrinsic = style.height?.toLowerCase() == 'intrinsic';
-  final isWidthIntrinsic = style.width?.toLowerCase() == 'intrinsic';
+  final heightStr = style.height;
+  final widthStr = style.width;
+  final isHeightIntrinsic =
+      heightStr != null && heightStr.trim().toLowerCase() == 'intrinsic';
+  final isWidthIntrinsic =
+      widthStr != null && widthStr.trim().toLowerCase() == 'intrinsic';
 
   if (isHeightIntrinsic || isWidthIntrinsic) {
     if (isHeightIntrinsic && isWidthIntrinsic) {
