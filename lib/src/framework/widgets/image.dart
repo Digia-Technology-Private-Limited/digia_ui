@@ -205,12 +205,13 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
         final maxHeight = _validateAndConvertDimension(constraints.maxHeight);
         final dpr = MediaQuery.devicePixelRatioOf(context).toInt();
 
-        final imageSource = payload.eval(props.get('imageSrc'),
-            scopeContext: DefaultScopeContext(variables: {
-              'renderWidth': maxWidth,
-              'renderHeight': maxHeight,
-              'dpr': dpr,
-            }));
+        final imageSource =
+            payload.eval(props.get('src.imageSrc') ?? props.get('imageSrc'),
+                scopeContext: DefaultScopeContext(variables: {
+                  'renderWidth': maxWidth,
+                  'renderHeight': maxHeight,
+                  'dpr': dpr,
+                }));
         final opacity = payload.eval<double>(props.get('opacity')) ?? 1.0;
         final imageType =
             (props.getString('imageType') ?? 'auto').toLowerCase();

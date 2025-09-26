@@ -28,7 +28,8 @@ class VWLottie extends VirtualLeafStatelessWidget<Props> {
     final frameRate = FrameRate(props.getDouble('frameRate') ?? 60);
     final fit = To.boxFit(props.get('fit'));
 
-    final lottiePath = payload.eval<String>(props.get('lottiePath'));
+    final lottiePath = payload
+        .eval<String>(props.get('src.lottiePath') ?? props.get('lottiePath'));
 
     if (lottiePath == null) {
       return const Center(
