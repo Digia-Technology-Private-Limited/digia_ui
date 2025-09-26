@@ -75,8 +75,24 @@ Widget wrapInContainer(
     );
   }
 
-  final height = style.height?.toHeight(payload.buildContext);
-  final width = style.width?.toWidth(payload.buildContext);
+  final isHeightIntrinsic = style.height?.toLowerCase() == 'intrinsic';
+  final isWidthIntrinsic = style.width?.toLowerCase() == 'intrinsic';
+
+  if (isHeightIntrinsic || isWidthIntrinsic) {
+    if (isHeightIntrinsic && isWidthIntrinsic) {
+      current = IntrinsicWidth(child: IntrinsicHeight(child: current));
+    } else if (isHeightIntrinsic) {
+      current = IntrinsicHeight(child: current);
+    } else {
+      current = IntrinsicWidth(child: current);
+    }
+  }
+
+  final height =
+      isHeightIntrinsic ? null : style.height?.toHeight(payload.buildContext);
+  final width =
+      isWidthIntrinsic ? null : style.width?.toWidth(payload.buildContext);
+
   if (!(width == null && height == null)) {
     current = SizedBox(width: width, height: height, child: current);
   }

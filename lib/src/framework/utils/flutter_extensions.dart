@@ -34,6 +34,10 @@ extension ExtentUtil on String {
     final trimmedValue = trim();
     if (trimmedValue.isEmpty) return null;
 
+    if (trimmedValue.toLowerCase() == 'intrinsic') {
+      return null;
+    }
+
     if (trimmedValue.endsWith('%')) {
       final mediaQuerySize = MediaQuery.maybeSizeOf(context);
       if (mediaQuerySize == null) return null;
