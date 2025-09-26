@@ -85,7 +85,6 @@ class VWButton extends VirtualLeafStatelessWidget<Props> {
               final onClick = ActionFlow.fromJson(props.get('onClick'));
               payload.executeAction(
                 onClick,
-                scopeContext: payload.scopeContext,
                 triggerType: 'onPressed',
               );
             },
