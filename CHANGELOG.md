@@ -2,6 +2,19 @@
 
 Digia Ui SDK.
 
+## [1.2.0] – 2025-09-29
+
+- 🖥️ New Debug Console: View network requests, state changes, and app events in real-time while previewing on the Dashboard. [See integration steps](https://github.com/Digia-Technology-Private-Limited/digia_inspector)
+- 🔗 GraphQL Support: Digia now supports GraphQL queries and mutations.
+- 🖼️ Image Widget: Added alignment property; fixed Blurhash rendering issues.
+- 🔒 TextField: obscureText is now dynamic — perfect for show/hide password toggles.
+- 🎨 Button Widget: Redesigned to look and behave more like a standard button.
+- 🏗️ Column & Row Widgets: Added spacing options (between items, start, and end).
+- 🎠 Carousel: Improved behavior to better match WYSIWYG experience in Digia Studio.
+- 🐞 StreamBuilder: Fixed bug preventing a stream from being subscribed to multiple times.
+- 🐞 Parent Properties: Fixed issue where properties like Flex expansion and Stack positioning were not applied to components.
+- 🧹 Chores & Hygiene: General codebase improvements and cleanup.
+
 ## [1.1.0] – 2025-08-21
 
 - ✅ Verified compatibility with Flutter 3.35.1
