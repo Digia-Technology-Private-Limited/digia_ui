@@ -68,13 +68,12 @@ class _BottomNavigationBarState extends State<BottomNavigationBar> {
       decoration: BoxDecoration(boxShadow: widget.shadow),
       child: ClipRRect(
         borderRadius: widget.borderRadius ?? BorderRadius.zero,
-        child: SizedBox(
-          height: widget.height,
           child: NavigationBar(
             backgroundColor: widget.backgroundColor,
             animationDuration: widget.animationDuration,
             elevation: widget.elevation,
             selectedIndex: _selectedIndex,
+            height: widget.height,
             onDestinationSelected: _handleDestinationSelected,
             surfaceTintColor: widget.surfaceTintColor,
             indicatorColor: widget.indicatorColor,
@@ -84,7 +83,7 @@ class _BottomNavigationBarState extends State<BottomNavigationBar> {
             destinations: widget.destinations,
           ),
         ),
-      ),
-    );
+      );
+    
   }
 }
