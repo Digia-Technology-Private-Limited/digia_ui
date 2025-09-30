@@ -42,6 +42,23 @@ class VWNavigationBarCustom
     onDestinationSelected?.call(index);
   }
 
+  List<Widget> _buildDestinations(RenderPayload payload) {
+    final navItems =
+        children?.whereType<VWNavigationBarItemCustom>().toList() ?? [];
+    final destinations = <Widget>[];
+
+    for (int i = 0; i < navItems.length; i++) {
+      destinations.add(
+        InheritedNavigationBarController(
+          itemIndex: i,
+          child: navItems[i].toWidget(payload),
+        ),
+      );
+    }
+
+    return destinations;
+  }
+
   @override
   Widget render(RenderPayload payload) {
     return internal.BottomNavigationBar(
@@ -59,22 +76,7 @@ class VWNavigationBarCustom
           payload.evalExpr(props.indicatorShape), payload.getColor),
       labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
       selectedIndex: selectedIndex,
-      destinations: () {
-        final navItems =
-            children?.whereType<VWNavigationBarItemCustom>().toList() ?? [];
-        final destinations = <Widget>[];
-
-        for (int i = 0; i < navItems.length; i++) {
-          destinations.add(
-            InheritedNavigationBarController(
-              itemIndex: i,
-              child: navItems[i].toWidget(payload),
-            ),
-          );
-        }
-
-        return destinations;
-      }(),
+      destinations: _buildDestinations(payload),
       onDestinationSelected: (value) {
         handleDestinationSelected(value, payload);
       },
