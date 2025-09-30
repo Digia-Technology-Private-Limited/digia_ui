@@ -1,13 +1,13 @@
 import 'package:digia_inspector_core/digia_inspector_core.dart';
 import 'package:flutter/widgets.dart';
 
+import '../init/digia_ui_manager.dart';
 import '../network/api_request/api_request.dart';
 import 'actions/base/action_flow.dart';
 import 'expr/expression_util.dart';
 import 'expr/scope_context.dart';
 import 'font_factory.dart';
 import 'models/types.dart';
-import 'observability/observability_scope.dart';
 import 'resource_provider.dart';
 import 'ui_factory.dart';
 import 'utils/textstyle_util.dart';
@@ -16,10 +16,14 @@ import 'utils/types.dart';
 class RenderPayload {
   final BuildContext buildContext;
   final ScopeContext scopeContext;
+  final List<String> widgetHierarchy;
+  final String? currentEntityId;
 
   RenderPayload({
     required this.buildContext,
     required this.scopeContext,
+    this.widgetHierarchy = const [],
+    this.currentEntityId,
   });
 
   // Retrieves an icon from a map, currently not implemented
@@ -30,9 +34,16 @@ class RenderPayload {
     return null;
   }
 
-  /// Gets the current ObservabilityContext from scope
-  ObservabilityContext? get observabilityContext =>
-      ObservabilityScope.of(buildContext);
+  /// Gets the current ObservabilityContext from payload fields
+  ObservabilityContext? get observabilityContext {
+    // Only create if inspector is enabled
+    if (!DigiaUIManager().isInspectorEnabled) return null;
+
+    return ObservabilityContext(
+      widgetHierarchy: widgetHierarchy,
+      currentEntityId: currentEntityId,
+    );
+  }
 
   // Retrieves a color from the ResourceProvider using a key
   Color? getColor(String key) {
@@ -66,9 +77,16 @@ class RenderPayload {
   }) {
     if (actionFlow == null) return null;
 
-    final observabilityContextWithTrigger = triggerType != null
-        ? observabilityContext?.forTrigger(triggerType: triggerType)
-        : observabilityContext;
+    // Create observability context with trigger type if enabled
+    ObservabilityContext? observabilityContextWithTrigger;
+    if (DigiaUIManager().isInspectorEnabled &&
+        (currentEntityId != null || widgetHierarchy.isNotEmpty)) {
+      observabilityContextWithTrigger = ObservabilityContext(
+        widgetHierarchy: widgetHierarchy,
+        currentEntityId: currentEntityId,
+        triggerType: triggerType,
+      );
+    }
 
     return DefaultActionExecutor.of(buildContext).execute(
       buildContext,
@@ -79,27 +97,24 @@ class RenderPayload {
     );
   }
 
-  /// Extends the observability context hierarchy with additional widget names
+  /// Creates a new RenderPayload with an extended widget hierarchy
   ///
-  /// This is the preferred method for adding widgets to the hierarchy chain
-  ObservabilityContext? extendHierarchy(
-      {required List<String> additionalHierarchy}) {
-    return observabilityContext?.extendHierarchy(additionalHierarchy);
+  /// This is used when a VirtualWidget renders its children to add itself
+  /// to the hierarchy chain
+  RenderPayload withExtendedHierarchy(String widgetName) {
+    return copyWith(
+      widgetHierarchy: [...widgetHierarchy, widgetName],
+    );
   }
 
-  /// Creates a context for triggering an action
-  ObservabilityContext? forTrigger({required String triggerType}) {
-    return observabilityContext?.forTrigger(triggerType: triggerType);
-  }
-
-  /// Creates a new RenderPayload with an extended hierarchy
-  ///
-  /// This creates a new scope wrapper with the extended context
-  Widget withExtendedHierarchy(List<String> additionalHierarchy, Widget child) {
-    final extended = observabilityContext?.extendHierarchy(additionalHierarchy);
-    return ObservabilityScope(
-      value: extended,
-      child: child,
+  /// Creates a new RenderPayload for a component, replacing the entity ID
+  /// and preserving the page hierarchy as a prefix
+  RenderPayload forComponent({required String componentId}) {
+    // When entering a component from a page, preserve the page hierarchy
+    // by adding the component ID to the hierarchy
+    return copyWith(
+      widgetHierarchy: [...widgetHierarchy, componentId],
+      currentEntityId: componentId,
     );
   }
 
@@ -167,14 +182,18 @@ class RenderPayload {
     );
   }
 
-  // Copies the payload with optional new buildContext and scopeContext
+  // Copies the payload with optional new fields
   RenderPayload copyWith({
     BuildContext? buildContext,
     ScopeContext? scopeContext,
+    List<String>? widgetHierarchy,
+    String? currentEntityId,
   }) {
     return RenderPayload(
       buildContext: buildContext ?? this.buildContext,
       scopeContext: scopeContext ?? this.scopeContext,
+      widgetHierarchy: widgetHierarchy ?? this.widgetHierarchy,
+      currentEntityId: currentEntityId ?? this.currentEntityId,
     );
   }
 }

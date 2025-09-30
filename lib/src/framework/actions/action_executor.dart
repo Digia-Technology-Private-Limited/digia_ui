@@ -3,7 +3,6 @@ import 'package:flutter/widgets.dart';
 
 import '../data_type/method_bindings/method_binding_registry.dart';
 import '../expr/scope_context.dart';
-import '../observability/observability_scope.dart';
 import '../utils/types.dart';
 import 'action_descriptor.dart';
 import 'action_execution_context.dart';
@@ -29,13 +28,10 @@ class ActionExecutor {
     BuildContext context,
     ActionFlow actionFlow,
     ScopeContext? scopeContext, {
-    required String id,
+    String? id,
     String? parentActionId,
     ObservabilityContext? observabilityContext,
   }) async {
-    final currentObservabilityContext =
-        observabilityContext ?? ObservabilityScope.of(context);
-
     // Register all actions as pending
     for (final action in actionFlow.actions) {
       final actionId = ActionId(IdHelper.randomId());
@@ -46,7 +42,7 @@ class ActionExecutor {
         parentActionId: parentActionId,
         type: action.actionType,
         definition: action.toJson(),
-        observabilityContext: currentObservabilityContext,
+        observabilityContext: observabilityContext,
       );
     }
 
@@ -67,7 +63,7 @@ class ActionExecutor {
             resolvedParameters: {},
           ),
           reason: action.disableActionIf?.toString() ?? 'disableActionIf=true',
-          observabilityContext: currentObservabilityContext,
+          observabilityContext: observabilityContext,
         );
         continue;
       }
@@ -88,7 +84,7 @@ class ActionExecutor {
         scopeContext,
         id: actionEventId!.id,
         parentActionId: parentActionId,
-        observabilityContext: currentObservabilityContext,
+        observabilityContext: observabilityContext,
       );
     }
 

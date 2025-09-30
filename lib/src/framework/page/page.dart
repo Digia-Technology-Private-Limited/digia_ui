@@ -11,7 +11,6 @@ import '../expr/default_scope_context.dart';
 import '../expr/scope_context.dart';
 import '../models/page_definition.dart';
 import '../models/vw_data.dart';
-import '../observability/observability_scope.dart';
 import '../render_payload.dart';
 import '../resource_provider.dart';
 import '../state/state_context.dart';
@@ -160,15 +159,9 @@ class _DUIPageContent extends StatefulWidget {
 }
 
 class _DUIPageContentState extends State<_DUIPageContent> {
-  late final ObservabilityContext observabilityContext;
-
   @override
   void initState() {
     super.initState();
-    observabilityContext = ObservabilityContext(
-      widgetHierarchy: [],
-      currentEntityId: widget.pageId,
-    );
     SchedulerBinding.instance.addPostFrameCallback((_) {
       _onPageLoaded();
     });
@@ -199,15 +192,12 @@ class _DUIPageContentState extends State<_DUIPageContent> {
 
     final virtualWidget = widget.registry.createWidget(rootNode, null);
 
-    return ObservabilityScope(
-      value: observabilityContext,
-      child: Builder(
-        builder: (innerContext) => virtualWidget.toWidget(
-          RenderPayload(
-            buildContext: innerContext,
-            scopeContext: widget.scope,
-          ),
-        ),
+    return virtualWidget.toWidget(
+      RenderPayload(
+        buildContext: context,
+        scopeContext: widget.scope,
+        currentEntityId: widget.pageId,
+        widgetHierarchy: const [],
       ),
     );
   }
@@ -218,7 +208,7 @@ class _DUIPageContentState extends State<_DUIPageContent> {
         context,
         widget.onPageLoaded!,
         widget.scope,
-        observabilityContext.forTrigger(triggerType: 'onPageLoad'),
+        triggerType: 'onPageLoad',
       );
     }
   }
@@ -229,7 +219,7 @@ class _DUIPageContentState extends State<_DUIPageContent> {
         context,
         widget.onBackPress!,
         widget.scope,
-        observabilityContext.forTrigger(triggerType: 'onBackPress'),
+        triggerType: 'onBackPress',
       );
     }
   }
@@ -237,9 +227,19 @@ class _DUIPageContentState extends State<_DUIPageContent> {
   Future<Object?>? _executeAction(
     BuildContext context,
     ActionFlow actionFlow,
-    ScopeContext? scopeContext,
-    ObservabilityContext observabilityContext,
-  ) {
+    ScopeContext? scopeContext, {
+    required String triggerType,
+  }) {
+    // Create ObservabilityContext for page-level actions
+    ObservabilityContext? observabilityContext;
+    if (DigiaUIManager().isInspectorEnabled) {
+      observabilityContext = ObservabilityContext(
+        widgetHierarchy: const [],
+        currentEntityId: widget.pageId,
+        triggerType: triggerType,
+      );
+    }
+
     return DefaultActionExecutor.of(context).execute(
       context,
       actionFlow,

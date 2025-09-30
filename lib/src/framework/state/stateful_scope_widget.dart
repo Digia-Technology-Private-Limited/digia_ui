@@ -11,7 +11,7 @@ class StatefulScopeWidget extends StatefulWidget {
   final String? namespace;
 
   /// The ID of this state scope.
-  final String stateId;
+  final String? stateId;
 
   /// A function that builds the child widget using the current state.
   final Widget Function(BuildContext context, StateContext state) childBuilder;
@@ -24,7 +24,7 @@ class StatefulScopeWidget extends StatefulWidget {
 
   const StatefulScopeWidget({
     super.key,
-    required this.stateId,
+    this.stateId,
     required this.childBuilder,
     required this.initialState,
     this.namespace,

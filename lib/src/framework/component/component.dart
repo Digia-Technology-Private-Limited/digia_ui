@@ -7,7 +7,6 @@ import '../data_type/data_type_creator.dart';
 import '../expr/default_scope_context.dart';
 import '../expr/scope_context.dart';
 import '../models/component_definition.dart';
-import '../observability/observability_scope.dart';
 import '../render_payload.dart';
 import '../resource_provider.dart';
 import '../state/state_context.dart';
@@ -26,6 +25,7 @@ class DUIComponent extends StatelessWidget {
   final ScopeContext? scope;
   final Map<String, APIModel>? apiModels;
   final GlobalKey<NavigatorState>? navigatorKey;
+  final ObservabilityContext? parentObservabilityContext;
 
   /// Gets the state observer from the DigiaUIManager
   static StateObserver? get stateObserver =>
@@ -41,6 +41,7 @@ class DUIComponent extends StatelessWidget {
     this.scope,
     this.apiModels,
     this.navigatorKey,
+    this.parentObservabilityContext,
   });
   @override
   Widget build(BuildContext context) {
@@ -87,6 +88,7 @@ class DUIComponent extends StatelessWidget {
                 resolvedArgs,
                 state,
               ),
+              parentObservabilityContext,
             );
           },
         ));
@@ -95,6 +97,7 @@ class DUIComponent extends StatelessWidget {
   Widget _buildContent(
     BuildContext context,
     ScopeContext scopeContext,
+    ObservabilityContext? parentObservabilityContext,
   ) {
     final rootNode = definition.layout?.root;
     // Blank Layout
@@ -104,20 +107,26 @@ class DUIComponent extends StatelessWidget {
 
     final virtualWidget = registry.createWidget(rootNode, null);
 
-    // Get parent context from scope and extend for this component
-    final parentContext = ObservabilityScope.of(context);
-    final componentObservabilityContext =
-        parentContext?.forComponent(componentId: id);
+    // Create component payload, preserving parent hierarchy
+    final List<String> componentHierarchy;
+    final String? entityId;
 
-    return ObservabilityScope(
-      value: componentObservabilityContext,
-      child: Builder(
-        builder: (innerContext) => virtualWidget.toWidget(
-          RenderPayload(
-            buildContext: innerContext,
-            scopeContext: scopeContext,
-          ),
-        ),
+    if (parentObservabilityContext != null) {
+      // When used inside a page, preserve the page's entity ID
+      // and extend the hierarchy with the component ID
+      componentHierarchy = [...parentObservabilityContext.widgetHierarchy, id];
+      entityId = parentObservabilityContext.currentEntityId;
+    } else {
+      componentHierarchy = const [];
+      entityId = id;
+    }
+
+    return virtualWidget.toWidget(
+      RenderPayload(
+        buildContext: context,
+        scopeContext: scopeContext,
+        widgetHierarchy: componentHierarchy,
+        currentEntityId: entityId,
       ),
     );
   }
