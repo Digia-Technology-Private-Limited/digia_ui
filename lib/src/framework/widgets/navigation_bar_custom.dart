@@ -62,14 +62,18 @@ class VWNavigationBarCustom
       destinations: () {
         final navItems =
             children?.whereType<VWNavigationBarItemCustom>().toList() ?? [];
-        return navItems.asMap().entries.map((entry) {
-          final itemIndex = entry.key;
-          final navItem = entry.value;
-          return InheritedNavigationBarController(
-            itemIndex: itemIndex,
-            child: navItem.toWidget(payload),
+        final destinations = <Widget>[];
+
+        for (int i = 0; i < navItems.length; i++) {
+          destinations.add(
+            InheritedNavigationBarController(
+              itemIndex: i,
+              child: navItems[i].toWidget(payload),
+            ),
           );
-        }).toList();
+        }
+
+        return destinations;
       }(),
       onDestinationSelected: (value) {
         handleDestinationSelected(value, payload);
