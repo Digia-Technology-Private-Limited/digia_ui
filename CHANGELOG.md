@@ -2,6 +2,11 @@
 
 Digia Ui SDK.
 
+## [1.2.1] – 2025-10-01
+
+- 🐞 Fixed an issue where context was being unmounted after async calls
+- 🧹 Removed unsupported delay option from FutureBuilder (was never intended for use)
+
 ## [1.2.0] – 2025-09-29
 
 - 🖥️ New Debug Console: View network requests, state changes, and app events in real-time while previewing on the Dashboard. [See integration steps](https://github.com/Digia-Technology-Private-Limited/digia_inspector)
