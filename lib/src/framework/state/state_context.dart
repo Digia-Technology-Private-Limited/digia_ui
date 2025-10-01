@@ -13,7 +13,7 @@ class StateContext extends ChangeNotifier {
   final String? namespace;
 
   /// Unique ID for this state context instance.
-  final String stateId;
+  final String? stateId;
 
   /// The type of state this context represents.
   late final StateType _stateType;
@@ -26,7 +26,7 @@ class StateContext extends ChangeNotifier {
 
   StateContext(
     this.namespace, {
-    required this.stateId,
+    this.stateId,
     required Map<String, Object?> initialState,
     StateContext? ancestorContext,
     StateType stateType = StateType.stateContainer,
@@ -37,7 +37,7 @@ class StateContext extends ChangeNotifier {
 
     // Log state creation
     stateObserver?.onCreate(
-      id: stateId,
+      id: stateId ?? '',
       stateType: stateType,
       namespace: namespace,
       stateData: Map.from(initialState),
@@ -47,7 +47,7 @@ class StateContext extends ChangeNotifier {
   @override
   void dispose() {
     stateObserver?.onDispose(
-      id: stateId,
+      id: stateId ?? '',
       stateType: _stateType,
       namespace: namespace,
       stateData: Map.from(_stateVariables),
@@ -91,7 +91,7 @@ class StateContext extends ChangeNotifier {
 
       if (namespace != null) {
         stateObserver?.onChange(
-          id: stateId,
+          id: stateId ?? '',
           stateType: _stateType,
           namespace: namespace,
           stateData: Map<String, Object?>.from(_stateVariables),
@@ -127,7 +127,7 @@ class StateContext extends ChangeNotifier {
     if (notify && anyUpdated) {
       if (namespace != null) {
         stateObserver?.onChange(
-          id: stateId,
+          id: stateId ?? '',
           stateType: _stateType,
           namespace: namespace,
           stateData: Map<String, Object?>.from(_stateVariables),

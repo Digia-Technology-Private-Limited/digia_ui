@@ -1,4 +1,5 @@
 import 'package:digia_expr/digia_expr.dart';
+import 'package:digia_inspector_core/digia_inspector_core.dart';
 import 'package:flutter/widgets.dart';
 
 import '../config/app_state/app_state_scope_context.dart';
@@ -146,7 +147,7 @@ class DUIFactory {
     widgetRegistry = DefaultVirtualWidgetRegistry(
       // MessageHandler is not propagated here
       componentBuilder: (id, args, observabilityContext) =>
-          createComponent(id, args),
+          createComponent(id, args, observabilityContext: observabilityContext),
     );
 
     // Initialize method binding registry for expression evaluation
@@ -576,6 +577,7 @@ class DUIFactory {
     Map<String, TextStyle>? overrideTextStyles,
     Map<String, Color?>? overrideColorTokens,
     GlobalKey<NavigatorState>? navigatorKey,
+    ObservabilityContext? observabilityContext,
   }) {
     // Merge overriding resources with existing resources
     final mergedResources = UIResources(
@@ -606,6 +608,7 @@ class DUIFactory {
         definition: componentDef,
         registry: widgetRegistry,
         apiModels: configProvider.getAllApiModels(),
+        parentObservabilityContext: observabilityContext,
         scope: AppStateScopeContext(
           values: DUIAppState().value,
           variables: {
