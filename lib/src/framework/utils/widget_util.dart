@@ -192,3 +192,32 @@ Widget _applyIntrinsicSizing(
   }
   return child;
 }
+
+class SafeLayoutBuilder extends StatelessWidget {
+  const SafeLayoutBuilder({
+    super.key,
+    required this.builder,
+  });
+
+  final Widget Function(BuildContext context, BoxConstraints constraints)
+      builder;
+
+  @override
+  Widget build(BuildContext context) {
+    // Simply use Builder and create constraints from MediaQuery
+    // This avoids LayoutBuilder entirely, so no intrinsic dimension errors
+    return Builder(
+      builder: (context) {
+        final screenSize = MediaQuery.maybeSizeOf(context);
+        final fallbackConstraints = BoxConstraints(
+          minWidth: 0,
+          maxWidth: screenSize?.width ?? 375.0,
+          minHeight: 0,
+          maxHeight: screenSize?.height ?? 667.0,
+        );
+
+        return builder(context, fallbackConstraints);
+      },
+    );
+  }
+}

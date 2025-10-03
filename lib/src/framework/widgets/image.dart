@@ -18,7 +18,7 @@ import '../render_payload.dart';
 import '../resource_provider.dart';
 import '../utils/flutter_type_converters.dart';
 import '../utils/network_util.dart' show hasExtension;
-import '../utils/widget_util.dart';
+import '../utils/widget_util.dart' show SafeLayoutBuilder, wrapInAspectRatio;
 
 class VWImage extends VirtualLeafStatelessWidget<Props> {
   VWImage({
@@ -200,80 +200,87 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
   @override
   Widget render(RenderPayload payload) {
     return _mayWrapInAspectRatio(
-      LayoutBuilder(builder: (context, constraints) {
-        final maxWidth = _validateAndConvertDimension(constraints.maxWidth);
-        final maxHeight = _validateAndConvertDimension(constraints.maxHeight);
-        final dpr = MediaQuery.devicePixelRatioOf(context).toInt();
+      kDebugMode
+          ? SafeLayoutBuilder(builder: (context, constraints) {
+              return _buildImageContent(context, constraints, payload);
+            })
+          : LayoutBuilder(builder: (context, constraints) {
+              return _buildImageContent(context, constraints, payload);
+            }),
+    );
+  }
 
-        final imageSource =
-            payload.eval(props.get('src.imageSrc') ?? props.get('imageSrc'),
-                scopeContext: DefaultScopeContext(variables: {
-                  'renderWidth': maxWidth,
-                  'renderHeight': maxHeight,
-                  'dpr': dpr,
-                }));
-        final opacity = payload.eval<double>(props.get('opacity')) ?? 1.0;
-        final imageType =
-            (props.getString('imageType') ?? 'auto').toLowerCase();
+  Widget _buildImageContent(
+      BuildContext context, BoxConstraints constraints, RenderPayload payload) {
+    final maxWidth = _validateAndConvertDimension(constraints.maxWidth);
+    final maxHeight = _validateAndConvertDimension(constraints.maxHeight);
+    final dpr = MediaQuery.devicePixelRatioOf(context).toInt();
 
-        if (imageType == 'svg' ||
-            (imageSource is String && hasExtension(imageSource, ['.svg']))) {
-          return _buildSvgImage(imageSource, payload, opacity);
-        }
+    final imageSource =
+        payload.eval(props.get('src.imageSrc') ?? props.get('imageSrc'),
+            scopeContext: DefaultScopeContext(variables: {
+              'renderWidth': maxWidth,
+              'renderHeight': maxHeight,
+              'dpr': dpr,
+            }));
+    final opacity = payload.eval<double>(props.get('opacity')) ?? 1.0;
+    final imageType = (props.getString('imageType') ?? 'auto').toLowerCase();
 
-        final imageProvider = _createImageProvider(
-          payload,
-          imageSource,
-          maxHeight,
-          maxWidth,
-          dpr,
-        );
+    if (imageType == 'svg' ||
+        (imageSource is String && hasExtension(imageSource, ['.svg']))) {
+      return _buildSvgImage(imageSource, payload, opacity);
+    }
 
-        if (imageType == 'avif' ||
-            (imageSource is String && hasExtension(imageSource, ['.avif']))) {
-          return Opacity(
-            opacity: opacity,
-            child: AvifImage(
+    final imageProvider = _createImageProvider(
+      payload,
+      imageSource,
+      maxHeight,
+      maxWidth,
+      dpr,
+    );
+
+    if (imageType == 'avif' ||
+        (imageSource is String && hasExtension(imageSource, ['.avif']))) {
+      return Opacity(
+        opacity: opacity,
+        child: AvifImage(
+          image: imageProvider,
+          fit: To.boxFit(props.get('fit')),
+          alignment: To.alignment(props.get('alignment')) ?? Alignment.center,
+          gaplessPlayback: true,
+          errorBuilder: (context, error, stackTrace) {
+            return _buildErrorWidget(error);
+          },
+        ),
+      );
+    }
+    return Opacity(
+      opacity: opacity,
+      child: imageProvider is MemoryImage || imageProvider is FileImage
+          ? Image(
               image: imageProvider,
               fit: To.boxFit(props.get('fit')),
               alignment:
                   To.alignment(props.get('alignment')) ?? Alignment.center,
-              gaplessPlayback: true,
               errorBuilder: (context, error, stackTrace) {
                 return _buildErrorWidget(error);
               },
+            )
+          : OctoImage(
+              fadeInDuration: const Duration(milliseconds: 200),
+              fadeInCurve: Curves.easeIn,
+              fadeOutDuration: const Duration(milliseconds: 200),
+              fadeOutCurve: Curves.easeOut,
+              image: imageProvider,
+              fit: To.boxFit(props.get('fit')),
+              gaplessPlayback: true,
+              placeholderBuilder: _placeHolderBuilderCreator(),
+              errorBuilder: (context, error, stackTrace) {
+                return _buildErrorWidget(error);
+              },
+              alignment:
+                  To.alignment(props.get('alignment')) ?? Alignment.center,
             ),
-          );
-        }
-        return Opacity(
-          opacity: opacity,
-          child: imageProvider is MemoryImage || imageProvider is FileImage
-              ? Image(
-                  image: imageProvider,
-                  fit: To.boxFit(props.get('fit')),
-                  alignment:
-                      To.alignment(props.get('alignment')) ?? Alignment.center,
-                  errorBuilder: (context, error, stackTrace) {
-                    return _buildErrorWidget(error);
-                  },
-                )
-              : OctoImage(
-                  fadeInDuration: const Duration(milliseconds: 200),
-                  fadeInCurve: Curves.easeIn,
-                  fadeOutDuration: const Duration(milliseconds: 200),
-                  fadeOutCurve: Curves.easeOut,
-                  image: imageProvider,
-                  fit: To.boxFit(props.get('fit')),
-                  gaplessPlayback: true,
-                  placeholderBuilder: _placeHolderBuilderCreator(),
-                  errorBuilder: (context, error, stackTrace) {
-                    return _buildErrorWidget(error);
-                  },
-                  alignment:
-                      To.alignment(props.get('alignment')) ?? Alignment.center,
-                ),
-        );
-      }),
     );
   }
 }

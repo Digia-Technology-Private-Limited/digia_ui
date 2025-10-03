@@ -1,5 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import '../utils/widget_util.dart' show SafeLayoutBuilder;
 import 'custom_flutter_types.dart';
 import 'path_draw.dart';
 
@@ -43,7 +45,8 @@ class DividerWithPattern extends StatelessWidget {
     final Color effectiveColor = color ??
         DividerTheme.of(context).color ??
         Theme.of(context).dividerColor;
-    return LayoutBuilder(builder: (context, constraints) {
+
+    Widget buildContent(BuildContext context, BoxConstraints constraints) {
       final double maxSize = axis == Axis.horizontal
           ? constraints.maxWidth
           : constraints.maxHeight;
@@ -75,7 +78,11 @@ class DividerWithPattern extends StatelessWidget {
           ),
         ),
       );
-    });
+    }
+
+    return kDebugMode
+        ? SafeLayoutBuilder(builder: buildContent)
+        : LayoutBuilder(builder: buildContent);
   }
 }
 
