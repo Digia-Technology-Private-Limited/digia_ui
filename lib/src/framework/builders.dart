@@ -103,6 +103,9 @@ import 'widgets/video_player.dart';
 import 'widgets/web_view.dart';
 import 'widgets/wrap.dart';
 import 'widgets/youtube_player.dart';
+import 'widgets/story.dart';
+import 'widget_props/story_props.dart';
+import 'widget_props/story_item_props.dart';
 
 Map<String, List<VirtualWidget>>? createChildGroups(
     Map<String, List<VWData>>? childGroups,
@@ -618,6 +621,36 @@ VWYoutubePlayer youtubePlayerBuilder(
     parentProps: data.parentProps,
     parent: parent,
     refName: data.refName,
+  );
+}
+
+VWStory storyBuilder(
+  VWNodeData data,
+  VirtualWidget? parent,
+  VirtualWidgetRegistry registry,
+) {
+  return VWStory(
+    props: StoryProps.fromJson(data.props.value),
+    commonProps: data.commonProps,
+    parentProps: data.parentProps,
+    parent: parent,
+    refName: data.refName,
+    childGroups: createChildGroups(data.childGroups, parent, registry),
+  );
+}
+
+VWStoryItem storyItemBuilder(
+  VWNodeData data,
+  VirtualWidget? parent,
+  VirtualWidgetRegistry registry,
+) {
+  return VWStoryItem(
+    props: StoryItemProps.fromJson(data.props.value),
+    commonProps: data.commonProps,
+    parentProps: data.parentProps,
+    parent: parent,
+    refName: data.refName,
+    childGroups: createChildGroups(data.childGroups, parent, registry),
   );
 }
 
