@@ -68,6 +68,11 @@ class VWTextFormField extends VirtualStatelessWidget<Props> {
     final focusedErrorBorder =
         _toInputBorder(payload, props.get('focusedErrorBorder'));
     final errorBorder = _toInputBorder(payload, props.get('errorBorder'));
+
+    // building prefix and suffix widgets with proper constraints
+    final prefixWidget = _buildConstrainedIcon(childOf('prefix')?.toWidget(payload));
+    final suffixWidget = _buildConstrainedIcon(childOf('suffix')?.toWidget(payload));
+
     return InternalTextFormField(
       controller: controller,
       autoFocus: autoFocus,
@@ -90,6 +95,7 @@ class VWTextFormField extends VirtualStatelessWidget<Props> {
         );
       },
       textAlign: textAlign,
+      textAlignVertical: TextAlignVertical.center,
       readOnly: readOnly,
       obscureText: obscureText,
       enabled: enabled,
@@ -103,6 +109,7 @@ class VWTextFormField extends VirtualStatelessWidget<Props> {
       cursorColor: cursorColor,
       validations: validations,
       inputDecoration: InputDecoration(
+        isDense: true,
         fillColor: fillColor,
         filled: fillColor != null,
         labelText: labelText,
@@ -112,8 +119,14 @@ class VWTextFormField extends VirtualStatelessWidget<Props> {
         hintStyle: hintStyle,
         contentPadding: isMultiline ? const EdgeInsets.all(12) : contentPadding,
         focusColor: focusColor,
-        prefixIcon: childOf('prefix')?.toWidget(payload),
-        suffixIcon: childOf('suffix')?.toWidget(payload),
+        prefixIcon: prefixWidget,
+        suffixIcon: suffixWidget,
+        prefixIconConstraints: prefixWidget != null
+            ? const BoxConstraints(minWidth: 0, minHeight: 0)
+            : null,
+        suffixIconConstraints: suffixWidget != null
+            ? const BoxConstraints(minWidth: 0, minHeight: 0)
+            : null,
         enabledBorder: enabledBorder,
         disabledBorder: disabledBorder,
         focusedBorder: focusedBorder,
@@ -171,5 +184,21 @@ class VWTextFormField extends VirtualStatelessWidget<Props> {
     return DefaultScopeContext(variables: {
       'text': text,
     });
+  }
+
+  // Add this helper method
+  Widget? _buildConstrainedIcon(Widget? iconWidget) {
+    if (iconWidget == null) return null;
+
+    return Container(
+      constraints: const BoxConstraints(
+        maxWidth: 48,
+        maxHeight: 48,
+      ),
+      alignment: Alignment.center,
+      child: ClipRect(
+        child: iconWidget,
+      ),
+    );
   }
 }

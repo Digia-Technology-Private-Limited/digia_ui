@@ -26,6 +26,7 @@ class InternalTextFormField extends StatefulWidget {
   final TextAlign textAlign;
   final bool readOnly;
   final bool obscureText;
+  final TextAlignVertical textAlignVertical;
   final int? maxLines;
   final int? minLines;
   final int? maxLength;
@@ -51,6 +52,7 @@ class InternalTextFormField extends StatefulWidget {
     required this.textAlign,
     required this.readOnly,
     required this.obscureText,
+    required this.textAlignVertical,
     this.maxLines,
     this.minLines,
     this.maxLength,
@@ -143,6 +145,7 @@ class _DUITextFieldState extends State<InternalTextFormField> {
       textInputAction: widget.textInputAction,
       style: widget.style,
       textAlign: widget.textAlign,
+      textAlignVertical: widget.textAlignVertical,
       obscureText: widget.obscureText,
       readOnly: widget.readOnly,
       maxLines: widget.maxLines,
