@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_story_presenter/flutter_story_presenter.dart';
-import 'package:just_audio/just_audio.dart';
 
 import '../base/virtual_stateless_widget.dart';
 import '../render_payload.dart';
 import '../widget_props/story_item_props.dart';
 import '../widget_props/story_props.dart';
+import '../utils/flutter_type_converters.dart';
 
 class VWStory extends VirtualStatelessWidget<StoryProps> {
   VWStory({
@@ -42,10 +42,6 @@ class VWStory extends VirtualStatelessWidget<StoryProps> {
       height: (indicator?['height'] as num?)?.toDouble() ?? 3.5,
       borderRadius: (indicator?['borderRadius'] as num?)?.toDouble() ?? 4.0,
       horizontalGap: (indicator?['horizontalGap'] as num?)?.toDouble() ?? 4.0,
-      alignment: _getAlignmentFromString(indicator?['alignment']?.toString() ?? 'topCenter'),
-      margin: _getEdgeInsetsFromString(indicator?['margin']?.toString() ?? '14,10,0,10'),
-      enableTopSafeArea: false,
-      enableBottomSafeArea: false,
     );
 
     return FlutterStoryPresenter(
@@ -120,7 +116,6 @@ class VWStory extends VirtualStatelessWidget<StoryProps> {
     final isMuteByDefault = payload.evalExpr(itemWidget.props.isMuteByDefault) ?? false;
     final videoConfig = itemWidget.props.videoConfig;
     final imageConfig = itemWidget.props.imageConfig;
-    final audioConfig = itemWidget.props.audioConfig;
     
     // Skip story items without valid URLs
     if (url == null || url.isEmpty) {
@@ -136,68 +131,33 @@ class VWStory extends VirtualStatelessWidget<StoryProps> {
       case 'video':
         type = StoryItemType.video;
         break;
-      case 'custom':
-        type = StoryItemType.custom;
-        break;
       default:
         type = StoryItemType.image;
     }
 
     // Convert source
-    StoryItemSource itemSource;
-    switch (source) {
-      case 'network':
-        itemSource = StoryItemSource.network;
-        break;
-      case 'asset':
-        itemSource = StoryItemSource.asset;
-        break;
-      case 'file':
-        itemSource = StoryItemSource.file;
-        break;
-      default:
-        itemSource = StoryItemSource.network;
-    }
+    final itemSource = switch (source) {
+      'asset' => StoryItemSource.asset,
+      _ => StoryItemSource.network,
+    };
 
     // Convert video config
     StoryViewVideoConfig? videoConfigObj;
     if (videoConfig != null && type == StoryItemType.video) {
       videoConfigObj = StoryViewVideoConfig(
-        fit: _getBoxFitFromString(videoConfig['fit']?.toString() ?? 'cover'),
+        fit: To.boxFit(videoConfig['fit']),
       );
     }
 
-    // Handle custom widget
-    Widget Function(FlutterStoryController?, AudioPlayer?)? customWidget;
-    if (type == StoryItemType.custom) {
-      final customContent = itemWidget.childOf('custom')?.toWidget(payload);
-      if (customContent != null) {
-        customWidget = (controller, audioPlayer) => customContent;
-      }
-    }
 
     // Convert image config
     StoryViewImageConfig? imageConfigObj;
     if (imageConfig != null && type == StoryItemType.image) {
       imageConfigObj = StoryViewImageConfig(
-        fit: _getBoxFitFromString(imageConfig['fit']?.toString() ?? 'cover'),
-        height: (imageConfig['height'] as num?)?.toDouble(),
-        width: (imageConfig['width'] as num?)?.toDouble(),
+        fit: To.boxFit(imageConfig['fit']),
       );
     }
 
-    // Convert audio config
-    StoryViewAudioConfig? audioConfigObj;
-    if (audioConfig != null && audioConfig['audioPath'] != null) {
-      final audioSource = _getStoryItemSourceFromString(audioConfig['source']?.toString() ?? 'network');
-      audioConfigObj = StoryViewAudioConfig(
-        audioPath: audioConfig['audioPath'] as String,
-        source: audioSource,
-        onAudioStart: (player) {
-          // Audio started callback
-        },
-      );
-    }
 
     // Create default loading widget (circular progress bar)
     Widget loadingWidget = Container(
@@ -219,77 +179,9 @@ class VWStory extends VirtualStatelessWidget<StoryProps> {
       thumbnail: loadingWidget,
       videoConfig: videoConfigObj,
       imageConfig: imageConfigObj,
-      audioConfig: audioConfigObj,
-      customWidget: customWidget,
     );
   }
 
-  BoxFit _getBoxFitFromString(String fit) {
-    switch (fit.toLowerCase()) {
-      case 'cover':
-        return BoxFit.cover;
-      case 'contain':
-        return BoxFit.contain;
-      case 'fill':
-        return BoxFit.fill;
-      case 'fitwidth':
-        return BoxFit.fitWidth;
-      case 'fitheight':
-        return BoxFit.fitHeight;
-      case 'none':
-        return BoxFit.none;
-      case 'scaledown':
-        return BoxFit.scaleDown;
-      default:
-        return BoxFit.cover;
-    }
-  }
-
-  StoryItemSource _getStoryItemSourceFromString(String source) {
-    switch (source.toLowerCase()) {
-      case 'network':
-        return StoryItemSource.network;
-      case 'asset':
-        return StoryItemSource.asset;
-      case 'file':
-        return StoryItemSource.file;
-      default:
-        return StoryItemSource.network;
-    }
-  }
-
-
-  Alignment _getAlignmentFromString(String alignment) {
-    switch (alignment.toLowerCase()) {
-      case 'topcenter':
-        return Alignment.topCenter;
-      case 'topstart':
-        return Alignment.topLeft;
-      case 'topend':
-        return Alignment.topRight;
-      case 'bottomcenter':
-        return Alignment.bottomCenter;
-      case 'bottomstart':
-        return Alignment.bottomLeft;
-      case 'bottomend':
-        return Alignment.bottomRight;
-      default:
-        return Alignment.topCenter;
-    }
-  }
-
-  EdgeInsets _getEdgeInsetsFromString(String marginString) {
-    final parts = marginString.split(',');
-    if (parts.length == 4) {
-      return EdgeInsets.only(
-        top: double.tryParse(parts[0]) ?? 0,
-        right: double.tryParse(parts[1]) ?? 0,
-        bottom: double.tryParse(parts[2]) ?? 0,
-        left: double.tryParse(parts[3]) ?? 0,
-      );
-    }
-    return const EdgeInsets.only(top: 40, left: 16, right: 16);
-  }
 
 }
 

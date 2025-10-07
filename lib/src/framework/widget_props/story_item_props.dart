@@ -4,13 +4,12 @@ import '../utils/types.dart';
 
 class StoryItemProps {
   final ExprOr<String>? url;
-  final ExprOr<String>? storyItemType; // image | video | custom
+  final ExprOr<String>? storyItemType; // image | video
   final ExprOr<int>? durationMs;
-  final ExprOr<String>? source; // network | asset | file
+  final ExprOr<String>? source; // network | asset
   final ExprOr<bool>? isMuteByDefault;
   final JsonLike? videoConfig;
   final JsonLike? imageConfig;
-  final JsonLike? audioConfig;
 
   const StoryItemProps({
     this.url,
@@ -20,7 +19,6 @@ class StoryItemProps {
     this.isMuteByDefault,
     this.videoConfig,
     this.imageConfig,
-    this.audioConfig,
   });
 
   factory StoryItemProps.fromJson(JsonLike json) {
@@ -29,10 +27,9 @@ class StoryItemProps {
       storyItemType: ExprOr.fromJson<String>(json['storyItemType']),
       durationMs: ExprOr.fromJson<int>(json['durationMs']),
       source: ExprOr.fromJson<String>(json['source']),
-      isMuteByDefault: ExprOr.fromJson<bool>(json['isMuteByDefault']),
+      isMuteByDefault: ExprOr.fromJson<bool>(json['isMuteByDefault']),      
       videoConfig: as$<JsonLike>(json['videoConfig']),
       imageConfig: as$<JsonLike>(json['imageConfig']),
-      audioConfig: as$<JsonLike>(json['audioConfig']),
     );
   }
 }
