@@ -70,8 +70,10 @@ class VWTextFormField extends VirtualStatelessWidget<Props> {
     final errorBorder = _toInputBorder(payload, props.get('errorBorder'));
 
     // building prefix and suffix widgets with proper constraints
-    final prefixWidget = _buildConstrainedIcon(childOf('prefix')?.toWidget(payload));
-    final suffixWidget = _buildConstrainedIcon(childOf('suffix')?.toWidget(payload));
+    final prefixWidget =
+        _buildConstrainedIcon(childOf('prefix')?.toWidget(payload));
+    final suffixWidget =
+        _buildConstrainedIcon(childOf('suffix')?.toWidget(payload));
 
     return InternalTextFormField(
       controller: controller,
