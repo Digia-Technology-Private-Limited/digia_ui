@@ -51,7 +51,6 @@ class InternalImage extends StatefulWidget {
 class _InternalImageState extends State<InternalImage> {
   final GlobalKey _imageKey = GlobalKey();
   Size? _imageSize;
-  bool _hasLoadedSize = false;
 
   @override
   void initState() {
@@ -62,15 +61,15 @@ class _InternalImageState extends State<InternalImage> {
   }
 
   void _updateImageSize() {
-    if (_hasLoadedSize) return; // Prevent re-fetching on rebuilds
-
     final RenderBox? renderBox =
         _imageKey.currentContext?.findRenderObject() as RenderBox?;
     if (renderBox != null && renderBox.hasSize) {
-      setState(() {
-        _imageSize = renderBox.size;
-        _hasLoadedSize = true;
-      });
+      final newSize = renderBox.size;
+      if (_imageSize != newSize) {
+        setState(() {
+          _imageSize = newSize;
+        });
+      }
     }
   }
 
@@ -122,6 +121,7 @@ class _InternalImageState extends State<InternalImage> {
   Widget _buildSvgImage(Object? imageSource, double opacity) {
     final color = widget.svgColor;
     if (imageSource is String) {
+      Widget svgWidget;
       if (imageSource.startsWith('http')) {
         final DigiaUIHost? host = DigiaUIManager().host;
         final String finalUrl;
@@ -130,7 +130,7 @@ class _InternalImageState extends State<InternalImage> {
         } else {
           finalUrl = imageSource;
         }
-        return SvgPicture.network(
+        svgWidget = SvgPicture.network(
           finalUrl,
           colorFilter:
               color != null ? ColorFilter.mode(color, BlendMode.srcIn) : null,
@@ -140,7 +140,7 @@ class _InternalImageState extends State<InternalImage> {
           alignment: widget.alignment ?? Alignment.center,
         );
       } else {
-        return SvgPicture.asset(
+        svgWidget = SvgPicture.asset(
           imageSource,
           colorFilter:
               color != null ? ColorFilter.mode(color, BlendMode.srcIn) : null,
@@ -150,6 +150,11 @@ class _InternalImageState extends State<InternalImage> {
           alignment: widget.alignment ?? Alignment.center,
         );
       }
+
+      if (opacity != 1.0) {
+        return Opacity(opacity: opacity, child: svgWidget);
+      }
+      return svgWidget;
     }
 
     throw Exception('Unsupported image source type');
@@ -242,7 +247,7 @@ class _InternalImageState extends State<InternalImage> {
 
     final maxWidth = _validateAndConvertDimension(_imageSize!.width);
     final maxHeight = _validateAndConvertDimension(_imageSize!.height);
-    final dpr = MediaQuery.devicePixelRatioOf(context).toInt();
+    final dpr = MediaQuery.devicePixelRatioOf(context).round();
 
     // Evaluate imageSource with render dimensions
     final imageSource = widget.payload.eval(
