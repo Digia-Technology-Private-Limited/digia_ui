@@ -111,7 +111,6 @@ class VWTextFormField extends VirtualStatelessWidget<Props> {
       cursorColor: cursorColor,
       validations: validations,
       inputDecoration: InputDecoration(
-        isDense: true,
         fillColor: fillColor,
         filled: fillColor != null,
         labelText: labelText,
