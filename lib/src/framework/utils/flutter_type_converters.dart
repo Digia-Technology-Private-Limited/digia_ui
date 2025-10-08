@@ -166,7 +166,8 @@ abstract class To {
         'fitWidth' => BoxFit.fitWidth,
         'fitHeight' => BoxFit.fitHeight,
         'scaleDown' => BoxFit.scaleDown,
-        _ => BoxFit.none
+        'none' => BoxFit.none,
+        _ => BoxFit.cover
       };
 
   /// Converts a dynamic value to [EdgeInsets].

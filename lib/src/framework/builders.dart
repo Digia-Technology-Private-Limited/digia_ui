@@ -104,7 +104,6 @@ import 'widgets/web_view.dart';
 import 'widgets/wrap.dart';
 import 'widgets/youtube_player.dart';
 import 'widgets/story.dart';
-import 'widget_props/story_props.dart';
 import 'widget_props/story_item_props.dart';
 
 Map<String, List<VirtualWidget>>? createChildGroups(
@@ -630,7 +629,7 @@ VWStory storyBuilder(
   VirtualWidgetRegistry registry,
 ) {
   return VWStory(
-    props: StoryProps.fromJson(data.props.value),
+    props: data.props,
     commonProps: data.commonProps,
     parentProps: data.parentProps,
     parent: parent,
