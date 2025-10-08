@@ -82,7 +82,11 @@ class _InternalImageState extends State<InternalImage> {
     if (imageSource is List<AdaptedFile> && imageSource.isNotEmpty) {
       final firstFile = imageSource.first;
       if (firstFile.isWeb && firstFile.xFile?.path != null) {
-        return CachedNetworkImageProvider(firstFile.xFile!.path);
+        return CachedNetworkImageProvider(
+          firstFile.xFile!.path,
+          maxHeight: maxHeight,
+          maxWidth: maxWidth,
+        );
       } else if (firstFile.isMobile && firstFile.path != null) {
         return FileImage(File(firstFile.path!));
       }
@@ -91,7 +95,11 @@ class _InternalImageState extends State<InternalImage> {
 
     if (imageSource is AdaptedFile) {
       if (imageSource.isWeb && imageSource.xFile?.path != null) {
-        return CachedNetworkImageProvider(imageSource.xFile!.path);
+        return CachedNetworkImageProvider(
+          imageSource.xFile!.path,
+          maxHeight: maxHeight,
+          maxWidth: maxWidth,
+        );
       } else if (imageSource.isMobile && imageSource.path != null) {
         return FileImage(File(imageSource.path!));
       }
@@ -107,7 +115,11 @@ class _InternalImageState extends State<InternalImage> {
         } else {
           finalUrl = imageSource;
         }
-        return CachedNetworkImageProvider(finalUrl);
+        return CachedNetworkImageProvider(
+          finalUrl,
+          maxHeight: maxHeight,
+          maxWidth: maxWidth,
+        );
       } else {
         return ResourceProvider.maybeOf(widget.payload.buildContext)
                 ?.getImageProvider(imageSource) ??
@@ -171,10 +183,13 @@ class _InternalImageState extends State<InternalImage> {
     return (context) {
       switch (placeholderType.toLowerCase()) {
         case 'blurhash':
-          return BlurHash(
-            hash: placeholderSrc ?? '',
-            duration: const Duration(milliseconds: 300),
-          );
+          if (placeholderSrc != null && placeholderSrc.isNotEmpty) {
+            return BlurHash(
+              hash: placeholderSrc,
+              duration: const Duration(milliseconds: 300),
+            );
+          }
+          break;
         case 'network':
           if (placeholderSrc != null && placeholderSrc.startsWith('http')) {
             return CachedNetworkImage(imageUrl: placeholderSrc);
@@ -275,46 +290,53 @@ class _InternalImageState extends State<InternalImage> {
 
     if (imageType == 'avif' ||
         (imageSource is String && hasExtension(imageSource, ['.avif']))) {
-      return Opacity(
-        opacity: opacity,
-        child: AvifImage(
-          image: imageProvider,
-          fit: widget.fit,
-          alignment: widget.alignment ?? Alignment.center,
-          gaplessPlayback: true,
-          errorBuilder: (context, error, stackTrace) {
-            return _buildErrorWidget(error);
-          },
-        ),
+      final avifWidget = AvifImage(
+        image: imageProvider,
+        fit: widget.fit,
+        alignment: widget.alignment ?? Alignment.center,
+        gaplessPlayback: true,
+        errorBuilder: (context, error, stackTrace) {
+          return _buildErrorWidget(error);
+        },
       );
+
+      if (opacity != 1.0) {
+        return Opacity(opacity: opacity, child: avifWidget);
+      } else {
+        return avifWidget;
+      }
     }
 
-    return Opacity(
-      opacity: opacity,
-      child: imageProvider is MemoryImage || imageProvider is FileImage
-          ? Image(
-              image: imageProvider,
-              fit: widget.fit,
-              alignment: widget.alignment ?? Alignment.center,
-              errorBuilder: (context, error, stackTrace) {
-                return _buildErrorWidget(error);
-              },
-            )
-          : OctoImage(
-              fadeInDuration: const Duration(milliseconds: 200),
-              fadeInCurve: Curves.easeIn,
-              fadeOutDuration: const Duration(milliseconds: 200),
-              fadeOutCurve: Curves.easeOut,
-              image: imageProvider,
-              fit: widget.fit,
-              gaplessPlayback: true,
-              placeholderBuilder: _placeHolderBuilderCreator(),
-              errorBuilder: (context, error, stackTrace) {
-                return _buildErrorWidget(error);
-              },
-              alignment: widget.alignment ?? Alignment.center,
-            ),
-    );
+    final imageWidget =
+        imageProvider is MemoryImage || imageProvider is FileImage
+            ? Image(
+                image: imageProvider,
+                fit: widget.fit,
+                alignment: widget.alignment ?? Alignment.center,
+                errorBuilder: (context, error, stackTrace) {
+                  return _buildErrorWidget(error);
+                },
+              )
+            : OctoImage(
+                fadeInDuration: const Duration(milliseconds: 200),
+                fadeInCurve: Curves.easeIn,
+                fadeOutDuration: const Duration(milliseconds: 200),
+                fadeOutCurve: Curves.easeOut,
+                image: imageProvider,
+                fit: widget.fit,
+                gaplessPlayback: true,
+                placeholderBuilder: _placeHolderBuilderCreator(),
+                errorBuilder: (context, error, stackTrace) {
+                  return _buildErrorWidget(error);
+                },
+                alignment: widget.alignment ?? Alignment.center,
+              );
+
+    if (opacity != 1.0) {
+      return Opacity(opacity: opacity, child: imageWidget);
+    } else {
+      return imageWidget;
+    }
   }
 
   @override
