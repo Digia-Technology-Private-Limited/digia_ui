@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../actions/base/action_flow.dart';
 import '../base/virtual_stateless_widget.dart';
-import '../internal_widgets/bottom_navigation_bar.dart' as internal;
+import '../internal_widgets/bottom_navigation_bar/bottom_navigation_bar.dart'
+    as internal;
+import '../internal_widgets/bottom_navigation_bar/inherited_navigation_bar_controller.dart';
 import '../render_payload.dart';
 import '../utils/flutter_type_converters.dart';
 import '../widget_props/navigation_bar_custom_props.dart';
@@ -40,6 +42,23 @@ class VWNavigationBarCustom
     onDestinationSelected?.call(index);
   }
 
+  List<Widget> _buildDestinations(RenderPayload payload) {
+    final navItems =
+        children?.whereType<VWNavigationBarItemCustom>().toList() ?? [];
+    final destinations = <Widget>[];
+
+    for (int i = 0; i < navItems.length; i++) {
+      destinations.add(
+        InheritedNavigationBarController(
+          itemIndex: i,
+          child: navItems[i].toWidget(payload),
+        ),
+      );
+    }
+
+    return destinations;
+  }
+
   @override
   Widget render(RenderPayload payload) {
     return internal.BottomNavigationBar(
@@ -57,11 +76,7 @@ class VWNavigationBarCustom
           payload.evalExpr(props.indicatorShape), payload.getColor),
       labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
       selectedIndex: selectedIndex,
-      destinations: children
-              ?.whereType<VWNavigationBarItemCustom>()
-              .map((e) => e.toWidget(payload))
-              .toList() ??
-          [],
+      destinations: _buildDestinations(payload),
       onDestinationSelected: (value) {
         handleDestinationSelected(value, payload);
       },
