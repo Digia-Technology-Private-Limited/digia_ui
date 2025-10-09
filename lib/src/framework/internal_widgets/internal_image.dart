@@ -260,8 +260,8 @@ class _InternalImageState extends State<InternalImage> {
       return _buildPlaceholder();
     }
 
-    final maxWidth = _validateAndConvertDimension(_imageSize!.width);
-    final maxHeight = _validateAndConvertDimension(_imageSize!.height);
+    final maxWidth = _validateAndConvertDimension(_imageSize?.width);
+    final maxHeight = _validateAndConvertDimension(_imageSize?.height);
     final dpr = MediaQuery.devicePixelRatioOf(context).round();
 
     // Evaluate imageSource with render dimensions
@@ -341,7 +341,7 @@ class _InternalImageState extends State<InternalImage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return KeyedSubtree(
       key: _imageKey,
       child: _buildOptimizedImage(),
     );
