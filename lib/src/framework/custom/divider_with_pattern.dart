@@ -43,39 +43,35 @@ class DividerWithPattern extends StatelessWidget {
     final Color effectiveColor = color ??
         DividerTheme.of(context).color ??
         Theme.of(context).dividerColor;
-    return LayoutBuilder(builder: (context, constraints) {
-      final double maxSize = axis == Axis.horizontal
-          ? constraints.maxWidth
-          : constraints.maxHeight;
-      return Padding(
-        padding: (axis == Axis.horizontal)
-            ? EdgeInsetsDirectional.only(
-                start: indent,
-                end: endIndent,
-              )
-            : EdgeInsetsDirectional.only(top: indent, bottom: endIndent),
-        child: SizedBox(
-          height: axis == Axis.horizontal ? size : null,
-          width: axis == Axis.vertical ? size : null,
-          child: Center(
-            child: CustomPaint(
-              size: axis == Axis.horizontal
-                  ? Size(maxSize, thickness)
-                  : Size(thickness, maxSize),
-              painter: _PatternPainter(
-                color: effectiveColor,
-                gradient: gradient,
-                borderPattern: borderPattern,
-                strokeCap: strokeCap,
-                dashPattern: dashPattern,
-                strokeWidth: thickness,
-                axis: axis,
-              ),
+    final double maxSize = double.infinity;
+    return Padding(
+      padding: (axis == Axis.horizontal)
+          ? EdgeInsetsDirectional.only(
+              start: indent,
+              end: endIndent,
+            )
+          : EdgeInsetsDirectional.only(top: indent, bottom: endIndent),
+      child: SizedBox(
+        height: axis == Axis.horizontal ? size : null,
+        width: axis == Axis.vertical ? size : null,
+        child: Center(
+          child: CustomPaint(
+            size: axis == Axis.horizontal
+                ? Size(maxSize, thickness)
+                : Size(thickness, maxSize),
+            painter: _PatternPainter(
+              color: effectiveColor,
+              gradient: gradient,
+              borderPattern: borderPattern,
+              strokeCap: strokeCap,
+              dashPattern: dashPattern,
+              strokeWidth: thickness,
+              axis: axis,
             ),
           ),
         ),
-      );
-    });
+      ),
+    );
   }
 }
 
