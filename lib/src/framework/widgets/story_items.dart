@@ -42,7 +42,7 @@ class VWStoryItem extends VirtualStatelessWidget<StoryItemProps> {
           duration: durationTransformed,
           imageConfig: props.imageConfig != null 
               ? StoryViewImageConfig(
-                  fit: To.boxFit(payload.eval(props.imageConfig?['fit'])),
+                  fit: To.boxFit(payload.eval(props.imageConfig?['fit']) ?? 'cover'),
                 )
               : null,
         );
@@ -72,7 +72,6 @@ class VWStoryItem extends VirtualStatelessWidget<StoryItemProps> {
           duration: durationTransformed,
         );
       default:
-        print('VWStoryItem Debug - unknown type: $type, returning null');
         return null;
     }
   }
