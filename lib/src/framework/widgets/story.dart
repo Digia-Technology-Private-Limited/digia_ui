@@ -1,7 +1,3 @@
-
-//not optimised code as conditional builders were giving errors------------------
-
-
 import 'package:flutter/material.dart';
 import 'package:flutter_story_presenter/flutter_story_presenter.dart';
 import 'package:flutter/cupertino.dart';
@@ -17,6 +13,7 @@ import '../models/props.dart';
 import '../actions/base/action_flow.dart';
 import 'conditional_builder.dart';
 import 'condtional_item.dart';
+
 class VWStory extends VirtualStatelessWidget<Props> {
   VWStory({
     required super.props,
@@ -26,10 +23,12 @@ class VWStory extends VirtualStatelessWidget<Props> {
     required super.refName,
     required super.childGroups,
   });
+
   @override
   Widget render(RenderPayload payload) {
     final storyItems = _convertToStoryItems(payload);
     if (storyItems.isEmpty) return const SizedBox.shrink();
+
     return FlutterStoryPresenter(
       initialIndex: payload.eval<int>(props.get('initialIndex')) ?? 0,
       restartOnCompleted: payload.eval<bool>(props.get('restartOnCompleted')) ?? true,
@@ -46,163 +45,101 @@ class VWStory extends VirtualStatelessWidget<Props> {
       onStoryChanged: _buildStoryChangedCallback('onStoryChanged', payload),
     );
   }
+
   List<StoryItem> _convertToStoryItems(RenderPayload payload) {
     final storyItems = <StoryItem>[];
-    // Check if we should use data source iteration
-    final shouldRepeatChild = props.get('dataSource') != null;
-    if (shouldRepeatChild) {
-      // Use data source for dynamic iteration
-      final items = payload.eval<List<Object>>(props.get('dataSource')) ?? [];
+
+    // Determine if dynamic iteration is needed
+    final dataSource = props.get('dataSource');
+    if (dataSource != null) {
+      final items = payload.eval<List<Object>>(dataSource) ?? [];
       for (int index = 0; index < items.length; index++) {
-        final dataItem = items[index];
         final scopedPayload = payload.copyWithChainedContext(
-          _createExprContext(dataItem, index),
+          _createExprContext(items[index], index),
         );
-        // Let conditional builder choose the right story item template
-        final itemsGroup = childGroups?['items'] ?? [];
-        for (final item in itemsGroup) {
-          if (item is VWStoryItem) {
-            final storyItem = _convertStoryItemWidget(item, scopedPayload);
-            if (storyItem != null) {
-              storyItems.add(storyItem);
-              break; // Only use the first valid story item from conditional builder
-            }
-          } else if (item is VWConditionalBuilder) {
-            // Evaluate the conditional builder to get the selected story item
-            final conditionalChildren = item.childGroups?['children'] ?? [];
-            final conditionalItems = conditionalChildren.whereType<VWConditionItem>();
-            // Find the first conditional item that evaluates to true
-            final activeConditionalItem = conditionalItems.firstWhereOrNull(
-              (conditionalItem) => conditionalItem.evaluate(scopedPayload.scopeContext) == true
-            );
-            // If we found an active conditional item, check if it contains a story item
-            if (activeConditionalItem != null) {
-              final storyItemChild = activeConditionalItem.child;
-              if (storyItemChild is VWStoryItem) {
-                final storyItem = _convertStoryItemWidget(storyItemChild, scopedPayload);
-                if (storyItem != null) {
-                  storyItems.add(storyItem);
-                }
-              }
-            }
-          }
-        }
+        _addStoryItemsFromGroup(storyItems, childGroups?['items'] ?? [], scopedPayload);
       }
     } else {
-      // Use static items
-      final items = childGroups?['items'] ?? [];
-      for (final item in items) {
-        if (item is VWStoryItem) {
-          final storyItem = _convertStoryItemWidget(item, payload);
-          if (storyItem != null) {
-            storyItems.add(storyItem);
-          }
-        } else if (item is VWConditionalBuilder) {
-          // Evaluate the conditional builder to get the selected story item
-          final conditionalChildren = item.childGroups?['children'] ?? [];
-          final conditionalItems = conditionalChildren.whereType<VWConditionItem>();
-          // Find the first conditional item that evaluates to true
-          final activeConditionalItem = conditionalItems.firstWhereOrNull(
-            (conditionalItem) => conditionalItem.evaluate(payload.scopeContext) == true
-          );
-          // If we found an active conditional item, check if it contains a story item
-          if (activeConditionalItem != null) {
-            final storyItemChild = activeConditionalItem.child;
-            if (storyItemChild is VWStoryItem) {
-              final storyItem = _convertStoryItemWidget(storyItemChild, payload);
-              if (storyItem != null) {
-                storyItems.add(storyItem);
-              }
-            }
-          }
-        }
-      }
+      _addStoryItemsFromGroup(storyItems, childGroups?['items'] ?? [], payload);
     }
+
     return storyItems;
   }
-  StoryItem? _convertStoryItemWidget(VWStoryItem itemWidget, RenderPayload payload) {
-    // Properly handle ExprOr types to avoid validation errors
-    final storyItemType = itemWidget.props.storyItemType != null
-        ? payload.evalExpr(itemWidget.props.storyItemType) ?? 'image'
-        : 'image';
-    final url = itemWidget.props.url != null
-        ? payload.evalExpr(itemWidget.props.url)
-        : null;
-    final durationMs = itemWidget.props.durationMs != null
-        ? payload.evalExpr(itemWidget.props.durationMs) ?? 3000
-        : 3000;
-    final source = itemWidget.props.source != null
-        ? payload.evalExpr(itemWidget.props.source) ?? 'network'
-        : 'network';
-    final isMuteByDefault = itemWidget.props.isMuteByDefault != null
-        ? payload.evalExpr(itemWidget.props.isMuteByDefault) ?? false
-        : false;
-    final videoConfig = itemWidget.props.videoConfig;
-    final imageConfig = itemWidget.props.imageConfig;
-    // Skip story items without valid URLs
-    if (url == null || url.isEmpty) {
-      return null;
+
+  void _addStoryItemsFromGroup(List<StoryItem> storyItems, List<dynamic> groupItems, RenderPayload payload) {
+    for (final item in groupItems) {
+      if (item is VWStoryItem) {
+        final storyItem = _convertStoryItemWidget(item, payload);
+        if (storyItem != null) storyItems.add(storyItem);
+      } else if (item is VWConditionalBuilder) {
+        _addConditionalStoryItem(storyItems, item, payload);
+      }
     }
-    // Convert story item type
-    StoryItemType type;
-    switch (storyItemType) {
-      case 'image':
-        type = StoryItemType.image;
-        break;
-      case 'video':
-        type = StoryItemType.video;
-        break;
-      default:
-        type = StoryItemType.image;
-    }
-    // Convert source
-    final itemSource = switch (source) {
-      'asset' => StoryItemSource.asset,
-      _ => StoryItemSource.network,
-    };
-    // Convert video config
-    StoryViewVideoConfig? videoConfigObj;
-    if (videoConfig != null && type == StoryItemType.video) {
-      videoConfigObj = StoryViewVideoConfig(
-        fit: To.boxFit(videoConfig['fit']),
-      );
-    }
-    // Convert image config
-    StoryViewImageConfig? imageConfigObj;
-    if (imageConfig != null && type == StoryItemType.image) {
-      imageConfigObj = StoryViewImageConfig(
-        fit: To.boxFit(imageConfig['fit']),
-      );
-    }
-    // Create default loading widget (circular progress bar)
-    //will remove in future version-------
-    Widget loadingWidget = Container(
-      color: Colors.grey[100],
-      child: const Center(
-        child: CupertinoActivityIndicator(),
-      ),
+  }
+
+  void _addConditionalStoryItem(List<StoryItem> storyItems, VWConditionalBuilder builder, RenderPayload payload) {
+    final conditionalItems = builder.childGroups?['children']?.whereType<VWConditionItem>() ?? [];
+    final activeItem = conditionalItems.firstWhereOrNull(
+      (item) => item.evaluate(payload.scopeContext) == true,
     );
+    if (activeItem != null && activeItem.child is VWStoryItem) {
+      final storyItem = _convertStoryItemWidget(activeItem.child as VWStoryItem, payload);
+      if (storyItem != null) storyItems.add(storyItem);
+    }
+  }
+
+  StoryItem? _convertStoryItemWidget(VWStoryItem itemWidget, RenderPayload payload) {
+    final storyItemType = payload.evalExpr(itemWidget.props.storyItemType) ?? 'image';
+    final url = payload.evalExpr(itemWidget.props.url);
+    if (url == null || url.isEmpty) return null;
+
+    final type = switch (storyItemType) {
+      'image' => StoryItemType.image,
+      'video' => StoryItemType.video,
+      _ => StoryItemType.image,
+    };
+
+    final source = payload.evalExpr(itemWidget.props.source) ?? 'network';
+    final itemSource = source == 'asset' ? StoryItemSource.asset : StoryItemSource.network;
+
+    final durationInMs = payload.evalExpr(itemWidget.props.durationInMs) ?? 3000;
+    final isMuteByDefault = payload.evalExpr(itemWidget.props.isMuteByDefault) ?? false;
+
+    StoryViewVideoConfig? videoConfig;
+    if (type == StoryItemType.video && itemWidget.props.videoConfig != null) {
+      videoConfig = StoryViewVideoConfig(fit: To.boxFit(itemWidget.props.videoConfig?['fit']));
+    }
+
+    StoryViewImageConfig? imageConfig;
+    if (type == StoryItemType.image && itemWidget.props.imageConfig != null) {
+      imageConfig = StoryViewImageConfig(fit: To.boxFit(itemWidget.props.imageConfig?['fit']));
+    }
+
+    final loadingWidget = Container(
+      color: Colors.grey[100],
+      child: const Center(child: CupertinoActivityIndicator()),
+    );
+
     return StoryItem(
       url: url,
       storyItemType: type,
-      duration: Duration(milliseconds: durationMs),
+      duration: Duration(milliseconds: durationInMs),
       storyItemSource: itemSource,
       isMuteByDefault: isMuteByDefault,
       thumbnail: loadingWidget,
-      videoConfig: videoConfigObj,
-      imageConfig: imageConfigObj,
+      videoConfig: videoConfig,
+      imageConfig: imageConfig,
     );
   }
+
   ScopeContext _createExprContext(Object? item, int index) {
-    final storyObj = {
-      'currentItem': item,
-      'index': index,
-    };
+    final storyObj = {'currentItem': item, 'index': index};
     return DefaultScopeContext(variables: {
       ...storyObj,
       ...?refName?.maybe((it) => {it: storyObj}),
     });
   }
+
   StoryViewIndicatorConfig _buildIndicatorConfig(RenderPayload payload) {
     final indicator = props.get('indicator') as Map<String, dynamic>?;
     return StoryViewIndicatorConfig(
@@ -214,36 +151,35 @@ class VWStory extends VirtualStatelessWidget<Props> {
       horizontalGap: (indicator?['horizontalGap'] as num?)?.toDouble() ?? 4.0,
     );
   }
+
   void Function(DragUpdateDetails)? _buildSlideDownCallback(String actionName, RenderPayload payload) {
-    if (props.get(actionName) == null) return null;
-    return (details) {
-      final action = ActionFlow.fromJson(props.get(actionName));
-      payload.executeAction(action);
-    };
+    final actionData = props.get(actionName);
+    if (actionData == null) return null;
+    return (details) => payload.executeAction(ActionFlow.fromJson(actionData));
   }
+
   void Function(DragStartDetails)? _buildSlideStartCallback(String actionName, RenderPayload payload) {
-    if (props.get(actionName) == null) return null;
-    return (details) {
-      final action = ActionFlow.fromJson(props.get(actionName));
-      payload.executeAction(action);
-    };
+    final actionData = props.get(actionName);
+    if (actionData == null) return null;
+    return (details) => payload.executeAction(ActionFlow.fromJson(actionData));
   }
+
   void Function(int)? _buildStoryChangedCallback(String actionName, RenderPayload payload) {
-    if (props.get(actionName) == null) return null;
-    return (index) {
-      final action = ActionFlow.fromJson(props.get(actionName));
-      payload.executeAction(action);
-    };
+    final actionData = props.get(actionName);
+    if (actionData == null) return null;
+    return (index) => payload.executeAction(ActionFlow.fromJson(actionData));
   }
+
   Future<bool> Function()? _buildAsyncActionCallback(String actionName, RenderPayload payload) {
-    if (props.get(actionName) == null) return null;
+    final actionData = props.get(actionName);
+    if (actionData == null) return null;
     return () async {
-      final action = ActionFlow.fromJson(props.get(actionName));
-      payload.executeAction(action);
+      payload.executeAction(ActionFlow.fromJson(actionData));
       return true;
     };
   }
 }
+
 class VWStoryItem extends VirtualStatelessWidget<StoryItemProps> {
   VWStoryItem({
     required super.props,
@@ -253,10 +189,7 @@ class VWStoryItem extends VirtualStatelessWidget<StoryItemProps> {
     required super.refName,
     required super.childGroups,
   });
+
   @override
-  Widget render(RenderPayload payload) {
-    // Story items are data-only nodes that get converted to StoryItem objects
-    // They don't render directly in the builder, only when used in FlutterStoryPresenter
-    return const SizedBox.shrink();
-  }
+  Widget render(RenderPayload payload) => const SizedBox.shrink();
 }
