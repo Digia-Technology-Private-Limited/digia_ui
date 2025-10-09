@@ -25,6 +25,7 @@ class VWStoryItem extends VirtualStatelessWidget<StoryItemProps> {
     final type = props.storyItemType?.evaluate(payload.scopeContext);
     final url = props.url?.evaluate(payload.scopeContext);
     final duration = props.durationInMs?.evaluate(payload.scopeContext);
+    final isMuteByDefault = props.isMuteByDefault?.evaluate(payload.scopeContext);
     final durationTransformed = duration != null
         ? Duration(milliseconds: duration)
         : const Duration(seconds: 3);
@@ -55,9 +56,10 @@ class VWStoryItem extends VirtualStatelessWidget<StoryItemProps> {
           url: url,
           thumbnail: loadingWidget,
           duration: durationTransformed,
+          isMuteByDefault: isMuteByDefault ?? false,
           videoConfig: props.videoConfig != null
               ? StoryViewVideoConfig(
-                  fit: To.boxFit(payload.eval(props.videoConfig?['fit'])),
+                  fit: To.boxFit(payload.eval(props.videoConfig?['fit']) ?? 'cover'),
                 )
               : null,
         );
