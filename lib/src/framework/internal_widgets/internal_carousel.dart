@@ -90,8 +90,8 @@ class _InternalCarouselState extends State<InternalCarousel> {
     Widget child;
     if (widget.itemBuilder != null) {
       child = SizedBox(
-        height: widget.height,
-        width: widget.width,
+        height: widget.height ?? double.infinity,
+        width: widget.width ?? double.infinity,
         child: CarouselSlider.builder(
           carouselController: _carouselController,
           itemCount: widget.itemCount,
@@ -126,8 +126,8 @@ class _InternalCarouselState extends State<InternalCarousel> {
       );
     } else {
       child = SizedBox(
-        height: widget.height,
-        width: widget.width,
+        height: widget.height ?? double.infinity,
+        width: widget.width ?? double.infinity,
         child: CarouselSlider.builder(
           itemCount: widget.children.length,
           carouselController: _carouselController,
@@ -169,9 +169,9 @@ class _InternalCarouselState extends State<InternalCarousel> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Expanded(child: child),
+        Flexible(child: child),
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          padding: const EdgeInsets.only(top: 8.0),
           child: ValueListenableBuilder<int>(
             valueListenable: _currentPageNotifier,
             builder: (context, value, _) {
