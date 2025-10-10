@@ -9,12 +9,14 @@ class InternalStory extends StatefulWidget {
   final bool repeat;
   final Widget? header;
   final Widget? footer;
+  final StoryViewIndicatorConfig? storyViewIndicatorConfig;
 
   const InternalStory({
     super.key,
     required this.controller,
     required this.storyItems,
     this.onComplete,
+    this.storyViewIndicatorConfig,
     this.repeat = false,
     this.header,
     this.footer,
@@ -33,6 +35,7 @@ class _InternalStoryState extends State<InternalStory> {
       key: _storyKey,
       flutterStoryController: widget.controller,
       items: widget.storyItems,
+      storyViewIndicatorConfig: widget.storyViewIndicatorConfig,
       onCompleted: () {
         widget.onComplete?.call();
         if (widget.repeat) {

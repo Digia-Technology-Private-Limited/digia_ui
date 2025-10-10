@@ -1,8 +1,6 @@
 import 'package:collection/collection.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_story_presenter/flutter_story_presenter.dart';
-
 import '../actions/base/action_flow.dart';
 import '../base/virtual_stateless_widget.dart';
 import '../base/virtual_widget.dart';
@@ -51,6 +49,18 @@ class VWStory extends VirtualStatelessWidget<Props> {
 
     final headerWidget = header?.toWidget(payload);
     final footerWidget = footer?.toWidget(payload);
+
+    StoryViewIndicatorConfig buildIndicatorConfig(RenderPayload payload) {
+    final indicator = props.get('indicator') as Map<String, dynamic>?;
+    return StoryViewIndicatorConfig(
+      activeColor: payload.evalColor(indicator?['activeColor']) ?? Colors.blue,
+      backgroundCompletedColor: payload.evalColor(indicator?['backgroundCompletedColor']) ?? Colors.white,
+      backgroundDisabledColor: payload.evalColor(indicator?['backgroundDisabledColor']) ?? Colors.grey,
+      height: (indicator?['height'] as num?)?.toDouble() ?? 3.5,
+      borderRadius: (indicator?['borderRadius'] as num?)?.toDouble() ?? 4.0,
+      horizontalGap: (indicator?['horizontalGap'] as num?)?.toDouble() ?? 4.0,
+    );
+  }
 
     List<StoryItem> storyItems = [];
 
@@ -127,6 +137,7 @@ class VWStory extends VirtualStatelessWidget<Props> {
       controller: controller,
       storyItems: storyItems,
       repeat: repeat,
+      storyViewIndicatorConfig: buildIndicatorConfig(payload),
       header: headerWidget,
       footer: footerWidget,
       onComplete: () {
