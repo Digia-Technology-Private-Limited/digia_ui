@@ -14,7 +14,8 @@ enum DataType {
   pageController('pageController'),
   file('file'),
   apiCancelToken('apiCancelToken'),
-  action('action');
+  action('action'),
+  storyController('storyController');
 
   final String id;
 
