@@ -50,7 +50,8 @@ class VWTextFormField extends VirtualStatelessWidget<Props> {
     final contentPadding = To.edgeInsets(props.get('contentPadding'));
     final focusColor = payload.evalColor(props.get('focusColor'));
     final cursorColor = payload.evalColor(props.get('cursorColor'));
-    final iconConstraints = _getIconConstraints(payload);
+    final prefixIconConstraints = _getPrefixIconConstraints(payload);
+    final suffixIconConstraints = _getSuffixIconConstraints(payload);
     final prefixIcon = childOf('prefix')?.toWidget(payload);
     final suffixIcon = childOf('suffix')?.toWidget(payload);
 
@@ -117,8 +118,8 @@ class VWTextFormField extends VirtualStatelessWidget<Props> {
         focusColor: focusColor,
         prefixIcon: prefixIcon,
         suffixIcon: suffixIcon,
-        prefixIconConstraints: iconConstraints,
-        suffixIconConstraints: iconConstraints,
+        prefixIconConstraints: prefixIconConstraints,
+        suffixIconConstraints: suffixIconConstraints,
         enabledBorder: enabledBorder,
         disabledBorder: disabledBorder,
         focusedBorder: focusedBorder,
@@ -128,10 +129,13 @@ class VWTextFormField extends VirtualStatelessWidget<Props> {
     );
   }
 
-  BoxConstraints _getIconConstraints(RenderPayload payload) {
-    final constraintsMap = props.getMap('iconConstraints');
-    if (constraintsMap == null) {
-      // Default constraints from your schema
+  BoxConstraints _getPrefixIconConstraints(RenderPayload payload) {
+    final iconConstraintsMap = props.getMap('iconConstraints');
+    final prefixConstraintsMap =
+        iconConstraintsMap?['prefixIconConstraints'] as Map?;
+
+    if (prefixConstraintsMap == null) {
+      // Default constraints
       return const BoxConstraints(
         minWidth: 0,
         minHeight: 0,
@@ -141,10 +145,33 @@ class VWTextFormField extends VirtualStatelessWidget<Props> {
     }
 
     return BoxConstraints(
-      minWidth: payload.eval<double>(constraintsMap['minWidth']) ?? 0,
-      minHeight: payload.eval<double>(constraintsMap['minHeight']) ?? 0,
-      maxWidth: payload.eval<double>(constraintsMap['maxWidth']) ?? 48,
-      maxHeight: payload.eval<double>(constraintsMap['maxHeight']) ?? 48,
+      minWidth: payload.eval<double>(prefixConstraintsMap['minWidth']) ?? 0,
+      minHeight: payload.eval<double>(prefixConstraintsMap['minHeight']) ?? 0,
+      maxWidth: payload.eval<double>(prefixConstraintsMap['maxWidth']) ?? 48,
+      maxHeight: payload.eval<double>(prefixConstraintsMap['maxHeight']) ?? 48,
+    );
+  }
+
+  BoxConstraints _getSuffixIconConstraints(RenderPayload payload) {
+    final iconConstraintsMap = props.getMap('iconConstraints');
+    final suffixConstraintsMap =
+        iconConstraintsMap?['suffixIconConstraints'] as Map?;
+
+    if (suffixConstraintsMap == null) {
+      // Default constraints
+      return const BoxConstraints(
+        minWidth: 0,
+        minHeight: 0,
+        maxWidth: 48,
+        maxHeight: 48,
+      );
+    }
+
+    return BoxConstraints(
+      minWidth: payload.eval<double>(suffixConstraintsMap['minWidth']) ?? 0,
+      minHeight: payload.eval<double>(suffixConstraintsMap['minHeight']) ?? 0,
+      maxWidth: payload.eval<double>(suffixConstraintsMap['maxWidth']) ?? 48,
+      maxHeight: payload.eval<double>(suffixConstraintsMap['maxHeight']) ?? 48,
     );
   }
 
