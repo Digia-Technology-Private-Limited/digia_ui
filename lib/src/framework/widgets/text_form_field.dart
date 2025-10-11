@@ -50,6 +50,11 @@ class VWTextFormField extends VirtualStatelessWidget<Props> {
     final contentPadding = To.edgeInsets(props.get('contentPadding'));
     final focusColor = payload.evalColor(props.get('focusColor'));
     final cursorColor = payload.evalColor(props.get('cursorColor'));
+    final prefixIconConstraints = _getPrefixIconConstraints(payload);
+    final suffixIconConstraints = _getSuffixIconConstraints(payload);
+    final prefixIcon = childOf('prefix')?.toWidget(payload);
+    final suffixIcon = childOf('suffix')?.toWidget(payload);
+
     final validations = props.getList('validationRules')?.map(
       (Object? e) {
         final map = e as Map?;
@@ -96,8 +101,7 @@ class VWTextFormField extends VirtualStatelessWidget<Props> {
       keyboardType: keyboardType,
       textInputAction: textInputAction,
       style: style,
-      maxLines:
-          effectiveMaxLines, // Ensuring the effective maxLines and minLines are dynamically set as per the obscureText
+      maxLines: effectiveMaxLines,
       minLines: effectiveMinLines,
       maxLength: maxLength,
       cursorColor: cursorColor,
@@ -112,14 +116,62 @@ class VWTextFormField extends VirtualStatelessWidget<Props> {
         hintStyle: hintStyle,
         contentPadding: isMultiline ? const EdgeInsets.all(12) : contentPadding,
         focusColor: focusColor,
-        prefixIcon: childOf('prefix')?.toWidget(payload),
-        suffixIcon: childOf('suffix')?.toWidget(payload),
+        prefixIcon: prefixIcon,
+        suffixIcon: suffixIcon,
+        prefixIconConstraints: prefixIconConstraints,
+        suffixIconConstraints: suffixIconConstraints,
         enabledBorder: enabledBorder,
         disabledBorder: disabledBorder,
         focusedBorder: focusedBorder,
         focusedErrorBorder: focusedErrorBorder,
         errorBorder: errorBorder,
       ),
+    );
+  }
+
+  BoxConstraints _getPrefixIconConstraints(RenderPayload payload) {
+    final iconConstraintsMap = props.getMap('iconConstraints');
+    final prefixConstraintsMap =
+        iconConstraintsMap?['prefixIconConstraints'] as Map?;
+
+    if (prefixConstraintsMap == null) {
+      // Default constraints
+      return const BoxConstraints(
+        minWidth: 0,
+        minHeight: 0,
+        maxWidth: 48,
+        maxHeight: 48,
+      );
+    }
+
+    return BoxConstraints(
+      minWidth: payload.eval<double>(prefixConstraintsMap['minWidth']) ?? 0,
+      minHeight: payload.eval<double>(prefixConstraintsMap['minHeight']) ?? 0,
+      maxWidth: payload.eval<double>(prefixConstraintsMap['maxWidth']) ?? 48,
+      maxHeight: payload.eval<double>(prefixConstraintsMap['maxHeight']) ?? 48,
+    );
+  }
+
+  BoxConstraints _getSuffixIconConstraints(RenderPayload payload) {
+    final iconConstraintsMap = props.getMap('iconConstraints');
+    final suffixConstraintsMap =
+        iconConstraintsMap?['suffixIconConstraints'] as Map?;
+
+    if (suffixConstraintsMap == null) {
+      // Default constraints
+      return const BoxConstraints(
+        minWidth: 0,
+        minHeight: 0,
+        maxWidth: 48,
+        maxHeight: 48,
+      );
+    }
+
+    return BoxConstraints(
+      minWidth: payload.eval<double>(suffixConstraintsMap['minWidth']) ?? 0,
+      minHeight: payload.eval<double>(suffixConstraintsMap['minHeight']) ?? 0,
+      maxWidth: payload.eval<double>(suffixConstraintsMap['maxWidth']) ?? 48,
+      maxHeight: payload.eval<double>(suffixConstraintsMap['maxHeight']) ?? 48,
     );
   }
 
