@@ -64,11 +64,32 @@ class _InternalImageState extends State<InternalImage> {
     if (renderBox != null && renderBox.hasSize) {
       final newSize = renderBox.size;
       if (_imageSize != newSize) {
+        if (!mounted) return;
         setState(() {
           _imageSize = newSize;
         });
       }
     }
+  }
+
+  @override
+  void didUpdateWidget(InternalImage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.imageSourceExpr != widget.imageSourceExpr) {
+      _imageSize = null;
+      WidgetsBinding.instance.addPostFrameCallback((_) => _updateImageSize());
+    }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _updateImageSize();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   ImageProvider _createImageProvider(Object? imageSource) {
@@ -307,7 +328,7 @@ class _InternalImageState extends State<InternalImage> {
 
   @override
   Widget build(BuildContext context) {
-    return KeyedSubtree(
+    return RepaintBoundary(
       key: _imageKey,
       child: _buildOptimizedImage(),
     );
