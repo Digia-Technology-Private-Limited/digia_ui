@@ -130,9 +130,8 @@ class VWTextFormField extends VirtualStatelessWidget<Props> {
   }
 
   BoxConstraints _getPrefixIconConstraints(RenderPayload payload) {
-    final iconConstraintsMap = props.getMap('iconConstraints');
     final prefixConstraintsMap =
-        iconConstraintsMap?['prefixIconConstraints'] as Map?;
+        props.getMap('prefixIconConstraints') as Map?;
 
     if (prefixConstraintsMap == null) {
       // Default constraints
@@ -153,9 +152,8 @@ class VWTextFormField extends VirtualStatelessWidget<Props> {
   }
 
   BoxConstraints _getSuffixIconConstraints(RenderPayload payload) {
-    final iconConstraintsMap = props.getMap('iconConstraints');
     final suffixConstraintsMap =
-        iconConstraintsMap?['suffixIconConstraints'] as Map?;
+        props.getMap('suffixIconConstraints') as Map?;
 
     if (suffixConstraintsMap == null) {
       // Default constraints
