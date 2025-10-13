@@ -129,10 +129,12 @@ class VWTextFormField extends VirtualStatelessWidget<Props> {
     );
   }
 
-  BoxConstraints _getPrefixIconConstraints(RenderPayload payload) {
-    final prefixConstraintsMap = props.getMap('prefixIconConstraints') as Map?;
+  BoxConstraints _getIconConstraints(
+      RenderPayload payload, String constraintKey) {
+    final iconConstraintsMap = props.getMap('iconConstraints');
+    final constraintsMap = iconConstraintsMap?[constraintKey] as Map?;
 
-    if (prefixConstraintsMap == null) {
+    if (constraintsMap == null) {
       // Default constraints
       return const BoxConstraints(
         minWidth: 0,
@@ -143,32 +145,19 @@ class VWTextFormField extends VirtualStatelessWidget<Props> {
     }
 
     return BoxConstraints(
-      minWidth: payload.eval<double>(prefixConstraintsMap['minWidth']) ?? 0,
-      minHeight: payload.eval<double>(prefixConstraintsMap['minHeight']) ?? 0,
-      maxWidth: payload.eval<double>(prefixConstraintsMap['maxWidth']) ?? 48,
-      maxHeight: payload.eval<double>(prefixConstraintsMap['maxHeight']) ?? 48,
+      minWidth: payload.eval<double>(constraintsMap['minWidth']) ?? 0,
+      minHeight: payload.eval<double>(constraintsMap['minHeight']) ?? 0,
+      maxWidth: payload.eval<double>(constraintsMap['maxWidth']) ?? 48,
+      maxHeight: payload.eval<double>(constraintsMap['maxHeight']) ?? 48,
     );
   }
 
+  BoxConstraints _getPrefixIconConstraints(RenderPayload payload) {
+    return _getIconConstraints(payload, 'prefixIconConstraints');
+  }
+
   BoxConstraints _getSuffixIconConstraints(RenderPayload payload) {
-    final suffixConstraintsMap = props.getMap('suffixIconConstraints') as Map?;
-
-    if (suffixConstraintsMap == null) {
-      // Default constraints
-      return const BoxConstraints(
-        minWidth: 0,
-        minHeight: 0,
-        maxWidth: 48,
-        maxHeight: 48,
-      );
-    }
-
-    return BoxConstraints(
-      minWidth: payload.eval<double>(suffixConstraintsMap['minWidth']) ?? 0,
-      minHeight: payload.eval<double>(suffixConstraintsMap['minHeight']) ?? 0,
-      maxWidth: payload.eval<double>(suffixConstraintsMap['maxWidth']) ?? 48,
-      maxHeight: payload.eval<double>(suffixConstraintsMap['maxHeight']) ?? 48,
-    );
+    return _getIconConstraints(payload, 'suffixIconConstraints');
   }
 
   InputBorder? _toInputBorder(RenderPayload payload, dynamic border) {
