@@ -25,7 +25,6 @@ class InternalImage extends StatefulWidget {
   final BoxFit? fit;
   final Alignment? alignment;
   final Color? svgColor;
-  final double opacity;
   final String? placeholderType;
   final String? placeholderSrc;
   final Object? errorImage;
@@ -38,7 +37,6 @@ class InternalImage extends StatefulWidget {
     this.fit,
     this.alignment,
     this.svgColor,
-    this.opacity = 1.0,
     this.placeholderType,
     this.placeholderSrc,
     this.errorImage,
@@ -73,20 +71,11 @@ class _InternalImageState extends State<InternalImage> {
     }
   }
 
-  ImageProvider _createImageProvider(
-    Object? imageSource,
-    int? maxHeight,
-    int? maxWidth,
-    int dpr,
-  ) {
+  ImageProvider _createImageProvider(Object? imageSource) {
     if (imageSource is List<AdaptedFile> && imageSource.isNotEmpty) {
       final firstFile = imageSource.first;
       if (firstFile.isWeb && firstFile.xFile?.path != null) {
-        return CachedNetworkImageProvider(
-          firstFile.xFile!.path,
-          maxHeight: maxHeight,
-          maxWidth: maxWidth,
-        );
+        return CachedNetworkImageProvider(firstFile.xFile!.path);
       } else if (firstFile.isMobile && firstFile.path != null) {
         return FileImage(File(firstFile.path!));
       }
@@ -95,11 +84,7 @@ class _InternalImageState extends State<InternalImage> {
 
     if (imageSource is AdaptedFile) {
       if (imageSource.isWeb && imageSource.xFile?.path != null) {
-        return CachedNetworkImageProvider(
-          imageSource.xFile!.path,
-          maxHeight: maxHeight,
-          maxWidth: maxWidth,
-        );
+        return CachedNetworkImageProvider(imageSource.xFile!.path);
       } else if (imageSource.isMobile && imageSource.path != null) {
         return FileImage(File(imageSource.path!));
       }
@@ -115,11 +100,7 @@ class _InternalImageState extends State<InternalImage> {
         } else {
           finalUrl = imageSource;
         }
-        return CachedNetworkImageProvider(
-          finalUrl,
-          maxHeight: maxHeight,
-          maxWidth: maxWidth,
-        );
+        return CachedNetworkImageProvider(finalUrl);
       } else {
         return ResourceProvider.maybeOf(widget.payload.buildContext)
                 ?.getImageProvider(imageSource) ??
@@ -130,7 +111,7 @@ class _InternalImageState extends State<InternalImage> {
     throw Exception('Unsupported image source type');
   }
 
-  Widget _buildSvgImage(Object? imageSource, double opacity) {
+  Widget _buildSvgImage(Object? imageSource) {
     final color = widget.svgColor;
     if (imageSource is String) {
       Widget svgWidget;
@@ -163,13 +144,22 @@ class _InternalImageState extends State<InternalImage> {
         );
       }
 
-      if (opacity != 1.0) {
-        return Opacity(opacity: opacity, child: svgWidget);
-      }
       return svgWidget;
     }
 
     throw Exception('Unsupported image source type');
+  }
+
+  Widget _buildAvifImage(ImageProvider imageProvider) {
+    return AvifImage(
+      image: imageProvider,
+      fit: widget.fit,
+      alignment: widget.alignment ?? Alignment.center,
+      gaplessPlayback: true,
+      errorBuilder: (context, error, stackTrace) {
+        return _buildErrorWidget(error);
+      },
+    );
   }
 
   OctoPlaceholderBuilder? _placeHolderBuilderCreator() {
@@ -273,38 +263,18 @@ class _InternalImageState extends State<InternalImage> {
         'dpr': dpr,
       }),
     );
-    final opacity = widget.opacity;
     final imageType = (widget.imageType ?? 'auto').toLowerCase();
 
     if (imageType == 'svg' ||
         (imageSource is String && hasExtension(imageSource, ['.svg']))) {
-      return _buildSvgImage(imageSource, opacity);
+      return _buildSvgImage(imageSource);
     }
 
-    final imageProvider = _createImageProvider(
-      imageSource,
-      maxHeight,
-      maxWidth,
-      dpr,
-    );
+    final imageProvider = _createImageProvider(imageSource);
 
     if (imageType == 'avif' ||
         (imageSource is String && hasExtension(imageSource, ['.avif']))) {
-      final avifWidget = AvifImage(
-        image: imageProvider,
-        fit: widget.fit,
-        alignment: widget.alignment ?? Alignment.center,
-        gaplessPlayback: true,
-        errorBuilder: (context, error, stackTrace) {
-          return _buildErrorWidget(error);
-        },
-      );
-
-      if (opacity != 1.0) {
-        return Opacity(opacity: opacity, child: avifWidget);
-      } else {
-        return avifWidget;
-      }
+      return _buildAvifImage(imageProvider);
     }
 
     final imageWidget =
@@ -332,11 +302,7 @@ class _InternalImageState extends State<InternalImage> {
                 alignment: widget.alignment ?? Alignment.center,
               );
 
-    if (opacity != 1.0) {
-      return Opacity(opacity: opacity, child: imageWidget);
-    } else {
-      return imageWidget;
-    }
+    return imageWidget;
   }
 
   @override

@@ -33,7 +33,6 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
   @override
   Widget render(RenderPayload payload) {
     final imageSourceExpr = props.get('src.imageSrc') ?? props.get('imageSrc');
-    final opacity = payload.eval<double>(props.get('opacity')) ?? 1.0;
     final imageType = props.getString('imageType');
     final fit = To.boxFit(props.get('fit'));
     final alignment = To.alignment(props.get('alignment'));
@@ -50,7 +49,6 @@ class VWImage extends VirtualLeafStatelessWidget<Props> {
         fit: fit,
         alignment: alignment,
         svgColor: svgColor,
-        opacity: opacity,
         placeholderType: placeholderType,
         placeholderSrc: placeholderSrc,
         errorImage: errorImage,
