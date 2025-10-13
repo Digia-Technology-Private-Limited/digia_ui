@@ -84,7 +84,7 @@ class _InternalImageState extends State<InternalImage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _updateImageSize();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _updateImageSize());
   }
 
   @override
