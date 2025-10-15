@@ -126,8 +126,8 @@ class _InternalCarouselState extends State<InternalCarousel> {
       );
     } else {
       child = SizedBox(
-        height: widget.height ?? double.infinity,
-        width: widget.width ?? double.infinity,
+        height: widget.height,
+        width: widget.width,
         child: CarouselSlider.builder(
           itemCount: widget.children.length,
           carouselController: _carouselController,

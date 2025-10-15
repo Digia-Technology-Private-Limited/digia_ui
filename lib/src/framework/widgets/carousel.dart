@@ -70,7 +70,7 @@ class VWCarousel extends VirtualStatelessWidget<CarouselProps> {
       );
     }
     return InternalCarousel(
-      width: props.width?.toWidth(payload.buildContext),
+      width: props.width?.toWidth(payload.buildContext) ?? double.infinity,
       height: props.height?.toHeight(payload.buildContext),
       direction: props.direction,
       aspectRatio: props.aspectRatio,
