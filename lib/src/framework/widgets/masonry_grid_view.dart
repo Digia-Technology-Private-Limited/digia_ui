@@ -68,22 +68,16 @@ class VWMasonryGridView extends VirtualStatelessWidget<MasonryGridViewProps> {
       );
     }
 
-    return MasonryGridView.builder(
+    return MasonryGridView.count(
       controller: controller,
       physics: physics,
       shrinkWrap: shrinkWrap,
-      gridDelegate: SliverSimpleGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: crossAxisCount,
-      ),
+      crossAxisCount: crossAxisCount,
       mainAxisSpacing: mainAxisSpacing,
       crossAxisSpacing: crossAxisSpacing,
       itemCount: 1,
       itemBuilder: (buildContext, index) {
-        return StaggeredGridTile.count(
-          crossAxisCellCount: crossAxisCellCount,
-          mainAxisCellCount: mainAxisCellCount,
-          child: child!.toWidget(payload.copyWith(buildContext: buildContext)),
-        );
+        return child!.toWidget(payload.copyWith(buildContext: buildContext));
       },
     );
   }
