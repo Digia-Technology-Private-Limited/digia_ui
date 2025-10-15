@@ -24,15 +24,20 @@ class VWMasonryGridView extends VirtualStatelessWidget<MasonryGridViewProps> {
   Widget render(RenderPayload payload) {
     if (child == null) return empty();
 
-    final controller = payload.evalExpr<AdaptedScrollController>(props.controller);
+    final controller =
+        payload.evalExpr<AdaptedScrollController>(props.controller);
     final allowScroll = payload.evalExpr<bool>(props.allowScroll) ?? true;
     final physics = allowScroll ? null : const NeverScrollableScrollPhysics();
     final shrinkWrap = payload.evalExpr<bool>(props.shrinkWrap) ?? false;
     final crossAxisCount = payload.evalExpr<int>(props.crossAxisCount) ?? 2;
-    final mainAxisSpacing = payload.evalExpr<double>(props.mainAxisSpacing) ?? 0.0;
-    final crossAxisSpacing = payload.evalExpr<double>(props.crossAxisSpacing) ?? 0.0;
-    final mainAxisCellCount = payload.evalExpr<int>(props.mainAxisCellCount) ?? 2;
-    final crossAxisCellCount = payload.evalExpr<int>(props.crossAxisCellCount) ?? 1;
+    final mainAxisSpacing =
+        payload.evalExpr<double>(props.mainAxisSpacing) ?? 0.0;
+    final crossAxisSpacing =
+        payload.evalExpr<double>(props.crossAxisSpacing) ?? 0.0;
+    final mainAxisCellCount =
+        payload.evalExpr<int>(props.mainAxisCellCount) ?? 2;
+    final crossAxisCellCount =
+        payload.evalExpr<int>(props.crossAxisCellCount) ?? 1;
 
     if (shouldRepeatChild) {
       final dataSourceValue = payload.evalExpr<Object>(props.dataSource);
