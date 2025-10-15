@@ -40,8 +40,9 @@ class VWMasonryGridView extends VirtualStatelessWidget<MasonryGridViewProps> {
         payload.evalExpr<int>(props.crossAxisCellCount) ?? 1;
 
     if (shouldRepeatChild) {
-      final dataSourceValue = payload.evalExpr<Object>(props.dataSource);
-      final items = (dataSourceValue as List<Object>?) ?? [];
+      final items = payload.eval<List<Object>>(
+              props.dataSource?.evaluate(payload.scopeContext)) ??
+          [];
       return MasonryGridView.builder(
         controller: controller,
         physics: physics,
