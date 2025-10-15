@@ -14,6 +14,7 @@ import 'widget_props/condtional_item_props.dart';
 import 'widget_props/icon_props.dart';
 import 'widget_props/image_view_360_props.dart';
 import 'widget_props/markdown_props.dart';
+import 'widget_props/masonry_grid_view_props.dart';
 import 'widget_props/nav_bar_item_custom.dart';
 import 'widget_props/nav_bar_item_default_props.dart';
 import 'widget_props/navigation_bar_custom_props.dart';
@@ -64,6 +65,7 @@ import 'widgets/linear_progress_bar.dart';
 import 'widgets/list_view.dart';
 import 'widgets/lottie.dart';
 import 'widgets/markdown.dart';
+import 'widgets/masonry_grid_view.dart';
 import 'widgets/nav_bar_item_custom.dart';
 import 'widgets/nav_bar_item_default.dart';
 import 'widgets/navigation_bar.dart';
@@ -129,6 +131,21 @@ VirtualStateContainerWidget stateContainerBuilder(
     parentProps: data.parentProps,
     initStateDefs: data.initStateDefs,
     childGroups: createChildGroups(data.childGroups, parent, registry),
+  );
+}
+
+VWMasonryGridView masonryGridViewBuilder(
+  VWNodeData data,
+  VirtualWidget? parent,
+  VirtualWidgetRegistry registry,
+) {
+  return VWMasonryGridView(
+    props: MasonryGridViewProps.fromJson(data.props.value),
+    commonProps: data.commonProps,
+    parentProps: data.parentProps,
+    parent: parent,
+    childGroups: createChildGroups(data.childGroups, parent, registry),
+    refName: data.refName,
   );
 }
 
