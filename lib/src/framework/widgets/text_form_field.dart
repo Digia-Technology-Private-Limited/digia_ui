@@ -50,7 +50,8 @@ class VWTextFormField extends VirtualStatelessWidget<Props> {
     final contentPadding = To.edgeInsets(props.get('contentPadding'));
     final focusColor = payload.evalColor(props.get('focusColor'));
     final cursorColor = payload.evalColor(props.get('cursorColor'));
-    final iconConstraints = _getIconConstraints(payload);
+    final prefixIconConstraints = _getPrefixIconConstraints(payload);
+    final suffixIconConstraints = _getSuffixIconConstraints(payload);
     final prefixIcon = childOf('prefix')?.toWidget(payload);
     final suffixIcon = childOf('suffix')?.toWidget(payload);
 
@@ -117,8 +118,8 @@ class VWTextFormField extends VirtualStatelessWidget<Props> {
         focusColor: focusColor,
         prefixIcon: prefixIcon,
         suffixIcon: suffixIcon,
-        prefixIconConstraints: iconConstraints,
-        suffixIconConstraints: iconConstraints,
+        prefixIconConstraints: prefixIconConstraints,
+        suffixIconConstraints: suffixIconConstraints,
         enabledBorder: enabledBorder,
         disabledBorder: disabledBorder,
         focusedBorder: focusedBorder,
@@ -128,10 +129,13 @@ class VWTextFormField extends VirtualStatelessWidget<Props> {
     );
   }
 
-  BoxConstraints _getIconConstraints(RenderPayload payload) {
-    final constraintsMap = props.getMap('iconConstraints');
+  BoxConstraints _getIconConstraints(
+      RenderPayload payload, String constraintKey) {
+    final iconConstraintsMap = props.getMap('iconConstraints');
+    final constraintsMap = iconConstraintsMap?[constraintKey] as Map?;
+
     if (constraintsMap == null) {
-      // Default constraints from your schema
+      // Default constraints
       return const BoxConstraints(
         minWidth: 0,
         minHeight: 0,
@@ -146,6 +150,14 @@ class VWTextFormField extends VirtualStatelessWidget<Props> {
       maxWidth: payload.eval<double>(constraintsMap['maxWidth']) ?? 48,
       maxHeight: payload.eval<double>(constraintsMap['maxHeight']) ?? 48,
     );
+  }
+
+  BoxConstraints _getPrefixIconConstraints(RenderPayload payload) {
+    return _getIconConstraints(payload, 'prefixIconConstraints');
+  }
+
+  BoxConstraints _getSuffixIconConstraints(RenderPayload payload) {
+    return _getIconConstraints(payload, 'suffixIconConstraints');
   }
 
   InputBorder? _toInputBorder(RenderPayload payload, dynamic border) {
