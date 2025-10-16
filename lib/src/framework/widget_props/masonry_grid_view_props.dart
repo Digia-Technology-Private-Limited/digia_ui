@@ -10,8 +10,6 @@ class MasonryGridViewProps {
   final ExprOr<int>? crossAxisCount;
   final ExprOr<double>? crossAxisSpacing;
   final ExprOr<double>? mainAxisSpacing;
-  final ExprOr<int>? mainAxisCellCount;
-  final ExprOr<int>? crossAxisCellCount;
 
   const MasonryGridViewProps({
     this.controller,
@@ -21,8 +19,6 @@ class MasonryGridViewProps {
     this.crossAxisCount,
     this.crossAxisSpacing,
     this.mainAxisSpacing,
-    this.mainAxisCellCount,
-    this.crossAxisCellCount,
   });
 
   factory MasonryGridViewProps.fromJson(JsonLike json) {
@@ -34,8 +30,6 @@ class MasonryGridViewProps {
       crossAxisCount: ExprOr.fromJson<int>(json['crossAxisCount']),
       crossAxisSpacing: ExprOr.fromJson<double>(json['crossAxisSpacing']),
       mainAxisSpacing: ExprOr.fromJson<double>(json['mainAxisSpacing']),
-      mainAxisCellCount: ExprOr.fromJson<int>(json['mainAxisCellCount']),
-      crossAxisCellCount: ExprOr.fromJson<int>(json['crossAxisCellCount']),
     );
   }
 }

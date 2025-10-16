@@ -34,34 +34,24 @@ class VWMasonryGridView extends VirtualStatelessWidget<MasonryGridViewProps> {
         payload.evalExpr<double>(props.mainAxisSpacing) ?? 0.0;
     final crossAxisSpacing =
         payload.evalExpr<double>(props.crossAxisSpacing) ?? 0.0;
-    final mainAxisCellCount =
-        payload.evalExpr<int>(props.mainAxisCellCount) ?? 2;
-    final crossAxisCellCount =
-        payload.evalExpr<int>(props.crossAxisCellCount) ?? 1;
 
     if (shouldRepeatChild) {
       final items = payload.eval<List<Object>>(
               props.dataSource?.evaluate(payload.scopeContext)) ??
           [];
-      return MasonryGridView.builder(
+      return MasonryGridView.count(
         controller: controller,
         physics: physics,
         shrinkWrap: shrinkWrap,
-        gridDelegate: SliverSimpleGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: crossAxisCount,
-        ),
+        crossAxisCount: crossAxisCount,
         mainAxisSpacing: mainAxisSpacing,
         crossAxisSpacing: crossAxisSpacing,
         itemCount: items.length,
         itemBuilder: (buildContext, index) {
-          return StaggeredGridTile.count(
-            crossAxisCellCount: crossAxisCellCount,
-            mainAxisCellCount: mainAxisCellCount,
-            child: child!.toWidget(
-              payload.copyWithChainedContext(
-                _createExprContext(items[index], index),
-                buildContext: buildContext,
-              ),
+          return child!.toWidget(
+            payload.copyWithChainedContext(
+              _createExprContext(items[index], index),
+              buildContext: buildContext,
             ),
           );
         },
@@ -75,17 +65,22 @@ class VWMasonryGridView extends VirtualStatelessWidget<MasonryGridViewProps> {
       crossAxisCount: crossAxisCount,
       mainAxisSpacing: mainAxisSpacing,
       crossAxisSpacing: crossAxisSpacing,
-      itemCount: 1,
+      itemCount: -1,
       itemBuilder: (buildContext, index) {
         return child!.toWidget(payload.copyWith(buildContext: buildContext));
       },
     );
   }
 
-  ScopeContext _createExprContext(Object item, int index) {
-    return DefaultScopeContext(variables: {
-      'item': item,
+  ScopeContext _createExprContext(Object? item, int index) {
+    final gridObj = {
+      'currentItem': item,
       'index': index,
+    };
+
+    return DefaultScopeContext(variables: {
+      ...gridObj,
+      if (refName != null) refName!: gridObj,
     });
   }
 }
