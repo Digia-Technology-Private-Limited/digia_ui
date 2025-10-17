@@ -6,6 +6,7 @@ import '../data_type/adapted_types/scroll_controller.dart';
 import '../expr/default_scope_context.dart';
 import '../expr/scope_context.dart';
 import '../render_payload.dart';
+import '../utils/functional_util.dart';
 import '../widget_props/masonry_grid_view_props.dart';
 
 class VWMasonryGridView extends VirtualStatelessWidget<MasonryGridViewProps> {
@@ -80,7 +81,7 @@ class VWMasonryGridView extends VirtualStatelessWidget<MasonryGridViewProps> {
 
     return DefaultScopeContext(variables: {
       ...gridObj,
-      if (refName != null) refName!: gridObj,
+      ...?refName.maybe((it) => {it: gridObj}),
     });
   }
 }
