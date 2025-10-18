@@ -115,6 +115,7 @@ abstract class VirtualWidgetRegistry {
     'digia/animationBuilder': animationBuilder,
     'digia/animatedSwitcher': animatedSwitcher,
     'digia/timer': timerBuilder,
+    'digia/story': storyBuilder,
   };
 
   void registerWidget<T>(

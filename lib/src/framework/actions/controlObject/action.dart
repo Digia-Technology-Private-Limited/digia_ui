@@ -27,7 +27,7 @@ class ControlObjectAction extends Action {
   factory ControlObjectAction.fromJson(Map<String, Object?> json) {
     return ControlObjectAction(
       dataType: ExprOr.fromJson<Object>(json['dataType']),
-      method: as<String>(json['method']),
+      method: as$<String>(json['method']) ?? 'unknown',
       args: as$<Map<String, Object?>>(json['args'])?.map(
         (k, v) => MapEntry(k, ExprOr.fromJson<Object>(v)),
       ),
