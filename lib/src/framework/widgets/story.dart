@@ -11,9 +11,6 @@ import '../internal_widgets/internal_story.dart';
 import '../models/props.dart';
 import '../render_payload.dart';
 import '../utils/functional_util.dart';
-import 'conditional_builder.dart';
-import 'condtional_item.dart';
-import 'story_items.dart';
 
 class VWStory extends VirtualStatelessWidget<Props> {
   VWStory({
@@ -34,25 +31,25 @@ class VWStory extends VirtualStatelessWidget<Props> {
   List<VirtualWidget>? get items => childGroups?['items'];
 
   @override
+  Widget empty() => const SizedBox.shrink();
+
+  @override
   Widget render(RenderPayload payload) {
+    if (items == null || items!.isEmpty) return empty();
+
     final controller =
         payload.eval<AdaptedStoryController>(props.get('controller')) ??
             AdaptedStoryController();
 
-    // if (controller == null) {
-    //   return const Center(
-    //       child: Text('StoryController is required for VWStory'));
-    // }
-
     final onCompleteAction = props.get('onComplete') as ActionFlow?;
-    final repeat = props.getBool('repeat') ?? false;
+    final repeat = props.getBool('restartOnCompleted') ?? false;
+    final duration = props.getInt('duration') ?? 3000;
 
     final headerWidget = header?.toWidget(payload);
     final footerWidget = footer?.toWidget(payload);
 
-    StoryViewIndicatorConfig buildIndicatorConfig(RenderPayload payload) {
     final indicator = props.get('indicator') as Map<String, dynamic>?;
-    return StoryViewIndicatorConfig(
+    final storyViewIndicatorConfig = StoryViewIndicatorConfig(
       activeColor: payload.evalColor(indicator?['activeColor']) ?? Colors.blue,
       backgroundCompletedColor: payload.evalColor(indicator?['backgroundCompletedColor']) ?? Colors.white,
       backgroundDisabledColor: payload.evalColor(indicator?['backgroundDisabledColor']) ?? Colors.grey,
@@ -60,86 +57,43 @@ class VWStory extends VirtualStatelessWidget<Props> {
       borderRadius: (indicator?['borderRadius'] as num?)?.toDouble() ?? 4.0,
       horizontalGap: (indicator?['horizontalGap'] as num?)?.toDouble() ?? 4.0,
     );
-  }
-
-    List<StoryItem> storyItems = [];
 
     if (shouldRepeatChild) {
-      final dataSource =
-          payload.eval<List<Object>>(props.get('dataSource')) ?? [];
+      final dataSource = payload.eval<List<Object>>(props.get('dataSource')) ?? [];
       final template = items?.firstOrNull;
-      if (template is VWStoryItem) {
-        for (var i = 0; i < dataSource.length; i++) {
-          final itemData = dataSource[i];
-          final itemPayload = payload.copyWithChainedContext(
-            _createExprContext(itemData, i),
-          );
-          final storyItem = template.toStoryItem(itemPayload, controller);
-          if (storyItem != null) {
-            storyItems.add(storyItem);
-          }
-        }
-      }
-      if (template is VWConditionalBuilder) {
-        for (var i = 0; i < dataSource.length; i++) {
-          final itemData = dataSource[i];
-          final itemPayload = payload.copyWithChainedContext(
-            _createExprContext(itemData, i),
-          );
-          // Evaluate which conditional item should be used based on conditions
-          final conditionalItem = template.children
-              ?.whereType<VWConditionItem>()
-              .firstWhereOrNull((e) => e.evaluate(itemPayload.scopeContext));
-
-          if (conditionalItem != null) {
-            final conditionalItemChild = conditionalItem.child;
-            if (conditionalItemChild is VWStoryItem) {
-              final storyItem =
-                  conditionalItemChild.toStoryItem(itemPayload, controller);
-              if (storyItem != null) {
-                storyItems.add(storyItem);
-              }
-            }
-          }
-        }
-      }
-    } else {
-      // Handle both direct VWStoryItem and VWConditionItem containing VWStoryItem
-      storyItems = [];
       
-      for (final item in items ?? []) {
-        if (item is VWStoryItem) {
-          // Direct story item
-          final storyItem = item.toStoryItem(payload, controller);
-          if (storyItem != null) {
-            storyItems.add(storyItem);
+      return InternalStory(
+        controller: controller,
+        widgets: dataSource.asMap().entries.map((entry) {
+          final index = entry.key;
+          final itemData = entry.value;
+          return template?.toWidget(
+            payload.copyWithChainedContext(
+              _createExprContext(itemData, index),
+            ),
+          ) ?? empty();
+        }).toList(),
+        repeat: repeat,
+        storyViewIndicatorConfig: storyViewIndicatorConfig,
+        header: headerWidget,
+        footer: footerWidget,
+        defaultDuration: Duration(milliseconds: duration),
+        onComplete: () {
+          if (onCompleteAction != null) {
+            payload.executeAction(onCompleteAction);
           }
-        } else if (item is VWConditionalBuilder) {
-          // Conditional builder - evaluate conditions and get the active child
-          final activeItem = item.children
-              ?.whereType<VWConditionItem>()
-              .firstWhereOrNull((e) => e.evaluate(payload.scopeContext));
-          
-          if (activeItem != null && activeItem.child is VWStoryItem) {
-            final storyItem = (activeItem.child as VWStoryItem).toStoryItem(payload, controller);
-            if (storyItem != null) {
-              storyItems.add(storyItem);
-            }
-          }
-        }
-      }
-    }
-    if (storyItems.isEmpty) {
-      return const Center(child: Text('No story items provided.'));
+        },
+      );
     }
 
     return InternalStory(
       controller: controller,
-      storyItems: storyItems,
+      widgets: items!.map((item) => item.toWidget(payload)).toList(),
       repeat: repeat,
-      storyViewIndicatorConfig: buildIndicatorConfig(payload),
+      storyViewIndicatorConfig: storyViewIndicatorConfig,
       header: headerWidget,
       footer: footerWidget,
+      defaultDuration: Duration(milliseconds: duration),
       onComplete: () {
         if (onCompleteAction != null) {
           payload.executeAction(onCompleteAction);

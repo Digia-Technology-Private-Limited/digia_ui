@@ -4,22 +4,24 @@ import '../data_type/adapted_types/story_controller.dart';
 
 class InternalStory extends StatefulWidget {
   final AdaptedStoryController controller;
-  final List<StoryItem> storyItems;
+  final List<Widget> widgets;
   final VoidCallback? onComplete;
   final bool repeat;
   final Widget? header;
   final Widget? footer;
   final StoryViewIndicatorConfig? storyViewIndicatorConfig;
+  final Duration defaultDuration;
 
   const InternalStory({
     super.key,
     required this.controller,
-    required this.storyItems,
+    required this.widgets,
     this.onComplete,
     this.storyViewIndicatorConfig,
     this.repeat = false,
     this.header,
     this.footer,
+    this.defaultDuration = const Duration(seconds: 3),
   });
 
   @override
@@ -31,11 +33,13 @@ class _InternalStoryState extends State<InternalStory> {
 
   @override
   Widget build(BuildContext context) {
-    return FlutterStoryPresenter(
+    return FlutterStoryPresenterWidgets(
       key: _storyKey,
+      restartOnCompleted: widget.repeat,
       flutterStoryController: widget.controller,
-      items: widget.storyItems,
+      widgets: widget.widgets,
       storyViewIndicatorConfig: widget.storyViewIndicatorConfig,
+      defaultDuration: widget.defaultDuration,
       onCompleted: () {
         widget.onComplete?.call();
         if (widget.repeat) {
@@ -48,6 +52,5 @@ class _InternalStoryState extends State<InternalStory> {
       headerWidget: widget.header,
       footerWidget: widget.footer,
     );
-    
   }
 }
