@@ -37,10 +37,7 @@ class VWStory extends VirtualStatelessWidget<Props> {
   Widget render(RenderPayload payload) {
     if (items == null || items!.isEmpty) return empty();
 
-    final controller =
-        payload.eval<AdaptedStoryController>(props.get('controller')) ??
-            AdaptedStoryController();
-
+    final controller = payload.eval<AdaptedStoryController>(props.get('controller'));
     final onCompleteAction = props.get('onComplete') as ActionFlow?;
     final repeat = props.getBool('restartOnCompleted') ?? false;
     final duration = props.getInt('duration') ?? 3000;
@@ -63,7 +60,7 @@ class VWStory extends VirtualStatelessWidget<Props> {
       final template = items?.firstOrNull;
       
       return InternalStory(
-        controller: controller,
+        controller: controller ?? AdaptedStoryController(),
         widgets: dataSource.asMap().entries.map((entry) {
           final index = entry.key;
           final itemData = entry.value;
@@ -87,7 +84,7 @@ class VWStory extends VirtualStatelessWidget<Props> {
     }
 
     return InternalStory(
-      controller: controller,
+      controller: controller ?? AdaptedStoryController(),
       widgets: items!.map((item) => item.toWidget(payload)).toList(),
       repeat: repeat,
       storyViewIndicatorConfig: storyViewIndicatorConfig,
