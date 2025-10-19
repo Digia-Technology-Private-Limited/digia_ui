@@ -1,6 +1,7 @@
 import 'package:digia_inspector_core/digia_inspector_core.dart';
 import 'package:flutter/widgets.dart';
 
+import '../../data_type/adapted_types/story_controller.dart';
 import '../../data_type/method_bindings/method_binding_registry.dart';
 import '../../expr/scope_context.dart';
 import '../action_descriptor.dart';

@@ -104,6 +104,7 @@ import 'widgets/web_view.dart';
 import 'widgets/wrap.dart';
 import 'widgets/youtube_player.dart';
 import 'widgets/story.dart';
+import 'widgets/story_video_player.dart';
 
 Map<String, List<VirtualWidget>>? createChildGroups(
     Map<String, List<VWData>>? childGroups,
@@ -376,6 +377,16 @@ VWStack stackBuilder(
 
 VWVideoPlayer videoPlayerBuilder(VWNodeData data, VirtualWidget? parent, _) {
   return VWVideoPlayer(
+    props: data.props,
+    commonProps: data.commonProps,
+    parentProps: data.parentProps,
+    parent: parent,
+    refName: data.refName,
+  );
+}
+
+VWStoryVideoPlayer storyVideoPlayerBuilder(VWNodeData data, VirtualWidget? parent, _) {
+  return VWStoryVideoPlayer(
     props: data.props,
     commonProps: data.commonProps,
     parentProps: data.parentProps,

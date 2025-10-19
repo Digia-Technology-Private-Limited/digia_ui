@@ -93,6 +93,7 @@ abstract class VirtualWidgetRegistry {
     'digia/lottie': lottieBuilder,
     'digia/youtubePlayer': youtubePlayerBuilder,
     'digia/videoPlayer': videoPlayerBuilder,
+    'digia/storyVideoPlayer': storyVideoPlayerBuilder,
     'digia/htmlView': htmlViewBuilder,
     'digia/webView': webViewBuilder,
 
