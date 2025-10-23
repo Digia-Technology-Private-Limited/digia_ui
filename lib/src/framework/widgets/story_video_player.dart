@@ -17,7 +17,17 @@ class VWStoryVideoPlayer extends VirtualLeafStatelessWidget<Props> {
   @override
   Widget render(RenderPayload payload) {
     final videoUrl = payload.eval(props.get('videoUrl'));
-    if (videoUrl == null) return empty();
+    
+    // Validate videoUrl before proceeding
+    if (videoUrl == null) {
+      debugPrint('StoryVideoPlayer: videoUrl is null');
+      return empty();
+    }
+    
+    if (videoUrl is String && videoUrl.isEmpty) {
+      debugPrint('StoryVideoPlayer: videoUrl is empty');
+      return empty();
+    }
 
     final autoPlay = payload.eval<bool>(props.get('autoPlay')) ?? true;
     final looping = payload.eval<bool>(props.get('looping')) ?? false;

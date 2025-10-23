@@ -39,6 +39,12 @@ class VWStory extends VirtualStatelessWidget<Props> {
 
     final controller = payload.eval<AdaptedStoryController>(props.get('controller'));
     final onCompleteAction = props.get('onComplete') as ActionFlow?;
+    final onSlideDownAction = props.get('onSlideDown') as ActionFlow?;
+    final onSlideStartAction = props.get('onSlideStart') as ActionFlow?;
+    final onLeftTapAction = props.get('onLeftTap') as ActionFlow?;
+    final onRightTapAction = props.get('onRightTap') as ActionFlow?;
+    final onPreviousCompletedAction = props.get('onPreviousCompleted') as ActionFlow?;
+    final onStoryChangedAction = props.get('onStoryChanged') as ActionFlow?;
     final repeat = props.getBool('restartOnCompleted') ?? false;
     final duration = props.getInt('duration') ?? 3000;
 
@@ -75,11 +81,32 @@ class VWStory extends VirtualStatelessWidget<Props> {
         header: headerWidget,
         footer: footerWidget,
         defaultDuration: Duration(milliseconds: duration),
+        payload: payload,
         onComplete: () {
           if (onCompleteAction != null) {
             payload.executeAction(onCompleteAction);
           }
         },
+        onSlideDown: onSlideDownAction != null ? (details) {
+          payload.executeAction(onSlideDownAction);
+        } : null,
+        onSlideStart: onSlideStartAction != null ? (details) {
+          payload.executeAction(onSlideStartAction);
+        } : null,
+        onLeftTap: onLeftTapAction != null ? () async {
+          await payload.executeAction(onLeftTapAction);
+          return true; // Allow default behavior
+        } : null,
+        onRightTap: onRightTapAction != null ? () async {
+          await payload.executeAction(onRightTapAction);
+          return true; // Allow default behavior
+        } : null,
+        onPreviousCompleted: onPreviousCompletedAction != null ? () {
+          payload.executeAction(onPreviousCompletedAction);
+        } : null,
+        onStoryChanged: onStoryChangedAction != null ? (index) {
+          payload.executeAction(onStoryChangedAction);
+        } : null,
       );
     }
 
@@ -91,11 +118,32 @@ class VWStory extends VirtualStatelessWidget<Props> {
       header: headerWidget,
       footer: footerWidget,
       defaultDuration: Duration(milliseconds: duration),
+      payload: payload,
       onComplete: () {
         if (onCompleteAction != null) {
           payload.executeAction(onCompleteAction);
         }
       },
+      onSlideDown: onSlideDownAction != null ? (details) {
+        payload.executeAction(onSlideDownAction);
+      } : null,
+      onSlideStart: onSlideStartAction != null ? (details) {
+        payload.executeAction(onSlideStartAction);
+      } : null,
+      onLeftTap: onLeftTapAction != null ? () async {
+        await payload.executeAction(onLeftTapAction);
+        return true;
+      } : null,
+      onRightTap: onRightTapAction != null ? () async {
+        await payload.executeAction(onRightTapAction);
+        return true; 
+      } : null,
+      onPreviousCompleted: onPreviousCompletedAction != null ? () {
+        payload.executeAction(onPreviousCompletedAction);
+      } : null,
+      onStoryChanged: onStoryChangedAction != null ? (index) {
+        payload.executeAction(onStoryChangedAction);
+      } : null,
     );
   }
 

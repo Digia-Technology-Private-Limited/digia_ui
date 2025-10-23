@@ -64,6 +64,12 @@ class _InternalStoryVideoPlayerState extends State<InternalStoryVideoPlayer> {
       }
     } catch (e) {
       debugPrint('Error initializing video: $e');
+      // Don't call callback on error
+      if (mounted) {
+        setState(() {
+          _isInitialized = false;
+        });
+      }
     }
   }
 
@@ -85,12 +91,28 @@ class _InternalStoryVideoPlayerState extends State<InternalStoryVideoPlayer> {
     }
 
     if (videoSource is String) {
-      if (videoSource.startsWith('http')) {
-        return VideoPlayerController.networkUrl(Uri.parse(videoSource));
+      // Validate URL before creating controller
+      if (videoSource.isEmpty) {
+        throw Exception('Video URL cannot be empty');
+      }
+      
+      if (videoSource.startsWith('http://') || videoSource.startsWith('https://')) {
+        try {
+          final uri = Uri.parse(videoSource);
+          if (uri.hasScheme && uri.hasAuthority) {
+            return VideoPlayerController.networkUrl(uri);
+          } else {
+            throw Exception('Invalid URL format');
+          }
+        } catch (e) {
+          throw Exception('Invalid URL: $e');
+        }
+      } else {
+        throw Exception('URL must start with http:// or https://');
       }
     }
-    // Additional source handling if needed
-    throw Exception('Unsupported video source type');
+    
+    throw Exception('Unsupported video source type: ${videoSource.runtimeType}');
   }
 
   @override
