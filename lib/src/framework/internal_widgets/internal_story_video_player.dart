@@ -25,7 +25,8 @@ class InternalStoryVideoPlayer extends StatefulWidget {
   });
 
   @override
-  State<InternalStoryVideoPlayer> createState() => _InternalStoryVideoPlayerState();
+  State<InternalStoryVideoPlayer> createState() =>
+      _InternalStoryVideoPlayerState();
 }
 
 class _InternalStoryVideoPlayerState extends State<InternalStoryVideoPlayer> {
@@ -42,21 +43,21 @@ class _InternalStoryVideoPlayerState extends State<InternalStoryVideoPlayer> {
     try {
       _videoController = _createController(widget.videoUrl);
       await _videoController!.initialize();
-      
+
       // Register with story presenter if available
       final callbackProvider = StoryVideoCallbackProvider.maybeOf(context);
       callbackProvider?.onVideoLoad?.call(_videoController!);
-      
+
       // Set looping if specified
       if (widget.looping == true) {
         await _videoController!.setLooping(true);
       }
-      
+
       // Auto-play if specified (default true for stories)
       if (widget.autoPlay ?? true) {
         await _videoController!.play();
       }
-      
+
       if (mounted) {
         setState(() {
           _isInitialized = true;
@@ -95,8 +96,9 @@ class _InternalStoryVideoPlayerState extends State<InternalStoryVideoPlayer> {
       if (videoSource.isEmpty) {
         throw Exception('Video URL cannot be empty');
       }
-      
-      if (videoSource.startsWith('http://') || videoSource.startsWith('https://')) {
+
+      if (videoSource.startsWith('http://') ||
+          videoSource.startsWith('https://')) {
         try {
           final uri = Uri.parse(videoSource);
           if (uri.hasScheme && uri.hasAuthority) {
@@ -111,8 +113,9 @@ class _InternalStoryVideoPlayerState extends State<InternalStoryVideoPlayer> {
         throw Exception('URL must start with http:// or https://');
       }
     }
-    
-    throw Exception('Unsupported video source type: ${videoSource.runtimeType}');
+
+    throw Exception(
+        'Unsupported video source type: ${videoSource.runtimeType}');
   }
 
   @override
@@ -125,7 +128,18 @@ class _InternalStoryVideoPlayerState extends State<InternalStoryVideoPlayer> {
   Widget build(BuildContext context) {
     if (!_isInitialized || _videoController == null) {
       return const Center(
-        child: CircularProgressIndicator(),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Icon(Icons.error,
+                size: 48, color: Color.fromARGB(255, 235, 44, 44)),
+            Text(
+              'Error loading video',
+              style: TextStyle(color: Color.fromARGB(255, 235, 44, 44)),
+            ),
+          ],
+        ),
       );
     }
 
