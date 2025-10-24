@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_story_presenter/flutter_story_presenter.dart';
 import 'package:video_player/video_player.dart';
@@ -36,6 +37,21 @@ class _InternalStoryVideoPlayerState extends State<InternalStoryVideoPlayer> {
   @override
   void initState() {
     super.initState();
+    // Notify presenter that a video exists and is about to load. We use
+    // getElementForInheritedWidgetOfExactType to avoid establishing an
+    // inherited-widget dependency during initState (didChangeDependencies
+    // runs after initState and may be too late: initState starts the
+    // async initialization which can complete before didChangeDependencies
+    // and cause a race). Sending the early null signal before starting
+    // initialization guarantees the presenter sees the "loading" state
+    // first.
+    final providerElement =
+        context.getElementForInheritedWidgetOfExactType<StoryVideoCallbackProvider>();
+    final callbackProvider = providerElement?.widget as StoryVideoCallbackProvider?;
+    try {
+      callbackProvider?.onVideoLoad?.call(null);
+    } catch (_) {}
+
     _initializeVideo();
   }
 
@@ -128,18 +144,7 @@ class _InternalStoryVideoPlayerState extends State<InternalStoryVideoPlayer> {
   Widget build(BuildContext context) {
     if (!_isInitialized || _videoController == null) {
       return const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Icon(Icons.error,
-                size: 48, color: Color.fromARGB(255, 235, 44, 44)),
-            Text(
-              'Error loading video',
-              style: TextStyle(color: Color.fromARGB(255, 235, 44, 44)),
-            ),
-          ],
-        ),
+        child:CupertinoActivityIndicator()
       );
     }
 

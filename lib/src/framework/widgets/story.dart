@@ -48,6 +48,7 @@ class VWStory extends VirtualStatelessWidget<Props> {
         ActionFlow.fromJson(props.get('onPreviousCompleted'));
     final onStoryChangedAction =
         ActionFlow.fromJson(props.get('onStoryChanged'));
+    final initialIndex = props.getInt('initialIndex') ?? 0;    
  
     final repeat = props.getBool('restartOnCompleted') ?? false;
     final duration = props.getInt('duration') ?? 3000;
@@ -75,6 +76,7 @@ class VWStory extends VirtualStatelessWidget<Props> {
       final template = items?.firstOrNull;
 
       return InternalStory(
+        initialIndex: initialIndex,
         controller: controller ?? AdaptedStoryController(),
         widgets: dataSource.asMap().entries.map((entry) {
           final index = entry.key;
@@ -133,6 +135,7 @@ class VWStory extends VirtualStatelessWidget<Props> {
     }
 
     return InternalStory(
+      initialIndex: initialIndex,
       controller: controller ?? AdaptedStoryController(),
       widgets: items!.map((item) => item.toWidget(payload)).toList(),
       repeat: repeat,

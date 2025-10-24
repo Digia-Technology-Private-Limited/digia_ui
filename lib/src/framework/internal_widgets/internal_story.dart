@@ -14,6 +14,7 @@ class InternalStory extends StatefulWidget {
   final VoidCallback? onPreviousCompleted;
   final void Function(int)? onStoryChanged;
   final bool repeat;
+  final int initialIndex;
   final Widget? header;
   final Widget? footer;
   final StoryViewIndicatorConfig? storyViewIndicatorConfig;
@@ -27,6 +28,7 @@ class InternalStory extends StatefulWidget {
     this.onComplete,
     this.onSlideDown,
     this.onSlideStart,
+    this.initialIndex=0,
     this.onLeftTap,
     this.onRightTap,
     this.onPreviousCompleted,
@@ -50,6 +52,7 @@ class _InternalStoryState extends State<InternalStory> {
   Widget build(BuildContext context) {
     return FlutterStoryPresenterWidgets(
       key: _storyKey,
+      initialIndex: widget.initialIndex,
       restartOnCompleted: widget.repeat,
       flutterStoryController: widget.controller,
       widgets: widget.widgets,
