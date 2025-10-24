@@ -103,6 +103,8 @@ import 'widgets/video_player.dart';
 import 'widgets/web_view.dart';
 import 'widgets/wrap.dart';
 import 'widgets/youtube_player.dart';
+import 'widgets/story.dart';
+import 'widgets/story_video_player.dart';
 
 Map<String, List<VirtualWidget>>? createChildGroups(
     Map<String, List<VWData>>? childGroups,
@@ -383,6 +385,16 @@ VWVideoPlayer videoPlayerBuilder(VWNodeData data, VirtualWidget? parent, _) {
   );
 }
 
+VWStoryVideoPlayer storyVideoPlayerBuilder(VWNodeData data, VirtualWidget? parent, _) {
+  return VWStoryVideoPlayer(
+    props: data.props,
+    commonProps: data.commonProps,
+    parentProps: data.parentProps,
+    parent: parent,
+    refName: data.refName,
+  );
+}
+
 VWStyledHorizontalDivider horizontalDividerBuilder(
     VWNodeData data, VirtualWidget? parent, _) {
   final props = data.props;
@@ -620,6 +632,22 @@ VWYoutubePlayer youtubePlayerBuilder(
     refName: data.refName,
   );
 }
+
+VWStory storyBuilder(
+  VWNodeData data,
+  VirtualWidget? parent,
+  VirtualWidgetRegistry registry,
+) {
+  return VWStory(
+    props: data.props,
+    commonProps: data.commonProps,
+    parentProps: data.parentProps,
+    parent: parent,
+    refName: data.refName,
+    childGroups: createChildGroups(data.childGroups, parent, registry),
+  );
+}
+
 
 VWSwitch switchBuilder(VWNodeData data, VirtualWidget? parent, _) {
   return VWSwitch(
