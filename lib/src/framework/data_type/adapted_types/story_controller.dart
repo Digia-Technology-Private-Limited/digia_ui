@@ -6,9 +6,6 @@ class AdaptedStoryController extends FlutterStoryController implements ExprInsta
 
   @override
   Object? getField(String name) => switch (name) {
-        'storyStatus' => storyStatus.toString(),
-        'jumpIndex' => jumpIndex,
-        'isPlaying' => storyStatus == StoryAction.play,
         'isPaused' => storyStatus == StoryAction.pause,
         'isMuted' => storyStatus == StoryAction.mute,
         _ => null,
