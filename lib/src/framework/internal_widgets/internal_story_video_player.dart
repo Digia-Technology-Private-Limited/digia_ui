@@ -1,18 +1,11 @@
-import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_story_presenter/flutter_story_presenter.dart';
 import 'package:video_player/video_player.dart';
 
-import '../data_type/adapted_types/file.dart';
-
-// Import the callback provider from the SDK
-// Note: This is a private class from the SDK, we'll need to make it public or use a different approach
 typedef OnVideoLoad = void Function(VideoPlayerController?);
 
 class InternalStoryVideoPlayer extends StatefulWidget {
-  final Object videoUrl;
+  final String videoUrl; 
   final bool? autoPlay;
   final bool? looping;
   final BoxFit? fit;
@@ -37,39 +30,59 @@ class _InternalStoryVideoPlayerState extends State<InternalStoryVideoPlayer> {
   @override
   void initState() {
     super.initState();
-    // Notify presenter that a video exists and is about to load. We use
-    // getElementForInheritedWidgetOfExactType to avoid establishing an
-    // inherited-widget dependency during initState (didChangeDependencies
-    // runs after initState and may be too late: initState starts the
-    // async initialization which can complete before didChangeDependencies
-    // and cause a race). Sending the early null signal before starting
-    // initialization guarantees the presenter sees the "loading" state
-    // first.
+    _initializeVideo();
+  }
+
+  @override
+  void didUpdateWidget(InternalStoryVideoPlayer oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.videoUrl != widget.videoUrl) {
+      _reinitializeVideo();
+    }
+  }
+
+  void _reinitializeVideo() {
+    _videoController?.dispose();
+    _videoController = null;
+    
+    if (mounted) {
+      setState(() {
+        _isInitialized = false;
+      });
+    }
+    
+    _notifyVideoLoading();
+    _initializeVideo();
+  }
+
+  void _notifyVideoLoading() {
+    /// Notify presenter that a video exists and is loading
     final providerElement =
         context.getElementForInheritedWidgetOfExactType<StoryVideoCallbackProvider>();
     final callbackProvider = providerElement?.widget as StoryVideoCallbackProvider?;
     try {
       callbackProvider?.onVideoLoad?.call(null);
     } catch (_) {}
-
-    _initializeVideo();
   }
 
   Future<void> _initializeVideo() async {
     try {
+      _notifyVideoLoading();
+      
       _videoController = _createController(widget.videoUrl);
       await _videoController!.initialize();
 
-      // Register with story presenter if available
+      /// Register with story presenter for multi-video management
       final callbackProvider = StoryVideoCallbackProvider.maybeOf(context);
-      callbackProvider?.onVideoLoad?.call(_videoController!);
+      if (callbackProvider != null) {
+        callbackProvider.onVideoLoad?.call(_videoController!);
+      }
 
-      // Set looping if specified
       if (widget.looping == true) {
         await _videoController!.setLooping(true);
       }
 
-      // Auto-play if specified (default true for stories)
+      /// Auto-play if specified (defaults to true for stories)
       if (widget.autoPlay ?? true) {
         await _videoController!.play();
       }
@@ -81,7 +94,6 @@ class _InternalStoryVideoPlayerState extends State<InternalStoryVideoPlayer> {
       }
     } catch (e) {
       debugPrint('Error initializing video: $e');
-      // Don't call callback on error
       if (mounted) {
         setState(() {
           _isInitialized = false;
@@ -90,48 +102,25 @@ class _InternalStoryVideoPlayerState extends State<InternalStoryVideoPlayer> {
     }
   }
 
-  VideoPlayerController _createController(Object videoSource) {
-    if (videoSource is List<AdaptedFile> && videoSource.isNotEmpty) {
-      final firstFile = videoSource.first;
-      if (firstFile.isMobile) {
-        return VideoPlayerController.file(File(firstFile.path!));
-      } else if (firstFile.isWeb) {
-        return VideoPlayerController.networkUrl(
-            Uri.parse(firstFile.xFile!.path));
-      }
-      throw Exception('Invalid File source in list');
+  VideoPlayerController _createController(String videoUrl) {
+    if (videoUrl.isEmpty) {
+      throw Exception('Video URL cannot be empty');
     }
 
-    if (videoSource is AdaptedFile) {
-      return VideoPlayerController.networkUrl(
-          Uri.parse(videoSource.xFile!.path));
-    }
-
-    if (videoSource is String) {
-      // Validate URL before creating controller
-      if (videoSource.isEmpty) {
-        throw Exception('Video URL cannot be empty');
-      }
-
-      if (videoSource.startsWith('http://') ||
-          videoSource.startsWith('https://')) {
-        try {
-          final uri = Uri.parse(videoSource);
-          if (uri.hasScheme && uri.hasAuthority) {
-            return VideoPlayerController.networkUrl(uri);
-          } else {
-            throw Exception('Invalid URL format');
-          }
-        } catch (e) {
-          throw Exception('Invalid URL: $e');
+    if (videoUrl.startsWith('http://') || videoUrl.startsWith('https://')) {
+      try {
+        final uri = Uri.parse(videoUrl);
+        if (uri.hasScheme && uri.hasAuthority) {
+          return VideoPlayerController.networkUrl(uri);
+        } else {
+          throw Exception('Invalid URL format');
         }
-      } else {
-        throw Exception('URL must start with http:// or https://');
+      } catch (e) {
+        throw Exception('Invalid URL: $e');
       }
+    } else {
+      throw Exception('URL must start with http:// or https://');
     }
-
-    throw Exception(
-        'Unsupported video source type: ${videoSource.runtimeType}');
   }
 
   @override
@@ -144,7 +133,14 @@ class _InternalStoryVideoPlayerState extends State<InternalStoryVideoPlayer> {
   Widget build(BuildContext context) {
     if (!_isInitialized || _videoController == null) {
       return const Center(
-        child:CupertinoActivityIndicator()
+        child: CupertinoActivityIndicator(),
+      );
+    }
+
+    /// Ensure video is fully initialized before rendering
+    if (!_videoController!.value.isInitialized) {
+      return const Center(
+        child: CupertinoActivityIndicator(),
       );
     }
 

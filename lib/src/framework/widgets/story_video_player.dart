@@ -18,14 +18,20 @@ class VWStoryVideoPlayer extends VirtualLeafStatelessWidget<Props> {
   Widget render(RenderPayload payload) {
     final videoUrl = payload.eval(props.get('videoUrl'));
     
-    // Validate videoUrl before proceeding
     if (videoUrl == null) {
       debugPrint('StoryVideoPlayer: videoUrl is null');
       return empty();
     }
     
-    if (videoUrl is String && videoUrl.isEmpty) {
-      debugPrint('StoryVideoPlayer: videoUrl is empty');
+    String? urlString;
+    if (videoUrl is String) {
+      if (videoUrl.isEmpty) {
+        debugPrint('StoryVideoPlayer: videoUrl is empty');
+        return empty();
+      }
+      urlString = videoUrl;
+    } else {
+      debugPrint('StoryVideoPlayer: videoUrl is not a string: ${videoUrl.runtimeType}');
       return empty();
     }
 
@@ -33,12 +39,21 @@ class VWStoryVideoPlayer extends VirtualLeafStatelessWidget<Props> {
     final looping = payload.eval<bool>(props.get('looping')) ?? false;
     final fit = _parseBoxFit(props.get('fit'));
 
+    /// Unique key based on video URL ensures proper widget rebuilding when URL changes
+    final videoKey = _generateVideoKey(urlString);
+    debugPrint('StoryVideoPlayer: Rendering with key: $videoKey, videoUrl: $urlString');
+
     return InternalStoryVideoPlayer(
-      videoUrl: videoUrl,
+      key: ValueKey(videoKey),
+      videoUrl: urlString,
       autoPlay: autoPlay,
       looping: looping,
       fit: fit,
     );
+  }
+
+  String _generateVideoKey(String videoUrl) {
+    return 'video_${videoUrl.hashCode}';
   }
 
   BoxFit? _parseBoxFit(dynamic fitValue) {
