@@ -1,18 +1,17 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_story_presenter/flutter_story_presenter.dart';
-import '../actions/base/action_flow.dart';
 import '../base/virtual_stateless_widget.dart';
 import '../base/virtual_widget.dart';
 import '../data_type/adapted_types/story_controller.dart';
 import '../expr/default_scope_context.dart';
 import '../expr/scope_context.dart';
 import '../internal_widgets/internal_story.dart';
-import '../models/props.dart';
 import '../render_payload.dart';
 import '../utils/functional_util.dart';
+import '../widget_props/story_props.dart';
 
-class VWStory extends VirtualStatelessWidget<Props> {
+class VWStory extends VirtualStatelessWidget<StoryProps> {
   VWStory({
     required super.props,
     required super.commonProps,
@@ -22,7 +21,7 @@ class VWStory extends VirtualStatelessWidget<Props> {
     super.refName,
   });
 
-  bool get shouldRepeatChild => props.get('dataSource') != null;
+  bool get shouldRepeatChild => props.dataSource != null;
 
   VirtualWidget? get header => childGroups?['header']?.firstOrNull;
 
@@ -37,26 +36,23 @@ class VWStory extends VirtualStatelessWidget<Props> {
   Widget render(RenderPayload payload) {
     if (items == null || items!.isEmpty) return empty();
 
-    final controller =
-        payload.eval<AdaptedStoryController>(props.get('controller'));
-    final onCompleteAction = ActionFlow.fromJson(props.get('onComplete'));
-    final onSlideDownAction = ActionFlow.fromJson(props.get('onSlideDown'));
-    final onSlideStartAction = ActionFlow.fromJson(props.get('onSlideStart'));
-    final onLeftTapAction = ActionFlow.fromJson(props.get('onLeftTap'));
-    final onRightTapAction = ActionFlow.fromJson(props.get('onRightTap'));
-    final onPreviousCompletedAction =
-        ActionFlow.fromJson(props.get('onPreviousCompleted'));
-    final onStoryChangedAction =
-        ActionFlow.fromJson(props.get('onStoryChanged'));
-    final initialIndex = props.getInt('initialIndex') ?? 0;    
+    final controller = payload.eval<AdaptedStoryController>(props.controller);
+    final onCompleteAction = props.onComplete;
+    final onSlideDownAction = props.onSlideDown;
+    final onSlideStartAction = props.onSlideStart;
+    final onLeftTapAction = props.onLeftTap;
+    final onRightTapAction = props.onRightTap;
+    final onPreviousCompletedAction = props.onPreviousCompleted;
+    final onStoryChangedAction = props.onStoryChanged;
+    final initialIndex = payload.eval<int>(props.initialIndex) ?? 0;    
  
-    final repeat = props.getBool('restartOnCompleted') ?? false;
-    final duration = props.getInt('duration') ?? 3000;
+    final repeat = payload.eval<bool>(props.restartOnCompleted) ?? false;
+    final duration = payload.eval<int>(props.duration) ?? 3000;
 
     final headerWidget = header?.toWidget(payload);
     final footerWidget = footer?.toWidget(payload);
 
-    final indicator = props.get('indicator') as Map<String, dynamic>?;
+    final indicator = props.indicator;
     final storyViewIndicatorConfig = StoryViewIndicatorConfig(
       activeColor: payload.evalColor(indicator?['activeColor']) ?? Colors.blue,
       backgroundCompletedColor:
@@ -71,8 +67,7 @@ class VWStory extends VirtualStatelessWidget<Props> {
     );
 
     if (shouldRepeatChild) {
-      final dataSource =
-          payload.eval<List<Object>>(props.get('dataSource')) ?? [];
+      final dataSource = payload.eval<List<Object>>(props.dataSource) ?? [];
       final template = items?.firstOrNull;
 
       return InternalStory(
@@ -93,7 +88,6 @@ class VWStory extends VirtualStatelessWidget<Props> {
         header: headerWidget,
         footer: footerWidget,
         defaultDuration: Duration(milliseconds: duration),
-        payload: payload,
         onComplete: () {
           if (onCompleteAction != null) {
             payload.executeAction(onCompleteAction);
@@ -143,7 +137,6 @@ class VWStory extends VirtualStatelessWidget<Props> {
       header: headerWidget,
       footer: footerWidget,
       defaultDuration: Duration(milliseconds: duration),
-      payload: payload,
       onComplete: () {
         if (onCompleteAction != null) {
           payload.executeAction(onCompleteAction);

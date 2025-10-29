@@ -57,9 +57,7 @@ class _InternalStoryVideoPlayerState extends State<InternalStoryVideoPlayer> {
 
   void _notifyVideoLoading() {
     /// Notify presenter that a video exists and is loading
-    final providerElement =
-        context.getElementForInheritedWidgetOfExactType<StoryVideoCallbackProvider>();
-    final callbackProvider = providerElement?.widget as StoryVideoCallbackProvider?;
+    final callbackProvider = context.getInheritedWidgetOfExactType<StoryVideoCallbackProvider>();
     try {
       callbackProvider?.onVideoLoad?.call(null);
     } catch (_) {}

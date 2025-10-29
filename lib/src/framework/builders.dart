@@ -29,6 +29,8 @@ import 'widget_props/scaffold_props.dart';
 import 'widget_props/sized_box_props.dart';
 import 'widget_props/sliver_app_bar_props.dart';
 import 'widget_props/smart_scroll_view_props.dart';
+import 'widget_props/story_props.dart';
+import 'widget_props/story_video_player_props.dart';
 import 'widget_props/stream_builder_props.dart';
 import 'widget_props/styled_divider_props.dart';
 import 'widget_props/switch_props.dart';
@@ -387,7 +389,7 @@ VWVideoPlayer videoPlayerBuilder(VWNodeData data, VirtualWidget? parent, _) {
 
 VWStoryVideoPlayer storyVideoPlayerBuilder(VWNodeData data, VirtualWidget? parent, _) {
   return VWStoryVideoPlayer(
-    props: data.props,
+    props: StoryVideoPlayerProps.fromJson(data.props.value),
     commonProps: data.commonProps,
     parentProps: data.parentProps,
     parent: parent,
@@ -639,7 +641,7 @@ VWStory storyBuilder(
   VirtualWidgetRegistry registry,
 ) {
   return VWStory(
-    props: data.props,
+    props: StoryProps.fromJson(data.props.value),
     commonProps: data.commonProps,
     parentProps: data.parentProps,
     parent: parent,

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_story_presenter/flutter_story_presenter.dart';
 import '../data_type/adapted_types/story_controller.dart';
-import '../render_payload.dart';
 
 class InternalStory extends StatefulWidget {
   final AdaptedStoryController controller;
@@ -19,7 +18,6 @@ class InternalStory extends StatefulWidget {
   final Widget? footer;
   final StoryViewIndicatorConfig? storyViewIndicatorConfig;
   final Duration defaultDuration;
-  final RenderPayload payload;
 
   const InternalStory({
     super.key,
@@ -38,7 +36,6 @@ class InternalStory extends StatefulWidget {
     this.header,
     this.footer,
     this.defaultDuration = const Duration(seconds: 3),
-    required this.payload,
   });
 
   @override

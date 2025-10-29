@@ -92,7 +92,7 @@ dependencies:
   flutter_story_presenter:
     git :
      url: git@github.com:Digia-Technology-Private-Limited/flutter_story_presenter.git
-     ref : shashwat/customWidgetPresenter
+     ref : main
   web: ^1.1.1
   digia_inspector_core: ^1.0.0
 
