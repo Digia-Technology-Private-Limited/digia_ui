@@ -1,11 +1,12 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_story_presenter/flutter_story_presenter.dart';
 import 'package:video_player/video_player.dart';
+
+import '../../components/story/story_presenter/flutter_story_widgets.dart';
 
 typedef OnVideoLoad = void Function(VideoPlayerController?);
 
 class InternalStoryVideoPlayer extends StatefulWidget {
-  final String videoUrl; 
+  final String videoUrl;
   final bool? autoPlay;
   final bool? looping;
   final BoxFit? fit;
@@ -44,20 +45,21 @@ class _InternalStoryVideoPlayerState extends State<InternalStoryVideoPlayer> {
   void _reinitializeVideo() {
     _videoController?.dispose();
     _videoController = null;
-    
+
     if (mounted) {
       setState(() {
         _isInitialized = false;
       });
     }
-    
+
     _notifyVideoLoading();
     _initializeVideo();
   }
 
   void _notifyVideoLoading() {
     /// Notify presenter that a video exists and is loading
-    final callbackProvider = context.getInheritedWidgetOfExactType<StoryVideoCallbackProvider>();
+    final callbackProvider =
+        context.getInheritedWidgetOfExactType<StoryVideoCallbackProvider>();
     try {
       callbackProvider?.onVideoLoad?.call(null);
     } catch (_) {}
@@ -66,7 +68,7 @@ class _InternalStoryVideoPlayerState extends State<InternalStoryVideoPlayer> {
   Future<void> _initializeVideo() async {
     try {
       _notifyVideoLoading();
-      
+
       _videoController = _createController(widget.videoUrl);
       await _videoController!.initialize();
 

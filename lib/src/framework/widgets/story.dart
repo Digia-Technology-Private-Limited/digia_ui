@@ -1,6 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_story_presenter/flutter_story_presenter.dart';
+import '../../components/story/models/story_view_indicator_config.dart';
 import '../base/virtual_stateless_widget.dart';
 import '../base/virtual_widget.dart';
 import '../data_type/adapted_types/story_controller.dart';
@@ -36,18 +36,20 @@ class VWStory extends VirtualStatelessWidget<StoryProps> {
   Widget render(RenderPayload payload) {
     if (items == null || items!.isEmpty) return empty();
 
-    final controller = payload.eval<AdaptedStoryController>(props.controller);
-    final onCompleteAction = props.onComplete;
+    final controller = props.controller?.evaluate(payload.scopeContext);
+    final onCompletedAction = props.onCompleted;
     final onSlideDownAction = props.onSlideDown;
     final onSlideStartAction = props.onSlideStart;
     final onLeftTapAction = props.onLeftTap;
     final onRightTapAction = props.onRightTap;
     final onPreviousCompletedAction = props.onPreviousCompleted;
     final onStoryChangedAction = props.onStoryChanged;
-    final initialIndex = payload.eval<int>(props.initialIndex) ?? 0;    
- 
-    final repeat = payload.eval<bool>(props.restartOnCompleted) ?? false;
-    final duration = payload.eval<int>(props.duration) ?? 3000;
+    final initialIndex =
+        props.initialIndex?.evaluate(payload.scopeContext) ?? 0;
+
+    final repeat =
+        props.restartOnCompleted?.evaluate(payload.scopeContext) ?? false;
+    final duration = props.duration?.evaluate(payload.scopeContext) ?? 3000;
 
     final headerWidget = header?.toWidget(payload);
     final footerWidget = footer?.toWidget(payload);
@@ -67,7 +69,9 @@ class VWStory extends VirtualStatelessWidget<StoryProps> {
     );
 
     if (shouldRepeatChild) {
-      final dataSource = payload.eval<List<Object>>(props.dataSource) ?? [];
+      final dataSource = payload.eval<List<Object>>(
+              props.dataSource?.evaluate(payload.scopeContext)) ??
+          [];
       final template = items?.firstOrNull;
 
       return InternalStory(
@@ -88,9 +92,9 @@ class VWStory extends VirtualStatelessWidget<StoryProps> {
         header: headerWidget,
         footer: footerWidget,
         defaultDuration: Duration(milliseconds: duration),
-        onComplete: () {
-          if (onCompleteAction != null) {
-            payload.executeAction(onCompleteAction);
+        onCompleted: () {
+          if (onCompletedAction != null) {
+            payload.executeAction(onCompletedAction);
           }
         },
         onSlideDown: onSlideDownAction != null
@@ -137,9 +141,9 @@ class VWStory extends VirtualStatelessWidget<StoryProps> {
       header: headerWidget,
       footer: footerWidget,
       defaultDuration: Duration(milliseconds: duration),
-      onComplete: () {
-        if (onCompleteAction != null) {
-          payload.executeAction(onCompleteAction);
+      onCompleted: () {
+        if (onCompletedAction != null) {
+          payload.executeAction(onCompletedAction);
         }
       },
       onSlideDown: onSlideDownAction != null

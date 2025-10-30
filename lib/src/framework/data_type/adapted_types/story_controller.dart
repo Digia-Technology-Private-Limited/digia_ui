@@ -1,7 +1,8 @@
 import 'package:digia_expr/digia_expr.dart';
-import 'package:flutter_story_presenter/flutter_story_presenter.dart';
+import '../../../components/story/story.dart';
 
-class AdaptedStoryController extends FlutterStoryController implements ExprInstance {
+class AdaptedStoryController extends FlutterStoryController
+    implements ExprInstance {
   AdaptedStoryController();
 
   @override

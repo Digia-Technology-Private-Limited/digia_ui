@@ -5,13 +5,12 @@ import '../utils/functional_util.dart';
 import '../utils/types.dart';
 
 class StoryProps {
-  final ExprOr<List<Object>>? dataSource;
+  final ExprOr<Object>? dataSource;
   final ExprOr<AdaptedStoryController>? controller;
   final ActionFlow? onSlideDown;
   final ActionFlow? onSlideStart;
   final ActionFlow? onLeftTap;
   final ActionFlow? onRightTap;
-  final ActionFlow? onComplete;
   final ActionFlow? onCompleted;
   final ActionFlow? onPreviousCompleted;
   final ActionFlow? onStoryChanged;
@@ -27,7 +26,6 @@ class StoryProps {
     this.onSlideStart,
     this.onLeftTap,
     this.onRightTap,
-    this.onComplete,
     this.onCompleted,
     this.onPreviousCompleted,
     this.onStoryChanged,
@@ -39,13 +37,12 @@ class StoryProps {
 
   factory StoryProps.fromJson(JsonLike json) {
     return StoryProps(
-      dataSource: ExprOr.fromJson<List<Object>>(json['dataSource']),
+      dataSource: ExprOr.fromJson<Object>(json['dataSource']),
       controller: ExprOr.fromJson<AdaptedStoryController>(json['controller']),
       onSlideDown: ActionFlow.fromJson(json['onSlideDown']),
       onSlideStart: ActionFlow.fromJson(json['onSlideStart']),
       onLeftTap: ActionFlow.fromJson(json['onLeftTap']),
       onRightTap: ActionFlow.fromJson(json['onRightTap']),
-      onComplete: ActionFlow.fromJson(json['onComplete']),
       onCompleted: ActionFlow.fromJson(json['onCompleted']),
       onPreviousCompleted: ActionFlow.fromJson(json['onPreviousCompleted']),
       onStoryChanged: ActionFlow.fromJson(json['onStoryChanged']),
@@ -56,5 +53,3 @@ class StoryProps {
     );
   }
 }
-
-

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_story_presenter/flutter_story_presenter.dart';
+import '../../components/story/models/story_view_indicator_config.dart';
+import '../../components/story/story_presenter/flutter_story_widgets.dart';
 import '../data_type/adapted_types/story_controller.dart';
 
 class InternalStory extends StatefulWidget {
   final AdaptedStoryController controller;
   final List<Widget> widgets;
-  final VoidCallback? onComplete;
+  final VoidCallback? onCompleted;
   final void Function(DragUpdateDetails)? onSlideDown;
   final void Function(DragStartDetails)? onSlideStart;
   final Future<bool> Function()? onLeftTap;
@@ -23,10 +24,10 @@ class InternalStory extends StatefulWidget {
     super.key,
     required this.controller,
     required this.widgets,
-    this.onComplete,
+    this.onCompleted,
     this.onSlideDown,
     this.onSlideStart,
-    this.initialIndex=0,
+    this.initialIndex = 0,
     this.onLeftTap,
     this.onRightTap,
     this.onPreviousCompleted,
@@ -56,7 +57,7 @@ class _InternalStoryState extends State<InternalStory> {
       storyViewIndicatorConfig: widget.storyViewIndicatorConfig,
       defaultDuration: widget.defaultDuration,
       onCompleted: () {
-        widget.onComplete?.call();
+        widget.onCompleted?.call();
         if (widget.repeat) {
           setState(() {
             _storyKey = UniqueKey();
