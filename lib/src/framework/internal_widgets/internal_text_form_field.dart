@@ -143,6 +143,7 @@ class _DUITextFieldState extends State<InternalTextFormField> {
       textInputAction: widget.textInputAction,
       style: widget.style,
       textAlign: widget.textAlign,
+      textAlignVertical: TextAlignVertical.center,
       obscureText: widget.obscureText,
       readOnly: widget.readOnly,
       maxLines: widget.maxLines,

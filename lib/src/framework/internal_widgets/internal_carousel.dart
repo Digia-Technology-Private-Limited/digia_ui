@@ -169,9 +169,9 @@ class _InternalCarouselState extends State<InternalCarousel> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Expanded(child: child),
+        Flexible(child: child),
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          padding: const EdgeInsets.only(top: 8.0),
           child: ValueListenableBuilder<int>(
             valueListenable: _currentPageNotifier,
             builder: (context, value, _) {
