@@ -69,7 +69,7 @@ class _ImageStoryViewState extends State<ImageStoryView> {
       }
     } catch (e) {
       widget.onImageLoaded?.call(true);
-      log("$e");
+      log('$e');
     }
   }
 

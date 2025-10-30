@@ -11,8 +11,8 @@ import '../utils/types.dart';
 import 'adapted_types/file.dart';
 import 'adapted_types/page_controller.dart';
 import 'adapted_types/scroll_controller.dart';
-import 'adapted_types/text_editing_controller.dart';
 import 'adapted_types/story_controller.dart';
+import 'adapted_types/text_editing_controller.dart';
 import 'data_type.dart';
 import 'variable.dart';
 

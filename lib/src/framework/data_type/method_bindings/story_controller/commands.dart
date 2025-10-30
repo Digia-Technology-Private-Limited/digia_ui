@@ -1,5 +1,5 @@
-import '../base.dart';
 import '../../adapted_types/story_controller.dart';
+import '../base.dart';
 
 class StoryControllerPlayCommand extends MethodCommand<AdaptedStoryController> {
   @override

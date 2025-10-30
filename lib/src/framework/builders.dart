@@ -91,6 +91,8 @@ import 'widgets/smart_scroll_group.dart';
 import 'widgets/smart_scroll_view.dart';
 import 'widgets/spacer.dart';
 import 'widgets/stack.dart';
+import 'widgets/story.dart';
+import 'widgets/story_video_player.dart';
 import 'widgets/stream_builder.dart';
 import 'widgets/styled_horizontal_divider.dart';
 import 'widgets/styled_vertical_divider.dart';
@@ -105,8 +107,6 @@ import 'widgets/video_player.dart';
 import 'widgets/web_view.dart';
 import 'widgets/wrap.dart';
 import 'widgets/youtube_player.dart';
-import 'widgets/story.dart';
-import 'widgets/story_video_player.dart';
 
 Map<String, List<VirtualWidget>>? createChildGroups(
     Map<String, List<VWData>>? childGroups,

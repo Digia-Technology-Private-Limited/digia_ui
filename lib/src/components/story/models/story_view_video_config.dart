@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import '../utils/story_utils.dart';
 import 'package:video_player/video_player.dart';
+
+import '../utils/story_utils.dart';
 
 class StoryViewVideoConfig {
   const StoryViewVideoConfig({
