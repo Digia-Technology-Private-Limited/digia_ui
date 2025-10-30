@@ -4,8 +4,17 @@ import 'package:video_player/video_player.dart';
 import '../controller/flutter_story_controller.dart';
 import '../models/story_view_indicator_config.dart';
 import '../utils/story_utils.dart';
-import 'story_view.dart'; // Import existing typedefs
 import 'story_view_indicator.dart';
+
+typedef OnStoryChanged = void Function(int);
+typedef OnCompleted = Future<void> Function();
+typedef OnLeftTap = Future<bool> Function();
+typedef OnRightTap = Future<bool> Function();
+typedef OnDrag = void Function();
+typedef OnItemBuild = Widget? Function(int, Widget);
+typedef OnVideoLoad = void Function(VideoPlayerController?);
+typedef OnSlideDown = void Function(DragUpdateDetails);
+typedef OnSlideStart = void Function(DragStartDetails);
 
 // Story presenter that accepts List<Widget> directly
 class FlutterStoryPresenterWidgets extends StatefulWidget {

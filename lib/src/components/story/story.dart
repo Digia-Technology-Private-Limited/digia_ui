@@ -1,15 +1,3 @@
 export 'controller/flutter_story_controller.dart';
-export 'models/story_item.dart';
-export 'models/story_view_audio_config.dart';
-export 'models/story_view_image_config.dart';
 export 'models/story_view_indicator_config.dart';
-export 'models/story_view_text_config.dart';
-export 'models/story_view_video_config.dart';
-export 'models/story_view_web_config.dart';
-export 'story_presenter/flutter_story_widgets.dart';
-export 'story_presenter/image_story_view.dart';
-export 'story_presenter/story_view.dart';
-export 'story_presenter/text_story_view.dart';
-export 'story_presenter/video_story_view.dart';
-export 'story_presenter/web_story_view.dart';
 export 'utils/story_utils.dart';
