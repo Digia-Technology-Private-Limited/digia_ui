@@ -22,14 +22,20 @@ class ConfigResolver implements ConfigProvider {
 
   @override
   Future<JsonLike?> getAppConfigFromNetwork(String path) async {
-    var resp = await _networkClient.requestInternal(
+    final Map<String, dynamic>? payload;
+    if (_flavorInfo is VersionedFlavor) {
+      payload = {'version': _flavorInfo.version};
+    } else {
+      payload = {'branchName': _branchName!};
+    } 
+    final resp = await _networkClient.requestInternal(
       HttpMethod.post,
-      data: {'branchName': _branchName},
       path,
       (json) => json as dynamic,
+      data: payload,
     );
-    final data = as$<JsonLike>(resp.data['response']);
-    return data;
+
+    return as$<JsonLike>(resp.data['response']);
   }
 
   @override
