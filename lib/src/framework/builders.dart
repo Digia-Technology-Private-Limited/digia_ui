@@ -29,6 +29,8 @@ import 'widget_props/scaffold_props.dart';
 import 'widget_props/sized_box_props.dart';
 import 'widget_props/sliver_app_bar_props.dart';
 import 'widget_props/smart_scroll_view_props.dart';
+import 'widget_props/story_props.dart';
+import 'widget_props/story_video_player_props.dart';
 import 'widget_props/stream_builder_props.dart';
 import 'widget_props/styled_divider_props.dart';
 import 'widget_props/switch_props.dart';
@@ -89,6 +91,8 @@ import 'widgets/smart_scroll_group.dart';
 import 'widgets/smart_scroll_view.dart';
 import 'widgets/spacer.dart';
 import 'widgets/stack.dart';
+import 'widgets/story.dart';
+import 'widgets/story_video_player.dart';
 import 'widgets/stream_builder.dart';
 import 'widgets/styled_horizontal_divider.dart';
 import 'widgets/styled_vertical_divider.dart';
@@ -383,6 +387,16 @@ VWVideoPlayer videoPlayerBuilder(VWNodeData data, VirtualWidget? parent, _) {
   );
 }
 
+VWStoryVideoPlayer storyVideoPlayerBuilder(VWNodeData data, VirtualWidget? parent, _) {
+  return VWStoryVideoPlayer(
+    props: StoryVideoPlayerProps.fromJson(data.props.value),
+    commonProps: data.commonProps,
+    parentProps: data.parentProps,
+    parent: parent,
+    refName: data.refName,
+  );
+}
+
 VWStyledHorizontalDivider horizontalDividerBuilder(
     VWNodeData data, VirtualWidget? parent, _) {
   final props = data.props;
@@ -620,6 +634,22 @@ VWYoutubePlayer youtubePlayerBuilder(
     refName: data.refName,
   );
 }
+
+VWStory storyBuilder(
+  VWNodeData data,
+  VirtualWidget? parent,
+  VirtualWidgetRegistry registry,
+) {
+  return VWStory(
+    props: StoryProps.fromJson(data.props.value),
+    commonProps: data.commonProps,
+    parentProps: data.parentProps,
+    parent: parent,
+    refName: data.refName,
+    childGroups: createChildGroups(data.childGroups, parent, registry),
+  );
+}
+
 
 VWSwitch switchBuilder(VWNodeData data, VirtualWidget? parent, _) {
   return VWSwitch(

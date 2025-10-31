@@ -93,6 +93,7 @@ abstract class VirtualWidgetRegistry {
     'digia/lottie': lottieBuilder,
     'digia/youtubePlayer': youtubePlayerBuilder,
     'digia/videoPlayer': videoPlayerBuilder,
+    'digia/storyVideoPlayer': storyVideoPlayerBuilder,
     'digia/htmlView': htmlViewBuilder,
     'digia/webView': webViewBuilder,
 
@@ -115,6 +116,7 @@ abstract class VirtualWidgetRegistry {
     'digia/animationBuilder': animationBuilder,
     'digia/animatedSwitcher': animatedSwitcher,
     'digia/timer': timerBuilder,
+    'digia/story': storyBuilder,
   };
 
   void registerWidget<T>(
