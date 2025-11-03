@@ -27,7 +27,7 @@ class ConfigResolver implements ConfigProvider {
       payload = {'version': _flavorInfo.version};
     } else {
       payload = {'branchName': _branchName!};
-    } 
+    }
     final resp = await _networkClient.requestInternal(
       HttpMethod.post,
       path,
