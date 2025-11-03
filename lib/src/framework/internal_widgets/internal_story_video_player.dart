@@ -72,6 +72,8 @@ class _InternalStoryVideoPlayerState extends State<InternalStoryVideoPlayer> {
       _videoController = _createController(widget.videoUrl);
       await _videoController!.initialize();
 
+      if (!mounted) return;
+
       /// Register with story presenter for multi-video management
       final callbackProvider = StoryVideoCallbackProvider.maybeOf(context);
       if (callbackProvider != null) {

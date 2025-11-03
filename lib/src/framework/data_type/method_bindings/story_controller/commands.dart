@@ -8,7 +8,8 @@ class StoryControllerPlayCommand extends MethodCommand<AdaptedStoryController> {
   }
 }
 
-class StoryControllerPauseCommand extends MethodCommand<AdaptedStoryController> {
+class StoryControllerPauseCommand
+    extends MethodCommand<AdaptedStoryController> {
   @override
   void run(AdaptedStoryController instance, Map<String, Object?> args) {
     instance.pause();
@@ -22,14 +23,16 @@ class StoryControllerNextCommand extends MethodCommand<AdaptedStoryController> {
   }
 }
 
-class StoryControllerPreviousCommand extends MethodCommand<AdaptedStoryController> {
+class StoryControllerPreviousCommand
+    extends MethodCommand<AdaptedStoryController> {
   @override
   void run(AdaptedStoryController instance, Map<String, Object?> args) {
     instance.previous();
   }
 }
 
-class StoryControllerJumpToCommand extends MethodCommand<AdaptedStoryController> {
+class StoryControllerJumpToCommand
+    extends MethodCommand<AdaptedStoryController> {
   @override
   void run(AdaptedStoryController instance, Map<String, Object?> args) {
     final index = args['index'] as int?;
@@ -46,7 +49,8 @@ class StoryControllerMuteCommand extends MethodCommand<AdaptedStoryController> {
   }
 }
 
-class StoryControllerUnMuteCommand extends MethodCommand<AdaptedStoryController> {
+class StoryControllerUnMuteCommand
+    extends MethodCommand<AdaptedStoryController> {
   @override
   void run(AdaptedStoryController instance, Map<String, Object?> args) {
     instance.unMute();
