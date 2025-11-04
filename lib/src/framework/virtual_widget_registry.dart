@@ -16,7 +16,7 @@ typedef VirtualWidgetBuilder = VirtualWidget Function(
 typedef ComponentBuilder = Widget Function(
   String id,
   JsonLike? args,
-  ObservabilityContext? observabilityContext,
+  ObservabilityContext? observabilityContext
 );
 
 abstract class VirtualWidgetRegistry {
@@ -35,6 +35,7 @@ abstract class VirtualWidgetRegistry {
     'digia/safeArea': safeAreaBuilder,
     'digia/smartScrollView': smartScrollViewBuilder,
     'digia/nestedScrollView': nestedScrollViewBuilder,
+    'digia/chart': chartBuilder,
 
     // Basic Widgets
     'digia/text': textBuilder,
