@@ -7,9 +7,8 @@ class ChartProps {
 
   factory ChartProps.fromJson(JsonLike json) {
     return ChartProps(
-      chartData: (json['chartData'] as List?)
-          ?.map((e) => e as Map<String, dynamic>)
-          .toList()
-    );
+        chartData: (json['chartData'] as List?)
+            ?.map((e) => e as Map<String, dynamic>)
+            .toList());
   }
 }

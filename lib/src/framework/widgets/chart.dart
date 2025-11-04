@@ -6,14 +6,13 @@ import '../render_payload.dart';
 import '../widget_props/chart_props.dart';
 
 class VWChart extends VirtualStatelessWidget<ChartProps> {
-  VWChart({
-    required super.props,
-    required super.commonProps,
-    super.parentProps,
-    required super.parent,
-    super.refName,
-    required super.childGroups
-  });
+  VWChart(
+      {required super.props,
+      required super.commonProps,
+      super.parentProps,
+      required super.parent,
+      super.refName,
+      required super.childGroups});
 
   @override
   Widget render(RenderPayload payload) {
