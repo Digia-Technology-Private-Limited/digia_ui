@@ -11,12 +11,14 @@ class VWChart extends VirtualStatelessWidget<ChartProps> {
     required super.commonProps,
     super.parentProps,
     required super.parent,
-    super.refName, required super.childGroups,
+    super.refName,
+    required super.childGroups,
   });
 
   @override
   Widget render(RenderPayload payload) {
-    final chartDataList = props.chartData; // ✅ Fixed: Use chartData instead of chartConfig
+    final chartDataList =
+        props.chartData; // ✅ Fixed: Use chartData instead of chartConfig
 
     // Return placeholder if no chart data is provided
     if (chartDataList == null || chartDataList.isEmpty) {
@@ -31,7 +33,8 @@ class VWChart extends VirtualStatelessWidget<ChartProps> {
     final chartConfigObject = chartDataList.first;
 
     // Extract chart configuration using the builder
-    final chartConfig = ChartConfigBuilder.extractChartConfig(chartConfigObject);
+    final chartConfig =
+        ChartConfigBuilder.extractChartConfig(chartConfigObject);
 
     return SizedBox(
       width: 400,
@@ -45,7 +48,8 @@ class VWChart extends VirtualStatelessWidget<ChartProps> {
 
 class ChartConfigBuilder {
   /// Extracts the complete chart configuration from chart data
-  static Map<String, dynamic> extractChartConfig(Map<String, dynamic>? chartObject) {
+  static Map<String, dynamic> extractChartConfig(
+      Map<String, dynamic>? chartObject) {
     if (chartObject == null) return {};
     return {
       'type': chartObject['type'] ?? 'line',
