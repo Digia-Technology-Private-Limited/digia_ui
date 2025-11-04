@@ -35,6 +35,7 @@ abstract class VirtualWidgetRegistry {
     'digia/safeArea': safeAreaBuilder,
     'digia/smartScrollView': smartScrollViewBuilder,
     'digia/nestedScrollView': nestedScrollViewBuilder,
+    'digia/chart': chartBuilder,
 
     // Basic Widgets
     'digia/text': textBuilder,
@@ -68,10 +69,7 @@ abstract class VirtualWidgetRegistry {
     'digia/pageView': pageViewBuilder,
     'digia/smartScrollGroup': smartScrollGroupBuilder,
     'digia/pinnedHeader': pinnedHeaderBuilder,
-    // 'digia/tabView': tabViewBuilder,
-    // 'digia/tabViewItem': tabViewItemBuilder,
 
-    // Dividers and Decorative Elements
     'digia/horizontalDivider': horizontalDividerBuilder,
     'digia/verticalDivider': verticalDividerBuilder,
     'digia/styledHorizontalDivider': styledHorizontalDividerBuilder,
