@@ -8,10 +8,7 @@ import 'models/vw_data.dart';
 import 'utils/types.dart';
 
 typedef VirtualWidgetBuilder = VirtualWidget Function(
-  VWNodeData data,
-  VirtualWidget? parent,
-  VirtualWidgetRegistry registry,
-);
+    VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry);
 
 typedef ComponentBuilder = Widget Function(
   String id,

@@ -123,10 +123,7 @@ Map<String, List<VirtualWidget>>? createChildGroups(
 }
 
 VirtualStateContainerWidget stateContainerBuilder(
-  VWStateData data,
-  VirtualWidget? parent,
-  VirtualWidgetRegistry registry,
-) {
+    VWStateData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
   return VirtualStateContainerWidget(
     refName: data.refName,
     parent: parent,
