@@ -1,4 +1,4 @@
-import 'package:chartjs_flutter/chart_js_widget.dart';
+import 'package:chartjs_flutter/chartjs_flutter.dart';
 import 'package:flutter/widgets.dart';
 
 import '../base/virtual_stateless_widget.dart';
@@ -16,11 +16,13 @@ class VWChart extends VirtualStatelessWidget<ChartProps> {
 
   @override
   Widget render(RenderPayload payload) {
-    final chartDataList =
-        props.chartData; // ✅ Fixed: Use chartData instead of chartConfig
+    final chartType = props.chartType;
+    final labels = props.labels;
+    final chartDatasets = props.chartData;
+    final options = props.options;
 
     // Return placeholder if no chart data is provided
-    if (chartDataList == null || chartDataList.isEmpty) {
+    if (chartDatasets == null || chartDatasets.isEmpty) {
       return const SizedBox(
         width: 400,
         height: 300,
@@ -28,12 +30,13 @@ class VWChart extends VirtualStatelessWidget<ChartProps> {
       );
     }
 
-    // Get the first chart configuration
-    final chartConfigObject = chartDataList.first;
-
-    // Extract chart configuration using the builder
-    final chartConfig =
-        ChartConfigBuilder.extractChartConfig(chartConfigObject);
+    // Convert flat structure to Chart.js format
+    final chartConfig = ChartConfigBuilder.buildChartConfig(
+      chartType: chartType ?? 'line',
+      labels: labels,
+      datasets: chartDatasets,
+      options: options,
+    );
 
     return SizedBox(
       width: 400,
@@ -46,104 +49,99 @@ class VWChart extends VirtualStatelessWidget<ChartProps> {
 }
 
 class ChartConfigBuilder {
-  /// Extracts the complete chart configuration from chart data
-  static Map<String, dynamic> extractChartConfig(
-      Map<String, dynamic>? chartObject) {
-    if (chartObject == null) return {};
+  /// Builds Chart.js config from flat structure
+  static Map<String, dynamic> buildChartConfig({
+    required String chartType,
+    required List<dynamic>? labels,
+    required List<Map<String, dynamic>> datasets,
+    required Map<String, dynamic>? options,
+  }) {
+    // Determine if this is a mixed chart
+    final isMixed = chartType == 'mixed' || _hasMixedTypes(datasets);
+    final effectiveType = isMixed ? 'bar' : chartType; // Chart.js uses base type for mixed
+
     return {
-      'type': chartObject['type'] ?? 'line',
-      'data': extractChartData(chartObject['data']),
-      'options': extractChartOptions(chartObject['options']),
+      'type': effectiveType,
+      'data': {
+        'labels': (labels ?? []).map((e) => e.toString()).toList(),
+        'datasets': datasets.map((dataset) => _cleanDataset(dataset)).toList(),
+      },
+      'options': _buildOptions(options),
     };
   }
 
-  /// Extracts chart data (labels and datasets)
-  static Map<String, dynamic> extractChartData(dynamic dataProp) {
-    if (dataProp is! Map) return {};
-    final labels =
-        (dataProp['labels'] as List?)?.map((e) => e.toString()).toList() ?? [];
-    final datasets = (dataProp['datasets'] as List?)
-            ?.map((dataset) => extractDataset(dataset))
-            .toList() ??
-        [];
-    return {
-      'labels': labels,
-      'datasets': datasets,
-    };
+  /// Check if datasets have different types (mixed chart)
+  static bool _hasMixedTypes(List<Map<String, dynamic>> datasets) {
+    if (datasets.length <= 1) return false;
+    final firstType = datasets.first['type'];
+    return datasets.any((ds) => ds['type'] != firstType);
   }
 
-  /// Extracts a single dataset configuration
-  static Map<String, dynamic> extractDataset(dynamic dataset) {
-    if (dataset is! Map) return {};
-
-    // Helper to clean empty strings to null
-    dynamic cleanValue(dynamic value) {
-      if (value is String && value.isEmpty) {
-        return null;
-      }
-      return value;
-    }
-
-    // Start with the base properties that are always present
-    final Map<String, dynamic> datasetMap = {
+  /// Clean dataset by removing null/empty values
+  static Map<String, dynamic> _cleanDataset(Map<String, dynamic> dataset) {
+    final cleaned = <String, dynamic>{
       'label': dataset['label'] ?? '',
       'data': (dataset['data'] as List?)?.map((e) => e as num).toList() ?? [],
     };
 
-    // Add optional properties only if they exist
-    final borderColor = cleanValue(dataset['borderColor']);
-    if (borderColor != null) {
-      datasetMap['borderColor'] = borderColor;
+    // Add type for mixed charts
+    final type = dataset['type'];
+    if (type != null && type.toString().isNotEmpty) {
+      cleaned['type'] = type;
     }
 
-    final backgroundColor = cleanValue(dataset['backgroundColor']);
-    if (backgroundColor != null) {
-      datasetMap['backgroundColor'] = backgroundColor;
-    }
+    // Add optional properties if present and not empty
+    _addIfPresent(cleaned, dataset, 'borderColor');
+    _addIfPresent(cleaned, dataset, 'backgroundColor');
+    _addIfPresent(cleaned, dataset, 'borderWidth');
+    _addIfPresent(cleaned, dataset, 'tension');
+    _addIfPresent(cleaned, dataset, 'fill');
 
-    final borderWidth = cleanValue(dataset['borderWidth']);
-    if (borderWidth != null) {
-      datasetMap['borderWidth'] = borderWidth;
-    }
-
-    final tension = cleanValue(dataset['tension']);
-    if (tension != null) {
-      datasetMap['tension'] = tension;
-    }
-
-    final fill = cleanValue(dataset['fill']);
-    if (fill != null) {
-      datasetMap['fill'] = fill;
-    }
-
-    return datasetMap;
+    return cleaned;
   }
 
-  /// Extracts chart options (responsive, aspect ratio, plugins)
-  static Map<String, dynamic> extractChartOptions(dynamic optionsProp) {
-    if (optionsProp is! Map) return {};
+  /// Helper to add property if present and not empty
+  static void _addIfPresent(
+      Map<String, dynamic> target, Map<String, dynamic> source, String key) {
+    final value = source[key];
+    if (value != null && !(value is String && value.isEmpty)) {
+      target[key] = value;
+    }
+  }
+
+  /// Build Chart.js options
+  static Map<String, dynamic> _buildOptions(Map<String, dynamic>? optionsProp) {
+    if (optionsProp == null) {
+      return {
+        'responsive': true,
+        'maintainAspectRatio': false,
+        'plugins': {
+          'legend': {'display': true, 'position': 'top'},
+          'title': {'display': false, 'text': ''},
+        },
+      };
+    }
+
     return {
       'responsive': optionsProp['responsive'] ?? true,
       'maintainAspectRatio': optionsProp['maintainAspectRatio'] ?? false,
       'plugins': {
-        'legend': extractLegendOptions(optionsProp['legend']),
-        'title': extractTitleOptions(optionsProp['title']),
+        'legend': _buildLegendOptions(optionsProp['legend']),
+        'title': _buildTitleOptions(optionsProp['title']),
       },
     };
   }
 
-  /// Extracts legend options for Chart.js config
-  static Map<String, dynamic> extractLegendOptions(dynamic legendProp) {
-    if (legendProp is! Map) return {};
+  static Map<String, dynamic> _buildLegendOptions(dynamic legendProp) {
+    if (legendProp is! Map) return {'display': true, 'position': 'top'};
     return {
       'display': legendProp['display'] ?? true,
       'position': legendProp['position'] ?? 'top',
     };
   }
 
-  /// Extracts title options for Chart.js config
-  static Map<String, dynamic> extractTitleOptions(dynamic titleProp) {
-    if (titleProp is! Map) return {};
+  static Map<String, dynamic> _buildTitleOptions(dynamic titleProp) {
+    if (titleProp is! Map) return {'display': false, 'text': ''};
     return {
       'display': titleProp['display'] ?? false,
       'text': titleProp['text'] ?? '',
