@@ -16,13 +16,16 @@ class VWChart extends VirtualStatelessWidget<ChartProps> {
 
   @override
   Widget render(RenderPayload payload) {
-    final chartType = props.chartType;
-    final labels = props.labels;
-    final chartDatasets = props.chartData;
+    // Evaluate ExprOr values
+    final chartType = props.chartType?.evaluate(payload.scopeContext) ?? 'line';
+    final labels = props.labels?.evaluate(payload.scopeContext);
+    final chartDatasets = props.chartData?.evaluate(payload.scopeContext);
     final options = props.options;
 
     // Return placeholder if no chart data is provided
-    if (chartDatasets == null || chartDatasets.isEmpty) {
+    if (chartDatasets == null ||
+        chartDatasets is! List ||
+        chartDatasets.isEmpty) {
       return const SizedBox(
         width: 400,
         height: 300,
@@ -32,9 +35,9 @@ class VWChart extends VirtualStatelessWidget<ChartProps> {
 
     // Convert flat structure to Chart.js format
     final chartConfig = ChartConfigBuilder.buildChartConfig(
-      chartType: chartType ?? 'line',
+      chartType: chartType,
       labels: labels,
-      datasets: chartDatasets,
+      datasets: chartDatasets.cast<Map<String, dynamic>>(),
       options: options,
     );
 
@@ -52,18 +55,23 @@ class ChartConfigBuilder {
   /// Builds Chart.js config from flat structure
   static Map<String, dynamic> buildChartConfig({
     required String chartType,
-    required List<dynamic>? labels,
+    required dynamic labels,
     required List<Map<String, dynamic>> datasets,
     required Map<String, dynamic>? options,
   }) {
     // Determine if this is a mixed chart
     final isMixed = chartType == 'mixed' || _hasMixedTypes(datasets);
-    final effectiveType = isMixed ? 'bar' : chartType; // Chart.js uses base type for mixed
+    final effectiveType =
+        isMixed ? 'bar' : chartType; // Chart.js uses base type for mixed
+
+    // Convert labels to List<String>
+    final labelsList =
+        labels is List ? labels.map((e) => e.toString()).toList() : <String>[];
 
     return {
       'type': effectiveType,
       'data': {
-        'labels': (labels ?? []).map((e) => e.toString()).toList(),
+        'labels': labelsList,
         'datasets': datasets.map((dataset) => _cleanDataset(dataset)).toList(),
       },
       'options': _buildOptions(options),
