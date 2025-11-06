@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_avif/flutter_avif.dart';
 import 'package:flutter_blurhash/flutter_blurhash.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lottie/lottie.dart';
@@ -171,17 +170,6 @@ class _InternalImageState extends State<InternalImage> {
     throw Exception('Unsupported image source type');
   }
 
-  Widget _buildAvifImage(ImageProvider imageProvider) {
-    return AvifImage(
-      image: imageProvider,
-      fit: widget.fit,
-      alignment: widget.alignment ?? Alignment.center,
-      gaplessPlayback: true,
-      errorBuilder: (context, error, stackTrace) {
-        return _buildErrorWidget(error);
-      },
-    );
-  }
 
   OctoPlaceholderBuilder? _placeHolderBuilderCreator() {
     final placeholderType = widget.placeholderType;
@@ -292,11 +280,6 @@ class _InternalImageState extends State<InternalImage> {
     }
 
     final imageProvider = _createImageProvider(imageSource);
-
-    if (imageType == 'avif' ||
-        (imageSource is String && hasExtension(imageSource, ['.avif']))) {
-      return _buildAvifImage(imageProvider);
-    }
 
     final imageWidget =
         imageProvider is MemoryImage || imageProvider is FileImage
