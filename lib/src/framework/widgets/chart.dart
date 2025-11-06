@@ -16,22 +16,37 @@ class VWChart extends VirtualStatelessWidget<ChartProps> {
 
   @override
   Widget render(RenderPayload payload) {
-    // Evaluate ExprOr values
-    final chartType = props.chartType?.evaluate(payload.scopeContext) ?? 'line';
-    final labels = props.labels?.evaluate(payload.scopeContext);
-    final chartDatasets = props.chartData?.evaluate(payload.scopeContext);
+    // Debug: Print props before evaluation
+    print('🔍 [Chart Debug] Raw props.chartType: ${props.chartType}');
+    print('🔍 [Chart Debug] Raw props.labels: ${props.labels}');
+    print('🔍 [Chart Debug] Raw props.chartData: ${props.chartData}');
+    print('🔍 [Chart Debug] Raw props.options: ${props.options}');
+
+    // Evaluate ExprOr values using payload.evalExpr (same as rich_text.dart)
+    final chartType = payload.evalExpr(props.chartType) ?? 'line';
+    final labels = payload.evalExpr(props.labels);
+    final chartDatasets = payload.evalExpr(props.chartData);
     final options = props.options;
+
+    // Debug: Print evaluated values
+    print('✅ [Chart Debug] Evaluated chartType: $chartType (${chartType.runtimeType})');
+    print('✅ [Chart Debug] Evaluated labels: $labels (${labels.runtimeType})');
+    print('✅ [Chart Debug] Evaluated chartDatasets: $chartDatasets (${chartDatasets.runtimeType})');
+    print('✅ [Chart Debug] Options: $options');
 
     // Return placeholder if no chart data is provided
     if (chartDatasets == null ||
         chartDatasets is! List ||
         chartDatasets.isEmpty) {
+      print('⚠️ [Chart Debug] No valid chart data provided');
       return const SizedBox(
         width: 400,
         height: 300,
         child: Center(child: Text('No chart data provided.')),
       );
     }
+
+    print('🔄 [Chart Debug] Building chart config...');
 
     // Convert flat structure to Chart.js format
     final chartConfig = ChartConfigBuilder.buildChartConfig(
@@ -40,6 +55,8 @@ class VWChart extends VirtualStatelessWidget<ChartProps> {
       datasets: chartDatasets.cast<Map<String, dynamic>>(),
       options: options,
     );
+
+    print('✅ [Chart Debug] Chart config built: $chartConfig');
 
     return SizedBox(
       width: 400,
@@ -59,20 +76,32 @@ class ChartConfigBuilder {
     required List<Map<String, dynamic>> datasets,
     required Map<String, dynamic>? options,
   }) {
+    print('🔧 [ChartConfigBuilder] chartType: $chartType');
+    print('🔧 [ChartConfigBuilder] labels: $labels');
+    print('🔧 [ChartConfigBuilder] datasets count: ${datasets.length}');
+    print('🔧 [ChartConfigBuilder] options: $options');
+
     // Determine if this is a mixed chart
     final isMixed = chartType == 'mixed' || _hasMixedTypes(datasets);
-    final effectiveType =
-        isMixed ? 'bar' : chartType; // Chart.js uses base type for mixed
+    final effectiveType = isMixed ? 'bar' : chartType;
+
+    print('🔧 [ChartConfigBuilder] isMixed: $isMixed, effectiveType: $effectiveType');
 
     // Convert labels to List<String>
-    final labelsList =
-        labels is List ? labels.map((e) => e.toString()).toList() : <String>[];
+    final labelsList = labels is List 
+        ? labels.map((e) => e.toString()).toList() 
+        : <String>[];
+
+    print('🔧 [ChartConfigBuilder] labelsList: $labelsList');
+
+    final cleanedDatasets = datasets.map((dataset) => _cleanDataset(dataset)).toList();
+    print('🔧 [ChartConfigBuilder] cleanedDatasets: $cleanedDatasets');
 
     return {
       'type': effectiveType,
       'data': {
         'labels': labelsList,
-        'datasets': datasets.map((dataset) => _cleanDataset(dataset)).toList(),
+        'datasets': cleanedDatasets,
       },
       'options': _buildOptions(options),
     };
@@ -87,6 +116,8 @@ class ChartConfigBuilder {
 
   /// Clean dataset by removing null/empty values
   static Map<String, dynamic> _cleanDataset(Map<String, dynamic> dataset) {
+    print('🧹 [ChartConfigBuilder] Cleaning dataset: $dataset');
+
     final cleaned = <String, dynamic>{
       'label': dataset['label'] ?? '',
       'data': (dataset['data'] as List?)?.map((e) => e as num).toList() ?? [],
@@ -105,6 +136,7 @@ class ChartConfigBuilder {
     _addIfPresent(cleaned, dataset, 'tension');
     _addIfPresent(cleaned, dataset, 'fill');
 
+    print('🧹 [ChartConfigBuilder] Cleaned dataset: $cleaned');
     return cleaned;
   }
 
@@ -114,11 +146,14 @@ class ChartConfigBuilder {
     final value = source[key];
     if (value != null && !(value is String && value.isEmpty)) {
       target[key] = value;
+      print('➕ [ChartConfigBuilder] Added $key: $value');
     }
   }
 
   /// Build Chart.js options
   static Map<String, dynamic> _buildOptions(Map<String, dynamic>? optionsProp) {
+    print('⚙️ [ChartConfigBuilder] Building options from: $optionsProp');
+
     if (optionsProp == null) {
       return {
         'responsive': true,
