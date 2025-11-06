@@ -16,29 +16,18 @@ class VWChart extends VirtualStatelessWidget<ChartProps> {
 
   @override
   Widget render(RenderPayload payload) {
-    // Debug: Print props before evaluation
-    print('🔍 [Chart Debug] Raw props.chartType: ${props.chartType}');
-    print('🔍 [Chart Debug] Raw props.labels: ${props.labels}');
-    print('🔍 [Chart Debug] Raw props.chartData: ${props.chartData}');
-    print('🔍 [Chart Debug] Raw props.options: ${props.options}');
 
     // Evaluate ExprOr values using payload.evalExpr (same as rich_text.dart)
     final chartType = payload.evalExpr(props.chartType) ?? 'line';
     final labels = payload.evalExpr(props.labels);
-    final chartDatasets = payload.evalExpr(props.chartData);
+    final chartDatasets = props.chartData?.deepEvaluate(payload.scopeContext) ?? [];
     final options = props.options;
 
-    // Debug: Print evaluated values
-    print('✅ [Chart Debug] Evaluated chartType: $chartType (${chartType.runtimeType})');
-    print('✅ [Chart Debug] Evaluated labels: $labels (${labels.runtimeType})');
-    print('✅ [Chart Debug] Evaluated chartDatasets: $chartDatasets (${chartDatasets.runtimeType})');
-    print('✅ [Chart Debug] Options: $options');
 
     // Return placeholder if no chart data is provided
     if (chartDatasets == null ||
         chartDatasets is! List ||
         chartDatasets.isEmpty) {
-      print('⚠️ [Chart Debug] No valid chart data provided');
       return const SizedBox(
         width: 400,
         height: 300,
@@ -46,7 +35,6 @@ class VWChart extends VirtualStatelessWidget<ChartProps> {
       );
     }
 
-    print('🔄 [Chart Debug] Building chart config...');
 
     // Convert flat structure to Chart.js format
     final chartConfig = ChartConfigBuilder.buildChartConfig(
@@ -56,7 +44,6 @@ class VWChart extends VirtualStatelessWidget<ChartProps> {
       options: options,
     );
 
-    print('✅ [Chart Debug] Chart config built: $chartConfig');
 
     return SizedBox(
       width: 400,

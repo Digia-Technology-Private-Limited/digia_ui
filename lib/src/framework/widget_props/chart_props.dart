@@ -16,17 +16,11 @@ class ChartProps {
   });
 
   factory ChartProps.fromJson(JsonLike json) {
-    print('📝 [ChartProps] Parsing from JSON: $json');
     
     final chartType = ExprOr.fromJson<String>(json['chartType']);
     final labels = ExprOr.fromJson<List>(json['labels']);
     final chartData = ExprOr.fromJson<List>(json['chartData']);
     final options = as$<JsonLike>(json['options']);
-
-    print('📝 [ChartProps] chartType: $chartType (${chartType.runtimeType})');
-    print('📝 [ChartProps] labels: $labels (${labels.runtimeType})');
-    print('📝 [ChartProps] chartData: $chartData (${chartData.runtimeType})');
-    print('📝 [ChartProps] options: $options');
 
     return ChartProps(
       chartType: chartType,
