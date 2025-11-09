@@ -404,7 +404,8 @@ VWVideoPlayer videoPlayerBuilder(VWNodeData data, VirtualWidget? parent, _) {
   );
 }
 
-VWStoryVideoPlayer storyVideoPlayerBuilder(VWNodeData data, VirtualWidget? parent, _) {
+VWStoryVideoPlayer storyVideoPlayerBuilder(
+    VWNodeData data, VirtualWidget? parent, _) {
   return VWStoryVideoPlayer(
     props: StoryVideoPlayerProps.fromJson(data.props.value),
     commonProps: data.commonProps,
@@ -666,7 +667,6 @@ VWStory storyBuilder(
     childGroups: createChildGroups(data.childGroups, parent, registry),
   );
 }
-
 
 VWSwitch switchBuilder(VWNodeData data, VirtualWidget? parent, _) {
   return VWSwitch(
