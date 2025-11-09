@@ -2,6 +2,13 @@
 
 Digia Ui SDK.
 
+## [1.3.0] – 2025-10-27
+
+- 🧭 NavigationBarCustom: Added support for separate selected and unselected widgets — fully customizable NavigationBarItem states.
+- 🧱 Layout Improvements: Removed reliance on LayoutBuilder in certain widgets to avoid issues with IntrinsicHeight. Size is now measured efficiently without performance loss.
+- ✏️ TextField: Added support for prefix and suffix icon constraints — perfect for customizing icon sizes.
+- 🎠 Carousel: Height and width no longer default to double.infinity, preventing unbounded constraint issues.
+
 ## [1.2.1] – 2025-10-01
 
 - 🐞 Fixed an issue where context was being unmounted after async calls
