@@ -170,7 +170,6 @@ class _InternalImageState extends State<InternalImage> {
     throw Exception('Unsupported image source type');
   }
 
-
   OctoPlaceholderBuilder? _placeHolderBuilderCreator() {
     final placeholderType = widget.placeholderType;
     final placeholderSrc = widget.placeholderSrc;
