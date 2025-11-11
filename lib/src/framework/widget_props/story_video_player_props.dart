@@ -10,7 +10,7 @@ class StoryVideoPlayerProps {
   final ExprOr<bool>? autoPlay;
   final ExprOr<bool>? looping;
   final ExprOr<String>? fit;
-  
+
   // Story-specific properties
   final ExprOr<List<Object>>? dataSource;
   final ExprOr<AdaptedStoryController>? controller;

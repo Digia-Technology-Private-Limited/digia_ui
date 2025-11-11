@@ -28,6 +28,7 @@ abstract class VirtualWidgetRegistry {
     'digia/stack': stackBuilder,
     'digia/listView': listViewBuilder,
     'digia/gridView': gridViewBuilder,
+    'digia/masonryGridView': masonryGridViewBuilder,
     'digia/wrap': wrapBuilder,
     'fw/sized_box': sizedBoxBuilder,
     'fw/spacer': spacerBuilder,
