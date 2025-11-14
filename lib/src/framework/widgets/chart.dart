@@ -181,7 +181,8 @@ class ChartConfigBuilder {
         'labels': labelsList,
         'datasets': cleanedDatasets,
       },
-      'options': _buildOptions(options),
+      'options':
+          _buildOptions(options, datasets), // Pass datasets to _buildOptions
     };
   }
 
@@ -229,7 +230,8 @@ class ChartConfigBuilder {
   }
 
   /// Build Chart.js options
-  static Map<String, dynamic> _buildOptions(Map<String, dynamic>? optionsProp) {
+  static Map<String, dynamic> _buildOptions(
+      Map<String, dynamic>? optionsProp, List<Map<String, dynamic>> datasets) {
     print('⚙️ [ChartConfigBuilder] Building options from: $optionsProp');
 
     if (optionsProp == null) {
@@ -247,25 +249,104 @@ class ChartConfigBuilder {
       'responsive': optionsProp['responsive'] ?? true,
       'maintainAspectRatio': optionsProp['maintainAspectRatio'] ?? false,
       'plugins': {
-        'legend': _buildLegendOptions(optionsProp['legend']),
+        'legend': _buildLegendOptions(optionsProp['legend'], datasets),
         'title': _buildTitleOptions(optionsProp['title']),
       },
     };
   }
 
-  static Map<String, dynamic> _buildLegendOptions(dynamic legendProp) {
+  static Map<String, dynamic> _buildLegendOptions(
+      dynamic legendProp, List<Map<String, dynamic>> datasets) {
     if (legendProp is! Map) return {'display': true, 'position': 'top'};
+
+    // --- Process label styles for the legend ---
+    final Map<String, dynamic> fontStyles = {
+      'family': 'Roboto',
+      'size': 12,
+      'style': 'normal',
+      'weight': 'normal',
+      'lineHeight': 1.2,
+    };
+    String defaultColor = '#666';
+
+    // If there's at least one dataset, use its style as the base
+    if (datasets.isNotEmpty) {
+      final firstDataset = datasets.first;
+      final firstLabelStyle = firstDataset['labelStyle'] as Map?;
+      if (firstLabelStyle != null) {
+        final fontOptions = _buildFontOptions(firstLabelStyle);
+        fontStyles.addAll(fontOptions);
+        defaultColor = firstLabelStyle['textColor'] ?? defaultColor;
+      }
+    }
+
     return {
       'display': legendProp['display'] ?? true,
       'position': legendProp['position'] ?? 'top',
+      'labels': {
+        'font': fontStyles,
+        'color': defaultColor,
+      },
     };
   }
 
   static Map<String, dynamic> _buildTitleOptions(dynamic titleProp) {
     if (titleProp is! Map) return {'display': false, 'text': ''};
+
+    final titleStyle = titleProp['titleStyle'] as Map?;
+    final titleFontOptions = _buildFontOptions(titleStyle);
+    final titleColor = titleStyle?['textColor'] as String?;
+
     return {
       'display': titleProp['display'] ?? false,
       'text': titleProp['text'] ?? '',
+      'font': titleFontOptions,
+      if (titleColor != null) 'color': titleColor,
     };
+  }
+
+  /// Reusable helper to build a Chart.js font object from our style map
+  static Map<String, dynamic> _buildFontOptions(Map? style) {
+    final Map<String, dynamic> fontStyles = {};
+    if (style == null) return fontStyles;
+
+    final fontToken = style['fontToken'] as Map?;
+    final font = fontToken?['font'] as Map?;
+
+    if (font != null) {
+      if (font['fontFamily'] != null) {
+        fontStyles['family'] = font['fontFamily'];
+      }
+      if (font['size'] != null) {
+        fontStyles['size'] = font['size'];
+      }
+      if (font['height'] != null) {
+        fontStyles['lineHeight'] = font['height'];
+      }
+
+      // Map 'isItalic' boolean to 'italic' or 'normal' string
+      final isItalic = font['isItalic'] as bool?;
+      fontStyles['style'] = isItalic == true ? 'italic' : 'normal';
+
+      // Map 'weight' string (e.g., "Bold", "Normal", "500") to valid Chart.js values
+      final weightValue = font['weight'] as String?;
+      switch (weightValue?.toLowerCase()) {
+        case 'bold':
+          fontStyles['weight'] = 'bold';
+          break;
+        case 'normal':
+          fontStyles['weight'] = 'normal';
+          break;
+        default:
+          if (weightValue != null) {
+            final weightNum = int.tryParse(weightValue);
+            if (weightNum != null) {
+              fontStyles['weight'] = weightNum;
+            }
+          }
+          break;
+      }
+    }
+    return fontStyles;
   }
 }
