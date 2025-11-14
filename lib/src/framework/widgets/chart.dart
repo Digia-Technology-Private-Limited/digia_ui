@@ -1,4 +1,5 @@
 import 'package:chartjs_flutter/chartjs_flutter.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 import '../base/virtual_stateless_widget.dart';
@@ -16,13 +17,12 @@ class VWChart extends VirtualStatelessWidget<ChartProps> {
 
   @override
   Widget render(RenderPayload payload) {
-
     // Evaluate ExprOr values using payload.evalExpr (same as rich_text.dart)
     final chartType = payload.evalExpr(props.chartType) ?? 'line';
     final labels = payload.evalExpr(props.labels);
-    final chartDatasets = props.chartData?.deepEvaluate(payload.scopeContext) ?? [];
+    final chartDatasets =
+        props.chartData?.deepEvaluate(payload.scopeContext) ?? [];
     final options = props.options;
-
 
     // Return placeholder if no chart data is provided
     if (chartDatasets == null ||
@@ -35,6 +35,46 @@ class VWChart extends VirtualStatelessWidget<ChartProps> {
       );
     }
 
+    // Validate chart type compatibility
+    final validationError =
+        _validateChartTypes(chartDatasets.cast<Map<String, dynamic>>());
+    if (validationError != null) {
+      return SizedBox(
+        width: 400,
+        height: 300,
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(
+                  Icons.error_outline,
+                  size: 48,
+                  color: Color(0xFFD32F2F),
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  'Invalid Chart Configuration',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFFD32F2F),
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  validationError,
+                  style: const TextStyle(fontSize: 14),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
 
     // Convert flat structure to Chart.js format
     final chartConfig = ChartConfigBuilder.buildChartConfig(
@@ -44,7 +84,6 @@ class VWChart extends VirtualStatelessWidget<ChartProps> {
       options: options,
     );
 
-
     return SizedBox(
       width: 400,
       height: 300,
@@ -52,6 +91,57 @@ class VWChart extends VirtualStatelessWidget<ChartProps> {
         chartConfig: chartConfig,
       ),
     );
+  }
+
+  /// Validates that chart types are compatible
+  /// Returns error message if invalid, null if valid
+  String? _validateChartTypes(List<Map<String, dynamic>> datasets) {
+    if (datasets.isEmpty) return null;
+
+    // Define chart type categories
+    final radialTypes = {'pie', 'doughnut', 'polarArea', 'radar'};
+    final cartesianTypes = {'line', 'bar'};
+
+    // Collect all dataset types
+    final datasetTypes = datasets
+        .map((ds) => ds['type'] as String?)
+        .where((type) => type != null)
+        .cast<String>()
+        .toSet();
+
+    // Check if we have both radial and cartesian types
+    final hasRadial = datasetTypes.any((type) => radialTypes.contains(type));
+    final hasCartesian =
+        datasetTypes.any((type) => cartesianTypes.contains(type));
+
+    if (hasRadial && hasCartesian) {
+      // Find which specific types are being mixed
+      final radialFound =
+          datasetTypes.where((type) => radialTypes.contains(type)).toList();
+      final cartesianFound =
+          datasetTypes.where((type) => cartesianTypes.contains(type)).toList();
+
+      return 'Cannot mix radial charts (${radialFound.join(', ')}) with cartesian charts (${cartesianFound.join(', ')}).\n\n'
+          'Please use either:\n'
+          '• Only radial charts (pie, doughnut, polarArea, radar)\n'
+          '• Only cartesian charts (line, bar)';
+    }
+
+    // Check if mixing different radial types (also not recommended)
+    if (hasRadial && datasetTypes.length > 1) {
+      final allRadial =
+          datasetTypes.every((type) => radialTypes.contains(type));
+      if (allRadial) {
+        final uniqueRadialTypes =
+            datasetTypes.where((type) => radialTypes.contains(type)).toSet();
+        if (uniqueRadialTypes.length > 1) {
+          return 'Cannot mix different radial chart types (${uniqueRadialTypes.join(', ')}).\n\n'
+              'Please use datasets of the same type.';
+        }
+      }
+    }
+
+    return null; // Valid configuration
   }
 }
 
@@ -72,16 +162,17 @@ class ChartConfigBuilder {
     final isMixed = chartType == 'mixed' || _hasMixedTypes(datasets);
     final effectiveType = isMixed ? 'bar' : chartType;
 
-    print('🔧 [ChartConfigBuilder] isMixed: $isMixed, effectiveType: $effectiveType');
+    print(
+        '🔧 [ChartConfigBuilder] isMixed: $isMixed, effectiveType: $effectiveType');
 
     // Convert labels to List<String>
-    final labelsList = labels is List 
-        ? labels.map((e) => e.toString()).toList() 
-        : <String>[];
+    final labelsList =
+        labels is List ? labels.map((e) => e.toString()).toList() : <String>[];
 
     print('🔧 [ChartConfigBuilder] labelsList: $labelsList');
 
-    final cleanedDatasets = datasets.map((dataset) => _cleanDataset(dataset)).toList();
+    final cleanedDatasets =
+        datasets.map((dataset) => _cleanDataset(dataset)).toList();
     print('🔧 [ChartConfigBuilder] cleanedDatasets: $cleanedDatasets');
 
     return {
