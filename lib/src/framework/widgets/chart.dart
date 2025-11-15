@@ -1,6 +1,5 @@
 import 'package:chartjs_flutter/chartjs_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 import '../base/virtual_stateless_widget.dart';
 import '../render_payload.dart';
@@ -17,7 +16,7 @@ class VWChart extends VirtualStatelessWidget<ChartProps> {
 
   @override
   Widget render(RenderPayload payload) {
-    final useDataSource = props.useDataSource ?? false;
+    final useDataSource = props.useDataSource;
 
     if (useDataSource) {
       // --- Direct Data Source Mode ---
