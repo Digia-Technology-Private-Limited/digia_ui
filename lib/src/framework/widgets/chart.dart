@@ -75,8 +75,10 @@ class VWChart extends VirtualStatelessWidget<ChartProps> {
 
     final List<dynamic> chartDatasets =
         (chartConfigFromDataSource['chartData'] as List<dynamic>?) ??
-            (props.chartData?.deepEvaluate(payload.scopeContext)
-                as List<dynamic>?) ??
+            (props.chartData?.deepEvaluate(payload.scopeContext) is List
+                ? props.chartData!.deepEvaluate(payload.scopeContext)
+                    as List<dynamic>
+                : null) ??
             <dynamic>[];
 
     final options =
@@ -165,11 +167,8 @@ class VWChart extends VirtualStatelessWidget<ChartProps> {
     final cartesianTypes = {'line', 'bar'};
 
     // Collect all dataset types
-    final datasetTypes = datasets
-        .map((ds) => ds['type'] as String?)
-        .where((type) => type != null)
-        .cast<String>()
-        .toSet();
+    final datasetTypes =
+        datasets.map((ds) => ds['type'] as String?).whereType<String>().toSet();
 
     // Check if we have both radial and cartesian types
     final hasRadial = datasetTypes.any((type) => radialTypes.contains(type));

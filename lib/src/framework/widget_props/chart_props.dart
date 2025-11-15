@@ -10,10 +10,9 @@ class ChartProps {
   final JsonLike? options;
   final ActionFlow? onChanged;
   final ExprOr<Object>? dataSource;
-  final bool useDataSource;
+  bool get useDataSource => dataSource != null;
 
-  const ChartProps(
-    this.useDataSource, {
+  const ChartProps({
     this.chartType,
     this.labels,
     this.chartData,
@@ -29,10 +28,8 @@ class ChartProps {
     final options = as$<JsonLike>(json['options']);
     final dataSource = ExprOr.fromJson<Object>(json['dataSource']);
     final onChanged = ActionFlow.fromJson(json['onChanged']);
-    final useDataSource = dataSource != null;
 
     return ChartProps(
-      useDataSource,
       chartType: chartType,
       labels: labels,
       chartData: chartData,
