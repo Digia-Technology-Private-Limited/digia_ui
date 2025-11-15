@@ -17,17 +17,75 @@ class VWChart extends VirtualStatelessWidget<ChartProps> {
 
   @override
   Widget render(RenderPayload payload) {
-    // Evaluate ExprOr values using payload.evalExpr (same as rich_text.dart)
-    final chartType = payload.evalExpr(props.chartType) ?? 'line';
-    final labels = payload.evalExpr(props.labels);
-    final chartDatasets =
-        props.chartData?.deepEvaluate(payload.scopeContext) ?? [];
-    final options = props.options;
+    final useDataSource = props.useDataSource ?? false;
 
+    if (useDataSource) {
+      // --- Direct Data Source Mode ---
+      final dataSource = props.dataSource;
+      if (dataSource == null) {
+        return _buildErrorWidget(
+            'Chart is configured to use a data source, but the `dataSource` property is not set.');
+      }
+
+      final chartConfig =
+          payload.eval(dataSource.evaluate(payload.scopeContext));
+
+      if (chartConfig is! Map<String, dynamic>) {
+        return _buildErrorWidget(
+            'The provided `dataSource` did not evaluate to a valid chart configuration map.');
+      }
+
+      return SizedBox(
+        width: 400,
+        height: 300,
+        child: ChartJsWidget(
+          chartConfig: chartConfig,
+        ),
+      );
+    } else {
+      // --- Individual Properties Mode ---
+      return _buildFromProperties(payload);
+    }
+  }
+
+  Widget _buildFromProperties(RenderPayload payload) {
+    // --- Data Source Handling ---
+    final dataSource = props.dataSource;
+    Map<String, dynamic> chartConfigFromDataSource = {};
+
+    if (dataSource != null) {
+      final evaluatedData =
+          payload.eval(dataSource.evaluate(payload.scopeContext));
+      if (evaluatedData is Map) {
+        // Ensure keys are strings for type safety
+        chartConfigFromDataSource = evaluatedData.map(
+          (key, value) => MapEntry(key.toString(), value),
+        );
+      }
+    }
+
+    // --- Property Resolution ---
+    // Use data from dataSource if available, otherwise fallback to props
+    final chartType = chartConfigFromDataSource['chartType'] as String? ??
+        payload.evalExpr(props.chartType) ??
+        'line';
+
+    final labels =
+        chartConfigFromDataSource['labels'] ?? payload.evalExpr(props.labels);
+
+    final List<dynamic> chartDatasets =
+        (chartConfigFromDataSource['chartData'] as List<dynamic>?) ??
+            (props.chartData?.deepEvaluate(payload.scopeContext)
+                as List<dynamic>?) ??
+            <dynamic>[];
+
+    final options =
+        chartConfigFromDataSource['options'] as Map<String, dynamic>? ??
+            props.options;
+
+    // --- Widget Rendering ---
     // Return placeholder if no chart data is provided
-    if (chartDatasets == null ||
-        chartDatasets is! List ||
-        chartDatasets.isEmpty) {
+    if (chartDatasets.isEmpty) {
       return const SizedBox(
         width: 400,
         height: 300,
@@ -39,41 +97,7 @@ class VWChart extends VirtualStatelessWidget<ChartProps> {
     final validationError =
         _validateChartTypes(chartDatasets.cast<Map<String, dynamic>>());
     if (validationError != null) {
-      return SizedBox(
-        width: 400,
-        height: 300,
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(
-                  Icons.error_outline,
-                  size: 48,
-                  color: Color(0xFFD32F2F),
-                ),
-                const SizedBox(height: 16),
-                const Text(
-                  'Invalid Chart Configuration',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFFD32F2F),
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  validationError,
-                  style: const TextStyle(fontSize: 14),
-                  textAlign: TextAlign.center,
-                ),
-              ],
-            ),
-          ),
-        ),
-      );
+      return _buildErrorWidget(validationError);
     }
 
     // Convert flat structure to Chart.js format
@@ -89,6 +113,44 @@ class VWChart extends VirtualStatelessWidget<ChartProps> {
       height: 300,
       child: ChartJsWidget(
         chartConfig: chartConfig,
+      ),
+    );
+  }
+
+  Widget _buildErrorWidget(String errorMessage) {
+    return SizedBox(
+      width: 400,
+      height: 300,
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(
+                Icons.error_outline,
+                size: 48,
+                color: Color(0xFFD32F2F),
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                'Invalid Chart Configuration',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFFD32F2F),
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                errorMessage,
+                style: const TextStyle(fontSize: 14),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -153,27 +215,16 @@ class ChartConfigBuilder {
     required List<Map<String, dynamic>> datasets,
     required Map<String, dynamic>? options,
   }) {
-    print('🔧 [ChartConfigBuilder] chartType: $chartType');
-    print('🔧 [ChartConfigBuilder] labels: $labels');
-    print('🔧 [ChartConfigBuilder] datasets count: ${datasets.length}');
-    print('🔧 [ChartConfigBuilder] options: $options');
-
     // Determine if this is a mixed chart
     final isMixed = chartType == 'mixed' || _hasMixedTypes(datasets);
     final effectiveType = isMixed ? 'bar' : chartType;
-
-    print(
-        '🔧 [ChartConfigBuilder] isMixed: $isMixed, effectiveType: $effectiveType');
 
     // Convert labels to List<String>
     final labelsList =
         labels is List ? labels.map((e) => e.toString()).toList() : <String>[];
 
-    print('🔧 [ChartConfigBuilder] labelsList: $labelsList');
-
     final cleanedDatasets =
         datasets.map((dataset) => _cleanDataset(dataset)).toList();
-    print('🔧 [ChartConfigBuilder] cleanedDatasets: $cleanedDatasets');
 
     return {
       'type': effectiveType,
@@ -195,8 +246,6 @@ class ChartConfigBuilder {
 
   /// Clean dataset by removing null/empty values
   static Map<String, dynamic> _cleanDataset(Map<String, dynamic> dataset) {
-    print('🧹 [ChartConfigBuilder] Cleaning dataset: $dataset');
-
     final cleaned = <String, dynamic>{
       'label': dataset['label'] ?? '',
       'data': (dataset['data'] as List?)?.map((e) => e as num).toList() ?? [],
@@ -215,7 +264,6 @@ class ChartConfigBuilder {
     _addIfPresent(cleaned, dataset, 'tension');
     _addIfPresent(cleaned, dataset, 'fill');
 
-    print('🧹 [ChartConfigBuilder] Cleaned dataset: $cleaned');
     return cleaned;
   }
 
@@ -225,15 +273,12 @@ class ChartConfigBuilder {
     final value = source[key];
     if (value != null && !(value is String && value.isEmpty)) {
       target[key] = value;
-      print('➕ [ChartConfigBuilder] Added $key: $value');
     }
   }
 
   /// Build Chart.js options
   static Map<String, dynamic> _buildOptions(
       Map<String, dynamic>? optionsProp, List<Map<String, dynamic>> datasets) {
-    print('⚙️ [ChartConfigBuilder] Building options from: $optionsProp');
-
     if (optionsProp == null) {
       return {
         'responsive': true,
