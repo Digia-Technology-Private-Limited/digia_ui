@@ -16,7 +16,7 @@ class VWChart extends VirtualStatelessWidget<ChartProps> {
 
   @override
   Widget render(RenderPayload payload) {
-    final useDataSource = props.useDataSource;
+    final useDataSource = props.useDataSource ?? false;
 
     if (useDataSource) {
       // --- Direct Data Source Mode ---
@@ -26,12 +26,17 @@ class VWChart extends VirtualStatelessWidget<ChartProps> {
             'Chart is configured to use a data source, but the `dataSource` property is not set.');
       }
 
-      final chartConfig =
-          payload.eval(dataSource.evaluate(payload.scopeContext));
+      // Properly evaluate the dataSource expression
+      final chartConfig = payload.evalExpr(dataSource);
+
+      if (chartConfig == null) {
+        return _buildErrorWidget(
+            'The provided `dataSource` is null or could not be evaluated.');
+      }
 
       if (chartConfig is! Map<String, dynamic>) {
         return _buildErrorWidget(
-            'The provided `dataSource` did not evaluate to a valid chart configuration map.');
+            'The provided `dataSource` did not evaluate to a valid chart configuration map. Got type: ${chartConfig.runtimeType}');
       }
 
       return SizedBox(
@@ -48,41 +53,17 @@ class VWChart extends VirtualStatelessWidget<ChartProps> {
   }
 
   Widget _buildFromProperties(RenderPayload payload) {
-    // --- Data Source Handling ---
-    final dataSource = props.dataSource;
-    Map<String, dynamic> chartConfigFromDataSource = {};
-
-    if (dataSource != null) {
-      final evaluatedData =
-          payload.eval(dataSource.evaluate(payload.scopeContext));
-      if (evaluatedData is Map) {
-        // Ensure keys are strings for type safety
-        chartConfigFromDataSource = evaluatedData.map(
-          (key, value) => MapEntry(key.toString(), value),
-        );
-      }
-    }
-
     // --- Property Resolution ---
-    // Use data from dataSource if available, otherwise fallback to props
-    final chartType = chartConfigFromDataSource['chartType'] as String? ??
-        payload.evalExpr(props.chartType) ??
-        'line';
+    // Use data directly from individual props.
+    final chartType = payload.evalExpr(props.chartType) ?? 'line';
 
-    final labels =
-        chartConfigFromDataSource['labels'] ?? payload.evalExpr(props.labels);
+    final labels = payload.evalExpr(props.labels);
 
-    final List<dynamic> chartDatasets =
-        (chartConfigFromDataSource['chartData'] as List<dynamic>?) ??
-            (props.chartData?.deepEvaluate(payload.scopeContext) is List
-                ? props.chartData!.deepEvaluate(payload.scopeContext)
-                    as List<dynamic>
-                : null) ??
-            <dynamic>[];
+    final List<dynamic> chartDatasets = (props.chartData
+            ?.deepEvaluate(payload.scopeContext) as List<dynamic>?) ??
+        <dynamic>[];
 
-    final options =
-        chartConfigFromDataSource['options'] as Map<String, dynamic>? ??
-            props.options;
+    final options = props.options;
 
     // --- Widget Rendering ---
     // Return placeholder if no chart data is provided

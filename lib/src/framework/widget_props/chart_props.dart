@@ -4,15 +4,16 @@ import '../utils/functional_util.dart';
 import '../utils/types.dart';
 
 class ChartProps {
+  final bool? useDataSource;
   final ExprOr<String>? chartType;
   final ExprOr<List>? labels;
   final ExprOr<List>? chartData;
   final JsonLike? options;
   final ActionFlow? onChanged;
   final ExprOr<Object>? dataSource;
-  bool get useDataSource => dataSource != null;
 
   const ChartProps({
+    this.useDataSource,
     this.chartType,
     this.labels,
     this.chartData,
@@ -22,20 +23,15 @@ class ChartProps {
   });
 
   factory ChartProps.fromJson(JsonLike json) {
-    final chartType = ExprOr.fromJson<String>(json['chartType']);
-    final labels = ExprOr.fromJson<List>(json['labels']);
-    final chartData = ExprOr.fromJson<List>(json['chartData']);
-    final options = as$<JsonLike>(json['options']);
-    final dataSource = ExprOr.fromJson<Object>(json['dataSource']);
-    final onChanged = ActionFlow.fromJson(json['onChanged']);
-
     return ChartProps(
-      chartType: chartType,
-      labels: labels,
-      chartData: chartData,
-      options: options,
-      dataSource: dataSource,
-      onChanged: onChanged,
+      useDataSource: as$<bool>(json[
+          'useDataSource']), // Fixed: Read from '_useDataSource' instead of 'useDataSource'
+      chartType: ExprOr.fromJson<String>(json['chartType']),
+      labels: ExprOr.fromJson<List>(json['labels']),
+      chartData: ExprOr.fromJson<List>(json['chartData']),
+      options: as$<JsonLike>(json['options']),
+      dataSource: ExprOr.fromJson<Object>(json['dataSource']),
+      onChanged: ActionFlow.fromJson(json['onChanged']),
     );
   }
 }
