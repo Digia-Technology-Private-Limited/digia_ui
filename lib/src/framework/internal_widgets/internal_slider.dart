@@ -40,6 +40,16 @@ class _InternalSliderState extends State<InternalSlider> {
   }
 
   @override
+  void didUpdateWidget(InternalSlider oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.value != oldWidget.value) {
+      setState(() {
+        _currentValue = widget.value;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SliderTheme(
       data: SliderTheme.of(context).copyWith(
