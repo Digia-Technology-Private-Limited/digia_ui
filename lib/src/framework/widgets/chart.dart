@@ -90,9 +90,8 @@ class VWChart extends VirtualStatelessWidget<ChartProps> {
       options: options,
     );
 
-    return SizedBox(
-      width: 400,
-      height: 300,
+    return AspectRatio(
+      aspectRatio: 1,
       child: ChartJsWidget(
         chartConfig: chartConfig,
       ),
