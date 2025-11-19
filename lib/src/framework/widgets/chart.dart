@@ -67,8 +67,9 @@ class VWChart extends VirtualStatelessWidget<ChartProps> {
     // --- Widget Rendering ---
     // Return placeholder if no chart data is provided
     if (chartDatasets.isEmpty) {
-      return AspectRatio(aspectRatio: 1,
-      child: Center(child: Text('No chart data provided.')));
+      return AspectRatio(
+          aspectRatio: 1,
+          child: Center(child: Text('No chart data provided.')));
     }
 
     // Validate chart type compatibility
