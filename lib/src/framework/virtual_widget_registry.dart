@@ -35,6 +35,7 @@ abstract class VirtualWidgetRegistry {
     'digia/safeArea': safeAreaBuilder,
     'digia/smartScrollView': smartScrollViewBuilder,
     'digia/nestedScrollView': nestedScrollViewBuilder,
+    'digia/chart': chartBuilder,
 
     // Basic Widgets
     'digia/text': textBuilder,

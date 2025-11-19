@@ -10,6 +10,7 @@ import 'widget_props/app_bar_props.dart';
 import 'widget_props/async_builder_props.dart';
 import 'widget_props/before_after_slider_props.dart';
 import 'widget_props/carousel_props.dart';
+import 'widget_props/chart_props.dart';
 import 'widget_props/condtional_item_props.dart';
 import 'widget_props/icon_props.dart';
 import 'widget_props/image_view_360_props.dart';
@@ -49,6 +50,7 @@ import 'widgets/before_after_slider.dart';
 import 'widgets/button.dart';
 import 'widgets/calendar.dart';
 import 'widgets/carousel.dart';
+import 'widgets/chart.dart';
 import 'widgets/checkbox.dart';
 import 'widgets/circular_progress_bar.dart';
 import 'widgets/conditional_builder.dart';
@@ -145,6 +147,18 @@ VWMasonryGridView masonryGridViewBuilder(
 ) {
   return VWMasonryGridView(
     props: MasonryGridViewProps.fromJson(data.props.value),
+    commonProps: data.commonProps,
+    parentProps: data.parentProps,
+    parent: parent,
+    childGroups: createChildGroups(data.childGroups, parent, registry),
+    refName: data.refName,
+  );
+}
+
+VWChart chartBuilder(
+    VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
+  return VWChart(
+    props: ChartProps.fromJson(data.props.value),
     commonProps: data.commonProps,
     parentProps: data.parentProps,
     parent: parent,
