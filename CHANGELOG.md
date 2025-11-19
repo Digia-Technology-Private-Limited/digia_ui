@@ -2,6 +2,17 @@
 
 Digia Ui SDK.
 
+## [1.4.0] – 2025-11-19
+
+This release introduces beautiful new UI widgets that make designing stunning apps easier than ever.
+
+- 🎚️ Slider: A smooth and fully customizable slider widget — perfect for selecting values with precision
+- 📖 Story: Create Instagram-style stories effortlessly with built-in transitions and autoplay
+- 📊 Charts: Build beautiful, interactive charts with minimal configuration
+- 🧱 Masonry GridView: Create Pinterest-style staggered grids for dynamic, adaptive layouts
+
+Also, we have removed support for AVIF image format, trimming the APK size by over 1 MB.
+
 ## [1.3.0] – 2025-10-27
 
 - 🧭 NavigationBarCustom: Added support for separate selected and unselected widgets — fully customizable NavigationBarItem states.
