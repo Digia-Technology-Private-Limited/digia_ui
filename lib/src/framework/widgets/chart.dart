@@ -39,9 +39,8 @@ class VWChart extends VirtualStatelessWidget<ChartProps> {
             'The provided `dataSource` did not evaluate to a valid chart configuration map. Got type: ${chartConfig.runtimeType}');
       }
 
-      return SizedBox(
-        width: 400,
-        height: 300,
+      return AspectRatio(
+        aspectRatio: 1,
         child: ChartJsWidget(
           chartConfig: chartConfig,
         ),
@@ -68,11 +67,8 @@ class VWChart extends VirtualStatelessWidget<ChartProps> {
     // --- Widget Rendering ---
     // Return placeholder if no chart data is provided
     if (chartDatasets.isEmpty) {
-      return const SizedBox(
-        width: 400,
-        height: 300,
-        child: Center(child: Text('No chart data provided.')),
-      );
+      return AspectRatio(aspectRatio: 1,
+      child: Center(child: Text('No chart data provided.')));
     }
 
     // Validate chart type compatibility
@@ -99,9 +95,8 @@ class VWChart extends VirtualStatelessWidget<ChartProps> {
   }
 
   Widget _buildErrorWidget(String errorMessage) {
-    return SizedBox(
-      width: 400,
-      height: 300,
+    return AspectRatio(
+      aspectRatio: 1,
       child: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
