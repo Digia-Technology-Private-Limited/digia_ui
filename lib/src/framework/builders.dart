@@ -28,6 +28,7 @@ import 'widget_props/rich_text_props.dart';
 import 'widget_props/safe_area_props.dart';
 import 'widget_props/scaffold_props.dart';
 import 'widget_props/sized_box_props.dart';
+import 'widget_props/slider_props.dart';
 import 'widget_props/sliver_app_bar_props.dart';
 import 'widget_props/smart_scroll_view_props.dart';
 import 'widget_props/story_props.dart';
@@ -86,6 +87,7 @@ import 'widgets/rich_text.dart';
 import 'widgets/safe_area.dart';
 import 'widgets/scaffold.dart';
 import 'widgets/sized_box.dart';
+import 'widgets/slider.dart';
 import 'widgets/sliver_app_bar.dart';
 import 'widgets/sliver_grid.dart';
 import 'widgets/sliver_list.dart';
@@ -176,6 +178,16 @@ VWMarkDown markdownBuilder(VWNodeData data, VirtualWidget? parent, _) {
 VWRangeSlider rangeSliderBuilder(VWNodeData data, VirtualWidget? parent, _) {
   return VWRangeSlider(
     props: RangeSliderProps.fromJson(data.props.value),
+    commonProps: data.commonProps,
+    parentProps: data.parentProps,
+    parent: parent,
+    refName: data.refName,
+  );
+}
+
+VWSlider sliderBuilder(VWNodeData data, VirtualWidget? parent, _) {
+  return VWSlider(
+    props: SliderProps.fromJson(data.props.value),
     commonProps: data.commonProps,
     parentProps: data.parentProps,
     parent: parent,

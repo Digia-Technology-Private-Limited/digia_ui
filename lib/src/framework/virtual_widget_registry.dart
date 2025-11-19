@@ -89,6 +89,7 @@ abstract class VirtualWidgetRegistry {
     'digia/pinField': pinFieldBuilder,
     'digia/calendar': calendarBuilder,
     'digia/rangeSlider': rangeSliderBuilder,
+    'digia/slider': sliderBuilder,
 
     // Media and Web Content
     'digia/lottie': lottieBuilder,
