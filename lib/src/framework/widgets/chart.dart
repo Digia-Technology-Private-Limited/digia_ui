@@ -39,11 +39,8 @@ class VWChart extends VirtualStatelessWidget<ChartProps> {
             'The provided `dataSource` did not evaluate to a valid chart configuration map. Got type: ${chartConfig.runtimeType}');
       }
 
-      return AspectRatio(
-        aspectRatio: 1,
-        child: ChartJsWidget(
-          chartConfig: chartConfig,
-        ),
+      return ChartJsWidget(
+        chartConfig: chartConfig,
       );
     } else {
       // --- Individual Properties Mode ---
@@ -67,9 +64,7 @@ class VWChart extends VirtualStatelessWidget<ChartProps> {
     // --- Widget Rendering ---
     // Return placeholder if no chart data is provided
     if (chartDatasets.isEmpty) {
-      return AspectRatio(
-          aspectRatio: 1,
-          child: Center(child: Text('No chart data provided.')));
+      return const Center(child: Text('No chart data provided.'));
     }
 
     // Validate chart type compatibility
@@ -87,46 +82,40 @@ class VWChart extends VirtualStatelessWidget<ChartProps> {
       options: options,
     );
 
-    return AspectRatio(
-      aspectRatio: 1,
-      child: ChartJsWidget(
-        chartConfig: chartConfig,
-      ),
+    return ChartJsWidget(
+      chartConfig: chartConfig,
     );
   }
 
   Widget _buildErrorWidget(String errorMessage) {
-    return AspectRatio(
-      aspectRatio: 1,
-      child: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(
-                Icons.error_outline,
-                size: 48,
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(
+              Icons.error_outline,
+              size: 48,
+              color: Color(0xFFD32F2F),
+            ),
+            const SizedBox(height: 16),
+            const Text(
+              'Invalid Chart Configuration',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
                 color: Color(0xFFD32F2F),
               ),
-              const SizedBox(height: 16),
-              const Text(
-                'Invalid Chart Configuration',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFFD32F2F),
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 8),
-              Text(
-                errorMessage,
-                style: const TextStyle(fontSize: 14),
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              errorMessage,
+              style: const TextStyle(fontSize: 14),
+              textAlign: TextAlign.center,
+            ),
+          ],
         ),
       ),
     );
