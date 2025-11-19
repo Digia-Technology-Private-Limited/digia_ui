@@ -48,11 +48,10 @@ class _InternalSliderState extends State<InternalSlider> {
         inactiveTrackColor: widget.inactiveColor,
         thumbColor: widget.thumbColor,
         disabledThumbColor: widget.thumbColor,
-        rangeThumbShape: RoundRangeSliderThumbShape(
+        thumbShape: RoundSliderThumbShape(
           enabledThumbRadius: widget.thumbRadius,
           disabledThumbRadius: widget.thumbRadius,
         ),
-        // overlayColor: widget.thumbColor.withOpacity(0.12),
         overlayShape: RoundSliderOverlayShape(
           overlayRadius: widget.thumbRadius,
         ),
