@@ -22,80 +22,64 @@ class VWAvatar extends VirtualLeafStatelessWidget<Props> {
   Widget render(RenderPayload payload) {
     final shapeProps = props.toProps('shape');
     return switch (shapeProps?.get('value')) {
-      'circle' => _buildCircle(shapeProps, payload),
-      'square' => _buildSquare(shapeProps, payload),
-      _ => _buildCircle(shapeProps, payload),
+      'circle' => _getCircleAvatar(shapeProps, payload),
+      'square' => _getSquareAvatar(shapeProps, payload),
+      _ => _getCircleAvatar(shapeProps, payload),
     };
   }
 
-  Widget _buildCircle(Props? shapeProps, RenderPayload payload) {
+  Widget _getCircleAvatar(Props? shapeProps, RenderPayload payload) {
     final bgColor = payload.evalColor(props.get('bgColor')) ?? Colors.grey;
-    final radius = payload.eval<double>(shapeProps?.get('radius')) ??
-        12; // sync with CWAvatar
-    final diameter = radius * 2;
-    return ClipOval(
-      child: Container(
-        width: diameter,
-        height: diameter,
-        color: bgColor,
-        child: _buildChild(payload, diameter, diameter, isCircle: true),
+    final radius = payload.eval<double>(shapeProps?.get('radius')) ?? 12;
+    return CircleAvatar(
+      radius: radius,
+      backgroundColor: bgColor,
+      child: ClipOval(
+        child: _getAvatarChildWidget(payload, radius * 2, radius * 2),
       ),
     );
   }
 
-  Widget _buildSquare(Props? shapeProps, RenderPayload payload) {
+  Widget _getSquareAvatar(Props? shapeProps, RenderPayload payload) {
     final bgColor = payload.evalColor(props.get('bgColor')) ?? Colors.grey;
     final cornerRadius = To.borderRadius(shapeProps?.get('cornerRadius'));
     final side = payload.eval<double>(shapeProps?.get('side')) ?? 16;
+
     return ClipRRect(
       borderRadius: cornerRadius,
       child: Container(
         width: side,
         height: side,
         color: bgColor,
-        child: _buildChild(payload, side, side, isCircle: false),
+        child: _getAvatarChildWidget(payload, side, side),
       ),
     );
   }
 
-  Widget _buildChild(RenderPayload payload, double w, double h,
-      {required bool isCircle}) {
-    final childType = props.getString('_childType'); // sync logic
-    final imagePropsMap = props.getMap('image');
+  // Rendering logic synchronized with CWAvatar. Data fetching lines kept intact.
+  Widget _getAvatarChildWidget(RenderPayload payload, double w, double h) {
+    final imageProps = props.getMap('image');
+    final String? imageSrc = payload
+        .eval(props.get('image.src.imageSrc') ?? imageProps?['imageSrc']);
+    final String? imageFit = payload.eval(imageProps?['fit']);
 
-    if (childType == 'image' && imagePropsMap != null) {
-      final fit = To.boxFit(imagePropsMap['fit']);
-      // Prefer explicit image.src.imageSrc expr if present
-      final imageSrcExpr =
-          props.get('image.src.imageSrc') ?? imagePropsMap['imageSrc'];
-      final imageSrc = payload.eval(imageSrcExpr);
-
-      if (imageSrc is String && imageSrc.isNotEmpty) {
-        final vwImage = VWImage(
-          props: Props({
-            ...imagePropsMap,
-            'imageSrc': imageSrc,
-            'fit': imagePropsMap['fit'],
-            'width': w,
-            'height': h,
-          }),
-          commonProps: null,
-          parent: null,
-        );
-        return SizedBox(
-          width: w,
-          height: h,
-          child: FittedBox(
-            fit: fit,
-            clipBehavior: Clip.hardEdge,
-            child: SizedBox(
-              width: w,
-              height: h,
-              child: vwImage.toWidget(payload),
-            ),
+    if (imageSrc != null && imageSrc.isNotEmpty) {
+      return SizedBox(
+        width: w,
+        height: h,
+        child: FittedBox(
+          fit: To.boxFit(imageFit),
+          clipBehavior: Clip.hardEdge,
+          child: SizedBox(
+            width: w,
+            height: h,
+            child: VWImage.fromValues(
+              imageSrc: imageSrc,
+              imageFit: imageFit,
+            ).toWidget(payload),
           ),
-        );
-      }
+        ),
+      );
     }
 
     return SizedBox(
