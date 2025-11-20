@@ -37,7 +37,11 @@ class VWAvatar extends VirtualLeafStatelessWidget<Props> {
     return CircleAvatar(
       radius: radius ?? 16,
       backgroundColor: bgColor ?? Colors.grey,
-      child: _getAvatarChildWidget(payload),
+      child: ClipOval(
+          child: SizedBox(
+              height: radius != null ? radius * 2 : 32,
+              width: radius != null ? radius * 2 : 32,
+              child: _getAvatarChildWidget(payload))),
     );
   }
 
