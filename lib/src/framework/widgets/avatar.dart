@@ -30,7 +30,8 @@ class VWAvatar extends VirtualLeafStatelessWidget<Props> {
 
   Widget _buildCircle(Props? shapeProps, RenderPayload payload) {
     final bgColor = payload.evalColor(props.get('bgColor')) ?? Colors.grey;
-    final radius = payload.eval<double>(shapeProps?.get('radius')) ?? 12; // sync with CWAvatar
+    final radius = payload.eval<double>(shapeProps?.get('radius')) ??
+        12; // sync with CWAvatar
     final diameter = radius * 2;
     return ClipOval(
       child: Container(
@@ -102,8 +103,7 @@ class VWAvatar extends VirtualLeafStatelessWidget<Props> {
       height: h,
       child: Center(
         child: VWText(
-          props:
-              props.getMap('text').maybe(TextProps.fromJson) ?? TextProps(),
+          props: props.getMap('text').maybe(TextProps.fromJson) ?? TextProps(),
           commonProps: null,
           parent: null,
         ).toWidget(payload),
