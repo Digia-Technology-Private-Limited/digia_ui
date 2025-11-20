@@ -21,77 +21,66 @@ class VWAvatar extends VirtualLeafStatelessWidget<Props> {
   @override
   Widget render(RenderPayload payload) {
     final shapeProps = props.toProps('shape');
+
+    // if (shapeProps == null) return empty();
+
     return switch (shapeProps?.get('value')) {
       'circle' => _getCircleAvatar(shapeProps, payload),
       'square' => _getSquareAvatar(shapeProps, payload),
-      _ => _getCircleAvatar(shapeProps, payload),
+      _ => _getCircleAvatar(shapeProps, payload)
     };
   }
 
   Widget _getCircleAvatar(Props? shapeProps, RenderPayload payload) {
-    final bgColor = payload.evalColor(props.get('bgColor')) ?? Colors.grey;
-    final radius = payload.eval<double>(shapeProps?.get('radius')) ?? 12;
+    final bgColor = payload.evalColor(props.get('bgColor'));
+    final radius = payload.eval<double>(shapeProps?.get('radius'));
     return CircleAvatar(
-      radius: radius,
-      backgroundColor: bgColor,
+      radius: radius ?? 16,
+      backgroundColor: bgColor ?? Colors.grey,
       child: ClipOval(
-        child: _getAvatarChildWidget(payload, radius * 2, radius * 2),
-      ),
+          child: SizedBox(
+              height: radius != null ? radius * 2 : 32,
+              width: radius != null ? radius * 2 : 32,
+              child: _getAvatarChildWidget(payload))),
     );
   }
 
   Widget _getSquareAvatar(Props? shapeProps, RenderPayload payload) {
-    final bgColor = payload.evalColor(props.get('bgColor')) ?? Colors.grey;
+    final bgColor = payload.evalColor(props.get('bgColor'));
     final cornerRadius = To.borderRadius(shapeProps?.get('cornerRadius'));
-    final side = payload.eval<double>(shapeProps?.get('side')) ?? 16;
+    final side = payload.eval<double>(shapeProps?.get('side'));
 
-    return ClipRRect(
-      borderRadius: cornerRadius,
-      child: Container(
-        width: side,
-        height: side,
-        color: bgColor,
-        child: _getAvatarChildWidget(payload, side, side),
-      ),
+    return Container(
+      height: side,
+      width: side,
+      decoration: BoxDecoration(
+          color: bgColor ?? Colors.grey,
+          shape: BoxShape.rectangle,
+          borderRadius: cornerRadius),
+      clipBehavior: Clip.hardEdge,
+      child: _getAvatarChildWidget(payload),
     );
   }
 
-  // Rendering logic synchronized with CWAvatar. Data fetching lines kept intact.
-  Widget _getAvatarChildWidget(RenderPayload payload, double w, double h) {
+  Widget? _getAvatarChildWidget(RenderPayload payload) {
     final imageProps = props.getMap('image');
     final String? imageSrc = payload
         .eval(props.get('image.src.imageSrc') ?? imageProps?['imageSrc']);
     final String? imageFit = payload.eval(imageProps?['fit']);
 
     if (imageSrc != null && imageSrc.isNotEmpty) {
-      return SizedBox(
-        width: w,
-        height: h,
-        child: FittedBox(
-          fit: To.boxFit(imageFit),
-          clipBehavior: Clip.hardEdge,
-          child: SizedBox(
-            width: w,
-            height: h,
-            child: VWImage.fromValues(
-              imageSrc: imageSrc,
-              imageFit: imageFit,
-            ).toWidget(payload),
-          ),
-        ),
-      );
+      return VWImage.fromValues(
+        imageSrc: imageSrc,
+        imageFit: imageFit,
+      ).toWidget(payload);
     }
-
-    return SizedBox(
-      width: w,
-      height: h,
-      child: Center(
-        child: VWText(
-          props: props.getMap('text').maybe(TextProps.fromJson) ?? TextProps(),
-          commonProps: null,
-          parent: null,
-        ).toWidget(payload),
-      ),
+    return Align(
+      alignment: Alignment.center,
+      child: VWText(
+        props: props.getMap('text').maybe(TextProps.fromJson) ?? TextProps(),
+        commonProps: null,
+        parent: null,
+      ).toWidget(payload),
     );
   }
 }
