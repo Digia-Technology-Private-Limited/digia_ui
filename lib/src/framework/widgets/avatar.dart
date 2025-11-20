@@ -48,7 +48,7 @@ class VWAvatar extends VirtualLeafStatelessWidget<Props> {
     final cornerRadius = To.borderRadius(shapeProps?.get('cornerRadius'));
     final side = payload.eval<double>(shapeProps?.get('side')) ?? 16;
     return ClipRRect(
-      borderRadius: cornerRadius ?? BorderRadius.zero,
+      borderRadius: cornerRadius,
       child: Container(
         width: side,
         height: side,
