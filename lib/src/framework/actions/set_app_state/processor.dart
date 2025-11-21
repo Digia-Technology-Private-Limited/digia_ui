@@ -54,7 +54,7 @@ class SetAppStateProcessor extends ActionProcessor<SetAppStateAction> {
     try {
       for (var update in updates) {
         try {
-          final newValue = update.newValue?.evaluate(scopeContext);
+          final newValue = update.newValue?.deepEvaluate(scopeContext);
           if (newValue == null) continue;
           DUIAppState().update(update.stateName, newValue);
           updatedValues[update.stateName] = newValue;

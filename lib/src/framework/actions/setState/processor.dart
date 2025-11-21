@@ -45,8 +45,8 @@ class SetStateProcessor extends ActionProcessor<SetStateAction> {
 
     if (updates.isNotEmpty) {
       final updatesMap = Map.fromEntries(updates.map(
-        (update) =>
-            MapEntry(update.stateName, update.newValue?.evaluate(scopeContext)),
+        (update) => MapEntry(
+            update.stateName, update.newValue?.deepEvaluate(scopeContext)),
       ));
 
       executionContext?.notifyProgress(
