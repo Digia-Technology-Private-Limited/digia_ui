@@ -79,8 +79,6 @@ class VWButton extends VirtualLeafStatelessWidget<Props> {
             )
           : null,
       minimumSize: WidgetStateProperty.all(Size.zero),
-      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-      visualDensity: VisualDensity.standard,
     );
 
     final content = _buildContent(
@@ -152,6 +150,10 @@ class VWButton extends VirtualLeafStatelessWidget<Props> {
           parent: this,
         ).toWidget(payload);
       }
+    }
+
+    if (leadingIcon == null && trailingIcon == null) {
+      return text;
     }
 
     return Row(
