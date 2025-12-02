@@ -141,7 +141,7 @@ class VWFlex extends VirtualStatelessWidget<Props> {
       child: Flex(
         direction: direction,
         mainAxisSize:
-            To.mainAxisSize(props.get('mainAxisSize')) ?? MainAxisSize.min,
+            To.mainAxisSize(props.get('mainAxisSize')) ?? MainAxisSize.max,
         mainAxisAlignment:
             To.mainAxisAlignment(props.get('mainAxisAlignment')) ??
                 MainAxisAlignment.start,
