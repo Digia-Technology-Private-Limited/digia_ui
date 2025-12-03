@@ -67,8 +67,12 @@ TextStyle? makeTextStyle(
 
   final fontTokenValue = as$<String>(fontToken['value']);
   final overridingFontFamily = fontToken.valueFor('font.fontFamily') as String?;
-  final overridingFontStyle =
-      eval<String>(fontToken.valueFor('font.style')).maybe(To.fontStyle);
+  // Support both 'style' (string) and 'isItalic' (boolean) for font style
+  final styleValue = fontToken.valueFor('font.style');
+  final isItalicValue = fontToken.valueFor('font.isItalic');
+  final overridingFontStyle = styleValue != null
+      ? eval<String>(styleValue).maybe(To.fontStyle)
+      : (isItalicValue == true ? FontStyle.italic : null);
   final overridingFontWeight =
       eval<String>(fontToken.valueFor('font.weight')).maybe(To.fontWeight);
   final overridingFontSize = eval<double>(fontToken.valueFor('font.size'));
