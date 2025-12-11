@@ -34,6 +34,7 @@ class VWGridView extends VirtualStatelessWidget<Props> {
     final shrinkWrap = props.getBool('shrinkWrap') ?? false;
     final mainAxisSpacing = props.getDouble('mainAxisSpacing');
     final crossAxisSpacing = props.getDouble('crossAxisSpacing');
+    final scrollDirection = To.axis(props.get('scrollDirection'));
     final gridDelegate = SliverSimpleGridDelegateWithFixedCrossAxisCount(
       crossAxisCount: props.getInt('crossAxisCount') ?? 2,
     );
@@ -44,6 +45,7 @@ class VWGridView extends VirtualStatelessWidget<Props> {
         controller: controller,
         physics: physics,
         shrinkWrap: shrinkWrap,
+        scrollDirection: scrollDirection,
         mainAxisSpacing: mainAxisSpacing,
         crossAxisSpacing: crossAxisSpacing,
         gridDelegate: gridDelegate,
@@ -61,6 +63,7 @@ class VWGridView extends VirtualStatelessWidget<Props> {
       controller: controller,
       physics: physics,
       shrinkWrap: shrinkWrap,
+      scrollDirection: scrollDirection,
       mainAxisSpacing: mainAxisSpacing,
       crossAxisSpacing: crossAxisSpacing,
       gridDelegate: gridDelegate,
