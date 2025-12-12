@@ -39,6 +39,7 @@ TextStyle? makeTextStyle(
 
   var fontToken = json['fontToken'];
 
+  // Case 1: No fontToken at all - use fallback with text decorations only
   if (fontToken == null) {
     return fallback?.copyWith(
       color: textColor,
@@ -49,6 +50,7 @@ TextStyle? makeTextStyle(
     );
   }
 
+  // Case 2: fontToken is a string token reference - use token as-is
   if (fontToken is String) {
     final textStyle =
         ResourceProvider.maybeOf(context)?.getFontFromToken(fontToken);
@@ -62,12 +64,13 @@ TextStyle? makeTextStyle(
     );
   }
 
-  // This means json['fontToken'] is a map
+  // Case 3: fontToken is a map
   fontToken = fontToken as JsonLike;
 
   final fontTokenValue = as$<String>(fontToken['value']);
+
+  // Extract font property overrides
   final overridingFontFamily = fontToken.valueFor('font.fontFamily') as String?;
-  // Support both 'style' (string) and 'isItalic' (boolean) for font style
   final styleValue = fontToken.valueFor('font.style');
   final isItalicValue = fontToken.valueFor('font.isItalic');
   final overridingFontStyle = styleValue != null
@@ -78,10 +81,40 @@ TextStyle? makeTextStyle(
   final overridingFontSize = eval<double>(fontToken.valueFor('font.size'));
   final overridingFontHeight = eval<double>(fontToken.valueFor('font.height'));
 
-  final fontFromToken = fontTokenValue
-      .maybe((it) => ResourceProvider.maybeOf(context)?.getFontFromToken(it));
+  // Case 3a: Design/custom token is selected (has value key)
+  // Use token as-is, ignore all font property overrides
+  if (fontTokenValue != null) {
+    final fontFromToken =
+        ResourceProvider.maybeOf(context)?.getFontFromToken(fontTokenValue);
 
-  final textStyle = (fontFromToken ?? defaultTextStyle).copyWith(
+    // If token found, use it without overrides (only apply text decorations)
+    if (fontFromToken != null) {
+      return fontFromToken.copyWith(
+        color: textColor,
+        backgroundColor: textBgColor,
+        decoration: textDecoration,
+        decorationColor: textDecorationColor,
+        decorationStyle: textDecorationStyle,
+      );
+    }
+
+    // Token not found - fallback to default with overrides for backwards compatibility
+    return defaultTextStyle.copyWith(
+      fontWeight: overridingFontWeight,
+      fontStyle: overridingFontStyle,
+      fontSize: overridingFontSize,
+      height: overridingFontHeight,
+      color: textColor,
+      backgroundColor: textBgColor,
+      decoration: textDecoration,
+      decorationColor: textDecorationColor,
+      decorationStyle: textDecorationStyle,
+    );
+  }
+
+  // Case 3b: No token value provided - use font property overrides
+  // This allows custom inline font properties without referencing a token
+  final textStyle = defaultTextStyle.copyWith(
     fontWeight: overridingFontWeight,
     fontStyle: overridingFontStyle,
     fontSize: overridingFontSize,
@@ -93,8 +126,8 @@ TextStyle? makeTextStyle(
     decorationStyle: textDecorationStyle,
   );
 
+  // Apply custom font family if specified
   final fontFactory = ResourceProvider.maybeOf(context)?.getFontFactory();
-
   if (overridingFontFamily == null || fontFactory == null) {
     return textStyle;
   }
