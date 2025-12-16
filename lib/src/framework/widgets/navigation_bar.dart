@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../actions/base/action_flow.dart';
 import '../base/virtual_stateless_widget.dart';
 import '../internal_widgets/bottom_navigation_bar/bottom_navigation_bar.dart'
     as internal;
@@ -26,17 +25,6 @@ class VWNavigationBar extends VirtualStatelessWidget<NavigationBarProps> {
   });
 
   void handleDestinationSelected(int index, RenderPayload payload) {
-    final selectedChild = children?.elementAt(index);
-    if (selectedChild is VWNavigationBarItemDefault) {
-      final onPageSelected = selectedChild.props.onSelect;
-      final onPageSelectedAction = onPageSelected?['action'];
-      if (onPageSelectedAction != null) {
-        payload.executeAction(
-          ActionFlow.fromJson(onPageSelectedAction),
-          triggerType: 'onPageSelected',
-        );
-      }
-    }
     onDestinationSelected?.call(index);
   }
 

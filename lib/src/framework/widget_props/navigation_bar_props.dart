@@ -12,6 +12,7 @@ class NavigationBarProps {
   final ExprOr<String>? indicatorColor;
   final ExprOr<String>? indicatorShape;
   final ExprOr<bool>? showLabels;
+  final ExprOr<bool>? preservePage;
   final List<Object?>? shadow;
   final String? borderRadius;
 
@@ -27,6 +28,7 @@ class NavigationBarProps {
     this.indicatorColor,
     this.indicatorShape,
     this.showLabels,
+    this.preservePage,
   });
 
   factory NavigationBarProps.fromJson(JsonLike json) {
@@ -40,6 +42,7 @@ class NavigationBarProps {
       indicatorColor: ExprOr.fromJson<String>(json['indicatorColor']),
       indicatorShape: ExprOr.fromJson<String>(json['indicatorShape']),
       showLabels: ExprOr.fromJson<bool>(json['showLabels']),
+      preservePage: ExprOr.fromJson<bool>(json['preservePage']),
       borderRadius: as$<String>(json['borderRadius']),
       shadow: as$<List<Object?>?>(json['shadow']),
     );

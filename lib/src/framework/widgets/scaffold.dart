@@ -287,71 +287,6 @@ class VWScaffold extends VirtualStatelessWidget<ScaffoldProps> {
       );
     });
   }
-
-  Widget? _buildBodyWithNavBar(
-      RenderPayload payload, int bottomNavBarIndex, bool enableSafeArea) {
-    final bottomNavBar = childOf('bottomNavigationBar');
-    if (bottomNavBar is! VWNavigationBar &&
-        bottomNavBar is! VWNavigationBarCustom) {
-      return null;
-    }
-
-    final isDefaultNavBar = bottomNavBar is VWNavigationBar;
-    final navigationItems = isDefaultNavBar
-        ? bottomNavBar
-            .childrenOf('children')
-            ?.whereType<VWNavigationBarItemDefault>()
-            .toList()
-        : (bottomNavBar as VWNavigationBarCustom)
-            .childrenOf('children')
-            ?.whereType<VWNavigationBarItemCustom>()
-            .toList();
-
-    if (navigationItems == null || navigationItems.isEmpty) return null;
-
-    final entityIds = navigationItems.map((item) {
-      if (isDefaultNavBar) {
-        return as$<String?>(((item as VWNavigationBarItemDefault)
-            .props
-            .onSelect?['entity'] as JsonLike?)?['id']);
-      } else {
-        return as$<String?>(((item as VWNavigationBarItemCustom)
-            .props
-            .onSelect?['entity'] as JsonLike?)?['id']);
-      }
-    }).toList();
-
-    if (entityIds.isEmpty || bottomNavBarIndex >= entityIds.length) return null;
-    final currentEntityId = entityIds[bottomNavBarIndex];
-    if (currentEntityId == null) return null;
-
-    final currentItem = navigationItems.firstWhere((item) {
-      if (isDefaultNavBar) {
-        return ((item as VWNavigationBarItemDefault).props.onSelect?['entity']
-                as JsonLike?)?['id'] ==
-            currentEntityId;
-      } else {
-        return ((item as VWNavigationBarItemCustom).props.onSelect?['entity']
-                as JsonLike?)?['id'] ==
-            currentEntityId;
-      }
-    });
-
-    final currentEntityArgs = isDefaultNavBar
-        ? (((currentItem as VWNavigationBarItemDefault)
-            .props
-            .onSelect?['entity'] as JsonLike?)?['args'] as JsonLike?)
-        : (((currentItem as VWNavigationBarItemCustom).props.onSelect?['entity']
-            as JsonLike?)?['args'] as JsonLike?);
-
-    final Widget entity =
-        DefaultActionExecutor.of(payload.buildContext).viewBuilder(
-      payload.buildContext,
-      currentEntityId,
-      currentEntityArgs,
-    );
-    return enableSafeArea ? SafeArea(child: entity) : entity;
-  }
 }
 
 class _ScaffoldWithBottomNav extends StatefulWidget {
@@ -365,64 +300,241 @@ class _ScaffoldWithBottomNav extends StatefulWidget {
   final VWScaffold parent;
   final bool resizeToAvoidBottomInset;
 
-  const _ScaffoldWithBottomNav(
-      {required this.appBarWidget,
-      required this.drawer,
-      required this.endDrawer,
-      required this.persistentFooterButtons,
-      required this.isCollapsibleAppBar,
-      required this.enableSafeArea,
-      required this.payload,
-      required this.parent,
-      required this.resizeToAvoidBottomInset});
+  const _ScaffoldWithBottomNav({
+    required this.appBarWidget,
+    required this.drawer,
+    required this.endDrawer,
+    required this.persistentFooterButtons,
+    required this.isCollapsibleAppBar,
+    required this.enableSafeArea,
+    required this.payload,
+    required this.parent,
+    required this.resizeToAvoidBottomInset,
+  });
 
   @override
   State<_ScaffoldWithBottomNav> createState() => _ScaffoldWithBottomNavState();
 }
 
 class _ScaffoldWithBottomNavState extends State<_ScaffoldWithBottomNav> {
-  int bottomNavBarIndex = 0;
+  int _currentIndex = 0;
 
-  void onDestinationSelected(int index) {
-    setState(() {
-      bottomNavBarIndex = index;
-    });
-  }
+  late List<VirtualWidget> _navItems;
+  final Map<int, Widget> _pageCache = {};
 
-  Widget? buildBottomNavigationBar(RenderPayload payload) {
-    final child = widget.parent.childOf('bottomNavigationBar');
-    if (child == null) return null;
-    if (child is! VWNavigationBar && child is! VWNavigationBarCustom) {
-      return null;
-    }
+  // ------------------------------------------------------------
+  // Lifecycle
+  // ------------------------------------------------------------
 
-    if (child is VWNavigationBarCustom) {
-      return VWNavigationBarCustom(
-        props: child.props,
-        commonProps: child.commonProps,
-        parent: widget.parent,
-        childGroups: child.childGroups,
-        selectedIndex: bottomNavBarIndex,
-        onDestinationSelected: onDestinationSelected,
-      ).toWidget(payload);
-    } else {
-      child as VWNavigationBar;
-      return VWNavigationBar(
-        props: child.props,
-        commonProps: child.commonProps,
-        parent: widget.parent,
-        childGroups: child.childGroups,
-        selectedIndex: bottomNavBarIndex,
-        onDestinationSelected: onDestinationSelected,
-      ).toWidget(payload);
-    }
+  @override
+  void initState() {
+    super.initState();
+    _navItems = _extractNavigationItems();
   }
 
   @override
+  void didUpdateWidget(covariant _ScaffoldWithBottomNav oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    final oldNav = oldWidget.parent.childOf('bottomNavigationBar');
+    final newNav = widget.parent.childOf('bottomNavigationBar');
+
+    if (oldNav != newNav) {
+      _navItems = _extractNavigationItems();
+      _pageCache.clear();
+      _currentIndex = 0;
+    }
+  }
+
+  // ------------------------------------------------------------
+  // Navigation extraction
+  // ------------------------------------------------------------
+
+  List<VirtualWidget> _extractNavigationItems() {
+    final navBar = widget.parent.childOf('bottomNavigationBar');
+
+    if (navBar is VWNavigationBar) {
+      return navBar
+              .childrenOf('children')
+              ?.whereType<VWNavigationBarItemDefault>()
+              .toList() ??
+          [];
+    }
+
+    if (navBar is VWNavigationBarCustom) {
+      return navBar
+              .childrenOf('children')
+              ?.whereType<VWNavigationBarItemCustom>()
+              .toList() ??
+          [];
+    }
+
+    return [];
+  }
+
+  // ------------------------------------------------------------
+  // Preserve page flag
+  // ------------------------------------------------------------
+
+  bool _getPreservePageState() {
+    final navBar = widget.parent.childOf('bottomNavigationBar');
+
+    if (navBar is VWNavigationBar) {
+      return navBar.props.preservePage?.evaluate(widget.payload.scopeContext) ??
+          false;
+    }
+
+    if (navBar is VWNavigationBarCustom) {
+      return navBar.props.preservePage?.evaluate(widget.payload.scopeContext) ??
+          false;
+    }
+
+    return false;
+  }
+
+  // ------------------------------------------------------------
+  // Page creation (lazy + cached)
+  // ------------------------------------------------------------
+
+  Widget _buildPage(int index) {
+    if (_pageCache.containsKey(index)) {
+      return _pageCache[index]!;
+    }
+
+    if (index >= _navItems.length) {
+      return const SizedBox.shrink();
+    }
+
+    final item = _navItems[index];
+    final onSelect = item is VWNavigationBarItemDefault
+        ? item.props.onSelect
+        : (item as VWNavigationBarItemCustom).props.onSelect;
+
+    final entity = onSelect?['entity'] as JsonLike?;
+    final entityId = as$<String?>(entity?['id']);
+    final args = entity?['args'] as JsonLike?;
+
+    final page = entityId != null
+        ? DefaultActionExecutor.of(widget.payload.buildContext).viewBuilder(
+            widget.payload.buildContext,
+            entityId,
+            args,
+          )
+        : const SizedBox.shrink();
+
+    _pageCache[index] = page;
+    return page;
+  }
+
+  // ------------------------------------------------------------
+  // Action detection
+  // ------------------------------------------------------------
+
+  dynamic _getActionForIndex(int index) {
+    if (index >= _navItems.length) return null;
+
+    final item = _navItems[index];
+    final onSelect = item is VWNavigationBarItemDefault
+        ? item.props.onSelect
+        : (item as VWNavigationBarItemCustom).props.onSelect;
+
+    return (onSelect != null && onSelect['type'] == 'action')
+        ? onSelect['action']
+        : null;
+  }
+
+  // ------------------------------------------------------------
+  // Bottom nav tap handler (ONLY place actions execute)
+  // ------------------------------------------------------------
+
+  void onDestinationSelected(int index) {
+    final action = _getActionForIndex(index);
+
+    if (action != null) {
+      widget.payload.executeAction(
+        ActionFlow.fromJson(action),
+        triggerType: 'onPageSelected',
+      );
+      return;
+    }
+
+    if (index == _currentIndex) return;
+
+    setState(() {
+      _currentIndex = index;
+    });
+  }
+
+  // ------------------------------------------------------------
+  // Body builder (pure)
+  // ------------------------------------------------------------
+
+  Widget _buildBody() {
+    final preserve = _getPreservePageState();
+
+    if (preserve) {
+      return IndexedStack(
+        index: _currentIndex,
+        children: List.generate(
+          _navItems.length,
+          (i) => _buildPage(i),
+        ),
+      );
+    }
+
+    return _buildPage(_currentIndex);
+  }
+
+  // ------------------------------------------------------------
+  // Bottom Navigation Bar
+  // ------------------------------------------------------------
+
+  Widget? buildBottomNavigationBar(RenderPayload payload) {
+    final navBar = widget.parent.childOf('bottomNavigationBar');
+
+    if (navBar == null) return null;
+
+    return Builder(builder: (context) {
+      final updatedPayload = payload.copyWith(buildContext: context);
+
+      if (navBar is VWNavigationBarCustom) {
+        return VWNavigationBarCustom(
+          props: navBar.props,
+          commonProps: navBar.commonProps,
+          parent: widget.parent,
+          childGroups: navBar.childGroups,
+          selectedIndex: _currentIndex,
+          onDestinationSelected: onDestinationSelected,
+        ).toWidget(updatedPayload);
+      }
+
+      if (navBar is VWNavigationBar) {
+        return VWNavigationBar(
+          props: navBar.props,
+          commonProps: navBar.commonProps,
+          parent: widget.parent,
+          childGroups: navBar.childGroups,
+          selectedIndex: _currentIndex,
+          onDestinationSelected: onDestinationSelected,
+        ).toWidget(updatedPayload);
+      }
+
+      return const SizedBox.shrink();
+    });
+  }
+
+  // ------------------------------------------------------------
+  // Build
+  // ------------------------------------------------------------
+
+  @override
   Widget build(BuildContext context) {
+    final body =
+        widget.enableSafeArea ? SafeArea(child: _buildBody()) : _buildBody();
+
     return InheritedScaffoldController(
+      currentIndex: _currentIndex,
       setCurrentIndex: onDestinationSelected,
-      currentIndex: bottomNavBarIndex,
       child: Scaffold(
         resizeToAvoidBottomInset: widget.resizeToAvoidBottomInset,
         appBar: widget.isCollapsibleAppBar
@@ -433,9 +545,10 @@ class _ScaffoldWithBottomNavState extends State<_ScaffoldWithBottomNav> {
         bottomNavigationBar: buildBottomNavigationBar(widget.payload),
         body: widget.isCollapsibleAppBar
             ? widget.parent._buildCollapsibleAppBarBody(
-                widget.payload, widget.enableSafeArea)
-            : widget.parent._buildBodyWithNavBar(
-                widget.payload, bottomNavBarIndex, widget.enableSafeArea),
+                widget.payload,
+                widget.enableSafeArea,
+              )
+            : body,
         persistentFooterButtons: widget.persistentFooterButtons,
       ),
     );
