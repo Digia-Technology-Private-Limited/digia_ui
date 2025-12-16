@@ -412,7 +412,9 @@ class _ScaffoldWithBottomNavState extends State<_ScaffoldWithBottomNav> {
         ? item.props.onSelect
         : (item as VWNavigationBarItemCustom).props.onSelect;
 
-    final entity = onSelect?['entity'] as JsonLike?;
+    final entity = (onSelect != null && onSelect['type'] == 'loadEntity')
+        ? onSelect['entity'] as JsonLike?
+        : null;
     final entityId = as$<String?>(entity?['id']);
     final args = entity?['args'] as JsonLike?;
 
