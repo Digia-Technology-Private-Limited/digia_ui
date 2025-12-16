@@ -84,15 +84,14 @@ class VWRichText extends VirtualLeafStatelessWidget<RichTextProps> {
                 )
               : null;
 
-          final recognizer = spanObject['onClick'].maybe(
-            (p0) => TapGestureRecognizer()
-              ..onTap = () {
-                final onClick = ActionFlow.fromJson(p0);
-                payload.executeAction(
-                  onClick,
-                  triggerType: 'onTap',
-                );
-              },
+          final onTapHandler = spanObject['onClick'].maybe(
+            (p0) => () {
+              final onClick = ActionFlow.fromJson(p0);
+              payload.executeAction(
+                onClick,
+                triggerType: 'onTap',
+              );
+            },
           );
 
           if (gradient != null) {
@@ -100,7 +99,7 @@ class VWRichText extends VirtualLeafStatelessWidget<RichTextProps> {
               alignment: PlaceholderAlignment.baseline,
               baseline: TextBaseline.alphabetic,
               child: GestureDetector(
-                onTap: recognizer?.onTap,
+                onTap: onTapHandler,
                 child: ShaderMask(
                   shaderCallback: (bounds) => gradient.createShader(bounds),
                   blendMode: BlendMode.srcIn,
@@ -112,6 +111,10 @@ class VWRichText extends VirtualLeafStatelessWidget<RichTextProps> {
               ),
             );
           }
+
+          final recognizer = onTapHandler != null
+              ? (TapGestureRecognizer()..onTap = onTapHandler)
+              : null;
 
           return TextSpan(
             text: text,
