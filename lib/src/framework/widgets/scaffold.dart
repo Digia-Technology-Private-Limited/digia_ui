@@ -380,12 +380,14 @@ class _ScaffoldWithBottomNavState extends State<_ScaffoldWithBottomNav> {
     final navBar = widget.parent.childOf('bottomNavigationBar');
 
     if (navBar is VWNavigationBar) {
-      return navBar.props.preservePage?.evaluate(widget.payload.scopeContext) ??
+      return navBar.props.rebuildOnEveryLoad
+              ?.evaluate(widget.payload.scopeContext) ??
           false;
     }
 
     if (navBar is VWNavigationBarCustom) {
-      return navBar.props.preservePage?.evaluate(widget.payload.scopeContext) ??
+      return navBar.props.rebuildOnEveryLoad
+              ?.evaluate(widget.payload.scopeContext) ??
           false;
     }
 
