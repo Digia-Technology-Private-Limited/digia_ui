@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 import '../base/virtual_sliver.dart';
 import '../expr/default_scope_context.dart';
@@ -21,37 +22,31 @@ class VWSliverGrid extends VirtualSliver<Props> {
 
   @override
   Widget render(RenderPayload payload) {
-    if (children == null || children!.isEmpty) return empty();
-
-    final gridDelegate = SliverGridDelegateWithFixedCrossAxisCount(
-      crossAxisCount: props.getInt('crossAxisCount') ?? 2,
-    );
+    if (child == null) return empty();
 
     if (shouldRepeatChild) {
       final items = payload.eval<List<Object>>(props.get('dataSource')) ?? [];
 
-      final childToRepeat = children!.first;
-      return SliverGrid.builder(
+      final childToRepeat = child!;
+      return SliverAlignedGrid.count(
+        crossAxisCount: props.getInt('crossAxisCount') ?? 2,
+        crossAxisSpacing: props.getDouble('crossAxisSpacing') ?? 0.0,
+        mainAxisSpacing: props.getDouble('mainAxisSpacing') ?? 0.0,
         itemCount: items.length,
         itemBuilder: (innerCtx, index) =>
             childToRepeat.toWidget(payload.copyWithChainedContext(
           _createExprContext(items[index], index),
           buildContext: innerCtx,
         )),
-        gridDelegate: gridDelegate,
       );
     }
-    return SliverGrid(
-      delegate: SliverChildBuilderDelegate(
-        (context, index) => children![index].toWidget(
-          payload.copyWithChainedContext(
-            _createExprContext(children![index], index),
-            buildContext: context,
-          ),
+    return SliverAlignedGrid.count(
+      crossAxisCount: props.getInt('crossAxisCount') ?? 2,
+      itemBuilder: (context, index) => child!.toWidget(
+        payload.copyWith(
+          buildContext: context,
         ),
-        childCount: children?.length ?? 0,
       ),
-      gridDelegate: gridDelegate,
     );
   }
 
