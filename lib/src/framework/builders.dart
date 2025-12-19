@@ -8,11 +8,9 @@ import 'virtual_widget_registry.dart';
 import 'widget_props/animated_switcher_props.dart';
 import 'widget_props/app_bar_props.dart';
 import 'widget_props/async_builder_props.dart';
-import 'widget_props/before_after_slider_props.dart';
 import 'widget_props/carousel_props.dart';
 import 'widget_props/chart_props.dart';
 import 'widget_props/condtional_item_props.dart';
-import 'widget_props/image_view_360_props.dart';
 import 'widget_props/markdown_props.dart';
 import 'widget_props/masonry_grid_view_props.dart';
 import 'widget_props/nav_bar_item_custom.dart';
@@ -46,7 +44,6 @@ import 'widgets/animated_switcher.dart';
 import 'widgets/app_bar.dart';
 import 'widgets/async_builder.dart';
 import 'widgets/avatar.dart';
-import 'widgets/before_after_slider.dart';
 import 'widgets/button.dart';
 import 'widgets/calendar.dart';
 import 'widgets/carousel.dart';
@@ -63,7 +60,6 @@ import 'widgets/grid_view.dart';
 import 'widgets/html_view.dart';
 import 'widgets/icon_button.dart';
 import 'widgets/image.dart';
-import 'widgets/image_view_360.dart';
 import 'widgets/linear_progress_bar.dart';
 import 'widgets/list_view.dart';
 import 'widgets/lottie.dart';
@@ -783,35 +779,6 @@ VWRefreshIndicator refreshIndicatorBuilder(
     refName: data.refName,
     childGroups: createChildGroups(data.childGroups, parent, registry),
   );
-}
-
-VWBeforeAfterSlider beforeAfterSliderBuilder(
-  VWNodeData data,
-  VirtualWidget? parent,
-  VirtualWidgetRegistry registry,
-) {
-  return VWBeforeAfterSlider(
-    props: BeforeAfterSliderProps.fromJson(data.props.value),
-    commonProps: data.commonProps,
-    parentProps: data.parentProps,
-    parent: parent,
-    refName: data.refName,
-    childGroups: createChildGroups(data.childGroups, parent, registry),
-  );
-}
-
-VWImageView360 imageView360Builder(
-  VWNodeData data,
-  VirtualWidget? parent,
-  VirtualWidgetRegistry registry,
-) {
-  return VWImageView360(
-      props: ImageView360Props.fromJson(data.props.value),
-      commonProps: data.commonProps,
-      parentProps: data.parentProps,
-      parent: parent,
-      refName: data.refName,
-      childGroups: createChildGroups(data.childGroups, parent, registry));
 }
 
 VWOpacity opacityBuilder(

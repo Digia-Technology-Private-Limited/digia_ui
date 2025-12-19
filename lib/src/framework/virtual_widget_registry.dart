@@ -82,8 +82,6 @@ abstract class VirtualWidgetRegistry {
     'digia/animatedButton': animatedButtonBuilder,
     'digia/expandable': expandableBuilder,
     'digia/refreshIndicator': refreshIndicatorBuilder,
-    'digia/beforeAfterSlider': beforeAfterSliderBuilder,
-    'digia/imageView360': imageView360Builder,
     // 'digia/stepper': stepperBuilder,
     // 'digia/flutterStepper': flutterStepperBuilder,
     'digia/pinField': pinFieldBuilder,
