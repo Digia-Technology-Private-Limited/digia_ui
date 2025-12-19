@@ -11,7 +11,7 @@ import 'widget_props/async_builder_props.dart';
 import 'widget_props/before_after_slider_props.dart';
 import 'widget_props/carousel_props.dart';
 import 'widget_props/chart_props.dart';
-import 'widget_props/condtional_item_props.dart';
+import 'widget_props/conditional_item_props.dart';
 import 'widget_props/icon_props.dart';
 import 'widget_props/image_view_360_props.dart';
 import 'widget_props/markdown_props.dart';
@@ -55,7 +55,7 @@ import 'widgets/chart.dart';
 import 'widgets/checkbox.dart';
 import 'widgets/circular_progress_bar.dart';
 import 'widgets/conditional_builder.dart';
-import 'widgets/condtional_item.dart';
+import 'widgets/conditional_item.dart';
 import 'widgets/container.dart';
 import 'widgets/drawer.dart';
 import 'widgets/expandable.dart';
@@ -776,7 +776,7 @@ VWConditionItem conditionalItemBuilder(
   VirtualWidgetRegistry registry,
 ) {
   return VWConditionItem(
-    props: CondtionalItemProps.fromJson(data.props.value),
+    props: ConditionalItemProps.fromJson(data.props.value),
     refName: data.refName,
     childGroups: createChildGroups(data.childGroups, parent, registry),
   );

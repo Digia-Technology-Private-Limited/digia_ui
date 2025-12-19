@@ -24,7 +24,7 @@ class VWListView extends VirtualStatelessWidget<Props> {
 
   @override
   Widget render(RenderPayload payload) {
-    if (child == null) return empty();
+    if (child == null || !shouldRepeatChild) return empty();
 
     final controller =
         payload.eval<AdaptedScrollController>(props.get('controller'));
@@ -38,27 +38,7 @@ class VWListView extends VirtualStatelessWidget<Props> {
     final initialScrollPosition =
         payload.eval<String>(props.get('initialScrollPosition'));
 
-    if (shouldRepeatChild) {
-      final items = payload.eval<List<Object>>(props.get('dataSource')) ?? [];
-      return InternalListView(
-        controller: controller,
-        reverse: reverse,
-        scrollDirection: scrollDirection,
-        physics: physics,
-        shrinkWrap: shrinkWrap,
-        initialScrollPosition: initialScrollPosition,
-        itemCount: items.length,
-        itemBuilder: (innerCtx, index) =>
-            child?.toWidget(
-              payload.copyWithChainedContext(
-                _createExprContext(items[index], index),
-                buildContext: innerCtx,
-              ),
-            ) ??
-            empty(),
-      );
-    }
-
+    final items = payload.eval<List<Object>>(props.get('dataSource')) ?? [];
     return InternalListView(
       controller: controller,
       reverse: reverse,
@@ -66,7 +46,15 @@ class VWListView extends VirtualStatelessWidget<Props> {
       physics: physics,
       shrinkWrap: shrinkWrap,
       initialScrollPosition: initialScrollPosition,
-      children: [child?.toWidget(payload) ?? empty()],
+      itemCount: items.length,
+      itemBuilder: (innerCtx, index) =>
+          child?.toWidget(
+            payload.copyWithChainedContext(
+              _createExprContext(items[index], index),
+              buildContext: innerCtx,
+            ),
+          ) ??
+          empty(),
     );
   }
 

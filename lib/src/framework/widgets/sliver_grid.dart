@@ -22,31 +22,21 @@ class VWSliverGrid extends VirtualSliver<Props> {
 
   @override
   Widget render(RenderPayload payload) {
-    if (child == null) return empty();
+    if (child == null || !shouldRepeatChild) return empty();
 
-    if (shouldRepeatChild) {
-      final items = payload.eval<List<Object>>(props.get('dataSource')) ?? [];
+    final items = payload.eval<List<Object>>(props.get('dataSource')) ?? [];
 
-      final childToRepeat = child!;
-      return SliverAlignedGrid.count(
-        crossAxisCount: props.getInt('crossAxisCount') ?? 2,
-        crossAxisSpacing: props.getDouble('crossAxisSpacing') ?? 0.0,
-        mainAxisSpacing: props.getDouble('mainAxisSpacing') ?? 0.0,
-        itemCount: items.length,
-        itemBuilder: (innerCtx, index) =>
-            childToRepeat.toWidget(payload.copyWithChainedContext(
-          _createExprContext(items[index], index),
-          buildContext: innerCtx,
-        )),
-      );
-    }
+    final childToRepeat = child!;
     return SliverAlignedGrid.count(
       crossAxisCount: props.getInt('crossAxisCount') ?? 2,
-      itemBuilder: (context, index) => child!.toWidget(
-        payload.copyWith(
-          buildContext: context,
-        ),
-      ),
+      crossAxisSpacing: props.getDouble('crossAxisSpacing') ?? 0.0,
+      mainAxisSpacing: props.getDouble('mainAxisSpacing') ?? 0.0,
+      itemCount: items.length,
+      itemBuilder: (innerCtx, index) =>
+          childToRepeat.toWidget(payload.copyWithChainedContext(
+        _createExprContext(items[index], index),
+        buildContext: innerCtx,
+      )),
     );
   }
 
