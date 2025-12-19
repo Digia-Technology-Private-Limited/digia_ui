@@ -4,8 +4,6 @@ import '../base/virtual_leaf_stateless_widget.dart';
 import '../models/props.dart';
 import '../render_payload.dart';
 import '../utils/flutter_type_converters.dart';
-import '../widget_props/icon_props.dart';
-import 'icon.dart';
 
 class VWCheckbox extends VirtualLeafStatelessWidget<Props> {
   VWCheckbox({
@@ -33,20 +31,6 @@ class VWCheckbox extends VirtualLeafStatelessWidget<Props> {
         payload.evalColor(props.get('inactiveBorderColor'));
     final borderWidth = props.getDouble('borderWidth');
 
-    final activeIcon = VWIcon(
-      props:
-          IconProps.fromJson(props.getMap('activeIcon')) ?? IconProps.empty(),
-      commonProps: null,
-      parent: null,
-    );
-
-    final inactiveIcon = VWIcon(
-      props:
-          IconProps.fromJson(props.getMap('inactiveIcon')) ?? IconProps.empty(),
-      commonProps: null,
-      parent: null,
-    );
-
     return Center(
       child: Container(
         width: size,
@@ -62,9 +46,7 @@ class VWCheckbox extends VirtualLeafStatelessWidget<Props> {
                 Colors.grey,
           ),
         ),
-        child: value
-            ? activeIcon.toWidget(payload)
-            : inactiveIcon.toWidget(payload),
+        child: Icon(Icons.check),
       ),
     );
   }

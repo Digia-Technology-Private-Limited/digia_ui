@@ -6,15 +6,12 @@ import '../actions/base/action_flow.dart';
 import '../base/virtual_leaf_stateless_widget.dart';
 import '../custom/button_bounce_animation.dart';
 import '../models/props.dart';
-import '../models/types.dart';
 import '../render_payload.dart';
 import '../utils/flutter_type_converters.dart';
 import '../utils/functional_util.dart';
 import '../utils/json_util.dart';
 import '../utils/types.dart';
-import '../widget_props/icon_props.dart';
 import '../widget_props/text_props.dart';
-import 'icon.dart';
 import 'text.dart';
 
 class VWAnimatedButton extends VirtualLeafStatelessWidget<Props> {
@@ -94,8 +91,6 @@ class VWAnimatedButton extends VirtualLeafStatelessWidget<Props> {
     String? disabledIconColor,
   }) {
     Widget text;
-    Widget? leadingIcon;
-    Widget? trailingIcon;
 
     final JsonLike localProps =
         jsonDecode(jsonEncode(props.value)) as JsonLike? ?? {};
@@ -113,51 +108,6 @@ class VWAnimatedButton extends VirtualLeafStatelessWidget<Props> {
       commonProps: null,
     ).toWidget(payload);
 
-    final leadingIconProps =
-        (localProps['leadingIcon'] as Map<String, Object?>?)
-            .maybe(IconProps.fromJson)
-            ?.copyWith(
-              color: ExprOr.fromJson<String>(overrideColor
-                  ? disabledIconColor
-                  : props.get('leadingIcon.iconColor')),
-            );
-
-    if (leadingIconProps != null) {
-      leadingIcon = VWIcon(
-        props: leadingIconProps,
-        commonProps: commonProps,
-        parent: this,
-      ).toWidget(payload);
-    }
-
-    final trailingIconProps =
-        (localProps['trailingIcon'] as Map<String, Object?>?)
-            .maybe(IconProps.fromJson)
-            ?.copyWith(
-              color: ExprOr.fromJson<String>(overrideColor
-                  ? disabledIconColor
-                  : props.get('trailingIcon.iconColor')),
-            );
-
-    if (trailingIconProps != null) {
-      trailingIcon = VWIcon(
-        props: trailingIconProps,
-        commonProps: null,
-        parent: null,
-      ).toWidget(payload);
-    }
-
-    if (leadingIcon == null && trailingIcon == null) {
-      return text;
-    }
-
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        if (leadingIcon != null) leadingIcon,
-        Flexible(child: text),
-        if (trailingIcon != null) trailingIcon,
-      ],
-    );
+    return text;
   }
 }

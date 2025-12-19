@@ -8,8 +8,6 @@ import '../utils/flutter_extensions.dart';
 import '../utils/flutter_type_converters.dart';
 import '../utils/functional_util.dart';
 import '../utils/object_util.dart';
-import '../widget_props/icon_props.dart';
-import 'icon.dart';
 
 class VWIconButton extends VirtualLeafStatelessWidget<Props> {
   VWIconButton({
@@ -22,13 +20,6 @@ class VWIconButton extends VirtualLeafStatelessWidget<Props> {
 
   @override
   Widget render(RenderPayload payload) {
-    final icon = VWIcon(
-      props:
-          props.getMap('icon').maybe(IconProps.fromJson) ?? IconProps.empty(),
-      commonProps: commonProps,
-      parent: this,
-    ).toWidget(payload);
-
     final defaultStyleJson = props.getMap('defaultStyle') ?? {};
     final disabledStyleJson = props.getMap('disabledStyle') ?? {};
 
@@ -68,7 +59,7 @@ class VWIconButton extends VirtualLeafStatelessWidget<Props> {
                   triggerType: 'onPressed',
                 );
               },
-        icon: icon,
+        icon: Icon(Icons.add),
         style: style,
       ),
     );

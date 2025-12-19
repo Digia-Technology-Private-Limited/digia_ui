@@ -8,13 +8,10 @@ import '../internal_widgets/inherited_scaffold_controller.dart';
 import '../utils/flutter_extensions.dart';
 import '../utils/functional_util.dart';
 import '../utils/types.dart';
-import '../widget_props/icon_props.dart';
 import '../widget_props/scaffold_props.dart';
 import '../widget_props/sliver_app_bar_props.dart';
 import '../widget_props/text_props.dart';
 import 'app_bar.dart';
-import 'drawer.dart';
-import 'icon.dart';
 import 'nav_bar_item_custom.dart';
 import 'nav_bar_item_default.dart';
 import 'navigation_bar.dart';
@@ -110,8 +107,6 @@ class VWScaffold extends VirtualStatelessWidget<ScaffoldProps> {
       child: VWAppBar(
         props: child.props,
         parent: this,
-        leadingIcon: _drawerIcon(),
-        trailingIcon: _endDrawerIcon(),
         childGroups: child.childGroups,
       ).toWidget(payload) as PreferredSizeWidget,
     );
@@ -254,38 +249,6 @@ class VWScaffold extends VirtualStatelessWidget<ScaffoldProps> {
     }
 
     return body.toWidget(payload);
-  }
-
-  VirtualWidget? _drawerIcon() {
-    final child = childOf('drawer');
-
-    if (child == null || child is! VWDrawer) {
-      return null;
-    }
-
-    return child.props.getMap('drawerIcon').maybe((p0) {
-      return VWIcon(
-        props: IconProps.fromJson(p0) ?? IconProps.empty(),
-        commonProps: null,
-        parent: null,
-      );
-    });
-  }
-
-  VirtualWidget? _endDrawerIcon() {
-    final child = childOf('endDrawer');
-
-    if (child == null || child is! VWDrawer) {
-      return null;
-    }
-
-    return child.props.getMap('drawerIcon').maybe((p0) {
-      return VWIcon(
-        props: IconProps.fromJson(p0) ?? IconProps.empty(),
-        commonProps: null,
-        parent: null,
-      );
-    });
   }
 
   Widget? _buildBodyWithNavBar(

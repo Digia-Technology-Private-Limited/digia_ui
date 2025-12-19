@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/widgets.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../components/story/story_presenter/flutter_story_widgets.dart';
@@ -133,19 +133,6 @@ class _InternalStoryVideoPlayerState extends State<InternalStoryVideoPlayer> {
 
   @override
   Widget build(BuildContext context) {
-    if (!_isInitialized || _videoController == null) {
-      return const Center(
-        child: CupertinoActivityIndicator(),
-      );
-    }
-
-    /// Ensure video is fully initialized before rendering
-    if (!_videoController!.value.isInitialized) {
-      return const Center(
-        child: CupertinoActivityIndicator(),
-      );
-    }
-
     return FittedBox(
       fit: widget.fit ?? BoxFit.cover,
       child: SizedBox(

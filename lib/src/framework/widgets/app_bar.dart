@@ -1,27 +1,18 @@
 import 'package:flutter/material.dart';
 
 import '../base/virtual_stateless_widget.dart';
-import '../base/virtual_widget.dart';
 import '../render_payload.dart';
 import '../utils/flutter_extensions.dart';
 import '../utils/flutter_type_converters.dart';
-import '../utils/functional_util.dart';
-import '../utils/widget_util.dart';
 import '../widget_props/app_bar_props.dart';
-import '../widget_props/icon_props.dart';
-import 'icon.dart';
 import 'text.dart';
 
 class VWAppBar extends VirtualStatelessWidget<AppBarProps> {
-  final VirtualWidget? leadingIcon;
-  final VirtualWidget? trailingIcon;
   VWAppBar({
     required super.props,
     required super.parent,
     super.parentProps,
     super.refName,
-    this.leadingIcon,
-    this.trailingIcon,
     required super.childGroups,
   }) :
         // Since this is a PrefferedSizeWidget,
@@ -110,40 +101,10 @@ class VWAppBar extends VirtualStatelessWidget<AppBarProps> {
   }
 
   Widget? _buildLeading(RenderPayload payload) {
-    if (childOf('leading') != null) {
-      return childOf('leading')!.toWidget(payload);
-    }
-
-    final leadingIconProps = props.leadingIcon.maybe(IconProps.fromJson);
-    if (leadingIconProps == null) return null;
-
-    var widget = VWIcon(
-      props: leadingIconProps,
-      commonProps: null,
-      parent: this,
-    ).toWidget(payload);
-
-    return wrapInGestureDetector(
-      payload: payload,
-      actionFlow: props.onTapLeadingIcon,
-      child: widget,
-    );
+    return childOf('leading')?.toWidget(payload);
   }
 
   List<Widget>? _buildActions(RenderPayload payload) {
-    if (childrenOf('actions') != null) {
-      return childrenOf('actions')?.map((e) => e.toWidget(payload)).toList();
-    }
-
-    final trailingIconProps = props.trailingIcon.maybe(IconProps.fromJson);
-    if (trailingIconProps == null) return null;
-
-    return [
-      VWIcon(
-        props: trailingIconProps,
-        commonProps: null,
-        parent: this,
-      ).toWidget(payload),
-    ];
+    return childrenOf('actions')?.map((e) => e.toWidget(payload)).toList();
   }
 }

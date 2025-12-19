@@ -1,8 +1,7 @@
 import 'dart:math';
 
 import 'package:expandable/expandable.dart';
-import 'package:flutter/cupertino.dart';
-import '../../components/dui_icons/icon_helpers/icon_data_serialization.dart';
+import 'package:flutter/widgets.dart';
 import '../base/virtual_stateless_widget.dart';
 import '../models/props.dart';
 import '../render_payload.dart';
@@ -45,12 +44,6 @@ class VWExpandable extends VirtualStatelessWidget<Props> {
         alignment: To.alignment(props.get('alignment')),
         animationDuration:
             Duration(milliseconds: props.getInt('animationDuration') ?? 1000),
-        collapseIcon: (iconProps?.getMap('collapseIcon') != null)
-            ? getIconData(icondataMap: iconProps?.getMap('collapseIcon') ?? {})
-            : CupertinoIcons.chevron_right,
-        expandIcon: (iconProps?.getMap('expandIcon') != null)
-            ? getIconData(icondataMap: iconProps?.getMap('expandIcon') ?? {})
-            : CupertinoIcons.chevron_down,
         hasIcon: props.getBool('hasIcon') ?? true,
         iconPadding: To.edgeInsets(iconProps?.get('iconPadding')),
         iconSize: iconProps?.getDouble('iconSize'),

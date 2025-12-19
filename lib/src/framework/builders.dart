@@ -12,7 +12,6 @@ import 'widget_props/before_after_slider_props.dart';
 import 'widget_props/carousel_props.dart';
 import 'widget_props/chart_props.dart';
 import 'widget_props/condtional_item_props.dart';
-import 'widget_props/icon_props.dart';
 import 'widget_props/image_view_360_props.dart';
 import 'widget_props/markdown_props.dart';
 import 'widget_props/masonry_grid_view_props.dart';
@@ -62,7 +61,6 @@ import 'widgets/expandable.dart';
 import 'widgets/flex.dart';
 import 'widgets/grid_view.dart';
 import 'widgets/html_view.dart';
-import 'widgets/icon.dart';
 import 'widgets/icon_button.dart';
 import 'widgets/image.dart';
 import 'widgets/image_view_360.dart';
@@ -245,16 +243,6 @@ VWContainer containerBuilder(
     parentProps: data.parentProps,
     parent: parent,
     childGroups: createChildGroups(data.childGroups, parent, registry),
-    refName: data.refName,
-  );
-}
-
-VWIcon iconBuilder(VWNodeData data, VirtualWidget? parent, _) {
-  return VWIcon(
-    props: IconProps.fromJson(data.props.value) ?? IconProps.empty(),
-    commonProps: data.commonProps,
-    parentProps: data.parentProps,
-    parent: parent,
     refName: data.refName,
   );
 }

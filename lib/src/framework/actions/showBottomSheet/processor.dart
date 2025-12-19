@@ -5,14 +5,11 @@ import '../../custom/custom_flutter_types.dart';
 import '../../expr/default_scope_context.dart';
 import '../../expr/scope_context.dart';
 import '../../models/types.dart';
-import '../../render_payload.dart';
 import '../../resource_provider.dart';
 import '../../utils/flutter_type_converters.dart';
 import '../../utils/functional_util.dart';
 import '../../utils/navigation_util.dart';
 import '../../utils/types.dart';
-import '../../widget_props/icon_props.dart';
-import '../../widgets/icon.dart';
 import '../action_descriptor.dart';
 import '../base/action_flow.dart';
 import '../base/processor.dart';
@@ -65,8 +62,6 @@ class ShowBottomSheetProcessor extends ActionProcessor<ShowBottomSheetAction> {
             1;
     final useSafeArea = as$<bool>(style['useSafeArea']) ?? true;
 
-    final iconProps = as$<JsonLike>(style['icon']).maybe(IconProps.fromJson);
-
     final viewData = action.viewData?.deepEvaluate(scopeContext);
     final evaluatedArgs = as$<JsonLike>(as$<JsonLike>(viewData)?['args']);
     final bottomSheetId = as$<String>(as$<JsonLike>(viewData)?['id']);
@@ -105,42 +100,28 @@ class ShowBottomSheetProcessor extends ActionProcessor<ShowBottomSheetAction> {
 
     try {
       final future = presentBottomSheet(
-          context: navigatorKey?.currentContext ?? context,
-          builder: (innerCtx) {
-            return viewBuilder(
-              innerCtx,
-              bottomSheetId ?? '',
-              evaluatedArgs,
-            );
-          },
-          navigatorKey: navigatorKey,
-          backgroundColor: bgColor,
-          scrollControlDisabledMaxHeightRatio: maxHeightRatio,
-          barrierColor: barrierColor,
-          useSafeArea: useSafeArea,
-          border: To.border((
-            style: as$<String>(style['borderStyle']),
-            width: as$<double>(style['borderWidth']),
-            color: borderColor,
-            strokeAlign: To.strokeAlign(as$<String>(style['strokeAlign'])) ??
-                StrokeAlign.center,
-          )),
-          borderRadius: To.borderRadius(style['borderRadius']),
-          iconBuilder: iconProps.maybe((p0) {
-            return (innerCtx) => VWIcon(
-                  props: p0,
-                  commonProps: null,
-                  parent: null,
-                ).toWidget(
-                  RenderPayload(
-                    buildContext: context,
-                    scopeContext: DefaultScopeContext(
-                      variables: {},
-                      enclosing: scopeContext,
-                    ),
-                  ),
-                );
-          }));
+        context: navigatorKey?.currentContext ?? context,
+        builder: (innerCtx) {
+          return viewBuilder(
+            innerCtx,
+            bottomSheetId ?? '',
+            evaluatedArgs,
+          );
+        },
+        navigatorKey: navigatorKey,
+        backgroundColor: bgColor,
+        scrollControlDisabledMaxHeightRatio: maxHeightRatio,
+        barrierColor: barrierColor,
+        useSafeArea: useSafeArea,
+        border: To.border((
+          style: as$<String>(style['borderStyle']),
+          width: as$<double>(style['borderWidth']),
+          color: borderColor,
+          strokeAlign: To.strokeAlign(as$<String>(style['strokeAlign'])) ??
+              StrokeAlign.center,
+        )),
+        borderRadius: To.borderRadius(style['borderRadius']),
+      );
 
       executionContext?.notifyProgress(
         id: id,

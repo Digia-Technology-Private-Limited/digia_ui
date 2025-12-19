@@ -9,8 +9,6 @@ import '../render_payload.dart';
 import '../utils/date_util.dart';
 import '../utils/flutter_type_converters.dart';
 import '../utils/functional_util.dart';
-import '../widget_props/icon_props.dart';
-import 'icon.dart';
 
 class VWCalendar extends VirtualLeafStatelessWidget<Props> {
   VWCalendar({
@@ -150,20 +148,9 @@ class VWCalendar extends VirtualLeafStatelessWidget<Props> {
         payload.getTextStyle(headerStyle.getMap('titleTextStyle')) ??
             const TextStyle(fontSize: 17.0);
     EdgeInsets? headerPadding = To.edgeInsets(headerStyle.get('headerPadding'));
-    Widget? leftChevronIcon = VWIcon(
-      props: IconProps.fromJson(headerStyle.getMap('leftChevronIcon')) ??
-          IconProps.empty(),
-      commonProps: null,
-      parent: null,
-    ).toWidget(payload);
+
     EdgeInsets? leftChevronPadding =
         To.edgeInsets(headerStyle.get('leftChevronPadding'));
-    Widget? rightChevronIcon = VWIcon(
-      props: IconProps.fromJson(headerStyle.getMap('rightChevronIcon')) ??
-          IconProps.empty(),
-      commonProps: null,
-      parent: null,
-    ).toWidget(payload);
     EdgeInsets? rightChevronPadding =
         To.edgeInsets(headerStyle.get('rightChevronPadding'));
     final shapeProps = headerStyle.toProps('shape');
@@ -180,9 +167,7 @@ class VWCalendar extends VirtualLeafStatelessWidget<Props> {
       titleCentered: titleCentered,
       titleTextStyle: titleTextStyle,
       headerPadding: headerPadding,
-      leftChevronIcon: leftChevronIcon,
       leftChevronPadding: leftChevronPadding,
-      rightChevronIcon: rightChevronIcon,
       rightChevronPadding: rightChevronPadding,
       decoration: BoxDecoration(
         color: headerColor,

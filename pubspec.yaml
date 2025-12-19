@@ -59,7 +59,6 @@ dependencies:
   digia_expr: 0.0.15
   flutter_js: 0.8.5
   fluttertoast: ^8.2.12
-  font_awesome_flutter: 10.8.0
   json_annotation: ^4.9.0
   lottie: ^3.3.1
   octo_image: ^2.1.0
@@ -110,33 +109,4 @@ dev_dependencies:
 # following page: https://dart.dev/tools/pub/pubspec
 # The following section is specific to Flutter packages.
 flutter:
-  # The following line ensures that the Material Icons font is
-  # included with your application, so that you can use the icons insndfkjsfdnj jsdnbf jsnd
-  # the material Icons class.
   uses-material-design: true
-
-  # To add assets to your application, add an assets section, like this:
-  assets:
-    - assets/images/
-    - assets/json/
-
-  fonts:
-    - family: LineAwesomeIcons
-      fonts:
-        - asset: assets/icons/LineAwesome.ttf
-          style: normal
-    - family: FontAwesomeBrands
-      fonts:
-        - asset: assets/icons/fa-brands-400.ttf
-          style: normal
-    - family: FontAwesomeSolid
-      fonts:
-        - asset: assets/icons/fa-solid-900.ttf
-          style: normal
-    - family: FontAwesomeRegular
-      fonts:
-        - asset: assets/icons/fa-regular-400.ttf
-          style: normal
-
-  # For details regarding fonts from package dependencies,
-  # see https://flutter.dev/custom-fonts/#from-packages
