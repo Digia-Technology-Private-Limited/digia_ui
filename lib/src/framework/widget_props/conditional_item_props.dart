@@ -1,13 +1,13 @@
 import '../models/types.dart';
 import '../utils/types.dart';
 
-class CondtionalItemProps {
+class ConditionalItemProps {
   final ExprOr<bool>? condition;
 
-  CondtionalItemProps({this.condition});
+  ConditionalItemProps({this.condition});
 
-  factory CondtionalItemProps.fromJson(JsonLike json) {
-    return CondtionalItemProps(
+  factory ConditionalItemProps.fromJson(JsonLike json) {
+    return ConditionalItemProps(
       condition: ExprOr.fromJson<bool>(json['condition']),
     );
   }

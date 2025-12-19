@@ -23,7 +23,7 @@ class VWSmartScrollGroup extends VirtualSliver<Props> {
     return SliverMainAxisGroup(
       slivers: [
         ...slivers
-            .map((e) => SliverUtil.convertToSliver(e))
+            .map((e) => SliverUtil.convertToSliver(e, payload))
             .map((child) => child.toWidget(payload))
       ],
     );

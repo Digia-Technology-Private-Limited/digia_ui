@@ -21,22 +21,16 @@ class VWSliverList extends VirtualSliver<Props> {
 
   @override
   Widget render(RenderPayload payload) {
-    if (shouldRepeatChild) {
-      final items = payload.eval<List<Object>>(props.get('dataSource')) ?? [];
+    if (child == null || !shouldRepeatChild) return empty();
+    final items = payload.eval<List<Object>>(props.get('dataSource')) ?? [];
 
-      return SliverList.builder(
-        itemCount: items.length,
-        itemBuilder: (innerCtx, index) =>
-            child?.toWidget(payload.copyWithChainedContext(
-          _createExprContext(items[index], index),
-          buildContext: innerCtx,
-        )),
-      );
-    }
-    return SliverList(
-      delegate: SliverChildListDelegate(
-        [child?.toWidget(payload) ?? empty()],
-      ),
+    return SliverList.builder(
+      itemCount: items.length,
+      itemBuilder: (innerCtx, index) =>
+          child?.toWidget(payload.copyWithChainedContext(
+        _createExprContext(items[index], index),
+        buildContext: innerCtx,
+      )),
     );
   }
 
