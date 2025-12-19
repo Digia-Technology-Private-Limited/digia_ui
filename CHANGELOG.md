@@ -2,6 +2,12 @@
 
 Digia Ui SDK.
 
+## [1.5.0] – 2025-11-19
+
+- 🧑‍🎨 Avatar Widget: Fixed an issue where the oval shape was not respected when an image was applied
+- 🧱 GridView: Improved compatibility and smoother behavior when used with SmartScrollView
+- ✨ Gradient Text Support: Added support for gradients in text — bring richer visuals and expressive styling to your typography
+
 ## [1.4.0] – 2025-11-19
 
 This release introduces beautiful new UI widgets that make designing stunning apps easier than ever.
