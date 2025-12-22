@@ -94,10 +94,10 @@ class _InternalCalendarState extends State<InternalCalendar> {
 
   Widget? _buildCustomHeaderWithYearSelector(
       BuildContext context, DateTime focusedDay) {
-    if (!widget.yearSelectorEnabled) return null;
+    if (!widget.yearSelectorEnabled || !widget.headersVisible) return null;
 
-    final currentYear = focusedDay.year;
-    final currentMonth = DateFormat('MMMM').format(focusedDay);
+    final currentYear = _focusedDay.year;
+    final currentMonth = DateFormat('MMMM').format(_focusedDay);
     final availableYears = _generateYearList(
       widget.firstDay.year,
       widget.lastDay.year,
@@ -106,15 +106,14 @@ class _InternalCalendarState extends State<InternalCalendar> {
     return Container(
       padding: widget.headerStyle.headerPadding,
       decoration: widget.headerStyle.decoration,
-      child: Row(
-        mainAxisAlignment: widget.headerStyle.titleCentered
-            ? MainAxisAlignment.center
-            : MainAxisAlignment.spaceBetween,
-        children: [
-          SizedBox(
-            width: 48,
-            height: 48,
-            child: IconButton(
+      child: IntrinsicHeight(
+        child: Row(
+          mainAxisAlignment: widget.headerStyle.titleCentered
+              ? MainAxisAlignment.center
+              : MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            IconButton(
               icon: widget.headerStyle.leftChevronIcon,
               padding: widget.headerStyle.leftChevronPadding,
               constraints: const BoxConstraints(),
@@ -126,56 +125,65 @@ class _InternalCalendarState extends State<InternalCalendar> {
                 });
               },
             ),
-          ),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                currentMonth,
-                style: widget.headerStyle.titleTextStyle,
-              ),
-              const SizedBox(width: 8),
-              DropdownButton<int>(
-                value: currentYear,
-                underline: const SizedBox.shrink(),
-                style: widget.headerStyle.titleTextStyle,
-                icon: Icon(
-                  Icons.arrow_drop_down,
-                  color: widget.headerStyle.titleTextStyle.color,
-                ),
-                dropdownColor: Colors.white,
-                menuMaxHeight: 200,
-                items: availableYears.map((year) {
-                  return DropdownMenuItem<int>(
-                    value: year,
-                    child: Text(
-                      year.toString(),
-                      style: widget.headerStyle.titleTextStyle,
+            if (widget.headerStyle.titleCentered) Spacer(),
+            Expanded(
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: widget.headerStyle.titleCentered 
+                    ? MainAxisAlignment.center 
+                    : MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    currentMonth,
+                    style: widget.headerStyle.titleTextStyle,
+                  ),
+                  const SizedBox(width: 8),
+                  DropdownButtonHideUnderline(
+                    child: ButtonTheme(
+                      alignedDropdown: true,
+                      child: DropdownButton<int>(
+                        value: currentYear,
+                        style: widget.headerStyle.titleTextStyle,
+                        icon: Icon(
+                          Icons.arrow_drop_down,
+                          color: widget.headerStyle.titleTextStyle.color,
+                        ),
+                        dropdownColor: Colors.white,
+                        menuMaxHeight: 200,
+                        isDense: true,
+                        items: availableYears.map((year) {
+                          return DropdownMenuItem<int>(
+                            value: year,
+                            child: Text(
+                              year.toString(),
+                              style: widget.headerStyle.titleTextStyle,
+                            ),
+                          );
+                        }).toList(),
+                        onChanged: (int? newYear) {
+                          if (newYear != null) {
+                            setState(() {
+                              final lastDayOfMonth =
+                                  DateTime(newYear, _focusedDay.month + 1, 0).day;
+                              _focusedDay = DateTime(
+                                newYear,
+                                _focusedDay.month,
+                                _focusedDay.day > lastDayOfMonth
+                                    ? lastDayOfMonth
+                                    : _focusedDay.day,
+                              );
+                            });
+                          }
+                        },
+                      ),
                     ),
-                  );
-                }).toList(),
-                onChanged: (int? newYear) {
-                  if (newYear != null) {
-                    setState(() {
-                      final lastDayOfMonth =
-                          DateTime(newYear, _focusedDay.month + 1, 0).day;
-                      _focusedDay = DateTime(
-                        newYear,
-                        _focusedDay.month,
-                        _focusedDay.day > lastDayOfMonth
-                            ? lastDayOfMonth
-                            : _focusedDay.day,
-                      );
-                    });
-                  }
-                },
+                  ),
+                ],
               ),
-            ],
-          ),
-          SizedBox(
-            width: 48,
-            height: 48,
-            child: IconButton(
+            ),
+            if (widget.headerStyle.titleCentered) Spacer(),
+            IconButton(
               icon: widget.headerStyle.rightChevronIcon,
               padding: widget.headerStyle.rightChevronPadding,
               constraints: const BoxConstraints(),
@@ -187,8 +195,8 @@ class _InternalCalendarState extends State<InternalCalendar> {
                 });
               },
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
