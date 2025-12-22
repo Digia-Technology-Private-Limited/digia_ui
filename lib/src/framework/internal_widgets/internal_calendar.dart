@@ -129,8 +129,8 @@ class _InternalCalendarState extends State<InternalCalendar> {
             Expanded(
               child: Row(
                 mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: widget.headerStyle.titleCentered 
-                    ? MainAxisAlignment.center 
+                mainAxisAlignment: widget.headerStyle.titleCentered
+                    ? MainAxisAlignment.center
                     : MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -165,7 +165,8 @@ class _InternalCalendarState extends State<InternalCalendar> {
                           if (newYear != null) {
                             setState(() {
                               final lastDayOfMonth =
-                                  DateTime(newYear, _focusedDay.month + 1, 0).day;
+                                  DateTime(newYear, _focusedDay.month + 1, 0)
+                                      .day;
                               _focusedDay = DateTime(
                                 newYear,
                                 _focusedDay.month,
