@@ -107,106 +107,106 @@ class _InternalCalendarState extends State<InternalCalendar> {
       padding: widget.headerStyle.headerPadding,
       decoration: widget.headerStyle.decoration,
       child: Row(
-          mainAxisAlignment: widget.headerStyle.titleCentered
-              ? MainAxisAlignment.center
-              : MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            IconButton(
-              icon: widget.headerStyle.leftChevronIcon,
-              padding: widget.headerStyle.leftChevronPadding,
-              constraints: const BoxConstraints(),
-              visualDensity: VisualDensity.compact,
-              onPressed: () {
-                setState(() {
-                  final newDate = DateTime(_focusedDay.year, _focusedDay.month - 1);
-                  _focusedDay = newDate.isBefore(widget.firstDay) 
-                      ? widget.firstDay 
-                      : newDate;
-                });
-              },
-            ),
-            if (widget.headerStyle.titleCentered) Spacer(),
-            Expanded(
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: widget.headerStyle.titleCentered
-                    ? MainAxisAlignment.center
-                    : MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    currentMonth,
-                    style: widget.headerStyle.titleTextStyle,
-                  ),
-                  const SizedBox(width: 8),
-                  DropdownButtonHideUnderline(
-                    child: ButtonTheme(
-                      alignedDropdown: true,
-                      child: DropdownButton<int>(
-                        value: currentYear,
-                        style: widget.headerStyle.titleTextStyle,
-                        icon: Icon(
-                          Icons.arrow_drop_down,
-                          color: widget.headerStyle.titleTextStyle.color,
-                        ),
-                        dropdownColor: Colors.white,
-                        menuMaxHeight: 200,
-                        isDense: true,
-                        items: availableYears.map((year) {
-                          return DropdownMenuItem<int>(
-                            value: year,
-                            child: Text(
-                              year.toString(),
-                              style: widget.headerStyle.titleTextStyle,
-                            ),
-                          );
-                        }).toList(),
-                        onChanged: (int? newYear) {
-                          if (newYear != null) {
-                            setState(() {
-                              final lastDayOfMonth =
-                                  DateTime(newYear, _focusedDay.month + 1, 0)
-                                      .day;
-                              var newDate = DateTime(
-                                newYear,
-                                _focusedDay.month,
-                                _focusedDay.day > lastDayOfMonth
-                                    ? lastDayOfMonth
-                                    : _focusedDay.day,
-                              );
-                              if (newDate.isBefore(widget.firstDay)) {
-                                _focusedDay = widget.firstDay;
-                              } else if (newDate.isAfter(widget.lastDay)) {
-                                _focusedDay = widget.lastDay;
-                              } else {
-                                _focusedDay = newDate;
-                              }
-                            });
-                          }
-                        },
+        mainAxisAlignment: widget.headerStyle.titleCentered
+            ? MainAxisAlignment.center
+            : MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          IconButton(
+            icon: widget.headerStyle.leftChevronIcon,
+            padding: widget.headerStyle.leftChevronPadding,
+            constraints: const BoxConstraints(),
+            visualDensity: VisualDensity.compact,
+            onPressed: () {
+              setState(() {
+                final newDate =
+                    DateTime(_focusedDay.year, _focusedDay.month - 1);
+                _focusedDay = newDate.isBefore(widget.firstDay)
+                    ? widget.firstDay
+                    : newDate;
+              });
+            },
+          ),
+          if (widget.headerStyle.titleCentered) Spacer(),
+          Expanded(
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: widget.headerStyle.titleCentered
+                  ? MainAxisAlignment.center
+                  : MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  currentMonth,
+                  style: widget.headerStyle.titleTextStyle,
+                ),
+                const SizedBox(width: 8),
+                DropdownButtonHideUnderline(
+                  child: ButtonTheme(
+                    alignedDropdown: true,
+                    child: DropdownButton<int>(
+                      value: currentYear,
+                      style: widget.headerStyle.titleTextStyle,
+                      icon: Icon(
+                        Icons.arrow_drop_down,
+                        color: widget.headerStyle.titleTextStyle.color,
                       ),
+                      dropdownColor: Colors.white,
+                      menuMaxHeight: 200,
+                      isDense: true,
+                      items: availableYears.map((year) {
+                        return DropdownMenuItem<int>(
+                          value: year,
+                          child: Text(
+                            year.toString(),
+                            style: widget.headerStyle.titleTextStyle,
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (int? newYear) {
+                        if (newYear != null) {
+                          setState(() {
+                            final lastDayOfMonth =
+                                DateTime(newYear, _focusedDay.month + 1, 0).day;
+                            var newDate = DateTime(
+                              newYear,
+                              _focusedDay.month,
+                              _focusedDay.day > lastDayOfMonth
+                                  ? lastDayOfMonth
+                                  : _focusedDay.day,
+                            );
+                            if (newDate.isBefore(widget.firstDay)) {
+                              _focusedDay = widget.firstDay;
+                            } else if (newDate.isAfter(widget.lastDay)) {
+                              _focusedDay = widget.lastDay;
+                            } else {
+                              _focusedDay = newDate;
+                            }
+                          });
+                        }
+                      },
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-            if (widget.headerStyle.titleCentered) Spacer(),
-            IconButton(
-              icon: widget.headerStyle.rightChevronIcon,
-              padding: widget.headerStyle.rightChevronPadding,
-              constraints: const BoxConstraints(),
-              visualDensity: VisualDensity.compact,
-              onPressed: () {
-                setState(() {
-                  final newDate = DateTime(_focusedDay.year, _focusedDay.month + 1);
-                  _focusedDay = newDate.isAfter(widget.lastDay) 
-                      ? widget.lastDay 
-                      : newDate;
-                });
-              },
-            ),
-          ],
+          ),
+          if (widget.headerStyle.titleCentered) Spacer(),
+          IconButton(
+            icon: widget.headerStyle.rightChevronIcon,
+            padding: widget.headerStyle.rightChevronPadding,
+            constraints: const BoxConstraints(),
+            visualDensity: VisualDensity.compact,
+            onPressed: () {
+              setState(() {
+                final newDate =
+                    DateTime(_focusedDay.year, _focusedDay.month + 1);
+                _focusedDay =
+                    newDate.isAfter(widget.lastDay) ? widget.lastDay : newDate;
+              });
+            },
+          ),
+        ],
       ),
     );
   }
