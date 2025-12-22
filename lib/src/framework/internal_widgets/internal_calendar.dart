@@ -1,5 +1,6 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:intl/intl.dart';
 
 // ignore: must_be_immutable
 class InternalCalendar extends StatefulWidget {
@@ -22,6 +23,7 @@ class InternalCalendar extends StatefulWidget {
   final HeaderStyle headerStyle;
   final DaysOfWeekStyle daysOfWeekStyle;
   final CalendarStyle calendarStyle;
+  final bool yearSelectorEnabled;
   DateTime? selectedDate;
   DateTime? selectedRangeStart;
   DateTime? selectedRangeEnd;
@@ -50,6 +52,7 @@ class InternalCalendar extends StatefulWidget {
     required this.headerStyle,
     required this.daysOfWeekStyle,
     required this.calendarStyle,
+    this.yearSelectorEnabled = false,
     required this.selectedDate,
     required this.selectedRangeStart,
     required this.selectedRangeEnd,
@@ -89,9 +92,109 @@ class _InternalCalendarState extends State<InternalCalendar> {
     }
   }
 
+  Widget? _buildCustomHeaderWithYearSelector(
+      BuildContext context, DateTime focusedDay) {
+    if (!widget.yearSelectorEnabled) return null;
+
+    final currentYear = focusedDay.year;
+    final currentMonth = DateFormat('MMMM').format(focusedDay);
+    final availableYears = _generateYearList(
+      widget.firstDay.year,
+      widget.lastDay.year,
+    );
+
+    return Container(
+      padding: widget.headerStyle.headerPadding,
+      decoration: widget.headerStyle.decoration,
+      child: Row(
+        mainAxisAlignment: widget.headerStyle.titleCentered
+            ? MainAxisAlignment.center
+            : MainAxisAlignment.spaceBetween,
+        children: [
+          // Left navigation arrow
+          IconButton(
+            icon: widget.headerStyle.leftChevronIcon ??
+                Icon(Icons.chevron_left, color: widget.headerStyle.titleTextStyle.color),
+            padding: widget.headerStyle.leftChevronPadding,
+            onPressed: () {
+              setState(() {
+                _focusedDay = DateTime(focusedDay.year, focusedDay.month - 1);
+              });
+            },
+          ),
+
+          // Month and Year selector
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Month display
+              Text(
+                currentMonth,
+                style: widget.headerStyle.titleTextStyle,
+              ),
+              const SizedBox(width: 8),
+              // Year dropdown
+              DropdownButton<int>(
+                value: currentYear,
+                underline: const SizedBox.shrink(),
+                style: widget.headerStyle.titleTextStyle,
+                icon: Icon(
+                  Icons.arrow_drop_down,
+                  color: widget.headerStyle.titleTextStyle.color,
+                ),
+                dropdownColor: Colors.white,
+                menuMaxHeight: 200,
+                items: availableYears.map((year) {
+                  return DropdownMenuItem<int>(
+                    value: year,
+                    child: Text(
+                      year.toString(),
+                      style: widget.headerStyle.titleTextStyle,
+                    ),
+                  );
+                }).toList(),
+                onChanged: (int? newYear) {
+                  if (newYear != null) {
+                    setState(() {
+                      _focusedDay = DateTime(
+                        newYear,
+                        focusedDay.month,
+                        focusedDay.day,
+                      );
+                    });
+                  }
+                },
+              ),
+            ],
+          ),
+
+          // Right navigation arrow
+          IconButton(
+            icon: widget.headerStyle.rightChevronIcon ??
+                Icon(Icons.chevron_right, color: widget.headerStyle.titleTextStyle.color),
+            padding: widget.headerStyle.rightChevronPadding,
+            onPressed: () {
+              setState(() {
+                _focusedDay = DateTime(focusedDay.year, focusedDay.month + 1);
+              });
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  List<int> _generateYearList(int startYear, int endYear) {
+    final years = <int>[];
+    for (int year = startYear; year <= endYear; year++) {
+      years.add(year);
+    }
+    return years;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return TableCalendar<void>(
+    final calendar = TableCalendar<void>(
       focusedDay: _focusedDay,
       firstDay: widget.firstDay,
       lastDay: widget.lastDay,
@@ -100,7 +203,7 @@ class _InternalCalendarState extends State<InternalCalendar> {
       rangeEndDay: _rangeEnd,
       calendarFormat: widget.calendarFormat,
       rangeSelectionMode: _rangeSelectionMode,
-      headerVisible: widget.headersVisible,
+      headerVisible: widget.yearSelectorEnabled ? false : widget.headersVisible,
       daysOfWeekVisible: widget.daysOfWeekVisible,
       rowHeight: widget.rowHeight,
       daysOfWeekHeight: widget.daysOfWeekHeight,
@@ -133,8 +236,21 @@ class _InternalCalendarState extends State<InternalCalendar> {
         widget.onRangeSelected?.call(start, end, focusedDay);
       },
       onPageChanged: (focusedDay) {
-        _focusedDay = focusedDay;
+        setState(() {
+          _focusedDay = focusedDay;
+        });
       },
     );
+
+    if (widget.yearSelectorEnabled && widget.headersVisible) {
+      return Column(
+        children: [
+          _buildCustomHeaderWithYearSelector(context, _focusedDay)!,
+          calendar,
+        ],
+      );
+    }
+
+    return calendar;
   }
 }

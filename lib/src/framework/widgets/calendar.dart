@@ -41,6 +41,7 @@ class VWCalendar extends VirtualLeafStatelessWidget<Props> {
     bool pageJumpingEnabled = props.getBool('pageJumpingEnabled') ?? false;
     bool shouldFillViewport = props.getBool('shouldFillViewport') ?? false;
     bool weekNumbersVisible = props.getBool('weekNumbersVisible') ?? false;
+    bool yearSelectorEnabled = props.getBool('yearSelectorEnabled') ?? false;
 
     Props headerStyle = props.toProps('headerStyle') ?? Props.empty();
     Props daysOfWeekStyle = props.toProps('daysOfWeekStyle') ?? Props.empty();
@@ -99,6 +100,7 @@ class VWCalendar extends VirtualLeafStatelessWidget<Props> {
       headerStyle: _toHeaderStyle(payload, headerStyle),
       daysOfWeekStyle: _toDaysOfWeekStyleFromJson(payload, daysOfWeekStyle),
       calendarStyle: _toCalendarStyleFromJson(payload, calendarStyle),
+      yearSelectorEnabled: yearSelectorEnabled,
       selectedDate: selectedDate,
       selectedRangeStart: selectedRangeStart,
       selectedRangeEnd: selectedRangeEnd,
