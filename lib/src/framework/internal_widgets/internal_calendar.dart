@@ -114,7 +114,8 @@ class _InternalCalendarState extends State<InternalCalendar> {
           // Left navigation arrow
           IconButton(
             icon: widget.headerStyle.leftChevronIcon ??
-                Icon(Icons.chevron_left, color: widget.headerStyle.titleTextStyle.color),
+                Icon(Icons.chevron_left,
+                    color: widget.headerStyle.titleTextStyle.color),
             padding: widget.headerStyle.leftChevronPadding,
             onPressed: () {
               setState(() {
@@ -171,7 +172,8 @@ class _InternalCalendarState extends State<InternalCalendar> {
           // Right navigation arrow
           IconButton(
             icon: widget.headerStyle.rightChevronIcon ??
-                Icon(Icons.chevron_right, color: widget.headerStyle.titleTextStyle.color),
+                Icon(Icons.chevron_right,
+                    color: widget.headerStyle.titleTextStyle.color),
             padding: widget.headerStyle.rightChevronPadding,
             onPressed: () {
               setState(() {
