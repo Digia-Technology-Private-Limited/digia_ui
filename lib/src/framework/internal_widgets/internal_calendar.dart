@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
+import 'package:table_calendar/table_calendar.dart';
 
 // ignore: must_be_immutable
 class InternalCalendar extends StatefulWidget {
@@ -113,9 +113,7 @@ class _InternalCalendarState extends State<InternalCalendar> {
         children: [
           // Left navigation arrow
           IconButton(
-            icon: widget.headerStyle.leftChevronIcon ??
-                Icon(Icons.chevron_left,
-                    color: widget.headerStyle.titleTextStyle.color),
+            icon: widget.headerStyle.leftChevronIcon,
             padding: widget.headerStyle.leftChevronPadding,
             onPressed: () {
               setState(() {
@@ -171,9 +169,7 @@ class _InternalCalendarState extends State<InternalCalendar> {
 
           // Right navigation arrow
           IconButton(
-            icon: widget.headerStyle.rightChevronIcon ??
-                Icon(Icons.chevron_right,
-                    color: widget.headerStyle.titleTextStyle.color),
+            icon: widget.headerStyle.rightChevronIcon,
             padding: widget.headerStyle.rightChevronPadding,
             onPressed: () {
               setState(() {
@@ -246,6 +242,8 @@ class _InternalCalendarState extends State<InternalCalendar> {
 
     if (widget.yearSelectorEnabled && widget.headersVisible) {
       return Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           _buildCustomHeaderWithYearSelector(context, _focusedDay)!,
           calendar,
