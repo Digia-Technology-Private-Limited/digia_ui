@@ -106,8 +106,7 @@ class _InternalCalendarState extends State<InternalCalendar> {
     return Container(
       padding: widget.headerStyle.headerPadding,
       decoration: widget.headerStyle.decoration,
-      child: IntrinsicHeight(
-        child: Row(
+      child: Row(
           mainAxisAlignment: widget.headerStyle.titleCentered
               ? MainAxisAlignment.center
               : MainAxisAlignment.spaceBetween,
@@ -120,8 +119,10 @@ class _InternalCalendarState extends State<InternalCalendar> {
               visualDensity: VisualDensity.compact,
               onPressed: () {
                 setState(() {
-                  _focusedDay =
-                      DateTime(_focusedDay.year, _focusedDay.month - 1);
+                  final newDate = DateTime(_focusedDay.year, _focusedDay.month - 1);
+                  _focusedDay = newDate.isBefore(widget.firstDay) 
+                      ? widget.firstDay 
+                      : newDate;
                 });
               },
             ),
@@ -167,13 +168,20 @@ class _InternalCalendarState extends State<InternalCalendar> {
                               final lastDayOfMonth =
                                   DateTime(newYear, _focusedDay.month + 1, 0)
                                       .day;
-                              _focusedDay = DateTime(
+                              var newDate = DateTime(
                                 newYear,
                                 _focusedDay.month,
                                 _focusedDay.day > lastDayOfMonth
                                     ? lastDayOfMonth
                                     : _focusedDay.day,
                               );
+                              if (newDate.isBefore(widget.firstDay)) {
+                                _focusedDay = widget.firstDay;
+                              } else if (newDate.isAfter(widget.lastDay)) {
+                                _focusedDay = widget.lastDay;
+                              } else {
+                                _focusedDay = newDate;
+                              }
                             });
                           }
                         },
@@ -191,13 +199,14 @@ class _InternalCalendarState extends State<InternalCalendar> {
               visualDensity: VisualDensity.compact,
               onPressed: () {
                 setState(() {
-                  _focusedDay =
-                      DateTime(_focusedDay.year, _focusedDay.month + 1);
+                  final newDate = DateTime(_focusedDay.year, _focusedDay.month + 1);
+                  _focusedDay = newDate.isAfter(widget.lastDay) 
+                      ? widget.lastDay 
+                      : newDate;
                 });
               },
             ),
           ],
-        ),
       ),
     );
   }
@@ -255,7 +264,13 @@ class _InternalCalendarState extends State<InternalCalendar> {
       },
       onPageChanged: (focusedDay) {
         setState(() {
-          _focusedDay = focusedDay;
+          if (focusedDay.isBefore(widget.firstDay)) {
+            _focusedDay = widget.firstDay;
+          } else if (focusedDay.isAfter(widget.lastDay)) {
+            _focusedDay = widget.lastDay;
+          } else {
+            _focusedDay = focusedDay;
+          }
         });
       },
     );
