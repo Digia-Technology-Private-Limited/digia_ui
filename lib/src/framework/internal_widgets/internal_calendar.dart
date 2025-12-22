@@ -111,28 +111,30 @@ class _InternalCalendarState extends State<InternalCalendar> {
             ? MainAxisAlignment.center
             : MainAxisAlignment.spaceBetween,
         children: [
-          // Left navigation arrow
-          IconButton(
-            icon: widget.headerStyle.leftChevronIcon,
-            padding: widget.headerStyle.leftChevronPadding,
-            onPressed: () {
-              setState(() {
-                _focusedDay = DateTime(focusedDay.year, focusedDay.month - 1);
-              });
-            },
+          SizedBox(
+            width: 48,
+            height: 48,
+            child: IconButton(
+              icon: widget.headerStyle.leftChevronIcon,
+              padding: widget.headerStyle.leftChevronPadding,
+              constraints: const BoxConstraints(),
+              visualDensity: VisualDensity.compact,
+              onPressed: () {
+                setState(() {
+                  _focusedDay =
+                      DateTime(_focusedDay.year, _focusedDay.month - 1);
+                });
+              },
+            ),
           ),
-
-          // Month and Year selector
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // Month display
               Text(
                 currentMonth,
                 style: widget.headerStyle.titleTextStyle,
               ),
               const SizedBox(width: 8),
-              // Year dropdown
               DropdownButton<int>(
                 value: currentYear,
                 underline: const SizedBox.shrink(),
@@ -155,10 +157,14 @@ class _InternalCalendarState extends State<InternalCalendar> {
                 onChanged: (int? newYear) {
                   if (newYear != null) {
                     setState(() {
+                      final lastDayOfMonth =
+                          DateTime(newYear, _focusedDay.month + 1, 0).day;
                       _focusedDay = DateTime(
                         newYear,
-                        focusedDay.month,
-                        focusedDay.day,
+                        _focusedDay.month,
+                        _focusedDay.day > lastDayOfMonth
+                            ? lastDayOfMonth
+                            : _focusedDay.day,
                       );
                     });
                   }
@@ -166,16 +172,21 @@ class _InternalCalendarState extends State<InternalCalendar> {
               ),
             ],
           ),
-
-          // Right navigation arrow
-          IconButton(
-            icon: widget.headerStyle.rightChevronIcon,
-            padding: widget.headerStyle.rightChevronPadding,
-            onPressed: () {
-              setState(() {
-                _focusedDay = DateTime(focusedDay.year, focusedDay.month + 1);
-              });
-            },
+          SizedBox(
+            width: 48,
+            height: 48,
+            child: IconButton(
+              icon: widget.headerStyle.rightChevronIcon,
+              padding: widget.headerStyle.rightChevronPadding,
+              constraints: const BoxConstraints(),
+              visualDensity: VisualDensity.compact,
+              onPressed: () {
+                setState(() {
+                  _focusedDay =
+                      DateTime(_focusedDay.year, _focusedDay.month + 1);
+                });
+              },
+            ),
           ),
         ],
       ),
