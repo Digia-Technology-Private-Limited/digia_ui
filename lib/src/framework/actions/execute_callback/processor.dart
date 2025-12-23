@@ -10,6 +10,13 @@ import '../action_descriptor.dart';
 import '../base/processor.dart';
 import 'action.dart';
 
+/// Type definition for a native Dart callback that can be executed by
+/// the `Action.executeCallback` action when passed directly in component args.
+///
+/// The callback receives a map of arguments that were passed via `argUpdates`
+/// in the executeCallback action configuration.
+typedef DUICallback = Future<Object?>? Function(Map<String, dynamic> args);
+
 class ExecuteCallbackProcessor extends ActionProcessor<ExecuteCallbackAction> {
   final Future<Object?>? Function(
     BuildContext context,
@@ -68,23 +75,18 @@ class ExecuteCallbackProcessor extends ActionProcessor<ExecuteCallbackAction> {
     // The actionName should contain the full ActionFlow JSON structure
     final evaluatedActionName = action.actionName?.evaluate(scopeContext);
 
-    // First, check if there's a native Dart callback registered with this name
-    // This allows developers to pass callbacks via createComponent's callbacks parameter
-    if (evaluatedActionName is String) {
-      final callbackRegistry = CallbackProvider.maybeOf(context);
-      if (callbackRegistry != null &&
-          callbackRegistry.has(evaluatedActionName)) {
-        return _executeNativeCallback(
-          context: context,
-          callbackRegistry: callbackRegistry,
-          callbackName: evaluatedActionName,
-          resolvedArgs: resolvedArgs,
-          actionDescriptor: actionDescriptor,
-          id: id,
-          parentActionId: parentActionId,
-          observabilityContext: observabilityContext,
-        );
-      }
+    // First, check if the evaluated value is a native Dart callback function
+    // This allows developers to pass callbacks directly in createComponent args
+    if (evaluatedActionName is Function) {
+      return _executeNativeCallback(
+        context: context,
+        callback: evaluatedActionName,
+        resolvedArgs: resolvedArgs,
+        actionDescriptor: actionDescriptor,
+        id: id,
+        parentActionId: parentActionId,
+        observabilityContext: observabilityContext,
+      );
     }
 
     // If no native callback found, try to parse as ActionFlow
@@ -173,34 +175,19 @@ class ExecuteCallbackProcessor extends ActionProcessor<ExecuteCallbackAction> {
     }
   }
 
-  /// Executes a native Dart callback registered via CallbackProvider.
+  /// Executes a native Dart callback passed directly in component args.
   ///
-  /// This method is called when the actionName matches a callback registered
-  /// through the `callbacks` parameter of `createComponent`.
+  /// This method is called when the actionName expression evaluates to a
+  /// Function (callback) that was passed in the `args` of `createComponent`.
   Future<Object?>? _executeNativeCallback({
     required BuildContext context,
-    required CallbackRegistry callbackRegistry,
-    required String callbackName,
+    required Function callback,
     required Map<String, Object> resolvedArgs,
     required ActionDescriptor actionDescriptor,
     required String id,
     String? parentActionId,
     ObservabilityContext? observabilityContext,
   }) async {
-    final callback = callbackRegistry.get(callbackName);
-
-    if (callback == null) {
-      executionContext?.notifyComplete(
-        id: id,
-        parentActionId: parentActionId,
-        descriptor: actionDescriptor,
-        error: 'Native callback "$callbackName" not found in registry',
-        stackTrace: StackTrace.current,
-        observabilityContext: observabilityContext,
-      );
-      return null;
-    }
-
     try {
       // Execute the native Dart callback with resolved args
       final result = await callback(resolvedArgs);
