@@ -67,6 +67,26 @@ class ExecuteCallbackProcessor extends ActionProcessor<ExecuteCallbackAction> {
     // Parse actionFlow from evaluated actionName
     // The actionName should contain the full ActionFlow JSON structure
     final evaluatedActionName = action.actionName?.evaluate(scopeContext);
+
+    // First, check if there's a native Dart callback registered with this name
+    // This allows developers to pass callbacks via createComponent's callbacks parameter
+    if (evaluatedActionName is String) {
+      final callbackRegistry = CallbackProvider.maybeOf(context);
+      if (callbackRegistry != null && callbackRegistry.has(evaluatedActionName)) {
+        return _executeNativeCallback(
+          context: context,
+          callbackRegistry: callbackRegistry,
+          callbackName: evaluatedActionName,
+          resolvedArgs: resolvedArgs,
+          actionDescriptor: actionDescriptor,
+          id: id,
+          parentActionId: parentActionId,
+          observabilityContext: observabilityContext,
+        );
+      }
+    }
+
+    // If no native callback found, try to parse as ActionFlow
     ActionFlow? actionFlow;
 
     if (evaluatedActionName != null) {
@@ -127,6 +147,62 @@ class ExecuteCallbackProcessor extends ActionProcessor<ExecuteCallbackAction> {
         parentActionId: parentActionId,
         observabilityContext: callbackContext,
       );
+
+      executionContext?.notifyComplete(
+        id: id,
+        parentActionId: parentActionId,
+        descriptor: actionDescriptor,
+        error: null,
+        stackTrace: null,
+        observabilityContext: observabilityContext,
+      );
+
+      return result;
+    } catch (error) {
+      executionContext?.notifyComplete(
+        id: id,
+        parentActionId: parentActionId,
+        descriptor: actionDescriptor,
+        error: error,
+        stackTrace: StackTrace.current,
+        observabilityContext: observabilityContext,
+      );
+
+      rethrow;
+    }
+  }
+
+  /// Executes a native Dart callback registered via CallbackProvider.
+  ///
+  /// This method is called when the actionName matches a callback registered
+  /// through the `callbacks` parameter of `createComponent`.
+  Future<Object?>? _executeNativeCallback({
+    required BuildContext context,
+    required CallbackRegistry callbackRegistry,
+    required String callbackName,
+    required Map<String, Object> resolvedArgs,
+    required ActionDescriptor actionDescriptor,
+    required String id,
+    String? parentActionId,
+    ObservabilityContext? observabilityContext,
+  }) async {
+    final callback = callbackRegistry.get(callbackName);
+
+    if (callback == null) {
+      executionContext?.notifyComplete(
+        id: id,
+        parentActionId: parentActionId,
+        descriptor: actionDescriptor,
+        error: 'Native callback "$callbackName" not found in registry',
+        stackTrace: StackTrace.current,
+        observabilityContext: observabilityContext,
+      );
+      return null;
+    }
+
+    try {
+      // Execute the native Dart callback with resolved args
+      final result = await callback(resolvedArgs);
 
       executionContext?.notifyComplete(
         id: id,

@@ -8,6 +8,7 @@ import '../init/digia_ui_manager.dart';
 import 'actions/action_execution_context.dart';
 import 'actions/action_executor.dart';
 import 'base/virtual_widget.dart';
+import 'callback/callback_registry.dart';
 import 'component/component.dart';
 import 'data_type/method_bindings/method_binding_registry.dart';
 import 'font_factory.dart';
@@ -28,7 +29,6 @@ import 'virtual_widget_registry.dart';
 /// capabilities to be accessed throughout the widget tree via InheritedWidget.
 /// The ActionExecutor handles navigation, state management, API calls, and
 /// other pre-built actions defined in the Digia UI system.
-// TODO: Is there a better way to inject the action executor into the widget tree?
 class DefaultActionExecutor extends InheritedWidget {
   /// The action executor instance that handles all action execution
   final ActionExecutor actionExecutor;
@@ -569,9 +569,25 @@ class DUIFactory {
   ///   },
   /// );
   /// ```
+  ///
+  /// To pass native Dart callbacks that can be triggered by `Action.executeCallback`:
+  /// ```dart
+  /// Widget productCard = DUIFactory().createComponent(
+  ///   'product_card',
+  ///   {'title': 'iPhone 15', 'price': 999.99},
+  ///   callbacks: {
+  ///     'onAddToCart': (args) async {
+  ///       final productId = args['productId'];
+  ///       await cartService.add(productId);
+  ///       return {'success': true};
+  ///     },
+  ///   },
+  /// );
+  /// ```
   Widget createComponent(
     String componentid,
     JsonLike? args, {
+    Map<String, DUICallback>? callbacks,
     Map<String, IconData>? overrideIcons,
     Map<String, ImageProvider>? overrideImages,
     Map<String, TextStyle>? overrideTextStyles,
@@ -592,32 +608,59 @@ class DUIFactory {
     // Get component definition from configuration
     final componentDef = configProvider.getComponentDefinition(componentid);
 
+    // Create callback registry if callbacks are provided
+    final callbackRegistry = CallbackRegistry(callbacks);
+
+    // Merge args with callback names
+    // For each callback, we inject the callback name as a string value in args
+    // So when expression "args.onButtonClick" is evaluated, it returns "onButtonClick"
+    // which can then be matched in the CallbackRegistry
+    final mergedArgs = <String, dynamic>{
+      ...?args,
+      // Inject callback names as string values
+      if (callbacks != null)
+        for (final callbackName in callbacks.keys) callbackName: callbackName,
+    };
+
+    // Build the component widget
+    final component = DUIComponent(
+      id: componentid,
+      args: mergedArgs,
+      resources: mergedResources,
+      navigatorKey: navigatorKey,
+      definition: componentDef,
+      registry: widgetRegistry,
+      apiModels: configProvider.getAllApiModels(),
+      parentObservabilityContext: observabilityContext,
+      scope: AppStateScopeContext(
+        values: DUIAppState().value,
+        variables: {
+          ...StdLibFunctions.functions,
+          ...DigiaUIManager().jsVars,
+        },
+      ),
+    );
+
     // Wrap component with action executor for handling actions
-    return DefaultActionExecutor(
+    Widget result = DefaultActionExecutor(
       actionExecutor: ActionExecutor(
         viewBuilder: (context, id, args) => _buildView(context, id, args),
         pageRouteBuilder: (context, id, args) => createPageRoute(id, args),
         bindingRegistry: bindingRegistry,
         actionExecutionContext: actionExecutionContext,
       ),
-      child: DUIComponent(
-        id: componentid,
-        args: args,
-        resources: mergedResources,
-        navigatorKey: navigatorKey,
-        definition: componentDef,
-        registry: widgetRegistry,
-        apiModels: configProvider.getAllApiModels(),
-        parentObservabilityContext: observabilityContext,
-        scope: AppStateScopeContext(
-          values: DUIAppState().value,
-          variables: {
-            ...StdLibFunctions.functions,
-            ...DigiaUIManager().jsVars,
-          },
-        ),
-      ),
+      child: component,
     );
+
+    // Wrap with CallbackProvider if callbacks are provided
+    if (callbackRegistry.isNotEmpty) {
+      result = CallbackProvider(
+        registry: callbackRegistry,
+        child: result,
+      );
+    }
+
+    return result;
   }
 
   /// Shows a bottom sheet with a Digia UI view (page or component).
