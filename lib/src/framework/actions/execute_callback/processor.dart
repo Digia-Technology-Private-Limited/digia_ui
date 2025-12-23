@@ -72,7 +72,8 @@ class ExecuteCallbackProcessor extends ActionProcessor<ExecuteCallbackAction> {
     // This allows developers to pass callbacks via createComponent's callbacks parameter
     if (evaluatedActionName is String) {
       final callbackRegistry = CallbackProvider.maybeOf(context);
-      if (callbackRegistry != null && callbackRegistry.has(evaluatedActionName)) {
+      if (callbackRegistry != null &&
+          callbackRegistry.has(evaluatedActionName)) {
         return _executeNativeCallback(
           context: context,
           callbackRegistry: callbackRegistry,

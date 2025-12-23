@@ -85,9 +85,7 @@ class CallbackProvider extends InheritedWidget {
   ///
   /// Returns null if no CallbackProvider is found in the ancestor tree.
   static CallbackRegistry? maybeOf(BuildContext context) {
-    return context
-        .getInheritedWidgetOfExactType<CallbackProvider>()
-        ?.registry;
+    return context.getInheritedWidgetOfExactType<CallbackProvider>()?.registry;
   }
 
   /// Retrieves the CallbackRegistry from the widget tree.
