@@ -2,7 +2,12 @@
 
 Digia Ui SDK.
 
-## [1.5.0] – 2025-11-19
+## [1.6.0] – 2025-12-23
+
+- 📅 Calendar Widget: Added support for year selection, allowing users to quickly navigate to a specific year.
+- ✏️ TextField Improvements: Visual refinements and enhanced developer control over content padding and layout for better look and feel.
+
+## [1.5.0] – 2025-12-19
 
 - 🧑‍🎨 Avatar Widget: Fixed an issue where the oval shape was not respected when an image was applied
 - 🧱 GridView: Improved compatibility and smoother behavior when used with SmartScrollView
