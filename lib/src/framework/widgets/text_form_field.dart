@@ -107,6 +107,7 @@ class VWTextFormField extends VirtualStatelessWidget<Props> {
       cursorColor: cursorColor,
       validations: validations,
       inputDecoration: InputDecoration(
+        isDense: true,
         fillColor: fillColor,
         filled: fillColor != null,
         labelText: labelText,
@@ -131,8 +132,7 @@ class VWTextFormField extends VirtualStatelessWidget<Props> {
 
   BoxConstraints _getIconConstraints(
       RenderPayload payload, String constraintKey) {
-    final iconConstraintsMap = props.getMap('iconConstraints');
-    final constraintsMap = iconConstraintsMap?[constraintKey] as Map?;
+    final constraintsMap = props.getMap(constraintKey) as Map?;
 
     if (constraintsMap == null) {
       // Default constraints
