@@ -55,6 +55,7 @@ class _InternalYoutubePlayerState extends State<InternalYoutubePlayer> {
     }
     super.didUpdateWidget(oldWidget);
   }
+
   @override
   Widget build(BuildContext context) {
     return YoutubePlayerScaffold(
