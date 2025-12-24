@@ -49,11 +49,11 @@ class _InternalYoutubePlayerState extends State<InternalYoutubePlayer> {
   }
 
   @override
-  void didChangeDependencies() async {
-    widget.videoUrl.contains('https:')
-        ? await _controller.loadVideo(widget.videoUrl)
-        : await _controller.loadVideoById(videoId: widget.videoUrl);
-    super.didChangeDependencies();
+  void didUpdateWidget(covariant InternalYoutubePlayer oldWidget) {
+    if (widget.videoUrl != oldWidget.videoUrl) {
+      _controller.cueVideoById(videoId: getVideoId(widget.videoUrl));
+    }
+    super.didUpdateWidget(oldWidget);
   }
 
   @override
