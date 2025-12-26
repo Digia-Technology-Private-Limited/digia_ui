@@ -72,6 +72,7 @@ class _InternalSliderState extends State<InternalSlider> {
     _pendingValue = value;
     if (_throttleTimer == null || !_throttleTimer!.isActive) {
       widget.onChanged(value);
+      _pendingValue = null;
       _throttleTimer = Timer(const Duration(milliseconds: 32), () {
         if (_pendingValue != null) {
           widget.onChanged(_pendingValue!);
