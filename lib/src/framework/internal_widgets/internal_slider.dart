@@ -53,10 +53,11 @@ class _InternalSliderState extends State<InternalSlider> {
     super.didUpdateWidget(oldWidget);
     // Sync with parent only if the value has changed significantly
     // and differs from our local state (to avoid jitter)
-    if (widget.value != oldWidget.value && (widget.value - _currentValue).abs() > 0.01) {
-       setState(() {
-         _currentValue = widget.value;
-       });
+    if (widget.value != oldWidget.value &&
+        (widget.value - _currentValue).abs() > 0.01) {
+      setState(() {
+        _currentValue = widget.value;
+      });
     }
   }
 
