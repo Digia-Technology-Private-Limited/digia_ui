@@ -201,11 +201,8 @@ class ChartConfigBuilder {
   }
 
   /// Transforms Flutter AARRGGBB hex colors to CSS RRGGBBAA format.
-  ///
   /// Flutter: 0xffF10606 -> Alpha: ff, R: F1, G: 06, B: 06
   /// CSS/JS:  #F10606ff  -> R: F1, G: 06, B: 06, Alpha: ff
-  ///
-  /// If logic fails or color is not hex, returns the original string.
   static String? _normalizeColor(dynamic color) {
     if (color is! String || color.isEmpty) return null;
 
@@ -278,8 +275,6 @@ class ChartConfigBuilder {
     return cleaned;
   }
 
-  /// Helper to add property if present and not empty
-  /// [normalizeColor] flag triggers AARRGGBB -> RRGGBBAA conversion
   static void _addIfPresent(
     Map<String, dynamic> target,
     Map<String, dynamic> source,
