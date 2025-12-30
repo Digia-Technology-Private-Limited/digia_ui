@@ -196,8 +196,8 @@ class ChartConfigBuilder {
         'labels': labelsList,
         'datasets': cleanedDatasets,
       },
-      'options':
-          _buildOptions(options, datasets, payload), // Pass datasets to _buildOptions
+      'options': _buildOptions(
+          options, datasets, payload), // Pass datasets to _buildOptions
     };
   }
 
@@ -322,10 +322,9 @@ class ChartConfigBuilder {
 
   /// Build Chart.js options
   /// Build Chart.js options
-  static Map<String, dynamic> _buildOptions(
-      Map<String, dynamic>? optionsProp, 
-      List<Map<String, dynamic>> datasets, 
-      RenderPayload? payload) { // 1. Accept payload
+  static Map<String, dynamic> _buildOptions(Map<String, dynamic>? optionsProp,
+      List<Map<String, dynamic>> datasets, RenderPayload? payload) {
+    // 1. Accept payload
     if (optionsProp == null) {
       return {
         'responsive': true,
@@ -341,16 +340,17 @@ class ChartConfigBuilder {
       'responsive': optionsProp['responsive'] ?? true,
       'maintainAspectRatio': optionsProp['maintainAspectRatio'] ?? false,
       'plugins': {
-        'legend': _buildLegendOptions(optionsProp['legend'], datasets, payload), // Pass payload
-        'title': _buildTitleOptions(optionsProp['title'], payload), // Pass payload
+        'legend': _buildLegendOptions(
+            optionsProp['legend'], datasets, payload), // Pass payload
+        'title':
+            _buildTitleOptions(optionsProp['title'], payload), // Pass payload
       },
     };
   }
 
-  static Map<String, dynamic> _buildLegendOptions(
-      dynamic legendProp, 
-      List<Map<String, dynamic>> datasets, 
-      RenderPayload? payload) { // 2. Accept payload
+  static Map<String, dynamic> _buildLegendOptions(dynamic legendProp,
+      List<Map<String, dynamic>> datasets, RenderPayload? payload) {
+    // 2. Accept payload
     if (legendProp is! Map) return {'display': true, 'position': 'top'};
 
     // --- Process label styles for the legend ---
@@ -370,12 +370,13 @@ class ChartConfigBuilder {
       if (firstLabelStyle != null) {
         final fontOptions = _buildFontOptions(firstLabelStyle);
         fontStyles.addAll(fontOptions);
-        
+
         if (firstLabelStyle['textColor'] != null) {
           // 3. Evaluate color safely using payload
           final rawColor = firstLabelStyle['textColor'];
-          final evaluatedColor = payload != null ? payload.evalColor(rawColor) : rawColor;
-          
+          final evaluatedColor =
+              payload != null ? payload.evalColor(rawColor) : rawColor;
+
           defaultColor = _normalizeColor(evaluatedColor) ?? defaultColor;
         }
       }
@@ -391,18 +392,21 @@ class ChartConfigBuilder {
     };
   }
 
-  static Map<String, dynamic> _buildTitleOptions(dynamic titleProp, RenderPayload? payload) { // 4. Accept payload
+  static Map<String, dynamic> _buildTitleOptions(
+      dynamic titleProp, RenderPayload? payload) {
+    // 4. Accept payload
     if (titleProp is! Map) return {'display': false, 'text': ''};
 
     final titleStyle = titleProp['titleStyle'] as Map?;
     final titleFontOptions = _buildFontOptions(titleStyle);
-    
+
     // 5. Evaluate title color safely using payload
     String? titleColorHex;
     final rawTitleColor = titleStyle?['textColor'];
     if (rawTitleColor != null) {
-       final evaluatedColor = payload != null ? payload.evalColor(rawTitleColor) : rawTitleColor;
-       titleColorHex = _normalizeColor(evaluatedColor);
+      final evaluatedColor =
+          payload != null ? payload.evalColor(rawTitleColor) : rawTitleColor;
+      titleColorHex = _normalizeColor(evaluatedColor);
     }
 
     return {
