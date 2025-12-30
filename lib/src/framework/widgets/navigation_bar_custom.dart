@@ -28,17 +28,6 @@ class VWNavigationBarCustom
   });
 
   void handleDestinationSelected(int index, RenderPayload payload) {
-    final selectedChild = children?.elementAt(index);
-    if (selectedChild is VWNavigationBarItemCustom) {
-      final onPageSelected = selectedChild.props.onSelect;
-      final onPageSelectedAction = onPageSelected?['action'];
-      if (onPageSelectedAction != null) {
-        payload.executeAction(
-          ActionFlow.fromJson(onPageSelectedAction),
-          triggerType: 'onPageSelected',
-        );
-      }
-    }
     onDestinationSelected?.call(index);
   }
 
@@ -51,7 +40,11 @@ class VWNavigationBarCustom
       destinations.add(
         InheritedNavigationBarController(
           itemIndex: i,
-          child: navItems[i].toWidget(payload),
+          child: Builder(builder: (navItemContext) {
+            return navItems[i].toWidget(payload.copyWith(
+              buildContext: navItemContext,
+            ));
+          }),
         ),
       );
     }
