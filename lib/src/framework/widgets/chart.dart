@@ -200,6 +200,44 @@ class ChartConfigBuilder {
     };
   }
 
+  /// Transforms Flutter AARRGGBB hex colors to CSS RRGGBBAA format.
+  /// Flutter: 0xffF10606 -> Alpha: ff, R: F1, G: 06, B: 06
+  /// CSS/JS:  #F10606ff  -> R: F1, G: 06, B: 06, Alpha: ff
+  static String? _normalizeColor(dynamic color) {
+    if (color is! String || color.isEmpty) return null;
+
+    // Passthrough for functional notations (rgba, hsla, var) or named colors
+    if (color.startsWith('rgb') ||
+        color.startsWith('hsl') ||
+        color.startsWith('var') ||
+        !color.contains(RegExp(r'[0-9a-fA-F]'))) {
+      return color;
+    }
+
+    // Strip common prefixes
+    final cleanHex = color.replaceAll('#', '').replaceAll('0x', '');
+
+    // Strict hex check to avoid corrupting named colors like 'red' if they slipped through
+    if (!RegExp(r'^[0-9a-fA-F]+$').hasMatch(cleanHex)) {
+      return color;
+    }
+
+    // Standard RGB (RRGGBB) -> CSS #RRGGBB
+    if (cleanHex.length == 6) {
+      return '#$cleanHex';
+    }
+
+    // Flutter ARGB (AARRGGBB) -> CSS #RRGGBBAA
+    if (cleanHex.length == 8) {
+      final alpha = cleanHex.substring(0, 2);
+      final rgb = cleanHex.substring(2);
+      return '#$rgb$alpha';
+    }
+
+    // Return original if unknown format
+    return color;
+  }
+
   /// Check if datasets have different types (mixed chart)
   static bool _hasMixedTypes(List<Map<String, dynamic>> datasets) {
     if (datasets.length <= 1) return false;
@@ -221,8 +259,15 @@ class ChartConfigBuilder {
     }
 
     // Add optional properties if present and not empty
-    _addIfPresent(cleaned, dataset, 'borderColor');
-    _addIfPresent(cleaned, dataset, 'backgroundColor');
+    _addIfPresent(cleaned, dataset, 'borderColor', normalizeColor: true);
+    _addIfPresent(cleaned, dataset, 'backgroundColor', normalizeColor: true);
+    _addIfPresent(cleaned, dataset, 'pointBackgroundColor',
+        normalizeColor: true);
+    _addIfPresent(cleaned, dataset, 'pointBorderColor', normalizeColor: true);
+    _addIfPresent(cleaned, dataset, 'hoverBackgroundColor',
+        normalizeColor: true);
+    _addIfPresent(cleaned, dataset, 'hoverBorderColor', normalizeColor: true);
+
     _addIfPresent(cleaned, dataset, 'borderWidth');
     _addIfPresent(cleaned, dataset, 'tension');
     _addIfPresent(cleaned, dataset, 'fill');
@@ -230,12 +275,19 @@ class ChartConfigBuilder {
     return cleaned;
   }
 
-  /// Helper to add property if present and not empty
   static void _addIfPresent(
-      Map<String, dynamic> target, Map<String, dynamic> source, String key) {
+    Map<String, dynamic> target,
+    Map<String, dynamic> source,
+    String key, {
+    bool normalizeColor = false,
+  }) {
     final value = source[key];
     if (value != null && !(value is String && value.isEmpty)) {
-      target[key] = value;
+      if (normalizeColor && value is String) {
+        target[key] = _normalizeColor(value);
+      } else {
+        target[key] = value;
+      }
     }
   }
 
@@ -284,7 +336,10 @@ class ChartConfigBuilder {
       if (firstLabelStyle != null) {
         final fontOptions = _buildFontOptions(firstLabelStyle);
         fontStyles.addAll(fontOptions);
-        defaultColor = firstLabelStyle['textColor'] ?? defaultColor;
+        if (firstLabelStyle['textColor'] != null) {
+          defaultColor =
+              _normalizeColor(firstLabelStyle['textColor']) ?? defaultColor;
+        }
       }
     }
 
@@ -309,7 +364,7 @@ class ChartConfigBuilder {
       'display': titleProp['display'] ?? false,
       'text': titleProp['text'] ?? '',
       'font': titleFontOptions,
-      if (titleColor != null) 'color': titleColor,
+      if (titleColor != null) 'color': _normalizeColor(titleColor),
     };
   }
 
