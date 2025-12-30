@@ -29,14 +29,17 @@ class VWStack extends VirtualStatelessWidget<Props> {
     if (children == null || children!.isEmpty) return empty();
 
     return Stack(
+      clipBehavior: clipBehavior,
       alignment: _getChildAlignment,
       fit: _getStackFit,
       children: children!.map(_wrapInPositioned).toWidgetArray(payload),
     );
   }
 
-  /// Gets the alignment for stack children from props
-  /// Defaults to center alignment if not specified
+  Clip get clipBehavior {
+    return To.clip(props.getString('clipBehavior')) ?? Clip.hardEdge;
+  }
+
   AlignmentGeometry get _getChildAlignment =>
       To.stackChildAlignment(props.getString('childAlignment'));
 
