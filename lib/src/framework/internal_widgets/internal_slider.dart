@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 
 class InternalSlider extends StatefulWidget {
@@ -32,6 +33,8 @@ class InternalSlider extends StatefulWidget {
 
 class _InternalSliderState extends State<InternalSlider> {
   late double _currentValue;
+  Timer? _throttleTimer;
+  double? _pendingValue;
 
   @override
   void initState() {
@@ -40,11 +43,42 @@ class _InternalSliderState extends State<InternalSlider> {
   }
 
   @override
+  void dispose() {
+    _throttleTimer?.cancel();
+    super.dispose();
+  }
+
+  @override
   void didUpdateWidget(InternalSlider oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.value != oldWidget.value) {
+    // Sync with parent only if the value has changed significantly
+    // and differs from our local state (to avoid jitter)
+    final threshold = (widget.max - widget.min) * 0.0001;
+    if (widget.value != oldWidget.value &&
+        (widget.value - _currentValue).abs() > threshold) {
       setState(() {
         _currentValue = widget.value;
+      });
+    }
+  }
+
+  void _handleChanged(double value) {
+    // 1. Update UI Instantly
+    setState(() {
+      _currentValue = value;
+    });
+
+    // 2. Throttle Engine Calls (Max 30fps)
+    _pendingValue = value;
+    if (_throttleTimer == null || !_throttleTimer!.isActive) {
+      widget.onChanged(value);
+      _pendingValue = null;
+      _throttleTimer = Timer(const Duration(milliseconds: 32), () {
+        if (_pendingValue != null) {
+          widget.onChanged(_pendingValue!);
+          _pendingValue = null;
+        }
+        _throttleTimer = null;
       });
     }
   }
@@ -77,12 +111,7 @@ class _InternalSliderState extends State<InternalSlider> {
         min: widget.min,
         max: widget.max,
         value: _currentValue,
-        onChanged: (value) {
-          setState(() {
-            _currentValue = value;
-          });
-          widget.onChanged(value);
-        },
+        onChanged: _handleChanged,
         divisions: widget.divisions,
       ),
     );
