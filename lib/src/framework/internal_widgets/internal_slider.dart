@@ -32,47 +32,62 @@ class InternalSlider extends StatefulWidget {
 
 class _InternalSliderState extends State<InternalSlider> {
   late double _currentValue;
+  late SliderThemeData _sliderTheme;
 
   @override
   void initState() {
     super.initState();
     _currentValue = widget.value;
+    _buildSliderTheme();
   }
 
   @override
   void didUpdateWidget(InternalSlider oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.value != oldWidget.value) {
-      setState(() {
-        _currentValue = widget.value;
-      });
+
+    // Only rebuild theme if styling properties changed
+    if (oldWidget.trackHeight != widget.trackHeight ||
+        oldWidget.activeColor != widget.activeColor ||
+        oldWidget.inactiveColor != widget.inactiveColor ||
+        oldWidget.thumbColor != widget.thumbColor ||
+        oldWidget.thumbRadius != widget.thumbRadius) {
+      _buildSliderTheme();
     }
+
+    // Update value if it changed externally
+    if (widget.value != oldWidget.value && widget.value != _currentValue) {
+      _currentValue = widget.value;
+    }
+  }
+
+  void _buildSliderTheme() {
+    _sliderTheme = SliderThemeData(
+      trackHeight: widget.trackHeight,
+      activeTrackColor: widget.activeColor,
+      inactiveTrackColor: widget.inactiveColor,
+      thumbColor: widget.thumbColor,
+      disabledThumbColor: widget.thumbColor,
+      thumbShape: RoundSliderThumbShape(
+        enabledThumbRadius: widget.thumbRadius,
+        disabledThumbRadius: widget.thumbRadius,
+      ),
+      overlayShape: RoundSliderOverlayShape(
+        overlayRadius: widget.thumbRadius,
+      ),
+      valueIndicatorColor: widget.activeColor,
+      valueIndicatorTextStyle: const TextStyle(
+        color: Colors.white,
+        fontSize: 12.0,
+      ),
+      valueIndicatorShape: SliderComponentShape.noOverlay,
+      showValueIndicator: ShowValueIndicator.never,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return SliderTheme(
-      data: SliderTheme.of(context).copyWith(
-        trackHeight: widget.trackHeight,
-        activeTrackColor: widget.activeColor,
-        inactiveTrackColor: widget.inactiveColor,
-        thumbColor: widget.thumbColor,
-        disabledThumbColor: widget.thumbColor,
-        thumbShape: RoundSliderThumbShape(
-          enabledThumbRadius: widget.thumbRadius,
-          disabledThumbRadius: widget.thumbRadius,
-        ),
-        overlayShape: RoundSliderOverlayShape(
-          overlayRadius: widget.thumbRadius,
-        ),
-        valueIndicatorColor: widget.activeColor,
-        valueIndicatorTextStyle: const TextStyle(
-          color: Colors.white,
-          fontSize: 12.0,
-        ),
-        valueIndicatorShape: SliderComponentShape.noOverlay,
-        showValueIndicator: ShowValueIndicator.never,
-      ),
+      data: _sliderTheme,
       child: Slider(
         min: widget.min,
         max: widget.max,
