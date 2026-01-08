@@ -10,6 +10,7 @@ class NavigationBarCustomProps {
   final ExprOr<String>? overlayColor;
   final ExprOr<String>? indicatorColor;
   final ExprOr<String>? indicatorShape;
+  final ExprOr<bool>? rebuildOnEveryLoad;
   final List<Object?>? shadow;
   final String? borderRadius;
 
@@ -23,6 +24,7 @@ class NavigationBarCustomProps {
     this.overlayColor,
     this.indicatorColor,
     this.indicatorShape,
+    this.rebuildOnEveryLoad,
   });
 
   factory NavigationBarCustomProps.fromJson(JsonLike json) {
@@ -34,6 +36,7 @@ class NavigationBarCustomProps {
       overlayColor: ExprOr.fromJson<String>(json['overlayColor']),
       indicatorColor: ExprOr.fromJson<String>(json['indicatorColor']),
       indicatorShape: ExprOr.fromJson<String>(json['indicatorShape']),
+      rebuildOnEveryLoad: ExprOr.fromJson<bool>(json['rebuildOnEveryLoad']),
       borderRadius: as$<String>(json['borderRadius']),
       shadow: as$<List<Object?>?>(json['shadow']),
     );
