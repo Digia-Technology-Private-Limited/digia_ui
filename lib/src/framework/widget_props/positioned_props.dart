@@ -1,15 +1,16 @@
-import '../utils/object_util.dart';
-import '../utils/types.dart';
+import '../models/types.dart';
 
 class PositionedProps {
-  final double? top;
-  final double? bottom;
-  final double? left;
-  final double? right;
-  final double? width;
-  final double? height;
+  final ExprOr<List<dynamic>>? expr;
+  final ExprOr<double>? top;
+  final ExprOr<double>? bottom;
+  final ExprOr<double>? left;
+  final ExprOr<double>? right;
+  final ExprOr<double>? width;
+  final ExprOr<double>? height;
 
   PositionedProps({
+    this.expr,
     this.top,
     this.bottom,
     this.left,
@@ -19,29 +20,32 @@ class PositionedProps {
   });
 
   factory PositionedProps.fromJson(Object? data) {
-    if (data is String) {
-      double? parse(String v) {
-        v = v.trim();
-        return (v.isEmpty || v == '-') ? null : v.to<double>();
-      }
+    if (data == null) return PositionedProps();
 
-      final parts = data.split(',');
+    if (data is String && data.contains('js.eval')) {
       return PositionedProps(
-        left: parts.isNotEmpty ? parse(parts[0]) : null,
-        top: parts.length > 1 ? parse(parts[1]) : null,
-        right: parts.length > 2 ? parse(parts[2]) : null,
-        bottom: parts.length > 3 ? parse(parts[3]) : null,
+        expr: ExprOr.fromJson({'expr': data}),
       );
     }
 
-    if (data is JsonLike) {
+    if (data is String) {
+      final cleaned = data.replaceAll('\${', '').replaceAll('}', '').trim();
+
+      final parts = cleaned.split(',');
+
+      ExprOr<double>? part(String s) {
+        s = s.trim();
+        if (s.isEmpty || s == '-') return null;
+
+        final d = double.tryParse(s);
+        return d != null ? ExprOr.fromJson(d) : ExprOr.fromJson({'expr': s});
+      }
+
       return PositionedProps(
-        top: data['top']?.to<double>(),
-        bottom: data['bottom']?.to<double>(),
-        left: data['left']?.to<double>(),
-        right: data['right']?.to<double>(),
-        width: data['width']?.to<double>(),
-        height: data['height']?.to<double>(),
+        left: parts.isNotEmpty ? part(parts[0]) : null,
+        top: parts.length > 1 ? part(parts[1]) : null,
+        right: parts.length > 2 ? part(parts[2]) : null,
+        bottom: parts.length > 3 ? part(parts[3]) : null,
       );
     }
 
