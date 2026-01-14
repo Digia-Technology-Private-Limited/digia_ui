@@ -135,7 +135,10 @@ class RenderPayload {
 
   Color? evalColorExpr(ExprOr<String>? expression,
       {ScopeContext? scopeContext, String? Function(Object?)? decoder}) {
-    final colorString = expression?.evaluate(scopeContext, decoder: decoder);
+    final colorString = expression?.evaluate(
+      scopeContext ?? this.scopeContext,
+      decoder: decoder,
+    );
 
     if (colorString == null) return null;
 
