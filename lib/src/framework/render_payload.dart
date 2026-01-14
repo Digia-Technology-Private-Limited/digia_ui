@@ -136,7 +136,7 @@ class RenderPayload {
   Color? evalColorExpr(ExprOr<String>? expression,
       {ScopeContext? scopeContext, String? Function(Object?)? decoder}) {
     final colorString = expression?.evaluate(
-      scopeContext ?? this.scopeContext,
+      _chainExprContext(scopeContext),
       decoder: decoder,
     );
 
