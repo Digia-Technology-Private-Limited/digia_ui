@@ -41,26 +41,37 @@ class _InternalVideoPlayerState extends State<InternalVideoPlayer> {
   }
 
   Future<void> _initializeControllers() async {
-    _videoPlayerController = _createController(widget.videoUrl);
+    final localController = _createController(widget.videoUrl);
+    _videoPlayerController = localController;
 
     try {
-      await _videoPlayerController.initialize();
+      await localController.initialize();
+
+      if (localController != _videoPlayerController) {
+        localController.dispose();
+        return;
+      }
 
       if (widget.aspectRatio != null) {
         _aspectRatio = widget.aspectRatio!;
       } else {
-        _aspectRatio = _videoPlayerController.value.aspectRatio;
+        _aspectRatio = localController.value.aspectRatio;
       }
 
-      _chewieController = _createChewieController();
+      _chewieController =
+          _createChewieController(autoPlay: widget.autoPlay ?? true);
+      _initializationError = false;
+      _initializationErrorMessage = null;
 
       if (mounted) {
-        setState(() {
-          _isInitialized = true;
-        });
+        setState(() => _isInitialized = true);
       }
     } catch (e) {
-      // Handle initialization error - set error state instead of initialized
+      if (localController != _videoPlayerController) {
+        localController.dispose();
+        return;
+      }
+
       _aspectRatio = widget.aspectRatio ?? 16 / 9;
       if (mounted) {
         setState(() {
@@ -82,22 +93,22 @@ class _InternalVideoPlayerState extends State<InternalVideoPlayer> {
       _initializationErrorMessage = null;
       _initializeControllers();
     } else if (oldWidget.aspectRatio != widget.aspectRatio) {
-      // Update aspect ratio
       if (widget.aspectRatio != null) {
         _aspectRatio = widget.aspectRatio!;
       } else {
         _aspectRatio = _videoPlayerController.value.aspectRatio;
       }
-      // Recreate chewie controller
+      final wasPlaying = _chewieController?.isPlaying ?? false;
       _chewieController?.dispose();
-      _chewieController = _createChewieController();
+      _chewieController = null;
+      _chewieController =
+          _createChewieController(autoPlay: widget.autoPlay ?? wasPlaying);
       setState(() {});
     }
   }
 
-  ChewieController _createChewieController() {
+  ChewieController _createChewieController({required bool autoPlay}) {
     final showControls = widget.showControls ?? true;
-    final autoPlay = widget.autoPlay ?? _chewieController?.isPlaying ?? false;
     final looping = widget.looping ?? false;
 
     return ChewieController(
