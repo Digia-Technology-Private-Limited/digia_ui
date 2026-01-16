@@ -30,6 +30,8 @@ class _InternalVideoPlayerState extends State<InternalVideoPlayer> {
   late VideoPlayerController _videoPlayerController;
   ChewieController? _chewieController;
   bool _isInitialized = false;
+  bool _initializationError = false;
+  String? _initializationErrorMessage;
   double _aspectRatio = 16 / 9;
 
   @override
@@ -50,59 +52,7 @@ class _InternalVideoPlayerState extends State<InternalVideoPlayer> {
         _aspectRatio = _videoPlayerController.value.aspectRatio;
       }
 
-      _chewieController = ChewieController(
-        videoPlayerController: _videoPlayerController,
-        allowMuting: true,
-        errorBuilder: (context, error) => Center(
-          child: SizedBox(
-            height: MediaQuery.of(context).size.height * 0.4,
-            width: MediaQuery.of(context).size.width * 0.8,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.info,
-                  color: Colors.red,
-                  size: MediaQuery.of(context).size.height * 0.1,
-                ),
-                Text(
-                  error,
-                  textAlign: TextAlign.center,
-                ),
-              ],
-            ),
-          ),
-        ),
-        showControls: widget.showControls ?? true,
-        aspectRatio: _aspectRatio,
-        allowPlaybackSpeedChanging: true,
-        playbackSpeeds: [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2],
-        autoPlay: widget.autoPlay ?? true,
-        looping: widget.looping ?? false,
-        hideControlsTimer: const Duration(seconds: 1),
-        autoInitialize: false,
-        subtitle: Subtitles(
-          [
-            Subtitle(
-              index: 0,
-              start: Duration.zero,
-              end: const Duration(seconds: 10),
-              text: '',
-            ),
-          ],
-        ),
-        subtitleBuilder: (context, subtitle) => Container(
-          padding: const EdgeInsets.all(10.0),
-          child: subtitle is InlineSpan
-              ? RichText(text: subtitle)
-              : Text(
-                  subtitle.toString(),
-                  style: const TextStyle(color: Colors.black),
-                ),
-        ),
-      );
+      _chewieController = _createChewieController();
 
       if (mounted) {
         setState(() {
@@ -110,10 +60,12 @@ class _InternalVideoPlayerState extends State<InternalVideoPlayer> {
         });
       }
     } catch (e) {
+      // Handle initialization error - set error state instead of initialized
       _aspectRatio = widget.aspectRatio ?? 16 / 9;
       if (mounted) {
         setState(() {
-          _isInitialized = true;
+          _initializationError = true;
+          _initializationErrorMessage = e.toString();
         });
       }
     }
@@ -124,7 +76,10 @@ class _InternalVideoPlayerState extends State<InternalVideoPlayer> {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.videoUrl != widget.videoUrl) {
       _disposeControllers();
+      _chewieController = null;
       _isInitialized = false;
+      _initializationError = false;
+      _initializationErrorMessage = null;
       _initializeControllers();
     } else if (oldWidget.aspectRatio != widget.aspectRatio) {
       // Update aspect ratio
@@ -135,20 +90,75 @@ class _InternalVideoPlayerState extends State<InternalVideoPlayer> {
       }
       // Recreate chewie controller
       _chewieController?.dispose();
-      _chewieController = ChewieController(
-        videoPlayerController: _videoPlayerController,
-        allowMuting: true,
-        showControls: widget.showControls ?? true,
-        aspectRatio: _aspectRatio,
-        allowPlaybackSpeedChanging: true,
-        playbackSpeeds: [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2],
-        autoPlay: widget.autoPlay ?? true,
-        looping: widget.looping ?? false,
-        hideControlsTimer: const Duration(seconds: 1),
-        autoInitialize: false,
-      );
+      _chewieController = _createChewieController();
       setState(() {});
     }
+  }
+
+  ChewieController _createChewieController() {
+    final showControls = widget.showControls ?? true;
+    final autoPlay = widget.autoPlay ?? _chewieController?.isPlaying ?? false;
+    final looping = widget.looping ?? false;
+
+    return ChewieController(
+      videoPlayerController: _videoPlayerController,
+      allowMuting: true,
+      errorBuilder: _buildErrorWidget,
+      showControls: showControls,
+      aspectRatio: _aspectRatio,
+      allowPlaybackSpeedChanging: true,
+      playbackSpeeds: [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2],
+      autoPlay: autoPlay,
+      looping: looping,
+      hideControlsTimer: const Duration(seconds: 1),
+      autoInitialize: false,
+      subtitle: Subtitles([
+        Subtitle(
+          index: 0,
+          start: Duration.zero,
+          end: const Duration(seconds: 10),
+          text: '',
+        ),
+      ]),
+      subtitleBuilder: _buildSubtitle,
+    );
+  }
+
+  Widget _buildErrorWidget(BuildContext context, String error) {
+    return Center(
+      child: SizedBox(
+        height: MediaQuery.of(context).size.height * 0.4,
+        width: MediaQuery.of(context).size.width * 0.8,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.info,
+              color: Colors.red,
+              size: MediaQuery.of(context).size.height * 0.1,
+            ),
+            Text(
+              error,
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSubtitle(BuildContext context, dynamic subtitle) {
+    return Container(
+      padding: const EdgeInsets.all(10.0),
+      child: subtitle is InlineSpan
+          ? RichText(text: subtitle)
+          : Text(
+              subtitle.toString(),
+              style: const TextStyle(color: Colors.black),
+            ),
+    );
   }
 
   VideoPlayerController _createController(Object videoSource) {
@@ -201,6 +211,37 @@ class _InternalVideoPlayerState extends State<InternalVideoPlayer> {
 
   @override
   Widget build(BuildContext context) {
+    // Show error UI if initialization failed
+    if (_initializationError) {
+      return Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(
+              Icons.error_outline,
+              color: Colors.red,
+              size: 48,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Video initialization failed',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            if (_initializationErrorMessage != null)
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  _initializationErrorMessage!,
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              ),
+          ],
+        ),
+      );
+    }
+
+    // Show loading indicator while initializing
     if (!_isInitialized || _chewieController == null) {
       return const Center(
         child: CircularProgressIndicator(),
