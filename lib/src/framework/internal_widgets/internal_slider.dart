@@ -34,6 +34,8 @@ class _InternalSliderState extends State<InternalSlider> {
   late double _currentValue;
   late SliderThemeData _sliderTheme;
 
+  bool _isDragging = false;
+
   @override
   void initState() {
     super.initState();
@@ -45,7 +47,6 @@ class _InternalSliderState extends State<InternalSlider> {
   void didUpdateWidget(InternalSlider oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    // Only rebuild theme if styling properties changed
     if (oldWidget.trackHeight != widget.trackHeight ||
         oldWidget.activeColor != widget.activeColor ||
         oldWidget.inactiveColor != widget.inactiveColor ||
@@ -54,8 +55,10 @@ class _InternalSliderState extends State<InternalSlider> {
       _buildSliderTheme();
     }
 
-    // Update value if it changed externally
-    if (widget.value != oldWidget.value && widget.value != _currentValue) {
+    // Only update from parent when NOT dragging
+    if (!_isDragging &&
+        widget.value != oldWidget.value &&
+        widget.value != _currentValue) {
       _currentValue = widget.value;
     }
   }
@@ -74,12 +77,6 @@ class _InternalSliderState extends State<InternalSlider> {
       overlayShape: RoundSliderOverlayShape(
         overlayRadius: widget.thumbRadius,
       ),
-      valueIndicatorColor: widget.activeColor,
-      valueIndicatorTextStyle: const TextStyle(
-        color: Colors.white,
-        fontSize: 12.0,
-      ),
-      valueIndicatorShape: SliderComponentShape.noOverlay,
       showValueIndicator: ShowValueIndicator.never,
     );
   }
@@ -92,13 +89,19 @@ class _InternalSliderState extends State<InternalSlider> {
         min: widget.min,
         max: widget.max,
         value: _currentValue,
+        divisions: widget.divisions,
+        onChangeStart: (_) {
+          _isDragging = true;
+        },
         onChanged: (value) {
           setState(() {
             _currentValue = value;
           });
           widget.onChanged(value);
         },
-        divisions: widget.divisions,
+        onChangeEnd: (value) {
+          _isDragging = false;
+        },
       ),
     );
   }
