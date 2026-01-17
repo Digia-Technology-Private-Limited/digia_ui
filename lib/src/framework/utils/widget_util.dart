@@ -159,9 +159,9 @@ Widget _applySizing(Widget child, CommonStyle style, RenderPayload payload) {
 
   // Apply explicit sizing for non-intrinsic dimensions
   final height =
-      isHeightIntrinsic ? null : style.height?.toHeight(payload.buildContext);
-  final width =
-      isWidthIntrinsic ? null : style.width?.toWidth(payload.buildContext);
+    isHeightIntrinsic ? null : payload.eval<double>(style.height);
+final width =
+    isWidthIntrinsic ? null : payload.eval<double>(style.width);
 
   if (height != null || width != null) {
     current = SizedBox(

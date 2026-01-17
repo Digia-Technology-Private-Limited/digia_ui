@@ -68,9 +68,9 @@ class VWContainer extends VirtualStatelessWidget<Props> {
 
   @override
   Widget render(RenderPayload payload) {
-    final width = props.getString('width')?.toWidth(payload.buildContext);
+    final width = payload.eval<double>(props.get('width'));
 
-    final height = props.getString('height')?.toHeight(payload.buildContext);
+    final height = payload.eval<double>(props.get('height'));
 
     final borderRadius = To.borderRadius(props.get('borderRadius'));
 
