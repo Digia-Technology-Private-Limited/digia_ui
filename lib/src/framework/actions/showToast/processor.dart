@@ -1,4 +1,5 @@
 import 'package:digia_inspector_core/digia_inspector_core.dart';
+
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -37,8 +38,16 @@ class ShowToastProcessor extends ActionProcessor<ShowToastAction> {
         ?.evaluate(scopeContext)
         .maybe(
             (p0) => ResourceProvider.maybeOf(context)?.getColor(p0, context));
+
+    final evalColor = (Object? expr) => ExprOr.fromJson<String>(expr)
+        ?.evaluate(scopeContext)
+        .maybe(
+            (p0) => ResourceProvider.maybeOf(context)?.getColor(p0, context));
+
     final borderRadius =
         To.borderRadius(style['borderRadius'] ?? '12, 12, 12, 12');
+
+    final border = To.borderWithPattern(style['border'], evalColor: evalColor);
 
     final TextStyle? textStyle = makeTextStyle(
       as$<JsonLike>(style['textStyle']),
@@ -92,6 +101,7 @@ class ShowToastProcessor extends ActionProcessor<ShowToastAction> {
           decoration: BoxDecoration(
             color: bgColor ?? Colors.black,
             borderRadius: borderRadius,
+            border: border,
           ),
           padding: padding,
           margin: margin,
