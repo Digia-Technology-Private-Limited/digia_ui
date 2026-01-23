@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../base/virtual_stateless_widget.dart';
-import '../../custom/border_with_pattern.dart';
-import '../../custom/custom_flutter_types.dart';
+
 import '../../expr/default_scope_context.dart';
 import '../../expr/scope_context.dart';
 import '../../internal_widgets/tab_view/controller.dart';
@@ -98,8 +97,8 @@ class VWTabBar extends VirtualStatelessWidget<Props> {
         : BoxShape.rectangle;
     final borderRadius = To.borderRadius(indicatorProps.get('borderRadius'));
 
-    final border = _toBorderWithPattern(
-        payload, indicatorProps.toProps('border') ?? Props.empty());
+    final border = To.borderWithPattern(indicatorProps.get('border'),
+        evalColor: payload.evalColor);
 
     return BoxDecoration(
       gradient: gradient,
@@ -107,37 +106,6 @@ class VWTabBar extends VirtualStatelessWidget<Props> {
       border: border,
       borderRadius: shape == BoxShape.circle ? null : borderRadius,
       shape: shape,
-    );
-  }
-
-  BoxBorder? _toBorderWithPattern(RenderPayload payload, Props props) {
-    if (props.isEmpty) return null;
-
-    final strokeWidth = props.getDouble('borderWidth') ?? 0;
-    if (strokeWidth <= 0) return null;
-
-    final borderColor =
-        payload.evalColor(props.get('borderColor')) ?? Colors.transparent;
-    final dashPattern =
-        To.dashPattern(props.get('borderType.dashPattern')) ?? const [3, 1];
-    final strokeCap =
-        To.strokeCap(props.get('borderType.strokeCap')) ?? StrokeCap.butt;
-    final borderGradiant = To.gradient(props.getMap('borderGradiant'),
-        evalColor: payload.evalColor);
-    final BorderPattern borderPattern =
-        To.borderPattern(props.get('borderType.borderPattern')) ??
-            BorderPattern.solid;
-    final strokeAlign =
-        To.strokeAlign(props.get('strokeAlign')) ?? StrokeAlign.center;
-
-    return BorderWithPattern(
-      strokeWidth: strokeWidth,
-      color: borderColor,
-      dashPattern: dashPattern,
-      strokeCap: strokeCap,
-      gradient: borderGradiant,
-      borderPattern: borderPattern,
-      strokeAlign: strokeAlign,
     );
   }
 

@@ -1,7 +1,5 @@
 import 'package:digia_inspector_core/digia_inspector_core.dart';
-import 'package:digia_ui/src/framework/custom/border_with_pattern.dart';
-import 'package:digia_ui/src/framework/custom/custom_flutter_types.dart';
-import 'package:digia_ui/src/framework/models/props.dart';
+
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -40,7 +38,7 @@ class ShowToastProcessor extends ActionProcessor<ShowToastAction> {
         ?.evaluate(scopeContext)
         .maybe(
             (p0) => ResourceProvider.maybeOf(context)?.getColor(p0, context));
-    
+
     final evalColor = (Object? expr) => ExprOr.fromJson<String>(expr)
         ?.evaluate(scopeContext)
         .maybe(
@@ -48,9 +46,8 @@ class ShowToastProcessor extends ActionProcessor<ShowToastAction> {
 
     final borderRadius =
         To.borderRadius(style['borderRadius'] ?? '12, 12, 12, 12');
-    
-    final border = _toBorderWithPattern(
-        Props(style).toProps('border') ?? Props.empty(), evalColor);
+
+    final border = To.borderWithPattern(style['border'], evalColor: evalColor);
 
     final TextStyle? textStyle = makeTextStyle(
       as$<JsonLike>(style['textStyle']),
@@ -147,39 +144,4 @@ class ShowToastProcessor extends ActionProcessor<ShowToastAction> {
 
     return null;
   }
-}
-
-BorderWithPattern? _toBorderWithPattern(
-  Props props,
-  Color? Function(Object? expr) evalColor,
-) {
-  if (props.isEmpty) return null;
-
-  final strokeWidth = props.getDouble('borderWidth') ?? 0;
-
-  if (strokeWidth <= 0) return null;
-
-  final borderColor = evalColor(props.get('borderColor')) ?? Colors.transparent;
-  final dashPattern =
-      To.dashPattern(props.get('borderType.dashPattern')) ?? const [3, 1];
-  final strokeCap =
-      To.strokeCap(props.get('borderType.strokeCap')) ?? StrokeCap.butt;
-  final borderGradiant =
-      To.gradient(props.getMap('borderGradiant'), evalColor: evalColor);
-
-  final BorderPattern borderPattern =
-      To.borderPattern(props.get('borderType.borderPattern')) ??
-          BorderPattern.solid;
-  final strokeAlign =
-      To.strokeAlign(props.get('strokeAlign')) ?? StrokeAlign.center;
-
-  return BorderWithPattern(
-    strokeWidth: strokeWidth,
-    color: borderColor,
-    dashPattern: dashPattern,
-    strokeCap: strokeCap,
-    gradient: borderGradiant,
-    borderPattern: borderPattern,
-    strokeAlign: strokeAlign,
-  );
 }

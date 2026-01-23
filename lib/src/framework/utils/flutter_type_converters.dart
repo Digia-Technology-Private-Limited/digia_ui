@@ -3,6 +3,7 @@ import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../custom/border_with_pattern.dart';
 import '../custom/custom_flutter_types.dart';
 import 'color_util.dart';
 import 'functional_util.dart';
@@ -659,5 +660,40 @@ abstract class To {
         style: BorderStyle.solid,
         width: NumUtil.toDouble(value['borderWidth']) ?? 1.0,
         color: evalColor(value['borderColor']) ?? Colors.black);
+  }
+
+  static BorderWithPattern? borderWithPattern(
+    dynamic value, {
+    required Color? Function(Object? expr) evalColor,
+  }) {
+    if (value == null || value is! Map) return null;
+
+    final strokeWidth = NumUtil.toDouble(value['borderWidth']) ?? 0;
+
+    if (strokeWidth <= 0) return null;
+
+    final borderColor = evalColor(value['borderColor']) ?? Colors.transparent;
+    final dashPattern =
+        To.dashPattern(value['borderType.dashPattern']) ?? const [3, 1];
+    final strokeCap =
+        To.strokeCap(value['borderType.strokeCap']) ?? StrokeCap.butt;
+    final borderGradiant = To.gradient(as$<JsonLike>(value['borderGradiant']),
+        evalColor: evalColor);
+
+    final BorderPattern borderPattern =
+        To.borderPattern(value['borderType.borderPattern']) ??
+            BorderPattern.solid;
+    final strokeAlign =
+        To.strokeAlign(value['strokeAlign']) ?? StrokeAlign.center;
+
+    return BorderWithPattern(
+      strokeWidth: strokeWidth,
+      color: borderColor,
+      dashPattern: dashPattern,
+      strokeCap: strokeCap,
+      gradient: borderGradiant,
+      borderPattern: borderPattern,
+      strokeAlign: strokeAlign,
+    );
   }
 }
