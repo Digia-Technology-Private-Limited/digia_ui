@@ -22,7 +22,7 @@ class VWSlider extends VirtualLeafStatelessWidget<SliderProps> {
     return InternalSlider(
       min: payload.evalExpr(props.min) ?? 0,
       max: payload.evalExpr(props.max) ?? 100,
-      divisions: payload.evalExpr(props.division) ?? 100,
+      divisions: payload.evalExpr(props.division),
       value: initialValue.toDouble(),
       onChanged: (value) async {
         await payload.executeAction(

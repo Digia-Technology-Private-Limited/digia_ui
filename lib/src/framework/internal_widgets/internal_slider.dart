@@ -32,58 +32,76 @@ class InternalSlider extends StatefulWidget {
 
 class _InternalSliderState extends State<InternalSlider> {
   late double _currentValue;
+  late SliderThemeData _sliderTheme;
+
+  bool _isDragging = false;
 
   @override
   void initState() {
     super.initState();
     _currentValue = widget.value;
+    _buildSliderTheme();
   }
 
   @override
   void didUpdateWidget(InternalSlider oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.value != oldWidget.value) {
-      setState(() {
-        _currentValue = widget.value;
-      });
+
+    if (oldWidget.trackHeight != widget.trackHeight ||
+        oldWidget.activeColor != widget.activeColor ||
+        oldWidget.inactiveColor != widget.inactiveColor ||
+        oldWidget.thumbColor != widget.thumbColor ||
+        oldWidget.thumbRadius != widget.thumbRadius) {
+      _buildSliderTheme();
     }
+
+    // Only update from parent when NOT dragging
+    if (!_isDragging &&
+        widget.value != oldWidget.value &&
+        widget.value != _currentValue) {
+      _currentValue = widget.value;
+    }
+  }
+
+  void _buildSliderTheme() {
+    _sliderTheme = SliderThemeData(
+      trackHeight: widget.trackHeight,
+      activeTrackColor: widget.activeColor,
+      inactiveTrackColor: widget.inactiveColor,
+      thumbColor: widget.thumbColor,
+      disabledThumbColor: widget.thumbColor,
+      thumbShape: RoundSliderThumbShape(
+        enabledThumbRadius: widget.thumbRadius,
+        disabledThumbRadius: widget.thumbRadius,
+      ),
+      overlayShape: RoundSliderOverlayShape(
+        overlayRadius: widget.thumbRadius,
+      ),
+      showValueIndicator: ShowValueIndicator.never,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return SliderTheme(
-      data: SliderTheme.of(context).copyWith(
-        trackHeight: widget.trackHeight,
-        activeTrackColor: widget.activeColor,
-        inactiveTrackColor: widget.inactiveColor,
-        thumbColor: widget.thumbColor,
-        disabledThumbColor: widget.thumbColor,
-        thumbShape: RoundSliderThumbShape(
-          enabledThumbRadius: widget.thumbRadius,
-          disabledThumbRadius: widget.thumbRadius,
-        ),
-        overlayShape: RoundSliderOverlayShape(
-          overlayRadius: widget.thumbRadius,
-        ),
-        valueIndicatorColor: widget.activeColor,
-        valueIndicatorTextStyle: const TextStyle(
-          color: Colors.white,
-          fontSize: 12.0,
-        ),
-        valueIndicatorShape: SliderComponentShape.noOverlay,
-        showValueIndicator: ShowValueIndicator.never,
-      ),
+      data: _sliderTheme,
       child: Slider(
         min: widget.min,
         max: widget.max,
         value: _currentValue,
+        divisions: widget.divisions,
+        onChangeStart: (_) {
+          _isDragging = true;
+        },
         onChanged: (value) {
           setState(() {
             _currentValue = value;
           });
           widget.onChanged(value);
         },
-        divisions: widget.divisions,
+        onChangeEnd: (value) {
+          _isDragging = false;
+        },
       ),
     );
   }
