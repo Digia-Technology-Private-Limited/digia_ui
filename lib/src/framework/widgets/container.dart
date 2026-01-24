@@ -13,6 +13,7 @@ import '../utils/flutter_extensions.dart';
 import '../utils/flutter_type_converters.dart';
 import '../utils/functional_util.dart';
 import '../utils/json_util.dart';
+import '../utils/object_util.dart';
 import '../utils/types.dart';
 import '../utils/widget_util.dart';
 
@@ -67,9 +68,17 @@ class VWContainer extends VirtualStatelessWidget<Props> {
 
   @override
   Widget render(RenderPayload payload) {
-    final width = payload.eval<double>(props.get('width'));
+    final width = props
+        .getString('width')
+        .maybe((it) => payload.eval(it))
+        ?.to<String>()
+        ?.toWidth(payload.buildContext);
 
-    final height = payload.eval<double>(props.get('height'));
+    final height = props
+        .getString('height')
+        .maybe((it) => payload.eval(it))
+        ?.to<String>()
+        ?.toHeight(payload.buildContext);
 
     final borderRadius = To.borderRadius(props.get('borderRadius'));
 
