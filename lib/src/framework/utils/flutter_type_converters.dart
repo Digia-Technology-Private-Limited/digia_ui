@@ -441,13 +441,13 @@ abstract class To {
 
   static AlignmentDirectional stackChildAlignment(String? fit) => switch (fit) {
         'center' => AlignmentDirectional.center,
-        'topEnd' => AlignmentDirectional.topEnd,
+        'topEnd' || 'topRight' => AlignmentDirectional.topEnd,
         'topCenter' => AlignmentDirectional.topCenter,
         'centerEnd' => AlignmentDirectional.centerEnd,
         'centerStart' => AlignmentDirectional.centerStart,
         'bottomStart' => AlignmentDirectional.bottomStart,
         'bottomCenter' => AlignmentDirectional.bottomCenter,
-        'bottomEnd' => AlignmentDirectional.bottomEnd,
+        'bottomEnd' || 'bottomRight' => AlignmentDirectional.bottomEnd,
         _ => AlignmentDirectional.topStart
       };
 
