@@ -70,7 +70,8 @@ class VWScratchCard extends VirtualStatelessWidget<ScratchCardProps> {
       height: props.height?.toHeight(payload.buildContext),
       width: props.width?.toWidth(payload.buildContext),
       brushSize: payload.evalExpr(props.brushSize) ?? 20.0,
-      revealFullAtPercent: payload.evalExpr(props.revealFullAtPercent) ?? 0.5,
+      revealFullAtPercent:
+          (payload.evalExpr(props.revealFullAtPercent) ?? 75) / 100,
       isScratchingEnabled: payload.evalExpr(props.isScratchingEnabled) ?? true,
       gridResolution: payload.evalExpr(props.gridResolution) ?? 100,
       enableTapToScratch: payload.evalExpr(props.enableTapToScratch) ?? false,
