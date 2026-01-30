@@ -91,6 +91,7 @@ abstract class VirtualWidgetRegistry {
     'digia/calendar': calendarBuilder,
     'digia/rangeSlider': rangeSliderBuilder,
     'digia/slider': sliderBuilder,
+    'digia/scratchCard': scratchCardBuilder,
 
     // Media and Web Content
     'digia/lottie': lottieBuilder,
