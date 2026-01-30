@@ -39,7 +39,7 @@ class ShowToastProcessor extends ActionProcessor<ShowToastAction> {
         .maybe(
             (p0) => ResourceProvider.maybeOf(context)?.getColor(p0, context));
 
-    final evalColor = (Object? expr) => ExprOr.fromJson<String>(expr)
+    Color? evalColor(Object? expr) => ExprOr.fromJson<String>(expr)
         ?.evaluate(scopeContext)
         .maybe(
             (p0) => ResourceProvider.maybeOf(context)?.getColor(p0, context));

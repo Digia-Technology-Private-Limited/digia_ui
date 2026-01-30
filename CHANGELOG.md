@@ -2,6 +2,12 @@
 
 Digia Ui SDK.
 
+## [1.6.1] – 2026-01-19
+- 🎚️ Slider Widget: Fixed a lag issue during drag interactions for smoother responsiveness.
+- 🎥 Video Player: Resolved an issue where the video content did not respect the parent container’s aspect ratio.
+- 🎨 Expressions: Fixed a bug where expressions were not evaluated correctly in color properties.
+- 📊 Charts: Corrected an issue where chart colors did not properly reflect their corresponding values.
+
 ## [1.6.0] – 2025-12-23
 
 - 📅 Calendar Widget: Added support for year selection, allowing users to quickly navigate to a specific year.
