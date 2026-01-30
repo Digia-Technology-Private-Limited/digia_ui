@@ -28,6 +28,7 @@ import 'widget_props/range_slider_props.dart';
 import 'widget_props/rich_text_props.dart';
 import 'widget_props/safe_area_props.dart';
 import 'widget_props/scaffold_props.dart';
+import 'widget_props/scratch_card_props.dart';
 import 'widget_props/sized_box_props.dart';
 import 'widget_props/slider_props.dart';
 import 'widget_props/sliver_app_bar_props.dart';
@@ -88,6 +89,7 @@ import 'widgets/refresh_indicator.dart';
 import 'widgets/rich_text.dart';
 import 'widgets/safe_area.dart';
 import 'widgets/scaffold.dart';
+import 'widgets/scratch_card.dart';
 import 'widgets/sized_box.dart';
 import 'widgets/slider.dart';
 import 'widgets/sliver_app_bar.dart';
@@ -1162,5 +1164,16 @@ VWPinnedHeader pinnedHeaderBuilder(
     parent: parent,
     refName: data.refName,
     childGroups: createChildGroups(data.childGroups, parent, registry),
+  );
+}
+
+VWScratchCard scratchCardBuilder(VWNodeData data, VirtualWidget? parent, _) {
+  return VWScratchCard(
+    props: ScratchCardProps.fromJson(data.props.value),
+    commonProps: data.commonProps,
+    parentProps: data.parentProps,
+    parent: parent,
+    childGroups: createChildGroups(data.childGroups, parent, _),
+    refName: data.refName,
   );
 }
