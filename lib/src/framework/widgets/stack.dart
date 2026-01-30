@@ -1,6 +1,5 @@
 import 'package:flutter/widgets.dart';
 
-import '../base/extensions.dart';
 import '../base/virtual_stateless_widget.dart';
 import '../base/virtual_widget.dart';
 import '../models/props.dart';
@@ -31,7 +30,9 @@ class VWStack extends VirtualStatelessWidget<Props> {
     return Stack(
       alignment: _getChildAlignment,
       fit: _getStackFit,
-      children: children!.map(_wrapInPositioned).toWidgetArray(payload),
+      children: children!
+          .map((child) => _wrapInPositioned(child, payload).toWidget(payload))
+          .toList(),
     );
   }
 
@@ -48,7 +49,8 @@ class VWStack extends VirtualStatelessWidget<Props> {
   ///
   /// This method applies positioning properties from the child's parent props
   /// to properly position the child within the stack container.
-  VirtualWidget _wrapInPositioned(VirtualWidget childVirtualWidget) {
+  VirtualWidget _wrapInPositioned(
+      VirtualWidget childVirtualWidget, RenderPayload payload) {
     // Skip wrapping if widget is already positioned
     if (childVirtualWidget is VWPositioned) {
       return childVirtualWidget;
@@ -61,7 +63,7 @@ class VWStack extends VirtualStatelessWidget<Props> {
     if (position == null) return childVirtualWidget;
 
     return VWPositioned(
-      props: PositionedProps.fromJson(position),
+      props: PositionedProps.fromJson(payload.eval(position)),
       child: childVirtualWidget,
       parent: null,
     );

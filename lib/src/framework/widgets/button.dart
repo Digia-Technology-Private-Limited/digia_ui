@@ -11,6 +11,7 @@ import '../utils/flutter_extensions.dart';
 import '../utils/flutter_type_converters.dart';
 import '../utils/functional_util.dart';
 import '../utils/json_util.dart';
+import '../utils/object_util.dart';
 import '../utils/types.dart';
 import '../widget_props/icon_props.dart';
 import '../widget_props/text_props.dart';
@@ -32,10 +33,16 @@ class VWButton extends VirtualLeafStatelessWidget<Props> {
     final disabledStyleJson = props.toProps('disabledStyle') ?? Props.empty();
 
     //sizing constraints
-    final width =
-        defaultStyleJson.getString('width')?.toWidth(payload.buildContext);
-    final height =
-        defaultStyleJson.getString('height')?.toHeight(payload.buildContext);
+    final height = defaultStyleJson
+        .getString('height')
+        .maybe((it) => payload.eval(it))
+        ?.to<String>()
+        ?.toHeight(payload.buildContext);
+    final width = defaultStyleJson
+        .getString('width')
+        .maybe((it) => payload.eval(it))
+        ?.to<String>()
+        ?.toWidth(payload.buildContext);
 
     ButtonStyle style = ButtonStyle(
       shape: WidgetStateProperty.all(
