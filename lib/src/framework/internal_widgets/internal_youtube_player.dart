@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:youtube_player_iframe/youtube_player_iframe.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class InternalYoutubePlayer extends StatefulWidget {
   final String videoUrl;
@@ -29,51 +29,40 @@ class _InternalYoutubePlayerState extends State<InternalYoutubePlayer> {
   }
 
   void _initializeController() {
+    final String? videoId = YoutubePlayer.convertUrlToId(widget.videoUrl);
+
     _controller = YoutubePlayerController(
-      params: YoutubePlayerParams(
+      initialVideoId: videoId ?? '',
+      flags: YoutubePlayerFlags(
+        autoPlay: widget.autoPlay,
         mute: widget.isMuted,
-        showFullscreenButton: false,
         loop: widget.loop,
       ),
     );
-
-    widget.autoPlay
-        ? _controller.loadVideoById(videoId: getVideoId(widget.videoUrl))
-        : _controller.cueVideoById(videoId: getVideoId(widget.videoUrl));
   }
 
   @override
   void dispose() {
-    _controller.close();
+    _controller.dispose();
     super.dispose();
   }
 
   @override
   void didUpdateWidget(covariant InternalYoutubePlayer oldWidget) {
-    if (widget.videoUrl != oldWidget.videoUrl) {
-      _controller.cueVideoById(videoId: getVideoId(widget.videoUrl));
-    }
     super.didUpdateWidget(oldWidget);
+    if (widget.videoUrl != oldWidget.videoUrl) {
+      final String? videoId = YoutubePlayer.convertUrlToId(widget.videoUrl);
+      if (videoId != null) {
+        _controller.load(videoId);
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return YoutubePlayerScaffold(
-      enableFullScreenOnVerticalDrag: false,
-      builder: (context, player) {
-        return player;
-      },
+    return YoutubePlayer(
       controller: _controller,
+      showVideoProgressIndicator: true,
     );
-  }
-
-  String getVideoId(String url) {
-    if (url.contains('https:')) {
-      final params = Uri.parse(url).queryParameters;
-      final videoId = params['v'];
-      return videoId ?? '';
-    } else {
-      return url;
-    }
   }
 }
