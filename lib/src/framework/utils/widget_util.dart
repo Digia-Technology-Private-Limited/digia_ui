@@ -75,34 +75,37 @@ Widget wrapInContainer(
     );
   }
 
-  final height = style.height?.toHeight(payload.buildContext);
-  final width = style.width?.toWidth(payload.buildContext);
-  if (!(width == null && height == null)) {
-    current = SizedBox(width: width, height: height, child: current);
-  }
+  current = _applySizing(current, style, payload);
 
   return current;
 }
 
-Widget wrapInGestureDetector(
-    {required RenderPayload payload,
-    required ActionFlow? actionFlow,
-    required Widget child,
-    BorderRadius? borderRadius}) {
+Widget wrapInGestureDetector({
+  required RenderPayload payload,
+  required ActionFlow? actionFlow,
+  required Widget child,
+  BorderRadius? borderRadius,
+}) {
   if (actionFlow == null || actionFlow.actions.isEmpty) return child;
 
   if (actionFlow.inkwell) {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: () => payload.executeAction(actionFlow),
+        onTap: () => payload.executeAction(
+          actionFlow,
+          triggerType: 'onTap',
+        ),
         borderRadius: borderRadius,
         child: child,
       ),
     );
   } else {
     return GestureDetector(
-      onTap: () => payload.executeAction(actionFlow),
+      onTap: () => payload.executeAction(
+        actionFlow,
+        triggerType: 'onTap',
+      ),
       child: child,
     );
   }
@@ -134,4 +137,66 @@ Widget wrapInAspectRatio({
     aspectRatio: aspectRatio,
     child: child,
   );
+}
+
+/// Applies intrinsic and explicit sizing to a widget based on style properties.
+///
+/// This function handles three types of sizing:
+/// 1. Intrinsic sizing - when height/width is set to 'intrinsic'
+/// 2. Explicit sizing - when height/width has specific values
+/// 3. Mixed sizing - when one dimension is intrinsic and the other is explicit
+Widget _applySizing(Widget child, CommonStyle style, RenderPayload payload) {
+  final isHeightIntrinsic = _isIntrinsic(style.height);
+  final isWidthIntrinsic = _isIntrinsic(style.width);
+
+  Widget current = child;
+
+  // Apply intrinsic sizing first if needed
+  if (isHeightIntrinsic || isWidthIntrinsic) {
+    current =
+        _applyIntrinsicSizing(current, isHeightIntrinsic, isWidthIntrinsic);
+  }
+
+  // Apply explicit sizing for non-intrinsic dimensions
+  final height = isHeightIntrinsic
+      ? null
+      : style.height
+          .maybe((it) => payload.eval(it))
+          ?.to<String>()
+          ?.toHeight(payload.buildContext);
+  final width = isWidthIntrinsic
+      ? null
+      : style.width
+          .maybe((it) => payload.eval(it))
+          ?.to<String>()
+          ?.toWidth(payload.buildContext);
+
+  if (height != null || width != null) {
+    current = SizedBox(
+      width: width,
+      height: height,
+      child: current,
+    );
+  }
+
+  return current;
+}
+
+/// Checks if a dimension string represents intrinsic sizing.
+bool _isIntrinsic(String? dimensionStr) {
+  return dimensionStr != null &&
+      dimensionStr.trim().toLowerCase() == 'intrinsic';
+}
+
+/// Wraps a widget with appropriate intrinsic sizing widgets.
+Widget _applyIntrinsicSizing(
+    Widget child, bool isHeightIntrinsic, bool isWidthIntrinsic) {
+  if (isHeightIntrinsic && isWidthIntrinsic) {
+    return IntrinsicWidth(child: IntrinsicHeight(child: child));
+  } else if (isHeightIntrinsic) {
+    return IntrinsicHeight(child: child);
+  } else if (isWidthIntrinsic) {
+    return IntrinsicWidth(child: child);
+  }
+  return child;
 }

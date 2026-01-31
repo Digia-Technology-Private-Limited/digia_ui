@@ -3,9 +3,9 @@ import 'package:flutter/widgets.dart';
 import '../base/virtual_stateless_widget.dart';
 import '../expr/scope_context.dart';
 import '../render_payload.dart';
-import '../widget_props/condtional_item_props.dart';
+import '../widget_props/conditional_item_props.dart';
 
-class VWConditionItem extends VirtualStatelessWidget<CondtionalItemProps> {
+class VWConditionItem extends VirtualStatelessWidget<ConditionalItemProps> {
   VWConditionItem({
     required super.props,
     super.refName,

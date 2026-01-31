@@ -1,0 +1,108 @@
+import 'package:flutter/material.dart';
+
+class InternalSlider extends StatefulWidget {
+  final double min;
+  final double max;
+  final double value;
+  final ValueChanged<double> onChanged;
+  final Color activeColor;
+  final Color inactiveColor;
+  final Color thumbColor;
+  final double thumbRadius;
+  final double trackHeight;
+  final int? divisions;
+
+  const InternalSlider({
+    super.key,
+    this.min = 0.0,
+    this.max = 100.0,
+    required this.value,
+    required this.onChanged,
+    this.activeColor = Colors.blue,
+    this.inactiveColor = Colors.grey,
+    this.thumbColor = Colors.white,
+    this.thumbRadius = 10.0,
+    this.trackHeight = 4.0,
+    this.divisions,
+  });
+
+  @override
+  State<InternalSlider> createState() => _InternalSliderState();
+}
+
+class _InternalSliderState extends State<InternalSlider> {
+  late double _currentValue;
+  late SliderThemeData _sliderTheme;
+
+  bool _isDragging = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentValue = widget.value;
+    _buildSliderTheme();
+  }
+
+  @override
+  void didUpdateWidget(InternalSlider oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (oldWidget.trackHeight != widget.trackHeight ||
+        oldWidget.activeColor != widget.activeColor ||
+        oldWidget.inactiveColor != widget.inactiveColor ||
+        oldWidget.thumbColor != widget.thumbColor ||
+        oldWidget.thumbRadius != widget.thumbRadius) {
+      _buildSliderTheme();
+    }
+
+    // Only update from parent when NOT dragging
+    if (!_isDragging &&
+        widget.value != oldWidget.value &&
+        widget.value != _currentValue) {
+      _currentValue = widget.value;
+    }
+  }
+
+  void _buildSliderTheme() {
+    _sliderTheme = SliderThemeData(
+      trackHeight: widget.trackHeight,
+      activeTrackColor: widget.activeColor,
+      inactiveTrackColor: widget.inactiveColor,
+      thumbColor: widget.thumbColor,
+      disabledThumbColor: widget.thumbColor,
+      thumbShape: RoundSliderThumbShape(
+        enabledThumbRadius: widget.thumbRadius,
+        disabledThumbRadius: widget.thumbRadius,
+      ),
+      overlayShape: RoundSliderOverlayShape(
+        overlayRadius: widget.thumbRadius,
+      ),
+      showValueIndicator: ShowValueIndicator.never,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SliderTheme(
+      data: _sliderTheme,
+      child: Slider(
+        min: widget.min,
+        max: widget.max,
+        value: _currentValue,
+        divisions: widget.divisions,
+        onChangeStart: (_) {
+          _isDragging = true;
+        },
+        onChanged: (value) {
+          setState(() {
+            _currentValue = value;
+          });
+          widget.onChanged(value);
+        },
+        onChangeEnd: (value) {
+          _isDragging = false;
+        },
+      ),
+    );
+  }
+}

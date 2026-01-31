@@ -1,5 +1,7 @@
+import 'package:digia_inspector_core/digia_inspector_core.dart';
 import 'package:flutter/widgets.dart';
 
+import '../init/digia_ui_manager.dart';
 import '../network/api_request/api_request.dart';
 import 'actions/base/action_flow.dart';
 import 'expr/expression_util.dart';
@@ -14,8 +16,15 @@ import 'utils/types.dart';
 class RenderPayload {
   final BuildContext buildContext;
   final ScopeContext scopeContext;
+  final List<String> widgetHierarchy;
+  final String? currentEntityId;
 
-  RenderPayload({required this.buildContext, required this.scopeContext});
+  RenderPayload({
+    required this.buildContext,
+    required this.scopeContext,
+    this.widgetHierarchy = const [],
+    this.currentEntityId,
+  });
 
   // Retrieves an icon from a map, currently not implemented
   IconData? getIcon(Map<String, Object?>? map) {
@@ -23,6 +32,17 @@ class RenderPayload {
 
     // TODO: Yet to be implemented
     return null;
+  }
+
+  /// Gets the current ObservabilityContext from payload fields
+  ObservabilityContext? get observabilityContext {
+    // Only create if inspector is enabled
+    if (!DigiaUIManager().isInspectorEnabled) return null;
+
+    return ObservabilityContext(
+      widgetHierarchy: widgetHierarchy,
+      currentEntityId: currentEntityId,
+    );
   }
 
   // Retrieves a color from the ResourceProvider using a key
@@ -49,17 +69,52 @@ class RenderPayload {
     );
   }
 
-  // Executes an action flow with an optional expression context
+  /// Executes an action flow with optional trigger context
   Future<Object?>? executeAction(
     ActionFlow? actionFlow, {
     ScopeContext? scopeContext,
+    String? triggerType,
   }) {
     if (actionFlow == null) return null;
+
+    // Create observability context with trigger type if enabled
+    ObservabilityContext? observabilityContextWithTrigger;
+    if (DigiaUIManager().isInspectorEnabled &&
+        (currentEntityId != null || widgetHierarchy.isNotEmpty)) {
+      observabilityContextWithTrigger = ObservabilityContext(
+        widgetHierarchy: widgetHierarchy,
+        currentEntityId: currentEntityId,
+        triggerType: triggerType,
+      );
+    }
 
     return DefaultActionExecutor.of(buildContext).execute(
       buildContext,
       actionFlow,
       _chainExprContext(scopeContext),
+      id: IdHelper.randomId(),
+      observabilityContext: observabilityContextWithTrigger,
+    );
+  }
+
+  /// Creates a new RenderPayload with an extended widget hierarchy
+  ///
+  /// This is used when a VirtualWidget renders its children to add itself
+  /// to the hierarchy chain
+  RenderPayload withExtendedHierarchy(String widgetName) {
+    return copyWith(
+      widgetHierarchy: [...widgetHierarchy, widgetName],
+    );
+  }
+
+  /// Creates a new RenderPayload for a component, replacing the entity ID
+  /// and preserving the page hierarchy as a prefix
+  RenderPayload forComponent({required String componentId}) {
+    // When entering a component from a page, preserve the page hierarchy
+    // by adding the component ID to the hierarchy
+    return copyWith(
+      widgetHierarchy: [...widgetHierarchy, componentId],
+      currentEntityId: componentId,
     );
   }
 
@@ -80,7 +135,10 @@ class RenderPayload {
 
   Color? evalColorExpr(ExprOr<String>? expression,
       {ScopeContext? scopeContext, String? Function(Object?)? decoder}) {
-    final colorString = expression?.evaluate(scopeContext, decoder: decoder);
+    final colorString = expression?.evaluate(
+      _chainExprContext(scopeContext),
+      decoder: decoder,
+    );
 
     if (colorString == null) return null;
 
@@ -127,14 +185,18 @@ class RenderPayload {
     );
   }
 
-  // Copies the payload with optional new buildContext and scopeContext
+  // Copies the payload with optional new fields
   RenderPayload copyWith({
     BuildContext? buildContext,
     ScopeContext? scopeContext,
+    List<String>? widgetHierarchy,
+    String? currentEntityId,
   }) {
     return RenderPayload(
       buildContext: buildContext ?? this.buildContext,
       scopeContext: scopeContext ?? this.scopeContext,
+      widgetHierarchy: widgetHierarchy ?? this.widgetHierarchy,
+      currentEntityId: currentEntityId ?? this.currentEntityId,
     );
   }
 }

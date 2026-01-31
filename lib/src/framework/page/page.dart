@@ -1,6 +1,8 @@
+import 'package:digia_inspector_core/digia_inspector_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
+import '../../init/digia_ui_manager.dart';
 import '../../network/api_request/api_request.dart';
 import '../actions/base/action_flow.dart';
 import '../data_type/data_type_creator.dart';
@@ -31,6 +33,10 @@ class DUIPage extends StatelessWidget {
   final GlobalKey<NavigatorState>? navigatorKey;
   final DUIPageController? controller;
 
+  /// Gets the state observer from the DigiaUIManager
+  static StateObserver? get stateObserver =>
+      DigiaUIManager().inspector?.stateObserver;
+
   const DUIPage({
     super.key,
     required this.pageId,
@@ -56,9 +62,20 @@ class DUIPage extends StatelessWidget {
               null,
             ))));
 
+    final stateId = IdHelper.randomId();
+    stateObserver?.onCreate(
+      id: stateId,
+      stateType: StateType.page,
+      namespace: pageId,
+      argData: resolvePageArgs ?? {},
+      stateData: resolvedState ?? {},
+    );
+
     Widget child = StatefulScopeWidget(
+      stateId: stateId,
       namespace: pageId,
       initialState: resolvedState ?? {},
+      stateType: StateType.page,
       childBuilder: (context, state) {
         return _DUIPageContent(
           pageId: pageId,
@@ -180,13 +197,20 @@ class _DUIPageContentState extends State<_DUIPageContent> {
       RenderPayload(
         buildContext: context,
         scopeContext: widget.scope,
+        currentEntityId: widget.pageId,
+        widgetHierarchy: const [],
       ),
     );
   }
 
   void _onPageLoaded() {
     if (widget.onPageLoaded != null) {
-      _executeAction(context, widget.onPageLoaded!, widget.scope);
+      _executeAction(
+        context,
+        widget.onPageLoaded!,
+        widget.scope,
+        triggerType: 'onPageLoad',
+      );
     }
 
     // Mark TTI when onPageLoad completes (or immediately if no onPageLoad)
@@ -195,19 +219,37 @@ class _DUIPageContentState extends State<_DUIPageContent> {
 
   void _handleBackPress(bool didPop, Object? result) {
     if (widget.onBackPress != null) {
-      _executeAction(context, widget.onBackPress!, widget.scope);
+      _executeAction(
+        context,
+        widget.onBackPress!,
+        widget.scope,
+        triggerType: 'onBackPress',
+      );
     }
   }
 
   Future<Object?>? _executeAction(
     BuildContext context,
     ActionFlow actionFlow,
-    ScopeContext? scopeContext,
-  ) {
+    ScopeContext? scopeContext, {
+    required String triggerType,
+  }) {
+    // Create ObservabilityContext for page-level actions
+    ObservabilityContext? observabilityContext;
+    if (DigiaUIManager().isInspectorEnabled) {
+      observabilityContext = ObservabilityContext(
+        widgetHierarchy: const [],
+        currentEntityId: widget.pageId,
+        triggerType: triggerType,
+      );
+    }
+
     return DefaultActionExecutor.of(context).execute(
       context,
       actionFlow,
       scopeContext,
+      id: IdHelper.randomId(),
+      observabilityContext: observabilityContext,
     );
   }
 }

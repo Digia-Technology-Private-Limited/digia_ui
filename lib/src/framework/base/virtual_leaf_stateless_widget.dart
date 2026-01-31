@@ -23,15 +23,20 @@ abstract class VirtualLeafStatelessWidget<T> extends VirtualWidget {
   @override
   Widget toWidget(RenderPayload payload) {
     try {
-      if (commonProps == null) return render(payload);
+      // Extend hierarchy with this widget's name for observability
+      final extendedPayload =
+          refName != null ? payload.withExtendedHierarchy(refName!) : payload;
+
+      if (commonProps == null) return render(extendedPayload);
       final isVisible =
-          commonProps?.visibility?.evaluate(payload.scopeContext) ?? true;
+          commonProps?.visibility?.evaluate(extendedPayload.scopeContext) ??
+              true;
       if (!isVisible) return empty();
-      var current = render(payload);
+      var current = render(extendedPayload);
 
       // Styling
       current = wrapInContainer(
-        payload: payload,
+        payload: extendedPayload,
         style: commonProps!.style,
         child: current,
       );
@@ -43,7 +48,7 @@ abstract class VirtualLeafStatelessWidget<T> extends VirtualWidget {
       );
 
       current = wrapInGestureDetector(
-        payload: payload,
+        payload: extendedPayload,
         actionFlow: commonProps?.onClick,
         child: current,
         borderRadius: To.borderRadius(commonProps?.style?.borderRadius),

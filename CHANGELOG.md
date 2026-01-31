@@ -2,6 +2,59 @@
 
 Digia Ui SDK.
 
+## [1.6.1] – 2026-01-19
+- 🎚️ Slider Widget: Fixed a lag issue during drag interactions for smoother responsiveness.
+- 🎥 Video Player: Resolved an issue where the video content did not respect the parent container’s aspect ratio.
+- 🎨 Expressions: Fixed a bug where expressions were not evaluated correctly in color properties.
+- 📊 Charts: Corrected an issue where chart colors did not properly reflect their corresponding values.
+
+## [1.6.0] – 2025-12-23
+
+- 📅 Calendar Widget: Added support for year selection, allowing users to quickly navigate to a specific year.
+- ✏️ TextField Improvements: Visual refinements and enhanced developer control over content padding and layout for better look and feel.
+
+## [1.5.0] – 2025-12-19
+
+- 🧑‍🎨 Avatar Widget: Fixed an issue where the oval shape was not respected when an image was applied
+- 🧱 GridView: Improved compatibility and smoother behavior when used with SmartScrollView
+- ✨ Gradient Text Support: Added support for gradients in text — bring richer visuals and expressive styling to your typography
+
+## [1.4.0] – 2025-11-19
+
+This release introduces beautiful new UI widgets that make designing stunning apps easier than ever.
+
+- 🎚️ Slider: A smooth and fully customizable slider widget — perfect for selecting values with precision
+- 📖 Story: Create Instagram-style stories effortlessly with built-in transitions and autoplay
+- 📊 Charts: Build beautiful, interactive charts with minimal configuration
+- 🧱 Masonry GridView: Create Pinterest-style staggered grids for dynamic, adaptive layouts
+
+Also, we have removed support for AVIF image format, trimming the APK size by over 1 MB.
+
+## [1.3.0] – 2025-10-27
+
+- 🧭 NavigationBarCustom: Added support for separate selected and unselected widgets — fully customizable NavigationBarItem states.
+- 🧱 Layout Improvements: Removed reliance on LayoutBuilder in certain widgets to avoid issues with IntrinsicHeight. Size is now measured efficiently without performance loss.
+- ✏️ TextField: Added support for prefix and suffix icon constraints — perfect for customizing icon sizes.
+- 🎠 Carousel: Height and width no longer default to double.infinity, preventing unbounded constraint issues.
+
+## [1.2.1] – 2025-10-01
+
+- 🐞 Fixed an issue where context was being unmounted after async calls
+- 🧹 Removed unsupported delay option from FutureBuilder (was never intended for use)
+
+## [1.2.0] – 2025-09-29
+
+- 🖥️ New Debug Console: View network requests, state changes, and app events in real-time while previewing on the Dashboard. [See integration steps](https://github.com/Digia-Technology-Private-Limited/digia_inspector)
+- 🔗 GraphQL Support: Digia now supports GraphQL queries and mutations.
+- 🖼️ Image Widget: Added alignment property; fixed Blurhash rendering issues.
+- 🔒 TextField: obscureText is now dynamic — perfect for show/hide password toggles.
+- 🎨 Button Widget: Redesigned to look and behave more like a standard button.
+- 🏗️ Column & Row Widgets: Added spacing options (between items, start, and end).
+- 🎠 Carousel: Improved behavior to better match WYSIWYG experience in Digia Studio.
+- 🐞 StreamBuilder: Fixed bug preventing a stream from being subscribed to multiple times.
+- 🐞 Parent Properties: Fixed issue where properties like Flex expansion and Stack positioning were not applied to components.
+- 🧹 Chores & Hygiene: General codebase improvements and cleanup.
+
 ## [1.1.0] – 2025-08-21
 
 - ✅ Verified compatibility with Flutter 3.35.1

@@ -136,11 +136,11 @@ class NetworkClient {
   ///
   /// Throws an exception if the base URL is empty or invalid.
   NetworkClient(
-      String baseUrl,
-      Map<String, dynamic> digiaHeaders,
-      NetworkConfiguration projectNetworkConfiguration,
-      DeveloperConfig? developerConfig)
-      : digiaDioInstance =
+    String baseUrl,
+    Map<String, dynamic> digiaHeaders,
+    NetworkConfiguration projectNetworkConfiguration,
+    DeveloperConfig? developerConfig,
+  )   : digiaDioInstance =
             _createDigiaDio(baseUrl, digiaHeaders, developerConfig),
         projectDioInstance =
             _createProjectDio(projectNetworkConfiguration, developerConfig) {
@@ -173,6 +173,7 @@ class NetworkClient {
   /// - [additionalHeaders]: Optional headers to add to the request
   /// - [cancelToken]: Optional token for request cancellation
   /// - [data]: Request body data
+  /// - [apiName]: Optional API name for enhanced logging (from APIModel.name)
   ///
   /// Returns a [Response] containing the server response.
   ///
@@ -188,6 +189,7 @@ class NetworkClient {
     Map<String, dynamic>? additionalHeaders,
     CancelToken? cancelToken,
     Object? data,
+    String? apiName,
   }) {
     // Remove headers already passed in base headers to avoid conflicts
     if (additionalHeaders != null) {
@@ -213,6 +215,9 @@ class NetworkClient {
         method: method.stringValue,
         headers: headers,
         contentType: bodyType.contentTypeHeader,
+        extra: {
+          if (apiName != null) 'apiName': apiName,
+        },
       ),
     );
   }
@@ -263,12 +268,18 @@ class NetworkClient {
       final response =
           await _execute(path, method, data: data, headers: headers);
 
-      if (response.statusCode == 200) {
+      final code = response.statusCode ?? 0;
+      if (code >= 200 && code < 300) {
         return BaseResponse.fromJson(
-            response.data as Map<String, Object?>, fromJsonT);
+          response.data as Map<String, Object?>,
+          fromJsonT,
+        );
       } else {
         return BaseResponse(
-            isSuccess: false, data: null, error: {'code': response.statusCode});
+          isSuccess: false,
+          data: null,
+          error: {'code': response.statusCode},
+        );
       }
     } catch (e) {
       throw Exception('Error making HTTP request: $e');
@@ -372,6 +383,7 @@ class NetworkClient {
   /// - [data]: Multipart form data (typically FormData)
   /// - [uploadProgress]: Callback function to track upload progress
   /// - [cancelToken]: Optional token for request cancellation
+  /// - [apiName]: Optional API name for enhanced logging (from APIModel.name)
   ///
   /// Returns a [Response] containing the server response after upload completion.
   ///
@@ -402,6 +414,7 @@ class NetworkClient {
     Object? data,
     required void Function(int, int) uploadProgress,
     CancelToken? cancelToken,
+    String? apiName,
   }) {
     // Remove headers already passed in base headers to avoid conflicts
     if (additionalHeaders != null) {
@@ -430,6 +443,9 @@ class NetworkClient {
         method: method.stringValue,
         headers: headers,
         contentType: bodyType.contentTypeHeader,
+        extra: {
+          if (apiName != null) 'apiName': apiName,
+        },
       ),
       onSendProgress: (count, total) {
         uploadProgress(count, total);

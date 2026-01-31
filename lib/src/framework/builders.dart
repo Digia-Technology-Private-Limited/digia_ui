@@ -10,10 +10,12 @@ import 'widget_props/app_bar_props.dart';
 import 'widget_props/async_builder_props.dart';
 import 'widget_props/before_after_slider_props.dart';
 import 'widget_props/carousel_props.dart';
-import 'widget_props/condtional_item_props.dart';
+import 'widget_props/chart_props.dart';
+import 'widget_props/conditional_item_props.dart';
 import 'widget_props/icon_props.dart';
 import 'widget_props/image_view_360_props.dart';
 import 'widget_props/markdown_props.dart';
+import 'widget_props/masonry_grid_view_props.dart';
 import 'widget_props/nav_bar_item_custom.dart';
 import 'widget_props/nav_bar_item_default_props.dart';
 import 'widget_props/navigation_bar_custom_props.dart';
@@ -26,9 +28,13 @@ import 'widget_props/range_slider_props.dart';
 import 'widget_props/rich_text_props.dart';
 import 'widget_props/safe_area_props.dart';
 import 'widget_props/scaffold_props.dart';
+import 'widget_props/scratch_card_props.dart';
 import 'widget_props/sized_box_props.dart';
+import 'widget_props/slider_props.dart';
 import 'widget_props/sliver_app_bar_props.dart';
 import 'widget_props/smart_scroll_view_props.dart';
+import 'widget_props/story_props.dart';
+import 'widget_props/story_video_player_props.dart';
 import 'widget_props/stream_builder_props.dart';
 import 'widget_props/styled_divider_props.dart';
 import 'widget_props/switch_props.dart';
@@ -46,10 +52,11 @@ import 'widgets/before_after_slider.dart';
 import 'widgets/button.dart';
 import 'widgets/calendar.dart';
 import 'widgets/carousel.dart';
+import 'widgets/chart.dart';
 import 'widgets/checkbox.dart';
 import 'widgets/circular_progress_bar.dart';
 import 'widgets/conditional_builder.dart';
-import 'widgets/condtional_item.dart';
+import 'widgets/conditional_item.dart';
 import 'widgets/container.dart';
 import 'widgets/drawer.dart';
 import 'widgets/expandable.dart';
@@ -64,6 +71,7 @@ import 'widgets/linear_progress_bar.dart';
 import 'widgets/list_view.dart';
 import 'widgets/lottie.dart';
 import 'widgets/markdown.dart';
+import 'widgets/masonry_grid_view.dart';
 import 'widgets/nav_bar_item_custom.dart';
 import 'widgets/nav_bar_item_default.dart';
 import 'widgets/navigation_bar.dart';
@@ -81,7 +89,9 @@ import 'widgets/refresh_indicator.dart';
 import 'widgets/rich_text.dart';
 import 'widgets/safe_area.dart';
 import 'widgets/scaffold.dart';
+import 'widgets/scratch_card.dart';
 import 'widgets/sized_box.dart';
+import 'widgets/slider.dart';
 import 'widgets/sliver_app_bar.dart';
 import 'widgets/sliver_grid.dart';
 import 'widgets/sliver_list.dart';
@@ -89,6 +99,8 @@ import 'widgets/smart_scroll_group.dart';
 import 'widgets/smart_scroll_view.dart';
 import 'widgets/spacer.dart';
 import 'widgets/stack.dart';
+import 'widgets/story.dart';
+import 'widgets/story_video_player.dart';
 import 'widgets/stream_builder.dart';
 import 'widgets/styled_horizontal_divider.dart';
 import 'widgets/styled_vertical_divider.dart';
@@ -132,6 +144,33 @@ VirtualStateContainerWidget stateContainerBuilder(
   );
 }
 
+VWMasonryGridView masonryGridViewBuilder(
+  VWNodeData data,
+  VirtualWidget? parent,
+  VirtualWidgetRegistry registry,
+) {
+  return VWMasonryGridView(
+    props: MasonryGridViewProps.fromJson(data.props.value),
+    commonProps: data.commonProps,
+    parentProps: data.parentProps,
+    parent: parent,
+    childGroups: createChildGroups(data.childGroups, parent, registry),
+    refName: data.refName,
+  );
+}
+
+VWChart chartBuilder(
+    VWNodeData data, VirtualWidget? parent, VirtualWidgetRegistry registry) {
+  return VWChart(
+    props: ChartProps.fromJson(data.props.value),
+    commonProps: data.commonProps,
+    parentProps: data.parentProps,
+    parent: parent,
+    childGroups: createChildGroups(data.childGroups, parent, registry),
+    refName: data.refName,
+  );
+}
+
 VWText textBuilder(VWNodeData data, VirtualWidget? parent, _) {
   return VWText(
     props: TextProps.fromJson(data.props.value),
@@ -155,6 +194,16 @@ VWMarkDown markdownBuilder(VWNodeData data, VirtualWidget? parent, _) {
 VWRangeSlider rangeSliderBuilder(VWNodeData data, VirtualWidget? parent, _) {
   return VWRangeSlider(
     props: RangeSliderProps.fromJson(data.props.value),
+    commonProps: data.commonProps,
+    parentProps: data.parentProps,
+    parent: parent,
+    refName: data.refName,
+  );
+}
+
+VWSlider sliderBuilder(VWNodeData data, VirtualWidget? parent, _) {
+  return VWSlider(
+    props: SliderProps.fromJson(data.props.value),
     commonProps: data.commonProps,
     parentProps: data.parentProps,
     parent: parent,
@@ -376,6 +425,17 @@ VWStack stackBuilder(
 VWVideoPlayer videoPlayerBuilder(VWNodeData data, VirtualWidget? parent, _) {
   return VWVideoPlayer(
     props: data.props,
+    commonProps: data.commonProps,
+    parentProps: data.parentProps,
+    parent: parent,
+    refName: data.refName,
+  );
+}
+
+VWStoryVideoPlayer storyVideoPlayerBuilder(
+    VWNodeData data, VirtualWidget? parent, _) {
+  return VWStoryVideoPlayer(
+    props: StoryVideoPlayerProps.fromJson(data.props.value),
     commonProps: data.commonProps,
     parentProps: data.parentProps,
     parent: parent,
@@ -621,6 +681,21 @@ VWYoutubePlayer youtubePlayerBuilder(
   );
 }
 
+VWStory storyBuilder(
+  VWNodeData data,
+  VirtualWidget? parent,
+  VirtualWidgetRegistry registry,
+) {
+  return VWStory(
+    props: StoryProps.fromJson(data.props.value),
+    commonProps: data.commonProps,
+    parentProps: data.parentProps,
+    parent: parent,
+    refName: data.refName,
+    childGroups: createChildGroups(data.childGroups, parent, registry),
+  );
+}
+
 VWSwitch switchBuilder(VWNodeData data, VirtualWidget? parent, _) {
   return VWSwitch(
     props: SwitchProps.fromJson(data.props.value),
@@ -703,7 +778,7 @@ VWConditionItem conditionalItemBuilder(
   VirtualWidgetRegistry registry,
 ) {
   return VWConditionItem(
-    props: CondtionalItemProps.fromJson(data.props.value),
+    props: ConditionalItemProps.fromJson(data.props.value),
     refName: data.refName,
     childGroups: createChildGroups(data.childGroups, parent, registry),
   );
@@ -1089,5 +1164,16 @@ VWPinnedHeader pinnedHeaderBuilder(
     parent: parent,
     refName: data.refName,
     childGroups: createChildGroups(data.childGroups, parent, registry),
+  );
+}
+
+VWScratchCard scratchCardBuilder(VWNodeData data, VirtualWidget? parent, _) {
+  return VWScratchCard(
+    props: ScratchCardProps.fromJson(data.props.value),
+    commonProps: data.commonProps,
+    parentProps: data.parentProps,
+    parent: parent,
+    childGroups: createChildGroups(data.childGroups, parent, _),
+    refName: data.refName,
   );
 }

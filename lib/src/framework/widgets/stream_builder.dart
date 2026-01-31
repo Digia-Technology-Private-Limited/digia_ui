@@ -52,11 +52,17 @@ class VWStreamBuilder extends VirtualStatelessWidget<StreamBuilderProps> {
               AsyncSnapshot.withData(ConnectionState.active, data),
             ),
             buildContext: context);
-        updatedPayload.executeAction(props.onSuccess);
+        updatedPayload.executeAction(
+          props.onSuccess,
+          triggerType: 'onSuccess',
+        );
       },
       onError: (context) {
         final updatedPayload = payload.copyWith(buildContext: context);
-        updatedPayload.executeAction(props.onError);
+        updatedPayload.executeAction(
+          props.onError,
+          triggerType: 'onError',
+        );
       },
     );
   }

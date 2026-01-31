@@ -1,5 +1,7 @@
+import 'package:digia_inspector_core/digia_inspector_core.dart';
 import 'package:flutter/widgets.dart';
 
+import '../../init/digia_ui_manager.dart';
 import '../../network/api_request/api_request.dart';
 import '../data_type/data_type_creator.dart';
 import '../expr/default_scope_context.dart';
@@ -23,6 +25,11 @@ class DUIComponent extends StatelessWidget {
   final ScopeContext? scope;
   final Map<String, APIModel>? apiModels;
   final GlobalKey<NavigatorState>? navigatorKey;
+  final ObservabilityContext? parentObservabilityContext;
+
+  /// Gets the state observer from the DigiaUIManager
+  static StateObserver? get stateObserver =>
+      DigiaUIManager().inspector?.stateObserver;
 
   const DUIComponent({
     super.key,
@@ -34,8 +41,8 @@ class DUIComponent extends StatelessWidget {
     this.scope,
     this.apiModels,
     this.navigatorKey,
+    this.parentObservabilityContext,
   });
-
   @override
   Widget build(BuildContext context) {
     final resolvedArgs = definition.argDefs
@@ -48,7 +55,16 @@ class DUIComponent extends StatelessWidget {
               enclosing: scope,
             ))));
 
-    final inhertiedResources = ResourceProvider.maybeOf(context);
+    final stateId = IdHelper.randomId();
+    stateObserver?.onCreate(
+      id: stateId,
+      stateType: StateType.component,
+      namespace: id,
+      argData: resolvedArgs ?? {},
+      stateData: resolvedState ?? {},
+    );
+
+    final inheritedResources = ResourceProvider.maybeOf(context);
     return ResourceProvider(
         icons: resources?.icons ?? {},
         images: resources?.images ?? {},
@@ -59,10 +75,12 @@ class DUIComponent extends StatelessWidget {
         apiModels: apiModels ?? {},
         // Only these two need to be passed. Rest all values are
         // configured at initialization time.
-        navigatorKey: navigatorKey ?? inhertiedResources?.navigatorKey,
+        navigatorKey: navigatorKey ?? inheritedResources?.navigatorKey,
         child: StatefulScopeWidget(
           namespace: id,
+          stateId: stateId,
           initialState: resolvedState ?? {},
+          stateType: StateType.component,
           childBuilder: (context, state) {
             return _buildContent(
               context,
@@ -70,12 +88,17 @@ class DUIComponent extends StatelessWidget {
                 resolvedArgs,
                 state,
               ),
+              parentObservabilityContext,
             );
           },
         ));
   }
 
-  Widget _buildContent(BuildContext context, ScopeContext scopeContext) {
+  Widget _buildContent(
+    BuildContext context,
+    ScopeContext scopeContext,
+    ObservabilityContext? parentObservabilityContext,
+  ) {
     final rootNode = definition.layout?.root;
     // Blank Layout
     if (rootNode == null) {
@@ -84,10 +107,26 @@ class DUIComponent extends StatelessWidget {
 
     final virtualWidget = registry.createWidget(rootNode, null);
 
+    // Create component payload, preserving parent hierarchy
+    final List<String> componentHierarchy;
+    final String? entityId;
+
+    if (parentObservabilityContext != null) {
+      // When used inside a page, preserve the page's entity ID
+      // and extend the hierarchy with the component ID
+      componentHierarchy = [...parentObservabilityContext.widgetHierarchy, id];
+      entityId = parentObservabilityContext.currentEntityId;
+    } else {
+      componentHierarchy = const [];
+      entityId = id;
+    }
+
     return virtualWidget.toWidget(
       RenderPayload(
         buildContext: context,
         scopeContext: scopeContext,
+        widgetHierarchy: componentHierarchy,
+        currentEntityId: entityId,
       ),
     );
   }

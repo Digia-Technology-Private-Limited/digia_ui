@@ -50,6 +50,11 @@ class VWTextFormField extends VirtualStatelessWidget<Props> {
     final contentPadding = To.edgeInsets(props.get('contentPadding'));
     final focusColor = payload.evalColor(props.get('focusColor'));
     final cursorColor = payload.evalColor(props.get('cursorColor'));
+    final prefixIconConstraints = _getPrefixIconConstraints(payload);
+    final suffixIconConstraints = _getSuffixIconConstraints(payload);
+    final prefixIcon = childOf('prefix')?.toWidget(payload);
+    final suffixIcon = childOf('suffix')?.toWidget(payload);
+
     final validations = props.getList('validationRules')?.map(
       (Object? e) {
         final map = e as Map?;
@@ -78,6 +83,7 @@ class VWTextFormField extends VirtualStatelessWidget<Props> {
         await payload.executeAction(
           actionFlow,
           scopeContext: _createExprContext(p0),
+          triggerType: 'onChanged',
         );
       },
       onSubmit: (p0) async {
@@ -85,6 +91,7 @@ class VWTextFormField extends VirtualStatelessWidget<Props> {
         await payload.executeAction(
           actionFlow,
           scopeContext: _createExprContext(p0),
+          triggerType: 'onSubmit',
         );
       },
       textAlign: textAlign,
@@ -94,12 +101,13 @@ class VWTextFormField extends VirtualStatelessWidget<Props> {
       keyboardType: keyboardType,
       textInputAction: textInputAction,
       style: style,
-      maxLines: effectiveMaxLines, // Ensuring the effective maxLines and minLines are dynamically set as per the obscureText
+      maxLines: effectiveMaxLines,
       minLines: effectiveMinLines,
       maxLength: maxLength,
       cursorColor: cursorColor,
       validations: validations,
       inputDecoration: InputDecoration(
+        isDense: true,
         fillColor: fillColor,
         filled: fillColor != null,
         labelText: labelText,
@@ -109,8 +117,10 @@ class VWTextFormField extends VirtualStatelessWidget<Props> {
         hintStyle: hintStyle,
         contentPadding: isMultiline ? const EdgeInsets.all(12) : contentPadding,
         focusColor: focusColor,
-        prefixIcon: childOf('prefix')?.toWidget(payload),
-        suffixIcon: childOf('suffix')?.toWidget(payload),
+        prefixIcon: prefixIcon,
+        suffixIcon: suffixIcon,
+        prefixIconConstraints: prefixIconConstraints,
+        suffixIconConstraints: suffixIconConstraints,
         enabledBorder: enabledBorder,
         disabledBorder: disabledBorder,
         focusedBorder: focusedBorder,
@@ -118,6 +128,36 @@ class VWTextFormField extends VirtualStatelessWidget<Props> {
         errorBorder: errorBorder,
       ),
     );
+  }
+
+  BoxConstraints _getIconConstraints(
+      RenderPayload payload, String constraintKey) {
+    final constraintsMap = props.getMap(constraintKey) as Map?;
+
+    if (constraintsMap == null) {
+      // Default constraints
+      return const BoxConstraints(
+        minWidth: 0,
+        minHeight: 0,
+        maxWidth: 48,
+        maxHeight: 48,
+      );
+    }
+
+    return BoxConstraints(
+      minWidth: payload.eval<double>(constraintsMap['minWidth']) ?? 0,
+      minHeight: payload.eval<double>(constraintsMap['minHeight']) ?? 0,
+      maxWidth: payload.eval<double>(constraintsMap['maxWidth']) ?? 48,
+      maxHeight: payload.eval<double>(constraintsMap['maxHeight']) ?? 48,
+    );
+  }
+
+  BoxConstraints _getPrefixIconConstraints(RenderPayload payload) {
+    return _getIconConstraints(payload, 'prefixIconConstraints');
+  }
+
+  BoxConstraints _getSuffixIconConstraints(RenderPayload payload) {
+    return _getIconConstraints(payload, 'suffixIconConstraints');
   }
 
   InputBorder? _toInputBorder(RenderPayload payload, dynamic border) {

@@ -16,7 +16,7 @@ repository: https://github.com/Digia-Technology-Private-Limited/digia_ui.git
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 1.1.0
+version: 1.6.1
 
 environment:
   sdk: '>=3.3.0 <4.0.0'
@@ -58,6 +58,7 @@ dependencies:
   flutter_html: ^3.0.0
   digia_expr: 0.0.15
   flutter_js: 0.8.5
+  intl: ^0.19.0
   fluttertoast: ^8.2.12
   font_awesome_flutter: 10.8.0
   json_annotation: ^4.9.0
@@ -86,10 +87,11 @@ dependencies:
   percent_indicator: ^4.2.5
   cross_file: ^0.3.4+2
   image_picker: ^1.2.0
-  flutter_avif: ^3.0.0
   markdown_widget: ^2.3.2+8
   flutter_staggered_grid_view: ^0.7.0
   web: ^1.1.1
+  digia_inspector_core: ^1.0.0
+  chartjs_flutter: ^1.0.0
 
 dev_dependencies:
   build_runner: ^2.7.0
@@ -139,3 +141,7 @@ flutter:
 
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+
+platforms:
+   android:
+   ios:

@@ -10,6 +10,7 @@ class InternalGridView extends StatefulWidget {
   final Widget Function(BuildContext context, int index)? itemBuilder;
   final double? mainAxisSpacing;
   final double? crossAxisSpacing;
+  final Axis? scrollDirection;
 
   const InternalGridView({
     super.key,
@@ -20,6 +21,7 @@ class InternalGridView extends StatefulWidget {
     this.crossAxisSpacing,
     this.itemCount = -1,
     this.itemBuilder,
+    this.scrollDirection,
     required this.gridDelegate,
   });
 
@@ -34,6 +36,7 @@ class _InternalGridViewState extends State<InternalGridView> {
       mainAxisSpacing: widget.mainAxisSpacing ?? 0.0,
       crossAxisSpacing: widget.crossAxisSpacing ?? 0.0,
       controller: widget.controller,
+      scrollDirection: widget.scrollDirection ?? Axis.vertical,
       padding: EdgeInsets.zero,
       physics: widget.physics,
       shrinkWrap: widget.shrinkWrap,

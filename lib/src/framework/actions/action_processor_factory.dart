@@ -1,9 +1,10 @@
+import 'package:digia_inspector_core/digia_inspector_core.dart';
 import 'package:flutter/widgets.dart';
 
-import '../../dui_logger.dart';
 import '../data_type/method_bindings/method_binding_registry.dart';
 import '../expr/scope_context.dart';
 import '../utils/types.dart';
+import 'action_execution_context.dart';
 import 'base/action.dart' as an;
 import 'base/action_flow.dart';
 import 'base/processor.dart';
@@ -42,8 +43,11 @@ class ActionProcDependencies {
   final Future<Object?>? Function(
     BuildContext context,
     ActionFlow actionFlow,
-    ScopeContext? scopeContext,
-  ) executeActionFlow;
+    ScopeContext? scopeContext, {
+    required String id,
+    String? parentActionId,
+    ObservabilityContext? observabilityContext,
+  }) executeActionFlow;
   final MethodBindingRegistry bindingRegistry;
   // Add other shared dependencies here
 
@@ -57,10 +61,9 @@ class ActionProcDependencies {
 
 class ActionProcessorFactory {
   final ActionProcDependencies dependencies;
-  final DUILogger? logger;
-  final Map<String, Object?>? metaData;
+  final ActionExecutionContext executionContext;
 
-  ActionProcessorFactory(this.dependencies, this.logger, this.metaData);
+  ActionProcessorFactory(this.dependencies, this.executionContext);
 
   ActionProcessor? actionProcessor;
   ActionProcessor getProcessor(an.Action action) {
@@ -130,8 +133,7 @@ class ActionProcessorFactory {
           executeActionFlow: dependencies.executeActionFlow,
         );
     }
-    actionProcessor?.metaData = metaData;
-    // TODO: Remove later
-    return (actionProcessor ?? ShowToastProcessor())..logger = logger;
+    actionProcessor?.executionContext = executionContext;
+    return (actionProcessor ?? ShowToastProcessor());
   }
 }

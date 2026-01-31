@@ -1,6 +1,5 @@
 import 'package:flutter/gestures.dart';
-import 'package:flutter/widgets.dart';
-
+import 'package:flutter/material.dart';
 import '../actions/base/action_flow.dart';
 import '../base/virtual_leaf_stateless_widget.dart';
 import '../models/types.dart';
@@ -45,7 +44,7 @@ class VWRichText extends VirtualLeafStatelessWidget<RichTextProps> {
     );
   }
 
-  List<TextSpan>? _toTextSpan(RenderPayload payload, Object? textSpans) {
+  List<InlineSpan>? _toTextSpan(RenderPayload payload, Object? textSpans) {
     if (textSpans == null) return null;
 
     if (textSpans is String) {
@@ -75,16 +74,53 @@ class VWRichText extends VirtualLeafStatelessWidget<RichTextProps> {
 
           final style = payload.getTextStyle(styleJson);
 
+          final gradientConfig = styleJson != null
+              ? payload.eval<JsonLike>(styleJson['gradient'])
+              : null;
+          final gradient = gradientConfig != null
+              ? To.gradient(
+                  gradientConfig as Map<String, Object?>?,
+                  evalColor: (colorRef) => payload.evalColor(colorRef),
+                )
+              : null;
+
+          final onTapHandler = spanObject['onClick'].maybe(
+            (p0) => () {
+              final onClick = ActionFlow.fromJson(p0);
+              payload.executeAction(
+                onClick,
+                triggerType: 'onTap',
+              );
+            },
+          );
+
+          if (gradient != null) {
+            return WidgetSpan(
+              alignment: PlaceholderAlignment.baseline,
+              baseline: TextBaseline.alphabetic,
+              child: GestureDetector(
+                onTap: onTapHandler,
+                child: ShaderMask(
+                  shaderCallback: (bounds) => gradient.createShader(bounds),
+                  blendMode: BlendMode.srcIn,
+                  child: Text(
+                    text ?? '',
+                    style: style?.copyWith(color: Colors.white),
+                  ),
+                ),
+              ),
+            );
+          }
+
+          final recognizer = onTapHandler != null
+              ? (TapGestureRecognizer()..onTap = onTapHandler)
+              : null;
+
           return TextSpan(
-              text: text,
-              style: style,
-              recognizer: spanObject['onClick'].maybe(
-                (p0) => TapGestureRecognizer()
-                  ..onTap = () {
-                    final onClick = ActionFlow.fromJson(p0);
-                    payload.executeAction(onClick);
-                  },
-              ));
+            text: text,
+            style: style,
+            recognizer: recognizer,
+          );
         })
         .nonNulls
         .toList();

@@ -169,9 +169,9 @@ class _InternalCarouselState extends State<InternalCarousel> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        child,
+        Flexible(child: child),
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          padding: const EdgeInsets.only(top: 8.0),
           child: ValueListenableBuilder<int>(
             valueListenable: _currentPageNotifier,
             builder: (context, value, _) {
@@ -299,11 +299,14 @@ class IndicatorBuilder extends StatelessWidget {
           ),
           activeDotDecoration: DotDecoration(
             borderRadius: BorderRadius.circular(100),
-            width: dotWidth * 0.75,
-            height: dotHeight * 0.75,
+            width: dotWidth,
+            height: dotHeight,
             color: activeDotColor ?? Colors.indigo,
             dotBorder: DotBorder(
-                padding: dotHeight * 0.75, width: 1, type: DotBorderType.solid),
+                padding: dotHeight * 0.75,
+                color: activeDotColor ?? Colors.indigo,
+                width: 2,
+                type: DotBorderType.solid),
           ),
         );
       case IndicatorEffectType.slide:

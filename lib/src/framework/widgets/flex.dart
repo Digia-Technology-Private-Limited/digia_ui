@@ -121,17 +121,36 @@ class VWFlex extends VirtualStatelessWidget<Props> {
   }
 
   /// Creates the core Flex widget with configured properties
+  double get spacing => props.getDouble('spacing') ?? 0.0;
+  double get startSpacing => props.getDouble('startSpacing') ?? 0.0;
+  double get endSpacing => props.getDouble('endSpacing') ?? 0.0;
+
+  EdgeInsetsGeometry get padding => direction == Axis.horizontal
+      ? EdgeInsetsDirectional.only(
+          start: startSpacing,
+          end: endSpacing,
+        )
+      : EdgeInsets.only(
+          top: startSpacing,
+          bottom: endSpacing,
+        );
+
   Widget _buildFlex(List<Widget> Function() childrenBuilder) {
-    return Flex(
-      direction: direction,
-      mainAxisSize:
-          To.mainAxisSize(props.get('mainAxisSize')) ?? MainAxisSize.min,
-      mainAxisAlignment: To.mainAxisAlignment(props.get('mainAxisAlignment')) ??
-          MainAxisAlignment.start,
-      crossAxisAlignment:
-          To.crossAxisAlignment(props.get('crossAxisAlignment')) ??
-              CrossAxisAlignment.center,
-      children: childrenBuilder(),
+    return Padding(
+      padding: padding,
+      child: Flex(
+        direction: direction,
+        mainAxisSize:
+            To.mainAxisSize(props.get('mainAxisSize')) ?? MainAxisSize.max,
+        mainAxisAlignment:
+            To.mainAxisAlignment(props.get('mainAxisAlignment')) ??
+                MainAxisAlignment.start,
+        crossAxisAlignment:
+            To.crossAxisAlignment(props.get('crossAxisAlignment')) ??
+                CrossAxisAlignment.center,
+        spacing: spacing,
+        children: childrenBuilder(),
+      ),
     );
   }
 

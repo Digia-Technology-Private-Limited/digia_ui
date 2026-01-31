@@ -6,14 +6,14 @@ import '../../dui_dev_config.dart';
 import '../../init/digia_ui_manager.dart';
 import '../base/default_error_widget.dart';
 import '../base/virtual_stateless_widget.dart';
-import '../custom/border_with_pattern.dart';
-import '../custom/custom_flutter_types.dart';
+
 import '../models/props.dart';
 import '../render_payload.dart';
 import '../utils/flutter_extensions.dart';
 import '../utils/flutter_type_converters.dart';
 import '../utils/functional_util.dart';
 import '../utils/json_util.dart';
+import '../utils/object_util.dart';
 import '../utils/types.dart';
 import '../utils/widget_util.dart';
 
@@ -68,9 +68,17 @@ class VWContainer extends VirtualStatelessWidget<Props> {
 
   @override
   Widget render(RenderPayload payload) {
-    final width = props.getString('width')?.toWidth(payload.buildContext);
+    final width = props
+        .getString('width')
+        .maybe((it) => payload.eval(it))
+        ?.to<String>()
+        ?.toWidth(payload.buildContext);
 
-    final height = props.getString('height')?.toHeight(payload.buildContext);
+    final height = props
+        .getString('height')
+        .maybe((it) => payload.eval(it))
+        ?.to<String>()
+        ?.toHeight(payload.buildContext);
 
     final borderRadius = To.borderRadius(props.get('borderRadius'));
 
@@ -96,8 +104,8 @@ class VWContainer extends VirtualStatelessWidget<Props> {
             gradient: gradiant,
             boxShadow: toShadowList(payload, props.getList('shadow')),
             color: color,
-            border: _toBorderWithPattern(
-                payload, props.toProps('border') ?? Props.empty()),
+            border: To.borderWithPattern(props.get('border'),
+                evalColor: payload.evalColor),
             borderRadius: shape == BoxShape.circle ? null : borderRadius,
             image:
                 _toDecorationImage(payload, props.toProps('decorationImage')),
@@ -165,37 +173,4 @@ DecorationImage? _toDecorationImage(RenderPayload payload, Props? props) {
       image: imageProvider,
       alignment: imageAlignment ?? Alignment.center,
       fit: To.boxFit(props?.get('fit')));
-}
-
-BorderWithPattern? _toBorderWithPattern(RenderPayload payload, Props props) {
-  if (props.isEmpty) return null;
-
-  final strokeWidth = props.getDouble('borderWidth') ?? 0;
-
-  if (strokeWidth <= 0) return null;
-
-  final borderColor =
-      payload.evalColor(props.get('borderColor')) ?? Colors.transparent;
-  final dashPattern =
-      To.dashPattern(props.get('borderType.dashPattern')) ?? const [3, 1];
-  final strokeCap =
-      To.strokeCap(props.get('borderType.strokeCap')) ?? StrokeCap.butt;
-  final borderGradiant =
-      To.gradient(props.getMap('borderGradiant'), evalColor: payload.evalColor);
-
-  final BorderPattern borderPattern =
-      To.borderPattern(props.get('borderType.borderPattern')) ??
-          BorderPattern.solid;
-  final strokeAlign =
-      To.strokeAlign(props.get('strokeAlign')) ?? StrokeAlign.center;
-
-  return BorderWithPattern(
-    strokeWidth: strokeWidth,
-    color: borderColor,
-    dashPattern: dashPattern,
-    strokeCap: strokeCap,
-    gradient: borderGradiant,
-    borderPattern: borderPattern,
-    strokeAlign: strokeAlign,
-  );
 }

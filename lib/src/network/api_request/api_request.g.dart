@@ -8,6 +8,7 @@ part of 'api_request.dart';
 
 APIModel _$APIModelFromJson(Map<String, dynamic> json) => APIModel(
       id: json['id'] as String,
+      name: json['name'] as String?,
       url: json['url'] as String,
       method: $enumDecode(_$HttpMethodEnumMap, json['method']),
       headers: json['headers'] as Map<String, dynamic>?,
@@ -22,6 +23,7 @@ APIModel _$APIModelFromJson(Map<String, dynamic> json) => APIModel(
 
 Map<String, dynamic> _$APIModelToJson(APIModel instance) => <String, dynamic>{
       'id': instance.id,
+      'name': instance.name,
       'url': instance.url,
       'method': _$HttpMethodEnumMap[instance.method]!,
       'headers': instance.headers,

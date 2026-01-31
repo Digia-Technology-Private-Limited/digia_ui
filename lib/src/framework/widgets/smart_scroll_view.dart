@@ -49,7 +49,12 @@ class VWSmartScrollView extends VirtualStatelessWidget<SmartScrollViewProps> {
             ),
           ...List.generate(items.length, (index) {
             final dataItem = items[index];
-            final template = SliverUtil.convertToSliver(children!.first);
+            final template = SliverUtil.convertToSliver(
+              children!.first,
+              payload.copyWithChainedContext(
+                _createExprContext(dataItem, index),
+              ),
+            );
             return template.toWidget(
               payload.copyWithChainedContext(
                 _createExprContext(dataItem, index),
@@ -73,7 +78,7 @@ class VWSmartScrollView extends VirtualStatelessWidget<SmartScrollViewProps> {
             ),
           ),
         ...?children
-            ?.map((e) => SliverUtil.convertToSliver(e))
+            ?.map((e) => SliverUtil.convertToSliver(e, payload))
             .map((child) => child.toWidget(payload)),
       ],
     );

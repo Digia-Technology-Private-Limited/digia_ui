@@ -11,7 +11,6 @@ import '../page_performance_monitor.dart';
 import '../render_payload.dart';
 import '../utils/functional_util.dart';
 import '../utils/network_util.dart';
-import '../utils/num_util.dart';
 import '../utils/types.dart';
 import '../widget_props/async_builder_props.dart';
 
@@ -23,7 +22,6 @@ enum FutureState {
 
 enum FutureType {
   api,
-  delay;
 }
 
 class VWAsyncBuilder extends VirtualStatelessWidget<AsyncBuilderProps> {
@@ -79,8 +77,6 @@ class VWAsyncBuilder extends VirtualStatelessWidget<AsyncBuilderProps> {
     switch (type) {
       case 'api':
         return FutureType.api;
-      case 'delay':
-        return FutureType.delay;
       default:
         return null;
     }
@@ -93,8 +89,6 @@ class VWAsyncBuilder extends VirtualStatelessWidget<AsyncBuilderProps> {
     switch (futureType) {
       case FutureType.api:
         return _createApiExprContext(snapshot, futureState);
-      case FutureType.delay:
-        return _createDefaultExprContext(snapshot, futureState);
       default:
         return _createDefaultExprContext(snapshot, futureState);
     }
@@ -195,15 +189,14 @@ class VWAsyncBuilder extends VirtualStatelessWidget<AsyncBuilderProps> {
     }
 
     final type = _getFutureType(props, payload);
+    // Backward-compat: if type is unknown (e.g., legacy 'delay'),
     if (type == null) {
-      return Future.error('Unknown Future Type');
+      return Future.value(null);
     }
 
     switch (type) {
       case FutureType.api:
         return _makeApiFuture(futureProps, payload, props);
-      case FutureType.delay:
-        return _makeDelayFuture(futureProps);
     }
   }
 }
@@ -236,20 +229,17 @@ Future<Response<Object?>> _makeApiFuture(
       await payload.executeAction(
         props.onSuccess,
         scopeContext: DefaultScopeContext(variables: {'response': response}),
+        triggerType: 'onSuccess',
       );
     },
     onError: (response) async {
       await payload.executeAction(
         props.onError,
         scopeContext: DefaultScopeContext(variables: {'response': response}),
+        triggerType: 'onError',
       );
     },
   );
-}
-
-Future<Object?> _makeDelayFuture(JsonLike futureProps) async {
-  final durationInMs = NumUtil.toInt(futureProps['durationInMs']) ?? 0;
-  return Future.delayed(Duration(milliseconds: durationInMs));
 }
 
 JsonLike? _requestObjToMap(RequestOptions? requestOptions) {

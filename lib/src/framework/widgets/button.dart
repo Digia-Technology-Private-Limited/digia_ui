@@ -11,6 +11,7 @@ import '../utils/flutter_extensions.dart';
 import '../utils/flutter_type_converters.dart';
 import '../utils/functional_util.dart';
 import '../utils/json_util.dart';
+import '../utils/object_util.dart';
 import '../utils/types.dart';
 import '../widget_props/icon_props.dart';
 import '../widget_props/text_props.dart';
@@ -30,6 +31,18 @@ class VWButton extends VirtualLeafStatelessWidget<Props> {
   Widget render(RenderPayload payload) {
     final defaultStyleJson = props.toProps('defaultStyle') ?? Props.empty();
     final disabledStyleJson = props.toProps('disabledStyle') ?? Props.empty();
+
+    //sizing constraints
+    final height = defaultStyleJson
+        .getString('height')
+        .maybe((it) => payload.eval(it))
+        ?.to<String>()
+        ?.toHeight(payload.buildContext);
+    final width = defaultStyleJson
+        .getString('width')
+        .maybe((it) => payload.eval(it))
+        ?.to<String>()
+        ?.toWidth(payload.buildContext);
 
     ButtonStyle style = ButtonStyle(
       shape: WidgetStateProperty.all(
@@ -54,12 +67,10 @@ class VWButton extends VirtualLeafStatelessWidget<Props> {
             .getString('backgroundColor')
             .maybe(payload.evalColor);
       }),
-      fixedSize: WidgetStateProperty.all(Size(
-        defaultStyleJson.getString('width')?.toWidth(payload.buildContext) ??
-            0.0,
-        defaultStyleJson.getString('height')?.toHeight(payload.buildContext) ??
-            0.0,
-      )),
+      fixedSize: width != null || height != null
+          ? WidgetStateProperty.all(
+              Size(width ?? double.infinity, height ?? double.infinity))
+          : null,
     );
 
     final isDisabled = payload.eval<bool>(props.get('isDisabled')) ??
@@ -79,7 +90,10 @@ class VWButton extends VirtualLeafStatelessWidget<Props> {
           ? null
           : () {
               final onClick = ActionFlow.fromJson(props.get('onClick'));
-              payload.executeAction(onClick);
+              payload.executeAction(
+                onClick,
+                triggerType: 'onPressed',
+              );
             },
       style: style,
       child: content,

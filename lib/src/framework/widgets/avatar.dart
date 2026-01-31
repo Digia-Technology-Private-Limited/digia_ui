@@ -34,10 +34,17 @@ class VWAvatar extends VirtualLeafStatelessWidget<Props> {
   Widget _getCircleAvatar(Props? shapeProps, RenderPayload payload) {
     final bgColor = payload.evalColor(props.get('bgColor'));
     final radius = payload.eval<double>(shapeProps?.get('radius'));
+    final radiusVal = radius ?? 16;
     return CircleAvatar(
-      radius: radius ?? 16,
+      radius: radiusVal,
       backgroundColor: bgColor ?? Colors.grey,
-      child: _getAvatarChildWidget(payload),
+      child: ClipOval(
+        child: SizedBox(
+          height: radiusVal * 2,
+          width: radiusVal * 2,
+          child: _getAvatarChildWidget(payload),
+        ),
+      ),
     );
   }
 
@@ -59,10 +66,12 @@ class VWAvatar extends VirtualLeafStatelessWidget<Props> {
   }
 
   Widget? _getAvatarChildWidget(RenderPayload payload) {
-    final String? imageSrc = payload.eval<String>(props.get('imageSrc'));
-    final String? imageFit = payload.eval<String>(props.get('imageFit'));
+    final imageProps = props.getMap('image');
+    final String? imageSrc = payload
+        .eval(props.get('image.src.imageSrc') ?? imageProps?['imageSrc']);
+    final String? imageFit = payload.eval(imageProps?['fit']);
 
-    if (imageSrc != null) {
+    if (imageSrc != null && imageSrc.isNotEmpty) {
       return VWImage.fromValues(
         imageSrc: imageSrc,
         imageFit: imageFit,

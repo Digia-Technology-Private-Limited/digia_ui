@@ -59,7 +59,10 @@ class VWTimer extends VirtualStatelessWidget<TimerProps> {
             snapshot.connectionState != ConnectionState.waiting) {
           Future.delayed(
             Duration.zero,
-            () async => await updatedPayload.executeAction(props.onTick),
+            () async => await updatedPayload.executeAction(
+              props.onTick,
+              triggerType: 'onTick',
+            ),
           );
         }
 
@@ -68,7 +71,10 @@ class VWTimer extends VirtualStatelessWidget<TimerProps> {
           Future.delayed(Duration.zero, () async {
             Future.delayed(
               Duration.zero,
-              () async => await updatedPayload.executeAction(props.onTimerEnd),
+              () async => await updatedPayload.executeAction(
+                props.onTimerEnd,
+                triggerType: 'onTimerEnd',
+              ),
             );
           });
         }

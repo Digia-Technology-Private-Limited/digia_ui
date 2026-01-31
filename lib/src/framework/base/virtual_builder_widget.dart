@@ -3,7 +3,6 @@ import 'package:flutter/widgets.dart';
 
 import '../../../digia_ui.dart';
 import '../models/common_props.dart';
-
 import '../utils/flutter_extensions.dart';
 import '../utils/widget_util.dart';
 import 'default_error_widget.dart';
@@ -12,12 +11,15 @@ import 'virtual_widget.dart';
 class VirtualBuilderWidget extends VirtualWidget {
   final Widget Function(RenderPayload payload) builder;
   final CommonProps? commonProps;
+  final bool extendHierarchy;
+
   VirtualBuilderWidget(
     this.builder, {
     required this.commonProps,
     super.parentProps,
     super.refName,
     required super.parent,
+    this.extendHierarchy = true,
   });
 
   @override
@@ -26,15 +28,23 @@ class VirtualBuilderWidget extends VirtualWidget {
   @override
   Widget toWidget(RenderPayload payload) {
     try {
-      if (commonProps == null) return render(payload);
+      // Extend hierarchy if requested and refName exists
+      final extendedPayload = (extendHierarchy && refName != null)
+          ? payload.withExtendedHierarchy(refName!)
+          : payload;
+
+      if (commonProps == null) return render(extendedPayload);
+
       final isVisible =
-          commonProps?.visibility?.evaluate(payload.scopeContext) ?? true;
+          commonProps?.visibility?.evaluate(extendedPayload.scopeContext) ??
+              true;
       if (!isVisible) return empty();
-      var current = render(payload);
+
+      var current = render(extendedPayload);
 
       // Styling
       current = wrapInContainer(
-        payload: payload,
+        payload: extendedPayload,
         style: commonProps!.style,
         child: current,
       );
@@ -46,7 +56,7 @@ class VirtualBuilderWidget extends VirtualWidget {
       );
 
       current = wrapInGestureDetector(
-        payload: payload,
+        payload: extendedPayload,
         actionFlow: commonProps?.onClick,
         child: current,
         borderRadius: To.borderRadius(commonProps?.style?.borderRadius),

@@ -26,8 +26,11 @@ class VWTabViewController
     final initialIndex = payload.evalExpr<int>(props.initialIndex) ?? 0;
 
     void onTabChange(int currentIndex, Object? currentItem) {
-      payload.executeAction(props.onTabChange,
-          scopeContext: _createExprContext(currentIndex, currentItem));
+      payload.executeAction(
+        props.onTabChange,
+        scopeContext: _createExprContext(currentIndex, currentItem),
+        triggerType: 'onTabChange',
+      );
     }
 
     return TabViewControllerScopeWidget(

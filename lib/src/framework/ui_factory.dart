@@ -1,9 +1,11 @@
 import 'package:digia_expr/digia_expr.dart';
+import 'package:digia_inspector_core/digia_inspector_core.dart';
 import 'package:flutter/widgets.dart';
 
 import '../config/app_state/app_state_scope_context.dart';
 import '../config/app_state/global_state.dart';
 import '../init/digia_ui_manager.dart';
+import 'actions/action_execution_context.dart';
 import 'actions/action_executor.dart';
 import 'base/virtual_widget.dart';
 import 'component/component.dart';
@@ -102,6 +104,9 @@ class DUIFactory {
   /// Registry for method bindings used in expressions
   late MethodBindingRegistry bindingRegistry;
 
+  /// Execution context for the factory
+  late ActionExecutionContext actionExecutionContext;
+
   /// Private constructor for singleton pattern
   DUIFactory._internal();
 
@@ -142,11 +147,17 @@ class DUIFactory {
     // Initialize widget registry with component builder
     widgetRegistry = DefaultVirtualWidgetRegistry(
       // MessageHandler is not propagated here
-      componentBuilder: (id, args) => createComponent(id, args),
+      componentBuilder: (id, args, observabilityContext) =>
+          createComponent(id, args, observabilityContext: observabilityContext),
     );
 
     // Initialize method binding registry for expression evaluation
     bindingRegistry = MethodBindingRegistry();
+
+    // Initialize action execution context
+    actionExecutionContext = ActionExecutionContext(
+      actionObserver: DigiaUIManager().inspector?.actionObserver,
+    );
 
     // Set up configuration provider (use custom or default)
     configProvider =
@@ -442,10 +453,7 @@ class DUIFactory {
         viewBuilder: (context, id, args) => _buildView(context, id, args),
         pageRouteBuilder: (context, id, args) => createPageRoute(id, args),
         bindingRegistry: bindingRegistry,
-        logger: DigiaUIManager().logger,
-        metaData: {
-          'entitySlug': pageId,
-        },
+        actionExecutionContext: actionExecutionContext,
       ),
       child: DUIPage(
         pageId: pageId,
@@ -581,8 +589,6 @@ class DUIFactory {
   ///   },
   /// );
   /// ```
-  // TODO: What should be done about MessageHandler here?
-  // Show it propagate to Page?
   Widget createComponent(
     String componentid,
     JsonLike? args, {
@@ -591,6 +597,7 @@ class DUIFactory {
     Map<String, TextStyle>? overrideTextStyles,
     Map<String, Color?>? overrideColorTokens,
     GlobalKey<NavigatorState>? navigatorKey,
+    ObservabilityContext? observabilityContext,
   }) {
     // Merge overriding resources with existing resources
     final mergedResources = UIResources(
@@ -605,29 +612,13 @@ class DUIFactory {
     // Get component definition from configuration
     final componentDef = configProvider.getComponentDefinition(componentid);
 
-    // Log component initialization for debugging and analytics
-    DigiaUIManager().logger?.logEntity(
-      entitySlug: componentid,
-      eventName: 'INITIALIZATION',
-      argDefs: componentDef.argDefs
-              ?.map((key, value) => MapEntry(key, value.defaultValue)) ??
-          {},
-      initStateDefs: componentDef.initStateDefs
-              ?.map((key, value) => MapEntry(key, value.defaultValue)) ??
-          {},
-      stateContainerVariables: {},
-    );
-
     // Wrap component with action executor for handling actions
     return DefaultActionExecutor(
       actionExecutor: ActionExecutor(
         viewBuilder: (context, id, args) => _buildView(context, id, args),
         pageRouteBuilder: (context, id, args) => createPageRoute(id, args),
         bindingRegistry: bindingRegistry,
-        logger: DigiaUIManager().logger,
-        metaData: {
-          'entitySlug': componentid,
-        },
+        actionExecutionContext: actionExecutionContext,
       ),
       child: DUIComponent(
         id: componentid,
@@ -637,6 +628,7 @@ class DUIFactory {
         definition: componentDef,
         registry: widgetRegistry,
         apiModels: configProvider.getAllApiModels(),
+        parentObservabilityContext: observabilityContext,
         scope: AppStateScopeContext(
           values: DUIAppState().value,
           variables: {
