@@ -1,5 +1,10 @@
 import 'package:flutter/widgets.dart';
-import 'package:youtube_player_iframe/youtube_player_iframe.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart'
+    as yt_flutter;
+import 'package:youtube_player_iframe/youtube_player_iframe.dart' as yt_iframe;
+
+import '../../dui_dev_config.dart';
+import '../../init/digia_ui_manager.dart';
 
 class InternalYoutubePlayer extends StatefulWidget {
   final String videoUrl;
@@ -20,60 +25,77 @@ class InternalYoutubePlayer extends StatefulWidget {
 }
 
 class _InternalYoutubePlayerState extends State<InternalYoutubePlayer> {
-  late YoutubePlayerController _controller;
+  late dynamic _controller;
+  bool _isIframe = false;
 
   @override
   void initState() {
     super.initState();
+    _isIframe = DigiaUIManager().host is DashboardHost;
     _initializeController();
   }
 
   void _initializeController() {
-    _controller = YoutubePlayerController(
-      params: YoutubePlayerParams(
-        mute: widget.isMuted,
-        showFullscreenButton: false,
-        loop: widget.loop,
-      ),
-    );
+    final String? videoId =
+        yt_flutter.YoutubePlayer.convertUrlToId(widget.videoUrl);
 
-    widget.autoPlay
-        ? _controller.loadVideoById(videoId: getVideoId(widget.videoUrl))
-        : _controller.cueVideoById(videoId: getVideoId(widget.videoUrl));
+    if (_isIframe) {
+      _controller = yt_iframe.YoutubePlayerController.fromVideoId(
+        videoId: videoId ?? '',
+        autoPlay: widget.autoPlay,
+        params: yt_iframe.YoutubePlayerParams(
+          mute: widget.isMuted,
+          showControls: true,
+          showFullscreenButton: true,
+          loop: widget.loop,
+        ),
+      );
+    } else {
+      _controller = yt_flutter.YoutubePlayerController(
+        initialVideoId: videoId ?? '',
+        flags: yt_flutter.YoutubePlayerFlags(
+          autoPlay: widget.autoPlay,
+          mute: widget.isMuted,
+          loop: widget.loop,
+        ),
+      );
+    }
   }
 
   @override
   void dispose() {
-    _controller.close();
+    _controller.dispose();
     super.dispose();
   }
 
   @override
   void didUpdateWidget(covariant InternalYoutubePlayer oldWidget) {
-    if (widget.videoUrl != oldWidget.videoUrl) {
-      _controller.cueVideoById(videoId: getVideoId(widget.videoUrl));
-    }
     super.didUpdateWidget(oldWidget);
+    if (widget.videoUrl != oldWidget.videoUrl) {
+      final String? videoId =
+          yt_flutter.YoutubePlayer.convertUrlToId(widget.videoUrl);
+      if (videoId != null) {
+        if (_isIframe) {
+          _controller.loadVideoById(videoId: videoId);
+        } else {
+          _controller.load(videoId);
+        }
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return YoutubePlayerScaffold(
-      enableFullScreenOnVerticalDrag: false,
-      builder: (context, player) {
-        return player;
-      },
-      controller: _controller,
-    );
-  }
-
-  String getVideoId(String url) {
-    if (url.contains('https:')) {
-      final params = Uri.parse(url).queryParameters;
-      final videoId = params['v'];
-      return videoId ?? '';
+    if (_isIframe) {
+      return yt_iframe.YoutubePlayer(
+        controller: _controller,
+        aspectRatio: 16 / 9,
+      );
     } else {
-      return url;
+      return yt_flutter.YoutubePlayer(
+        controller: _controller,
+        showVideoProgressIndicator: true,
+      );
     }
   }
 }
