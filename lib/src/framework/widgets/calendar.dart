@@ -131,51 +131,65 @@ class VWCalendar extends VirtualLeafStatelessWidget<Props> {
 
   // Header Props
   HeaderStyle _toHeaderStyle(RenderPayload payload, Props headerStyle) {
-    if (headerStyle.isEmpty ||
-        headerStyle.toProps('leftChevronIcon')?.get('iconData') == null) {
-      return const HeaderStyle(
-        formatButtonVisible: false,
-        titleCentered: false,
-        titleTextStyle: TextStyle(fontSize: 17.0),
-        headerPadding: EdgeInsets.symmetric(vertical: 8.0),
-        leftChevronIcon: Icon(Icons.chevron_left),
-        leftChevronPadding: EdgeInsets.all(12.0),
-        rightChevronIcon: Icon(Icons.chevron_right),
-        rightChevronPadding: EdgeInsets.all(12.0),
-        decoration: BoxDecoration(),
-      );
-    }
-
     bool titleCentered = headerStyle.getBool('titleCentered') ?? false;
     BoxShape? shape = _toBoxShape(headerStyle.get('shape'));
     TextStyle titleTextStyle =
         payload.getTextStyle(headerStyle.getMap('titleTextStyle')) ??
             const TextStyle(fontSize: 17.0);
-    EdgeInsets? headerPadding = To.edgeInsets(headerStyle.get('headerPadding'));
-    Widget? leftChevronIcon = VWIcon(
-      props: IconProps.fromJson(headerStyle.getMap('leftChevronIcon')) ??
-          IconProps.empty(),
-      commonProps: null,
-      parent: null,
-    ).toWidget(payload);
-    EdgeInsets? leftChevronPadding =
-        To.edgeInsets(headerStyle.get('leftChevronPadding'));
-    Widget? rightChevronIcon = VWIcon(
-      props: IconProps.fromJson(headerStyle.getMap('rightChevronIcon')) ??
-          IconProps.empty(),
-      commonProps: null,
-      parent: null,
-    ).toWidget(payload);
-    EdgeInsets? rightChevronPadding =
-        To.edgeInsets(headerStyle.get('rightChevronPadding'));
+    EdgeInsets headerPadding = To.edgeInsets(headerStyle.get('headerPadding'),
+        or: const EdgeInsets.symmetric(vertical: 8.0));
+
+    final leftChevronProps =
+        IconProps.fromJson(headerStyle.getMap('leftChevronIcon'));
+    Widget leftChevronIcon = leftChevronProps != null
+        ? VWIcon(
+            props: leftChevronProps,
+            commonProps: null,
+            parent: null,
+          ).toWidget(payload)
+        : const Icon(Icons.chevron_left);
+
+    EdgeInsets leftChevronPadding = To.edgeInsets(
+        headerStyle.get('leftChevronPadding'),
+        or: const EdgeInsets.all(12.0));
+
+    final rightChevronProps =
+        IconProps.fromJson(headerStyle.getMap('rightChevronIcon'));
+    Widget rightChevronIcon = rightChevronProps != null
+        ? VWIcon(
+            props: rightChevronProps,
+            commonProps: null,
+            parent: null,
+          ).toWidget(payload)
+        : const Icon(Icons.chevron_right);
+
+    EdgeInsets rightChevronPadding = To.edgeInsets(
+        headerStyle.get('rightChevronPadding'),
+        or: const EdgeInsets.all(12.0));
     final shapeProps = headerStyle.toProps('shape');
-    Color? headerColor = shapeProps?.getString('color').maybe(payload.getColor);
-    Color headerBorderColor =
-        shapeProps?.getString('borderColor').maybe(payload.getColor) ??
-            const Color(0xFF000000);
-    double headerBorderWidth = shapeProps?.getDouble('borderWidth') ?? 1.0;
-    BorderRadius? headerBorderRadius =
-        To.borderRadius(shapeProps?.get('borderRadius'));
+    BoxDecoration decoration;
+    if (shapeProps == null) {
+      decoration = const BoxDecoration();
+    } else {
+      Color? headerColor =
+          shapeProps.getString('color').maybe(payload.evalColor);
+      Color headerBorderColor =
+          shapeProps.getString('borderColor').maybe(payload.evalColor) ??
+              const Color(0xFF000000);
+      double headerBorderWidth = shapeProps.getDouble('borderWidth') ?? 1.0;
+      BorderRadius? headerBorderRadius =
+          To.borderRadius(shapeProps.get('borderRadius'));
+
+      decoration = BoxDecoration(
+        color: headerColor,
+        border: Border.all(
+          color: headerBorderColor,
+          width: headerBorderWidth,
+        ),
+        borderRadius: shape == BoxShape.circle ? null : headerBorderRadius,
+        shape: shape,
+      );
+    }
 
     return HeaderStyle(
       formatButtonVisible: false,
@@ -186,15 +200,7 @@ class VWCalendar extends VirtualLeafStatelessWidget<Props> {
       leftChevronPadding: leftChevronPadding,
       rightChevronIcon: rightChevronIcon,
       rightChevronPadding: rightChevronPadding,
-      decoration: BoxDecoration(
-        color: headerColor,
-        border: Border.all(
-          color: headerBorderColor,
-          width: headerBorderWidth,
-        ),
-        borderRadius: shape == BoxShape.circle ? null : headerBorderRadius,
-        shape: shape,
-      ),
+      decoration: decoration,
     );
   }
 
@@ -218,9 +224,9 @@ class VWCalendar extends VirtualLeafStatelessWidget<Props> {
             const TextStyle(color: Color(0xFF6A6A6A));
     final shapeProps = daysOfWeekStyle.toProps('shape');
     Color? daysOfWeekColor =
-        shapeProps?.getString('color').maybe(payload.getColor);
+        shapeProps?.getString('color').maybe(payload.evalColor);
     Color daysOfWeekBorderColor =
-        shapeProps?.getString('borderColor').maybe(payload.getColor) ??
+        shapeProps?.getString('borderColor').maybe(payload.evalColor) ??
             const Color(0xFF000000);
     double daysOfWeekBorderWidth = shapeProps?.getDouble('borderWidth') ?? 1.0;
     BorderRadius? daysOfWeekBorderRadius =
@@ -258,7 +264,7 @@ class VWCalendar extends VirtualLeafStatelessWidget<Props> {
     double? rangeHighlightScale =
         calendarStyle.getDouble('rangeHighlightScale');
     Color? rangeHighlightColor =
-        calendarStyle.getString('rangeHighlightColor').maybe(payload.getColor);
+        calendarStyle.getString('rangeHighlightColor').maybe(payload.evalColor);
     bool? outsideDaysVisible = calendarStyle.getBool('outsideDaysVisible');
     bool? isTodayHighlighted = calendarStyle.getBool('isTodayHighlighted');
     TableBorder? tableBorder = _toTableBorder(
@@ -314,7 +320,7 @@ class VWCalendar extends VirtualLeafStatelessWidget<Props> {
   TableBorder? _toTableBorder(RenderPayload payload, Props value) {
     if (value.isEmpty) return null;
     return TableBorder.all(
-      color: value.getString('color').maybe(payload.getColor) ??
+      color: value.getString('color').maybe(payload.evalColor) ??
           Colors.transparent,
       width: value.getDouble('width') ?? 1.0,
       style: _toBorderStyle(value.get('style')),
