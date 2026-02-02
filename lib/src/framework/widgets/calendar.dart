@@ -168,28 +168,25 @@ class VWCalendar extends VirtualLeafStatelessWidget<Props> {
         or: const EdgeInsets.all(12.0));
     final shapeProps = headerStyle.toProps('shape');
     BoxDecoration decoration;
-    if (shapeProps == null) {
-      decoration = const BoxDecoration();
-    } else {
-      Color? headerColor =
-          shapeProps.getString('color').maybe(payload.evalColor);
-      Color headerBorderColor =
-          shapeProps.getString('borderColor').maybe(payload.evalColor) ??
-              const Color(0xFF000000);
-      double headerBorderWidth = shapeProps.getDouble('borderWidth') ?? 1.0;
-      BorderRadius? headerBorderRadius =
-          To.borderRadius(shapeProps.get('borderRadius'));
 
-      decoration = BoxDecoration(
-        color: headerColor,
-        border: Border.all(
-          color: headerBorderColor,
-          width: headerBorderWidth,
-        ),
-        borderRadius: shape == BoxShape.circle ? null : headerBorderRadius,
-        shape: shape,
-      );
-    }
+    Color? headerColor = shapeProps?.getString('color').maybe(payload.evalColor);
+    Color? headerBorderColor =
+        shapeProps?.getString('borderColor').maybe(payload.evalColor);
+    double? headerBorderWidth = shapeProps?.getDouble('borderWidth');
+    BorderRadius? headerBorderRadius =
+        To.borderRadius(shapeProps?.get('borderRadius'));
+
+    decoration = BoxDecoration(
+      color: headerColor,
+      border: headerBorderColor != null || headerBorderWidth != null
+          ? Border.all(
+              color: headerBorderColor ?? const Color(0xFF000000),
+              width: headerBorderWidth ?? 1.0,
+            )
+          : null,
+      borderRadius: shape == BoxShape.circle ? null : headerBorderRadius,
+      shape: shape,
+    );
 
     return HeaderStyle(
       formatButtonVisible: false,
