@@ -25,7 +25,7 @@ class ScratchMaskPainter extends CustomPainter {
 
     // Draw the path with brush color and opacity
     final paint = Paint()
-      ..color = config.brushColor.withOpacity(config.brushOpacity);
+      ..color = config.brushColor.withValues(alpha: config.brushOpacity);
     canvas.drawPath(path, paint);
   }
 

@@ -1167,13 +1167,17 @@ VWPinnedHeader pinnedHeaderBuilder(
   );
 }
 
-VWScratchCard scratchCardBuilder(VWNodeData data, VirtualWidget? parent, _) {
+VWScratchCard scratchCardBuilder(
+  VWNodeData data,
+  VirtualWidget? parent,
+  VirtualWidgetRegistry registry,
+) {
   return VWScratchCard(
     props: ScratchCardProps.fromJson(data.props.value),
     commonProps: data.commonProps,
     parentProps: data.parentProps,
     parent: parent,
-    childGroups: createChildGroups(data.childGroups, parent, _),
+    childGroups: createChildGroups(data.childGroups, parent, registry),
     refName: data.refName,
   );
 }
