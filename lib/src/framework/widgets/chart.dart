@@ -76,11 +76,11 @@ class VWChart extends VirtualStatelessWidget<ChartProps> {
 
     // Convert flat structure to Chart.js format
     final chartConfig = ChartConfigBuilder.buildChartConfig(
-      chartType: chartType,
-      labels: labels,
-      datasets: chartDatasets.cast<Map<String, dynamic>>(),
-      options: options,
-    );
+        chartType: chartType,
+        labels: labels,
+        datasets: chartDatasets.cast<Map<String, dynamic>>(),
+        options: options,
+        payload: payload);
 
     return ChartJsWidget(
       chartConfig: chartConfig,
@@ -177,6 +177,7 @@ class ChartConfigBuilder {
     required dynamic labels,
     required List<Map<String, dynamic>> datasets,
     required Map<String, dynamic>? options,
+    RenderPayload? payload,
   }) {
     // Determine if this is a mixed chart
     final isMixed = chartType == 'mixed' || _hasMixedTypes(datasets);
@@ -187,7 +188,7 @@ class ChartConfigBuilder {
         labels is List ? labels.map((e) => e.toString()).toList() : <String>[];
 
     final cleanedDatasets =
-        datasets.map((dataset) => _cleanDataset(dataset)).toList();
+        datasets.map((dataset) => _cleanDataset(dataset, payload)).toList();
 
     return {
       'type': effectiveType,
@@ -195,8 +196,8 @@ class ChartConfigBuilder {
         'labels': labelsList,
         'datasets': cleanedDatasets,
       },
-      'options':
-          _buildOptions(options, datasets), // Pass datasets to _buildOptions
+      'options': _buildOptions(
+          options, datasets, payload), // Pass datasets to _buildOptions
     };
   }
 
@@ -204,6 +205,19 @@ class ChartConfigBuilder {
   /// Flutter: 0xffF10606 -> Alpha: ff, R: F1, G: 06, B: 06
   /// CSS/JS:  #F10606ff  -> R: F1, G: 06, B: 06, Alpha: ff
   static String? _normalizeColor(dynamic color) {
+    // 1. Handle Flutter Color Object directly
+    if (color is Color) {
+      // Flutter Color.value is AARRGGBB (int)
+      // CSS Hex is #RRGGBBAA
+      final value = color.value;
+      final alpha = ((value >> 24) & 0xFF).toRadixString(16).padLeft(2, '0');
+      final red = ((value >> 16) & 0xFF).toRadixString(16).padLeft(2, '0');
+      final green = ((value >> 8) & 0xFF).toRadixString(16).padLeft(2, '0');
+      final blue = ((value) & 0xFF).toRadixString(16).padLeft(2, '0');
+
+      return '#$red$green$blue$alpha';
+    }
+
     if (color is! String || color.isEmpty) return null;
 
     // Passthrough for functional notations (rgba, hsla, var) or named colors
@@ -217,7 +231,7 @@ class ChartConfigBuilder {
     // Strip common prefixes
     final cleanHex = color.replaceAll('#', '').replaceAll('0x', '');
 
-    // Strict hex check to avoid corrupting named colors like 'red' if they slipped through
+    // Strict hex check
     if (!RegExp(r'^[0-9a-fA-F]+$').hasMatch(cleanHex)) {
       return color;
     }
@@ -234,7 +248,6 @@ class ChartConfigBuilder {
       return '#$rgb$alpha';
     }
 
-    // Return original if unknown format
     return color;
   }
 
@@ -246,7 +259,8 @@ class ChartConfigBuilder {
   }
 
   /// Clean dataset by removing null/empty values
-  static Map<String, dynamic> _cleanDataset(Map<String, dynamic> dataset) {
+  static Map<String, dynamic> _cleanDataset(
+      Map<String, dynamic> dataset, RenderPayload? payload) {
     final cleaned = <String, dynamic>{
       'label': dataset['label'] ?? '',
       'data': (dataset['data'] as List?)?.map((e) => e as num).toList() ?? [],
@@ -259,14 +273,18 @@ class ChartConfigBuilder {
     }
 
     // Add optional properties if present and not empty
-    _addIfPresent(cleaned, dataset, 'borderColor', normalizeColor: true);
-    _addIfPresent(cleaned, dataset, 'backgroundColor', normalizeColor: true);
+    _addIfPresent(cleaned, dataset, 'borderColor',
+        normalizeColor: true, payload: payload);
+    _addIfPresent(cleaned, dataset, 'backgroundColor',
+        normalizeColor: true, payload: payload);
     _addIfPresent(cleaned, dataset, 'pointBackgroundColor',
-        normalizeColor: true);
-    _addIfPresent(cleaned, dataset, 'pointBorderColor', normalizeColor: true);
+        normalizeColor: true, payload: payload);
+    _addIfPresent(cleaned, dataset, 'pointBorderColor',
+        normalizeColor: true, payload: payload);
     _addIfPresent(cleaned, dataset, 'hoverBackgroundColor',
-        normalizeColor: true);
-    _addIfPresent(cleaned, dataset, 'hoverBorderColor', normalizeColor: true);
+        normalizeColor: true, payload: payload);
+    _addIfPresent(cleaned, dataset, 'hoverBorderColor',
+        normalizeColor: true, payload: payload);
 
     _addIfPresent(cleaned, dataset, 'borderWidth');
     _addIfPresent(cleaned, dataset, 'tension');
@@ -276,24 +294,37 @@ class ChartConfigBuilder {
   }
 
   static void _addIfPresent(
-    Map<String, dynamic> target,
-    Map<String, dynamic> source,
-    String key, {
-    bool normalizeColor = false,
-  }) {
+      Map<String, dynamic> target, Map<String, dynamic> source, String key,
+      {bool normalizeColor = false, RenderPayload? payload}) {
     final value = source[key];
-    if (value != null && !(value is String && value.isEmpty)) {
-      if (normalizeColor && value is String) {
-        target[key] = _normalizeColor(value);
+
+    // Safely evaluate payload
+    dynamic colorValue;
+    if (payload != null) {
+      colorValue = payload.evalColor(value);
+    } else {
+      colorValue = value;
+    }
+
+    // If result exists, process it
+    if (colorValue != null) {
+      if (normalizeColor) {
+        // Pass the evaluated value (Color or String) to _normalizeColor
+        final normalized = _normalizeColor(colorValue);
+        if (normalized != null) {
+          target[key] = normalized;
+        }
       } else {
-        target[key] = value;
+        target[key] = colorValue;
       }
     }
   }
 
   /// Build Chart.js options
-  static Map<String, dynamic> _buildOptions(
-      Map<String, dynamic>? optionsProp, List<Map<String, dynamic>> datasets) {
+  /// Build Chart.js options
+  static Map<String, dynamic> _buildOptions(Map<String, dynamic>? optionsProp,
+      List<Map<String, dynamic>> datasets, RenderPayload? payload) {
+    // 1. Accept payload
     if (optionsProp == null) {
       return {
         'responsive': true,
@@ -309,14 +340,17 @@ class ChartConfigBuilder {
       'responsive': optionsProp['responsive'] ?? true,
       'maintainAspectRatio': optionsProp['maintainAspectRatio'] ?? false,
       'plugins': {
-        'legend': _buildLegendOptions(optionsProp['legend'], datasets),
-        'title': _buildTitleOptions(optionsProp['title']),
+        'legend': _buildLegendOptions(
+            optionsProp['legend'], datasets, payload), // Pass payload
+        'title':
+            _buildTitleOptions(optionsProp['title'], payload), // Pass payload
       },
     };
   }
 
-  static Map<String, dynamic> _buildLegendOptions(
-      dynamic legendProp, List<Map<String, dynamic>> datasets) {
+  static Map<String, dynamic> _buildLegendOptions(dynamic legendProp,
+      List<Map<String, dynamic>> datasets, RenderPayload? payload) {
+    // 2. Accept payload
     if (legendProp is! Map) return {'display': true, 'position': 'top'};
 
     // --- Process label styles for the legend ---
@@ -336,9 +370,14 @@ class ChartConfigBuilder {
       if (firstLabelStyle != null) {
         final fontOptions = _buildFontOptions(firstLabelStyle);
         fontStyles.addAll(fontOptions);
+
         if (firstLabelStyle['textColor'] != null) {
-          defaultColor =
-              _normalizeColor(firstLabelStyle['textColor']) ?? defaultColor;
+          // 3. Evaluate color safely using payload
+          final rawColor = firstLabelStyle['textColor'];
+          final evaluatedColor =
+              payload != null ? payload.evalColor(rawColor) : rawColor;
+
+          defaultColor = _normalizeColor(evaluatedColor) ?? defaultColor;
         }
       }
     }
@@ -353,18 +392,28 @@ class ChartConfigBuilder {
     };
   }
 
-  static Map<String, dynamic> _buildTitleOptions(dynamic titleProp) {
+  static Map<String, dynamic> _buildTitleOptions(
+      dynamic titleProp, RenderPayload? payload) {
+    // 4. Accept payload
     if (titleProp is! Map) return {'display': false, 'text': ''};
 
     final titleStyle = titleProp['titleStyle'] as Map?;
     final titleFontOptions = _buildFontOptions(titleStyle);
-    final titleColor = titleStyle?['textColor'] as String?;
+
+    // 5. Evaluate title color safely using payload
+    String? titleColorHex;
+    final rawTitleColor = titleStyle?['textColor'];
+    if (rawTitleColor != null) {
+      final evaluatedColor =
+          payload != null ? payload.evalColor(rawTitleColor) : rawTitleColor;
+      titleColorHex = _normalizeColor(evaluatedColor);
+    }
 
     return {
       'display': titleProp['display'] ?? false,
       'text': titleProp['text'] ?? '',
       'font': titleFontOptions,
-      if (titleColor != null) 'color': _normalizeColor(titleColor),
+      if (titleColorHex != null) 'color': titleColorHex,
     };
   }
 
