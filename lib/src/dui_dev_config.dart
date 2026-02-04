@@ -41,6 +41,17 @@ class DashboardHost extends DigiaUIHost {
   const DashboardHost({super.resourceProxyUrl});
 }
 
+/// Host configuration for Digia Preview deployment.
+///
+/// [PreviewHost] represents the preview environment for Digia Studio.
+/// This is used for previewing changes before going live.
+class PreviewHost extends DigiaUIHost {
+  /// Creates a new [PreviewHost] configuration.
+  ///
+  /// This represents the preview hosting environment.
+  const PreviewHost({super.resourceProxyUrl});
+}
+
 /// Developer configuration for debugging and development features.
 ///
 /// [DeveloperConfig] provides configuration options specifically designed
@@ -115,4 +126,21 @@ class DeveloperConfig {
     this.host,
     this.baseUrl = 'https://app.digia.tech/api/v1',
   });
+}
+
+enum HostApp {
+  dashboard,
+  preview;
+
+  /// Returns the corresponding [HostApp] enum value for the given [DigiaUIHost].
+  ///
+  /// This function maps [DigiaUIHost] subclasses to their respective [HostApp] values.
+  /// Returns `null` if the host type is not recognized (though all sealed subclasses are covered).
+  static HostApp? getHostApp(DigiaUIHost? host) {
+    return switch (host) {
+      DashboardHost() => HostApp.dashboard,
+      PreviewHost() => HostApp.preview,
+      _ => null,
+    };
+  }
 }
