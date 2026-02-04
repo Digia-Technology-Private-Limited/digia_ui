@@ -14,6 +14,7 @@ import 'widget_props/chart_props.dart';
 import 'widget_props/conditional_item_props.dart';
 import 'widget_props/icon_props.dart';
 import 'widget_props/image_view_360_props.dart';
+import 'widget_props/lottie_props.dart';
 import 'widget_props/markdown_props.dart';
 import 'widget_props/masonry_grid_view_props.dart';
 import 'widget_props/nav_bar_item_custom.dart';
@@ -399,7 +400,7 @@ VWSpacer spacerBuilder(VWNodeData data, VirtualWidget? parent, _) {
 
 VWLottie lottieBuilder(VWNodeData data, VirtualWidget? parent, _) {
   return VWLottie(
-    props: data.props,
+    props: LottieProps.fromJson(data.props.value),
     commonProps: data.commonProps,
     parentProps: data.parentProps,
     parent: parent,
