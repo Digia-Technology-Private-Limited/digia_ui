@@ -26,10 +26,11 @@ class LottieProps {
   });
 
   factory LottieProps.fromJson(JsonLike json) {
-    final src = json['src'] as JsonLike?;
+    final src = json['src'];
+    final srcPath = src is JsonLike ? src['lottiePath'] : src;
     return LottieProps(
       lottiePath: ExprOr.fromJson<String>(
-        src?['lottiePath'] ?? json['lottiePath'],
+        srcPath ?? json['lottiePath'],
       ),
       height: ExprOr.fromJson<double>(json['height']),
       width: ExprOr.fromJson<double>(json['width']),

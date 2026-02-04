@@ -75,6 +75,7 @@ class _InternalLottieState extends State<InternalLottie>
 
   void _resetController() {
     _animationController?.dispose();
+    _animationController = null;
     _hasTriggeredOnComplete = false;
     _initializeController();
     if (mounted) {
