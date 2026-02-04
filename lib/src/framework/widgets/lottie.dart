@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
-import '../../dui_dev_config.dart';
-import '../../init/digia_ui_manager.dart';
 import '../base/virtual_leaf_stateless_widget.dart';
-import '../models/props.dart';
+import '../internal_widgets/internal_lottie.dart';
 import '../render_payload.dart';
 import '../utils/flutter_type_converters.dart';
+import '../widget_props/lottie_props.dart';
 
-class VWLottie extends VirtualLeafStatelessWidget<Props> {
+class VWLottie extends VirtualLeafStatelessWidget<LottieProps> {
   VWLottie({
     required super.props,
     required super.commonProps,
@@ -19,17 +18,14 @@ class VWLottie extends VirtualLeafStatelessWidget<Props> {
 
   @override
   Widget render(RenderPayload payload) {
-    final (repeat, reverse) =
-        getAnimationType(props.getString('animationType'));
-    final alignment = To.alignment(props.get('alignment'));
-    final height = props.getDouble('height');
-    final width = props.getDouble('width');
-    final animate = payload.eval<bool>(props.get('animate')) ?? true;
-    final frameRate = FrameRate(props.getDouble('frameRate') ?? 60);
-    final fit = To.boxFit(props.get('fit'));
-
-    final lottiePath = payload
-        .eval<String>(props.get('src.lottiePath') ?? props.get('lottiePath'));
+    final (repeat, reverse) = getAnimationType(props.animationType);
+    final alignment = To.alignment(payload.evalExpr(props.alignment));
+    final height = payload.evalExpr(props.height);
+    final width = payload.evalExpr(props.width);
+    final animate = payload.evalExpr(props.animate) ?? true;
+    final frameRate = FrameRate(payload.evalExpr(props.frameRate) ?? 60);
+    final fit = To.boxFit(payload.evalExpr(props.fit));
+    final lottiePath = payload.evalExpr(props.lottiePath);
 
     if (lottiePath == null) {
       return const Center(
@@ -40,43 +36,9 @@ class VWLottie extends VirtualLeafStatelessWidget<Props> {
       );
     }
 
-    Widget errorBuilder(
-        BuildContext context, Object object, StackTrace? stackTrace) {
-      return SizedBox(
-        height: height,
-        width: width,
-        child: const Icon(
-          Icons.error_outline,
-          color: Colors.red,
-        ),
-      );
-    }
-
-    if (lottiePath.startsWith('http')) {
-      final DigiaUIHost? host = DigiaUIManager().host;
-      final String finalUrl;
-      if (host is DashboardHost && host.resourceProxyUrl != null) {
-        finalUrl = '${host.resourceProxyUrl}${Uri.encodeFull(lottiePath)}';
-      } else {
-        finalUrl = lottiePath;
-      }
-      return LottieBuilder.network(
-        finalUrl,
-        alignment: alignment,
-        height: height,
-        width: width,
-        animate: animate,
-        frameRate: frameRate,
-        fit: fit,
-        repeat: repeat,
-        reverse: reverse,
-        errorBuilder: errorBuilder,
-      );
-    }
-
-    return LottieBuilder.asset(
-      lottiePath,
-      alignment: alignment,
+    return InternalLottie(
+      lottiePath: lottiePath,
+      alignment: alignment ?? Alignment.center,
       height: height,
       width: width,
       animate: animate,
@@ -84,7 +46,14 @@ class VWLottie extends VirtualLeafStatelessWidget<Props> {
       fit: fit,
       repeat: repeat,
       reverse: reverse,
-      errorBuilder: errorBuilder,
+      onComplete: !repeat && props.onComplete != null
+          ? () async {
+              await payload.executeAction(
+                props.onComplete!,
+                triggerType: 'onComplete',
+              );
+            }
+          : null,
     );
   }
 
