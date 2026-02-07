@@ -90,6 +90,9 @@ class ActionFactory {
         action = SetAppStateAction.fromJson(actionData);
       case ActionType.executeCallback:
         action = ExecuteCallbackAction.fromJson(actionData);
+      case ActionType.hideBottomSheet:
+      case ActionType.dismissDialog:
+        action = NavigateBackAction.fromJson(actionData);
     }
 
     // TODO: Remove force cast

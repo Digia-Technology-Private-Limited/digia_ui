@@ -26,7 +26,9 @@ enum ActionType {
   uploadFile('Action.upload'),
   filePicker('Action.filePicker'),
   fireEvent('Action.fireEvent'),
-  setAppState('Action.setAppState');
+  setAppState('Action.setAppState'),
+  hideBottomSheet('Action.hideBottomSheet'),
+  dismissDialog('Action.dismissDialog');
 
   final String value;
   const ActionType(this.value);

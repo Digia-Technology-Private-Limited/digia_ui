@@ -132,6 +132,9 @@ class ActionProcessorFactory {
         actionProcessor = ExecuteCallbackProcessor(
           executeActionFlow: dependencies.executeActionFlow,
         );
+      case an.ActionType.hideBottomSheet:
+      case an.ActionType.dismissDialog:
+        actionProcessor = NavigateBackProcessor();
     }
     actionProcessor?.executionContext = executionContext;
     return (actionProcessor ?? ShowToastProcessor());
