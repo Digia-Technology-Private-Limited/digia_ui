@@ -99,7 +99,13 @@ class _DigiaUIAppState extends State<DigiaUIApp> {
     DUIFactory().initialize(
       pageConfigProvider: widget.pageConfigProvider,
       icons: widget.icons,
-      images: widget.images,
+      images: {
+        ...(DigiaUIManager().assetImages.asMap().map((k, v) => MapEntry(
+            v.assetData.localPath,
+            AssetImage(
+                '${v.assetData.fileUrl?.baseUrl}${v.assetData.fileUrl?.path}')))),
+        ...?widget.images
+      },
       fontFactory: widget.fontFactory,
     );
 

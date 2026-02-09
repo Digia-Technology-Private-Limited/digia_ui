@@ -66,6 +66,8 @@ class DUIConfig {
   /// JavaScript functions instance for custom logic (optional)
   JSFunctions? jsFunctions;
 
+  final List<dynamic>? assetImages;
+
   /// Creates a new [DUIConfig] instance from the provided configuration data.
   ///
   /// The [data] parameter should be a Map containing the complete configuration
@@ -95,7 +97,8 @@ class DUIConfig {
         version = as$<int>(data['version']),
         versionUpdated = as$<bool>(data['versionUpdated']),
         functionsFilePath = as$<String>(data['functionsFilePath']),
-        _environment = as$<Map<String, dynamic>>(data['environment']);
+        _environment = as$<Map<String, dynamic>>(data['environment']),
+        assetImages = as$<List>(data['assetImages']);
 
   /// Internal getter for light theme colors
   Map<String, dynamic> get _colors =>
