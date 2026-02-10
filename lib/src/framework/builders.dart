@@ -768,8 +768,12 @@ VWConditionalBuilder conditionalBuilderBuilder(
   VirtualWidgetRegistry registry,
 ) {
   return VWConditionalBuilder(
+    props: data.props,
+    commonProps: data.commonProps,
     parentProps: data.parentProps,
     childGroups: createChildGroups(data.childGroups, parent, registry),
+    parent: parent,
+    refName: data.refName,
   );
 }
 
