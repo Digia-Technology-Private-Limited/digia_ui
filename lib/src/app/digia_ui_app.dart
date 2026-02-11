@@ -102,8 +102,8 @@ class _DigiaUIAppState extends State<DigiaUIApp> {
       images: {
         ...(DigiaUIManager().assetImages.asMap().map((k, v) => MapEntry(
             v.assetData.localPath,
-            AssetImage(
-                '${v.assetData.fileUrl?.baseUrl}${v.assetData.fileUrl?.path}')))),
+            NetworkImage(
+                '${v.assetData.image?.baseUrl}${v.assetData.image?.path}')))),
         ...?widget.images
       },
       fontFactory: widget.fontFactory,

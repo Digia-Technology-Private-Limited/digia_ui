@@ -98,7 +98,7 @@ class DUIConfig {
         versionUpdated = as$<bool>(data['versionUpdated']),
         functionsFilePath = as$<String>(data['functionsFilePath']),
         _environment = as$<Map<String, dynamic>>(data['environment']),
-        assetImages = as$<List>(data['assetImages']);
+        assetImages = as$<List>(data['appAssets']);
 
   /// Internal getter for light theme colors
   Map<String, dynamic> get _colors =>
