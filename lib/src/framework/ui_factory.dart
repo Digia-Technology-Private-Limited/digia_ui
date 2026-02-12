@@ -1,5 +1,6 @@
 import 'package:digia_expr/digia_expr.dart';
 import 'package:digia_inspector_core/digia_inspector_core.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 import '../config/app_state/app_state_scope_context.dart';
@@ -52,6 +53,30 @@ class DefaultActionExecutor extends InheritedWidget {
 
   @override
   bool updateShouldNotify(DefaultActionExecutor oldWidget) => false;
+}
+
+/// Action types for showing/dismissing UI
+enum UIActionType {
+  showBottomSheet('SHOW_BOTTOM_SHEET'),
+  showDialog('SHOW_DIALOG'),
+  closeBottomSheet('CLOSE_BOTTOM_SHEET'),
+  closeDialog('CLOSE_DIALOG');
+
+  final String value;
+  const UIActionType(this.value);
+
+  @override
+  String toString() => value;
+
+  static UIActionType? fromString(String command) {
+    try {
+      return values.firstWhere(
+        (e) => e.value == command.trim().toUpperCase(),
+      );
+    } catch (_) {
+      return null;
+    }
+  }
 }
 
 /// Central factory class for creating Digia UI widgets, pages, and components.
@@ -677,6 +702,43 @@ class DUIFactory {
       iconBuilder: iconBuilder,
       navigatorKey: navigatorKey,
     );
+  }
+
+  /// Performs a UI action via the global `DigiaUIManager` managers.
+  ///
+  /// `actionType` controls which manager/method to call. `componentArgs`
+  /// are forwarded to the underlying show methods when applicable.
+  void showUIAction(
+    UIActionType actionType,
+    BuildContext context,
+    String componentId, {
+    Map<String, Object?>? componentArgs,
+  }) {
+    switch (actionType) {
+      case UIActionType.showBottomSheet:
+        showBottomSheet(
+          context,
+          componentId,
+          componentArgs,
+        );
+        break;
+      case UIActionType.showDialog:
+        presentDialog(
+          context: context,
+          builder: (innerCtx) => _buildView(
+            innerCtx,
+            componentId,
+            componentArgs,
+          ),
+        );
+        break;
+      case UIActionType.closeBottomSheet:
+        Navigator.pop(context);
+        break;
+      case UIActionType.closeDialog:
+        Navigator.pop(context);
+        break;
+    }
   }
 }
 
