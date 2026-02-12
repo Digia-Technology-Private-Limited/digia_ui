@@ -37,8 +37,8 @@ class SliverUtil {
           refName: widget.refName,
           childGroups: widget.childGroups,
         ),
-    VWConditionalBuilder: (widget, payload) =>
-        (widget as VWConditionalBuilder).getEvalChild(payload),
+    VWConditionalBuilder: (widget, payload) => convertToSliver(
+        (widget as VWConditionalBuilder).getEvalChild(payload), payload),
   };
 
   /// Converts a widget to a sliver if possible
