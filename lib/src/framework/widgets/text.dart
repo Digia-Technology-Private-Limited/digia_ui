@@ -19,6 +19,10 @@ class VWText extends VirtualLeafStatelessWidget<TextProps> {
   @override
   Widget render(RenderPayload payload) {
     final text = payload.evalExpr(props.text);
+    if (text == null) {
+      return const SizedBox.shrink();
+    }
+    final textValue = text.toString();
     final style = payload.getTextStyle(props.textStyle);
     final maxLines = payload.evalExpr(props.maxLines);
     final alignment = To.textAlign(payload.evalExpr(props.alignment));
@@ -40,7 +44,7 @@ class VWText extends VirtualLeafStatelessWidget<TextProps> {
         shaderCallback: (bounds) => gradient.createShader(bounds),
         blendMode: BlendMode.srcIn,
         child: Text(
-          text.toString(),
+          textValue,
           style: style?.copyWith(color: Colors.white),
           maxLines: maxLines,
           overflow: To.textOverflow(overflow),
@@ -49,7 +53,7 @@ class VWText extends VirtualLeafStatelessWidget<TextProps> {
       );
     } else {
       textWidget = Text(
-        text.toString(),
+        textValue,
         style: style,
         maxLines: maxLines,
         overflow: To.textOverflow(overflow),
