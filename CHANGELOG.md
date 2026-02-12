@@ -2,6 +2,16 @@
 
 Digia Ui SDK.
 
+## [1.7.0] - 2026-02-12
+- 🎨 Dynamic Layouts: width and height in Button and Container widgets, along with Stack positioning, can now be driven dynamically.
+- 🆕 Scratchify Widget: Introduced Scratchify — build beautiful, interactive scratch cards with ease.
+- ▶️ YouTube Player: Fixed platform inconsistencies; the player now works correctly on Android and iOS, matching web behavior.
+- 🎞️ Lottie Callbacks: Added completion callback support when a Lottie animation finishes (applicable when repeat is set to once).
+- 🖼️ Local Assets Preview: Local assets can now be viewed directly in Digia Preview as well as the Dashboard.
+- 🧭 Overlay Control: DigiaUI can now be instructed to programmatically show or hide bottom sheets and dialogs — useful when triggering overlays from a host screen.
+- 📊 Charts: Fixed an issue where library-defined colors were not applied correctly.
+- 📅 Calendar Widget: Header UI refinements for a cleaner and more consistent appearance.
+
 ## [1.6.1] – 2026-01-19
 - 🎚️ Slider Widget: Fixed a lag issue during drag interactions for smoother responsiveness.
 - 🎥 Video Player: Resolved an issue where the video content did not respect the parent container’s aspect ratio.
