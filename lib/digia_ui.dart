@@ -7,6 +7,8 @@ export 'package:digia_ui/src/app/digia_ui_app_builder.dart';
 export 'package:digia_ui/src/config/app_state/global_state.dart';
 export 'package:digia_ui/src/dui_dev_config.dart';
 export 'package:digia_ui/src/framework/actions/base/action_flow.dart';
+export 'package:digia_ui/src/framework/actions/execute_callback/processor.dart'
+    show DUICallback;
 export 'package:digia_ui/src/framework/base/virtual_leaf_stateless_widget.dart';
 export 'package:digia_ui/src/framework/digia_message_handler_mixin.dart';
 export 'package:digia_ui/src/framework/digia_ui_scope.dart';
