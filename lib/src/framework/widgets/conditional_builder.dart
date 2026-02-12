@@ -9,13 +9,13 @@ import 'conditional_item.dart';
 
 class VWConditionalBuilder extends VirtualStatelessWidget<Props> {
   VWConditionalBuilder({
-    super.commonProps,
-    super.refName,
-    required super.childGroups,
     super.parentProps,
+    required super.childGroups,
   }) : super(
           props: Props.empty(),
+          commonProps: null,
           parent: null,
+          refName: null,
         );
 
   VirtualWidget? getEvalChild(RenderPayload payload) {
