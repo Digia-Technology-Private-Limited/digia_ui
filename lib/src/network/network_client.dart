@@ -349,6 +349,7 @@ class NetworkClient {
     String appBuildNumber,
     String environment,
     String buildSignature,
+    HostApp? hostApp,
   ) {
     return {
       'x-digia-version': packageVersion,
@@ -359,6 +360,7 @@ class NetworkClient {
       'x-app-version': appVersion,
       'x-app-build-number': appBuildNumber,
       'x-digia-environment': environment,
+      'x-digia-host': hostApp?.name,
       if (buildSignature.isNotEmpty) 'x-app-signature': buildSignature,
     };
   }

@@ -5,6 +5,7 @@ import 'package:package_info_plus/package_info_plus.dart' show PackageInfo;
 
 import '../config/model.dart';
 import '../config/resolver.dart';
+import '../dui_dev_config.dart';
 import '../network/netwok_config.dart';
 import '../network/network_client.dart';
 import '../preferences_store.dart';
@@ -100,6 +101,7 @@ class DigiaUI {
       appbuildNumber,
       options.flavor.environment.name,
       appSignatureSha256,
+      HostApp.getHostApp(options.developerConfig.host),
     );
   }
 

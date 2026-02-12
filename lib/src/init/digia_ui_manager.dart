@@ -4,6 +4,7 @@ import 'package:digia_inspector_core/digia_inspector_core.dart';
 import '../dui_dev_config.dart';
 
 import '../framework/data_type/variable.dart';
+import '../framework/models/asset_model.dart';
 import '../network/network_client.dart';
 import 'digia_ui.dart';
 
@@ -37,6 +38,12 @@ class DigiaUIManager {
       _digiaUI!.dslConfig.getEnvironmentVariables();
   DigiaUIHost? get host => _digiaUI!.initConfig.developerConfig.host;
   NetworkClient get networkClient => _digiaUI!.networkClient;
+
+  List<LocalAsset> get assetImages =>
+      _digiaUI!.dslConfig.assetImages
+          ?.map((e) => LocalAsset.fromJson(e))
+          .toList() ??
+      [];
 
   Map<String, Object?> get jsVars => {
         'js': ExprClassInstance(
