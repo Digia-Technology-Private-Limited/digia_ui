@@ -339,10 +339,15 @@ abstract class To {
           regexString.isEmpty) {
         continue;
       }
-      if (type == 'allow') {
-        formatters.add(FilteringTextInputFormatter.allow(RegExp(regexString)));
-      } else if (type == 'deny') {
-        formatters.add(FilteringTextInputFormatter.deny(RegExp(regexString)));
+      try {
+        final regex = RegExp(regexString);
+        if (type == 'allow') {
+          formatters.add(FilteringTextInputFormatter.allow(regex));
+        } else if (type == 'deny') {
+          formatters.add(FilteringTextInputFormatter.deny(regex));
+        }
+      } on FormatException catch (e) {
+        debugPrint('Invalid regex pattern "$regexString": $e');
       }
     }
 
