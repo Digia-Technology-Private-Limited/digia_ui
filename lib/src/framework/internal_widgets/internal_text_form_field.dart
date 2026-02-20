@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../utils/debouncer.dart';
 import '../utils/functional_util.dart';
@@ -36,6 +37,8 @@ class InternalTextFormField extends StatefulWidget {
   final void Function(String)? onChanged;
   final InputDecoration? inputDecoration;
   final int? debounceValue;
+  final List<TextInputFormatter>? inputFormatters;
+  final TextCapitalization textCapitalization;
 
   const InternalTextFormField({
     super.key,
@@ -58,6 +61,8 @@ class InternalTextFormField extends StatefulWidget {
     this.inputDecoration = const InputDecoration(),
     this.debounceValue,
     this.validations,
+    this.inputFormatters,
+    this.textCapitalization = TextCapitalization.none,
     // this.onChanged,
   });
 
@@ -149,6 +154,8 @@ class _DUITextFieldState extends State<InternalTextFormField> {
       maxLines: widget.maxLines,
       minLines: widget.minLines,
       maxLength: widget.maxLength,
+      inputFormatters: widget.inputFormatters,
+      textCapitalization: widget.textCapitalization,
       validator: (value) => validateField(value, widget.validations),
       cursorColor: widget.cursorColor,
       onChanged: _onChanged,
