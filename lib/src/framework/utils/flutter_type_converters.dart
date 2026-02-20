@@ -317,7 +317,8 @@ abstract class To {
     return Radius.zero;
   }
 
-  static TextCapitalization textCapitalization(dynamic value) => switch (value) {
+  static TextCapitalization textCapitalization(dynamic value) =>
+      switch (value) {
         'words' => TextCapitalization.words,
         'sentences' => TextCapitalization.sentences,
         'characters' => TextCapitalization.characters,
@@ -326,22 +327,25 @@ abstract class To {
 
   static List<TextInputFormatter>? inputFormatters(dynamic value) {
     if (value is! List) return null;
-    
+
     final formatters = <TextInputFormatter>[];
     for (final item in value) {
       if (item is! Map) continue;
-      
+
       final type = item['type'];
       final regexString = item['regex'];
-      if (regexString == null || regexString is! String || regexString.isEmpty) continue;
-      
+      if (regexString == null ||
+          regexString is! String ||
+          regexString.isEmpty) {
+        continue;
+      }
       if (type == 'allow') {
         formatters.add(FilteringTextInputFormatter.allow(RegExp(regexString)));
       } else if (type == 'deny') {
         formatters.add(FilteringTextInputFormatter.deny(RegExp(regexString)));
       }
     }
-    
+
     return formatters.isEmpty ? null : formatters;
   }
 
