@@ -39,6 +39,10 @@ class VWTextFormField extends VirtualStatelessWidget<Props> {
     final maxLines = props.getInt('maxLines');
     final minLines = props.getInt('minLines');
     final maxLength = props.getInt('maxLength');
+    final textCapitalization =
+        To.textCapitalization(props.get('textCapitalization'));
+    final inputFormatters =
+        To.inputFormatters(props.getList('inputFormatters'));
     final effectiveMaxLines = obscureText ? 1 : maxLines;
     final effectiveMinLines = obscureText ? 1 : minLines;
     final isMultiline = (effectiveMinLines ?? 1) > 1;
@@ -104,6 +108,8 @@ class VWTextFormField extends VirtualStatelessWidget<Props> {
       maxLines: effectiveMaxLines,
       minLines: effectiveMinLines,
       maxLength: maxLength,
+      textCapitalization: textCapitalization,
+      inputFormatters: inputFormatters,
       cursorColor: cursorColor,
       validations: validations,
       inputDecoration: InputDecoration(
