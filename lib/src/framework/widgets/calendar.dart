@@ -169,7 +169,8 @@ class VWCalendar extends VirtualLeafStatelessWidget<Props> {
     final shapeProps = headerStyle.toProps('shape');
     BoxDecoration decoration;
 
-    Color? headerColor = shapeProps?.getString('color').maybe(payload.evalColor);
+    Color? headerColor =
+        shapeProps?.getString('color').maybe(payload.evalColor);
     Color? headerBorderColor =
         shapeProps?.getString('borderColor').maybe(payload.evalColor);
     double? headerBorderWidth = shapeProps?.getDouble('borderWidth');
