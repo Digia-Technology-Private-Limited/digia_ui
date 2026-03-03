@@ -27,9 +27,13 @@ class VWNavigationBarCustom
     this.selectedIndex = 0,
   });
 
-  void handleDestinationSelected(int index, RenderPayload payload) {
-    final selectedChild = children?.elementAt(index);
-    if (selectedChild is VWNavigationBarItemCustom) {
+  void handleDestinationSelected(
+    int index,
+    RenderPayload payload,
+    List<VWNavigationBarItemCustom> visibleChildren,
+  ) {
+    if (index >= 0 && index < visibleChildren.length) {
+      final selectedChild = visibleChildren[index];
       final onPageSelected = selectedChild.props.onSelect;
       final onPageSelectedAction = onPageSelected?['action'];
       if (onPageSelectedAction != null) {
@@ -42,11 +46,11 @@ class VWNavigationBarCustom
     onDestinationSelected?.call(index);
   }
 
-  List<Widget> _buildDestinations(RenderPayload payload) {
-    final navItems =
-        children?.whereType<VWNavigationBarItemCustom>().toList() ?? [];
+  List<Widget> _buildDestinations(
+    RenderPayload payload,
+    List<VWNavigationBarItemCustom> navItems,
+  ) {
     final destinations = <Widget>[];
-
     for (int i = 0; i < navItems.length; i++) {
       destinations.add(
         InheritedNavigationBarController(
@@ -61,6 +65,16 @@ class VWNavigationBarCustom
 
   @override
   Widget render(RenderPayload payload) {
+    final visibleChildren = children
+            ?.whereType<VWNavigationBarItemCustom>()
+            .where(
+                (e) => e.props.showIf?.evaluate(payload.scopeContext) != false)
+            .toList() ??
+        [];
+    if (visibleChildren.length < 2) {
+      return const SizedBox.shrink();
+    }
+    final clampedIndex = selectedIndex.clamp(0, visibleChildren.length - 1);
     return internal.BottomNavigationBar(
       borderRadius: To.borderRadius(props.borderRadius),
       shadow: toShadowList(payload, props.shadow),
@@ -75,11 +89,10 @@ class VWNavigationBarCustom
       indicatorShape: To.buttonShape(
           payload.evalExpr(props.indicatorShape), payload.getColor),
       labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
-      selectedIndex: selectedIndex,
-      destinations: _buildDestinations(payload),
-      onDestinationSelected: (value) {
-        handleDestinationSelected(value, payload);
-      },
+      selectedIndex: clampedIndex,
+      destinations: _buildDestinations(payload, visibleChildren),
+      onDestinationSelected: (v) =>
+          handleDestinationSelected(v, payload, visibleChildren),
     );
   }
 }

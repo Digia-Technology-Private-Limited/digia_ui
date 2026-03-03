@@ -207,13 +207,13 @@ class ChartConfigBuilder {
   static String? _normalizeColor(dynamic color) {
     // 1. Handle Flutter Color Object directly
     if (color is Color) {
-      // Flutter Color.value is AARRGGBB (int)
+      // Flutter Color: use toARGB32 (Color.value deprecated)
       // CSS Hex is #RRGGBBAA
-      final value = color.value;
-      final alpha = ((value >> 24) & 0xFF).toRadixString(16).padLeft(2, '0');
-      final red = ((value >> 16) & 0xFF).toRadixString(16).padLeft(2, '0');
-      final green = ((value >> 8) & 0xFF).toRadixString(16).padLeft(2, '0');
-      final blue = ((value) & 0xFF).toRadixString(16).padLeft(2, '0');
+      final argb = color.toARGB32();
+      final alpha = ((argb >> 24) & 0xFF).toRadixString(16).padLeft(2, '0');
+      final red = ((argb >> 16) & 0xFF).toRadixString(16).padLeft(2, '0');
+      final green = ((argb >> 8) & 0xFF).toRadixString(16).padLeft(2, '0');
+      final blue = (argb & 0xFF).toRadixString(16).padLeft(2, '0');
 
       return '#$red$green$blue$alpha';
     }

@@ -25,9 +25,13 @@ class VWNavigationBar extends VirtualStatelessWidget<NavigationBarProps> {
     this.selectedIndex = 0,
   });
 
-  void handleDestinationSelected(int index, RenderPayload payload) {
-    final selectedChild = children?.elementAt(index);
-    if (selectedChild is VWNavigationBarItemDefault) {
+  void handleDestinationSelected(
+    int index,
+    RenderPayload payload,
+    List<VWNavigationBarItemDefault> visibleChildren,
+  ) {
+    if (index >= 0 && index < visibleChildren.length) {
+      final selectedChild = visibleChildren[index];
       final onPageSelected = selectedChild.props.onSelect;
       final onPageSelectedAction = onPageSelected?['action'];
       if (onPageSelectedAction != null) {
@@ -42,6 +46,15 @@ class VWNavigationBar extends VirtualStatelessWidget<NavigationBarProps> {
 
   @override
   Widget render(RenderPayload payload) {
+    final visibleChildren = children
+            ?.whereType<VWNavigationBarItemDefault>()
+            .where(
+                (e) => e.props.showIf?.evaluate(payload.scopeContext) != false)
+            .toList() ??
+        [];
+    if (visibleChildren.length < 2) {
+      return const SizedBox.shrink();
+    }
     return internal.BottomNavigationBar(
       borderRadius: To.borderRadius(props.borderRadius),
       shadow: toShadowList(payload, props.shadow),
@@ -60,14 +73,9 @@ class VWNavigationBar extends VirtualStatelessWidget<NavigationBarProps> {
           ? NavigationDestinationLabelBehavior.alwaysShow
           : NavigationDestinationLabelBehavior.alwaysHide,
       selectedIndex: selectedIndex,
-      destinations: children
-              ?.whereType<VWNavigationBarItemDefault>()
-              .map((e) => e.toWidget(payload))
-              .toList() ??
-          [],
-      onDestinationSelected: (value) {
-        handleDestinationSelected(value, payload);
-      },
+      destinations: visibleChildren.map((e) => e.toWidget(payload)).toList(),
+      onDestinationSelected: (v) =>
+          handleDestinationSelected(v, payload, visibleChildren),
     );
   }
 }
