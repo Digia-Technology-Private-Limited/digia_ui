@@ -77,6 +77,7 @@ class VWAppBar extends VirtualStatelessWidget<AppBarProps> {
       title: useFlexibleSpace ? null : _buildTitle(payload),
       elevation: payload.evalExpr(props.elevation)?.toDouble(),
       shadowColor: payload.evalColorExpr(props.shadowColor),
+      surfaceTintColor: payload.evalColorExpr(props.surfaceTintColor),
       backgroundColor: payload.evalColorExpr(props.backgroundColor),
       iconTheme: automaticallyImplyLeading && defaultButtonColor != null
           ? IconThemeData(color: defaultButtonColor)
