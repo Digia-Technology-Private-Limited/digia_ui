@@ -9,6 +9,7 @@ class SliverAppBarProps {
   final TextProps title;
   final ExprOr<double>? elevation;
   final ExprOr<String>? shadowColor;
+  final ExprOr<String>? surfaceTintColor;
   final ExprOr<String>? backgroundColor;
   final ExprOr<String>? iconColor;
   final JsonLike? leadingIcon;
@@ -39,6 +40,7 @@ class SliverAppBarProps {
     required this.title,
     this.elevation,
     this.shadowColor,
+    this.surfaceTintColor,
     this.backgroundColor,
     this.iconColor,
     this.leadingIcon,
@@ -72,6 +74,7 @@ class SliverAppBarProps {
           as$<JsonLike>(json['title']).maybe(TextProps.fromJson) ?? TextProps(),
       elevation: ExprOr.fromJson<double>(json['elevation']),
       shadowColor: ExprOr.fromJson<String>(json['shadowColor']),
+      surfaceTintColor: ExprOr.fromJson<String>(json['surfaceTintColor']),
       backgroundColor: tryKeys<ExprOr<String>>(
         json,
         ['backgrounColor', 'backgroundColor'],

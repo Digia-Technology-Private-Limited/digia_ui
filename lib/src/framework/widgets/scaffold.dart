@@ -143,6 +143,7 @@ class VWScaffold extends VirtualStatelessWidget<ScaffoldProps> {
       // Create SliverAppBarProps from AppBarProps
       final sliverAppBarProps = SliverAppBarProps(
         backgroundColor: payload.eval(appBarProps?.backgroundColor),
+        surfaceTintColor: payload.eval(appBarProps?.surfaceTintColor),
         centerTitle: payload.eval(appBarProps?.centerTitle),
         collapsedHeight: payload.eval(appBarProps?.collapsedHeight),
         elevation: payload.eval(appBarProps?.elevation),

@@ -23,6 +23,7 @@ class VWSliverAppBar extends VirtualSliver<SliverAppBarProps> {
     final expandedHeight = payload.evalExpr(props.expandedHeight);
     final backgroundColor = payload.evalColorExpr(props.backgroundColor);
     final shadowColor = payload.evalColor(props.shadowColor);
+    final surfaceTintColor = payload.evalColorExpr(props.surfaceTintColor);
     final elevation = payload.evalExpr(props.elevation);
 
     final centerTitle = payload.evalExpr(props.centerTitle) ?? false;
@@ -90,6 +91,7 @@ class VWSliverAppBar extends VirtualSliver<SliverAppBarProps> {
       flexibleSpace: flexibleSpaceWidget,
       backgroundColor: backgroundColor,
       shadowColor: shadowColor,
+      surfaceTintColor: surfaceTintColor,
       elevation: elevation?.toDouble(),
       snap: snap,
       pinned: pinned,
