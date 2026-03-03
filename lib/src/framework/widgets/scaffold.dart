@@ -301,10 +301,14 @@ class VWScaffold extends VirtualStatelessWidget<ScaffoldProps> {
         ? bottomNavBar
             .childrenOf('children')
             ?.whereType<VWNavigationBarItemDefault>()
+            .where(
+                (e) => e.props.showIf?.evaluate(payload.scopeContext) != false)
             .toList()
         : (bottomNavBar as VWNavigationBarCustom)
             .childrenOf('children')
             ?.whereType<VWNavigationBarItemCustom>()
+            .where(
+                (e) => e.props.showIf?.evaluate(payload.scopeContext) != false)
             .toList();
 
     if (navigationItems == null || navigationItems.isEmpty) return null;

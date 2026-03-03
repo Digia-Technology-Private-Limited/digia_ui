@@ -28,8 +28,15 @@ class VWNavigationBarCustom
   });
 
   void handleDestinationSelected(int index, RenderPayload payload) {
-    final selectedChild = children?.elementAt(index);
-    if (selectedChild is VWNavigationBarItemCustom) {
+    final visibleChildren = children
+            ?.whereType<VWNavigationBarItemCustom>()
+            .where(
+                (e) => e.props.showIf?.evaluate(payload.scopeContext) != false)
+            .toList() ??
+        [];
+
+    if (index >= 0 && index < visibleChildren.length) {
+      final selectedChild = visibleChildren.elementAt(index);
       final onPageSelected = selectedChild.props.onSelect;
       final onPageSelectedAction = onPageSelected?['action'];
       if (onPageSelectedAction != null) {
@@ -42,11 +49,11 @@ class VWNavigationBarCustom
     onDestinationSelected?.call(index);
   }
 
-  List<Widget> _buildDestinations(RenderPayload payload) {
-    final navItems =
-        children?.whereType<VWNavigationBarItemCustom>().toList() ?? [];
+  List<Widget> _buildDestinations(
+    RenderPayload payload,
+    List<VWNavigationBarItemCustom> navItems,
+  ) {
     final destinations = <Widget>[];
-
     for (int i = 0; i < navItems.length; i++) {
       destinations.add(
         InheritedNavigationBarController(
@@ -61,6 +68,20 @@ class VWNavigationBarCustom
 
   @override
   Widget render(RenderPayload payload) {
+    final visibleChildren = children
+            ?.whereType<VWNavigationBarItemCustom>()
+            .where(
+                (e) => e.props.showIf?.evaluate(payload.scopeContext) != false)
+            .toList() ??
+        [];
+    if (visibleChildren.length < 2) {
+      return SizedBox(
+        height: 80,
+        child: Center(
+          child: Text('At least 2 items must be visible'),
+        ),
+      );
+    }
     return internal.BottomNavigationBar(
       borderRadius: To.borderRadius(props.borderRadius),
       shadow: toShadowList(payload, props.shadow),
@@ -76,10 +97,8 @@ class VWNavigationBarCustom
           payload.evalExpr(props.indicatorShape), payload.getColor),
       labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
       selectedIndex: selectedIndex,
-      destinations: _buildDestinations(payload),
-      onDestinationSelected: (value) {
-        handleDestinationSelected(value, payload);
-      },
+      destinations: _buildDestinations(payload, visibleChildren),
+      onDestinationSelected: (v) => handleDestinationSelected(v, payload),
     );
   }
 }
