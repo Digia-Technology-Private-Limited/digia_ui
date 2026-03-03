@@ -74,6 +74,7 @@ class VWNavigationBarCustom
     if (visibleChildren.length < 2) {
       return const SizedBox.shrink();
     }
+    final clampedIndex = selectedIndex.clamp(0, visibleChildren.length - 1);
     return internal.BottomNavigationBar(
       borderRadius: To.borderRadius(props.borderRadius),
       shadow: toShadowList(payload, props.shadow),
@@ -88,7 +89,7 @@ class VWNavigationBarCustom
       indicatorShape: To.buttonShape(
           payload.evalExpr(props.indicatorShape), payload.getColor),
       labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
-      selectedIndex: selectedIndex,
+      selectedIndex: clampedIndex,
       destinations: _buildDestinations(payload, visibleChildren),
       onDestinationSelected: (v) =>
           handleDestinationSelected(v, payload, visibleChildren),
