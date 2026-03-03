@@ -27,16 +27,13 @@ class VWNavigationBarCustom
     this.selectedIndex = 0,
   });
 
-  void handleDestinationSelected(int index, RenderPayload payload) {
-    final visibleChildren = children
-            ?.whereType<VWNavigationBarItemCustom>()
-            .where(
-                (e) => e.props.showIf?.evaluate(payload.scopeContext) != false)
-            .toList() ??
-        [];
-
+  void handleDestinationSelected(
+    int index,
+    RenderPayload payload,
+    List<VWNavigationBarItemCustom> visibleChildren,
+  ) {
     if (index >= 0 && index < visibleChildren.length) {
-      final selectedChild = visibleChildren.elementAt(index);
+      final selectedChild = visibleChildren[index];
       final onPageSelected = selectedChild.props.onSelect;
       final onPageSelectedAction = onPageSelected?['action'];
       if (onPageSelectedAction != null) {
@@ -75,12 +72,7 @@ class VWNavigationBarCustom
             .toList() ??
         [];
     if (visibleChildren.length < 2) {
-      return SizedBox(
-        height: 80,
-        child: Center(
-          child: Text('At least 2 items must be visible'),
-        ),
-      );
+      return const SizedBox.shrink();
     }
     return internal.BottomNavigationBar(
       borderRadius: To.borderRadius(props.borderRadius),
@@ -98,7 +90,8 @@ class VWNavigationBarCustom
       labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
       selectedIndex: selectedIndex,
       destinations: _buildDestinations(payload, visibleChildren),
-      onDestinationSelected: (v) => handleDestinationSelected(v, payload),
+      onDestinationSelected: (v) =>
+          handleDestinationSelected(v, payload, visibleChildren),
     );
   }
 }

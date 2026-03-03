@@ -25,16 +25,13 @@ class VWNavigationBar extends VirtualStatelessWidget<NavigationBarProps> {
     this.selectedIndex = 0,
   });
 
-  void handleDestinationSelected(int index, RenderPayload payload) {
-    final visibleChildren = children
-            ?.whereType<VWNavigationBarItemDefault>()
-            .where(
-                (e) => e.props.showIf?.evaluate(payload.scopeContext) != false)
-            .toList() ??
-        [];
-
+  void handleDestinationSelected(
+    int index,
+    RenderPayload payload,
+    List<VWNavigationBarItemDefault> visibleChildren,
+  ) {
     if (index >= 0 && index < visibleChildren.length) {
-      final selectedChild = visibleChildren.elementAt(index);
+      final selectedChild = visibleChildren[index];
       final onPageSelected = selectedChild.props.onSelect;
       final onPageSelectedAction = onPageSelected?['action'];
       if (onPageSelectedAction != null) {
@@ -56,12 +53,7 @@ class VWNavigationBar extends VirtualStatelessWidget<NavigationBarProps> {
             .toList() ??
         [];
     if (visibleChildren.length < 2) {
-      return SizedBox(
-        height: 80,
-        child: Center(
-          child: Text('At least 2 items must be visible'),
-        ),
-      );
+      return const SizedBox.shrink();
     }
     return internal.BottomNavigationBar(
       borderRadius: To.borderRadius(props.borderRadius),
@@ -82,7 +74,8 @@ class VWNavigationBar extends VirtualStatelessWidget<NavigationBarProps> {
           : NavigationDestinationLabelBehavior.alwaysHide,
       selectedIndex: selectedIndex,
       destinations: visibleChildren.map((e) => e.toWidget(payload)).toList(),
-      onDestinationSelected: (v) => handleDestinationSelected(v, payload),
+      onDestinationSelected: (v) =>
+          handleDestinationSelected(v, payload, visibleChildren),
     );
   }
 }
