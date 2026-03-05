@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'base.dart';
 import 'register_bindings.dart';
 
@@ -15,9 +17,17 @@ class MethodBindingRegistry {
 
   // Executes the command by name, passing the instance and arguments
   void execute<T>(T instance, String methodName, Map<String, Object?> args) {
-    if (_bindings.containsKey(instance.runtimeType) &&
-        _bindings[instance.runtimeType]!.containsKey(methodName)) {
-      final command = _bindings[instance.runtimeType]![methodName];
+    Type lookupType = instance.runtimeType;
+
+    // StreamController.broadcast() returns _AsyncBroadcastStreamController (dart:async impl detail).
+    if (!_bindings.containsKey(lookupType) &&
+        instance is StreamController<Object?>) {
+      lookupType = StreamController<Object?>;
+    }
+
+    if (_bindings.containsKey(lookupType) &&
+        _bindings[lookupType]!.containsKey(methodName)) {
+      final command = _bindings[lookupType]![methodName];
       command?.run(instance, args);
       return;
     }
