@@ -1,10 +1,9 @@
-import 'dart:async';
-
 import 'base.dart';
 import 'register_bindings.dart';
 
 class MethodBindingRegistry {
-  final Map<Type, Map<String, MethodCommand>> _bindings = {};
+  final List<(bool Function(Object?), Map<String, MethodCommand>)>
+      _typeCheckers = [];
 
   MethodBindingRegistry() {
     registerBindings(this);
@@ -12,24 +11,19 @@ class MethodBindingRegistry {
 
   // Registers a command for a given method name
   void registerMethods<T>(Map<String, MethodCommand<T>> commands) {
-    _bindings[T] = commands;
+    _typeCheckers.add(((instance) => instance is T, commands));
   }
 
   // Executes the command by name, passing the instance and arguments
   void execute<T>(T instance, String methodName, Map<String, Object?> args) {
-    Type lookupType = instance.runtimeType;
-
-    // StreamController.broadcast() returns _AsyncBroadcastStreamController (dart:async impl detail).
-    if (!_bindings.containsKey(lookupType) &&
-        instance is StreamController<Object?>) {
-      lookupType = StreamController<Object?>;
-    }
-
-    if (_bindings.containsKey(lookupType) &&
-        _bindings[lookupType]!.containsKey(methodName)) {
-      final command = _bindings[lookupType]![methodName];
-      command?.run(instance, args);
-      return;
+    // Use is-based type checkers to support both exact types and subtypes.
+    // This handles cases like _AsyncBroadcastStreamController, which is a
+    // subtype of StreamController<Object?> but has a different runtimeType.
+    for (final (checker, commands) in _typeCheckers) {
+      if (checker(instance) && commands.containsKey(methodName)) {
+        commands[methodName]?.run(instance, args);
+        return;
+      }
     }
 
     throw Exception(
@@ -37,6 +31,6 @@ class MethodBindingRegistry {
   }
 
   void dispose() {
-    _bindings.clear();
+    _typeCheckers.clear();
   }
 }
