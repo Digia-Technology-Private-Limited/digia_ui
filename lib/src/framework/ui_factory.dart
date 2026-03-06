@@ -1,13 +1,17 @@
 import 'package:digia_expr/digia_expr.dart';
 import 'package:digia_inspector_core/digia_inspector_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 import '../config/app_state/app_state_scope_context.dart';
 import '../config/app_state/global_state.dart';
+import '../dui_dev_config.dart';
 import '../init/digia_ui_manager.dart';
 import 'actions/action_execution_context.dart';
 import 'actions/action_executor.dart';
+import 'base/default_error_widget.dart';
+import 'base/virtual_builder_widget.dart';
 import 'base/virtual_widget.dart';
 import 'component/component.dart';
 import 'data_type/method_bindings/method_binding_registry.dart';
@@ -173,6 +177,24 @@ class DUIFactory {
       // MessageHandler is not propagated here
       componentBuilder: (id, args, observabilityContext) =>
           createComponent(id, args, observabilityContext: observabilityContext),
+      unknownWidgetFallback: (type, data, parent) {
+        if (DigiaUIManager().host is DashboardHost ||
+            DigiaUIManager().host is PreviewHost ||
+            kDebugMode) {
+          return VirtualBuilderWidget(
+            commonProps: data.commonProps,
+            parentProps: data.parentProps,
+            parent: parent,
+            refName: data.refName,
+            extendHierarchy: false,
+            (_) => DefaultErrorWidget(
+              refName: data.refName,
+              errorMessage: 'Unknown widget type: $type',
+            ),
+          );
+        }
+        return null;
+      },
     );
 
     // Initialize method binding registry for expression evaluation
