@@ -2,6 +2,12 @@
 
 Digia Ui SDK.
 
+## [1.8.0] - 2026-03-17
+- ✏️ TextField Enhancements: Added regex-based formatting and text capitalization support for better input control.
+- 🎨 AppBar: Added support for surfaceTintColor to improve theming flexibility.
+- 🧭 BottomNavigationBar: Fixed an issue where hidden items (showIf = false) still occupied layout space.
+- 🔄 StreamController: Control Object action now works correctly.
+
 ## [1.7.0] - 2026-02-12
 - 🎨 Dynamic Layouts: width and height in Button and Container widgets, along with Stack positioning, can now be driven dynamically.
 - 🆕 Scratchify Widget: Introduced Scratchify — build beautiful, interactive scratch cards with ease.
