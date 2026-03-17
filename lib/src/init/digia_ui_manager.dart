@@ -68,7 +68,7 @@ class DigiaUIManager {
   }
 
   List<LocalAsset> getAllAssets() {
-    if (host?.supportsAssets != true) return [];
+    if (host?.canAccessLocalAssets != true) return [];
     try {
       return _digiaUI?.dslConfig.assetImages
               ?.map((e) => LocalAsset.fromJson(e))

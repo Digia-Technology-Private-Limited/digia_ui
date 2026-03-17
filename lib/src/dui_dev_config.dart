@@ -20,7 +20,7 @@ sealed class DigiaUIHost {
   const DigiaUIHost({this.resourceProxyUrl});
 
   /// Whether this host supports loading local assets.
-  bool get supportsAssets => false;
+  bool get canAccessLocalAssets => false;
 }
 
 /// Host configuration for Digia Dashboard deployment.
@@ -44,7 +44,7 @@ class DashboardHost extends DigiaUIHost {
   const DashboardHost({super.resourceProxyUrl});
 
   @override
-  bool get supportsAssets => true;
+  bool get canAccessLocalAssets => true;
 }
 
 /// Host configuration for Digia Preview deployment.
@@ -58,7 +58,7 @@ class PreviewHost extends DigiaUIHost {
   const PreviewHost({super.resourceProxyUrl});
 
   @override
-  bool get supportsAssets => true;
+  bool get canAccessLocalAssets => true;
 }
 
 /// Developer configuration for debugging and development features.
