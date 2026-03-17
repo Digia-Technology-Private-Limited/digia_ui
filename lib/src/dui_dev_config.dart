@@ -18,6 +18,9 @@ sealed class DigiaUIHost {
   /// Parameters:
   /// - [resourceProxyUrl]: URL to proxy resource requests through
   const DigiaUIHost({this.resourceProxyUrl});
+
+  /// Whether this host supports loading local assets.
+  bool get supportsAssets => false;
 }
 
 /// Host configuration for Digia Dashboard deployment.
@@ -39,6 +42,9 @@ class DashboardHost extends DigiaUIHost {
   /// Resource proxy URL can be provided to serve static assets through
   /// a different CDN or proxy service.
   const DashboardHost({super.resourceProxyUrl});
+
+  @override
+  bool get supportsAssets => true;
 }
 
 /// Host configuration for Digia Preview deployment.
@@ -50,6 +56,9 @@ class PreviewHost extends DigiaUIHost {
   ///
   /// This represents the preview hosting environment.
   const PreviewHost({super.resourceProxyUrl});
+
+  @override
+  bool get supportsAssets => true;
 }
 
 /// Developer configuration for debugging and development features.

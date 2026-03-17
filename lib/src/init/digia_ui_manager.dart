@@ -39,11 +39,7 @@ class DigiaUIManager {
   DigiaUIHost? get host => _digiaUI!.initConfig.developerConfig.host;
   NetworkClient get networkClient => _digiaUI!.networkClient;
 
-  List<LocalAsset> get assetImages =>
-      _digiaUI!.dslConfig.assetImages
-          ?.map((e) => LocalAsset.fromJson(e))
-          .toList() ??
-      [];
+  List<LocalAsset> get assetImages => getAllAssets();
 
   Map<String, Object?> get jsVars => {
         'js': ExprClassInstance(
@@ -69,5 +65,17 @@ class DigiaUIManager {
     }
 
     return obj as T?;
+  }
+
+  List<LocalAsset> getAllAssets() {
+    if (host?.supportsAssets != true) return [];
+    try {
+      return _digiaUI?.dslConfig.assetImages
+              ?.map((e) => LocalAsset.fromJson(e))
+              .toList() ??
+          [];
+    } catch (e) {
+      return [];
+    }
   }
 }
