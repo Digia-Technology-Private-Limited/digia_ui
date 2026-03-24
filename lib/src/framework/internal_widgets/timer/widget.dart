@@ -48,13 +48,16 @@ class _TimerWidgetState extends State<TimerWidget> {
   void didUpdateWidget(TimerWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    if (widget.controller != oldWidget.controller ||
-        widget.initialValue != oldWidget.initialValue ||
+    final controllerChanged = widget.controller != oldWidget.controller;
+
+    final configChanged = widget.initialValue != oldWidget.initialValue ||
         widget.updateInterval != oldWidget.updateInterval ||
         widget.isCountDown != oldWidget.isCountDown ||
-        widget.duration != oldWidget.duration) {
-      // Its ok to dispose this. If it was a ChangeNotifier, then removeListener
-      // should be called.
+        widget.duration != oldWidget.duration;
+
+    if (controllerChanged ||
+        configChanged ||
+        (oldWidget.controller == null && widget.controller == null)) {
       _controller.dispose();
       _setupController();
     }
