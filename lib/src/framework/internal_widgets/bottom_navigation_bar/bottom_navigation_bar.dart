@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class BottomNavigationBar extends StatefulWidget {
+class BottomNavigationBar extends StatelessWidget {
   final Color? backgroundColor;
   final Duration? animationDuration;
   final int selectedIndex;
@@ -35,29 +35,24 @@ class BottomNavigationBar extends StatefulWidget {
   });
 
   @override
-  State<BottomNavigationBar> createState() => _BottomNavigationBarState();
-}
-
-class _BottomNavigationBarState extends State<BottomNavigationBar> {
-  @override
   Widget build(BuildContext context) {
     return DecoratedBox(
-      decoration: BoxDecoration(boxShadow: widget.shadow),
+      decoration: BoxDecoration(boxShadow: shadow),
       child: ClipRRect(
-        borderRadius: widget.borderRadius ?? BorderRadius.zero,
+        borderRadius: borderRadius ?? BorderRadius.zero,
         child: NavigationBar(
-          backgroundColor: widget.backgroundColor,
-          animationDuration: widget.animationDuration,
-          elevation: widget.elevation,
-          selectedIndex: widget.selectedIndex,
-          onDestinationSelected: widget.onDestinationSelected,
-          surfaceTintColor: widget.surfaceTintColor,
-          indicatorColor: widget.indicatorColor,
-          indicatorShape: widget.indicatorShape,
-          height: widget.height,
-          labelBehavior: widget.labelBehavior,
-          overlayColor: widget.overlayColor,
-          destinations: widget.destinations,
+          backgroundColor: backgroundColor,
+          animationDuration: animationDuration,
+          elevation: elevation,
+          selectedIndex: selectedIndex,
+          onDestinationSelected: onDestinationSelected,
+          surfaceTintColor: surfaceTintColor,
+          indicatorColor: indicatorColor,
+          indicatorShape: indicatorShape,
+          height: height,
+          labelBehavior: labelBehavior,
+          overlayColor: overlayColor,
+          destinations: destinations,
         ),
       ),
     );
