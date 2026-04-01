@@ -37,7 +37,7 @@ class VWNavigationBarCustom
       final onSelect = selectedChild.props.onSelect;
       final type = onSelect?['type'] as String?;
 
-      if (type == 'action') {
+      if (type == 'action' || (type == null && onSelect?['action'] != null)) {
         final action = onSelect?['action'];
         if (action != null) {
           payload.executeAction(
