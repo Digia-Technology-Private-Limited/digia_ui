@@ -305,42 +305,31 @@ class VWScaffold extends VirtualStatelessWidget<ScaffoldProps> {
             .where(
                 (e) => e.props.showIf?.evaluate(payload.scopeContext) != false)
             .toList()
-        : (bottomNavBar as VWNavigationBarCustom)
-            .childrenOf('children')
-            ?.whereType<VWNavigationBarItemCustom>()
-            .where(
-                (e) => e.props.showIf?.evaluate(payload.scopeContext) != false)
-            .toList();
+        : bottomNavBar is VWNavigationBarCustom
+            ? bottomNavBar
+                .childrenOf('children')
+                ?.whereType<VWNavigationBarItemCustom>()
+                .where((e) =>
+                    e.props.showIf?.evaluate(payload.scopeContext) != false)
+                .toList()
+            : null;
 
     if (navigationItems == null || navigationItems.isEmpty) return null;
 
-    final entityIds = navigationItems.map((item) {
-      if (isDefaultNavBar) {
-        return as$<String?>(((item as VWNavigationBarItemDefault)
+    final clampedIndex = bottomNavBarIndex.clamp(0, navigationItems.length - 1);
+    final currentItem = navigationItems[clampedIndex];
+
+    final currentEntityId = isDefaultNavBar
+        ? as$<String?>(((currentItem as VWNavigationBarItemDefault)
+            .props
+            .onSelect?['entity'] as JsonLike?)?['id'])
+        : as$<String?>(((currentItem as VWNavigationBarItemCustom)
             .props
             .onSelect?['entity'] as JsonLike?)?['id']);
-      } else {
-        return as$<String?>(((item as VWNavigationBarItemCustom)
-            .props
-            .onSelect?['entity'] as JsonLike?)?['id']);
-      }
-    }).toList();
 
-    if (entityIds.isEmpty || bottomNavBarIndex >= entityIds.length) return null;
-    final currentEntityId = entityIds[bottomNavBarIndex];
-    if (currentEntityId == null) return null;
-
-    final currentItem = navigationItems.firstWhere((item) {
-      if (isDefaultNavBar) {
-        return ((item as VWNavigationBarItemDefault).props.onSelect?['entity']
-                as JsonLike?)?['id'] ==
-            currentEntityId;
-      } else {
-        return ((item as VWNavigationBarItemCustom).props.onSelect?['entity']
-                as JsonLike?)?['id'] ==
-            currentEntityId;
-      }
-    });
+    if (currentEntityId == null || currentEntityId.isEmpty) {
+      return null;
+    }
 
     final currentEntityArgs = isDefaultNavBar
         ? (((currentItem as VWNavigationBarItemDefault)
@@ -387,6 +376,18 @@ class _ScaffoldWithBottomNav extends StatefulWidget {
 
 class _ScaffoldWithBottomNavState extends State<_ScaffoldWithBottomNav> {
   int bottomNavBarIndex = 0;
+
+  Widget _buildBody(RenderPayload payload) {
+    final body = widget.parent._buildBodyWithNavBar(
+      payload,
+      bottomNavBarIndex,
+      widget.enableSafeArea,
+    );
+    if (body != null) {
+      return body;
+    }
+    return widget.parent._buildRegularBody(payload, widget.enableSafeArea);
+  }
 
   void onDestinationSelected(int index) {
     setState(() {
@@ -439,8 +440,7 @@ class _ScaffoldWithBottomNavState extends State<_ScaffoldWithBottomNav> {
         body: widget.isCollapsibleAppBar
             ? widget.parent._buildCollapsibleAppBarBody(
                 widget.payload, widget.enableSafeArea)
-            : widget.parent._buildBodyWithNavBar(
-                widget.payload, bottomNavBarIndex, widget.enableSafeArea),
+            : _buildBody(widget.payload),
         persistentFooterButtons: widget.persistentFooterButtons,
       ),
     );

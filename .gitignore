@@ -18,10 +18,7 @@ migrate_working_dir/
 *.iws
 .idea/
 
-# The .vscode folder contains launch configuration and tasks you configure in
-# VS Code which you may wish to be included in version control, so this line
-# is commented out by default.
-#.vscode/
+.vscode/
 
 # Flutter/Dart/Pub related
 **/doc/api/
@@ -47,12 +44,12 @@ app.*.map.json
 android/local.properties
 /android/local.properties
 pubspec.lock
-.vscode/launch.json
 example/ios/Podfile.lock
 macos/Podfile.lock
 
-# FVM Version Cache
-.fvm/
-
-ios/Flutter/flutter_export_environment.sh
-ios/Flutter/Generated.xcconfig
+# Flutter tool output (flutter pub get); nested example/*/.gitignore also lists these
+**/ios/Flutter/Generated.xcconfig
+**/ios/Flutter/flutter_export_environment.sh
+**/Runner/GeneratedPluginRegistrant.h
+**/Runner/GeneratedPluginRegistrant.m
+**/io/flutter/plugins/GeneratedPluginRegistrant.java

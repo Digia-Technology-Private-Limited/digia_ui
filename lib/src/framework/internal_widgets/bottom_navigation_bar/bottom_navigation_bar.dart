@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class BottomNavigationBar extends StatefulWidget {
+class BottomNavigationBar extends StatelessWidget {
   final Color? backgroundColor;
   final Duration? animationDuration;
   final int selectedIndex;
@@ -35,52 +35,24 @@ class BottomNavigationBar extends StatefulWidget {
   });
 
   @override
-  State<BottomNavigationBar> createState() => _BottomNavigationBarState();
-}
-
-class _BottomNavigationBarState extends State<BottomNavigationBar> {
-  late int _selectedIndex;
-
-  @override
-  void initState() {
-    super.initState();
-    _selectedIndex = widget.selectedIndex;
-  }
-
-  @override
-  void didUpdateWidget(BottomNavigationBar oldWidget) {
-    if (widget.selectedIndex != oldWidget.selectedIndex) {
-      _selectedIndex = widget.selectedIndex;
-    }
-    super.didUpdateWidget(oldWidget);
-  }
-
-  void _handleDestinationSelected(int index) {
-    _selectedIndex = index;
-    if (widget.onDestinationSelected != null) {
-      widget.onDestinationSelected!(index);
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
     return DecoratedBox(
-      decoration: BoxDecoration(boxShadow: widget.shadow),
+      decoration: BoxDecoration(boxShadow: shadow),
       child: ClipRRect(
-        borderRadius: widget.borderRadius ?? BorderRadius.zero,
+        borderRadius: borderRadius ?? BorderRadius.zero,
         child: NavigationBar(
-          backgroundColor: widget.backgroundColor,
-          animationDuration: widget.animationDuration,
-          elevation: widget.elevation,
-          selectedIndex: _selectedIndex,
-          onDestinationSelected: _handleDestinationSelected,
-          surfaceTintColor: widget.surfaceTintColor,
-          indicatorColor: widget.indicatorColor,
-          indicatorShape: widget.indicatorShape,
-          height: widget.height,
-          labelBehavior: widget.labelBehavior,
-          overlayColor: widget.overlayColor,
-          destinations: widget.destinations,
+          backgroundColor: backgroundColor,
+          animationDuration: animationDuration,
+          elevation: elevation,
+          selectedIndex: selectedIndex,
+          onDestinationSelected: onDestinationSelected,
+          surfaceTintColor: surfaceTintColor,
+          indicatorColor: indicatorColor,
+          indicatorShape: indicatorShape,
+          height: height,
+          labelBehavior: labelBehavior,
+          overlayColor: overlayColor,
+          destinations: destinations,
         ),
       ),
     );

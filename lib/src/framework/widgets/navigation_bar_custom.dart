@@ -34,13 +34,19 @@ class VWNavigationBarCustom
   ) {
     if (index >= 0 && index < visibleChildren.length) {
       final selectedChild = visibleChildren[index];
-      final onPageSelected = selectedChild.props.onSelect;
-      final onPageSelectedAction = onPageSelected?['action'];
-      if (onPageSelectedAction != null) {
-        payload.executeAction(
-          ActionFlow.fromJson(onPageSelectedAction),
-          triggerType: 'onPageSelected',
-        );
+      final onSelect = selectedChild.props.onSelect;
+      final type = onSelect?['type'] as String?;
+
+      if (type == 'action' || (type == null && onSelect?['action'] != null)) {
+        final action = onSelect?['action'];
+        if (action != null) {
+          payload.executeAction(
+            ActionFlow.fromJson(action),
+            triggerType: 'onNavBarItemSelected',
+          );
+        }
+        // Action-type items execute their action but do not change the selected tab.
+        return;
       }
     }
     onDestinationSelected?.call(index);
@@ -55,7 +61,11 @@ class VWNavigationBarCustom
       destinations.add(
         InheritedNavigationBarController(
           itemIndex: i,
-          child: navItems[i].toWidget(payload),
+          child: Builder(
+            builder: (context) => navItems[i].toWidget(
+              payload.copyWith(buildContext: context),
+            ),
+          ),
         ),
       );
     }
