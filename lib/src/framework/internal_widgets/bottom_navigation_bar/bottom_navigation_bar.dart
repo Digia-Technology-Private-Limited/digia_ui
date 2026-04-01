@@ -39,29 +39,6 @@ class BottomNavigationBar extends StatefulWidget {
 }
 
 class _BottomNavigationBarState extends State<BottomNavigationBar> {
-  late int _selectedIndex;
-
-  @override
-  void initState() {
-    super.initState();
-    _selectedIndex = widget.selectedIndex;
-  }
-
-  @override
-  void didUpdateWidget(BottomNavigationBar oldWidget) {
-    if (widget.selectedIndex != oldWidget.selectedIndex) {
-      _selectedIndex = widget.selectedIndex;
-    }
-    super.didUpdateWidget(oldWidget);
-  }
-
-  void _handleDestinationSelected(int index) {
-    _selectedIndex = index;
-    if (widget.onDestinationSelected != null) {
-      widget.onDestinationSelected!(index);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return DecoratedBox(
@@ -72,8 +49,8 @@ class _BottomNavigationBarState extends State<BottomNavigationBar> {
           backgroundColor: widget.backgroundColor,
           animationDuration: widget.animationDuration,
           elevation: widget.elevation,
-          selectedIndex: _selectedIndex,
-          onDestinationSelected: _handleDestinationSelected,
+          selectedIndex: widget.selectedIndex,
+          onDestinationSelected: widget.onDestinationSelected,
           surfaceTintColor: widget.surfaceTintColor,
           indicatorColor: widget.indicatorColor,
           indicatorShape: widget.indicatorShape,
