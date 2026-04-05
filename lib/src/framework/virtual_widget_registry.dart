@@ -19,6 +19,15 @@ typedef ComponentBuilder = Widget Function(
   ObservabilityContext? observabilityContext,
 );
 
+/// Called when [VirtualWidgetRegistry.createWidget] encounters an unknown widget
+/// type. Return a [VirtualWidget] to render a graceful fallback, or return
+/// `null` to let the registry throw instead.
+typedef UnknownWidgetFallback = VirtualWidget? Function(
+  String type,
+  VWNodeData data,
+  VirtualWidget? parent,
+);
+
 abstract class VirtualWidgetRegistry {
   static final Map<String, VirtualWidgetBuilder> _defaultBuilders = {
     // Layout Widgets
@@ -142,6 +151,7 @@ abstract class VirtualWidgetRegistry {
 
   factory VirtualWidgetRegistry({
     required ComponentBuilder componentBuilder,
+    UnknownWidgetFallback? unknownWidgetFallback,
   }) = DefaultVirtualWidgetRegistry;
 
   VirtualWidget createWidget(VWData data, VirtualWidget? parent);
@@ -152,10 +162,15 @@ abstract class VirtualWidgetRegistry {
 class DefaultVirtualWidgetRegistry implements VirtualWidgetRegistry {
   final ComponentBuilder componentBuilder;
 
+  /// Optional fallback invoked when an unknown widget type is encountered.
+  /// When `null`, an [Exception] is thrown instead.
+  final UnknownWidgetFallback? unknownWidgetFallback;
+
   final Map<String, VirtualWidgetBuilder> builders;
 
   DefaultVirtualWidgetRegistry({
     required this.componentBuilder,
+    this.unknownWidgetFallback,
   }) : builders = Map.from(VirtualWidgetRegistry._defaultBuilders);
 
   @override
@@ -167,6 +182,8 @@ class DefaultVirtualWidgetRegistry implements VirtualWidgetRegistry {
         {
           String type = data.type;
           if (!builders.containsKey(type)) {
+            final fallback = unknownWidgetFallback?.call(type, data, parent);
+            if (fallback != null) return fallback;
             throw Exception('Unknown widget type: $type');
           }
           widget = builders[type]!(data, parent, this);
