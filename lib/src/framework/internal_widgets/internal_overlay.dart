@@ -72,7 +72,10 @@ class _InternalOverlayState extends State<InternalOverlay> {
         dismissOnTapOutside: widget.dismissOnTapOutside,
         dismissOnTapInside: widget.dismissOnTapInside,
         onDismiss: hideOverlay,
-        child: widget.popupBuilder(context, _controller),
+        child: Material(
+          color: Colors.transparent,
+          child: widget.popupBuilder(context, _controller),
+        ),
       ),
     );
 
