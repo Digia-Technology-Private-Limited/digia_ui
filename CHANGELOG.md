@@ -2,6 +2,10 @@
 
 Digia Ui SDK.
 
+## [1.8.2] - 2026-04-24
+
+- ✨ Overlay: Wrapped overlay content with Material to resolve missing Material context issues.
+
 ## [1.8.1] - 2026-04-02
 
 - 🧭 NavigationBarCustom: Fixed issues with selected and unselected widget rendering/state handling.
