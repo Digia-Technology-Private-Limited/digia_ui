@@ -1,5 +1,6 @@
 name: digia_ui
-description: Flutter SDK for rendering server-driven UIs using JSON from Digia Studio. Supports dynamic layouts, state, actions, and custom widgets.
+description: Flutter SDK for rendering server-driven UIs using JSON from Digia
+  Studio. Supports dynamic layouts, state, actions, and custom widgets.
 repository: https://github.com/Digia-Technology-Private-Limited/digia_ui.git
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -16,10 +17,10 @@ repository: https://github.com/Digia-Technology-Private-Limited/digia_ui.git
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 1.8.1
+version: 1.8.2
 
 environment:
-  sdk: '>=3.3.0 <4.0.0'
+  sdk: ">=3.3.0 <4.0.0"
 
 # https://github.com/frencojobs/derry
 scripts:
@@ -139,7 +140,6 @@ flutter:
       fonts:
         - asset: assets/icons/fa-regular-400.ttf
           style: normal
-
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
 
