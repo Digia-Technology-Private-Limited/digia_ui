@@ -2,6 +2,10 @@
 
 Digia Ui SDK.
 
+## [1.9.0] - 2026-04-24
+
+- ✨ Overlay: Added overlay controller support to programmatically show/hide overlays.
+
 ## [1.8.2] - 2026-04-24
 
 - ✨ Overlay: Wrapped overlay content with Material to resolve missing Material context issues.
