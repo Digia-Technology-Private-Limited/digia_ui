@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../digia_ui.dart';
 import '../base/virtual_stateless_widget.dart';
+import '../data_type/adapted_types/overlay_controller.dart';
 import '../internal_widgets/internal_overlay.dart';
 import '../models/props.dart';
 
@@ -27,7 +28,11 @@ class VWOverlay extends VirtualStatelessWidget<Props> {
     final popupAlignment =
         To.alignment(props.getString('popupAlignment')) ?? Alignment.center;
 
+    final overlayController =
+        payload.eval<AdaptedOverlayController>(props.get('controller'));
+
     return InternalOverlay(
+      controller: overlayController,
       popupBuilder: (ctx, controller) =>
           popupWidget?.toWidget(payload) ?? const SizedBox.shrink(),
       childAlignment: childAlignment,

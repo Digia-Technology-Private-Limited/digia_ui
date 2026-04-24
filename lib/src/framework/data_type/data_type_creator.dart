@@ -9,6 +9,7 @@ import '../internal_widgets/timer/controller.dart';
 import '../utils/functional_util.dart';
 import '../utils/types.dart';
 import 'adapted_types/file.dart';
+import 'adapted_types/overlay_controller.dart';
 import 'adapted_types/page_controller.dart';
 import 'adapted_types/scroll_controller.dart';
 import 'adapted_types/story_controller.dart';
@@ -49,6 +50,9 @@ class DataTypeCreator {
         return AdaptedTextEditingController(
           text: evaluate<String>(value['text'], scopeContext: scopeContext),
         );
+
+      case DataType.overlayController:
+        return AdaptedOverlayController();
 
       case DataType.timerController:
         final value = as$<JsonLike>(def.defaultValue) ?? {};

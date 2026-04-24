@@ -64,19 +64,21 @@ class _InternalOverlayState extends State<InternalOverlay> {
     if (_isVisible) return;
 
     _overlayEntry = OverlayEntry(
-      builder: (context) => _OverlayContent(
-        link: _layerLink,
-        offset: widget.offset,
-        childAlignment: widget.childAlignment,
-        popupAlignment: widget.popupAlignment,
-        dismissOnTapOutside: widget.dismissOnTapOutside,
-        dismissOnTapInside: widget.dismissOnTapInside,
-        onDismiss: hideOverlay,
-        child: Material(
-          color: Colors.transparent,
-          child: widget.popupBuilder(context, _controller),
-        ),
-      ),
+      builder: (context) {
+        return _OverlayContent(
+          link: _layerLink,
+          offset: widget.offset,
+          childAlignment: widget.childAlignment,
+          popupAlignment: widget.popupAlignment,
+          dismissOnTapOutside: widget.dismissOnTapOutside,
+          dismissOnTapInside: widget.dismissOnTapInside,
+          onDismiss: hideOverlay,
+          child: Material(
+            type: MaterialType.transparency,
+            child: widget.popupBuilder(context, _controller),
+          ),
+        );
+      },
     );
 
     Overlay.of(context).insert(_overlayEntry!);
@@ -102,6 +104,7 @@ class _InternalOverlayState extends State<InternalOverlay> {
       child: widget.showOnTap
           ? GestureDetector(
               onTap: showOverlay,
+              behavior: HitTestBehavior.translucent,
               child: widget.child,
             )
           : widget.child,
@@ -132,28 +135,36 @@ class _OverlayContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onTap: dismissOnTapOutside ? onDismiss : null,
-      child: Stack(
-        children: [
-          CompositedTransformFollower(
-            link: link,
-            showWhenUnlinked: false,
-            offset: offset,
-            targetAnchor: childAlignment,
-            followerAnchor: popupAlignment,
-            child: dismissOnTapInside
-                ? _TapDetector(
-                    onTapUp: () {
-                      onDismiss();
-                    },
-                    child: child,
-                  )
-                : child,
+    return Stack(
+      children: [
+        /// 🔹 Background barrier (handles outside tap ONLY)
+        if (dismissOnTapOutside)
+          Positioned.fill(
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: onDismiss,
+            ),
           ),
-        ],
-      ),
+
+        /// 🔹 Popup (independent, no accidental bubbling)
+        CompositedTransformFollower(
+          link: link,
+          showWhenUnlinked: false,
+          offset: offset,
+          targetAnchor: childAlignment,
+          followerAnchor: popupAlignment,
+          child: dismissOnTapInside
+              ? _TapDetector(
+                  onTapUp: onDismiss,
+                  child: child,
+                )
+              : GestureDetector(
+                  onTap: () {}, // 👈 consume taps inside
+                  behavior: HitTestBehavior.translucent,
+                  child: child,
+                ),
+        ),
+      ],
     );
   }
 }
@@ -175,7 +186,7 @@ class _TapDetectorState extends State<_TapDetector> {
   Offset? _touchDownPosition;
   bool _hasScrolled = false;
 
-  static const double _kTapSlop = 18.0; // Maximum movement allowed for a tap
+  static const double _kTapSlop = 18.0;
 
   void _handlePointerDown(PointerDownEvent event) {
     _touchDownPosition = event.position;
