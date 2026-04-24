@@ -11,6 +11,7 @@ enum DataType {
   streamController('streamController'),
   asyncController('asyncController'),
   textEditingController('textFieldController'),
+  overlayController('overlayController'),
   pageController('pageController'),
   file('file'),
   apiCancelToken('apiCancelToken'),
