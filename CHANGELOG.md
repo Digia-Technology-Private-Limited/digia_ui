@@ -2,6 +2,11 @@
 
 Digia Ui SDK.
 
+## [1.10.0] - 2026-05-19
+
+- 📅 Calendar Widget: Fixed an issue where the year selector dropdown appeared behind overlays.
+- 🔄 Pagination Controller: Added support to refresh pagination state.
+
 ## [1.9.0] - 2026-04-24
 
 - ✨ Overlay: Added overlay controller support to programmatically show/hide overlays.
