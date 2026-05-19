@@ -4,6 +4,7 @@ import 'file/register_fn.dart';
 import 'method_binding_registry.dart';
 import 'overlay_controller/register_fn.dart';
 import 'page_controller/register_fn.dart';
+import 'paginated_list_controller/register_fn.dart';
 import 'scroll_controller/register_fn.dart';
 import 'story_controller/register_fn.dart';
 import 'stream_controller/register_fn.dart';
@@ -21,4 +22,5 @@ void registerBindings(MethodBindingRegistry registry) {
   registerMethodCommandsForPageController(registry);
   registerMethodCommandsForStoryController(registry);
   registerMethodCommandsForOverlayController(registry);
+  registerMethodCommandsForPaginatedListController(registry);
 }
