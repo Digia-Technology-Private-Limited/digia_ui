@@ -92,6 +92,26 @@ class _InternalCalendarState extends State<InternalCalendar> {
     }
   }
 
+  void _selectYear(int newYear) {
+    if (!mounted) return;
+
+    setState(() {
+      final lastDayOfMonth = DateTime(newYear, _focusedDay.month + 1, 0).day;
+      var newDate = DateTime(
+        newYear,
+        _focusedDay.month,
+        _focusedDay.day > lastDayOfMonth ? lastDayOfMonth : _focusedDay.day,
+      );
+      if (newDate.isBefore(widget.firstDay)) {
+        _focusedDay = widget.firstDay;
+      } else if (newDate.isAfter(widget.lastDay)) {
+        _focusedDay = widget.lastDay;
+      } else {
+        _focusedDay = newDate;
+      }
+    });
+  }
+
   Widget? _buildCustomHeaderWithYearSelector(
       BuildContext context, DateTime focusedDay) {
     if (!widget.yearSelectorEnabled || !widget.headersVisible) return null;
@@ -141,50 +161,87 @@ class _InternalCalendarState extends State<InternalCalendar> {
                   style: widget.headerStyle.titleTextStyle,
                 ),
                 const SizedBox(width: 8),
-                DropdownButtonHideUnderline(
-                  child: ButtonTheme(
-                    alignedDropdown: true,
-                    child: DropdownButton<int>(
-                      value: currentYear,
-                      style: widget.headerStyle.titleTextStyle,
-                      icon: Icon(
-                        Icons.arrow_drop_down,
-                        color: widget.headerStyle.titleTextStyle.color,
-                      ),
-                      dropdownColor: Colors.white,
-                      menuMaxHeight: 200,
+                DropdownMenuTheme(
+                  data: DropdownMenuThemeData(
+                    textStyle: widget.headerStyle.titleTextStyle,
+                    menuStyle: MenuStyle(
+                      backgroundColor: WidgetStatePropertyAll(Colors.white),
+                    ),
+                    inputDecorationTheme: InputDecorationTheme(
+                      border: InputBorder.none,
+                      enabledBorder: InputBorder.none,
+                      focusedBorder: InputBorder.none,
                       isDense: true,
-                      items: availableYears.map((year) {
-                        return DropdownMenuItem<int>(
-                          value: year,
-                          child: Text(
-                            year.toString(),
-                            style: widget.headerStyle.titleTextStyle,
+                      contentPadding: EdgeInsets.zero,
+                      constraints: BoxConstraints.tightFor(height: 28),
+                    ),
+                  ),
+                  child: IconButtonTheme(
+                    data: const IconButtonThemeData(
+                      style: ButtonStyle(
+                        overlayColor: WidgetStatePropertyAll(
+                          Colors.transparent,
+                        ),
+                        padding: WidgetStatePropertyAll(EdgeInsets.zero),
+                        minimumSize: WidgetStatePropertyAll(Size.square(20)),
+                        fixedSize: WidgetStatePropertyAll(Size.square(20)),
+                        splashFactory: NoSplash.splashFactory,
+                      ),
+                    ),
+                    child: SizedBox(
+                      width: 84,
+                      child: Stack(
+                        alignment: Alignment.centerLeft,
+                        children: [
+                          DropdownMenu<int>(
+                            initialSelection: currentYear,
+                            width: 84,
+                            menuHeight: 200,
+                            requestFocusOnTap: false,
+                            showTrailingIcon: false,
+                            textStyle: widget.headerStyle.titleTextStyle
+                                .copyWith(color: Colors.transparent),
+                            dropdownMenuEntries: availableYears.map((year) {
+                              return DropdownMenuEntry<int>(
+                                value: year,
+                                label: year.toString(),
+                                style: ButtonStyle(
+                                  textStyle: WidgetStatePropertyAll(
+                                    widget.headerStyle.titleTextStyle,
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                            onSelected: (int? newYear) {
+                              if (newYear != null) {
+                                _selectYear(newYear);
+                              }
+                            },
                           ),
-                        );
-                      }).toList(),
-                      onChanged: (int? newYear) {
-                        if (newYear != null) {
-                          setState(() {
-                            final lastDayOfMonth =
-                                DateTime(newYear, _focusedDay.month + 1, 0).day;
-                            var newDate = DateTime(
-                              newYear,
-                              _focusedDay.month,
-                              _focusedDay.day > lastDayOfMonth
-                                  ? lastDayOfMonth
-                                  : _focusedDay.day,
-                            );
-                            if (newDate.isBefore(widget.firstDay)) {
-                              _focusedDay = widget.firstDay;
-                            } else if (newDate.isAfter(widget.lastDay)) {
-                              _focusedDay = widget.lastDay;
-                            } else {
-                              _focusedDay = newDate;
-                            }
-                          });
-                        }
-                      },
+                          Positioned.fill(
+                            child: IgnorePointer(
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      currentYear.toString(),
+                                      style: widget.headerStyle.titleTextStyle,
+                                    ),
+                                    Icon(
+                                      Icons.arrow_drop_down,
+                                      color: widget
+                                          .headerStyle.titleTextStyle.color,
+                                      size: 20,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
