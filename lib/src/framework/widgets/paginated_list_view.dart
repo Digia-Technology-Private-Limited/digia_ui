@@ -53,12 +53,16 @@ class VWPaginatedListView
             ),
           );
         },
-        firstPageLoadingBuilder: childOf('firstPageLoadingWidget').maybe((it) {
+        firstPageLoadingBuilder: (childOf('firstPageLoadingWidget') ??
+                childOf('firstPageLoadingIndicator'))
+            .maybe((it) {
           return (innerCtx) {
             return it.toWidget(payload.copyWith(buildContext: innerCtx));
           };
         }),
-        newPageLoadingBuilder: childOf('newPageLoadingWidget').maybe((it) {
+        newPageLoadingBuilder: (childOf('newPageLoadingWidget') ??
+                childOf('newPageLoadingIndicator'))
+            .maybe((it) {
           return (innerCtx) {
             return it.toWidget(payload.copyWith(buildContext: innerCtx));
           };
