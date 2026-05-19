@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
+import 'paginated_list_controller.dart';
 import 'scrollable_position_mixin.dart';
 
 class PaginatedListView extends StatefulWidget {
@@ -11,6 +12,7 @@ class PaginatedListView extends StatefulWidget {
       pageRequestListener;
 
   final List<Object> items;
+  final PaginatedListController? controller;
   final String? initialScrollPosition;
   final bool? isReverse;
   final Object firstPageKey;
@@ -24,6 +26,7 @@ class PaginatedListView extends StatefulWidget {
     required this.itemBuilder,
     required this.pageRequestListener,
     required this.firstPageKey,
+    this.controller,
     this.firstPageLoadingBuilder,
     this.newPageLoadingBuilder,
     this.pageErrorBuilder,
@@ -37,33 +40,39 @@ class PaginatedListView extends StatefulWidget {
 
 class _PaginatedListViewState extends State<PaginatedListView>
     with ScrollablePositionMixin {
-  late ScrollController _scrollController;
-  late PagingController<Object, Object> _pagingController;
+  late final ScrollController _scrollController;
+  late final PagingController<Object, Object> _pagingController;
 
   @override
   void initState() {
-    _scrollController = ScrollController();
-    _pagingController = PagingController(
-      firstPageKey: widget.firstPageKey,
-    );
-
     super.initState();
-
-    setInitialScrollPosition(_scrollController, widget.initialScrollPosition);
-
+    _scrollController = ScrollController();
+    _pagingController = PagingController(firstPageKey: widget.firstPageKey);
     _pagingController.addPageRequestListener(
-      (pageKey) => widget.pageRequestListener(
-        pageKey,
-        _pagingController,
-      ),
+      (pageKey) => widget.pageRequestListener(pageKey, _pagingController),
     );
+    widget.controller?.addListener(_onRefreshRequested);
+    setInitialScrollPosition(_scrollController, widget.initialScrollPosition);
+  }
+
+  @override
+  void didUpdateWidget(covariant PaginatedListView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.controller != widget.controller) {
+      oldWidget.controller?.removeListener(_onRefreshRequested);
+      widget.controller?.addListener(_onRefreshRequested);
+    }
+  }
+
+  void _onRefreshRequested() {
+    _pagingController.refresh();
   }
 
   @override
   Widget build(BuildContext context) {
     final bool isReverse = widget.isReverse ?? false;
 
-    return PagedListView(
+    return PagedListView<Object, Object>(
       reverse: isReverse,
       scrollController: _scrollController,
       pagingController: _pagingController,
@@ -82,6 +91,7 @@ class _PaginatedListViewState extends State<PaginatedListView>
 
   @override
   void dispose() {
+    widget.controller?.removeListener(_onRefreshRequested);
     _scrollController.dispose();
     _pagingController.dispose();
     super.dispose();

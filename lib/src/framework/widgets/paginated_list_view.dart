@@ -4,6 +4,7 @@ import '../base/virtual_stateless_widget.dart';
 import '../expr/default_scope_context.dart';
 import '../expr/scope_context.dart';
 import '../internal_widgets/internal_list_view.dart';
+import '../internal_widgets/paginated_list_controller.dart';
 import '../internal_widgets/paginated_list_view.dart';
 import '../render_payload.dart';
 import '../utils/functional_util.dart';
@@ -35,8 +36,11 @@ class VWPaginatedListView
       final items = payload.eval<List<Object>>(
               props.dataSource?.evaluate(payload.scopeContext)) ??
           [];
+      final controller =
+          payload.evalExpr<PaginatedListController>(props.controller);
 
       return PaginatedListView(
+        controller: controller,
         firstPageKey: firstPageKey!,
         initialScrollPosition: initialScrollPosition ?? 'start',
         isReverse: isReverse,

@@ -4,6 +4,7 @@ import '../base/virtual_sliver.dart';
 import '../expr/default_scope_context.dart';
 import '../expr/scope_context.dart';
 import '../internal_widgets/internal_paginated_sliver_list.dart';
+import '../internal_widgets/paginated_list_controller.dart';
 import '../render_payload.dart';
 import '../utils/functional_util.dart';
 import '../utils/network_util.dart';
@@ -32,8 +33,12 @@ class VWPaginatedSliverList extends VirtualSliver<PaginatedListViewProps> {
           [];
       final firstPageKey = payload.evalExpr(props.firstPageKey);
 
+      final controller =
+          payload.evalExpr<PaginatedListController>(props.controller);
+
       return InternalPaginatedSliverList(
         items: items,
+        controller: controller,
         firstPageKey: firstPageKey!,
         firstPageLoadingBuilder: childOf('firstPageLoadingWidget').maybe((it) {
           return (innerCtx) {

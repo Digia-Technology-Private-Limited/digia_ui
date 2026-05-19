@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import '../expr/expression_util.dart';
 import '../expr/scope_context.dart';
 import '../internal_widgets/async_builder/controller.dart';
+import '../internal_widgets/paginated_list_controller.dart';
 import '../internal_widgets/timer/controller.dart';
 import '../utils/functional_util.dart';
 import '../utils/types.dart';
@@ -86,6 +87,8 @@ class DataTypeCreator {
         );
       case DataType.storyController:
         return AdaptedStoryController();
+      case DataType.paginationController:
+        return PaginatedListController();
       default:
         throw Exception('Unknown type: ${def.type}');
     }

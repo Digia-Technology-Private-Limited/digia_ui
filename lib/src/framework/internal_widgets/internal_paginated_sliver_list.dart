@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
+import 'paginated_list_controller.dart';
+
 class InternalPaginatedSliverList extends StatefulWidget {
   final Widget Function(BuildContext context, int index, List<Object>? data)
       itemBuilder;
@@ -8,6 +10,7 @@ class InternalPaginatedSliverList extends StatefulWidget {
   final void Function(
           dynamic pageKey, PagingController<Object, Object> controller)
       pageRequestListener;
+  final PaginatedListController? controller;
   final WidgetBuilder? firstPageLoadingBuilder;
   final WidgetBuilder? newPageLoadingBuilder;
   final WidgetBuilder? pageErrorBuilder;
@@ -20,6 +23,7 @@ class InternalPaginatedSliverList extends StatefulWidget {
     required this.items,
     required this.pageRequestListener,
     required this.firstPageKey,
+    this.controller,
     this.firstPageLoadingBuilder,
     this.newPageLoadingBuilder,
     this.pageErrorBuilder,
@@ -31,24 +35,34 @@ class InternalPaginatedSliverList extends StatefulWidget {
 
 class _InternalPaginatedSliverListState
     extends State<InternalPaginatedSliverList> {
-  late PagingController<Object, Object> _pagingController;
+  late final PagingController<Object, Object> _pagingController;
 
   @override
   void initState() {
-    _pagingController = PagingController(firstPageKey: widget.firstPageKey);
     super.initState();
-
+    _pagingController = PagingController(firstPageKey: widget.firstPageKey);
     _pagingController.addPageRequestListener(
-      (pageKey) => widget.pageRequestListener(
-        pageKey,
-        _pagingController,
-      ),
+      (pageKey) => widget.pageRequestListener(pageKey, _pagingController),
     );
+    widget.controller?.addListener(_onRefreshRequested);
+  }
+
+  @override
+  void didUpdateWidget(covariant InternalPaginatedSliverList oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.controller != widget.controller) {
+      oldWidget.controller?.removeListener(_onRefreshRequested);
+      widget.controller?.addListener(_onRefreshRequested);
+    }
+  }
+
+  void _onRefreshRequested() {
+    _pagingController.refresh();
   }
 
   @override
   Widget build(BuildContext context) {
-    return PagedSliverList(
+    return PagedSliverList<Object, Object>(
       pagingController: _pagingController,
       builderDelegate: PagedChildBuilderDelegate(
         itemBuilder: (cntx, item, index) =>
@@ -68,6 +82,7 @@ class _InternalPaginatedSliverListState
 
   @override
   void dispose() {
+    widget.controller?.removeListener(_onRefreshRequested);
     _pagingController.dispose();
     super.dispose();
   }

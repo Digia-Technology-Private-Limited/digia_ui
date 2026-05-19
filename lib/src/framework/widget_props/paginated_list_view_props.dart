@@ -1,3 +1,4 @@
+import '../internal_widgets/paginated_list_controller.dart';
 import '../models/types.dart';
 import '../utils/functional_util.dart';
 import '../utils/json_util.dart';
@@ -13,6 +14,7 @@ class PaginatedListViewProps {
   final ExprOr<Object>? nextPageKey;
   final ExprOr<Object>? apiDataSource;
   final ExprOr<Object>? dataSource;
+  final ExprOr<PaginatedListController>? controller;
 
   PaginatedListViewProps({
     this.initialScrollPosition,
@@ -24,6 +26,7 @@ class PaginatedListViewProps {
     this.transformItems,
     this.apiDataSource,
     this.dataSource,
+    this.controller,
   });
 
   factory PaginatedListViewProps.fromJson(JsonLike json) {
@@ -42,6 +45,7 @@ class PaginatedListViewProps {
       nextPageKey: ExprOr.fromJson<Object>(json['nextPageKey']),
       apiDataSource: ExprOr.fromJson<Object>(json['apiDataSource']),
       dataSource: ExprOr.fromJson<Object>(json['dataSource']),
+      controller: ExprOr.fromJson<PaginatedListController>(json['controller']),
     );
   }
 }
