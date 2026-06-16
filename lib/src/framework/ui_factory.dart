@@ -29,7 +29,6 @@ import 'virtual_widget_registry.dart';
 /// capabilities to be accessed throughout the widget tree via InheritedWidget.
 /// The ActionExecutor handles navigation, state management, API calls, and
 /// other pre-built actions defined in the Digia UI system.
-// TODO: Is there a better way to inject the action executor into the widget tree?
 class DefaultActionExecutor extends InheritedWidget {
   /// The action executor instance that handles all action execution
   final ActionExecutor actionExecutor;
@@ -594,6 +593,25 @@ class DUIFactory {
   ///   },
   /// );
   /// ```
+  ///
+  /// To pass native Dart callbacks that can be triggered by `Action.executeCallback`,
+  /// include them directly in the args map. When the dashboard component triggers
+  /// an executeCallback action with `actionName` set to `args.onAddToCart`, the
+  /// callback function will be invoked with the `argUpdates` as parameters:
+  /// ```dart
+  /// Widget productCard = DUIFactory().createComponent(
+  ///   'product_card',
+  ///   {
+  ///     'title': 'iPhone 15',
+  ///     'price': 999.99,
+  ///     'onAddToCart': (Map<String, dynamic> args) async {
+  ///       final productId = args['productId'];
+  ///       await cartService.add(productId);
+  ///       return {'success': true};
+  ///     },
+  ///   },
+  /// );
+  /// ```
   Widget createComponent(
     String componentid,
     JsonLike? args, {
@@ -617,6 +635,25 @@ class DUIFactory {
     // Get component definition from configuration
     final componentDef = configProvider.getComponentDefinition(componentid);
 
+    // Build the component widget
+    final component = DUIComponent(
+      id: componentid,
+      args: args,
+      resources: mergedResources,
+      navigatorKey: navigatorKey,
+      definition: componentDef,
+      registry: widgetRegistry,
+      apiModels: configProvider.getAllApiModels(),
+      parentObservabilityContext: observabilityContext,
+      scope: AppStateScopeContext(
+        values: DUIAppState().value,
+        variables: {
+          ...StdLibFunctions.functions,
+          ...DigiaUIManager().jsVars,
+        },
+      ),
+    );
+
     // Wrap component with action executor for handling actions
     return DefaultActionExecutor(
       actionExecutor: ActionExecutor(
@@ -625,23 +662,7 @@ class DUIFactory {
         bindingRegistry: bindingRegistry,
         actionExecutionContext: actionExecutionContext,
       ),
-      child: DUIComponent(
-        id: componentid,
-        args: args,
-        resources: mergedResources,
-        navigatorKey: navigatorKey,
-        definition: componentDef,
-        registry: widgetRegistry,
-        apiModels: configProvider.getAllApiModels(),
-        parentObservabilityContext: observabilityContext,
-        scope: AppStateScopeContext(
-          values: DUIAppState().value,
-          variables: {
-            ...StdLibFunctions.functions,
-            ...DigiaUIManager().jsVars,
-          },
-        ),
-      ),
+      child: component,
     );
   }
 
